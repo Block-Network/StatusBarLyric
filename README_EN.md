@@ -2,16 +2,16 @@
 
 <div align="center">
 
-![Release Download](https://img.shields.io/github/downloads/577fkj/MIUIStatusBarLyricw/total?style=flat-square)
-[![Release Version](https://img.shields.io/github/v/release/577fkj/MIUIStatusBarLyricw?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyricw/releases/latest)
-[![GitHub license](https://img.shields.io/github/license/577fkj/MIUIStatusBarLyricw?style=flat-square)](LICENSE)
-[![GitHub Star](https://img.shields.io/github/stars/577fkj/MIUIStatusBarLyricw?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyricw/stargazers)
-[![GitHub Fork](https://img.shields.io/github/forks/577fkj/MIUIStatusBarLyricw?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyricw/network/members)
-![GitHub Repo size](https://img.shields.io/github/repo-size/577fkj/MIUIStatusBarLyricw?style=flat-square&color=3cb371)
-[![GitHub Repo Languages](https://img.shields.io/github/languages/top/577fkj/MIUIStatusBarLyricw?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyricw/search?l=java)
+![Release Download](https://img.shields.io/github/downloads/577fkj/MIUIStatusBarLyric/total?style=flat-square)
+[![Release Version](https://img.shields.io/github/v/release/577fkj/MIUIStatusBarLyric?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyric/releases/latest)
+[![GitHub license](https://img.shields.io/github/license/577fkj/MIUIStatusBarLyric?style=flat-square)](LICENSE)
+[![GitHub Star](https://img.shields.io/github/stars/577fkj/MIUIStatusBarLyric?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyric/stargazers)
+[![GitHub Fork](https://img.shields.io/github/forks/577fkj/MIUIStatusBarLyric?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyric/network/members)
+![GitHub Repo size](https://img.shields.io/github/repo-size/577fkj/MIUIStatusBarLyric?style=flat-square&color=3cb371)
+[![GitHub Repo Languages](https://img.shields.io/github/languages/top/577fkj/MIUIStatusBarLyric?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyric/search?l=java)
 
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSteamTools-Team%2FSteamTools%2Fbadge%3Fref%3Ddevelop&style=flat-square)](https://actions-badge.atrox.dev/577fkj/MIUIStatusBarLyricw/goto?ref=develop)
-[![GitHub Star](https://img.shields.io/github/stars/577fkj/MIUIStatusBarLyricw.svg?style=social)](https://github.com/577fkj/MIUIStatusBarLyricw)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSteamTools-Team%2FSteamTools%2Fbadge%3Fref%3Ddevelop&style=flat-square)](https://actions-badge.atrox.dev/577fkj/MIUIStatusBarLyric/goto?ref=develop)
+[![GitHub Star](https://img.shields.io/github/stars/577fkj/MIUIStatusBarLyric.svg?style=social)](https://github.com/577fkj/MIUIStatusBarLyric)
 [![Telegram](https://img.shields.io/badge/Telegram-MIUIStatusBatLyric-blue.svg?style=flat-square&color=12b7f5)](https://t.me/MIUIStatusBatLyric)
 [![QQ group](https://img.shields.io/badge/QQ group-884185860-blue.svg?style=flat-square&color=12b7f5)](https://qm.qq.com/cgi-bin/qm/qr?k=ea_MP7zFoZJEdpxDFQcadBdbZmwYXZHh&jump_from=webapi)
 
@@ -51,6 +51,13 @@
 - [Releases](https://github.com/577fkj/MIUIStatusBarLyric/releases)
 - [CoolAPK](https://www.coolapk.com/apk/miui.statusbar.lyric)
 - [Beta](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
+
+### contact us
+
+- [QQ Group](https://jq.qq.com/?_wv=1027&amp;k=KQeQjgsv)
+- [Telegram](https://t.me/MIUIStatusBatLyric)
+- [CoolAPK](https://www.coolapk.com/apk/miui.statusbar.lyric)
+- [BUG feedback (Github)](https://github.com/577fkj/MIUIStatusBarLyric/issues/new)
 
 ## App active adaptation
 ### API Send lyrics example

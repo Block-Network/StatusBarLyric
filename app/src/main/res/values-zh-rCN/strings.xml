@@ -59,4 +59,93 @@
     <string name="TestIcon">自定义图标</string>
     <string name="CustomLyric">自定义歌词</string>
     <string name="Stop">停止</string>
+    <string name="ThkListUrl">
+        https://github.com/577fkj/MIUIStatusBarLyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95%E4%B8%8D%E5%88%86%E5%85%88%E5%90%8E
+    </string>
+    <string name="Tips">提示</string>
+    <string name="Quit">退出</string>
+    <string name="TipsIDone">我已知晓</string>
+    <string name="AppTips">请认真阅读此一次性警告！\n\n 很抱歉花费您的时间。\n 请检查软件版本是否正确！\n 如果出现不生效请重新优化软件\n
+        模块不生效请打开debug并重启SystemUI并附上日志，前往 Github/电报 进行反馈。
+    </string>
+    <string name="VerExplanation">版本说明</string>
+    <string name="Done">关闭</string>
+    <string name="CurrentVer">当前版本</string>
+    <string name="VerExp">适用情况：\n\n
+        完美适配：（标记最高适配的版本）\n
+        Aplayer:v1.5.7.9\n
+        网易云音乐:v8.6.13\n\n
+
+
+        应用主动适配：（标记开始适配的版本）\n
+        椒盐音乐：v4.5\n\n
+
+
+        应用内打开蓝牙歌词（标记最高适配的版本）：\n
+        QQ音乐:v10.17.0.11 （另需额外连接蓝牙）\n
+        酷狗音乐:v10.9.0\n
+        酷我音乐:v10.0.1.0\n
+        咪咕音乐:v7.6.1 (另需额外连接蓝牙)\n
+        网易云音乐:v7.2.22\n\n
+
+
+        每个应用版本需要 Hook 的内容不同, \n
+        所以需要进行人工适配，\n
+        其余版本可能同样适配，请自测\n\n
+
+
+        带*的功能改动需要重启系统界面</string>
+    <string name="AppName">MIUI 状态栏歌词</string>
+    <string name="QuickTitle">状态栏歌词</string>
+    <string name="XposedTips">如果无法显示歌词，请尝试停止音乐软件并重启系统界面\n或查看 使用说明 自己是否使用正确版本</string>
+    <string name="InitError">初始化失败，请重启软件</string>
+    <string name="NewVer">发现新版本</string>
+    <string name="Update">更新</string>
+    <string name="GetNewVerError">"获取最新版下载地址失败: "</string>
+    <string name="Cancel">取消</string>
+    <string name="NoVerUpdate">无新版可更新</string>
+    <string name="CheckUpdateError">检查失败，请稍后再试!</string>
+    <string name="CheckUpdateFailed">检查更新失败</string>
+    <string name="ResetSuccess">重置成功</string>
+    <string name="Warn">警告</string>
+    <string name="ConfigError">配置文件错误\n
+        可能是文件内容丢失或者配置文件有所升级\n
+        可能造成不必要的问题\n
+        是否重置</string>
+    <string name="ResetNow">立即重置</string>
+    <string name="NoReset">先不重置</string>
+    <string name="top">上滑</string>
+    <string name="lower">下滑</string>
+    <string name="left">左滑</string>
+    <string name="right">右滑</string>
+    <string name="random">随机</string>
+    <string name="LyricMaxWidthTips">(-1~100，-1为关闭，仅在歌词宽度为自适应时生效)，当前:</string>
+    <string name="RangeError">范围输入错误，恢复默认</string>
+    <string name="LyricWidthTips">(-1~100，-1为自适应)，当前：</string>
+    <string name="LyricColorTips">请输入16进制颜色代码，例如: #C0C0C0，当前：</string>
+    <string name="LyricColorError">颜色代码不正确!</string>
+    <string name="DefaultPath">默认路径</string>
+    <string name="RestoreDefaultPath">恢复默认路径</string>
+    <string name="NewPath">选择新路径</string>
+    <string name="LyricPosTips">-100~100，当前:</string>
+    <string name="On">开启</string>
+    <string name="Reset">恢复默认</string>
+    <string name="ResetHookTips">已恢复默认Hook,请重启SystemUI</string>
+    <string name="Ok">确定</string>
+    <string name="HookSetTips">"已设置Hook为: "</string>
+    <string name="RestartSystemUI">请重启SystemUI</string>
+    <string name="CustomHookTips">自定义Hook</string>
+    <string name="RestartUI">确定重启系统界面吗？</string>
+    <string name="RestartUITips">若使用中突然发现不能使用，可尝试重启系统界面。</string>
+    <string name="ResetModuleDialog">是否要重置模块</string>
+    <string name="ResetModuleDialogTips">模块没问题请不要随意重置</string>
+    <string name="StartCheckUpdate">开始检查是否有更新</string>
+    <string name="YouNotMIUI">" (您不是MIUI系统)"</string>
+    <string name="GetLyricNum">"已获取歌词数句数: "</string>
+    <string name="GetStorageFaildTips">请开通存储权限\n
+        否则无法正常使用本模块\n
+        若不信任本模块,请卸载</string>
+    <string name="GetStorageFailed">获取存储权限失败</string>
+    <string name="GetPermission">前往设置授予权限</string>
+    <string name="ReAppy">重新申请</string>
 </resources>

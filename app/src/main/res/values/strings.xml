@@ -61,4 +61,98 @@
     <string name="TestIcon">Custom icon</string>
     <string name="CustomLyric">Custom lyrics</string>
     <string name="Stop">Stop</string>
+    <string name="ThkListUrl">
+        https://github.com/577fkj/MIUIStatusBarLyric/blob/main/README_EN.md#thanks-listin-no-particular-order
+    </string>
+    <string name="Tips">Tips</string>
+    <string name="Quit">quit</string>
+    <string name="TipsIDone">I already know</string>
+    <string name="AppTips">Please read this one-time warning carefully! \n\n Sorry to take your time. \n Please check
+        whether the software version is correct! \n If it does not take effect, please re-optimize the software\n If
+        the module does not take effect, please open debug and restart SystemUI, attach the log, and go to
+        Github/Telegram for feedback.
+    </string>
+    <string name="VerExplanation">Version explanation</string>
+    <string name="Done">Done</string>
+    <string name="CurrentVer">current version</string>
+    <string name="VerExp">Application situation: \n\n
+        Perfect fit：（Mark the most suitable version）\n
+        \n APlayer : v1.5.7.9
+        \n NetEase Cloud Music : v8.6.13 \n\n
+
+        App active adaptation：（Mark the start adapting version）
+        \n SaltPlayer ：v4.5+
+
+        Open Bluetooth lyrics in the app：（Mark the most suitable version）
+        \n QQ Music : v10.17.0.11 （Need to connect to Bluetooth）
+        \n kugou Music : v10.9.0
+        \n kuwo Music : v10.0.1.0
+        \n Migu Music : v7.6.1 (Need to connect to Bluetooth)
+        \n NetEase Cloud Music : v7.2.22 \n\n
+
+        Each application version requires different content of Hook,\n
+        So manual adaptation is required,\n
+        Other versions may be the OK, please test by yourself\n\n
+
+        belt * need to restart the SystemUI
+    </string>
+    <string name="AppName">MIUI Status bar lyric</string>
+    <string name="QuickTitle">Status bar lyric</string>
+    <string name="XposedTips">If the lyrics cannot be displayed, please try to stop the music software and restart the
+        SystemUI\n or check the instructions for use. Are you using the correct version?
+    </string>
+    <string name="InitError">Initialization failed, please restart the software</string>
+    <string name="NewVer">New version found</string>
+    <string name="Update">Update</string>
+    <string name="GetNewVerError">Failed to get the latest version download address:</string>
+    <string name="Cancel">Cancel</string>
+    <string name="NoVerUpdate">No new version to update</string>
+    <string name="CheckUpdateError">Check failed, please try again later!</string>
+    <string name="CheckUpdateFailed">Check for update failed</string>
+    <string name="ResetSuccess">Reset successfully</string>
+    <string name="Warn">Warning</string>
+    <string name="ConfigError">Configuration file error\n
+        It may be that the content of the file is missing or the configuration file has been upgraded\n
+        May cause unnecessary problems\n
+        Whether to reset</string>
+    <string name="ResetNow">Reset now</string>
+    <string name="NoReset">Don\'t reset yet</string>
+    <string name="top">Slide up</string>
+    <string name="lower">Decline</string>
+    <string name="left">Swipe left</string>
+    <string name="right">Swipe right</string>
+    <string name="random">random</string>
+    <string name="LyricMaxWidthTips">(-1~100, -1 is off, only takes effect when the lyrics width is adaptive),
+        currently:
+    </string>
+    <string name="RangeError">Range input error, restore default</string>
+    <string name="LyricWidthTips">(-1~100, -1 is adaptive), currently:</string>
+    <string name="LyricColorTips">Please enter the hexadecimal color code, for example: #C0C0C0, currently:</string>
+    <string name="LyricColorError">The color code is incorrect!</string>
+    <string name="DefaultPath">Default path</string>
+    <string name="RestoreDefaultPath">Restore default path</string>
+    <string name="NewPath">Choose a new path</string>
+    <string name="LyricPosTips">-100~100, currently:</string>
+    <string name="On">ON</string>
+    <string name="Reset">Reset defula</string>
+    <string name="ResetHookTips">The default hook has been restored, please restart SystemUI</string>
+    <string name="Ok">Sure</string>
+    <string name="HookSetTips">"Hook has been set to: "</string>
+    <string name="RestartSystemUI">Please restart SystemUI</string>
+    <string name="CustomHookTips">Custom Hook</string>
+    <string name="RestartUI">Are you sure to restart the system interface?</string>
+    <string name="RestartUITips">If you suddenly find that you cannot use it during use, you can try to restart the
+        SystemUI.
+    </string>
+    <string name="ResetModuleDialog">Do you want to reset the module</string>
+    <string name="ResetModuleDialogTips">The module is OK, please don\'t reset it at will</string>
+    <string name="StartCheckUpdate">Start checking for updates</string>
+    <string name="YouNotMIUI">" (You are not a MIUI system)"</string>
+    <string name="GetLyricNum">Number of lyrics obtained:</string>
+    <string name="GetStorageFaildTips">Please activate storage permissions\n
+        Otherwise, this module cannot be used normally\n
+        If you don't trust this module, please uninstall</string>
+    <string name="GetPermission">Go to settings to grant permissions</string>
+    <string name="ReAppy">Re-apply</string>
+    <string name="GetStorageFailed">Failed to obtain storage permissions</string>
 </resources>

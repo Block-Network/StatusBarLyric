@@ -33,7 +33,7 @@
             android:title="@string/ThkList">
         <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/xiaowine/miui.statusbar.lyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95"/>
+                android:data="@string/ThkListUrl"/>
     </Preference>
 
 

@@ -13,7 +13,7 @@
 
     <application
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
+            android:label="@string/AppName"
             android:requestLegacyExternalStorage="true"
             android:resizeableActivity="true"
             android:roundIcon="@mipmap/ic_launcher_round"
@@ -56,7 +56,7 @@
                 android:value="true"/>
         <meta-data
                 android:name="xposeddescription"
-                android:value="如果无法显示歌词，请尝试停止音乐软件并重启系统界面\n或查看 使用说明 自己是否使用正确版本"/>
+                android:value="@string/XposedTips"/>
         <meta-data
                 android:name="xposedminversion"
                 android:value="54"/>
@@ -67,7 +67,7 @@
                 android:name=".QuickTitleService"
                 android:exported="true"
                 android:icon="@drawable/title_icon"
-                android:label="状态栏歌词"
+                android:label="@string/QuickTitle"
                 android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE"/>

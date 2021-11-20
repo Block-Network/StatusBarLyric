@@ -23,12 +23,12 @@ public class TestActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.test_preferences);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("开发测试");
+        setTitle(getString(R.string.DevelopmentTest));
 
         Preference preference = findPreference("testlyric");
         preference.setOnPreferenceClickListener((preference1) -> {
             Api api = new Api();
-            api.sendLyric(activity, ((int) (Math.random() * 10)) + lyric, icon, "miui.statusbar.lyric");
+            api.sendLyric(activity, ((int) (Math.random() * 10)) + lyric, icon, "miui.statusbar.lyric", false);
             return true;
         });
 

@@ -1,2 +1,0 @@
--keep class miui.statusbar.lyric.activity.AboutActivity { <init>(); }
--keep class miui.statusbar.lyric.activity.SettingsActivity { <init>(); }

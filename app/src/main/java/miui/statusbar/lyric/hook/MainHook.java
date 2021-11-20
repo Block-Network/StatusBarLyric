@@ -61,6 +61,7 @@ public class MainHook implements IXposedHookLoadPackage {
     static Config config = new Config();
     Context context = null;
     boolean showLyric = true;
+    static boolean useSystemMusicActive = true;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
@@ -303,7 +304,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                                         enable = true;
                                                         if (config.getLyricAutoOff()) {
                                                             Utils.log("icon[0] = " + icon[0]);
-                                                            if (icon[0].equals("app")) {
+                                                            if (!useSystemMusicActive) {
                                                                 lyricOff = musicOffStatus;
                                                                 Utils.log("musicOffStatus = " + lyricOff);
                                                             } else {
@@ -397,16 +398,43 @@ public class MainHook implements IXposedHookLoadPackage {
                                             if (enable) {
                                                 if (config.getFileLyric()) {
                                                     String[] strArr = Utils.getLyricFile();
-                                                    if (!strArr[1].equals("")) {
-                                                        lyric = strArr[1];
-                                                    }
-                                                    icon[0] = "hook";
-                                                    if (!strArr[0].equals("")) {
-                                                        if (config.getIcon()) {
-                                                            icon[1] = config.getIconPath() + strArr[0] + ".webp";
-                                                        } else {
-                                                            icon[1] = "";
-                                                        }
+                                                    icon[0] = strArr[0];
+                                                    switch (icon[0]) {
+                                                        case "hook":
+                                                            Utils.addLyricCount();
+                                                            if (!strArr[2].equals("")) {
+                                                                lyric = strArr[2];
+                                                            }
+                                                            if (config.getIcon()) {
+                                                                icon[1] = config.getIconPath() + strArr[1] + ".webp";
+                                                            } else {
+                                                                icon[1] = "";
+                                                            }
+                                                            useSystemMusicActive = true;
+                                                            break;
+                                                        case "app":
+                                                            Utils.addLyricCount();
+                                                            if (!strArr[2].equals("")) {
+                                                                lyric = strArr[2];
+                                                            }
+                                                            icon[1] = strArr[3];
+                                                            String packName = strArr[1];
+                                                            boolean isPackName = true;
+                                                            for (String mStr : musicServer) {
+                                                                if (mStr.equals(packName)) {
+                                                                    isPackName = false;
+                                                                    break;
+                                                                }
+                                                            }
+                                                            if (isPackName) {
+                                                                musicServer = Utils.stringsListAdd(musicServer, packName);
+                                                            }
+                                                            useSystemMusicActive = strArr[4].equals("true");
+                                                            musicOffStatus = true;
+                                                            break;
+                                                        case "app_stop":
+                                                            musicOffStatus = false;
+                                                            break;
                                                     }
                                                 }
                                             }

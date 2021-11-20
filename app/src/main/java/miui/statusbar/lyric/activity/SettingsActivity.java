@@ -50,21 +50,21 @@ public class SettingsActivity extends PreferenceActivity {
         config = new Config();
 
         Utils.context = activity;
-        Utils.log("Debug开启");
+        Utils.log("Debug On");
 
         String tips = "Tips1";
         SharedPreferences preferences = activity.getSharedPreferences(tips, 0);
         if (!preferences.getBoolean(tips, false)) {
             new AlertDialog.Builder(activity)
-                    .setTitle("提示")
+                    .setTitle(getString(R.string.Tips))
                     .setIcon(R.mipmap.ic_launcher)
-                    .setMessage(getString(R.string.Tips1))
-                    .setNegativeButton("我已知晓", (dialog, which) -> {
+                    .setMessage(getString(R.string.AppTips))
+                    .setNegativeButton(getString(R.string.TipsIDone), (dialog, which) -> {
                         SharedPreferences.Editor a = preferences.edit();
                         a.putBoolean(tips, true);
                         a.apply();
                     })
-                    .setPositiveButton("退出", (dialog, which) -> activity.finish())
+                    .setPositiveButton(getString(R.string.Quit), (dialog, which) -> activity.finish())
                     .setCancelable(false)
                     .create()
                     .show();
@@ -77,10 +77,10 @@ public class SettingsActivity extends PreferenceActivity {
         assert verExplain != null;
         verExplain.setOnPreferenceClickListener((preference) -> {
             new AlertDialog.Builder(activity)
-                    .setTitle("版本说明")
                     .setIcon(R.mipmap.ic_launcher)
-                    .setMessage(" 当前版本 [" + ActivityUtils.getLocalVersion(activity) + "] 适用情况：\n\n " + getString(R.string.ver_explain))
-                    .setNegativeButton("我已知晓", null)
+                    .setTitle(getString(R.string.VerExplanation))
+                    .setMessage(" " + getString(R.string.CurrentVer) + " [" + ActivityUtils.getLocalVersion(activity) + "] " + getString(R.string.VerExp))
+                    .setNegativeButton(getString(R.string.Done), null)
                     .create()
                     .show();
             return true;
@@ -126,16 +126,16 @@ public class SettingsActivity extends PreferenceActivity {
                 "left", "right", "random"
         });
         anim.setEntries(new String[]{
-                "关闭", "上滑", "下滑",
-                "左滑", "右滑", "随机"
+                getString(R.string.Off), getString(R.string.top), getString(R.string.lower),
+                getString(R.string.left), getString(R.string.right), getString(R.string.random)
         });
         Dictionary<String, String> dict = new Hashtable<>();
-        dict.put("off", "关闭");
-        dict.put("top", "上滑");
-        dict.put("lower", "下滑");
-        dict.put("left", "左滑");
-        dict.put("right", "右滑");
-        dict.put("random", "随机");
+        dict.put("off", getString(R.string.Off));
+        dict.put("top", getString(R.string.top));
+        dict.put("lower", getString(R.string.lower));
+        dict.put("left", getString(R.string.left));
+        dict.put("right", getString(R.string.right));
+        dict.put("random", getString(R.string.random));
         anim.setSummary(dict.get(new Config().getAnim()));
         anim.setOnPreferenceChangeListener((preference, newValue) -> {
             new Config().setAnim(newValue.toString());
@@ -149,12 +149,12 @@ public class SettingsActivity extends PreferenceActivity {
         lyricMaxWidth.setEnabled(String.valueOf(config.getLyricWidth()).equals("-1"));
         lyricMaxWidth.setSummary((String.valueOf(config.getLyricMaxWidth())));
         if (String.valueOf(config.getLyricMaxWidth()).equals("-1")) {
-            lyricMaxWidth.setSummary("关闭");
+            lyricMaxWidth.setSummary(getString(R.string.Off));
         }
-        lyricMaxWidth.setDialogMessage("(-1~100，-1为关闭，仅在歌词宽度为自适应时生效)，当前:" + lyricMaxWidth.getSummary());
+        lyricMaxWidth.setDialogMessage(getString(R.string.LyricMaxWidthTips) + lyricMaxWidth.getSummary());
         lyricMaxWidth.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricMaxWidth.setDialogMessage("(-1~100，-1为关闭，仅在歌词宽度为自适应时生效)，当前:自适应");
-            lyricMaxWidth.setSummary("自适应");
+            lyricMaxWidth.setDialogMessage(getString(R.string.LyricMaxWidthTips) + getString(R.string.Adaptive));
+            lyricMaxWidth.setSummary(getString(R.string.Adaptive));
             config.setLyricMaxWidth(-1);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
@@ -164,10 +164,10 @@ public class SettingsActivity extends PreferenceActivity {
                     config.setLyricMaxWidth(Integer.parseInt(value));
                     lyricMaxWidth.setSummary(value);
                 } else {
-                    Toast.makeText(activity, "范围输入错误，恢复默认", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(activity, "范围输入错误，恢复默认", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
             }
             return true;
         });
@@ -178,15 +178,15 @@ public class SettingsActivity extends PreferenceActivity {
         assert lyricWidth != null;
         lyricWidth.setSummary(String.valueOf(config.getLyricWidth()));
         if (String.valueOf(config.getLyricWidth()).equals("-1")) {
-            lyricWidth.setSummary("自适应");
+            lyricWidth.setSummary(getString(R.string.Adaptive));
         }
         lyricWidth.setDefaultValue(String.valueOf(config.getLyricWidth()));
-        lyricWidth.setDialogMessage("(-1~100，-1为自适应)，当前：" + lyricWidth.getSummary());
+        lyricWidth.setDialogMessage(getString(R.string.LyricWidthTips) + lyricWidth.getSummary());
         lyricWidth.setOnPreferenceChangeListener((preference, newValue) -> {
             String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
             lyricMaxWidth.setEnabled(true);
-            lyricWidth.setSummary("自适应");
-            lyricWidth.setDialogMessage("(-1~100，-1为自适应)，当前：自适应");
+            lyricWidth.setSummary(getString(R.string.Adaptive));
+            lyricWidth.setDialogMessage(getString(R.string.LyricWidthTips)+ getString(R.string.Adaptive));
             config.setLyricWidth(-1);
 
             try {
@@ -196,12 +196,12 @@ public class SettingsActivity extends PreferenceActivity {
                     config.setLyricWidth(Integer.parseInt(value));
                     lyricWidth.setSummary(value);
                     lyricMaxWidth.setEnabled(false);
-                    lyricWidth.setDialogMessage("(-1~100，-1为自适应)，当前：" + value);
+                    lyricWidth.setDialogMessage(getString(R.string.LyricWidthTips) + value);
                 } else {
-                    Toast.makeText(activity, "范围输入错误，恢复默认", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(activity, "范围输入错误，恢复默认", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
             }
             return true;
         });
@@ -212,15 +212,15 @@ public class SettingsActivity extends PreferenceActivity {
         assert lyricColour != null;
         lyricColour.setSummary(config.getLyricColor());
         if (config.getLyricColor().equals("off")) {
-            lyricColour.setSummary("自适应");
+            lyricColour.setSummary(getString(R.string.Adaptive));
         }
         lyricColour.setDefaultValue(String.valueOf(config.getLyricColor()));
-        lyricColour.setDialogMessage("请输入16进制颜色代码，例如: #C0C0C0，目前：" + config.getLyricColor());
+        lyricColour.setDialogMessage(getString(R.string.LyricColorTips) + config.getLyricColor());
         lyricColour.setOnPreferenceChangeListener((preference, newValue) -> {
             String value = newValue.toString().replaceAll(" ", "");
-            if (value.equals("") | value.equals("关闭") | value.equals("自适应")) {
+            if (value.equals("") | value.equals(getString(R.string.Off)) | value.equals(getString(R.string.Adaptive))) {
                 config.setLyricColor("off");
-                lyricColour.setSummary("自适应");
+                lyricColour.setSummary(getString(R.string.Adaptive));
             } else {
                 try {
                     Color.parseColor(newValue.toString());
@@ -228,8 +228,8 @@ public class SettingsActivity extends PreferenceActivity {
                     lyricColour.setSummary(newValue.toString());
                 } catch (Exception e) {
                     config.setLyricColor("off");
-                    lyricColour.setSummary("自适应");
-                    Toast.makeText(activity, "颜色代码不正确!", Toast.LENGTH_LONG).show();
+                    lyricColour.setSummary(getString(R.string.Adaptive));
+                    Toast.makeText(activity, getString(R.string.LyricColorError), Toast.LENGTH_LONG).show();
                 }
             }
             return true;
@@ -279,17 +279,17 @@ public class SettingsActivity extends PreferenceActivity {
         assert iconPath != null;
         iconPath.setSummary(config.getIconPath());
         if (config.getIconPath().equals(Utils.PATH)) {
-            iconPath.setSummary("默认路径");
+            iconPath.setSummary(getString(R.string.DefaultPath));
         }
         iconPath.setOnPreferenceClickListener(((preBuference) -> {
             new AlertDialog.Builder(activity)
-                    .setTitle("图标路径")
-                    .setNegativeButton("恢复默认路径", (dialog, which) -> {
-                        iconPath.setSummary("默认路径");
+                    .setTitle(getString(R.string.IconPath))
+                    .setNegativeButton(getString(R.string.RestoreDefaultPath), (dialog, which) -> {
+                        iconPath.setSummary(getString(R.string.DefaultPath));
                         config.setIconPath(Utils.PATH);
                         ActivityUtils.initIcon(activity);
                     })
-                    .setPositiveButton("选择新路径", (dialog, which) -> {
+                    .setPositiveButton(getString(R.string.NewPath), (dialog, which) -> {
                         ChooseFileUtils chooseFileUtils = new ChooseFileUtils(activity);
                         chooseFileUtils.chooseFolder(new ChooseFileUtils.ChooseListener() {
                             @Override
@@ -298,7 +298,7 @@ public class SettingsActivity extends PreferenceActivity {
                                 config.setIconPath(filePath);
                                 iconPath.setSummary(filePath);
                                 if (config.getIconPath().equals(Utils.PATH)) {
-                                    iconPath.setSummary("默认路径");
+                                    iconPath.setSummary(getString(R.string.DefaultPath));
                                 }
                                 ActivityUtils.initIcon(activity);
                             }
@@ -316,12 +316,12 @@ public class SettingsActivity extends PreferenceActivity {
         assert lyricPosition != null;
         lyricPosition.setSummary((String.valueOf(config.getLyricPosition())));
         if (String.valueOf(config.getLyricPosition()).equals("2")) {
-            lyricPosition.setSummary("默认");
+            lyricPosition.setSummary(getString(R.string.Default));
         }
-        lyricPosition.setDialogMessage("-100~100，当前:" + lyricPosition.getSummary());
+        lyricPosition.setDialogMessage(getString(R.string.LyricPosTips) + lyricPosition.getSummary());
         lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricPosition.setDialogMessage("-100~100，当前:默认");
-            lyricPosition.setSummary("默认");
+            lyricPosition.setDialogMessage(getString(R.string.LyricPosTips) + getString(R.string.Default));
+            lyricPosition.setSummary(getString(R.string.Default));
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
                 if (value.equals("2")) {
@@ -330,10 +330,10 @@ public class SettingsActivity extends PreferenceActivity {
                     config.setLyricPosition(Integer.parseInt(value));
                     lyricPosition.setSummary(value);
                 } else {
-                    Toast.makeText(activity, "范围输入错误，恢复默认", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
                 }
             } catch (NumberFormatException e) {
-                Toast.makeText(activity, "范围输入错误，恢复默认", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
             }
             return true;
         });
@@ -341,9 +341,9 @@ public class SettingsActivity extends PreferenceActivity {
         // 图标反色
         SwitchPreference iconColor = (SwitchPreference) findPreference("iconAutoColor");
         assert iconColor != null;
-        iconColor.setSummary("关闭");
+        iconColor.setSummary(getString(R.string.Off));
         if (config.getIconAutoColor()) {
-            iconColor.setSummary("开启");
+            iconColor.setSummary(getString(R.string.On));
         }
         iconColor.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setIconAutoColor((boolean) newValue);
@@ -398,43 +398,31 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-
-        // 隐藏闹钟图标
-//        SwitchPreference hAlarm = (SwitchPreference) findPreference("hAlarm");
-//        assert hAlarm != null;
-//        hAlarm.setChecked(config.getHAlarm());
-//        hAlarm.setOnPreferenceChangeListener((preference, newValue) -> {
-//            if (!(Boolean) newValue) {
-//                setIAlarm("settings delete secure icon_blacklist");
-//            }
-//            config.setHAlarm((Boolean) newValue);
-//            return true;
-//        });
         // 自定义Hook
         Preference hook = findPreference("lyricHook");
         assert hook != null;
         hook.setSummary(config.getHook());
         if (config.getHook().equals("")) {
-            hook.setSummary("默认Hook点");
+            hook.setSummary(getString(R.string.Default) + " Hook");
         }
         hook.setOnPreferenceClickListener((preBuference) -> {
             EditText editText = new EditText(activity);
             editText.setText(config.getHook());
             new AlertDialog.Builder(activity)
-                    .setTitle("自定义Hook点")
+                    .setTitle(getString(R.string.CustomHookTips))
                     .setView(editText)
-                    .setNegativeButton("恢复默认", (dialog, which) -> {
-                        hook.setSummary("默认Hook点");
+                    .setNegativeButton(getString(R.string.Reset), (dialog, which) -> {
+                        hook.setSummary(getString(R.string.Default) + " Hook");
                         config.setHook("");
-                        Utils.showToastOnLooper(activity, "已恢复默认Hook点,请重启SystemUI");
+                        Utils.showToastOnLooper(activity, getString(R.string.ResetHookTips));
                     })
-                    .setPositiveButton("确定", (dialog, which) -> {
+                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> {
                         config.setHook(editText.getText().toString());
                         hook.setSummary(editText.getText().toString());
                         if (config.getHook().equals("")) {
-                            hook.setSummary("默认Hook点");
+                            hook.setSummary(getString(R.string.Default) + " Hook");
                         }
-                        Utils.showToastOnLooper(activity, "已设置Hook点为: " + config.getHook() + " 请重启SystemUI");
+                        Utils.showToastOnLooper(activity, getString(R.string.HookSetTips) + config.getHook() + " " + getString(R.string.RestartSystemUI));
                     })
                     .create()
                     .show();
@@ -457,7 +445,7 @@ public class SettingsActivity extends PreferenceActivity {
         isUsedCount.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setisUsedCount((Boolean) newValue);
             if (!(Boolean) newValue) {
-                setTitle(getString(R.string.app_name));
+                setTitle(getString(R.string.AppName));
             }
             return true;
         });
@@ -467,10 +455,10 @@ public class SettingsActivity extends PreferenceActivity {
         assert reSystemUI != null;
         reSystemUI.setOnPreferenceClickListener((preference) -> {
             new AlertDialog.Builder(activity)
-                    .setTitle("确定重启系统界面吗？")
-                    .setMessage("若使用中突然发现不能使用，可尝试重启系统界面。")
-                    .setPositiveButton("确定", (dialog, which) -> ShellUtils.voidShell("pkill -f com.android.systemui", true))
-                    .setNegativeButton("取消", null)
+                    .setTitle(getString(R.string.RestartUI))
+                    .setMessage(getString(R.string.RestartUITips))
+                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ShellUtils.voidShell("pkill -f com.android.systemui", true))
+                    .setNegativeButton(getString(R.string.Cancel), null)
                     .create()
                     .show();
             return true;
@@ -481,10 +469,10 @@ public class SettingsActivity extends PreferenceActivity {
         assert reset != null;
         reset.setOnPreferenceClickListener((preference) -> {
             new AlertDialog.Builder(activity)
-                    .setTitle("是否要重置模块")
-                    .setMessage("模块没问题请不要随意重置")
-                    .setPositiveButton("确定", (dialog, which) -> Utils.cleanConfig(activity))
-                    .setNegativeButton("取消", null)
+                    .setTitle(getString(R.string.ResetModuleDialog))
+                    .setMessage(getString(R.string.ResetModuleDialogTips))
+                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ActivityUtils.cleanConfig(activity))
+                    .setNegativeButton(getString(R.string.Cancel), null)
                     .create()
                     .show();
             return true;
@@ -494,9 +482,9 @@ public class SettingsActivity extends PreferenceActivity {
         //检查更新
         Preference checkUpdate = findPreference("CheckUpdate");
         assert checkUpdate != null;
-        checkUpdate.setSummary("当前版本: " + ActivityUtils.getLocalVersion(activity));
+        checkUpdate.setSummary(getString(R.string.CurrentVer) + ": " + ActivityUtils.getLocalVersion(activity));
         checkUpdate.setOnPreferenceClickListener((preference) -> {
-            Toast.makeText(activity, "开始检查是否有更新", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, getString(R.string.StartCheckUpdate), Toast.LENGTH_LONG).show();
             ActivityUtils.checkUpdate(activity);
             return true;
         });
@@ -510,24 +498,24 @@ public class SettingsActivity extends PreferenceActivity {
         });
 
 
-//        非MIUI关闭功能
+        // 非MIUI关闭功能
         if (!Utils.hasMiuiSetting) {
             hNoticeIcon.setEnabled(false);
             hNoticeIcon.setChecked(false);
-            hNoticeIcon.setSummary(hNoticeIcon.getSummary() + " (您不是MIUI系统)");
+            hNoticeIcon.setSummary(hNoticeIcon.getSummary() + getString(R.string.YouNotMIUI));
             config.sethNoticeIcon(false);
             hNetWork.setEnabled(false);
             hNetWork.setChecked(false);
-            hNetWork.setSummary(hNetWork.getSummary() + " (您不是MIUI系统)");
+            hNetWork.setSummary(hNetWork.getSummary() + getString(R.string.YouNotMIUI));
             config.sethNoticeIcon(false);
             hCUK.setEnabled(false);
             hCUK.setChecked(false);
-            hCUK.setSummary(hCUK.getSummary() + " (您不是MIUI系统)");
+            hCUK.setSummary(hCUK.getSummary() + getString(R.string.YouNotMIUI));
             config.sethNoticeIcon(false);
         }
 
         Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
-            setTitle("已获取歌词数句数：" + new Config().getUsedCount());
+            setTitle(getString(R.string.GetLyricNum) + new Config().getUsedCount());
             return false;
         });
         new Thread(() -> {
@@ -542,7 +530,7 @@ public class SettingsActivity extends PreferenceActivity {
                 }
             }
         }).start();
-
+        ActivityUtils.setData(activity);
     }
 
     @Override
@@ -553,12 +541,11 @@ public class SettingsActivity extends PreferenceActivity {
             ActivityUtils.initIcon(activity);
         } else {
             new AlertDialog.Builder(activity)
-//                    .setIcon(R.mipmap.ic_launcher)
-                    .setTitle("获取存储权限失败")
-                    .setMessage("请开通存储权限\n否则无法正常使用本模块\n若不信任本模块,请卸载")
-                    .setNegativeButton("重新申请", (dialog, which) -> ActivityUtils.checkPermissions(activity))
-                    .setPositiveButton("推出", (dialog, which) -> finish())
-                    .setNeutralButton("前往设置授予权限", (dialog, which) -> {
+                    .setTitle(getString(R.string.GetStorageFailed))
+                    .setMessage(getString(R.string.GetStorageFaildTips))
+                    .setNegativeButton(getString(R.string.ReAppy), (dialog, which) -> ActivityUtils.checkPermissions(activity))
+                    .setPositiveButton(getString(R.string.Quit), (dialog, which) -> finish())
+                    .setNeutralButton(getString(R.string.GetPermission), (dialog, which) -> {
                         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                                 .setData(Uri.fromParts("package", getPackageName(), null));
                         startActivityForResult(intent, 13131);

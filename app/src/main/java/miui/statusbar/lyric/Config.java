@@ -7,6 +7,7 @@ import miui.statusbar.lyric.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class Config {
     public Config() {
         try {
             if (getConfig().equals("")) {
-                Log.d("LSPosed-Bridge: Config()", "cfg isEmpty!");
+                Log.d("StatusBarLyric: Config()", "cfg isEmpty!");
                 config = new JSONObject();
                 return;
             }
@@ -33,11 +34,11 @@ public class Config {
         try {
             String cfg = getConfig();
             if (cfg.equals("")) {
-                Log.d("LSPosed-Bridge: Config(Config config)", "cfg isEmpty!");
+                Log.d("StatusBarLyric: Config(Config config)", "cfg isEmpty!");
                 if (config != null) {
                     this.config = config.getConfigObject();
                 } else {
-                    Log.d("LSPosed-Bridge: Config(Config config)", "cfg isNull!");
+                    Log.d("StatusBarLyric: Config(Config config)", "cfg isNull!");
                     this.config = new JSONObject();
                 }
                 return;
@@ -50,7 +51,9 @@ public class Config {
     public static String getConfig() {
         String str = "";
         try {
-            Utils.PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/miui.statusbar.lyric/";
+            if (!new File(Utils.PATH + "Config.json").exists()) {
+                Utils.PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/miui.statusbar.lyric/";
+            }
             FileInputStream fileInputStream = new FileInputStream(Utils.PATH + "Config.json");
             byte[] bArr = new byte[fileInputStream.available()];
             fileInputStream.read(bArr);
@@ -59,7 +62,6 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ;
         return str;
     }
 

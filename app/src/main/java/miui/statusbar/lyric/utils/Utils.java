@@ -189,7 +189,13 @@ public class Utils {
             String json = stringBuffer.toString();
             log("获取歌词 " + json);
             JSONArray jsonArray = new JSONArray(json);
-            res = new String[]{(String) jsonArray.get(0), (String) jsonArray.get(1)};
+            res = new String[]{
+                    jsonArray.optString(0, ""),
+                    jsonArray.optString(1, ""),
+                    jsonArray.optString(2, ""),
+                    jsonArray.optString(3, ""),
+                    String.valueOf(jsonArray.optBoolean(4, true))
+            };
         } catch (FileNotFoundException ignored) {
         } catch (Exception e) {
             log("歌词读取错误: " + e + "\n" + dumpException(e));
@@ -202,8 +208,11 @@ public class Utils {
         try {
             FileOutputStream outputStream = new FileOutputStream(PATH + "lyric.txt");
             JSONArray jsonArray = new JSONArray();
+            jsonArray.put("hook");
             jsonArray.put(app_name);
             jsonArray.put(lyric);
+            jsonArray.put("");
+            jsonArray.put(true);
             String json = jsonArray.toString();
             log("设置歌词 " + json);
             outputStream.write(json.getBytes());
@@ -483,8 +492,8 @@ public class Utils {
                 }
             } else {
                 Log.d("MIUI状态栏歌词", text);
-                if (Utils.context != null) {
-                    showToastOnLooper(Utils.context, "MIUI状态栏歌词： " + text);
+                if (context != null) {
+                    showToastOnLooper(context, "MIUI状态栏歌词： " + text);
                 }
             }
         }

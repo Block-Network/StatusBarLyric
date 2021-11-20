@@ -17,7 +17,7 @@ public class AboutActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.about_preferences);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle("关于模块");
+        setTitle(getString(R.string.About));
 
         // 测试activity
         Preference about = findPreference("test");
