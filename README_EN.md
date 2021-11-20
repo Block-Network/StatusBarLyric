@@ -10,7 +10,7 @@
 ![GitHub Repo size](https://img.shields.io/github/repo-size/577fkj/MIUIStatusBarLyric?style=flat-square&color=3cb371)
 [![GitHub Repo Languages](https://img.shields.io/github/languages/top/577fkj/MIUIStatusBarLyric?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyric/search?l=java)
 
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSteamTools-Team%2FSteamTools%2Fbadge%3Fref%3Ddevelop&style=flat-square)](https://actions-badge.atrox.dev/577fkj/MIUIStatusBarLyric/goto?ref=develop)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2F577fkj%2FMIUIStatusBarLyric%2Fbadge%3Fref%3Dmain&style=flat)](https://actions-badge.atrox.dev/577fkj/MIUIStatusBarLyric/goto?ref=main)
 [![GitHub Star](https://img.shields.io/github/stars/577fkj/MIUIStatusBarLyric.svg?style=social)](https://github.com/577fkj/MIUIStatusBarLyric)
 [![Telegram](https://img.shields.io/badge/Telegram-MIUIStatusBatLyric-blue.svg?style=flat-square&color=12b7f5)](https://t.me/MIUIStatusBatLyric)
 [![QQ group](https://img.shields.io/badge/QQ group-884185860-blue.svg?style=flat-square&color=12b7f5)](https://qm.qq.com/cgi-bin/qm/qr?k=ea_MP7zFoZJEdpxDFQcadBdbZmwYXZHh&jump_from=webapi)
@@ -60,6 +60,5 @@
 - [BUG feedback (Github)](https://github.com/577fkj/MIUIStatusBarLyric/issues/new)
 
 ## App active adaptation
-### API Send lyrics example
 
 please check [Api.java](https://github.com/577fkj/MIUIStatusBarLyric/blob/main/Api/Api.java)

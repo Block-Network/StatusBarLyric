@@ -10,7 +10,7 @@
 ![GitHub Repo size](https://img.shields.io/github/repo-size/577fkj/MIUIStatusBarLyric?style=flat-square&color=3cb371)
 [![GitHub Repo Languages](https://img.shields.io/github/languages/top/577fkj/MIUIStatusBarLyric?style=flat-square)](https://github.com/577fkj/MIUIStatusBarLyric/search?l=java)
 
-[![Build Status](https://img.shields.io/endpoint.svg?url=https://actions-badge.atrox.dev/577fkj/MIUIStatusBarLyric/badge&style=flat-square)](https://actions-badge.atrox.dev/577fkj/MIUIStatusBarLyric/goto?ref=develop)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2F577fkj%2FMIUIStatusBarLyric%2Fbadge%3Fref%3Dmain&style=flat)](https://actions-badge.atrox.dev/577fkj/MIUIStatusBarLyric/goto?ref=main)
 [![GitHub Star](https://img.shields.io/github/stars/577fkj/MIUIStatusBarLyric.svg?style=social)](https://github.com/577fkj/MIUIStatusBarLyric)
 [![电报群](https://img.shields.io/badge/电报群-MIUIStatusBatLyric-blue.svg?style=flat-square&color=12b7f5)](https://t.me/MIUIStatusBatLyric)
 [![QQ群](https://img.shields.io/badge/QQ群-884185860-blue.svg?style=flat-square&color=12b7f5)](https://qm.qq.com/cgi-bin/qm/qr?k=ea_MP7zFoZJEdpxDFQcadBdbZmwYXZHh&jump_from=webapi)
@@ -61,6 +61,5 @@
 - [BUG反馈(Github)](https://github.com/577fkj/MIUIStatusBarLyric/issues/new)
 
 ## 音乐主动适配
-### API 发送歌词示例
 
 请查看 [Api.java](https://github.com/577fkj/MIUIStatusBarLyric/blob/main/Api/Api.java)
