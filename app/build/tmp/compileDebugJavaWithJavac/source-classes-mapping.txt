@@ -1,0 +1,65 @@
+com/byyang/choose/ActivityResultLauncher.java
+ com.byyang.choose.ActivityResultLauncher
+miui/statusbar/lyric/hook/MainHook.java
+ miui.statusbar.lyric.hook.MainHook
+ miui.statusbar.lyric.hook.MainHook$1
+ miui.statusbar.lyric.hook.MainHook$2
+ miui.statusbar.lyric.hook.MainHook$2$1
+ miui.statusbar.lyric.hook.MainHook$3
+ miui.statusbar.lyric.hook.MainHook$4
+ miui.statusbar.lyric.hook.MainHook$5
+ miui.statusbar.lyric.hook.MainHook$6
+ miui.statusbar.lyric.hook.MainHook$7
+ miui.statusbar.lyric.hook.MainHook$8
+ miui.statusbar.lyric.hook.MainHook$9
+ miui.statusbar.lyric.hook.MainHook$LyricReceiver
+miui/statusbar/lyric/Config.java
+ miui.statusbar.lyric.Config
+androidx/annotation/NonNull.java
+ androidx.annotation.NonNull
+com/byyang/choose/ActivityResultCallback.java
+ com.byyang.choose.ActivityResultCallback
+androidx/annotation/IntRange.java
+ androidx.annotation.IntRange
+com/byyang/choose/ChooseFileUtils.java
+ com.byyang.choose.ChooseFileUtils
+ com.byyang.choose.ChooseFileUtils$ChooseListener
+androidx/annotation/Nullable.java
+ androidx.annotation.Nullable
+miui/statusbar/lyric/Api.java
+ miui.statusbar.lyric.Api
+androidx/annotation/CallSuper.java
+ androidx.annotation.CallSuper
+miui/statusbar/lyric/activity/AboutActivity.java
+ miui.statusbar.lyric.activity.AboutActivity
+miui/statusbar/lyric/AutoMarqueeTextView.java
+ miui.statusbar.lyric.AutoMarqueeTextView
+miui/statusbar/lyric/activity/TestActivity.java
+ miui.statusbar.lyric.activity.TestActivity
+miui/statusbar/lyric/ColorUtils.java
+ miui.statusbar.lyric.ColorUtils
+com/byyang/choose/ContextUtils.java
+ com.byyang.choose.ContextUtils
+androidx/annotation/ColorInt.java
+ androidx.annotation.ColorInt
+miui/statusbar/lyric/activity/SettingsActivity.java
+ miui.statusbar.lyric.activity.SettingsActivity
+ miui.statusbar.lyric.activity.SettingsActivity$1
+miui/statusbar/lyric/Utils.java
+ miui.statusbar.lyric.Utils
+miui/statusbar/lyric/hook/netease.java
+ miui.statusbar.lyric.hook.netease
+ miui.statusbar.lyric.hook.netease$Hook
+ miui.statusbar.lyric.hook.netease$Hook$1
+ miui.statusbar.lyric.hook.netease$Hook$1$1
+ miui.statusbar.lyric.hook.netease$Hook$1$2
+ miui.statusbar.lyric.hook.netease$Hook$1$3
+miui/statusbar/lyric/BuildConfig.java
+ miui.statusbar.lyric.BuildConfig
+androidx/annotation/FloatRange.java
+ androidx.annotation.FloatRange
+com/byyang/choose/ActivityResult.java
+ com.byyang.choose.ActivityResult
+ com.byyang.choose.ActivityResult$1
+com/byyang/choose/ActivityResultFragment.java
+ com.byyang.choose.ActivityResultFragment

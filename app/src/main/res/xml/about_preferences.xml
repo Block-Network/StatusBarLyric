@@ -1,0 +1,65 @@
+<!--suppress DeprecatedClassUsageInspection -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory android:title="@string/Developer"/>
+
+    <Preference
+            android:key="author"
+            android:summary="@string/AboutTips1"
+            android:title="577fkj"
+            android:icon="@drawable/header_577fkj">
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/577fkj"/>
+    </Preference>
+
+    <Preference
+            android:key="author"
+            android:summary="@string/AboutTips2"
+            android:title="xiaowine"
+            android:icon="@drawable/header_xiaowine">
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/xiaowine"/>
+    </Preference>
+
+
+    <PreferenceCategory android:title="@string/ThkListTips"/>
+
+    <Preference
+            android:key=""
+            android:summary="@string/ClickThkList"
+            android:title="@string/ThkList">
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/xiaowine/miui.statusbar.lyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95"/>
+    </Preference>
+
+
+    <PreferenceCategory android:title="@string/Other"/>
+
+    <Preference
+            android:key="donate"
+            android:summary="@string/DonateTips"
+            android:title="@string/Donate">
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://afdian.net/@xiao_wine"/>
+    </Preference>
+
+    <Preference
+            android:key="contact"
+            android:title="@string/ContactUs">
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://io.xiaowine.cc/app/callme"/>
+    </Preference>
+
+    <Preference
+        android:key="test"
+        android:summary=""
+        android:title="@string/DevelopmentTest">
+    </Preference>
+
+</PreferenceScreen>

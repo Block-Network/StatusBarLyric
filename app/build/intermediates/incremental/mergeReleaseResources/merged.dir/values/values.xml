@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="need_module">
+        <item>com.android.systemui</item>
+        <item>com.kugou.android</item>
+        <item>com.netease.cloudmusic</item>
+        <item>com.tencent.qqmusic</item>
+        <item>cn.kuwo.player</item>
+        <item>remix.myplayer</item>
+    </array>
+    <color name="black">#000000</color>
+    <color name="colorAccent">#0374A7</color>
+    <color name="colorPrimary">#03A9F4</color>
+    <string name="app_name">MIUI状态栏歌词</string>
+    <string name="ver_explain">（部分其余版本也支持）\n酷狗音乐:v10.8.4 （需打开蓝牙歌词）\n酷我音乐:v9.4.6.2 （需打开蓝牙歌词）\n网易云音乐:v8.6.0 （完美适配）\nAplayer:v1.5.7.9 （完美适配）\nQQ音乐:v10.17.0.11 （需打开蓝牙歌词和戴耳机）\n\n\n 每个版本需要hook内容不同,所以需要适配</string>
+    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <!-- Customize your theme here. -->
+        <item name="android:textAllCaps">false</item>
+    </style>
+</resources>

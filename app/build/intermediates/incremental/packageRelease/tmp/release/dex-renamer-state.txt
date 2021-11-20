@@ -1,0 +1,4 @@
+#Wed Oct 27 19:13:56 CST 2021
+base.0=D\:\\program\\Android\\miui.statusbar.lyric\\app\\build\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

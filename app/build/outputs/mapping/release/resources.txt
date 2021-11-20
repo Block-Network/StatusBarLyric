@@ -1,0 +1,16 @@
+Resource Reference Graph:
+mipmap:ic_launcher:2131034112 => [drawable:ic_launcher_background:2130903043, drawable:ic_launcher_foreground:2130903044]
+mipmap:ic_launcher_round:2131034113 => [drawable:ic_launcher_background:2130903043, drawable:ic_launcher_foreground:2130903044]
+style:AppTheme:2131165184 => [color:colorPrimary:2130837506, color:colorAccent:2130837505, color:black:2130837504]
+xml:about_preferences:2131230720 => [drawable:header_577fkj:2130903040, drawable:header_xiaowine:2130903041, drawable:header_yang:2130903042]
+The root reachable resources are:
+array:need_module:2130771968,
+   drawable:ic_launcher_foreground:2130903044,
+   mipmap:ic_launcher:2131034112,
+   mipmap:ic_launcher_round:2131034113,
+   string:app_name:2131099648,
+   string:ver_explain:2131099649,
+   style:AppTheme:2131165184,
+   xml:about_preferences:2131230720,
+   xml:root_preferences:2131230721
+Skipped unused resource res/layout/activity_about.xml: 324 bytes (replaced with small dummy file of size 104 bytes)

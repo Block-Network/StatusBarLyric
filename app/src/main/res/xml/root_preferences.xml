@@ -1,0 +1,171 @@
+<!--suppress DeprecatedClassUsageInspection -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+            android:key="ver_explain"
+            android:summary="@string/ClickDetails"
+            android:title="@string/UseInfo"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="hLauncherIcon"
+            android:summary=""
+            android:title="@string/HideDeskIcon"/>
+
+
+    <PreferenceCategory android:title="@string/BaseSetting"/>
+
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="lyricService"
+            android:summary=""
+            android:title="@string/AllSwitch"/>
+
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="lyricOff"
+            android:summary=""
+            android:title="@string/SongPauseCloseLyrics"/>
+
+
+    <EditTextPreference
+            android:defaultValue="-1"
+            android:key="lyricWidth"
+            android:summary="@string/Adaptive"
+            android:title="@string/LyricWidth"/>
+
+    <EditTextPreference
+            android:defaultValue="-1"
+            android:key="lyricMaxWidth"
+            android:summary="@string/Off"
+            android:title="@string/LyricAutoMaxWidth"/>
+
+    <ListPreference
+            android:key="lyricAnim"
+            android:summary="@string/Off"
+            android:title="@string/LyricsAnimation"/>
+
+    <EditTextPreference
+            android:defaultValue="@string/Adaptive"
+            android:key="lyricColour"
+            android:summary="@string/Adaptive"
+            android:title="@string/LyricColor"/>
+
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="lyricIcon"
+            android:summary=""
+            android:title="@string/LyricIcon"/>
+
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="lshowonce"
+            android:summary="@string/LyricLoopTips"
+            android:title="@string/LyricLoop"/>
+
+    <PreferenceCategory android:title="@string/AdvancedSettings"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="lyricSwitch"
+            android:summary=""
+            android:title="@string/ClickLyric"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="antiburn"
+            android:summary=""
+            android:title="@string/AbScreen"/>
+
+
+    <Preference
+            android:key="iconPath"
+            android:summary=""
+            android:title="@string/IconPath"/>
+
+    <EditTextPreference
+            android:defaultValue="2"
+            android:key="lyricPosition"
+            android:summary="@string/Default"
+            android:title="@string/IconPos"/>
+
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="iconAutoColor"
+            android:summary=""
+            android:title="@string/IconAutoColors"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="lockScreenOff"
+            android:summary="@string/UnlockShowTips"
+            android:title="@string/UnlockShow"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="hNoticeIcon"
+            android:summary="@string/AutoHideNotiIcon"
+            android:title="@string/HideNotiIcon"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="hNetWork"
+            android:summary="@string/AutoHideNetWork"
+            android:title="@string/HideNetWork"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="hCUK"
+            android:summary="@string/AutoHideCarrierName"
+            android:title="@string/HideCarrierName"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="fileLyric"
+            android:summary="@string/FileLyricTips"
+            android:title="@string/FileLyric"/>
+
+    <PreferenceCategory android:title="@string/OtherSettings"/>
+
+    <Preference
+            android:key="lyricHook"
+            android:summary=""
+            android:title="@string/CustomHook"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
+            android:key="debug"
+            android:summary=""
+            android:title="@string/DebugMode"/>
+
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="isusedcount"
+            android:summary="@string/UseCountTips"
+            android:title="@string/UseCount"/>
+
+    <PreferenceScreen
+            android:key="restartUI"
+            android:summary="@string/ReStartSystemUITips"
+            android:title="@string/ReStartSystemUI"/>
+
+    <Preference
+            android:key="reset"
+            android:summary="@string/ResetModuleTips"
+            android:title="@string/ResetModule"/>
+
+    <PreferenceCategory android:title="@string/About"/>
+
+
+    <Preference
+            android:key="CheckUpdate"
+            android:summary=""
+            android:title="@string/CheckUpdate"/>
+
+    <Preference
+            android:key="about"
+            android:summary=""
+            android:title="@string/AboutModule"/>
+
+    <PreferenceCategory/>
+</PreferenceScreen>

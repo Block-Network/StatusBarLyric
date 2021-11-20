@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="UseInfo">Instructions for use</string>
+    <string name="ClickDetails">Click for details</string>
+    <string name="HideDeskIcon">Hide desktop icons</string>
+    <string name="BaseSetting">Basic Settings</string>
+    <string name="AllSwitch">Master switch</string>
+    <string name="SongPauseCloseLyrics">Song Pause Close Lyrics</string>
+    <string name="Adaptive">Adaptive</string>
+    <string name="LyricWidth">Lyric width</string>
+    <string name="Off">Off</string>
+    <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
+    <string name="LyricsAnimation">Lyrics animation</string>
+    <string name="LyricColor">Lyric color</string>
+    <string name="LyricIcon">Lyrcs icon</string>
+    <string name="LyricLoop">* Lyrics are not displayed in a loop</string>
+    <string name="LyricLoopTips">The lyrics are too long, only show once without looping</string>
+    <string name="AdvancedSettings">Advanced settings (change options after stopping music)</string>
+    <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
+    <string name="AbScreen">* Anti-burn screen</string>
+    <string name="IconPath">Icon path</string>
+    <string name="IconPos">Icon up and down position</string>
+    <string name="Default">Default</string>
+    <string name="IconAutoColors">The icon auto inverted colors</string>
+    <string name="UnlockShow">Unlock display only</string>
+    <string name="UnlockShowTips">Lyrics are not displayed on the lock screen and the rest screen</string>
+    <string name="HideNotiIcon">Hide notification icon</string>
+    <string name="AutoHideNotiIcon">Auto hide notification icons</string>
+    <string name="AutoHideNetWork">Auto hide network speed</string>
+    <string name="HideNetWork">Hide network speed</string>
+    <string name="HideCarrierName">Hide lock screen carrier name</string>
+    <string name="AutoHideCarrierName">Auto hide lock screen carrier name</string>
+    <string name="FileLyric">File transfer lyrics</string>
+    <string name="FileLyricTips">Broadcasting cannot be used, please turn on this switch (Storage space isolation,
+        please set relevant permissions)
+    </string>
+    <string name="OtherSettings">Other settings</string>
+    <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
+    <string name="DebugMode">Debug Mode</string>
+    <string name="UseCount">Usage statistics</string>
+    <string name="UseCountTips">Statistics are only saved locally</string>
+    <string name="ReStartSystemUITips">After LSPosed is activated, the SystemUI needs to be restarted to take effect, and EDXposed needs to restart the phone</string>
+    <string name="ReStartSystemUI">Restart SystemUI</string>
+    <string name="ResetModule">Reset module</string>
+    <string name="ResetModuleTips">If there are some inexplicable problems, please click here</string>
+    <string name="About">About</string>
+    <string name="CheckUpdate">Check update</string>
+    <string name="AboutModule">About the module</string>
+    <string name="Developer">Developer</string>
+    <string name="AboutTips1">Mainly responsible for Hook</string>
+    <string name="AboutTips2">Mainly responsible for the GUI</string>
+    <string name="ThkListTips">Thank you list (in no particular order)</string>
+    <string name="ThkList">Thank you list</string>
+    <string name="ClickThkList">Click to view the list of thanks</string>
+    <string name="Other">Other</string>
+    <string name="Donate">Donate</string>
+    <string name="DonateTips">If you find it easy to use, please support me</string>
+    <string name="ContactUs">contact us</string>
+    <string name="DevelopmentTest">Development test</string>
+    <string name="TestLyric">Show test lyrics</string>
+    <string name="TestIcon">Custom icon</string>
+    <string name="CustomLyric">Custom lyrics</string>
+    <string name="Stop">Stop</string>
+</resources>

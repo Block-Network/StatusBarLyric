@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="need_module">
+        <item>com.android.systemui</item>
+        <item>com.kugou.android</item>
+        <item>com.netease.cloudmusic</item>
+        <item>com.tencent.qqmusic</item>
+        <item>cn.kuwo.player</item>
+        <item>remix.myplayer</item>
+        <item>cmccwm.mobilemusic</item>
+    </array>
+</resources>
