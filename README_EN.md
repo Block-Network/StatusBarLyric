@@ -13,7 +13,7 @@
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2F577fkj%2FMIUIStatusBarLyric%2Fbadge%3Fref%3Dmain&style=flat)](https://actions-badge.atrox.dev/577fkj/MIUIStatusBarLyric/goto?ref=main)
 [![GitHub Star](https://img.shields.io/github/stars/577fkj/MIUIStatusBarLyric.svg?style=social)](https://github.com/577fkj/MIUIStatusBarLyric)
 [![Telegram](https://img.shields.io/badge/Telegram-MIUIStatusBatLyric-blue.svg?style=flat-square&color=12b7f5)](https://t.me/MIUIStatusBatLyric)
-[![QQ group](https://img.shields.io/badge/QQ group-884185860-blue.svg?style=flat-square&color=12b7f5)](https://qm.qq.com/cgi-bin/qm/qr?k=ea_MP7zFoZJEdpxDFQcadBdbZmwYXZHh&jump_from=webapi)
+[![QQ Group](https://img.shields.io/badge/QQ群-884185860-blue.svg?style=flat-square&color=12b7f5)](https://qm.qq.com/cgi-bin/qm/qr?k=ea_MP7zFoZJEdpxDFQcadBdbZmwYXZHh&jump_from=webapi)
 
 </div>
 
@@ -23,8 +23,12 @@
 
 ### Supported system versions
 
-#### Support MIUI 10/12/12.5 (MIUI 11[Not tested])
-#### Theoretical support other system
+-MIUI 10/12/12.5 (MIUI 11 is also supported with a high probability [not tested])
+-Oxygen11
+-Extension (ROG)
+-Realme UI
+-AOSP
+#### Theoretical support for some native classes
 
 ## Supported Music app versions
 ### Perfect fit：（Mark the most suitable version）
