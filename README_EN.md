@@ -23,11 +23,11 @@
 
 ### Supported system versions
 
--MIUI 10/12/12.5 (MIUI 11 is also supported with a high probability [not tested])
--Oxygen11
--Extension (ROG)
--Realme UI
--AOSP
+- MIUI 10/12/12.5 (MIUI 11 is also supported with a high probability [not tested])
+- Oxygen11
+- Extension (ROG)
+- Realme UI
+- AOSP
 #### Theoretical support for some native classes
 
 ## Supported Music app versions
