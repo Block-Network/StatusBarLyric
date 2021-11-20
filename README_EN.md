@@ -65,4 +65,5 @@
 
 ## App active adaptation
 
-please check [Api.java](https://github.com/577fkj/MIUIStatusBarLyric/blob/main/Api/Api.java)
+please check Java [Api.java](https://github.com/577fkj/MIUIStatusBarLyric/blob/main/Api/Api.java)
+please check Kotlin [Api.kt](https://github.com/577fkj/MIUIStatusBarLyric/blob/main/Api/Api.kt)
