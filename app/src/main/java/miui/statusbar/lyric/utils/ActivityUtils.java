@@ -175,7 +175,7 @@ public class ActivityUtils {
 
         new Thread(() -> {
             Looper.prepare();
-            String value = HttpUtils.Get("https://api.github.com/repos/xiaowine/miui.statusbar.lyric/releases/latest");
+            String value = HttpUtils.Get("https://api.github.com/repos/577fkj/MIUIStatusBarLyric/releases/latest");
             if (!value.equals("")) {
                 Message message = handler.obtainMessage();
                 Bundle bundle = new Bundle();
