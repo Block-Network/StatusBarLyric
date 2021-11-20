@@ -151,7 +151,7 @@
     <string name="GetLyricNum">Number of lyrics obtained:</string>
     <string name="GetStorageFaildTips">Please activate storage permissions\n
         Otherwise, this module cannot be used normally\n
-        If you don't trust this module, please uninstall</string>
+        If you don\'t trust this module, please uninstall</string>
     <string name="GetPermission">Go to settings to grant permissions</string>
     <string name="ReAppy">Re-apply</string>
     <string name="GetStorageFailed">Failed to obtain storage permissions</string>
