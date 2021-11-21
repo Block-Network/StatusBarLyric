@@ -54,6 +54,7 @@
     <string name="Donate">捐贈</string>
     <string name="DonateTips">覺得好用的話，支持一下唄</string>
     <string name="ContactUs">聯系我們</string>
+    <string name="Source">項目地址</string>
     <string name="DevelopmentTest">開發測試</string>
     <string name="TestLyric">顯示測試歌詞</string>
     <string name="TestIcon">自定義圖標</string>
