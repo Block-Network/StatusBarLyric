@@ -55,6 +55,13 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://io.xiaowine.cc/app/callme"/>
     </Preference>
+    <Preference
+            android:key="source"
+            android:title="@string/Source">
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/577fkj/MIUIStatusBarLyric"/>
+    </Preference>
 
     <Preference
         android:key="test"
