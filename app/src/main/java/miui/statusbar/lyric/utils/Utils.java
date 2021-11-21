@@ -98,11 +98,6 @@ public class Utils {
         }
     }
 
-    public static void setIAlarm(String s) {
-        ShellUtils.returnShell("settings get secure icon_blacklist");
-    }
-
-
     // 判断服务是否运行
     public static boolean isServiceRunning(Context context, String str) {
         List<ActivityManager.RunningServiceInfo> runningServices = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getRunningServices(200);

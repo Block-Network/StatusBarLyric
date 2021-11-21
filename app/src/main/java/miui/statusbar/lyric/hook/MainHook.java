@@ -666,14 +666,13 @@ public class MainHook implements IXposedHookLoadPackage {
                             String icon_data = intent.getStringExtra("Lyric_Icon");
                             if (icon_data != null) {
                                 icon[1] = icon_data;
-
                             } else {
                                 icon[1] = "";
                             }
                             boolean isPackName = true;
                             String packName = intent.getStringExtra("Lyric_PackName");
                             // 修复packName为null导致报错!
-                            if (packName != null) {
+                            if (!TextUtils.isEmpty(packName)) {
                                 for (String mStr : musicServer) {
                                     if (mStr.equals(packName)) {
                                         isPackName = false;
@@ -685,7 +684,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                 }
                             }
                             musicOffStatus = true;
-                            Utils.log("收到广播app: lyric:" + lyric + " icon:" + icon[1]);
+                            Utils.log("收到广播app: lyric:" + lyric + " icon:" + icon[1] + "packName:" + packName + " isPackName: " + isPackName);
                             break;
                         case "app_stop":
                             musicOffStatus = false;
