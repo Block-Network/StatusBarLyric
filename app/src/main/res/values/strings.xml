@@ -56,6 +56,7 @@
     <string name="Donate">Donate</string>
     <string name="DonateTips">If you find it easy to use, please support me</string>
     <string name="ContactUs">contact us</string>
+    <string name="Source">Project Address</string>
     <string name="DevelopmentTest">Development test</string>
     <string name="TestLyric">Show test lyrics</string>
     <string name="TestIcon">Custom icon</string>
