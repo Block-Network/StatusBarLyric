@@ -221,24 +221,20 @@ public class ActivityUtils {
 
     public static void setData(Activity activity) {
         new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            String data = HttpUtils.Get("https://io.xiaowine.cc/app/data.json");
+            String data = HttpUtils.Get("https://app.xiaowine.cc/app/notice.json");
             try {
                 JSONObject jsonObject = new JSONObject(data);
-                SharedPreferences preferences = activity.getSharedPreferences("dataId", 0);
-                int dataId=preferences.getInt("id",0);
+                SharedPreferences preferences = activity.getSharedPreferences("notice", 0);
+                int dataId = preferences.getInt("id", 0);
                 if (Integer.parseInt(jsonObject.getString("id"))
                         > dataId) {
                     SharedPreferences.Editor preferenceEditor = preferences.edit();
                     preferenceEditor.putInt("id", Integer.parseInt(jsonObject.getString("id")));
                     preferenceEditor.putString("data", jsonObject.getString("data"));
+                    preferenceEditor.putString("data_en", jsonObject.getString("data_en"));
                     preferenceEditor.apply();
                     Looper.prepare();
-                    Toast.makeText(activity, jsonObject.getString("id"), Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, activity.getString(R.string.Notice), Toast.LENGTH_LONG).show();
                     Looper.loop();
                 }
             } catch (JSONException e) {

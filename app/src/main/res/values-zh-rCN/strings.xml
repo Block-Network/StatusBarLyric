@@ -149,4 +149,5 @@
     <string name="GetStorageFailed">获取存储权限失败</string>
     <string name="GetPermission">前往设置授予权限</string>
     <string name="ReAppy">重新申请</string>
+    <string name="Notice">版本说明 内容有更新</string>
 </resources>

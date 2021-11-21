@@ -39,7 +39,9 @@
     <string name="DebugMode">Debug Mode</string>
     <string name="UseCount">Usage statistics</string>
     <string name="UseCountTips">Statistics are only saved locally</string>
-    <string name="ReStartSystemUITips">After LSPosed is activated, the SystemUI needs to be restarted to take effect, and EDXposed needs to restart the phone</string>
+    <string name="ReStartSystemUITips">After LSPosed is activated, the SystemUI needs to be restarted to take effect,
+        and EDXposed needs to restart the phone
+    </string>
     <string name="ReStartSystemUI">Restart SystemUI</string>
     <string name="ResetModule">Reset module</string>
     <string name="ResetModuleTips">If there are some inexplicable problems, please click here</string>
@@ -115,7 +117,8 @@
     <string name="ConfigError">Configuration file error\n
         It may be that the content of the file is missing or the configuration file has been upgraded\n
         May cause unnecessary problems\n
-        Whether to reset</string>
+        Whether to reset
+    </string>
     <string name="ResetNow">Reset now</string>
     <string name="NoReset">Don\'t reset yet</string>
     <string name="top">Slide up</string>
@@ -152,8 +155,10 @@
     <string name="GetLyricNum">Number of lyrics obtained:</string>
     <string name="GetStorageFaildTips">Please activate storage permissions\n
         Otherwise, this module cannot be used normally\n
-        If you don\'t trust this module, please uninstall</string>
+        If you don\'t trust this module, please uninstall
+    </string>
     <string name="GetPermission">Go to settings to grant permissions</string>
     <string name="ReAppy">Re-apply</string>
     <string name="GetStorageFailed">Failed to obtain storage permissions</string>
+    <string name="Notice">Version description The content has been updated</string>
 </resources>
