@@ -54,6 +54,7 @@
     <string name="Donate">捐赠</string>
     <string name="DonateTips">觉得好用的话，支持一下呗</string>
     <string name="ContactUs">联系我们</string>
+    <string name="Source">项目地址</string>
     <string name="DevelopmentTest">开发测试</string>
     <string name="TestLyric">显示测试歌词</string>
     <string name="TestIcon">自定义图标</string>
