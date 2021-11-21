@@ -32,7 +32,10 @@ import miui.statusbar.lyric.utils.Utils;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 @SuppressLint("ExportedPreferenceActivity")
@@ -55,6 +58,7 @@ public class SettingsActivity extends PreferenceActivity {
         String tips = "Tips1";
         SharedPreferences preferences = activity.getSharedPreferences(tips, 0);
         if (!preferences.getBoolean(tips, false)) {
+
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.Tips))
                     .setIcon(R.mipmap.ic_launcher)
@@ -76,14 +80,24 @@ public class SettingsActivity extends PreferenceActivity {
         Preference verExplain = findPreference("ver_explain");
         assert verExplain != null;
         verExplain.setOnPreferenceClickListener((preference) -> {
+            SharedPreferences dataPreferences = activity.getSharedPreferences("notice", 0);
+            String data;
+            String lang = Locale.getDefault().getLanguage().replaceAll(" ", "");
+            if (lang.equals("zh")) {
+                data = dataPreferences.getString("data", getString(R.string.VerExp));
+            } else if (lang.equals("en")) {
+                data = dataPreferences.getString("data_en", getString(R.string.VerExp));
+            } else {
+                data = getString(R.string.VerExplanation);
+            }
             new AlertDialog.Builder(activity)
                     .setIcon(R.mipmap.ic_launcher)
                     .setTitle(getString(R.string.VerExplanation))
-                    .setMessage(" " + getString(R.string.CurrentVer) + " [" + ActivityUtils.getLocalVersion(activity) + "] " + getString(R.string.VerExp))
+                    .setMessage(" " + getString(R.string.CurrentVer) + " [" + ActivityUtils.getLocalVersion(activity) + "] " + data)
                     .setNegativeButton(getString(R.string.Done), null)
                     .create()
                     .show();
-            return true;
+            return false;
         });
         // 隐藏桌面图标
         SwitchPreference hIcons = (SwitchPreference) findPreference("hLauncherIcon");
@@ -186,7 +200,7 @@ public class SettingsActivity extends PreferenceActivity {
             String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
             lyricMaxWidth.setEnabled(true);
             lyricWidth.setSummary(getString(R.string.Adaptive));
-            lyricWidth.setDialogMessage(getString(R.string.LyricWidthTips)+ getString(R.string.Adaptive));
+            lyricWidth.setDialogMessage(getString(R.string.LyricWidthTips) + getString(R.string.Adaptive));
             config.setLyricWidth(-1);
 
             try {
@@ -513,23 +527,22 @@ public class SettingsActivity extends PreferenceActivity {
             hCUK.setSummary(hCUK.getSummary() + getString(R.string.YouNotMIUI));
             config.sethNoticeIcon(false);
         }
-
         Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
             setTitle(getString(R.string.GetLyricNum) + new Config().getUsedCount());
             return false;
         });
+
         new Thread(() -> {
-            while (true) {
-                if (new Config().getisUsedCount()) {
-                    titleUpdate.sendEmptyMessage(0);
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            new Timer().schedule(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            titleUpdate.sendEmptyMessage(0);
+                        }
+                    }, 0, 1000);
         }).start();
+
+
         ActivityUtils.setData(activity);
     }
 

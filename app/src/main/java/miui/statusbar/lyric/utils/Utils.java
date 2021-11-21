@@ -341,19 +341,6 @@ public class Utils {
     }
 
 
-    public static void cleanConfig(Activity activity) {
-        SharedPreferences userSettings = activity.getSharedPreferences("miui.statusbar.lyric_preferences", 0);
-        SharedPreferences.Editor editor = userSettings.edit();
-        editor.clear();
-        editor.apply();
-        new File(Utils.PATH + "Config.json").delete();
-        PackageManager packageManager = Objects.requireNonNull(activity).getPackageManager();
-        packageManager.setComponentEnabledSetting(new ComponentName(activity, "miui.statusbar.lyric.launcher"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-
-        Toast.makeText(activity, "重置成功", Toast.LENGTH_LONG).show();
-        activity.finishAffinity();
-    }
-
     public static Bitmap stringToBitmap(String string) {
         Bitmap bitmap = null;
         try {
