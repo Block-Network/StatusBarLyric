@@ -29,6 +29,7 @@
 - Extension（ROG）
 - Realme UI
 - AOSP
+- Flyme
 #### 理论支持部分类原生
 
 ## 支持的音乐软件版本

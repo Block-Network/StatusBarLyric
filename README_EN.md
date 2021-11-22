@@ -28,6 +28,7 @@
 - Extension (ROG)
 - Realme UI
 - AOSP
+- Flyme
 #### Theoretical support for some native classes
 
 ## Supported Music app versions
