@@ -85,13 +85,13 @@ public class SettingsActivity extends PreferenceActivity {
             String lang = Locale.getDefault().getLanguage().replaceAll(" ", "");
             if (lang.equals("zh")) {
                 data = dataPreferences.getString("data", getString(R.string.VerExp));
-            } else  {
+            } else {
                 data = dataPreferences.getString("data_en", getString(R.string.VerExp));
             }
             new AlertDialog.Builder(activity)
                     .setIcon(R.mipmap.ic_launcher)
                     .setTitle(getString(R.string.VerExplanation))
-                    .setMessage(" " + getString(R.string.CurrentVer) + " [" + ActivityUtils.getLocalVersion(activity) + "] " + data)
+                    .setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity), data))
                     .setNegativeButton(getString(R.string.Done), null)
                     .create()
                     .show();
@@ -163,9 +163,9 @@ public class SettingsActivity extends PreferenceActivity {
         if (String.valueOf(config.getLyricMaxWidth()).equals("-1")) {
             lyricMaxWidth.setSummary(getString(R.string.Off));
         }
-        lyricMaxWidth.setDialogMessage(getString(R.string.LyricMaxWidthTips) + lyricMaxWidth.getSummary());
+        lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), lyricMaxWidth.getSummary()));
         lyricMaxWidth.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricMaxWidth.setDialogMessage(getString(R.string.LyricMaxWidthTips) + getString(R.string.Adaptive));
+            lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), getString(R.string.Adaptive)));
             lyricMaxWidth.setSummary(getString(R.string.Adaptive));
             config.setLyricMaxWidth(-1);
             try {
@@ -193,12 +193,12 @@ public class SettingsActivity extends PreferenceActivity {
             lyricWidth.setSummary(getString(R.string.Adaptive));
         }
         lyricWidth.setDefaultValue(String.valueOf(config.getLyricWidth()));
-        lyricWidth.setDialogMessage(getString(R.string.LyricWidthTips) + lyricWidth.getSummary());
+        lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), lyricWidth.getSummary()));
         lyricWidth.setOnPreferenceChangeListener((preference, newValue) -> {
             String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
             lyricMaxWidth.setEnabled(true);
             lyricWidth.setSummary(getString(R.string.Adaptive));
-            lyricWidth.setDialogMessage(getString(R.string.LyricWidthTips) + getString(R.string.Adaptive));
+            lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), getString(R.string.Adaptive)));
             config.setLyricWidth(-1);
 
             try {
@@ -208,7 +208,7 @@ public class SettingsActivity extends PreferenceActivity {
                     config.setLyricWidth(Integer.parseInt(value));
                     lyricWidth.setSummary(value);
                     lyricMaxWidth.setEnabled(false);
-                    lyricWidth.setDialogMessage(getString(R.string.LyricWidthTips) + value);
+                    lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
                 } else {
                     Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
                 }
@@ -227,7 +227,7 @@ public class SettingsActivity extends PreferenceActivity {
             lyricColour.setSummary(getString(R.string.Adaptive));
         }
         lyricColour.setDefaultValue(String.valueOf(config.getLyricColor()));
-        lyricColour.setDialogMessage(getString(R.string.LyricColorTips) + config.getLyricColor());
+        lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
         lyricColour.setOnPreferenceChangeListener((preference, newValue) -> {
             String value = newValue.toString().replaceAll(" ", "");
             if (value.equals("") | value.equals(getString(R.string.Off)) | value.equals(getString(R.string.Adaptive))) {
@@ -330,9 +330,9 @@ public class SettingsActivity extends PreferenceActivity {
         if (String.valueOf(config.getLyricPosition()).equals("2")) {
             lyricPosition.setSummary(getString(R.string.Default));
         }
-        lyricPosition.setDialogMessage(getString(R.string.LyricPosTips) + lyricPosition.getSummary());
+        lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), lyricPosition.getSummary()));
         lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricPosition.setDialogMessage(getString(R.string.LyricPosTips) + getString(R.string.Default));
+            lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
             lyricPosition.setSummary(getString(R.string.Default));
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
@@ -415,7 +415,7 @@ public class SettingsActivity extends PreferenceActivity {
         assert hook != null;
         hook.setSummary(config.getHook());
         if (config.getHook().equals("")) {
-            hook.setSummary(getString(R.string.Default) + " Hook");
+            hook.setSummary(String.format("%s Hook", getString(R.string.Default)));
         }
         hook.setOnPreferenceClickListener((preBuference) -> {
             EditText editText = new EditText(activity);
@@ -424,7 +424,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .setTitle(getString(R.string.CustomHookTips))
                     .setView(editText)
                     .setNegativeButton(getString(R.string.Reset), (dialog, which) -> {
-                        hook.setSummary(getString(R.string.Default) + " Hook");
+                        hook.setSummary(String.format("%s Hook", getString(R.string.Default)));
                         config.setHook("");
                         Utils.showToastOnLooper(activity, getString(R.string.ResetHookTips));
                     })
@@ -432,9 +432,9 @@ public class SettingsActivity extends PreferenceActivity {
                         config.setHook(editText.getText().toString());
                         hook.setSummary(editText.getText().toString());
                         if (config.getHook().equals("")) {
-                            hook.setSummary(getString(R.string.Default) + " Hook");
+                            hook.setSummary(String.format("%s Hook", getString(R.string.Default)));
                         }
-                        Utils.showToastOnLooper(activity, getString(R.string.HookSetTips) + config.getHook() + " " + getString(R.string.RestartSystemUI));
+                        Utils.showToastOnLooper(activity, String.format("%s %s%s", getString(R.string.HookSetTips), config.getHook(), getString(R.string.RestartSystemUI)));
                     })
                     .create()
                     .show();
@@ -494,7 +494,7 @@ public class SettingsActivity extends PreferenceActivity {
         //检查更新
         Preference checkUpdate = findPreference("CheckUpdate");
         assert checkUpdate != null;
-        checkUpdate.setSummary(getString(R.string.CurrentVer) + ": " + ActivityUtils.getLocalVersion(activity));
+        checkUpdate.setSummary(String.format("%s：%s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity)));
         checkUpdate.setOnPreferenceClickListener((preference) -> {
             Toast.makeText(activity, getString(R.string.StartCheckUpdate), Toast.LENGTH_LONG).show();
             ActivityUtils.checkUpdate(activity);
@@ -514,19 +514,19 @@ public class SettingsActivity extends PreferenceActivity {
         if (!Utils.hasMiuiSetting) {
             hNoticeIcon.setEnabled(false);
             hNoticeIcon.setChecked(false);
-            hNoticeIcon.setSummary(hNoticeIcon.getSummary() + getString(R.string.YouNotMIUI));
+            hNoticeIcon.setSummary(String.format("%s%s", hNoticeIcon.getSummary(), getString(R.string.YouNotMIUI)));
             config.sethNoticeIcon(false);
             hNetWork.setEnabled(false);
             hNetWork.setChecked(false);
-            hNetWork.setSummary(hNetWork.getSummary() + getString(R.string.YouNotMIUI));
+            hNetWork.setSummary(String.format("%s%s", hNetWork.getSummary(), getString(R.string.YouNotMIUI)));
             config.sethNoticeIcon(false);
             hCUK.setEnabled(false);
             hCUK.setChecked(false);
-            hCUK.setSummary(hCUK.getSummary() + getString(R.string.YouNotMIUI));
+            hCUK.setSummary(String.format("%s%s", hCUK.getSummary(), getString(R.string.YouNotMIUI)));
             config.sethNoticeIcon(false);
         }
         Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
-            setTitle(getString(R.string.GetLyricNum) + new Config().getUsedCount());
+            setTitle(String.format("%s%s", getString(R.string.GetLyricNum), new Config().getUsedCount()));
             return false;
         });
 
