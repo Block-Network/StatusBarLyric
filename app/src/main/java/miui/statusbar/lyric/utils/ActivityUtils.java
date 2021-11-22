@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public class ActivityUtils {
+    static int dataId = 0;
 
     public static String getLocalVersion(Context context) {
         String localVersion = "";
@@ -225,9 +226,9 @@ public class ActivityUtils {
             try {
                 JSONObject jsonObject = new JSONObject(data);
                 SharedPreferences preferences = activity.getSharedPreferences("notice", 0);
-                int dataId = preferences.getInt("id", 0);
+                int mDataId = preferences.getInt("id", dataId);
                 if (Integer.parseInt(jsonObject.getString("id"))
-                        > dataId) {
+                        > mDataId) {
                     SharedPreferences.Editor preferenceEditor = preferences.edit();
                     preferenceEditor.putInt("id", Integer.parseInt(jsonObject.getString("id")));
                     preferenceEditor.putString("data", jsonObject.getString("data"));

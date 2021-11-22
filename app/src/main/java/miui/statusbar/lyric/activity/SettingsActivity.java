@@ -85,10 +85,8 @@ public class SettingsActivity extends PreferenceActivity {
             String lang = Locale.getDefault().getLanguage().replaceAll(" ", "");
             if (lang.equals("zh")) {
                 data = dataPreferences.getString("data", getString(R.string.VerExp));
-            } else if (lang.equals("en")) {
+            } else  {
                 data = dataPreferences.getString("data_en", getString(R.string.VerExp));
-            } else {
-                data = getString(R.string.VerExplanation);
             }
             new AlertDialog.Builder(activity)
                     .setIcon(R.mipmap.ic_launcher)
@@ -97,7 +95,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .setNegativeButton(getString(R.string.Done), null)
                     .create()
                     .show();
-            return false;
+            return true;
         });
         // 隐藏桌面图标
         SwitchPreference hIcons = (SwitchPreference) findPreference("hLauncherIcon");
