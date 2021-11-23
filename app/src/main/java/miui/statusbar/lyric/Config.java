@@ -93,7 +93,7 @@ public class Config {
 
 
     public Boolean getLyricService() {
-        return config.optBoolean("LyricService", true);
+        return config.optBoolean("LyricService", false);
     }
 
     public void setLyricService(Boolean bool) {

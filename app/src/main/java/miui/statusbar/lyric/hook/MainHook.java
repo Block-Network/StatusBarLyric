@@ -57,11 +57,12 @@ public class MainHook implements IXposedHookLoadPackage {
     static boolean musicOffStatus = false;
     static boolean enable = false;
     static boolean iconReverseColor = false;
+    static boolean isPowerOn = false;
     static boolean isLock = true;
     static Config config = new Config();
+    static boolean useSystemMusicActive = true;
     Context context = null;
     boolean showLyric = true;
-    static boolean useSystemMusicActive = true;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
@@ -74,16 +75,17 @@ public class MainHook implements IXposedHookLoadPackage {
             protected void afterHookedMethod(MethodHookParam param) {
                 context = (Context) param.args[0];
                 if (lpparam.packageName.equals("com.android.systemui")) {
-                    // 注册广播
-                    IntentFilter filter = new IntentFilter();
-                    filter.addAction("Lyric_Server");
-                    context.registerReceiver(new LyricReceiver(), filter);
-
                     // 锁屏广播
                     IntentFilter screenOff = new IntentFilter();
                     screenOff.addAction(Intent.ACTION_USER_PRESENT);
                     screenOff.addAction(Intent.ACTION_SCREEN_OFF);
                     context.registerReceiver(new LockChangeReceiver(), screenOff);
+
+                    // 歌词广播
+                    IntentFilter filter = new IntentFilter();
+                    filter.addAction("Lyric_Server");
+                    context.registerReceiver(new LyricReceiver(), filter);
+
                 }
             }
         });
@@ -631,11 +633,15 @@ public class MainHook implements IXposedHookLoadPackage {
         }
     }
 
+
     public static class LockChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
                 isLock = !intent.getAction().equals(Intent.ACTION_USER_PRESENT);
+                if (!intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
+                    isPowerOn = true;
+                }
                 Utils.log("锁屏: " + isLock);
             } catch (Exception e) {
                 Utils.log("广播接收错误 " + e + "\n" + Utils.dumpException(e));
@@ -695,7 +701,7 @@ public class MainHook implements IXposedHookLoadPackage {
             } catch (Exception e) {
                 Utils.log("广播接收错误 " + e + "\n" + Utils.dumpException(e));
             }
-            
+
         }
     }
 

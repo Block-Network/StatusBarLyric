@@ -535,7 +535,9 @@ public class SettingsActivity extends PreferenceActivity {
                     new TimerTask() {
                         @Override
                         public void run() {
-                            titleUpdate.sendEmptyMessage(0);
+                            if (new Config().getisUsedCount()) {
+                                titleUpdate.sendEmptyMessage(0);
+                            }
                         }
                     }, 0, 1000);
         }).start();

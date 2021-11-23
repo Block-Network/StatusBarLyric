@@ -8,6 +8,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import miui.statusbar.lyric.R;
 
+@SuppressWarnings("deprecation")
 @SuppressLint("ExportedPreferenceActivity")
 public class AboutActivity extends PreferenceActivity {
     private final Activity activity = this;
