@@ -93,6 +93,7 @@ public class MainHook implements IXposedHookLoadPackage {
         switch (lpparam.packageName) {
             case "com.android.systemui":
                 Utils.log("正在hook系统界面");
+                MeiZuStatusBarLyricService.FlymeNotificationService(lpparam);
                 // 状态栏歌词
                 XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.CollapsedStatusBarFragment", lpparam.classLoader, "onViewCreated", View.class, Bundle.class, new XC_MethodHook() {
                     @Override
