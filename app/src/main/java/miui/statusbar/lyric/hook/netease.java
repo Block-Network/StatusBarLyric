@@ -19,7 +19,7 @@ public class netease {
     public static class Hook {
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
 //            Settings.System.getInt(context.contentResolver, "status_bar_show_lyric", 0)
-            Utils.guiseFlyme(lpparam);
+            MeiZuStatusBarLyric.guiseFlyme(lpparam);
             XposedHelpers.findAndHookMethod("com.netease.insightar.commonbase.b.i", lpparam.classLoader, "a", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

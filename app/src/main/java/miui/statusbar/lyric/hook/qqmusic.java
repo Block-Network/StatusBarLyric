@@ -16,6 +16,7 @@ public class qqmusic {
     public static class Hook {
 
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
+            MeiZuStatusBarLyric.guiseFlyme(lpparam);
             // 获取Context
             XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
                 @Override
