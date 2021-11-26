@@ -32,6 +32,7 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.AutoMarqueeTextView;
 import miui.statusbar.lyric.Config;
+import miui.statusbar.lyric.LyricTextView;
 import miui.statusbar.lyric.utils.Utils;
 
 import java.lang.reflect.Field;
@@ -42,24 +43,22 @@ import java.util.TimerTask;
 
 public class MainHook implements IXposedHookLoadPackage {
     static final String KEY_LYRIC = "lyric";
-    static final String[] icon = new String[]{"hook", ""};
-    static String lyric = "";
+    public static final String[] icon = new String[]{"hook", ""};
+    public static String lyric = "";
     static String[] musicServer = new String[]{
             "com.kugou",
             "com.netease.cloudmusic",
             "com.tencent.qqmusic.service",
             "cn.kuwo",
-            "com.maxmpz.audioplayer",
             "remix.myplayer",
             "cmccwm.mobilemusic",
-            "com.netease.cloudmusic.lite"
     };
     static boolean musicOffStatus = false;
     static boolean enable = false;
     static boolean iconReverseColor = false;
     static boolean isPowerOn = false;
     static boolean isLock = true;
-    static Config config = new Config();
+    public static Config config = new Config();
     static boolean useSystemMusicActive = true;
     Context context = null;
     boolean showLyric = true;
@@ -151,7 +150,7 @@ public class MainHook implements IXposedHookLoadPackage {
                         TextView clock = (TextView) clockField.get(param.thisObject);
 
                         // 创建TextView
-                        AutoMarqueeTextView lyricTextView = new AutoMarqueeTextView(application);
+                        LyricTextView lyricTextView = new LyricTextView(application);
                         lyricTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         lyricTextView.setWidth((dw * 35) / 100);
                         lyricTextView.setHeight(clock.getHeight());
@@ -162,13 +161,13 @@ public class MainHook implements IXposedHookLoadPackage {
                         lyricTextView.setLayoutParams(lyricParams);
 
                         // 设置跑马灯效果
-                        lyricTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                        if (config.getLShowOnce()) {
-                            // 设置跑马灯为1次
-                            lyricTextView.setMarqueeRepeatLimit(1);
-                        } else {// 设置跑马灯重复次数，-1为无限重复
-                            lyricTextView.setMarqueeRepeatLimit(-1);
-                        }
+//                        lyricTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+//                        if (config.getLShowOnce()) {
+//                            // 设置跑马灯为1次
+//                            lyricTextView.setMarqueeRepeatLimit(1);
+//                        } else {// 设置跑马灯重复次数，-1为无限重复
+//                            lyricTextView.setMarqueeRepeatLimit(-1);
+//                        }
 
                         // 单行显示
                         lyricTextView.setSingleLine(true);
@@ -391,7 +390,7 @@ public class MainHook implements IXposedHookLoadPackage {
                         // 反色/图标/文件歌词
                         new Timer().schedule(
                                 new TimerTask() {
-                                    ColorStateList color = null;
+                                    int color = 0;
                                     int count = 0;
 
                                     @Override
@@ -445,14 +444,14 @@ public class MainHook implements IXposedHookLoadPackage {
                                         if (enable && !lyric.equals("")) {
                                             // 设置颜色
                                             if (!config.getLyricColor().equals("off")) {
-                                                if (color != ColorStateList.valueOf(Color.parseColor(config.getLyricColor()))) {
-                                                    color = ColorStateList.valueOf(Color.parseColor(config.getLyricColor()));
+                                                if (color != Color.parseColor(config.getLyricColor())) {
+                                                    color = Color.parseColor(config.getLyricColor());
                                                     lyricTextView.setTextColor(color);
                                                 }
-                                            } else if (!(clock.getTextColors() == null || color == clock.getTextColors())) {
-                                                color = clock.getTextColors();
-                                                lyricTextView.setTextColor(color);
-
+                                            } else if (!Utils.isDark(clock.getTextColors().getDefaultColor())) {
+                                                lyricTextView.setTextColor(0xffffffff);
+                                            } else if (Utils.isDark(clock.getTextColors().getDefaultColor())) {
+                                                lyricTextView.setTextColor(0xff000000);
                                             }
                                             if (!icon[1].equals("")) {
                                                 Drawable createFromPath = null;

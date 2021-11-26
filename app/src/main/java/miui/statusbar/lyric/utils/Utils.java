@@ -34,6 +34,8 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.ColorUtils;
 import miui.statusbar.lyric.Config;
+import miui.statusbar.lyric.hook.MainHook;
+
 import org.json.JSONArray;
 
 import java.io.File;
@@ -42,6 +44,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +56,29 @@ public class Utils {
     @SuppressLint("StaticFieldLeak")
     public static Context context;
     public static boolean hasXposed = false;
+
+    public static HashMap<String, String> packName_Name;
+
+    static {
+        packName_Name = new HashMap<>();
+        packName_Name.put("com.netease.cloudmusic", "netease");
+        packName_Name.put("com.kugou", "kugou");
+        packName_Name.put("com.tencent.qqmusic.service", "qqmusic");
+        packName_Name.put("remix.myplayer", "myplayer");
+        packName_Name.put("cmccwm.mobilemusic", "migu");
+        packName_Name.put("cn.kuwo", "kuwo");
+    }
+
+    public static String packName_GetIconPath(String packName) {
+        return MainHook.config.getIconPath() + Utils.packName_Name.get(packName) + ".webp";
+    }
+
+    public static void setLocalLyric(String lyric, String packName) {
+        MainHook.icon[0] = "hook";
+        MainHook.icon[1] = Utils.packName_GetIconPath(packName);
+        MainHook.lyric = lyric;
+        addLyricCount();
+    }
 
     public static int getLocalVersionCode(Context context) {
         int localVersion = 0;
