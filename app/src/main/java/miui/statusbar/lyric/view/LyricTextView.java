@@ -1,4 +1,4 @@
-package miui.statusbar.lyric;
+package miui.statusbar.lyric.view;
 
 /*
  * Copyright (C) 2019 The Android Open Source Project

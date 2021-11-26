@@ -33,7 +33,9 @@
     public void *(de.robv.android.xposed.IXposedHookZygoteInit$StartupParam);
 }
 
--keep  class * extends java.io.Serializable{*;}
+-keep class * extends java.io.Serializable{*;}
+
+-keep class * extends android.app.Notification{*;}
 # keep rx
 -dontwarn sun.misc.**
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {

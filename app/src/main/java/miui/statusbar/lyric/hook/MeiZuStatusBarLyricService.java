@@ -30,27 +30,21 @@ public class MeiZuStatusBarLyricService {
                 super.beforeHookedMethod(param);
                 StatusBarNotification statusBarNotification = (StatusBarNotification) param.args[0];
                 Notification n = statusBarNotification.getNotification();
+                String lyric;
 
                 if (n.tickerText != null) {
-                    Utils.log(n.tickerText.toString());
+                    lyric = n.tickerText.toString();
+                    Utils.log(lyric);
                     Utils.log(statusBarNotification.getPackageName());
                     Utils.log(n.flags + " | " + n.when);
                     Utils.log((n.flags & MeiZuNotification.FLAG_INSISTENT) + "");
+                } else {
+                    lyric = "";
                 }
 
-                boolean isPackName = false;
-                for (String mStr : musicServer) {
-                    if (mStr.equals(statusBarNotification.getPackageName())) {
-                        isPackName = true;
-                        break;
-                    }
-                }
-                if (isPackName) {
-                    if (n.flags == 0 || n.flags == 8 || n.flags == 16777330) {
-                        Utils.setLocalLyric("", statusBarNotification.getPackageName());
-                        return;
-                    }
-                } else {
+                if (n.flags == 0 || n.flags == 8 || n.flags == 16777330) {
+                    Utils.log("n.flags = " + n.flags + " lyric：" + lyric);
+                    Utils.setLocalLyric("", statusBarNotification.getPackageName());
                     return;
                 }
 
@@ -59,19 +53,15 @@ public class MeiZuStatusBarLyricService {
                     param.setResult(null);
                 }
 
-                boolean isLyric = ((n.flags & MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER) != 0)
-                        && ((n.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0);
+                boolean isLyric = (n.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0;
                 if (n.flags == 16777314) {
                     isLyric = true;
                 }
                 Utils.log("isLyric = " + isLyric);
                 if (isLyric) {
-                    if (n.tickerText == null) {
-                        return;
-                    }
-                    Utils.log(n.tickerText.toString());
+                    Utils.log(lyric);
                     Utils.log(statusBarNotification.getPackageName());
-                    Utils.setLocalLyric(n.tickerText.toString(), statusBarNotification.getPackageName());
+                    Utils.setLocalLyric(lyric, statusBarNotification.getPackageName());
                 }
             }
 

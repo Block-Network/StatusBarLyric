@@ -63,7 +63,7 @@ public class Utils {
         packName_Name = new HashMap<>();
         packName_Name.put("com.netease.cloudmusic", "netease");
         packName_Name.put("com.kugou", "kugou");
-        packName_Name.put("com.tencent.qqmusic.service", "qqmusic");
+        packName_Name.put("com.tencent.qqmusic", "qqmusic");
         packName_Name.put("remix.myplayer", "myplayer");
         packName_Name.put("cmccwm.mobilemusic", "migu");
         packName_Name.put("cn.kuwo", "kuwo");

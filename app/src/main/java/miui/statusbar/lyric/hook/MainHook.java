@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -25,14 +24,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.ViewFlipper;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import miui.statusbar.lyric.AutoMarqueeTextView;
 import miui.statusbar.lyric.Config;
-import miui.statusbar.lyric.LyricTextView;
+import miui.statusbar.lyric.view.LyricTextSwitchView;
 import miui.statusbar.lyric.utils.Utils;
 
 import java.lang.reflect.Field;
@@ -151,37 +148,16 @@ public class MainHook implements IXposedHookLoadPackage {
                         TextView clock = (TextView) clockField.get(param.thisObject);
 
                         // 创建TextView
-                        LyricTextView lyricTextView = new LyricTextView(application);
-                        lyricTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        LyricTextSwitchView lyricTextView = new LyricTextSwitchView(application);
                         lyricTextView.setWidth((dw * 35) / 100);
                         lyricTextView.setHeight(clock.getHeight());
                         lyricTextView.setTypeface(clock.getTypeface());
                         lyricTextView.setTextSize(0, clock.getTextSize());
-                        LinearLayout.LayoutParams lyricParams = (LinearLayout.LayoutParams) lyricTextView.getLayoutParams();
-                        lyricParams.setMargins(10, 0, 0, 0);
-                        lyricTextView.setLayoutParams(lyricParams);
-
-                        LyricTextView lyricTextView2 = new LyricTextView(application);
-                        lyricTextView2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        lyricTextView2.setWidth((dw * 35) / 100);
-                        lyricTextView2.setHeight(clock.getHeight());
-                        lyricTextView2.setTypeface(clock.getTypeface());
-                        lyricTextView2.setTextSize(0, clock.getTextSize());
-                        LinearLayout.LayoutParams lyricParams2 = (LinearLayout.LayoutParams) lyricTextView2.getLayoutParams();
-                        lyricParams.setMargins(10, 0, 0, 0);
-                        lyricTextView2.setLayoutParams(lyricParams);
+                        lyricTextView.setMargins(10, 0, 0, 0);
 
                         // 单行显示
                         lyricTextView.setSingleLine(true);
                         lyricTextView.setMaxLines(1);
-
-                        lyricTextView2.setSingleLine(true);
-                        lyricTextView2.setMaxLines(1);
-
-                        // 创建动画控件
-                        ViewFlipper lyricAnim = new ViewFlipper(application);
-                        lyricAnim.addView(lyricTextView);
-                        lyricAnim.addView(lyricTextView2);
 
                         // 创建图标
                         TextView iconView = new TextView(application);
@@ -193,7 +169,7 @@ public class MainHook implements IXposedHookLoadPackage {
                         // 创建布局
                         LinearLayout lyricLayout = new LinearLayout(application);
                         lyricLayout.addView(iconView);
-                        lyricLayout.addView(lyricAnim);
+                        lyricLayout.addView(lyricTextView);
 
                         // 将歌词加入时钟布局
                         LinearLayout clockLayout = (LinearLayout) clock.getParent();
@@ -213,8 +189,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                     // 歌词显示
                                     lyricLayout.setVisibility(View.VISIBLE);
                                     // 设置歌词文本
-                                    lyricTextView.setText(lyricTextView.getText());
-                                    lyricTextView2.setText(lyricTextView.getText());
+                                    lyricTextView.setSourceText(lyricTextView.getText());
                                     // 隐藏时钟
                                     clock.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
                                     showLyric = true;
@@ -222,8 +197,19 @@ public class MainHook implements IXposedHookLoadPackage {
                             });
                         }
 
+                        // 防止报错子线程更新UI
                         final Handler iconUpdate = new Handler(Looper.getMainLooper(), message -> {
                             iconView.setCompoundDrawables((Drawable) message.obj, null, null, null);
+                            return true;
+                        });
+
+                        final Handler updateMarginsLyric = new Handler(Looper.getMainLooper(), message -> {
+                            lyricTextView.setMargins(message.arg1, message.arg2, 0, 0);
+                            return true;
+                        });
+
+                        final Handler updateMarginsIcon = new Handler(Looper.getMainLooper(), message -> {
+                            iconParams.setMargins(message.arg1, message.arg2, 0, 0);
                             return true;
                         });
 
@@ -232,31 +218,16 @@ public class MainHook implements IXposedHookLoadPackage {
                             String string = message.getData().getString(KEY_LYRIC);
                             if (!string.equals("")) {
                                 if (!string.equals(lyricTextView.getText().toString())) {
-
-                                    // 设置歌词文本
-                                    if (switchLyric) {
-                                        lyricTextView.setText(string);
-                                        switchLyric = false;
-                                    } else {
-                                        lyricTextView2.setText(string);
-                                        switchLyric = true;
-                                    }
-
-                                    lyricAnim.showNext();
-
                                     // 自适应/歌词宽度
                                     if (config.getLyricWidth() == -1) {
                                         TextPaint paint1 = lyricTextView.getPaint(); // 获取字体
                                         if (config.getLyricMaxWidth() == -1 || ((int) paint1.measureText(string)) + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
                                             lyricTextView.setWidth(((int) paint1.measureText(string)) + 6);
-                                            lyricTextView2.setWidth(((int) paint1.measureText(string)) + 6);
                                         } else {
                                             lyricTextView.setWidth((dw * config.getLyricMaxWidth()) / 100);
-                                            lyricTextView2.setWidth((dw * config.getLyricMaxWidth()) / 100);
                                         }
                                     } else {
                                         lyricTextView.setWidth((dw * config.getLyricWidth()) / 100);
-                                        lyricTextView2.setWidth((dw * config.getLyricWidth()) / 100);
                                     }
                                     // 歌词显示
                                     if (showLyric) {
@@ -264,7 +235,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                     }
                                     // 设置状态栏
                                     Utils.setStatusBar(application, false);
-
+                                    lyricTextView.setText(string);
                                 }
                                 // 隐藏时钟
                                 if (showLyric) {
@@ -272,8 +243,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                 }
                                 return false;
                             }
-                            lyricTextView.setText("");
-                            lyricTextView2.setText("");
+                            lyricTextView.setSourceText("");
                             if (config.getFileLyric()) {
                                 Utils.setLyricFile("", "");
                             }
@@ -312,19 +282,20 @@ public class MainHook implements IXposedHookLoadPackage {
                                                     if (!lyric.equals("") && !config.getAntiBurn()) {
                                                         if (config.getLyricPosition() != oldPos) {
                                                             oldPos = config.getLyricPosition();
-                                                            iconParams.setMargins(0, oldPos, 0, 0);
+                                                            Message message = updateMarginsIcon.obtainMessage();
+                                                            message.arg1 = 0;
+                                                            message.arg2 = oldPos;
+                                                            updateMarginsIcon.sendMessage(message);
                                                         }
                                                     }
                                                 } else if (count == 50) {
                                                     // 滚动速度
                                                     lyricTextView.setSpeed(Float.parseFloat(config.getLyricSpeed()));
-                                                    lyricTextView2.setSpeed(Float.parseFloat(config.getLyricSpeed()));
 
                                                     // 设置动画
                                                     String anim = config.getAnim();
-                                                    lyricAnim.setInAnimation(Utils.inAnim(anim));
-                                                    lyricAnim.setOutAnimation(Utils.outAnim(anim));
-
+                                                    lyricTextView.setInAnimation(Utils.inAnim(anim));
+                                                    lyricTextView.setOutAnimation(Utils.outAnim(anim));
                                                 } else if (count == 100) {
                                                     if (Utils.isServiceRunningList(application, musicServer)) {
                                                         enable = true;
@@ -471,14 +442,11 @@ public class MainHook implements IXposedHookLoadPackage {
                                                 if (color != Color.parseColor(config.getLyricColor())) {
                                                     color = Color.parseColor(config.getLyricColor());
                                                     lyricTextView.setTextColor(color);
-                                                    lyricTextView2.setTextColor(color);
                                                 }
                                             } else if (!Utils.isDark(clock.getTextColors().getDefaultColor())) {
                                                 lyricTextView.setTextColor(0xffffffff);
-                                                lyricTextView2.setTextColor(0xffffffff);
                                             } else if (Utils.isDark(clock.getTextColors().getDefaultColor())) {
                                                 lyricTextView.setTextColor(0xff000000);
-                                                lyricTextView2.setTextColor(0xff000000);
                                             }
                                             if (!icon[1].equals("")) {
                                                 Drawable createFromPath = null;
@@ -524,16 +492,30 @@ public class MainHook implements IXposedHookLoadPackage {
                                                 i -= 1;
                                             }
                                             Utils.log("当前位移：" + i);
-                                            lyricParams.setMargins(10 + i, 0, 0, 0);
-                                            iconParams.setMargins(i, oldPos, 0, 0);
+                                            Message message = updateMarginsLyric.obtainMessage();
+                                            message.arg1 = 10 + i;
+                                            message.arg2 = 0;
+                                            updateMarginsLyric.sendMessage(message);
+
+                                            Message message2 = updateMarginsIcon.obtainMessage();
+                                            message2.arg1 = i;
+                                            message2.arg2 = oldPos;
+                                            updateMarginsIcon.sendMessage(message2);
                                             if (i == 0) {
                                                 order = true;
                                             } else if (i == 10) {
                                                 order = false;
                                             }
                                         } else {
-                                            lyricParams.setMargins(10, 0, 0, 0);
-                                            iconParams.setMargins(0, oldPos, 0, 0);
+                                            Message message = updateMarginsLyric.obtainMessage();
+                                            message.arg1 = 10;
+                                            message.arg2 = 0;
+                                            updateMarginsLyric.sendMessage(message);
+
+                                            Message message2 = updateMarginsIcon.obtainMessage();
+                                            message2.arg1 = 0;
+                                            message2.arg2 = oldPos;
+                                            updateMarginsIcon.sendMessage(message2);
                                         }
                                     }
                                 }, 0, 60000);

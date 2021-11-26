@@ -255,6 +255,7 @@ public class SettingsActivity extends PreferenceActivity {
         lyricSpeed.setSummary(config.getLyricSpeed());
         lyricSpeed.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setLyricSpeed(newValue.toString());
+            lyricSpeed.setSummary(config.getLyricSpeed());
             return true;
         });
 

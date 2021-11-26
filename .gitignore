@@ -5,3 +5,4 @@ app/build
 /.idea/
 /.idea/inspectionProfiles/
 local.properties
+build
