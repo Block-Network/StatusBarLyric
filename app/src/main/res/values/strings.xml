@@ -13,8 +13,7 @@
     <string name="LyricsAnimation">Lyrics animation</string>
     <string name="LyricColor">Lyric color</string>
     <string name="LyricIcon">Lyrcs icon</string>
-    <string name="LyricLoop">* Lyrics are not displayed in a loop</string>
-    <string name="LyricLoopTips">The lyrics are too long, only show once without looping</string>
+    <string name="LyricSpeed">Lyrics scroll speed</string>
     <string name="AdvancedSettings">Advanced settings (change options after stopping music)</string>
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
     <string name="AbScreen">* Anti-burn screen</string>

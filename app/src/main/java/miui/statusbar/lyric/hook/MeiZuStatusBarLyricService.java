@@ -12,6 +12,8 @@ import android.content.Context;
 import android.service.notification.StatusBarNotification;
 import android.service.notification.NotificationListenerService;
 
+import static miui.statusbar.lyric.hook.MainHook.musicServer;
+
 public class MeiZuStatusBarLyricService {
     static Context context;
     public static void FlymeNotificationService(XC_LoadPackage.LoadPackageParam lpparam) {
@@ -29,16 +31,47 @@ public class MeiZuStatusBarLyricService {
                 StatusBarNotification statusBarNotification = (StatusBarNotification) param.args[0];
                 Notification n = statusBarNotification.getNotification();
 
+                if (n.tickerText != null) {
+                    Utils.log(n.tickerText.toString());
+                    Utils.log(statusBarNotification.getPackageName());
+                    Utils.log(n.flags + " | " + n.when);
+                    Utils.log((n.flags & MeiZuNotification.FLAG_INSISTENT) + "");
+                }
+
+                boolean isPackName = false;
+                for (String mStr : musicServer) {
+                    if (mStr.equals(statusBarNotification.getPackageName())) {
+                        isPackName = true;
+                        break;
+                    }
+                }
+                if (isPackName) {
+                    if (n.flags == 0 || n.flags == 8 || n.flags == 16777330) {
+                        Utils.setLocalLyric("", statusBarNotification.getPackageName());
+                        return;
+                    }
+                } else {
+                    return;
+                }
+
+                if ((n.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0) {
+                    Utils.log("dnotifi");
+                    param.setResult(null);
+                }
+
                 boolean isLyric = ((n.flags & MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER) != 0)
                         && ((n.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0);
+                if (n.flags == 16777314) {
+                    isLyric = true;
+                }
+                Utils.log("isLyric = " + isLyric);
                 if (isLyric) {
                     if (n.tickerText == null) {
                         return;
                     }
-                    XposedBridge.log(n.tickerText.toString());
-                    XposedBridge.log(statusBarNotification.getPackageName());
+                    Utils.log(n.tickerText.toString());
+                    Utils.log(statusBarNotification.getPackageName());
                     Utils.setLocalLyric(n.tickerText.toString(), statusBarNotification.getPackageName());
-                    param.setResult(null);
                 }
             }
 

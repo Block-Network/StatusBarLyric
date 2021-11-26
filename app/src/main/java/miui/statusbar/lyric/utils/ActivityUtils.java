@@ -77,7 +77,7 @@ public class ActivityUtils {
                 config.setAnim("off");
                 config.setLyricColor("off");
                 config.setIcon(true);
-                config.setLShowOnce(false);
+                config.setLyricSpeed("1f");
                 config.setLyricPosition(2);
                 config.setIconPath(Utils.PATH);
                 config.setIconAutoColor(true);

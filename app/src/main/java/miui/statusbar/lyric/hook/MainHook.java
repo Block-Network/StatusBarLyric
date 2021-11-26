@@ -62,6 +62,7 @@ public class MainHook implements IXposedHookLoadPackage {
     static boolean useSystemMusicActive = true;
     Context context = null;
     boolean showLyric = true;
+    boolean switchLyric = false;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
@@ -160,22 +161,27 @@ public class MainHook implements IXposedHookLoadPackage {
                         lyricParams.setMargins(10, 0, 0, 0);
                         lyricTextView.setLayoutParams(lyricParams);
 
-                        // 设置跑马灯效果
-//                        lyricTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-//                        if (config.getLShowOnce()) {
-//                            // 设置跑马灯为1次
-//                            lyricTextView.setMarqueeRepeatLimit(1);
-//                        } else {// 设置跑马灯重复次数，-1为无限重复
-//                            lyricTextView.setMarqueeRepeatLimit(-1);
-//                        }
+                        LyricTextView lyricTextView2 = new LyricTextView(application);
+                        lyricTextView2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        lyricTextView2.setWidth((dw * 35) / 100);
+                        lyricTextView2.setHeight(clock.getHeight());
+                        lyricTextView2.setTypeface(clock.getTypeface());
+                        lyricTextView2.setTextSize(0, clock.getTextSize());
+                        LinearLayout.LayoutParams lyricParams2 = (LinearLayout.LayoutParams) lyricTextView2.getLayoutParams();
+                        lyricParams.setMargins(10, 0, 0, 0);
+                        lyricTextView2.setLayoutParams(lyricParams);
 
                         // 单行显示
                         lyricTextView.setSingleLine(true);
                         lyricTextView.setMaxLines(1);
 
+                        lyricTextView2.setSingleLine(true);
+                        lyricTextView2.setMaxLines(1);
+
                         // 创建动画控件
                         ViewFlipper lyricAnim = new ViewFlipper(application);
                         lyricAnim.addView(lyricTextView);
+                        lyricAnim.addView(lyricTextView2);
 
                         // 创建图标
                         TextView iconView = new TextView(application);
@@ -208,6 +214,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                     lyricLayout.setVisibility(View.VISIBLE);
                                     // 设置歌词文本
                                     lyricTextView.setText(lyricTextView.getText());
+                                    lyricTextView2.setText(lyricTextView.getText());
                                     // 隐藏时钟
                                     clock.setLayoutParams(new LinearLayout.LayoutParams(0, 0));
                                     showLyric = true;
@@ -225,25 +232,31 @@ public class MainHook implements IXposedHookLoadPackage {
                             String string = message.getData().getString(KEY_LYRIC);
                             if (!string.equals("")) {
                                 if (!string.equals(lyricTextView.getText().toString())) {
-                                    // 设置动画
-                                    String anim = config.getAnim();
-                                    lyricAnim.setInAnimation(Utils.inAnim(anim));
-                                    lyricAnim.setOutAnimation(Utils.outAnim(anim));
-                                    lyricAnim.showNext();
 
                                     // 设置歌词文本
-                                    lyricTextView.setText(string);
+                                    if (switchLyric) {
+                                        lyricTextView.setText(string);
+                                        switchLyric = false;
+                                    } else {
+                                        lyricTextView2.setText(string);
+                                        switchLyric = true;
+                                    }
+
+                                    lyricAnim.showNext();
+
                                     // 自适应/歌词宽度
                                     if (config.getLyricWidth() == -1) {
                                         TextPaint paint1 = lyricTextView.getPaint(); // 获取字体
                                         if (config.getLyricMaxWidth() == -1 || ((int) paint1.measureText(string)) + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
                                             lyricTextView.setWidth(((int) paint1.measureText(string)) + 6);
-
+                                            lyricTextView2.setWidth(((int) paint1.measureText(string)) + 6);
                                         } else {
                                             lyricTextView.setWidth((dw * config.getLyricMaxWidth()) / 100);
+                                            lyricTextView2.setWidth((dw * config.getLyricMaxWidth()) / 100);
                                         }
                                     } else {
                                         lyricTextView.setWidth((dw * config.getLyricWidth()) / 100);
+                                        lyricTextView2.setWidth((dw * config.getLyricWidth()) / 100);
                                     }
                                     // 歌词显示
                                     if (showLyric) {
@@ -260,6 +273,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                 return false;
                             }
                             lyricTextView.setText("");
+                            lyricTextView2.setText("");
                             if (config.getFileLyric()) {
                                 Utils.setLyricFile("", "");
                             }
@@ -301,6 +315,16 @@ public class MainHook implements IXposedHookLoadPackage {
                                                             iconParams.setMargins(0, oldPos, 0, 0);
                                                         }
                                                     }
+                                                } else if (count == 50) {
+                                                    // 滚动速度
+                                                    lyricTextView.setSpeed(Float.parseFloat(config.getLyricSpeed()));
+                                                    lyricTextView2.setSpeed(Float.parseFloat(config.getLyricSpeed()));
+
+                                                    // 设置动画
+                                                    String anim = config.getAnim();
+                                                    lyricAnim.setInAnimation(Utils.inAnim(anim));
+                                                    lyricAnim.setOutAnimation(Utils.outAnim(anim));
+
                                                 } else if (count == 100) {
                                                     if (Utils.isServiceRunningList(application, musicServer)) {
                                                         enable = true;
@@ -447,11 +471,14 @@ public class MainHook implements IXposedHookLoadPackage {
                                                 if (color != Color.parseColor(config.getLyricColor())) {
                                                     color = Color.parseColor(config.getLyricColor());
                                                     lyricTextView.setTextColor(color);
+                                                    lyricTextView2.setTextColor(color);
                                                 }
                                             } else if (!Utils.isDark(clock.getTextColors().getDefaultColor())) {
                                                 lyricTextView.setTextColor(0xffffffff);
+                                                lyricTextView2.setTextColor(0xffffffff);
                                             } else if (Utils.isDark(clock.getTextColors().getDefaultColor())) {
                                                 lyricTextView.setTextColor(0xff000000);
+                                                lyricTextView2.setTextColor(0xff000000);
                                             }
                                             if (!icon[1].equals("")) {
                                                 Drawable createFromPath = null;
@@ -630,6 +657,8 @@ public class MainHook implements IXposedHookLoadPackage {
                 new neteaseLite.Hook(lpparam);
                 Utils.log("Hook 网易云音乐极速版结束");
                 break;
+            case "com.meizu.media.music":
+                MeiZuStatusBarLyric.guiseFlyme(lpparam);
         }
     }
 

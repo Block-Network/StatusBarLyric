@@ -3,20 +3,19 @@ package miui.statusbar.lyric;
 import android.annotation.SuppressLint;
 import android.os.Environment;
 import android.util.Log;
+import de.robv.android.xposed.XposedBridge;
 import miui.statusbar.lyric.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 import static miui.statusbar.lyric.utils.Utils.PATH;
 
 @SuppressLint("LongLogTag")
 public class Config {
     JSONObject config = new JSONObject();
+    static String old_Json = "";
 
     public Config() {
         try {
@@ -272,13 +271,13 @@ public class Config {
         }
     }
 
-    public boolean getLShowOnce() {
-        return config.optBoolean("LShowOnce", false);
+    public String getLyricSpeed() {
+        return config.optString("LyricSpeed", "1f");
     }
 
-    public void setLShowOnce(Boolean bool) {
+    public void setLyricSpeed(String str) {
         try {
-            config.put("LShowOnce", bool);
+            config.put("LyricSpeed", str);
             setConfig(config.toString());
         } catch (JSONException ignored) {
         }

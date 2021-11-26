@@ -28,7 +28,7 @@ public class LyricTextView extends TextView {
     private boolean isStop = true;
     private float textLength = 0f;
     private float viewWidth = 0f;
-    private float speed = 2f;
+    private float speed = 4f;
     private float x = 0f;
     private String text;
 

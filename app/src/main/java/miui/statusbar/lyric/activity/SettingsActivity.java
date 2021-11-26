@@ -32,7 +32,6 @@ import miui.statusbar.lyric.utils.Utils;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,23 +79,16 @@ public class SettingsActivity extends PreferenceActivity {
         Preference verExplain = findPreference("ver_explain");
         assert verExplain != null;
         verExplain.setOnPreferenceClickListener((preference) -> {
-            SharedPreferences dataPreferences = activity.getSharedPreferences("notice", 0);
-            String data;
-            String lang = Locale.getDefault().getLanguage().replaceAll(" ", "");
-            if (lang.equals("zh")) {
-                data = dataPreferences.getString("data", getString(R.string.VerExp));
-            } else {
-                data = dataPreferences.getString("data_en", getString(R.string.VerExp));
-            }
             new AlertDialog.Builder(activity)
                     .setIcon(R.mipmap.ic_launcher)
                     .setTitle(getString(R.string.VerExplanation))
-                    .setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity), data))
+                    .setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity), getString(R.string.VerExp)))
                     .setNegativeButton(getString(R.string.Done), null)
                     .create()
                     .show();
             return true;
         });
+
         // 隐藏桌面图标
         SwitchPreference hIcons = (SwitchPreference) findPreference("hLauncherIcon");
         assert hIcons != null;
@@ -257,12 +249,12 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 歌词仅显示一次
-        SwitchPreference lshowonce = (SwitchPreference) findPreference("lshowonce");
-        assert lshowonce != null;
-        lshowonce.setChecked(config.getLShowOnce());
-        lshowonce.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLShowOnce((Boolean) newValue);
+        // 歌词速度
+        EditTextPreference lyricSpeed = (EditTextPreference) findPreference("lyricSpeed");
+        assert lyricSpeed != null;
+        lyricSpeed.setSummary(config.getLyricSpeed());
+        lyricSpeed.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLyricSpeed(newValue.toString());
             return true;
         });
 

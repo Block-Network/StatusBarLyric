@@ -68,7 +68,7 @@ public class MeiZuStatusBarLyric {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 super.beforeHookedMethod(param);
-                XposedBridge.log("getDeclaredField: " + param.args[0]);
+//                XposedBridge.log("getDeclaredField: " + param.args[0]);
                 if (param.args[0].toString().equals("FLAG_ALWAYS_SHOW_TICKER")) {
                     param.setResult(MeiZuNotification.class.getField("FLAG_ALWAYS_SHOW_TICKER_HOOK"));
                 } else if (param.args[0].toString().equals("FLAG_ONLY_UPDATE_TICKER")) {

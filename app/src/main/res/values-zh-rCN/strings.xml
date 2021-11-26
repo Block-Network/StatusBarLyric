@@ -13,8 +13,7 @@
     <string name="LyricsAnimation">歌词动效</string>
     <string name="LyricColor">歌词颜色</string>
     <string name="LyricIcon">歌词图标</string>
-    <string name="LyricLoop">* 歌词不循环显示</string>
-    <string name="LyricLoopTips">歌词太长，仅显示一次不循环</string>
+    <string name="LyricSpeed">歌词滚动速度</string>
     <string name="AdvancedSettings">高级设置 (停止音乐后改动选项)</string>
     <string name="ClickLyric">* 点击歌词切换时钟和歌词</string>
     <string name="AbScreen">* 防烧屏</string>

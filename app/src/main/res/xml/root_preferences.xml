@@ -57,11 +57,11 @@
             android:title="@string/LyricIcon"/>
 
 
-    <SwitchPreference
+    <EditTextPreference
             android:defaultValue="false"
-            android:key="lshowonce"
-            android:summary="@string/LyricLoopTips"
-            android:title="@string/LyricLoop"/>
+            android:key="lyricSpeed"
+            android:summary=""
+            android:title="@string/LyricSpeed"/>
 
     <PreferenceCategory android:title="@string/AdvancedSettings"/>
 
