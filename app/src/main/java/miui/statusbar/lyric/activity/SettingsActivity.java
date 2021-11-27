@@ -536,7 +536,7 @@ public class SettingsActivity extends PreferenceActivity {
         }).start();
 
 
-        ActivityUtils.setData(activity);
+        //ActivityUtils.setData(activity);
     }
 
     @Override
