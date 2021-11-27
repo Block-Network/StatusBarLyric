@@ -34,9 +34,7 @@
     <string name="OtherSettings">其他设置</string>
     <string name="CustomHook">* 自定义Hook点 (不懂勿动)</string>
     <string name="DebugMode">Debug 模式</string>
-    <string name="UseCount">使用统计</string>
-    <string name="UseCountTips">统计数据仅保存本地</string>
-    <string name="ReStartSystemUITips">LSPosed 激活后需重启系统界面生效，EDXposed 需重启手机</string>
+    <string name="ReStartSystemUITips">LSPosed 激活后需重启系统界面生效</string>
     <string name="ReStartSystemUI">重启 SystemUI</string>
     <string name="ResetModule">重置模块</string>
     <string name="ResetModuleTips">如果出现某些莫名其妙的问题请点击此处</string>
@@ -155,4 +153,6 @@
         带 * 的功能改动需要重启系统界面
     </string>
     <string name="NotSupport">不支持的Xposed版本</string>
+    <string name="MeizuLyric">使用魅族方式获取歌词</string>
+    <string name="MeizuLyricTips">使用魅族方法无法获取歌词请关闭此开关</string>
 </resources>

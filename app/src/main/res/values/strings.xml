@@ -36,10 +36,7 @@
     <string name="OtherSettings">Other settings</string>
     <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
     <string name="DebugMode">Debug Mode</string>
-    <string name="UseCount">Usage statistics</string>
-    <string name="UseCountTips">Statistics are only saved locally</string>
-    <string name="ReStartSystemUITips">After LSPosed is activated, the SystemUI needs to be restarted to take effect,
-        and EDXposed needs to restart the phone
+    <string name="ReStartSystemUITips">After LSPosed is activated, the SystemUI needs to be restarted to take effect
     </string>
     <string name="ReStartSystemUI">Restart SystemUI</string>
     <string name="ResetModule">Reset module</string>
@@ -167,4 +164,6 @@
         The function changes with * need to restart the system interface
     </string>
     <string name="NotSupport">Xposed not supported</string>
+    <string name="MeizuLyric">Use Meizu Way to Get Lyrics</string>
+    <string name="MeizuLyricTips">Cannot get lyrics using Meizu method, please turn off this switch</string>
 </resources>

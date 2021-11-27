@@ -134,6 +134,12 @@
 
     <SwitchPreference
             android:defaultValue="false"
+            android:key="meizuLyric"
+            android:summary="@string/MeizuLyricTips"
+            android:title="@string/MeizuLyric"/>
+
+    <SwitchPreference
+            android:defaultValue="false"
             android:key="fileLyric"
             android:summary="@string/FileLyricTips"
             android:title="@string/FileLyric"/>
@@ -150,12 +156,6 @@
             android:key="debug"
             android:summary=""
             android:title="@string/DebugMode"/>
-
-    <SwitchPreference
-            android:defaultValue="true"
-            android:key="isusedcount"
-            android:summary="@string/UseCountTips"
-            android:title="@string/UseCount"/>
 
     <PreferenceScreen
             android:key="restartUI"

@@ -270,6 +270,7 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
+
         // 歌词速度
         EditTextPreference lyricSpeed = (EditTextPreference) findPreference("lyricSpeed");
         assert lyricSpeed != null;
@@ -490,15 +491,14 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 使用统计
-        SwitchPreference isUsedCount = (SwitchPreference) findPreference("isusedcount");
-        assert isUsedCount != null;
-        isUsedCount.setChecked(config.getisUsedCount());
-        isUsedCount.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setisUsedCount((Boolean) newValue);
-            if (!(Boolean) newValue) {
-                setTitle(getString(R.string.AppName));
-            }
+        // 魅族方式
+        SwitchPreference meizuLyric = (SwitchPreference) findPreference("meizuLyric");
+        assert meizuLyric != null;
+        fileLyric.setEnabled(!config.getMeizuLyric());
+        meizuLyric.setChecked(config.getMeizuLyric());
+        meizuLyric.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setMeizuLyric((Boolean) newValue);
+            fileLyric.setEnabled(!(Boolean) newValue);
             return true;
         });
 

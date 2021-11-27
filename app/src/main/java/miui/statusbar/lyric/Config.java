@@ -252,4 +252,12 @@ public class Config {
     public void setLShowOnce(boolean bool) {
         set("LShowOnce", bool);
     }
+
+    public boolean getMeizuLyric() {
+        return sp.getBoolean("MeizuLyric", true);
+    }
+
+    public void setMeizuLyric(boolean bool) {
+        set("MeizuLyric", bool);
+    }
 }
