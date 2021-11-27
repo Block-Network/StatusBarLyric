@@ -86,11 +86,11 @@
         Migu Music\n
         NetEase Cloud Music\n
         Support Flyme lyrics that is support
-        I don’t know the minimum version yet, feedback is welcome
+        I don’t know the minimum version yet, feedback is welcome\n\n
 
         Active application adaptation: (mark the version to start adaptation)\n
         Salt and Pepper Music: v4.5\n\n
-        Other versions may be the same, please test by yourself\n\n
+        Other versions may be the same, please test by yourself
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>

@@ -80,11 +80,11 @@
         咪咕音乐\n
         网易云音乐\n
         支持Flyme歌词即支持
-        暂不知最低版本，欢迎反馈
+        暂不知最低版本，欢迎反馈\n\n
 
         应用主动适配：（标记开始适配的版本）\n
         椒盐音乐：v4.5\n\n
-        其余版本可能同样适配，请自测\n\n
+        其余版本可能同样适配，请自测
     </string>
     <string name="AppName">状态栏歌词</string>
     <string name="QuickTitle">状态栏歌词</string>
