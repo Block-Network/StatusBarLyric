@@ -4,6 +4,10 @@
             android:key="ver_explain"
             android:summary="@string/ClickDetails"
             android:title="@string/UseInfo"/>
+   <Preference
+            android:key="warn_explain"
+            android:summary="@string/ClickDetails"
+            android:title="@string/WarnExplanation"/>
 
     <SwitchPreference
             android:defaultValue="false"
@@ -67,7 +71,7 @@
             android:title="@string/lShowOnce"/>
 
     <EditTextPreference
-            android:defaultValue="false"
+            android:defaultValue="1"
             android:key="lyricSpeed"
             android:summary=""
             android:title="@string/LyricSpeed"/>

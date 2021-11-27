@@ -1,24 +1,16 @@
 package miui.statusbar.lyric.hook;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
-import android.app.Notification;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import miui.statusbar.lyric.utils.Utils;
 
 public class MeiZuStatusBarLyric {
 
+    @SuppressLint("StaticFieldLeak")
     static Context context;
 
     //模拟flyme

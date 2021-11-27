@@ -77,28 +77,22 @@
     <string name="VerExplanation">Version explanation</string>
     <string name="Done">Done</string>
     <string name="CurrentVer">current version</string>
-    <string name="VerExp">Application situation: \n\n
-        Perfect fit：（Mark the most suitable version）\n
-        \n APlayer : v1.5.7.9
-        \n NetEase Cloud Music : v8.6.13 \n\n
+    <string name="VerExp">Application:\n\n
+        Perfect fit: (mark the version that started to fit)\n
+        I don’t know the minimum version, feedback is welcome\n
+        Support Flyme lyrics is support\n\n
 
-        App active adaptation：（Mark the start adapting version）
-        \n SaltPlayer ：v4.5+
 
-        Open Bluetooth lyrics in the app：（Mark the most suitable version）
-        \n QQ Music : v10.17.0.11 （Need to connect to Bluetooth）
-        \n kugou Music : v10.9.0
-        \n kuwo Music : v10.0.1.0
-        \n Migu Music : v7.6.1 (Need to connect to Bluetooth)
-        \n NetEase Cloud Music : v7.2.22 \n\n
+        Active application adaptation: (mark the version to start adaptation)\n
+        Salt and Pepper Music: v4.5\n\n
 
-        Each application version requires different content of Hook,\n
+        Each application version requires different content of Hook, \n
         So manual adaptation is required,\n
-        Other versions may be the OK, please test by yourself\n\n
+        Other versions may be the same, please test by yourself\n\n
 
-        belt * need to restart the SystemUI
+        The function change of the belt requires the system interface to be restarted
     </string>
-    <string name="AppName">MIUI Status bar lyric</string>
+    <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
     <string name="XposedTips">If the lyrics cannot be displayed, please try to stop the music software and restart the
         SystemUI\n or check the instructions for use. Are you using the correct version?
@@ -120,6 +114,7 @@
     </string>
     <string name="ResetNow">Reset now</string>
     <string name="NoReset">Don\'t reset yet</string>
+    <string name="TryFix">Try to Fix</string>
     <string name="top">Slide up</string>
     <string name="lower">Decline</string>
     <string name="left">Swipe left</string>
@@ -162,4 +157,9 @@
     <string name="Notice">Version description The content has been updated</string>
     <string name="MeizuStyle">* Meizu lyrics scroll style</string>
     <string name="lShowOnce">* Lyrics only scroll once</string>
+    <string name="WarnExplanation">Module Considerations</string>
+    <string name="WarnExp">Module Considerations\n\n
+        Known bug:\n
+        After restarting the phone, the system interface must be restarted before it can be used
+    </string>
 </resources>

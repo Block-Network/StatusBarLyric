@@ -72,30 +72,21 @@
     <string name="Done">关闭</string>
     <string name="CurrentVer">当前版本</string>
     <string name="VerExp">适用情况：\n\n
-        完美适配：（标记最高适配的版本）\n
-        Aplayer:v1.5.7.9\n
-        网易云音乐:v8.6.13\n\n
+        完美适配：（标记开始适配的版本）\n
+        暂不知最低版本，欢迎反馈\n
+        支持Flyme歌词即支持\n\n
 
 
         应用主动适配：（标记开始适配的版本）\n
         椒盐音乐：v4.5\n\n
 
-
-        应用内打开蓝牙歌词（标记最高适配的版本）：\n
-        QQ音乐:v10.17.0.11 （另需额外连接蓝牙）\n
-        酷狗音乐:v10.9.0\n
-        酷我音乐:v10.0.1.0\n
-        咪咕音乐:v7.6.1 (另需额外连接蓝牙)\n
-        网易云音乐:v7.2.22\n\n
-
-
         每个应用版本需要 Hook 的内容不同, \n
         所以需要进行人工适配，\n
         其余版本可能同样适配，请自测\n\n
 
-
-        带*的功能改动需要重启系统界面</string>
-    <string name="AppName">MIUI 状态栏歌词</string>
+        带*的功能改动需要重启系统界面
+    </string>
+    <string name="AppName">状态栏歌词</string>
     <string name="QuickTitle">状态栏歌词</string>
     <string name="XposedTips">如果无法显示歌词，请尝试停止音乐软件并重启系统界面\n或查看 使用说明 自己是否使用正确版本</string>
     <string name="InitError">初始化失败，请重启软件</string>
@@ -111,9 +102,11 @@
     <string name="ConfigError">配置文件错误\n
         可能是文件内容丢失或者配置文件有所升级\n
         可能造成不必要的问题\n
-        是否重置</string>
+        是否重置
+    </string>
     <string name="ResetNow">立即重置</string>
     <string name="NoReset">先不重置</string>
+    <string name="TryFix">尝试修复</string>
     <string name="top">上滑</string>
     <string name="lower">下滑</string>
     <string name="left">左滑</string>
@@ -144,11 +137,16 @@
     <string name="GetLyricNum">"已获取歌词数句数: "</string>
     <string name="GetStorageFaildTips">请开通存储权限\n
         否则无法正常使用本模块\n
-        若不信任本模块,请卸载</string>
+        若不信任本模块,请卸载
+    </string>
     <string name="GetStorageFailed">获取存储权限失败</string>
     <string name="GetPermission">前往设置授予权限</string>
     <string name="ReAppy">重新申请</string>
     <string name="Notice">版本说明 内容有更新</string>
     <string name="MeizuStyle">* 魅族歌词滚动样式</string>
     <string name="lShowOnce">* 歌词只滚动一次</string>
+    <string name="WarnExplanation">模块注意事项</string>
+    <string name="WarnExp">模块注意事项\n\n
+        已知Bug：\n
+            重启手机后必须重启系统界面才能使用</string>
 </resources>

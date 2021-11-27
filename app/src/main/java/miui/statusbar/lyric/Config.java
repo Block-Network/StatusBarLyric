@@ -215,7 +215,7 @@ public class Config {
         return config.optBoolean("hNetSpeed", false);
     }
 
-    public void sethNetSpeed(Boolean bool) {
+    public void setHNetSpeed(Boolean bool) {
         try {
             config.put("hNetSpeed", bool);
             setConfig(config.toString());
@@ -227,7 +227,7 @@ public class Config {
         return config.optBoolean("hCUK", false);
     }
 
-    public void sethCUK(Boolean bool) {
+    public void setHCUK(Boolean bool) {
         try {
             config.put("hCUK", bool);
             setConfig(config.toString());

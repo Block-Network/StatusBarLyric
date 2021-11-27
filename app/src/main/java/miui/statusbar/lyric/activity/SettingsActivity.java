@@ -57,7 +57,6 @@ public class SettingsActivity extends PreferenceActivity {
         String tips = "Tips1";
         SharedPreferences preferences = activity.getSharedPreferences(tips, 0);
         if (!preferences.getBoolean(tips, false)) {
-
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.Tips))
                     .setIcon(R.mipmap.ic_launcher)
@@ -83,6 +82,20 @@ public class SettingsActivity extends PreferenceActivity {
                     .setIcon(R.mipmap.ic_launcher)
                     .setTitle(getString(R.string.VerExplanation))
                     .setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity), getString(R.string.VerExp)))
+                    .setNegativeButton(getString(R.string.Done), null)
+                    .create()
+                    .show();
+            return true;
+        });
+
+        //模块注意事项
+        Preference warnPoint = findPreference("warn_explain");
+        assert warnPoint != null;
+        warnPoint.setOnPreferenceClickListener((preference) -> {
+            new AlertDialog.Builder(activity)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setTitle(getString(R.string.WarnExplanation))
+                    .setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity), getString(R.string.WarnExp)))
                     .setNegativeButton(getString(R.string.Done), null)
                     .create()
                     .show();
@@ -381,7 +394,7 @@ public class SettingsActivity extends PreferenceActivity {
         assert hNetWork != null;
         hNetWork.setChecked(config.getHNetSpeed());
         hNetWork.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.sethNetSpeed((Boolean) newValue);
+            config.setHNetSpeed((Boolean) newValue);
             return true;
         });
 
@@ -391,7 +404,7 @@ public class SettingsActivity extends PreferenceActivity {
         assert hCUK != null;
         hCUK.setChecked(config.getHCUK());
         hCUK.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.sethCUK((Boolean) newValue);
+            config.setHCUK((Boolean) newValue);
             return true;
         });
 
@@ -589,6 +602,7 @@ public class SettingsActivity extends PreferenceActivity {
 
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

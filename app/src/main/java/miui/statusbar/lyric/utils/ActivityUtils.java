@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public class ActivityUtils {
-    static int dataId = 0;
+    static int configId = 2;
 
     public static String getLocalVersion(Context context) {
         String localVersion = "";
@@ -67,7 +67,7 @@ public class ActivityUtils {
             try {
                 Config config = new Config();
                 file.createNewFile();
-                config.setId(1);
+                config.setId(configId);
                 config.setUsedCount(0);
                 config.setLyricService(false);
                 config.setLyricAutoOff(true);
@@ -77,19 +77,18 @@ public class ActivityUtils {
                 config.setAnim("off");
                 config.setLyricColor("off");
                 config.setIcon(true);
-                config.setLyricSpeed("1f");
+                config.setLyricSpeed("1");
                 config.setLyricPosition(2);
                 config.setIconPath(Utils.PATH);
                 config.setIconAutoColor(true);
                 config.setLockScreenOff(false);
                 config.sethNoticeIcon(false);
-                config.sethNetSpeed(false);
-                config.sethCUK(false);
+                config.setHNetSpeed(false);
+                config.setHCUK(false);
                 config.setHAlarm(false);
                 config.setDebug(false);
                 config.setisUsedCount(true);
                 config.setHook("");
-
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(activity, activity.getString(R.string.InitError), Toast.LENGTH_LONG).show();
@@ -198,19 +197,46 @@ public class ActivityUtils {
         new File(Utils.PATH + "Config.json").delete();
         PackageManager packageManager = Objects.requireNonNull(activity).getPackageManager();
         packageManager.setComponentEnabledSetting(new ComponentName(activity, "miui.statusbar.lyric.launcher"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-
         Toast.makeText(activity, activity.getString(R.string.ResetSuccess), Toast.LENGTH_LONG).show();
         activity.finishAffinity();
     }
 
+    public static void fixConfig(Activity activity) {
+        Config config = new Config();
+        config.setId(configId);
+        config.setUsedCount(config.getUsedCount());
+        config.setLyricService(config.getLyricService());
+        config.setLyricAutoOff(config.getLyricAutoOff());
+        config.setLyricSwitch(config.getLyricSwitch());
+        config.setLyricWidth(config.getLyricWidth());
+        config.setLyricMaxWidth(config.getLyricMaxWidth());
+        config.setAnim(config.getAnim());
+        config.setLyricColor(config.getLyricColor());
+        config.setIcon(config.getIcon());
+        config.setLyricSpeed(config.getLyricSpeed());
+        config.setLyricPosition(config.getLyricPosition());
+        config.setIconPath(config.getIconPath());
+        config.setIconAutoColor(config.getIconAutoColor());
+        config.setLockScreenOff(config.getLockScreenOff());
+        config.sethNoticeIcon(config.getHNoticeIco());
+        config.setHNetSpeed(config.getHNetSpeed());
+        config.setHCUK(config.getHCUK());
+        config.setHAlarm(config.getHAlarm());
+        config.setDebug(config.getDebug());
+        config.setisUsedCount(config.getisUsedCount());
+        config.setHook(config.getHook());
+        activity.finishAffinity();
+    }
+
     public static void checkConfig(final Activity activity, int id) {
-        if (id == 0) {
+        if (id != configId) {
             try {
                 new AlertDialog.Builder(activity)
                         .setTitle(activity.getString(R.string.Warn))
                         .setMessage(activity.getString(R.string.ConfigError))
                         .setNegativeButton(activity.getString(R.string.ResetNow), (dialog, which) -> cleanConfig(activity))
                         .setPositiveButton(activity.getString(R.string.NoReset), null)
+                        .setNeutralButton(activity.getString(R.string.TryFix), (dialog, which) -> fixConfig(activity))
                         .setCancelable(false)
                         .create()
                         .show();
@@ -220,31 +246,4 @@ public class ActivityUtils {
         }
     }
 
-    public static void setData(Activity activity) {
-        new Thread(() -> {
-            String data = HttpUtils.Get("https://app.xiaowine.cc/app/notice.json");
-            try {
-                JSONObject jsonObject = new JSONObject(data);
-                SharedPreferences preferences = activity.getSharedPreferences("notice", 0);
-                int mDataId = preferences.getInt("id", dataId);
-                if (Integer.parseInt(jsonObject.getString("id"))
-                        > mDataId) {
-                    SharedPreferences.Editor preferenceEditor = preferences.edit();
-                    preferenceEditor.putInt("id", Integer.parseInt(jsonObject.getString("id")));
-                    preferenceEditor.putString("data", jsonObject.getString("data"));
-                    preferenceEditor.putString("data_en", jsonObject.getString("data_en"));
-                    preferenceEditor.apply();
-                    Looper.prepare();
-                    Toast.makeText(activity, activity.getString(R.string.Notice), Toast.LENGTH_LONG).show();
-                    Looper.loop();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Looper.prepare();
-                Toast.makeText(activity, e.toString(), Toast.LENGTH_LONG).show();
-                Looper.loop();
-
-            }
-        }).start();
-    }
 }
