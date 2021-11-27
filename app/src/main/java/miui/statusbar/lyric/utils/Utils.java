@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.MiuiStatusBarManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,7 +25,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
+import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.Config;
 import miui.statusbar.lyric.hook.MainHook;
 
@@ -67,7 +71,7 @@ public class Utils {
         MainHook.icon[0] = "hook";
         MainHook.icon[1] = Utils.packName_GetIconPath(packName);
         MainHook.lyric = lyric;
-        addLyricCount();
+//        addLyricCount();
     }
 
     public static int getLocalVersionCode(Context context) {
@@ -91,11 +95,10 @@ public class Utils {
     }
 
     //状态栏图标设置
-    public static void setStatusBar(Context application, Boolean isOpen) {
+    public static void setStatusBar(Context application, Boolean isOpen, Config config) {
         if (!hasMiuiSetting) {
             return;
         }
-        Config config = new Config();
         int isCarrier = 1;
         int notCarrier = 0;
         if (isOpen) {
@@ -167,14 +170,14 @@ public class Utils {
     }
 
     //歌词磁获取统计
-    public static void addLyricCount() {
-        if (new Config().getisUsedCount()) {
-            new Config().setUsedCount(new Config().getUsedCount() + 1);
+    public static void addLyricCount(Config config) {
+        if (config.getisUsedCount()) {
+            config.setUsedCount(config.getUsedCount() + 1);
         }
     }
 
     public static void sendLyric(Context context, String lyric, String icon) {
-        if (new Config().getFileLyric()) {
+        if (new Config(Utils.getPref()).getFileLyric()) {
             setLyricFile(icon, lyric);
         } else {
             context.sendBroadcast(new Intent().setAction("Lyric_Server").putExtra("Lyric_Data", lyric).putExtra("Lyric_Icon", icon).putExtra("Lyric_Type", "hook"));
@@ -382,20 +385,32 @@ public class Utils {
 
     // log
     public static void log(String text) {
-        if (new Config().getDebug()) {
-            if (context == null) {
-                if (hasXposed) {
+        if (context != null) {
+            if (hasXposed) {
+                if (new Config(Utils.getPref()).getDebug()) {
                     XposedBridge.log("MIUI状态栏歌词： " + text);
-                } else {
-                    Log.d("MIUI状态栏歌词", text);
                 }
             } else {
-                Log.d("MIUI状态栏歌词", text);
-                if (context != null) {
+                if (new Config(Utils.getSP(context)).getDebug()) {
+                    Log.d("MIUI状态栏歌词", text);
                     showToastOnLooper(context, "MIUI状态栏歌词： " + text);
                 }
             }
+        } else {
+            Log.d("MIUI状态栏歌词", text);
         }
+    }
+
+    public static SharedPreferences getSP(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return context.createDeviceProtectedStorageContext().getSharedPreferences("Lyric_Config", Context.MODE_WORLD_READABLE);
+        }
+        return null;
+    }
+
+    public static SharedPreferences getPref() {
+        XSharedPreferences pref = new XSharedPreferences(BuildConfig.APPLICATION_ID, "Lyric_Config");
+        return pref.getFile().canRead() ? pref : null;
     }
 
 }

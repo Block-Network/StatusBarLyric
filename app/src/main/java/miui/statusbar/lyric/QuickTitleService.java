@@ -5,6 +5,7 @@ import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+import miui.statusbar.lyric.utils.Utils;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickTitleService extends TileService {
@@ -13,21 +14,23 @@ public class QuickTitleService extends TileService {
     public void onClick() {
         super.onClick();
         Tile tile = getQsTile();
-        new Config().setLyricService(!new Config().getLyricService());
+        Config config = new Config(Utils.getSP(getApplicationContext()));
+        config.setLyricService(!config.getLyricService());
         tile.setIcon(Icon.createWithResource(this, R.drawable.title_icon));
         tile.setLabel(getString(R.string.QuickTitle));
         tile.setContentDescription(getString(R.string.QuickTitle));
-        tile.setState(new Config().getLyricService() ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
+        tile.setState(config.getLyricService() ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
         tile.updateTile();
     }
 
     @Override
     public void onStartListening() {
+        Config config = new Config(Utils.getSP(getApplicationContext()));
         Tile tile = getQsTile();
         tile.setIcon(Icon.createWithResource(this, R.drawable.title_icon));
         tile.setLabel(getString(R.string.QuickTitle));
         tile.setContentDescription(getString(R.string.QuickTitle));
-        tile.setState(new Config().getLyricService() ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
+        tile.setState(config.getLyricService() ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
         tile.updateTile();
     }
 }

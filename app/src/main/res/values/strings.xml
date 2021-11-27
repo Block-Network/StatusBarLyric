@@ -166,4 +166,5 @@
 
         The function changes with * need to restart the system interface
     </string>
+    <string name="NotSupport">Xposed not supported</string>
 </resources>

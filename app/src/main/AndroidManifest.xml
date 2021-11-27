@@ -52,14 +52,11 @@
         </activity-alias>
 
         <meta-data
-                android:name="xposedmodule"
-                android:value="true"/>
-        <meta-data
                 android:name="xposeddescription"
                 android:value="@string/XposedTips"/>
         <meta-data
                 android:name="xposedminversion"
-                android:value="54"/>
+                android:value="93"/>
         <meta-data android:name="xposedscope"
                    android:resource="@array/need_module"/>
 

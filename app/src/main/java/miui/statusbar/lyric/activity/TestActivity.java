@@ -7,6 +7,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import miui.statusbar.lyric.Api;
+import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.R;
 
 @SuppressWarnings("deprecation")
@@ -26,7 +27,7 @@ public class TestActivity extends PreferenceActivity {
         Preference preference = findPreference("testlyric");
         preference.setOnPreferenceClickListener((preference1) -> {
             Api api = new Api();
-            api.sendLyric(activity, ((int) (Math.random() * 10)) + lyric, icon, "miui.statusbar.lyric", false);
+            api.sendLyric(activity, ((int) (Math.random() * 10)) + lyric, icon, BuildConfig.APPLICATION_ID, false);
             return true;
         });
 

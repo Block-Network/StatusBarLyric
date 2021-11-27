@@ -154,4 +154,5 @@
 
         带 * 的功能改动需要重启系统界面
     </string>
+    <string name="NotSupport">不支持的Xposed版本</string>
 </resources>

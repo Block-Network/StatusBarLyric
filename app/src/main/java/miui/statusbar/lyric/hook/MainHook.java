@@ -3,10 +3,7 @@ package miui.statusbar.lyric.hook;
 
 import android.app.AndroidAppHelper;
 import android.app.Application;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -55,7 +52,7 @@ public class MainHook implements IXposedHookLoadPackage {
     static boolean iconReverseColor = false;
     static boolean isPowerOn = false;
     static boolean isLock = true;
-    public static Config config = new Config();
+    public static Config config;
     static boolean useSystemMusicActive = true;
     Context context = null;
     boolean showLyric = true;
@@ -90,6 +87,7 @@ public class MainHook implements IXposedHookLoadPackage {
             case "com.android.systemui":
                 Utils.log("正在hook系统界面");
                 MeiZuStatusBarLyricService.FlymeNotificationService(lpparam);
+                config = new Config(Utils.getPref());
                 // 状态栏歌词
                 XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.CollapsedStatusBarFragment", lpparam.classLoader, "onViewCreated", View.class, Bundle.class, new XC_MethodHook() {
                     @Override
@@ -241,7 +239,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                         lyricLayout.setVisibility(View.VISIBLE);
                                     }
                                     // 设置状态栏
-                                    Utils.setStatusBar(application, false);
+                                    Utils.setStatusBar(application, false, config);
                                     lyricTextView.setText(string);
                                 }
                                 // 隐藏时钟
@@ -282,7 +280,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                     public void run() {
                                         try {
                                             if (count == 50) {
-                                                config = new Config(config);
+                                                config.update(Utils.getPref());
                                             }
                                             if (config.getLyricService()) {
                                                 if (count == 25) {
@@ -298,7 +296,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                                 } else if (count == 50) {
                                                     // 滚动速度
                                                     if (config.getLyricStyle()) {
-                                                        lyricTextView.setSpeed(Float.parseFloat(config.getLyricSpeed()));
+                                                        lyricTextView.setSpeed(config.getLyricSpeed());
                                                     }
 
                                                     // 设置动画
@@ -385,7 +383,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                             LyricUpdate.sendMessage(obtainMessage);
 
                                             // 恢复状态栏
-                                            Utils.setStatusBar(application, true);
+                                            Utils.setStatusBar(application, true, config);
                                         }
                                     }
 
@@ -407,7 +405,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                                     icon[0] = strArr[0];
                                                     switch (icon[0]) {
                                                         case "hook":
-                                                            Utils.addLyricCount();
+//                                                            Utils.addLyricCount();
                                                             if (!strArr[2].equals("")) {
                                                                 lyric = strArr[2];
                                                             }
@@ -416,7 +414,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                                             useSystemMusicActive = true;
                                                             break;
                                                         case "app":
-                                                            Utils.addLyricCount();
+//                                                            Utils.addLyricCount();
                                                             if (!strArr[2].equals("")) {
                                                                 lyric = strArr[2];
                                                             }
@@ -673,14 +671,14 @@ public class MainHook implements IXposedHookLoadPackage {
                 if (intent.getAction().equals("Lyric_Server")) {
                     switch (intent.getStringExtra("Lyric_Type")) {
                         case "hook":
-                            Utils.addLyricCount();
+//                            Utils.addLyricCount();
                             lyric = intent.getStringExtra("Lyric_Data");
                             icon[0] = "hook";
                             icon[1] = config.getIconPath() + intent.getStringExtra("Lyric_Icon") + ".webp";
                             Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon[1]);
                             break;
                         case "app":
-                            Utils.addLyricCount();
+//                            Utils.addLyricCount();
                             lyric = intent.getStringExtra("Lyric_Data");
                             icon[0] = "app";
                             String icon_data = intent.getStringExtra("Lyric_Icon");

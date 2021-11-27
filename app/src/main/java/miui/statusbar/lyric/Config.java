@@ -1,393 +1,255 @@
 package miui.statusbar.lyric;
 
 import android.annotation.SuppressLint;
-import android.os.Environment;
-import android.util.Log;
-import de.robv.android.xposed.XposedBridge;
+import android.content.SharedPreferences;
 import miui.statusbar.lyric.utils.Utils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.*;
 
 import static miui.statusbar.lyric.utils.Utils.PATH;
 
 @SuppressLint("LongLogTag")
 public class Config {
-    JSONObject config = new JSONObject();
-    static String old_Json = "";
+    SharedPreferences sp;
+    SharedPreferences.Editor spe;
 
-    public Config() {
-        try {
-            if (getConfig().equals("")) {
-                Log.d("StatusBarLyric: Config()", "cfg isEmpty!");
-                config = new JSONObject();
-                return;
-            }
-            config = new JSONObject(getConfig());
-        } catch (JSONException ignored) {
+    @SuppressLint("CommitPrefEdits")
+    public Config(SharedPreferences sharedPreferences) {
+        sp = sharedPreferences;
+        if (!Utils.hasXposed) {
+            spe = sharedPreferences.edit();
+        } else {
+            spe = null;
         }
     }
 
-    public Config(Config config) {
-        try {
-            String cfg = getConfig();
-            if (cfg.equals("")) {
-                Log.d("StatusBarLyric: Config(Config config)", "cfg isEmpty!");
-                if (config != null) {
-                    this.config = config.getConfigObject();
-                } else {
-                    Log.d("StatusBarLyric: Config(Config config)", "cfg isNull!");
-                    this.config = new JSONObject();
-                }
-                return;
-            }
-            this.config = new JSONObject(cfg);
-        } catch (JSONException ignored) {
+    public void update(SharedPreferences sharedPreferences) {
+        if (sharedPreferences == null) {
+            return;
         }
+        sp = sharedPreferences;
     }
 
-    public static String getConfig() {
-        String str = "";
-        try {
-            if (!new File(Utils.PATH + "Config.json").exists()) {
-                Utils.PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/miui.statusbar.lyric/";
-            }
-            FileInputStream fileInputStream = new FileInputStream(Utils.PATH + "Config.json");
-            byte[] bArr = new byte[fileInputStream.available()];
-            fileInputStream.read(bArr);
-            str = new String(bArr);
-            fileInputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void set(String key, Object any) {
+        if (spe == null) {
+            return;
         }
-        return str;
-    }
-
-    public static void setConfig(String str) {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(Utils.PATH + "Config.json");
-            fileOutputStream.write(str.getBytes());
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (any instanceof Integer) {
+            spe.putInt(key, (Integer) any);
+        } else if (any instanceof Float) {
+            spe.putFloat(key, (Float) any);
+        } else if (any instanceof String) {
+            spe.putString(key, (String) any);
+        } else if (any instanceof Boolean) {
+            spe.putBoolean(key, (boolean) any);
+        } else if (any instanceof Long) {
+            spe.putLong(key, (Long) any);
         }
-    }
-
-    public JSONObject getConfigObject() {
-        return config;
+        spe.apply();
     }
 
     public int getId() {
-        return config.optInt("id", 0);
+        return sp.getInt("id", 0);
     }
 
     public void setId(int i) {
-        try {
-            config.put("id", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("id", i);
     }
 
-
     public Boolean getLyricService() {
-        return config.optBoolean("LyricService", false);
+        return sp.getBoolean("LyricService", false);
     }
 
     public void setLyricService(Boolean bool) {
-        try {
-            config.put("LyricService", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("LyricService", bool);
     }
 
     public int getLyricWidth() {
-        return config.optInt("LyricWidth", -1);
+        return sp.getInt("LyricWidth", -1);
     }
 
     public void setLyricWidth(int i) {
-        try {
-            config.put("LyricWidth", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("LyricWidth", i);
     }
 
     public int getLyricMaxWidth() {
-        return config.optInt("LyricMaxWidth", -1);
+        return sp.getInt("LyricMaxWidth", -1);
     }
 
     public void setLyricMaxWidth(int i) {
-        try {
-            config.put("LyricMaxWidth", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("LyricMaxWidth", i);
     }
 
     public int getLyricPosition() {
-        return config.optInt("LyricPosition", 2);
+        return sp.getInt("LyricPosition", 2);
     }
 
     public void setLyricPosition(int i) {
-        try {
-            config.put("LyricPosition", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("LyricPosition", i);
     }
 
     public Boolean getLyricAutoOff() {
-        return config.optBoolean("LyricAutoOff", true);
+        return sp.getBoolean("LyricAutoOff", true);
     }
 
     public void setLyricAutoOff(Boolean bool) {
-        try {
-            config.put("LyricAutoOff", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("LyricAutoOff", bool);
     }
 
     public Boolean getLockScreenOff() {
-        return config.optBoolean("lockScreenOff", false);
+        return sp.getBoolean("lockScreenOff", false);
     }
 
     public void setLockScreenOff(Boolean bool) {
-        try {
-            config.put("lockScreenOff", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
-    }
-
-    public void sethNoticeIcon(Boolean bool) {
-        try {
-            config.put("hNoticeIcon", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("lockScreenOff", bool);
     }
 
     public String getLyricColor() {
-        return config.optString("LyricColor", "off");
+        return sp.getString("LyricColor", "off");
     }
 
     public void setLyricColor(String str) {
-        try {
-            config.put("LyricColor", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("LyricColor", str);
     }
 
     public Boolean getLyricSwitch() {
-        return config.optBoolean("LyricSwitch", false);
+        return sp.getBoolean("LyricSwitch", false);
     }
 
     public void setLyricSwitch(Boolean bool) {
-        try {
-            config.put("LyricSwitch", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("LyricSwitch", bool);
     }
 
     public Boolean getHNoticeIco() {
-        return config.optBoolean("hNoticeIcon", false);
+        return sp.getBoolean("hNoticeIcon", false);
     }
 
+    public void sethNoticeIcon(Boolean bool) {
+        set("hNoticeIcon", bool);
+    }
     public Boolean getHAlarm() {
-        return config.optBoolean("hAlarm", false);
+        return sp.getBoolean("hAlarm", false);
     }
 
     public void setHAlarm(Boolean bool) {
-        try {
-            config.put("hAlarm", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("hAlarm", bool);
     }
 
     public Boolean getHNetSpeed() {
-        return config.optBoolean("hNetSpeed", false);
+        return sp.getBoolean("hNetSpeed", false);
     }
 
     public void setHNetSpeed(Boolean bool) {
-        try {
-            config.put("hNetSpeed", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("hNetSpeed", bool);
     }
 
     public Boolean getHCUK() {
-        return config.optBoolean("hCUK", false);
+        return sp.getBoolean("hCUK", false);
     }
 
     public void setHCUK(Boolean bool) {
-        try {
-            config.put("hCUK", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("hCUK", bool);
     }
 
     public Boolean getDebug() {
-        return config.optBoolean("debug", false);
+        return sp.getBoolean("debug", false);
     }
 
     public void setDebug(Boolean bool) {
-        try {
-            config.put("debug", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("debug", bool);
     }
 
     public Boolean getisUsedCount() {
-        return config.optBoolean("isusedcount", true);
+        return sp.getBoolean("isusedcount", true);
     }
 
     public void setisUsedCount(Boolean bool) {
-        try {
-            config.put("isusedcount", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("isusedcount", bool);
     }
 
     public boolean getIcon() {
-        return config.optBoolean("Icon", true);
+        return sp.getBoolean("Icon", true);
     }
 
     public void setIcon(Boolean bool) {
-        try {
-            config.put("Icon", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("Icon", bool);
     }
 
-    public String getLyricSpeed() {
-        return config.optString("LyricSpeed", "1f");
+    public Float getLyricSpeed() {
+        return sp.getFloat("LyricSpeed", 1f);
     }
 
-    public void setLyricSpeed(String str) {
-        try {
-            config.put("LyricSpeed", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+    public void setLyricSpeed(Float f) {
+        set("LyricSpeed", f);
     }
 
     public Boolean getIconAutoColor() {
-        return config.optBoolean("IconAutoColor", true);
+        return sp.getBoolean("IconAutoColor", true);
     }
 
     public void setIconAutoColor(Boolean bool) {
-        try {
-            config.put("IconAutoColor", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("IconAutoColor", bool);
     }
 
     public String getIconPath() {
-        return config.optString("IconPath", PATH);
+        return sp.getString("IconPath", PATH);
     }
 
     public void setIconPath(String str) {
-        try {
-            config.put("IconPath", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("IconPath", str);
     }
 
     public boolean getAntiBurn() {
-        return config.optBoolean("antiburn", false);
+        return sp.getBoolean("AntiBurn", false);
     }
 
     public void setAntiBurn(Boolean bool) {
-        try {
-            config.put("antiburn", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("AntiBurn", bool);
     }
 
     public int getUsedCount() {
-        return config.optInt("usedcount", 0);
+        return sp.getInt("UsedCount", 0);
     }
 
     public void setUsedCount(int i) {
-        try {
-            config.put("usedcount", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("UsedCount", i);
     }
 
     public String getAnim() {
-        return config.optString("Anim", "off");
+        return sp.getString("Anim", "off");
     }
 
     public void setAnim(String str) {
-        try {
-            config.put("Anim", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("Anim", str);
     }
 
     public String getHook() {
-        return config.optString("Hook", "");
+        return sp.getString("Hook", "");
     }
 
     public void setHook(String str) {
-        try {
-            config.put("Hook", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("Hook", str);
     }
 
     public boolean getFileLyric() {
-        return config.optBoolean("FileLyric", false);
+        return sp.getBoolean("FileLyric", false);
     }
 
     public void setFileLyric(boolean bool) {
-        try {
-            config.put("FileLyric", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("FileLyric", bool);
     }
 
     public boolean getLyricStyle() {
-        return config.optBoolean("LyricStyle", true);
+        return sp.getBoolean("LyricStyle", true);
     }
 
     public void setLyricStyle(boolean bool) {
-        try {
-            config.put("LyricStyle", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("LyricStyle", bool);
     }
 
     public boolean getLShowOnce() {
-        return config.optBoolean("LShowOnce", false);
+        return sp.getBoolean("LShowOnce", false);
     }
 
     public void setLShowOnce(boolean bool) {
-        try {
-            config.put("LShowOnce", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        set("LShowOnce", bool);
     }
 }
