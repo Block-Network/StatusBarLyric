@@ -1,4 +1,4 @@
-<h1 align="center">MIUI Status bar lyric</h1>
+<h1 align="center">StatusBar lyric</h1>
 
 <div align="center">
 
