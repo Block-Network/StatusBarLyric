@@ -73,18 +73,18 @@
     <string name="CurrentVer">当前版本</string>
     <string name="VerExp">适用情况：\n\n
         完美适配：（标记开始适配的版本）\n
-        暂不知最低版本，欢迎反馈\n
-        支持Flyme歌词即支持\n\n
-
+        APlayer：v1.5.7.9
+        QQ音乐\n
+        酷狗音乐\n
+        酷我音乐\n
+        咪咕音乐\n
+        网易云音乐\n
+        支持Flyme歌词即支持
+        暂不知最低版本，欢迎反馈
 
         应用主动适配：（标记开始适配的版本）\n
         椒盐音乐：v4.5\n\n
-
-        每个应用版本需要 Hook 的内容不同, \n
-        所以需要进行人工适配，\n
         其余版本可能同样适配，请自测\n\n
-
-        带*的功能改动需要重启系统界面
     </string>
     <string name="AppName">状态栏歌词</string>
     <string name="QuickTitle">状态栏歌词</string>
@@ -149,6 +149,9 @@
     <string name="WarnExp">模块注意事项\n\n
         已知Bug：\n
         重启手机后必须重启系统界面才能使用\n
-        音乐软件非正常退出，歌词不会自动消失
+        音乐软件非正常退出，歌词不会自动消失\n\n
+
+
+        带 * 的功能改动需要重启系统界面
     </string>
 </resources>

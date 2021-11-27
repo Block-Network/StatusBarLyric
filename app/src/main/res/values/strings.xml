@@ -79,18 +79,18 @@
     <string name="CurrentVer">current version</string>
     <string name="VerExp">Application:\n\n
         Perfect fit: (mark the version that started to fit)\n
-        I don’t know the minimum version, feedback is welcome\n
-        Support Flyme lyrics is support\n\n
-
+        APlayer: v1.5.7.9
+        QQ Music\n
+        Kugou Music\n
+        Cool Music\n
+        Migu Music\n
+        NetEase Cloud Music\n
+        Support Flyme lyrics that is support
+        I don’t know the minimum version yet, feedback is welcome
 
         Active application adaptation: (mark the version to start adaptation)\n
         Salt and Pepper Music: v4.5\n\n
-
-        Each application version requires different content of Hook, \n
-        So manual adaptation is required,\n
         Other versions may be the same, please test by yourself\n\n
-
-        The function change of the belt requires the system interface to be restarted
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
@@ -161,6 +161,9 @@
     <string name="WarnExp">Module Considerations\n\n
         Known bug:\n
         After restarting the phone, the system interface must be restarted before it can be used\n
-        The music software exits abnormally, the lyrics will not disappear automatically
+        The music software exits abnormally, the lyrics will not disappear automatically\n\n
+
+
+        The function changes with * need to restart the system interface
     </string>
 </resources>
