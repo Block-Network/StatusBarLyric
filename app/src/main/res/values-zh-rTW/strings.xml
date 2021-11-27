@@ -148,5 +148,7 @@
     <string name="WarnExplanation">模塊注意事項</string>
     <string name="WarnExp">模塊注意事項\n\n
         已知Bug：\n
-            重啟手機後必須重啟系統界面才能使用 \\n</string>
+        重啟手機後必須重啟系統界面才能使用\n
+        音樂軟件非正常退出，歌詞不會自動消失
+    </string>
 </resources>

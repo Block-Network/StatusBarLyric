@@ -160,6 +160,7 @@
     <string name="WarnExplanation">Module Considerations</string>
     <string name="WarnExp">Module Considerations\n\n
         Known bug:\n
-        After restarting the phone, the system interface must be restarted before it can be used
+        After restarting the phone, the system interface must be restarted before it can be used\n
+        The music software exits abnormally, the lyrics will not disappear automatically
     </string>
 </resources>
