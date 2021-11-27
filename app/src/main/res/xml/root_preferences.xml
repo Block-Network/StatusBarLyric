@@ -56,6 +56,15 @@
             android:summary=""
             android:title="@string/LyricIcon"/>
 
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="lyricStyle"
+            android:title="@string/MeizuStyle"/>
+
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="lShowOnce"
+            android:title="@string/lShowOnce"/>
 
     <EditTextPreference
             android:defaultValue="false"

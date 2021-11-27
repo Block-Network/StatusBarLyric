@@ -252,10 +252,11 @@ public class SettingsActivity extends PreferenceActivity {
         // 歌词速度
         EditTextPreference lyricSpeed = (EditTextPreference) findPreference("lyricSpeed");
         assert lyricSpeed != null;
+        lyricSpeed.setEnabled(config.getLyricStyle());
         lyricSpeed.setSummary(config.getLyricSpeed());
         lyricSpeed.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setLyricSpeed(newValue.toString());
-            lyricSpeed.setSummary(config.getLyricSpeed());
+            lyricSpeed.setSummary(newValue.toString());
             return true;
         });
 
@@ -440,6 +441,31 @@ public class SettingsActivity extends PreferenceActivity {
         debug.setChecked(config.getDebug());
         debug.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setDebug((Boolean) newValue);
+            return true;
+        });
+
+        // 歌词滚动一次
+        SwitchPreference lShowOnce = (SwitchPreference) findPreference("lShowOnce");
+        assert lShowOnce != null;
+        lShowOnce.setEnabled(!config.getLyricStyle());
+        lShowOnce.setChecked(config.getLShowOnce());
+        lShowOnce.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLShowOnce((Boolean) newValue);
+            return true;
+        });
+
+        // 魅族样式歌词
+        SwitchPreference lyricStyle = (SwitchPreference) findPreference("lyricStyle");
+        assert lyricStyle != null;
+        lyricStyle.setChecked(config.getLyricStyle());
+        lyricStyle.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLyricStyle((Boolean) newValue);
+            lyricSpeed.setEnabled((Boolean) newValue);
+            lShowOnce.setEnabled(!(Boolean) newValue);
+            if ((Boolean) newValue) {
+                config.setLShowOnce(false);
+                lShowOnce.setChecked(false);
+            }
             return true;
         });
 
