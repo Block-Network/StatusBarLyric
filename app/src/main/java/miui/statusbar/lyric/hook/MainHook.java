@@ -298,7 +298,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                                     }
                                                 } else if (count == 50) {
                                                     // 滚动速度
-                                                    if (!config.getLyricStyle()) {
+                                                    if (config.getLyricStyle()) {
                                                         lyricTextView.setSpeed(Float.parseFloat(config.getLyricSpeed()));
                                                     }
 
