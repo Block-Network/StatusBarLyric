@@ -34,17 +34,16 @@
 ## Supported Music app versions
 ### Perfect fit：（Mark the most suitable version）
 - [APlayer](https://github.com/rRemix/APlayer) : v1.5.7.9
-- NetEase Cloud Music : v8.6.13
+- QQ Music
+- kugou music
+- kuwo music
+- Migu Music
+- NetEase Cloud Music
+- Support Flyme lyrics that is support
+- I don’t know the minimum version yet, feedback is welcome
 
 ### App active adaptation：（Mark the start adapting version）
 - [SaltPlayer](https://github.com/Moriafly/SaltPlayerSource) ：v4.5+
-
-### Open Bluetooth lyrics in the app：（Mark the most suitable version）
-- QQ Music : v10.17.0.11 （Need to connect to Bluetooth）
-- kugou Music : v10.9.0
-- kuwo Music : v10.0.1.0
-- Migu Music : v7.6.1 (Need to connect to Bluetooth)
-- NetEase Cloud Music : v7.2.22
 
 ## Thanks list（In no particular order）
 - @潇风残月 (Thanks for the provided library and the extreme streamlining of the code)
