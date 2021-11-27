@@ -4,6 +4,10 @@
             android:key="ver_explain"
             android:summary="@string/ClickDetails"
             android:title="@string/UseInfo"/>
+   <Preference
+            android:key="warn_explain"
+            android:summary="@string/ClickDetails"
+            android:title="@string/WarnExplanation"/>
 
     <SwitchPreference
             android:defaultValue="false"

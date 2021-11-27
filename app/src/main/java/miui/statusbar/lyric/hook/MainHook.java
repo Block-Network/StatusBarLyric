@@ -59,7 +59,6 @@ public class MainHook implements IXposedHookLoadPackage {
     static boolean useSystemMusicActive = true;
     Context context = null;
     boolean showLyric = true;
-    boolean switchLyric = false;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
