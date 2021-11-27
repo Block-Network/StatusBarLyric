@@ -367,4 +367,27 @@ public class Config {
         }
     }
 
+    public boolean getLyricStyle() {
+        return config.optBoolean("LyricStyle", true);
+    }
+
+    public void setLyricStyle(boolean bool) {
+        try {
+            config.put("LyricStyle", bool);
+            setConfig(config.toString());
+        } catch (JSONException ignored) {
+        }
+    }
+
+    public boolean getLShowOnce() {
+        return config.optBoolean("LShowOnce", false);
+    }
+
+    public void setLShowOnce(boolean bool) {
+        try {
+            config.put("LShowOnce", bool);
+            setConfig(config.toString());
+        } catch (JSONException ignored) {
+        }
+    }
 }

@@ -160,4 +160,6 @@
     <string name="ReAppy">Re-apply</string>
     <string name="GetStorageFailed">Failed to obtain storage permissions</string>
     <string name="Notice">Version description The content has been updated</string>
+    <string name="MeizuStyle">* Meizu lyrics scroll style</string>
+    <string name="lShowOnce">* Lyrics only scroll once</string>
 </resources>

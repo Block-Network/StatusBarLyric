@@ -149,4 +149,6 @@
     <string name="GetPermission">前往設置授予權限</string>
     <string name="ReAppy">重新申請</string>
     <string name="Notice">版本說明 內容有更新</string>
+    <string name="MeizuStyle">* 魅族歌詞滾動樣式</string>
+    <string name="lShowOnce">* 歌詞只滾動一次</string>
 </resources>

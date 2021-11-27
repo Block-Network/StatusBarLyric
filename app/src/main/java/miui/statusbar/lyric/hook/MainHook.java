@@ -148,14 +148,22 @@ public class MainHook implements IXposedHookLoadPackage {
                         TextView clock = (TextView) clockField.get(param.thisObject);
 
                         // 创建TextView
-                        LyricTextSwitchView lyricTextView = new LyricTextSwitchView(application);
+                        LyricTextSwitchView lyricTextView = new LyricTextSwitchView(application, config.getLyricStyle());
                         lyricTextView.setWidth((dw * 35) / 100);
                         lyricTextView.setHeight(clock.getHeight());
                         lyricTextView.setTypeface(clock.getTypeface());
                         lyricTextView.setTextSize(0, clock.getTextSize());
                         lyricTextView.setMargins(10, 0, 0, 0);
 
-                        // 单行显示
+                        if (!config.getLyricStyle()) {
+                            if (config.getLShowOnce()) {
+                                // 设置跑马灯为1次
+                                lyricTextView.setMarqueeRepeatLimit(1);
+                            } else {// 设置跑马灯重复次数，-1为无限重复
+                                lyricTextView.setMarqueeRepeatLimit(-1);
+                            }
+                        }
+
                         lyricTextView.setSingleLine(true);
                         lyricTextView.setMaxLines(1);
 
@@ -290,7 +298,9 @@ public class MainHook implements IXposedHookLoadPackage {
                                                     }
                                                 } else if (count == 50) {
                                                     // 滚动速度
-                                                    lyricTextView.setSpeed(Float.parseFloat(config.getLyricSpeed()));
+                                                    if (config.getLyricStyle()) {
+                                                        lyricTextView.setSpeed(Float.parseFloat(config.getLyricSpeed()));
+                                                    }
 
                                                     // 设置动画
                                                     String anim = config.getAnim();
@@ -402,11 +412,8 @@ public class MainHook implements IXposedHookLoadPackage {
                                                             if (!strArr[2].equals("")) {
                                                                 lyric = strArr[2];
                                                             }
-                                                            if (config.getIcon()) {
-                                                                icon[1] = config.getIconPath() + strArr[1] + ".webp";
-                                                            } else {
-                                                                icon[1] = "";
-                                                            }
+
+                                                            icon[1] = config.getIconPath() + strArr[1] + ".webp";
                                                             useSystemMusicActive = true;
                                                             break;
                                                         case "app":
@@ -448,7 +455,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                             } else if (Utils.isDark(clock.getTextColors().getDefaultColor())) {
                                                 lyricTextView.setTextColor(0xff000000);
                                             }
-                                            if (!icon[1].equals("")) {
+                                            if (config.getIcon() && !icon[1].equals("")) {
                                                 Drawable createFromPath = null;
                                                 if (icon[0].equals("hook")) {
                                                     createFromPath = Drawable.createFromPath(icon[1]);
@@ -670,10 +677,7 @@ public class MainHook implements IXposedHookLoadPackage {
                             Utils.addLyricCount();
                             lyric = intent.getStringExtra("Lyric_Data");
                             icon[0] = "hook";
-                            if (config.getIcon()) {
-                                icon[1] = config.getIconPath() + intent.getStringExtra("Lyric_Icon") + ".webp";
-
-                            }
+                            icon[1] = config.getIconPath() + intent.getStringExtra("Lyric_Icon") + ".webp";
                             Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon[1]);
                             break;
                         case "app":
