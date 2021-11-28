@@ -385,19 +385,19 @@ public class Utils {
 
     // log
     public static void log(String text) {
-        if (context != null) {
-            if (hasXposed) {
-                if (new Config(Utils.getPref()).getDebug()) {
-                    XposedBridge.log("MIUI状态栏歌词： " + text);
-                }
-            } else {
+        if (hasXposed) {
+            if (new Config(Utils.getPref()).getDebug()) {
+                XposedBridge.log("MIUI状态栏歌词： " + text);
+            }
+        } else {
+            if (context != null) {
                 if (new Config(Utils.getSP(context)).getDebug()) {
                     Log.d("MIUI状态栏歌词", text);
                     showToastOnLooper(context, "MIUI状态栏歌词： " + text);
                 }
+            } else {
+                Log.d("MIUI状态栏歌词", text);
             }
-        } else {
-            Log.d("MIUI状态栏歌词", text);
         }
     }
 

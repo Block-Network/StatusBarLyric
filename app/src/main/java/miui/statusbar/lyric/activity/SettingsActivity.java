@@ -49,7 +49,6 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.root_preferences);
-        ActivityUtils.checkPermissions(activity);
         SharedPreferences pref;
         try {
             pref = Utils.getSP(getApplicationContext());
@@ -60,6 +59,8 @@ public class SettingsActivity extends PreferenceActivity {
         }
 
         config = new Config(pref);
+
+        ActivityUtils.checkPermissions(activity, config);
 
         Utils.context = activity;
         Utils.log("Debug On");
@@ -315,7 +316,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .setNegativeButton(getString(R.string.RestoreDefaultPath), (dialog, which) -> {
                         iconPath.setSummary(getString(R.string.DefaultPath));
                         config.setIconPath(Utils.PATH);
-                        ActivityUtils.initIcon(activity);
+                        ActivityUtils.initIcon(activity, config);
                     })
                     .setPositiveButton(getString(R.string.NewPath), (dialog, which) -> {
                         ChooseFileUtils chooseFileUtils = new ChooseFileUtils(activity);
@@ -328,7 +329,7 @@ public class SettingsActivity extends PreferenceActivity {
                                 if (config.getIconPath().equals(Utils.PATH)) {
                                     iconPath.setSummary(getString(R.string.DefaultPath));
                                 }
-                                ActivityUtils.initIcon(activity);
+                                ActivityUtils.initIcon(activity, config);
                             }
                         });
                     })
@@ -591,12 +592,12 @@ public class SettingsActivity extends PreferenceActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == 0) {
             ActivityUtils.init(activity);
-            ActivityUtils.initIcon(activity);
+            ActivityUtils.initIcon(activity, config);
         } else {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.GetStorageFailed))
                     .setMessage(getString(R.string.GetStorageFaildTips))
-                    .setNegativeButton(getString(R.string.ReAppy), (dialog, which) -> ActivityUtils.checkPermissions(activity))
+                    .setNegativeButton(getString(R.string.ReAppy), (dialog, which) -> ActivityUtils.checkPermissions(activity, config))
                     .setPositiveButton(getString(R.string.Quit), (dialog, which) -> finish())
                     .setNeutralButton(getString(R.string.GetPermission), (dialog, which) -> {
                         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -615,7 +616,7 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 13131) {
-            ActivityUtils.checkPermissions(activity);
+            ActivityUtils.checkPermissions(activity, config);
         }
     }
 

@@ -41,14 +41,14 @@ public class ActivityUtils {
         return localVersion;
     }
 
-    public static void checkPermissions(Activity activity) {
+    public static void checkPermissions(Activity activity, Config config) {
         if (checkSelfPermission(activity) == -1) {
             activity.requestPermissions(new String[]{
                     "android.permission.WRITE_EXTERNAL_STORAGE"
             }, 1);
         } else {
             init(activity);
-            initIcon(activity);
+            initIcon(activity, config);
         }
     }
 
@@ -65,9 +65,8 @@ public class ActivityUtils {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void initIcon(Activity activity) {
+    public static void initIcon(Activity activity, Config config) {
         String[] IconList = {"kugou.webp", "netease.webp", "qqmusic.webp", "myplayer.webp", "migu.webp"};
-        Config config = new Config(Utils.getSP(activity.getApplicationContext()));
         for (String s : IconList) {
             if (!new File(config.getIconPath(), s).exists()) {
                 copyAssets(activity, "icon/" + s, config.getIconPath() + s);
