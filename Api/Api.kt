@@ -18,7 +18,28 @@ class Api {
 
     /**
      * SendLyric / 发送歌词
-     * @param context，lyric, icon, packName, useSystemMusicActive(是否使用系统检测音乐是否播放)
+     * -
+     * this function will broadcast a intent containing a single line lyrics, which would be displayed (and remained) on statusbar until you send another intent or you call [stopLyric] manually or your app is killed.
+     * -
+     * 发送单行歌词的广播Intent, 歌词将一直停留在状态栏! 调用[stopLyric]清除(当然你的应用被杀死也会清除)
+     * -
+     * Example/例:
+     * ```
+     * // for ( XXX in XXXX) {
+     * // ...
+     *     val line: String = XXXXX() // your method to get the current lyrics
+     *     // example of BASE64 code of notification icon, it should be like this:
+     *     val icon: String = "XEK+FoG3bhD/pK3u   .....    ACTEFV98A"
+     *     sendLyric(mContext, line, icon, BuildConfig.APPLICATION_ID, true)
+     * // ...
+     * // }
+     * ```
+     *
+     * @param context
+     * @param lyric A **single** line lyrics **单行**歌词
+     * @param icon (notification) icon (you can use your music service's notification icon), coded in BASE64, format should be webp. 通知栏图标(Webp格式,Base64编码)
+     * @param packName package name/id, actually music service's name in manifest(or s string containing service's name) 包名, 实际为音乐服务名(或包含该服务名的字符串)
+     * @param useSystemMusicActive detect your music service running status via system. 是否使用系统检测音乐是否播放
      */
     fun sendLyric(context: Context, lyric: String?, icon: String?, packName: String?, useSystemMusicActive: Boolean) {
         if (Config().isFileLyric()) {
