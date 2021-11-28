@@ -45,6 +45,7 @@
 
 ### 应用主动适配：（标记开始适配的版本）
 - [椒盐音乐](https://github.com/Moriafly/SaltPlayerSource) ：v4.5+
+- [Phonograph Plus](https://github.com/chr56/Phonograph_Plus/) (一个[Phonograph](https://github.com/kabouzeid/Phonograph)第三方修改版本) ：v0.0.2(不完美适配)/v0.0.3
 
 ## 感谢名单（不分先后）
 - @潇风残月 (感谢提供的库以及对代码的极限精简)

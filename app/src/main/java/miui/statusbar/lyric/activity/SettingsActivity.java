@@ -1,7 +1,6 @@
 package miui.statusbar.lyric.activity;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -34,18 +33,18 @@ import java.util.Hashtable;
 import java.util.Objects;
 
 
-@SuppressLint("ExportedPreferenceActivity")
 @SuppressWarnings("deprecation")
 public class SettingsActivity extends PreferenceActivity {
     private final Activity activity = this;
     private Config config;
 
-
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences pref;
         try {
             pref = Utils.getSP(getApplicationContext());
+            Toast.makeText(activity, "asasas", Toast.LENGTH_LONG).show();
         } catch (SecurityException ignored) {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.Tips))
