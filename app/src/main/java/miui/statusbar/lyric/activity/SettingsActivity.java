@@ -5,15 +5,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -34,8 +31,6 @@ import miui.statusbar.lyric.utils.Utils;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 @SuppressLint("ExportedPreferenceActivity")
@@ -48,7 +43,6 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.root_preferences);
         SharedPreferences pref;
         try {
             pref = Utils.getSP(getApplicationContext());
@@ -57,7 +51,7 @@ public class SettingsActivity extends PreferenceActivity {
             activity.finish();
             return;
         }
-
+        addPreferencesFromResource(R.xml.root_preferences);
         config = new Config(pref);
 
         ActivityUtils.checkPermissions(activity, config);

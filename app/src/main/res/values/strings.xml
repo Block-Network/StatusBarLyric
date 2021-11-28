@@ -144,7 +144,8 @@
     <string name="StartCheckUpdate">Start checking for updates</string>
     <string name="YouNotMIUI">" (You are not a MIUI system)"</string>
     <string name="GetLyricNum">Number of lyrics obtained:</string>
-    <string name="GetStorageFaildTips">Please activate storage permissions,used to store the lyrics icon\n
+    <string name="GetStorageFaildTips">
+        Please activate storage permissions,used to store the lyrics icon\n
         Otherwise, this module cannot be used normally\n
         If you don\'t trust this module, please uninstall
     </string>
@@ -155,14 +156,26 @@
     <string name="MeizuStyle">* Meizu lyrics scroll style</string>
     <string name="lShowOnce">* Lyrics only scroll once</string>
     <string name="WarnExplanation">Module Considerations</string>
-    <string name="WarnExp">Module Considerations\n\n
+    <string name="WarnExp">Module notes\n\n
+        The module is perfectly used in the official Rom, the official change may cause problems\n\n
+
+        Modules no longer support modules other than Lsposed\n
+        If lsp cannot find this module, please upgrade lsp\n\n
+
+        If the lyrics cannot be displayed\n
+        Please restart the system interface and make sure the module switch is turned on\n
+        Use Flyme to get the lyrics: please make sure the lyrics in the status bar of the music software is turned on\n
+        Use traditional hook to get lyrics: please make sure the music software version is correct\n
+        If Flyme cannot get the lyrics through the method of obtaining lyrics, please switch to the traditional Hook method of obtaining lyrics\n\n
+
+        The function changes with * need to restart the system interface\n\n
+
+        If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to Github Telegram for feedback. \n\n
+
         Known bug:\n
-        The music software exits abnormally, the lyrics will not disappear automatically\n\n
-
-
-        The function changes with * need to restart the system interface
+        The music software exits abnormally, the lyrics will not disappear automatically
     </string>
-    <string name="NotSupport">Xposed not supported</string>
+    <string name="NotSupport">Xposed not supported\n or the module is not activated\nforce stop the software after activation</string>
     <string name="MeizuLyric">Use Meizu Way to Get Lyrics</string>
     <string name="MeizuLyricTips">Cannot get lyrics using Meizu method, please turn off this switch</string>
 </resources>

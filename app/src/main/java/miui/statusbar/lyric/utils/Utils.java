@@ -250,7 +250,6 @@ public class Utils {
     }
 
     // 弹出toast
-
     public static void showToastOnLooper(final Context context, final String message) {
         try {
             Handler handler = new Handler(Looper.getMainLooper());

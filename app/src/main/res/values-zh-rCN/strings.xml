@@ -185,7 +185,8 @@
         已知Bug：\n
         音乐软件非正常退出，歌词不会自动消失
     </string>
-    <string name="NotSupport">不支持的Xposed版本</string>
+    <string name="NotSupport">不支持的Xposed版本\n或未激活本模块\n激活后强制停止本软件
+    </string>
     <string name="MeizuLyric">使用魅族方式获取歌词</string>
     <string name="MeizuLyricTips">使用魅族方法无法获取歌词请关闭此开关</string>
 </resources>
