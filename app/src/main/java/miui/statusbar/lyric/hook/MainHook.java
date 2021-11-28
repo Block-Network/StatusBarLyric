@@ -97,7 +97,10 @@ public class MainHook implements IXposedHookLoadPackage {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         super.afterHookedMethod(param);
-                        config = new Config(Utils.getPref());
+                        try {
+                            config = new Config(Utils.getPref());
+                        } catch (StackOverflowError ignored) {
+                        }
                         Field clockField;
 
                         // 获取当前进程的Application
@@ -280,7 +283,10 @@ public class MainHook implements IXposedHookLoadPackage {
                                     public void run() {
                                         try {
                                             if (count == 50) {
-                                                config.update(Utils.getPref());
+                                                try {
+                                                    config.update(Utils.getPref());
+                                                } catch (StackOverflowError ignored) {
+                                                }
                                             }
                                             if (config.getLyricService()) {
                                                 if (count == 25) {
@@ -410,7 +416,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                                                 lyric = strArr[2];
                                                             }
 
-                                                            icon[1] = config.getIconPath() + strArr[1] + ".webp";
+                                                            icon[1] = strArr[1] + ".webp";
                                                             useSystemMusicActive = true;
                                                             break;
                                                         case "app":
@@ -455,7 +461,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                             if (config.getIcon() && !icon[1].equals("")) {
                                                 Drawable createFromPath = null;
                                                 if (icon[0].equals("hook")) {
-                                                    createFromPath = Drawable.createFromPath(icon[1]);
+                                                    createFromPath = Drawable.createFromPath(config.getIconPath() + icon[1]);
                                                 } else if (icon[0].equals("app")) {
                                                     createFromPath = new BitmapDrawable(Utils.stringToBitmap(icon[1]));
                                                 }
@@ -671,14 +677,12 @@ public class MainHook implements IXposedHookLoadPackage {
                 if (intent.getAction().equals("Lyric_Server")) {
                     switch (intent.getStringExtra("Lyric_Type")) {
                         case "hook":
-//                            Utils.addLyricCount();
                             lyric = intent.getStringExtra("Lyric_Data");
                             icon[0] = "hook";
-                            icon[1] = config.getIconPath() + intent.getStringExtra("Lyric_Icon") + ".webp";
+                            icon[1] = intent.getStringExtra("Lyric_Icon") + ".webp";
                             Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon[1]);
                             break;
                         case "app":
-//                            Utils.addLyricCount();
                             lyric = intent.getStringExtra("Lyric_Data");
                             icon[0] = "app";
                             String icon_data = intent.getStringExtra("Lyric_Icon");

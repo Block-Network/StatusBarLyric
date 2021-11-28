@@ -15,6 +15,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.widget.Toast;
+import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.Config;
 import miui.statusbar.lyric.R;
 import org.json.JSONException;
@@ -27,19 +28,6 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public class ActivityUtils {
-    static int configId = 2;
-
-    public static String getLocalVersion(Context context) {
-        String localVersion = "";
-        try {
-            PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-            localVersion = packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return localVersion;
-    }
 
     public static void checkPermissions(Activity activity, Config config) {
         if (checkSelfPermission(activity) == -1) {
@@ -107,31 +95,26 @@ public class ActivityUtils {
             String data = message.getData().getString("value");
             try {
                 JSONObject jsonObject = new JSONObject(data);
-                if (!getLocalVersion(activity).equals("")) {
-                    if (Integer.parseInt(jsonObject.getString("tag_name").split("v")[1])
-                            > Utils.getLocalVersionCode(activity)) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setTitle(activity.getString(R.string.NewVer) + " [" + jsonObject.getString("name") + "]")
-                                .setIcon(R.mipmap.ic_launcher)
-                                .setMessage(jsonObject.getString("body").replace("#", ""))
-                                .setPositiveButton(activity.getString(R.string.Update), (dialog, which) -> {
-                                    try {
-                                        Uri uri = Uri.parse(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"));
-                                        Intent intent = new Intent();
-                                        intent.setAction("android.intent.action.VIEW");
-                                        intent.setData(uri);
-                                        activity.startActivity(intent);
-                                    } catch (JSONException e) {
-                                        Toast.makeText(activity, activity.getString(R.string.GetNewVerError) + e, Toast.LENGTH_LONG).show();
-                                    }
+                if (Integer.parseInt(jsonObject.getString("tag_name").split("v")[1])
+                        > BuildConfig.VERSION_CODE) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setTitle(activity.getString(R.string.NewVer) + " [" + jsonObject.getString("name") + "]")
+                            .setIcon(R.mipmap.ic_launcher)
+                            .setMessage(jsonObject.getString("body").replace("#", ""))
+                            .setPositiveButton(activity.getString(R.string.Update), (dialog, which) -> {
+                                try {
+                                    Uri uri = Uri.parse(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"));
+                                    Intent intent = new Intent();
+                                    intent.setAction("android.intent.action.VIEW");
+                                    intent.setData(uri);
+                                    activity.startActivity(intent);
+                                } catch (JSONException e) {
+                                    Toast.makeText(activity, activity.getString(R.string.GetNewVerError) + e, Toast.LENGTH_LONG).show();
+                                }
 
-                                }).setNegativeButton(activity.getString(R.string.Cancel), null).create().show();
-                    } else {
-                        Toast.makeText(activity, activity.getString(R.string.NoVerUpdate), Toast.LENGTH_LONG).show();
-                    }
+                            }).setNegativeButton(activity.getString(R.string.Cancel), null).create().show();
                 } else {
-                    Toast.makeText(activity, activity.getString(R.string.CheckUpdateError), Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(activity, activity.getString(R.string.NoVerUpdate), Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

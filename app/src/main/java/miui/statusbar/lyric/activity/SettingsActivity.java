@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.byyang.choose.ChooseFileUtils;
+import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.Config;
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.utils.ActivityUtils;
@@ -47,8 +48,14 @@ public class SettingsActivity extends PreferenceActivity {
         try {
             pref = Utils.getSP(getApplicationContext());
         } catch (SecurityException ignored) {
-            Utils.showToastOnLooper(getApplicationContext(), getString(R.string.NotSupport));
-            activity.finish();
+            new AlertDialog.Builder(activity)
+                    .setTitle(getString(R.string.Tips))
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setMessage(getString(R.string.NotSupport))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.Quit), (dialog, which) -> activity.finish())
+                    .create()
+                    .show();
             return;
         }
         addPreferencesFromResource(R.xml.root_preferences);
@@ -84,7 +91,7 @@ public class SettingsActivity extends PreferenceActivity {
             new AlertDialog.Builder(activity)
                     .setIcon(R.mipmap.ic_launcher)
                     .setTitle(getString(R.string.VerExplanation))
-                    .setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity), getString(R.string.VerExp)))
+                    .setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), BuildConfig.VERSION_NAME, getString(R.string.VerExp)))
                     .setNegativeButton(getString(R.string.Done), null)
                     .create()
                     .show();
@@ -98,7 +105,7 @@ public class SettingsActivity extends PreferenceActivity {
             new AlertDialog.Builder(activity)
                     .setIcon(R.mipmap.ic_launcher)
                     .setTitle(getString(R.string.WarnExplanation))
-                    .setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity), getString(R.string.WarnExp)))
+                    .setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), BuildConfig.VERSION_NAME, getString(R.string.WarnExp)))
                     .setNegativeButton(getString(R.string.Done), null)
                     .create()
                     .show();
@@ -529,7 +536,7 @@ public class SettingsActivity extends PreferenceActivity {
         //检查更新
         Preference checkUpdate = findPreference("CheckUpdate");
         assert checkUpdate != null;
-        checkUpdate.setSummary(String.format("%s：%s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity)));
+        checkUpdate.setSummary(String.format("%s：%s", getString(R.string.CurrentVer), BuildConfig.VERSION_NAME));
         checkUpdate.setOnPreferenceClickListener((preference) -> {
             Toast.makeText(activity, getString(R.string.StartCheckUpdate), Toast.LENGTH_LONG).show();
             ActivityUtils.checkUpdate(activity);

@@ -6,8 +6,6 @@ import android.app.MiuiStatusBarManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ColorMatrix;
@@ -69,19 +67,6 @@ public class Utils {
         MainHook.icon[1] = Utils.packName_GetIconPath(packName);
         MainHook.lyric = lyric;
 //        addLyricCount();
-    }
-
-    @SuppressWarnings("deprecation")
-    public static int getLocalVersionCode(Context context) {
-        int localVersion = 0;
-        try {
-            PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-            localVersion = packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return localVersion;
     }
 
     public static String getMiuiVer() {
@@ -408,7 +393,7 @@ public class Utils {
 
     public static SharedPreferences getPref() {
         XSharedPreferences pref = new XSharedPreferences(BuildConfig.APPLICATION_ID, "Lyric_Config");
-        return pref.getFile().canRead() ? pref : null;
+        return pref.getFile().canRead() ? pref : getPref();
     }
 
 }

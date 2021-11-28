@@ -3,6 +3,7 @@ package miui.statusbar.lyric.hook;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -40,7 +41,7 @@ public class netease {
                                 if (param.args[0] != null) {
                                     Utils.sendLyric(context, param.args[0].toString(), "netease");
                                     musicName = param.args[0].toString();
-                                    Utils.log("网易云： " + param.args[0].toString());
+                                    Utils.log("网易云歌名： " + param.args[0].toString());
                                 }
                             }
                         };
@@ -55,7 +56,7 @@ public class netease {
                                     Utils.sendLyric(context, param.args[0].toString(), "netease");
                                     Utils.log("网易云： " + param.args[0].toString());
                                 }
-                                if (!musicName.equals("")) {
+                                if (!TextUtils.isEmpty(musicName)) {
                                     param.args[0] = musicName;
                                     param.setResult(param.args);
                                 }

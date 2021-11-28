@@ -1,6 +1,7 @@
 .gradle
 app/release
 app/build
+app/debug
 !app/libs/classes.jar
 /.idea/
 /.idea/inspectionProfiles/
