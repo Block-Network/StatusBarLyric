@@ -14,7 +14,7 @@ public class QuickTitleService extends TileService {
     public void onClick() {
         super.onClick();
         Tile tile = getQsTile();
-        Config config = new Config(Utils.getSP(getApplicationContext()));
+        Config config = new Config();
         config.setLyricService(!config.getLyricService());
         tile.setIcon(Icon.createWithResource(this, R.drawable.title_icon));
         tile.setLabel(getString(R.string.QuickTitle));
@@ -25,7 +25,7 @@ public class QuickTitleService extends TileService {
 
     @Override
     public void onStartListening() {
-        Config config = new Config(Utils.getSP(getApplicationContext()));
+        Config config = new Config();
         Tile tile = getQsTile();
         tile.setIcon(Icon.createWithResource(this, R.drawable.title_icon));
         tile.setLabel(getString(R.string.QuickTitle));

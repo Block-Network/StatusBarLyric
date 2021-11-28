@@ -30,7 +30,6 @@ import de.robv.android.xposed.XposedBridge;
 import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.Config;
 import miui.statusbar.lyric.hook.MainHook;
-
 import org.json.JSONArray;
 
 import java.io.FileInputStream;
@@ -177,7 +176,7 @@ public class Utils {
     }
 
     public static void sendLyric(Context context, String lyric, String icon) {
-        if (new Config(Utils.getPref()).getFileLyric()) {
+        if (new Config().getFileLyric()) {
             setLyricFile(icon, lyric);
         } else {
             context.sendBroadcast(new Intent().setAction("Lyric_Server").putExtra("Lyric_Data", lyric).putExtra("Lyric_Icon", icon).putExtra("Lyric_Type", "hook"));
@@ -387,11 +386,11 @@ public class Utils {
     public static void log(String text) {
         if (context != null) {
             if (hasXposed) {
-                if (new Config(Utils.getPref()).getDebug()) {
+                if (new Config().getDebug()) {
                     XposedBridge.log("MIUI状态栏歌词： " + text);
                 }
             } else {
-                if (new Config(Utils.getSP(context)).getDebug()) {
+                if (new Config().getDebug()) {
                     Log.d("MIUI状态栏歌词", text);
                     showToastOnLooper(context, "MIUI状态栏歌词： " + text);
                 }

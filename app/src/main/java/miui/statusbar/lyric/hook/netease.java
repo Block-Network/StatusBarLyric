@@ -15,7 +15,7 @@ public class netease {
 
     public static class Hook {
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
-            Config config = new Config(Utils.getPref());
+            Config config = new Config();
             if (config.getMeizuLyric()) {
                 MeiZuStatusBarLyric.guiseFlyme(lpparam);
             } else {

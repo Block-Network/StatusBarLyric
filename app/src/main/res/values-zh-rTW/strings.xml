@@ -134,7 +134,8 @@
     <string name="StartCheckUpdate">開始檢查是否有更新</string>
     <string name="YouNotMIUI">" (您不是MIUI系統)"</string>
     <string name="GetLyricNum">"已獲取歌詞數句數: "</string>
-    <string name="GetStorageFaildTips">請開通存儲權限\n
+    <string name="GetStorageFaildTips">
+        請開通存儲權限，用於存放歌詞圖標\n
         否則無法正常使用本模塊\n
         若不信任本模塊,請卸載
     </string>
@@ -146,14 +147,25 @@
     <string name="lShowOnce">* 歌詞只滾動一次</string>
     <string name="WarnExplanation">模塊注意事項</string>
     <string name="WarnExp">模塊注意事項\n\n
+        模塊在官方Rom完美使用，官改可能會出問題\n\n
+
+        模塊不再支持除Lsposed的模塊\n
+        若lsp找不到本模塊，請升級lsp\n\n
+
+        若無法顯示歌詞\n
+        請重啟系統界面，確保模塊開關打開\n
+        使用 Flyme獲取歌詞方式 ：請確保音樂軟件內狀態欄歌詞打開\n
+        使用 傳統Hook獲取歌詞方式 ：請確保音樂軟件版本是否正確\n
+        若 Flyme獲取歌詞方式無法獲取歌詞，請切換到 傳統Hook獲取歌詞方式\n\n
+
+        帶 * 的功能改動需要重啟系統界面\n\n
+
+        模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋。 \n\n
+
         已知Bug：\n
-        重啟手機後必須重啟系統界面才能使用\n
-        音樂軟件非正常退出，歌詞不會自動消失 \n\n
-
-
-        帶 * 的功能改動需要重啟系統界面
+        音樂軟件非正常退出，歌詞不會自動消失
     </string>
-    <string name="NotSupport">不支持的Xposed版本</string>
+    <string name="NotSupport">不支持的Xposed版本\n或未激活本模塊\n激活後強制停止本軟件</string>
     <string name="MeizuLyric">使用魅族方式獲取歌詞</string>
     <string name="MeizuLyricTips">使用魅族方法無法獲取歌詞請關閉此開關</string>
 </resources>

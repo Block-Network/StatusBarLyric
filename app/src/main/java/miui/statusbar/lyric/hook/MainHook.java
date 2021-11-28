@@ -87,7 +87,7 @@ public class MainHook implements IXposedHookLoadPackage {
             case "com.android.systemui":
                 Utils.log("正在hook系统界面");
                 MeiZuStatusBarLyricService.FlymeNotificationService(lpparam);
-                config = new Config(Utils.getPref());
+                config = new Config();
                 // 状态栏歌词
                 XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.CollapsedStatusBarFragment", lpparam.classLoader, "onViewCreated", View.class, Bundle.class, new XC_MethodHook() {
                     @Override
@@ -280,7 +280,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                     public void run() {
                                         try {
                                             if (count == 50) {
-                                                config.update(Utils.getPref());
+                                                config= new Config();
                                             }
                                             if (config.getLyricService()) {
                                                 if (count == 25) {
@@ -296,7 +296,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                                 } else if (count == 50) {
                                                     // 滚动速度
                                                     if (config.getLyricStyle()) {
-                                                        lyricTextView.setSpeed(config.getLyricSpeed());
+                                                        lyricTextView.setSpeed(Float.parseFloat(config.getLyricSpeed()));
                                                     }
 
                                                     // 设置动画

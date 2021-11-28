@@ -71,7 +71,7 @@
             android:title="@string/lShowOnce"/>
 
     <EditTextPreference
-            android:defaultValue="1"
+            android:defaultValue="1f"
             android:key="lyricSpeed"
             android:summary=""
             android:title="@string/LyricSpeed"/>

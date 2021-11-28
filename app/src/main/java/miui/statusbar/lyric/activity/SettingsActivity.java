@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -50,16 +49,9 @@ public class SettingsActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.root_preferences);
         ActivityUtils.checkPermissions(activity);
-        SharedPreferences pref;
-        try {
-            pref = Utils.getSP(getApplicationContext());
-        } catch (SecurityException ignored) {
-            Utils.showToastOnLooper(getApplicationContext(), getString(R.string.NotSupport));
-            activity.finish();
-            return;
-        }
+        config = new Config();
+        ActivityUtils.checkConfig(activity, config.getId());
 
-        config = new Config(pref);
 
         Utils.context = activity;
         Utils.log("Debug On");
@@ -275,7 +267,7 @@ public class SettingsActivity extends PreferenceActivity {
         EditTextPreference lyricSpeed = (EditTextPreference) findPreference("lyricSpeed");
         assert lyricSpeed != null;
         lyricSpeed.setEnabled(config.getLyricStyle());
-        lyricSpeed.setSummary(config.getLyricSpeed().toString());
+        lyricSpeed.setSummary(config.getLyricSpeed());
         lyricSpeed.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setLyricSpeed(Float.parseFloat(newValue.toString()));
             lyricSpeed.setSummary(newValue.toString());
@@ -565,22 +557,21 @@ public class SettingsActivity extends PreferenceActivity {
             hCUK.setSummary(String.format("%s%s", hCUK.getSummary(), getString(R.string.YouNotMIUI)));
             config.sethNoticeIcon(false);
         }
-//        Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
-//            setTitle(String.format("%s%s", getString(R.string.GetLyricNum), config.getUsedCount()));
-//            return false;
-//        });
-//
-//        new Thread(() -> {
-//            new Timer().schedule(
-//                    new TimerTask() {
-//                        @Override
-//                        public void run() {
-//                            if (config.getisUsedCount()) {
-//                                titleUpdate.sendEmptyMessage(0);
-//                            }
-//                        }
-//                    }, 0, 1000);
-//        }).start();
+
+        Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
+            setTitle(String.format("%s%s", getString(R.string.GetLyricNum), config.getUsedCount()));
+            return false;
+        });
+
+        new Thread(() -> new Timer().schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (config.getisUsedCount()) {
+                            titleUpdate.sendEmptyMessage(0);
+                        }
+                    }
+                }, 0, 1000)).start();
 
 
         //ActivityUtils.setData(activity);
