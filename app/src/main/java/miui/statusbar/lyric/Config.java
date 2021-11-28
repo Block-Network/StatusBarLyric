@@ -125,6 +125,7 @@ public class Config {
     public void sethNoticeIcon(Boolean bool) {
         set("hNoticeIcon", bool);
     }
+
     public Boolean getHAlarm() {
         return sp.getBoolean("hAlarm", false);
     }

@@ -35,13 +35,12 @@ import java.util.Objects;
 
 
 @SuppressLint("ExportedPreferenceActivity")
+@SuppressWarnings("deprecation")
 public class SettingsActivity extends PreferenceActivity {
     private final Activity activity = this;
     private Config config;
 
-    @SuppressLint("WrongConstant")
-    @SuppressWarnings({"deprecation"})
-    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences pref;
