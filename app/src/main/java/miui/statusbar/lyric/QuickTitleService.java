@@ -16,6 +16,10 @@ public class QuickTitleService extends TileService {
         Tile tile = getQsTile();
         Config config = new Config();
         config.setLyricService(!config.getLyricService());
+        set(tile, config);
+    }
+
+    private void set(Tile tile, Config config) {
         tile.setIcon(Icon.createWithResource(this, R.drawable.title_icon));
         tile.setLabel(getString(R.string.QuickTitle));
         tile.setContentDescription(getString(R.string.QuickTitle));
@@ -27,10 +31,6 @@ public class QuickTitleService extends TileService {
     public void onStartListening() {
         Config config = new Config();
         Tile tile = getQsTile();
-        tile.setIcon(Icon.createWithResource(this, R.drawable.title_icon));
-        tile.setLabel(getString(R.string.QuickTitle));
-        tile.setContentDescription(getString(R.string.QuickTitle));
-        tile.setState(config.getLyricService() ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
-        tile.updateTile();
+        set(tile, config);
     }
 }

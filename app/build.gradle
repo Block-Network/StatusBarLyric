@@ -9,11 +9,11 @@ android {
 
     defaultConfig {
         applicationId "miui.statusbar.lyric"
-        minSdkVersion 23
+        minSdkVersion 27
         //noinspection OldTargetApi
         targetSdkVersion 29
-        versionCode 53
-        versionName "3.31.1"
+        versionCode 54
+        versionName "3.32.2"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }
