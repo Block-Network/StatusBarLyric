@@ -134,7 +134,7 @@
     <string name="StartCheckUpdate">開始檢查是否有更新</string>
     <string name="YouNotMIUI">" (您不是MIUI系統)"</string>
     <string name="GetLyricNum">"已獲取歌詞數句數: "</string>
-    <string name="GetStorageFaildTips">請開通存儲權限\n
+    <string name="GetStorageFaildTips">請開通存儲權限，用於存放歌詞圖標\n
         否則無法正常使用本模塊\n
         若不信任本模塊,請卸載
     </string>
@@ -147,7 +147,6 @@
     <string name="WarnExplanation">模塊注意事項</string>
     <string name="WarnExp">模塊注意事項\n\n
         已知Bug：\n
-        重啟手機後必須重啟系統界面才能使用\n
         音樂軟件非正常退出，歌詞不會自動消失 \n\n
 
 

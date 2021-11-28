@@ -144,7 +144,7 @@
     <string name="StartCheckUpdate">Start checking for updates</string>
     <string name="YouNotMIUI">" (You are not a MIUI system)"</string>
     <string name="GetLyricNum">Number of lyrics obtained:</string>
-    <string name="GetStorageFaildTips">Please activate storage permissions\n
+    <string name="GetStorageFaildTips">Please activate storage permissions,used to store the lyrics icon\n
         Otherwise, this module cannot be used normally\n
         If you don\'t trust this module, please uninstall
     </string>
@@ -157,7 +157,6 @@
     <string name="WarnExplanation">Module Considerations</string>
     <string name="WarnExp">Module Considerations\n\n
         Known bug:\n
-        After restarting the phone, the system interface must be restarted before it can be used\n
         The music software exits abnormally, the lyrics will not disappear automatically\n\n
 
 

@@ -13,7 +13,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -30,7 +29,6 @@ import de.robv.android.xposed.XposedBridge;
 import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.Config;
 import miui.statusbar.lyric.hook.MainHook;
-
 import org.json.JSONArray;
 
 import java.io.FileInputStream;
@@ -43,7 +41,6 @@ import java.util.List;
 import java.util.Objects;
 
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class Utils {
     public static String PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/miui.statusbar.lyric/";
     public static boolean hasMiuiSetting = isPresent("android.provider.MiuiSettings");
@@ -74,6 +71,7 @@ public class Utils {
 //        addLyricCount();
     }
 
+    @SuppressWarnings("deprecation")
     public static int getLocalVersionCode(Context context) {
         int localVersion = 0;
         try {
@@ -118,6 +116,7 @@ public class Utils {
     }
 
     // 判断服务是否运行
+    @SuppressWarnings("deprecation")
     public static boolean isServiceRunning(Context context, String str) {
         List<ActivityManager.RunningServiceInfo> runningServices = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).getRunningServices(200);
         if (runningServices.size() <= 0) {
@@ -133,6 +132,7 @@ public class Utils {
     }
 
     // 判断程序是否运行
+    @SuppressWarnings("deprecation")
     public static boolean isAppRunning(Context context, String str) {
         if (isServiceRunning(context, str)) {
             return true;
@@ -401,11 +401,10 @@ public class Utils {
         }
     }
 
+    @SuppressWarnings("deprecation")
+    @SuppressLint("WorldReadableFiles")
     public static SharedPreferences getSP(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return context.createDeviceProtectedStorageContext().getSharedPreferences("Lyric_Config", Context.MODE_WORLD_READABLE);
-        }
-        return null;
+        return context.createDeviceProtectedStorageContext().getSharedPreferences("Lyric_Config", Context.MODE_WORLD_READABLE);
     }
 
     public static SharedPreferences getPref() {
