@@ -103,6 +103,7 @@
     <string name="CheckUpdateError">Check failed, please try again later!</string>
     <string name="CheckUpdateFailed">Check for update failed</string>
     <string name="ResetSuccess">Reset successfully</string>
+    <string name="FixSuccess">Fix successfully</string>
     <string name="Warn">Warning</string>
     <string name="ConfigError">Configuration file error\n
         It may be that the content of the file is missing or the configuration file has been upgraded\n

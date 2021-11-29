@@ -3,7 +3,10 @@ package miui.statusbar.lyric.hook;
 
 import android.app.AndroidAppHelper;
 import android.app.Application;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -26,8 +29,8 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.Config;
-import miui.statusbar.lyric.view.LyricTextSwitchView;
 import miui.statusbar.lyric.utils.Utils;
+import miui.statusbar.lyric.view.LyricTextSwitchView;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -36,12 +39,14 @@ import java.util.TimerTask;
 
 
 public class MainHook implements IXposedHookLoadPackage {
-    static final String KEY_LYRIC = "lyric";
     public static final String[] icon = new String[]{"hook", ""};
+    static final String KEY_LYRIC = "lyric";
     public static String lyric = "";
+    public static Config config;
     static String[] musicServer = new String[]{
             "com.kugou",
             "com.netease.cloudmusic",
+            "com.netease.cloudmusic.lite",
             "com.tencent.qqmusic.service",
             "cn.kuwo",
             "remix.myplayer",
@@ -52,14 +57,12 @@ public class MainHook implements IXposedHookLoadPackage {
     static boolean iconReverseColor = false;
     static boolean isPowerOn = false;
     static boolean isLock = true;
-    public static Config config;
     static boolean useSystemMusicActive = true;
     Context context = null;
     boolean showLyric = true;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        Utils.hasXposed = true;
         Utils.log("Debug已开启");
 
         // 获取Context
@@ -95,6 +98,7 @@ public class MainHook implements IXposedHookLoadPackage {
                         super.beforeHookedMethod(param);
                     }
 
+                    @SuppressWarnings("deprecation")
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         super.afterHookedMethod(param);
@@ -241,6 +245,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                     // 设置状态栏
                                     Utils.setStatusBar(application, false, config);
                                     lyricTextView.setText(string);
+                                    Utils.addLyricCount(config);
                                 }
                                 // 隐藏时钟
                                 if (showLyric) {
@@ -280,7 +285,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                     public void run() {
                                         try {
                                             if (count == 50) {
-                                                config= new Config();
+                                                config = new Config();
                                             }
                                             if (config.getLyricService()) {
                                                 if (count == 25) {
@@ -395,6 +400,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                     int color = 0;
                                     int count = 0;
 
+                                    @SuppressWarnings("deprecation")
                                     @Override
                                     public void run() {
                                         if (count == 50) {

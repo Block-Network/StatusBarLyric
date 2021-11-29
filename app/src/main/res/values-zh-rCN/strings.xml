@@ -118,6 +118,7 @@
     <string name="CheckUpdateError">检查失败，请稍后再试!</string>
     <string name="CheckUpdateFailed">检查更新失败</string>
     <string name="ResetSuccess">重置成功</string>
+    <string name="FixSuccess">修复成功</string>
     <string name="Warn">警告</string>
     <string name="ConfigError">配置文件错误\n
         可能是文件内容丢失或者配置文件有所升级\n

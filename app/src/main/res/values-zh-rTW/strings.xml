@@ -97,6 +97,7 @@
     <string name="CheckUpdateError">檢查失敗，請稍後再試!</string>
     <string name="CheckUpdateFailed">檢查更新失敗</string>
     <string name="ResetSuccess">重置成功</string>
+    <string name="FixSuccess">修復成功</string>
     <string name="Warn">警告</string>
     <string name="ConfigError">配置文件錯誤\n
         可能是文件內容丟失或者配置文件有所升級\n

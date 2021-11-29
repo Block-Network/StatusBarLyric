@@ -49,6 +49,7 @@ public class ActivityUtils {
         } else {
             init(activity);
             initIcon(activity);
+            ActivityUtils.checkConfig(activity, new Config().getId());
         }
     }
 
@@ -189,6 +190,24 @@ public class ActivityUtils {
         }).start();
     }
 
+    public static void checkConfig(Activity activity, int id) {
+        if (id != configId) {
+            try {
+                new AlertDialog.Builder(activity)
+                        .setTitle(activity.getString(R.string.Warn))
+                        .setMessage(activity.getString(R.string.ConfigError))
+                        .setNegativeButton(activity.getString(R.string.ResetNow), (dialog, which) -> cleanConfig(activity))
+                        .setPositiveButton(activity.getString(R.string.NoReset), null)
+                        .setNeutralButton(activity.getString(R.string.TryFix), (dialog, which) -> fixConfig(activity))
+                        .setCancelable(false)
+                        .create()
+                        .show();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void cleanConfig(Activity activity) {
         SharedPreferences userSettings = activity.getSharedPreferences("miui.statusbar.lyric_preferences", 0);
         SharedPreferences.Editor editor = userSettings.edit();
@@ -225,25 +244,9 @@ public class ActivityUtils {
         config.setDebug(config.getDebug());
         config.setisUsedCount(config.getisUsedCount());
         config.setHook(config.getHook());
+        Toast.makeText(activity, activity.getString(R.string.FixSuccess), Toast.LENGTH_LONG).show();
         activity.finishAffinity();
     }
 
-    public static void checkConfig(final Activity activity, int id) {
-        if (id != configId) {
-            try {
-                new AlertDialog.Builder(activity)
-                        .setTitle(activity.getString(R.string.Warn))
-                        .setMessage(activity.getString(R.string.ConfigError))
-                        .setNegativeButton(activity.getString(R.string.ResetNow), (dialog, which) -> cleanConfig(activity))
-                        .setPositiveButton(activity.getString(R.string.NoReset), null)
-                        .setNeutralButton(activity.getString(R.string.TryFix), (dialog, which) -> fixConfig(activity))
-                        .setCancelable(false)
-                        .create()
-                        .show();
-            } catch (RuntimeException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
 }

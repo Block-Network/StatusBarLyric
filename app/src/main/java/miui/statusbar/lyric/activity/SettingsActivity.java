@@ -50,11 +50,7 @@ public class SettingsActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.root_preferences);
         ActivityUtils.checkPermissions(activity);
         config = new Config();
-        ActivityUtils.checkConfig(activity, config.getId());
-
-
-        Utils.context = activity;
-        Utils.log("Debug On");
+//        Utils.log("Debug On");
 
         String tips = "Tips1";
         SharedPreferences preferences = activity.getSharedPreferences(tips, 0);
@@ -508,7 +504,7 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 重置插件
+        // 重置模块
         Preference reset = findPreference("reset");
         assert reset != null;
         reset.setOnPreferenceClickListener((preference) -> {
@@ -557,7 +553,6 @@ public class SettingsActivity extends PreferenceActivity {
             hCUK.setSummary(String.format("%s%s", hCUK.getSummary(), getString(R.string.YouNotMIUI)));
             config.sethNoticeIcon(false);
         }
-
         Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
             setTitle(String.format("%s%s", getString(R.string.GetLyricNum), config.getUsedCount()));
             return false;
