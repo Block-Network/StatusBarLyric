@@ -178,4 +178,7 @@
     <string name="MeizuLyric">使用魅族方式獲取歌詞</string>
     <string name="MeizuLyricTips">使用魅族方法無法獲取歌詞請關閉此開關</string>
     <string name="UseCount">*歌词统计</string>
+    <string name="UseFileConfig">使用文件保存配置</string>
+    <string name="FileConfigMode">文件配置文件</string>
+    <string name="SPConfigMode">SP 配置文件</string>
 </resources>

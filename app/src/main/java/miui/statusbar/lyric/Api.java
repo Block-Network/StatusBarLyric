@@ -11,6 +11,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import miui.statusbar.lyric.utils.ActivityUtils;
+
 /**
  * 状态栏歌词Api
  * @author FKj
@@ -34,7 +36,7 @@ public class Api {
      * @param useSystemMusicActive detect your music service running status via system. 是否使用系统检测音乐是否播放
      */
     public void sendLyric(Context context, String lyric, String icon, String packName, boolean useSystemMusicActive) {
-        if (new Config().isFileLyric()) {
+        if (ActivityUtils.getConfig(context).getFileLyric()) {
             setLyricFile(packName, lyric, icon, useSystemMusicActive);
         } else {
             context.sendBroadcast(new Intent()
@@ -53,7 +55,7 @@ public class Api {
      * @param context
      */
     public void stopLyric(Context context) {
-        if (new Config().isFileLyric()) {
+        if (ActivityUtils.getConfig(context).getFileLyric()) {
             setLyricFile_stop();
         } else {
             context.sendBroadcast(new Intent().setAction("Lyric_Server").putExtra("Lyric_Type", "app_stop"));
@@ -87,39 +89,6 @@ public class Api {
             outputStream.write(json.getBytes());
             outputStream.close();
         } catch (Exception ignored) {
-        }
-    }
-
-    public class Config {
-        JSONObject config = new JSONObject();
-
-        public Config() {
-            try {
-                if (getConfig().equals("")) {
-                    config = new JSONObject();
-                    return;
-                }
-                config = new JSONObject(getConfig());
-            } catch (JSONException ignored) {
-            }
-        }
-
-        public String getConfig() {
-            String str = "";
-            try {
-                FileInputStream fileInputStream = new FileInputStream(PATH + "Config.json");
-                byte[] bArr = new byte[fileInputStream.available()];
-                fileInputStream.read(bArr);
-                str = new String(bArr);
-                fileInputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return str;
-        }
-
-        public boolean isFileLyric() {
-            return config.optBoolean("FileLyric", false);
         }
     }
 }

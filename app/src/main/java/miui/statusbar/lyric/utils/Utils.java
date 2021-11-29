@@ -23,7 +23,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
+
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
+import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.Config;
 import miui.statusbar.lyric.hook.MainHook;
 import org.json.JSONArray;
@@ -168,7 +171,7 @@ public class Utils {
     }
 
     public static void sendLyric(Context context, String lyric, String icon) {
-        if (new Config().getFileLyric()) {
+        if (Utils.getConfig().getFileLyric()) {
             setLyricFile(icon, lyric);
         } else {
             context.sendBroadcast(new Intent().setAction("Lyric_Server").putExtra("Lyric_Data", lyric).putExtra("Lyric_Icon", icon).putExtra("Lyric_Type", "hook"));
@@ -376,9 +379,23 @@ public class Utils {
 
     // log
     public static void log(String text) {
-        if (new Config().getDebug()) {
+        if (Utils.getConfig().getDebug()) {
             XposedBridge.log("MIUI状态栏歌词： " + text);
             Log.d("MIUI状态栏歌词", text);
+        }
+    }
+
+    public static XSharedPreferences getPref() {
+        XSharedPreferences pref = new XSharedPreferences(BuildConfig.APPLICATION_ID, "Lyric_Config");
+        return pref.getFile().canRead() ? pref : null;
+    }
+
+    public static Config getConfig() {
+        XSharedPreferences xSharedPreferences = getPref();
+        if (xSharedPreferences == null) {
+            return new Config();
+        } else {
+            return new Config(xSharedPreferences);
         }
     }
 

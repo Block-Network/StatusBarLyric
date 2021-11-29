@@ -189,4 +189,7 @@
     <string name="MeizuLyric">Use Meizu Way to Get Lyrics</string>
     <string name="MeizuLyricTips">Cannot get lyrics using Meizu method, please turn off this switch</string>
     <string name="UseCount">*Lyric statistics</string>
+    <string name="UseFileConfig">Use file to save configuration</string>
+    <string name="SPConfigMode">SP configuration file</string>
+    <string name="FileConfigMode">File configuration file</string>
 </resources>

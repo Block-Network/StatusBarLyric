@@ -17,7 +17,7 @@ public class qqmusic {
     public static class Hook {
 
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
-            Config config = new Config();
+            Config config = Utils.getConfig();
             if (config.getMeizuLyric()) {
                 MeiZuStatusBarLyric.guiseFlyme(lpparam);
             } else {

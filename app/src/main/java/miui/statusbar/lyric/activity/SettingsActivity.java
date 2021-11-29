@@ -49,9 +49,36 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.root_preferences);
-        ActivityUtils.checkPermissions(activity);
-        config = new Config();
+        try {
+            config = new Config(ActivityUtils.getSP(activity));
+            setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.SPConfigMode)));
+        } catch (SecurityException ignored) {
+            if (!activity.getSharedPreferences("isFile", 0).getBoolean("file", false)) {
+                new AlertDialog.Builder(activity)
+                        .setTitle(getString(R.string.Tips))
+                        .setIcon(R.mipmap.ic_launcher)
+                        .setMessage(getString(R.string.AppTips))
+                        .setNegativeButton(getString(R.string.UseFileConfig), (dialog, which) -> {
+                            activity.getSharedPreferences("isFile", 0).edit().putBoolean("file", true).apply();
+                            config = new Config();
+                            setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.FileConfigMode)));
+                            init();
+                        })
+                        .setPositiveButton(getString(R.string.Quit), (dialog, which) -> activity.finish())
+                        .setCancelable(false)
+                        .create()
+                        .show();
+            } else {
+                config = new Config();
+                setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.FileConfigMode)));
+                init();
+            }
+        }
 //        Utils.log("Debug On");
+
+    }
+    public void init() {
+        ActivityUtils.checkPermissions(activity, config);
 
         String tips = "Tips1";
         SharedPreferences preferences = activity.getSharedPreferences(tips, 0);
@@ -61,9 +88,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .setIcon(R.mipmap.ic_launcher)
                     .setMessage(getString(R.string.AppTips))
                     .setNegativeButton(getString(R.string.TipsIDone), (dialog, which) -> {
-                        SharedPreferences.Editor a = preferences.edit();
-                        a.putBoolean(tips, true);
-                        a.apply();
+                        preferences.edit().putBoolean(tips, true).apply();
                     })
                     .setPositiveButton(getString(R.string.Quit), (dialog, which) -> activity.finish())
                     .setCancelable(false)
@@ -257,9 +282,9 @@ public class SettingsActivity extends PreferenceActivity {
         EditTextPreference lyricSpeed = (EditTextPreference) findPreference("lyricSpeed");
         assert lyricSpeed != null;
         lyricSpeed.setEnabled(config.getLyricStyle());
-        lyricSpeed.setSummary(config.getLyricSpeed());
+        lyricSpeed.setSummary(config.getLyricSpeed().toString());
         lyricSpeed.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLyricSpeed(newValue.toString());
+            config.setLyricSpeed(Float.parseFloat(newValue.toString()));
             lyricSpeed.setSummary(newValue.toString());
             return true;
         });
@@ -297,7 +322,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .setNegativeButton(getString(R.string.RestoreDefaultPath), (dialog, which) -> {
                         iconPath.setSummary(getString(R.string.DefaultPath));
                         config.setIconPath(Utils.PATH);
-                        ActivityUtils.initIcon(activity);
+                        ActivityUtils.initIcon(activity, config);
                     })
                     .setPositiveButton(getString(R.string.NewPath), (dialog, which) -> {
                         ChooseFileUtils chooseFileUtils = new ChooseFileUtils(activity);
@@ -310,7 +335,7 @@ public class SettingsActivity extends PreferenceActivity {
                                 if (config.getIconPath().equals(Utils.PATH)) {
                                     iconPath.setSummary(getString(R.string.DefaultPath));
                                 }
-                                ActivityUtils.initIcon(activity);
+                                ActivityUtils.initIcon(activity, config);
                             }
                         });
                     })
@@ -545,7 +570,7 @@ public class SettingsActivity extends PreferenceActivity {
         }
         Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
             Log.i("asaaaaa", config.getisUsedCount() + "");
-            setTitle(String.format("%s%s", getString(R.string.GetLyricNum), new Config().getUsedCount()));
+            setTitle(String.format("%s%s", getString(R.string.GetLyricNum), config.getUsedCount()));
             return false;
         });
         new Thread(() -> new Timer().schedule(
@@ -565,14 +590,17 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (config == null) {
+            config = ActivityUtils.getConfig(getApplicationContext());
+        }
         if (grantResults[0] == 0) {
-            ActivityUtils.init(activity);
-            ActivityUtils.initIcon(activity);
+            ActivityUtils.init(activity, config);
+            ActivityUtils.initIcon(activity, config);
         } else {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.GetStorageFailed))
                     .setMessage(getString(R.string.GetStorageFaildTips))
-                    .setNegativeButton(getString(R.string.ReAppy), (dialog, which) -> ActivityUtils.checkPermissions(activity))
+                    .setNegativeButton(getString(R.string.ReAppy), (dialog, which) -> ActivityUtils.checkPermissions(activity, config))
                     .setPositiveButton(getString(R.string.Quit), (dialog, which) -> finish())
                     .setNeutralButton(getString(R.string.GetPermission), (dialog, which) -> {
                         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -591,7 +619,10 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 13131) {
-            ActivityUtils.checkPermissions(activity);
+            if (config == null) {
+                config = ActivityUtils.getConfig(getApplicationContext());
+            }
+            ActivityUtils.checkPermissions(activity, config);
         }
     }
 
