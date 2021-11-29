@@ -75,19 +75,28 @@
     <string name="Done">Done</string>
     <string name="CurrentVer">current version</string>
     <string name="VerExp">Application:\n\n
-        Perfect fit: (mark the version that started to fit)\n
-        APlayer: v1.5.7.9
-        QQ Music\n
-        Kugou Music\n
-        Cool Music\n
-        Migu Music\n
-        NetEase Cloud Music\n
-        Support Flyme lyrics that is support
-        I don’t know the minimum version yet, feedback is welcome\n\n
+         Flyme obtains lyrics:\n
+        -QQ Music\n
+        -Migu Music\n
+        -Meizu Music\n
+        -NetEase Cloud Music\n
+        -Support Flyme lyrics that is support\n
+        -I don’t know the minimum version yet, feedback is welcome\n\n
 
-        Active application adaptation: (mark the version to start adaptation)\n
-        Salt and Pepper Music: v4.5\n\n
-        Other versions may be the same, please test by yourself
+         Traditional Hook method of obtaining lyrics:\n(mark the most suitable version)\n
+        -APlayer: v1.5.7.9\n
+        -Kugou Music: v10.9.2\n
+        -Kuwo Music: v10.0.3.0\n
+        -QQ Music: v10.17.0.11 (additional Bluetooth connection is required)\n
+        -Migu Music: v7.6.1 (additional Bluetooth connection is required)\n
+        -NetEase Cloud Music: v7.2.22\n
+        -NetEase Cloud Music: v8.6.13\n
+        -NetEase Cloud Music: v8.6.26 (additional Bluetooth connection is required)\n
+        -Other versions may also be compatible, please self-test\n\n
+
+         Active application adaptation:\n(mark the version to start adaptation)\n
+         Salt and Pepper Music: v4.5\n
+         Phonograph Plus: v0.0.2v0.0.3
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>

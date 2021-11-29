@@ -70,20 +70,28 @@
     <string name="Done">關閉</string>
     <string name="CurrentVer">當前版本</string>
     <string name="VerExp">適用情況：\n\n
-        完美適配：（標記開始適配的版本）\n
-        APlayer：v1.5.7.9
-        QQ音樂\n
-        酷狗音樂\n
-        酷我音樂\n
-        咪咕音樂\n
-        網易云音樂\n
-        支持Flyme歌詞即支持
-        暫不知最低版本，歡迎反饋\n\n
+        Flyme獲取歌詞方式：\n
+        - QQ音樂\n
+        - 咪咕音樂\n
+        - 魅族音樂\n
+        - 網易云音樂\n
+        - 支持Flyme歌詞即支持\n
+        - 暫不知最低版本，歡迎反饋\n\n
 
-        應用主動適配：（標記開始適配的版本）\n
-        椒鹽音樂：v4.5\n\n
+        傳統Hook獲取歌詞方式：\n（標記最高適配的版本）\n
+        - APlayer：v1.5.7.9\n
+        - 酷狗音樂：v10.9.2\n
+        - 酷我音樂：v10.0.3.0\n
+        - QQ音樂 : v10.17.0.11 （另需額外連接藍牙）\n
+        - 咪咕音樂 : v7.6.1 （另需額外連接藍牙）\n
+        - 網易云音樂 : v7.2.22\n
+        - 網易云音樂 : v8.6.13\n
+        - 網易云音樂 : v8.6.26（另需額外連接藍牙）\n
+        - 其餘版本可能同樣適配，請自測\n\n
 
-        其餘版本可能同樣適配，請自測
+        應用主動適配：\n（標記開始適配的版本）\n
+        椒鹽音樂：v4.5\n
+        Phonograph Plus: v0.0.2v0.0.3
     </string>
     <string name="AppName">狀態欄歌詞</string>
     <string name="QuickTitle">狀態欄歌詞</string>

@@ -91,7 +91,7 @@
         - 支持Flyme歌词即支持\n
         - 暂不知最低版本，欢迎反馈\n\n
 
-        ### 传统Hook获取歌词方式：\n（标记最好高适配的版本）\n
+        ### 传统Hook获取歌词方式：\n（标记最高适配的版本）\n
         - APlayer：v1.5.7.9\n
         - 酷狗音乐：v10.9.2\n
         - 酷我音乐：v10.0.3.0\n
@@ -104,7 +104,7 @@
 
         ### 应用主动适配：\n（标记开始适配的版本）\n
         ### 椒盐音乐：v4.5\n
-        Phonograph Plus: v0.0.2/v0.0.3\n\n
+        Phonograph Plus: v0.0.2/v0.0.3
     </string>
     <string name="AppName">状态栏歌词</string>
     <string name="QuickTitle">状态栏歌词</string>
