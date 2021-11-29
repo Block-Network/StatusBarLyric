@@ -52,19 +52,23 @@ public class SettingsActivity extends PreferenceActivity {
         try {
             config = new Config(ActivityUtils.getSP(activity));
             setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.SPConfigMode)));
+            init();
         } catch (SecurityException ignored) {
             if (!activity.getSharedPreferences("isFile", 0).getBoolean("file", false)) {
                 new AlertDialog.Builder(activity)
                         .setTitle(getString(R.string.Tips))
                         .setIcon(R.mipmap.ic_launcher)
-                        .setMessage(getString(R.string.AppTips))
+                        .setMessage(getString(R.string.NotSupport))
                         .setNegativeButton(getString(R.string.UseFileConfig), (dialog, which) -> {
                             activity.getSharedPreferences("isFile", 0).edit().putBoolean("file", true).apply();
                             config = new Config();
                             setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.FileConfigMode)));
                             init();
                         })
-                        .setPositiveButton(getString(R.string.Quit), (dialog, which) -> activity.finish())
+                        .setPositiveButton(getString(R.string.Quit), (dialog, which) -> {
+                            activity.finish();
+                            System.exit(0);
+                        })
                         .setCancelable(false)
                         .create()
                         .show();
@@ -505,6 +509,16 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
+        // 统计次数
+        SwitchPreference usedCount = (SwitchPreference) findPreference("usedCount");
+        assert usedCount != null;
+        usedCount.setChecked(config.getisUsedCount());
+        usedCount.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setisUsedCount((Boolean) newValue);
+            usedCount.setEnabled(!(Boolean) newValue);
+            return true;
+        });
+
         // 重启SystemUI
         Preference reSystemUI = findPreference("restartUI");
         assert reSystemUI != null;
@@ -568,22 +582,27 @@ public class SettingsActivity extends PreferenceActivity {
             hCUK.setSummary(String.format("%s%s", hCUK.getSummary(), getString(R.string.YouNotMIUI)));
             config.sethNoticeIcon(false);
         }
-        Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
-            Log.i("asaaaaa", config.getisUsedCount() + "");
-            setTitle(String.format("%s%s", getString(R.string.GetLyricNum), config.getUsedCount()));
-            return false;
-        });
-        new Thread(() -> new Timer().schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (config.getisUsedCount()) {
-                            titleUpdate.sendEmptyMessage(0);
+
+        if (config.hasJson()) {
+            Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
+                Log.i("asaaaaa", config.getisUsedCount() + "");
+                setTitle(String.format("%s%s", getString(R.string.GetLyricNum), config.getUsedCount()));
+                return false;
+            });
+            new Thread(() -> new Timer().schedule(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (config.getisUsedCount()) {
+                                titleUpdate.sendEmptyMessage(0);
+                            }
                         }
-                    }
-                }, 0, 1000)).start();
+                    }, 0, 1000)).start();
 
-
+        } else {
+            usedCount.setChecked(false);
+            usedCount.setEnabled(false);
+        }
         //ActivityUtils.setData(activity);
     }
 

@@ -170,7 +170,7 @@
             android:title="@string/DebugMode"/>
     <SwitchPreference
             android:defaultValue="true"
-            android:key="isusedcount"
+            android:key="usedCount"
             android:summary=""
             android:title="@string/UseCount"/>
     <PreferenceScreen

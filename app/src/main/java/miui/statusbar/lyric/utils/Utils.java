@@ -165,8 +165,10 @@ public class Utils {
 
     //歌词磁获取统计
     public static void addLyricCount(Config config) {
-        if (config.getisUsedCount()) {
-            config.setUsedCount(config.getUsedCount() + 1);
+        if (config.hasJson()) {
+            if (config.getisUsedCount()) {
+                config.setUsedCount(config.getUsedCount() + 1);
+            }
         }
     }
 

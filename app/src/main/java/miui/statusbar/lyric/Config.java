@@ -61,6 +61,10 @@ public class Config {
         }
     }
 
+    public boolean hasJson() {
+        return config.hasJson();
+    }
+
     public int getId() {
         return config.optInt("id", 0);
     }
