@@ -55,7 +55,6 @@ public class MainHook implements IXposedHookLoadPackage {
     static boolean musicOffStatus = false;
     static boolean enable = false;
     static boolean iconReverseColor = false;
-    static boolean isPowerOn = false;
     static boolean isLock = true;
     static boolean useSystemMusicActive = true;
     Context context = null;
@@ -660,9 +659,6 @@ public class MainHook implements IXposedHookLoadPackage {
         public void onReceive(Context context, Intent intent) {
             try {
                 isLock = !intent.getAction().equals(Intent.ACTION_USER_PRESENT);
-                if (!intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-                    isPowerOn = true;
-                }
                 Utils.log("锁屏: " + isLock);
             } catch (Exception e) {
                 Utils.log("广播接收错误 " + e + "\n" + Utils.dumpException(e));
@@ -680,7 +676,10 @@ public class MainHook implements IXposedHookLoadPackage {
 //                            Utils.addLyricCount();
                             lyric = intent.getStringExtra("Lyric_Data");
                             icon[0] = "hook";
-                            icon[1] = config.getIconPath() + intent.getStringExtra("Lyric_Icon") + ".webp";
+                            if (config.getIcon()) {
+                                icon[1] = config.getIconPath() + intent.getStringExtra("Lyric_Icon") + ".webp";
+
+                            }
                             Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon[1]);
                             break;
                         case "app":

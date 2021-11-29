@@ -70,7 +70,7 @@ public class MeiZuStatusBarLyricService {
                     super.afterHookedMethod(param);
                 }
             });
-        } catch (Exception e) {
+        } catch (XposedHelpers.ClassNotFoundError e) {
             Utils.log("无法使用魅族方式获取歌词，请切换传统Hook模式");
             Utils.log(e.toString());
         }
