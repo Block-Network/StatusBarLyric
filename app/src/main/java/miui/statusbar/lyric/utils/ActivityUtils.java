@@ -78,7 +78,7 @@ public class ActivityUtils {
                 config.setAnim("off");
                 config.setLyricColor("off");
                 config.setIcon(true);
-                config.setLyricSpeed(1f);
+                config.setLyricSpeed("1.0");
                 config.setLyricPosition(2);
                 config.setIconPath(Utils.PATH);
                 config.setIconAutoColor(true);
@@ -213,7 +213,9 @@ public class ActivityUtils {
         SharedPreferences.Editor editor = userSettings.edit();
         editor.clear();
         editor.apply();
-        new File(Utils.PATH + "Config.json").delete();
+        Toast.makeText(activity, (new File(Utils.PATH + "Config.json").delete()) + "", Toast.LENGTH_LONG).show();
+
+
         PackageManager packageManager = Objects.requireNonNull(activity).getPackageManager();
         packageManager.setComponentEnabledSetting(new ComponentName(activity, "miui.statusbar.lyric.launcher"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         Toast.makeText(activity, activity.getString(R.string.ResetSuccess), Toast.LENGTH_LONG).show();
@@ -232,7 +234,7 @@ public class ActivityUtils {
         config.setAnim(config.getAnim());
         config.setLyricColor(config.getLyricColor());
         config.setIcon(config.getIcon());
-        config.setLyricSpeed(Float.parseFloat(config.getLyricSpeed()));
+        config.setLyricSpeed(config.getLyricSpeed());
         config.setLyricPosition(config.getLyricPosition());
         config.setIconPath(config.getIconPath());
         config.setIconAutoColor(config.getIconAutoColor());

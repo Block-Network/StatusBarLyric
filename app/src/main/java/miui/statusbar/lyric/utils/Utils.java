@@ -378,6 +378,7 @@ public class Utils {
     public static void log(String text) {
         if (new Config().getDebug()) {
             XposedBridge.log("MIUI状态栏歌词： " + text);
+            Log.d("MIUI状态栏歌词", text);
         }
     }
 

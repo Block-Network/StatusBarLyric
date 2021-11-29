@@ -179,4 +179,5 @@
     <string name="NotSupport">Xposed not supported\n or the module is not activated\nforce stop the software after activation</string>
     <string name="MeizuLyric">Use Meizu Way to Get Lyrics</string>
     <string name="MeizuLyricTips">Cannot get lyrics using Meizu method, please turn off this switch</string>
+    <string name="UseCount">*Lyric statistics</string>
 </resources>

@@ -191,4 +191,5 @@
     </string>
     <string name="MeizuLyric">使用魅族方式获取歌词</string>
     <string name="MeizuLyricTips">使用魅族方法无法获取歌词请关闭此开关</string>
+    <string name="UseCount">*歌词统计</string>
 </resources>

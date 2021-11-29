@@ -31,24 +31,6 @@ public class Config {
         }
     }
 
-    public Config(Config config) {
-        try {
-            String cfg = getConfig();
-            if (cfg.equals("")) {
-                Log.d("StatusBarLyric: Config(Config config)", "cfg isEmpty!");
-                if (config != null) {
-                    this.config = config.getConfigObject();
-                } else {
-                    Log.d("StatusBarLyric: Config(Config config)", "cfg isNull!");
-                    this.config = new JSONObject();
-                }
-                return;
-            }
-            this.config = new JSONObject(cfg);
-        } catch (JSONException ignored) {
-        }
-    }
-
     public static String getConfig() {
         String str = "";
         try {
@@ -79,9 +61,6 @@ public class Config {
         }
     }
 
-    public JSONObject getConfigObject() {
-        return config;
-    }
 
     public int getId() {
         return config.optInt("id", 0);
@@ -277,12 +256,12 @@ public class Config {
     }
 
     public String getLyricSpeed() {
-        return config.optString("LyricSpeed", "1f");
+        return config.optString("LyricSpeed", "1.0");
     }
 
-    public void setLyricSpeed(float f) {
+    public void setLyricSpeed(String str) {
         try {
-            config.put("LyricSpeed", f);
+            config.put("LyricSpeed", str);
             setConfig(config.toString());
         } catch (JSONException ignored) {
         }

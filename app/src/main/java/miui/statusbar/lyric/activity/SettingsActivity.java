@@ -19,6 +19,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -169,19 +170,16 @@ public class SettingsActivity extends PreferenceActivity {
             lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), getString(R.string.Adaptive)));
             lyricMaxWidth.setSummary(getString(R.string.Adaptive));
             config.setLyricMaxWidth(-1);
-            try {
-                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-                if (value.equals("-1")) {
-                    return true;
-                } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
-                    config.setLyricMaxWidth(Integer.parseInt(value));
-                    lyricMaxWidth.setSummary(value);
-                } else {
-                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
-                }
-            } catch (NumberFormatException e) {
+            String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+            if (value.equals("-1")) {
+                return true;
+            } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
+                config.setLyricMaxWidth(Integer.parseInt(value));
+                lyricMaxWidth.setSummary(value);
+            } else {
                 Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
             }
+
             return true;
         });
 
@@ -201,21 +199,17 @@ public class SettingsActivity extends PreferenceActivity {
             lyricWidth.setSummary(getString(R.string.Adaptive));
             lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), getString(R.string.Adaptive)));
             config.setLyricWidth(-1);
-
-            try {
-                if (value.equals("-1")) {
-                    return true;
-                } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
-                    config.setLyricWidth(Integer.parseInt(value));
-                    lyricWidth.setSummary(value);
-                    lyricMaxWidth.setEnabled(false);
-                    lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
-                } else {
-                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
-                }
-            } catch (NumberFormatException e) {
+            if (value.equals("-1")) {
+                return true;
+            } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
+                config.setLyricWidth(Integer.parseInt(value));
+                lyricWidth.setSummary(value);
+                lyricMaxWidth.setEnabled(false);
+                lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
+            } else {
                 Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
             }
+
             return true;
         });
 
@@ -265,7 +259,7 @@ public class SettingsActivity extends PreferenceActivity {
         lyricSpeed.setEnabled(config.getLyricStyle());
         lyricSpeed.setSummary(config.getLyricSpeed());
         lyricSpeed.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLyricSpeed(Float.parseFloat(newValue.toString()));
+            config.setLyricSpeed(newValue.toString());
             lyricSpeed.setSummary(newValue.toString());
             return true;
         });
@@ -338,17 +332,13 @@ public class SettingsActivity extends PreferenceActivity {
         lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
             lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
             lyricPosition.setSummary(getString(R.string.Default));
-            try {
-                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-                if (value.equals("2")) {
-                    return true;
-                } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
-                    config.setLyricPosition(Integer.parseInt(value));
-                    lyricPosition.setSummary(value);
-                } else {
-                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
-                }
-            } catch (NumberFormatException e) {
+            String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+            if (value.equals("2")) {
+                return true;
+            } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
+                config.setLyricPosition(Integer.parseInt(value));
+                lyricPosition.setSummary(value);
+            } else {
                 Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
             }
             return true;
@@ -554,10 +544,10 @@ public class SettingsActivity extends PreferenceActivity {
             config.sethNoticeIcon(false);
         }
         Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
-            setTitle(String.format("%s%s", getString(R.string.GetLyricNum), config.getUsedCount()));
+            Log.i("asaaaaa", config.getisUsedCount() + "");
+            setTitle(String.format("%s%s", getString(R.string.GetLyricNum), new Config().getUsedCount()));
             return false;
         });
-
         new Thread(() -> new Timer().schedule(
                 new TimerTask() {
                     @Override

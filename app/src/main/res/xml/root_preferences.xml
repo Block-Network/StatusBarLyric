@@ -4,7 +4,7 @@
             android:key="ver_explain"
             android:summary="@string/ClickDetails"
             android:title="@string/UseInfo"/>
-   <Preference
+    <Preference
             android:key="warn_explain"
             android:summary="@string/ClickDetails"
             android:title="@string/WarnExplanation"/>
@@ -24,35 +24,22 @@
             android:summary=""
             android:title="@string/AllSwitch"/>
 
-    <SwitchPreference
-            android:defaultValue="true"
-            android:key="lyricOff"
-            android:summary=""
-            android:title="@string/SongPauseCloseLyrics"/>
-
 
     <EditTextPreference
             android:defaultValue="-1"
             android:key="lyricWidth"
             android:summary="@string/Adaptive"
-            android:title="@string/LyricWidth"/>
+            android:title="@string/LyricWidth"
+            android:maxLength="4"
+            android:inputType="number"/>
 
     <EditTextPreference
             android:defaultValue="-1"
             android:key="lyricMaxWidth"
             android:summary="@string/Off"
-            android:title="@string/LyricAutoMaxWidth"/>
-
-    <ListPreference
-            android:key="lyricAnim"
-            android:summary="@string/Off"
-            android:title="@string/LyricsAnimation"/>
-
-    <EditTextPreference
-            android:defaultValue="@string/Adaptive"
-            android:key="lyricColour"
-            android:summary="@string/Adaptive"
-            android:title="@string/LyricColor"/>
+            android:title="@string/LyricAutoMaxWidth"
+            android:maxLength="4"
+            android:inputType="number"/>
 
     <SwitchPreference
             android:defaultValue="true"
@@ -60,24 +47,66 @@
             android:summary=""
             android:title="@string/LyricIcon"/>
 
+    <PreferenceCategory
+            android:title="歌词设置"/>
+
+    <EditTextPreference
+            android:defaultValue="@string/Adaptive"
+            android:key="lyricColour"
+            android:summary="@string/Adaptive"
+            android:title="@string/LyricColor"
+            android:maxLength="7"/>
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="lyricOff"
+            android:summary=""
+            android:title="@string/SongPauseCloseLyrics"/>
+
+    <ListPreference
+            android:key="lyricAnim"
+            android:summary="@string/Off"
+            android:title="@string/LyricsAnimation"/>
     <SwitchPreference
             android:defaultValue="true"
             android:key="lyricStyle"
             android:title="@string/MeizuStyle"/>
-
     <SwitchPreference
             android:defaultValue="true"
             android:key="lShowOnce"
             android:title="@string/lShowOnce"/>
 
     <EditTextPreference
-            android:defaultValue="1f"
+            android:defaultValue="1.0"
             android:key="lyricSpeed"
             android:summary=""
-            android:title="@string/LyricSpeed"/>
+            android:title="@string/LyricSpeed"
+            android:maxLength="4"
+            android:inputType="numberDecimal"/>
+    <PreferenceCategory
+            android:title="图标设置"/>
+
+    <Preference
+            android:key="iconPath"
+            android:summary=""
+            android:title="@string/IconPath"/>
+
+    <EditTextPreference
+            android:defaultValue="2"
+            android:key="lyricPosition"
+            android:summary="@string/Default"
+            android:title="@string/IconPos"
+            android:maxLength="4"
+            android:inputType="number"/>
+
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="iconAutoColor"
+            android:summary=""
+            android:title="@string/IconAutoColors"/>
 
     <PreferenceCategory android:title="@string/AdvancedSettings"/>
 
+    lyricColour
     <SwitchPreference
             android:defaultValue="false"
             android:key="lyricSwitch"
@@ -90,23 +119,6 @@
             android:summary=""
             android:title="@string/AbScreen"/>
 
-
-    <Preference
-            android:key="iconPath"
-            android:summary=""
-            android:title="@string/IconPath"/>
-
-    <EditTextPreference
-            android:defaultValue="2"
-            android:key="lyricPosition"
-            android:summary="@string/Default"
-            android:title="@string/IconPos"/>
-
-    <SwitchPreference
-            android:defaultValue="true"
-            android:key="iconAutoColor"
-            android:summary=""
-            android:title="@string/IconAutoColors"/>
 
     <SwitchPreference
             android:defaultValue="false"
@@ -156,7 +168,11 @@
             android:key="debug"
             android:summary=""
             android:title="@string/DebugMode"/>
-
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="isusedcount"
+            android:summary=""
+            android:title="@string/UseCount"/>
     <PreferenceScreen
             android:key="restartUI"
             android:summary="@string/ReStartSystemUITips"
