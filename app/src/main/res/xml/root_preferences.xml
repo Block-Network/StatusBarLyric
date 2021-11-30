@@ -31,7 +31,7 @@
             android:summary="@string/Adaptive"
             android:title="@string/LyricWidth"
             android:maxLength="4"
-            android:inputType="number"/>
+            android:inputType="numberSigned"/>
 
     <EditTextPreference
             android:defaultValue="-1"
@@ -39,7 +39,7 @@
             android:summary="@string/Off"
             android:title="@string/LyricAutoMaxWidth"
             android:maxLength="4"
-            android:inputType="number"/>
+            android:inputType="numberSigned"/>
 
     <SwitchPreference
             android:defaultValue="true"
@@ -96,7 +96,7 @@
             android:summary="@string/Default"
             android:title="@string/IconPos"
             android:maxLength="4"
-            android:inputType="number"/>
+            android:inputType="numberSigned"/>
 
     <SwitchPreference
             android:defaultValue="true"

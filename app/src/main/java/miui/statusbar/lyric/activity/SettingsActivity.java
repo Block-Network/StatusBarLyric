@@ -19,7 +19,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -170,13 +169,17 @@ public class SettingsActivity extends PreferenceActivity {
             lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), getString(R.string.Adaptive)));
             lyricMaxWidth.setSummary(getString(R.string.Adaptive));
             config.setLyricMaxWidth(-1);
-            String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-            if (value.equals("-1")) {
-                return true;
-            } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
-                config.setLyricMaxWidth(Integer.parseInt(value));
-                lyricMaxWidth.setSummary(value);
-            } else {
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "").replaceAll("\\+", "");
+                if (value.equals("-1")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
+                    config.setLyricMaxWidth(Integer.parseInt(value));
+                    lyricMaxWidth.setSummary(value);
+                } else {
+                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
+                }
+            } catch (NumberFormatException ignored) {
                 Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
             }
 
@@ -194,22 +197,25 @@ public class SettingsActivity extends PreferenceActivity {
         lyricWidth.setDefaultValue(String.valueOf(config.getLyricWidth()));
         lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), lyricWidth.getSummary()));
         lyricWidth.setOnPreferenceChangeListener((preference, newValue) -> {
-            String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
             lyricMaxWidth.setEnabled(true);
             lyricWidth.setSummary(getString(R.string.Adaptive));
             lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), getString(R.string.Adaptive)));
-            config.setLyricWidth(-1);
-            if (value.equals("-1")) {
-                return true;
-            } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
-                config.setLyricWidth(Integer.parseInt(value));
-                lyricWidth.setSummary(value);
-                lyricMaxWidth.setEnabled(false);
-                lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
-            } else {
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "").replaceAll("\\+", "");
+                config.setLyricWidth(-1);
+                if (value.equals("-1")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
+                    config.setLyricWidth(Integer.parseInt(value));
+                    lyricWidth.setSummary(value);
+                    lyricMaxWidth.setEnabled(false);
+                    lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
+                } else {
+                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
+                }
+            } catch (NumberFormatException ignored) {
                 Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
             }
-
             return true;
         });
 
@@ -544,7 +550,6 @@ public class SettingsActivity extends PreferenceActivity {
             config.sethNoticeIcon(false);
         }
         Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
-            Log.i("asaaaaa", config.getisUsedCount() + "");
             setTitle(String.format("%s%s", getString(R.string.GetLyricNum), new Config().getUsedCount()));
             return false;
         });
