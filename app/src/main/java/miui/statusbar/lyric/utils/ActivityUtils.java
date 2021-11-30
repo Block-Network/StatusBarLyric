@@ -49,7 +49,9 @@ public class ActivityUtils {
         } else {
             init(activity, config);
             initIcon(activity, config);
-            ActivityUtils.checkConfig(activity, config);
+            if (config.hasJson()) {
+                ActivityUtils.checkConfig(activity, config);
+            }
         }
     }
 
@@ -62,6 +64,9 @@ public class ActivityUtils {
         File file = new File(Utils.PATH);
         if (!file.exists()) {
             file.mkdirs();
+        }
+        if (!config.hasJson()) {
+            return;
         }
         file = new File(Utils.PATH + "Config.json");
         if (!file.exists()) {
@@ -98,7 +103,7 @@ public class ActivityUtils {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void initIcon(Activity activity, Config config) {
-        String[] IconList = {"kugou.webp", "netease.webp", "qqmusic.webp", "myplayer.webp", "migu.webp"};
+        String[] IconList = {"kugou.webp", "netease.webp", "qqmusic.webp", "myplayer.webp", "migu.webp", "kuwo.webp"};
         for (String s : IconList) {
             if (!new File(config.getIconPath(), s).exists()) {
                 copyAssets(activity, "icon/" + s, config.getIconPath() + s);

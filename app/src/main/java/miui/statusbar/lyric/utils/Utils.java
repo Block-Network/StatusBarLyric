@@ -24,11 +24,6 @@ import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
 
-import de.robv.android.xposed.XSharedPreferences;
-import de.robv.android.xposed.XposedBridge;
-import miui.statusbar.lyric.BuildConfig;
-import miui.statusbar.lyric.Config;
-import miui.statusbar.lyric.hook.MainHook;
 import org.json.JSONArray;
 
 import java.io.FileInputStream;
@@ -39,6 +34,11 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
+import miui.statusbar.lyric.BuildConfig;
+import miui.statusbar.lyric.Config;
 
 
 public class Utils {
@@ -57,15 +57,8 @@ public class Utils {
         packName_Name.put("cn.kuwo", "kuwo");
     }
 
-    public static String packName_GetIconPath(String packName) {
-        return MainHook.config.getIconPath() + Utils.packName_Name.get(packName) + ".webp";
-    }
-
-    public static void setLocalLyric(String lyric, String packName) {
-        MainHook.icon[0] = "hook";
-        MainHook.icon[1] = Utils.packName_GetIconPath(packName);
-        MainHook.lyric = lyric;
-//        addLyricCount();
+    public static String packName_GetIconName(String packName) {
+        return Utils.packName_Name.get(packName);
     }
 
     public static int getLocalVersionCode(Context context) {

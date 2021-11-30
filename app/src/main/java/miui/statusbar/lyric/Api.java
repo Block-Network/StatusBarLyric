@@ -3,13 +3,10 @@ package miui.statusbar.lyric;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.FileInputStream;
+import org.json.JSONArray;
+
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 import miui.statusbar.lyric.utils.ActivityUtils;
 

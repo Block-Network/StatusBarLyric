@@ -50,14 +50,14 @@ public class LyricTextSwitchView extends ViewFlipper {
         // 设置歌词文本
         if (switchLyric) {
             if (hasMeizu) {
-                lyricTextView.setText(str);
+                lyricTextView.setTextT(str);
             } else {
                 autoMarqueeTextView.setText(str);
             }
             switchLyric = false;
         } else {
             if (hasMeizu) {
-                lyricTextView2.setText(str);
+                lyricTextView2.setTextT(str);
             } else {
                 autoMarqueeTextView2.setText(str);
             }

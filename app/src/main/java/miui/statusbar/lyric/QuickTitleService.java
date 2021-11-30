@@ -7,7 +7,6 @@ import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 
 import miui.statusbar.lyric.utils.ActivityUtils;
-import miui.statusbar.lyric.utils.Utils;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickTitleService extends TileService {

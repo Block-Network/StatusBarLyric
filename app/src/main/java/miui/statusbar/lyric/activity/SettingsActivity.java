@@ -91,9 +91,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .setTitle(getString(R.string.Tips))
                     .setIcon(R.mipmap.ic_launcher)
                     .setMessage(getString(R.string.AppTips))
-                    .setNegativeButton(getString(R.string.TipsIDone), (dialog, which) -> {
-                        preferences.edit().putBoolean(tips, true).apply();
-                    })
+                    .setNegativeButton(getString(R.string.TipsIDone), (dialog, which) -> preferences.edit().putBoolean(tips, true).apply())
                     .setPositiveButton(getString(R.string.Quit), (dialog, which) -> activity.finish())
                     .setCancelable(false)
                     .create()
@@ -147,6 +145,7 @@ public class SettingsActivity extends PreferenceActivity {
         // 歌词总开关
         SwitchPreference lyricService = (SwitchPreference) findPreference("lyricService");
         assert lyricService != null;
+        Log.d("LSPosed", config.getLyricService().toString());
         lyricService.setChecked(config.getLyricService());
         lyricService.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setLyricService((Boolean) newValue);
@@ -498,17 +497,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 魅族方式
-        SwitchPreference meizuLyric = (SwitchPreference) findPreference("meizuLyric");
-        assert meizuLyric != null;
-        fileLyric.setEnabled(!config.getMeizuLyric());
-        meizuLyric.setChecked(config.getMeizuLyric());
-        meizuLyric.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setMeizuLyric((Boolean) newValue);
-            fileLyric.setEnabled(!(Boolean) newValue);
-            return true;
-        });
-
         // 统计次数
         SwitchPreference usedCount = (SwitchPreference) findPreference("usedCount");
         assert usedCount != null;
@@ -633,7 +621,6 @@ public class SettingsActivity extends PreferenceActivity {
 
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -274,11 +274,4 @@ public class Config {
         config.put("LShowOnce", bool);
     }
 
-    public boolean getMeizuLyric() {
-        return config.optBoolean("tMeizuLyric", true);
-    }
-
-    public void setMeizuLyric(boolean bool) {
-        config.put("tMeizuLyric", bool);
-    }
 }
