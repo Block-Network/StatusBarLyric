@@ -1,10 +1,8 @@
-name: Android Cl
+name: Android CI
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ main, Dev ]
 
 
 jobs:
@@ -19,16 +17,28 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: gradle
+          
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            !~/.gradle/caches/build-cache-*
+          key: gradle-deps-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-deps
+          
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease  
+        run: ./gradlew assembleRelease
 
       - name: Sign Android release
-        uses: r0adkll/sign-android-release@v1
+        if: success()
+        id: release
+        uses: r0adkll/sign-android-release@v1.0.4
         with:
-          releaseDirectory: ./app/build/outputs/apk/release/app-release-unsigned.apk
+          releaseDirectory: ./app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: xiao_wine
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -39,7 +49,7 @@ jobs:
         env:
           CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          RELEASE: ${{ steps.sign_release.outputs.signedReleaseFile }}
+          RELEASE: ${{ steps.release.outputs.signedReleaseFile }}
           COMMIT_MESSAGE: |+
             New push in Github\!
             ```
@@ -48,7 +58,9 @@ jobs:
         run: |
           ESCAPED=`python3 -c 'import json,os,urllib.parse; print(urllib.parse.quote(json.dumps(os.environ["COMMIT_MESSAGE"])))'`
           curl -v "https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup?chat_id=${CHANNEL_ID}&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Frelease%22%2C%22parse_mode%22%3A%22MarkdownV2%22%2C%22caption%22%3A${ESCAPED}%7D%5D" -F release="@$RELEASE"
-      - uses: actions/upload-artifact@v2
+      
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v2
         with:
-          name: Signed app bundle
-          path: ./app/build/outputs/apk/release/app-release-unsigned.apk
+          name: MIUIStatusBarLyric_release
+          path: ${{ steps.release.outputs.signedReleaseFile }}
