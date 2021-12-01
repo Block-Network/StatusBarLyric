@@ -23,14 +23,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease
-      - name:  change name
-        run: mv  ./app/build/outputs/apk/release/app-release-unsigned.apk ./app/build/outputs/apk/release/app-release.apk
+        run: ./gradlew assembleRelease  
 
       - name: Sign Android release
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: ./app/build/outputs/apk/release
+          releaseDirectory: ./app/build/outputs/apk/release/app-release-unsigned.apk
           signingKeyBase64: ${{ secrets.SIGNING_KEY }}
           alias: xiao_wine
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
@@ -53,4 +51,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Signed app bundle
-          path: ./app/build/outputs/apk/release
+          path: ./app/build/outputs/apk/release/app-release-unsigned.apk
