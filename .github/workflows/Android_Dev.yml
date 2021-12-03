@@ -1,4 +1,4 @@
-name: Android CI
+name: Android CI Dev
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: gradle
-          
+
       - uses: actions/cache@v2
         with:
           path: |
@@ -26,16 +26,18 @@ jobs:
             !~/.gradle/caches/build-cache-*
           key: gradle-deps-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: gradle-deps
-          
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease
+        run: |
+        bash ./gradlew assembleRelease
+        bash ./gradlew assembleDebug
 
-      - name: Sign Android release
+      - name: Sign Release APK
         if: success()
-        id: release
+        id: sign_release
         uses: r0adkll/sign-android-release@v1.0.4
         with:
           releaseDirectory: ./app/build/outputs/apk/release
@@ -43,9 +45,26 @@ jobs:
           alias: xiao_wine
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
-      
+
+      - name: Sign Debug APK
+        if: success()
+        id: sign_debug
+        uses: r0adkll/sign-android-release@v1.0.4
+        with:
+          releaseDirectory: ./app/build/outputs/apk/debug
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: xiao_wine
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
+
       - name: Upload Release APK
         uses: actions/upload-artifact@v2
         with:
           name: MIUIStatusBarLyric_release
-          path: ${{ steps.release.outputs.signedReleaseFile }}
+          path: ${{ steps.sign_release.outputs.signedReleaseFile }}
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: MIUIStatusBarLyric_debug
+          path: ${{ steps.sign_debug.outputs.signedReleaseFile }}
