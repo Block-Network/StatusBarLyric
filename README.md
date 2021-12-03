@@ -67,5 +67,4 @@
 
 ## 音乐主动适配
 
-请查看 Java [Api.java](https://github.com/577fkj/MIUIStatusBarLyric/blob/main/Api/Api.java)
-请查看 Kotlin [Api.kt](https://github.com/577fkj/MIUIStatusBarLyric/blob/main/Api/Api.kt)
+请查看 [Api](./Api)
