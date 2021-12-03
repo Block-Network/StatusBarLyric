@@ -1,0 +1,6 @@
+<!--suppress DeprecatedClassUsageInspection -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="tips"
+        android:title="@string/UseApiTips"/>
+</PreferenceScreen>

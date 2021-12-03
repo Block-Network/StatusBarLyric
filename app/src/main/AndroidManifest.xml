@@ -23,7 +23,7 @@
 
         <activity android:name=".activity.AboutActivity"/>
 
-        <activity android:name=".activity.TestActivity"/>
+        <activity android:name=".activity.ApiAPPListActivity"/>
 
         <activity
                 android:name=".activity.SettingsActivity"

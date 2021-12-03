@@ -1,8 +1,12 @@
 package miui.statusbar.lyric;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
+
+import de.robv.android.xposed.XSharedPreferences;
+import miui.statusbar.lyric.utils.ConfigUtils;
 import miui.statusbar.lyric.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,18 +21,18 @@ import static miui.statusbar.lyric.utils.Utils.PATH;
 @SuppressLint("LongLogTag")
 public class Config {
     static String old_Json = "";
-    JSONObject config = new JSONObject();
+    ConfigUtils config;
 
     public Config() {
-        try {
-            if (getConfig().equals("")) {
-                Log.d("StatusBarLyric: Config()", "cfg isEmpty!");
-                config = new JSONObject();
-                return;
-            }
-            config = new JSONObject(getConfig());
-        } catch (JSONException ignored) {
-        }
+        config = new ConfigUtils(getConfig());
+    }
+
+    public Config(XSharedPreferences xSharedPreferences) {
+        config = new ConfigUtils(xSharedPreferences);
+    }
+
+    public Config(SharedPreferences sharedPreferences) {
+        config = new ConfigUtils(sharedPreferences);
     }
 
     public static String getConfig() {
@@ -40,38 +44,33 @@ public class Config {
             FileInputStream fileInputStream = new FileInputStream(Utils.PATH + "Config.json");
             byte[] bArr = new byte[fileInputStream.available()];
             fileInputStream.read(bArr);
-            old_Json = new String(bArr);
             str = new String(bArr);
+            old_Json = str;
             fileInputStream.close();
         } catch (IOException e) {
-            if (!old_Json.equals("")) {
-                str = new String(old_Json);
-            }
+            str = old_Json;
         }
         return str;
     }
 
-    public static void setConfig(String str) {
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(Utils.PATH + "Config.json");
-            fileOutputStream.write(str.getBytes());
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void update() {
+        if (config.hasJson()) {
+            config.update(getConfig());
+        } else {
+            config.update();
         }
     }
 
+    public boolean hasJson() {
+        return config.hasJson();
+    }
 
     public int getId() {
         return config.optInt("id", 0);
     }
 
     public void setId(int i) {
-        try {
-            config.put("id", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("id", i);
     }
 
 
@@ -80,11 +79,7 @@ public class Config {
     }
 
     public void setLyricService(Boolean bool) {
-        try {
-            config.put("LyricService", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("LyricService", bool);
     }
 
     public int getLyricWidth() {
@@ -92,11 +87,7 @@ public class Config {
     }
 
     public void setLyricWidth(int i) {
-        try {
-            config.put("LyricWidth", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("LyricWidth", i);
     }
 
     public int getLyricMaxWidth() {
@@ -104,11 +95,7 @@ public class Config {
     }
 
     public void setLyricMaxWidth(int i) {
-        try {
-            config.put("LyricMaxWidth", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("LyricMaxWidth", i);
     }
 
     public int getLyricPosition() {
@@ -116,11 +103,7 @@ public class Config {
     }
 
     public void setLyricPosition(int i) {
-        try {
-            config.put("LyricPosition", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("LyricPosition", i);
     }
 
     public Boolean getLyricAutoOff() {
@@ -128,11 +111,7 @@ public class Config {
     }
 
     public void setLyricAutoOff(Boolean bool) {
-        try {
-            config.put("LyricAutoOff", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("LyricAutoOff", bool);
     }
 
     public Boolean getLockScreenOff() {
@@ -140,19 +119,11 @@ public class Config {
     }
 
     public void setLockScreenOff(Boolean bool) {
-        try {
-            config.put("lockScreenOff", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("lockScreenOff", bool);
     }
 
     public void sethNoticeIcon(Boolean bool) {
-        try {
-            config.put("hNoticeIcon", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("hNoticeIcon", bool);
     }
 
     public String getLyricColor() {
@@ -160,11 +131,7 @@ public class Config {
     }
 
     public void setLyricColor(String str) {
-        try {
-            config.put("LyricColor", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("LyricColor", str);
     }
 
     public Boolean getLyricSwitch() {
@@ -172,11 +139,7 @@ public class Config {
     }
 
     public void setLyricSwitch(Boolean bool) {
-        try {
-            config.put("LyricSwitch", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("LyricSwitch", bool);
     }
 
     public Boolean getHNoticeIco() {
@@ -188,11 +151,7 @@ public class Config {
     }
 
     public void setHAlarm(Boolean bool) {
-        try {
-            config.put("hAlarm", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("hAlarm", bool);
     }
 
     public Boolean getHNetSpeed() {
@@ -200,11 +159,7 @@ public class Config {
     }
 
     public void setHNetSpeed(Boolean bool) {
-        try {
-            config.put("hNetSpeed", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("hNetSpeed", bool);
     }
 
     public Boolean getHCUK() {
@@ -212,11 +167,7 @@ public class Config {
     }
 
     public void setHCUK(Boolean bool) {
-        try {
-            config.put("hCUK", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("hCUK", bool);
     }
 
     public Boolean getDebug() {
@@ -224,11 +175,7 @@ public class Config {
     }
 
     public void setDebug(Boolean bool) {
-        try {
-            config.put("debug", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("debug", bool);
     }
 
     public Boolean getisUsedCount() {
@@ -236,11 +183,7 @@ public class Config {
     }
 
     public void setisUsedCount(Boolean bool) {
-        try {
-            config.put("isusedcount", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("isusedcount", bool);
     }
 
     public boolean getIcon() {
@@ -248,23 +191,15 @@ public class Config {
     }
 
     public void setIcon(Boolean bool) {
-        try {
-            config.put("Icon", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("Icon", bool);
     }
 
-    public String getLyricSpeed() {
-        return config.optString("LyricSpeed", "1.0");
+    public Float getLyricSpeed() {
+        return config.optFloat("LyricSpeed", 1f);
     }
 
-    public void setLyricSpeed(String str) {
-        try {
-            config.put("LyricSpeed", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+    public void setLyricSpeed(Float f) {
+        config.put("LyricSpeed", f);
     }
 
     public Boolean getIconAutoColor() {
@@ -272,11 +207,7 @@ public class Config {
     }
 
     public void setIconAutoColor(Boolean bool) {
-        try {
-            config.put("IconAutoColor", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("IconAutoColor", bool);
     }
 
     public String getIconPath() {
@@ -284,11 +215,7 @@ public class Config {
     }
 
     public void setIconPath(String str) {
-        try {
-            config.put("IconPath", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("IconPath", str);
     }
 
     public boolean getAntiBurn() {
@@ -296,11 +223,7 @@ public class Config {
     }
 
     public void setAntiBurn(Boolean bool) {
-        try {
-            config.put("antiburn", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("antiburn", bool);
     }
 
     public int getUsedCount() {
@@ -308,11 +231,7 @@ public class Config {
     }
 
     public void setUsedCount(int i) {
-        try {
-            config.put("usedcount", i);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("usedcount", i);
     }
 
     public String getAnim() {
@@ -320,11 +239,7 @@ public class Config {
     }
 
     public void setAnim(String str) {
-        try {
-            config.put("Anim", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("Anim", str);
     }
 
     public String getHook() {
@@ -332,11 +247,7 @@ public class Config {
     }
 
     public void setHook(String str) {
-        try {
-            config.put("Hook", str);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("Hook", str);
     }
 
     public boolean getFileLyric() {
@@ -344,11 +255,7 @@ public class Config {
     }
 
     public void setFileLyric(boolean bool) {
-        try {
-            config.put("FileLyric", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("FileLyric", bool);
     }
 
     public boolean getLyricStyle() {
@@ -356,11 +263,7 @@ public class Config {
     }
 
     public void setLyricStyle(boolean bool) {
-        try {
-            config.put("LyricStyle", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("LyricStyle", bool);
     }
 
     public boolean getLShowOnce() {
@@ -368,22 +271,7 @@ public class Config {
     }
 
     public void setLShowOnce(boolean bool) {
-        try {
-            config.put("LShowOnce", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
+        config.put("LShowOnce", bool);
     }
 
-    public boolean getMeizuLyric() {
-        return config.optBoolean("tMeizuLyric", true);
-    }
-
-    public void setMeizuLyric(boolean bool) {
-        try {
-            config.put("tMeizuLyric", bool);
-            setConfig(config.toString());
-        } catch (JSONException ignored) {
-        }
-    }
 }

@@ -146,17 +146,16 @@
 
     <SwitchPreference
             android:defaultValue="false"
-            android:key="meizuLyric"
-            android:summary="@string/MeizuLyricTips"
-            android:title="@string/MeizuLyric"/>
-
-    <SwitchPreference
-            android:defaultValue="false"
             android:key="fileLyric"
             android:summary="@string/FileLyricTips"
             android:title="@string/FileLyric"/>
 
     <PreferenceCategory android:title="@string/OtherSettings"/>
+
+    <Preference
+        android:key="apiAc"
+        android:summary=""
+        android:title="@string/UseApiList"/>
 
     <Preference
             android:key="lyricHook"
@@ -170,7 +169,7 @@
             android:title="@string/DebugMode"/>
     <SwitchPreference
             android:defaultValue="true"
-            android:key="isusedcount"
+            android:key="usedCount"
             android:summary=""
             android:title="@string/UseCount"/>
     <PreferenceScreen

@@ -29,6 +29,7 @@ public class LyricTextView extends TextView {
     private float textLength = 0f;
     private float viewWidth = 0f;
     private float speed = 4f;
+    private long time;
     private float x = 0f;
     private String text;
 
@@ -88,6 +89,14 @@ public class LyricTextView extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         if (canvas != null && text != null) {
+            if ((System.currentTimeMillis() - time) <= 1500) {
+                float y = getHeight() / 2 + Math.abs(mPaint.ascent() + mPaint.descent()) / 2;
+                canvas.drawText(text, x, y, mPaint);
+                invalidateAfter(invalidateDelay);
+                return;
+            }
+        }
+        if (canvas != null && text != null) {
             float y = getHeight() / 2 + Math.abs(mPaint.ascent() + mPaint.descent()) / 2;
             canvas.drawText(text, x, y, mPaint);
         }
@@ -127,5 +136,10 @@ public class LyricTextView extends TextView {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public void setTextT(CharSequence charSequence) {
+        super.setText(charSequence);
+        this.time = System.currentTimeMillis();
     }
 }

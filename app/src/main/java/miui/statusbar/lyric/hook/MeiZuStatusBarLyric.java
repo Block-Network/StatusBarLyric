@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
+import android.app.Notification;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import miui.statusbar.lyric.utils.Utils;
 
 public class MeiZuStatusBarLyric {
 
@@ -66,6 +69,33 @@ public class MeiZuStatusBarLyric {
                 } else if (param.args[0].toString().equals("FLAG_ONLY_UPDATE_TICKER")) {
                     param.setResult(MeiZuNotification.class.getField("FLAG_ONLY_UPDATE_TICKER_HOOK"));
                 }
+            }
+
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                super.afterHookedMethod(param);
+            }
+        });
+        XposedHelpers.findAndHookMethod("android.app.NotificationManager", lpparam.classLoader, "notify", int.class, Notification.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+                Notification notification = ((Notification) param.args[1]);
+                CharSequence charSequence = notification.tickerText;
+                XposedBridge.log(notification.toString());
+                XposedBridge.log("Flags: " + notification.flags);
+                boolean isLyric = false;
+                if ((notification.flags & MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER) != 0) {
+                    isLyric = true;
+                }
+                if ((notification.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0) {
+                    isLyric = true;
+                }
+                if (charSequence == null || !isLyric) {
+                    return;
+                }
+//                XposedBridge.log("1: " + charSequence);
+                Utils.sendLyric(context, charSequence.toString(), Utils.packName_GetIconName(lpparam.packageName));
             }
 
             @Override

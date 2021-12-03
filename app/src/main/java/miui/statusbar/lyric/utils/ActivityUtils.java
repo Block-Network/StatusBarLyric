@@ -15,6 +15,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.widget.Toast;
+
+import miui.statusbar.lyric.ApiListConfig;
 import miui.statusbar.lyric.Config;
 import miui.statusbar.lyric.R;
 import org.json.JSONException;
@@ -41,15 +43,17 @@ public class ActivityUtils {
         return localVersion;
     }
 
-    public static void checkPermissions(Activity activity) {
+    public static void checkPermissions(Activity activity, Config config) {
         if (checkSelfPermission(activity) == -1) {
             activity.requestPermissions(new String[]{
                     "android.permission.WRITE_EXTERNAL_STORAGE"
             }, 1);
         } else {
-            init(activity);
-            initIcon(activity);
-            ActivityUtils.checkConfig(activity, new Config().getId());
+            init(activity, config);
+            initIcon(activity, config);
+            if (config.hasJson()) {
+                ActivityUtils.checkConfig(activity, config);
+            }
         }
     }
 
@@ -58,15 +62,17 @@ public class ActivityUtils {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void init(Activity activity) {
+    public static void init(Activity activity, Config config) {
         File file = new File(Utils.PATH);
         if (!file.exists()) {
             file.mkdirs();
         }
+        if (!config.hasJson()) {
+            return;
+        }
         file = new File(Utils.PATH + "Config.json");
         if (!file.exists()) {
             try {
-                Config config = new Config();
                 file.createNewFile();
                 config.setId(configId);
                 config.setUsedCount(0);
@@ -78,7 +84,7 @@ public class ActivityUtils {
                 config.setAnim("off");
                 config.setLyricColor("off");
                 config.setIcon(true);
-                config.setLyricSpeed("1.0");
+                config.setLyricSpeed(1f);
                 config.setLyricPosition(2);
                 config.setIconPath(Utils.PATH);
                 config.setIconAutoColor(true);
@@ -98,9 +104,8 @@ public class ActivityUtils {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void initIcon(Activity activity) {
-        String[] IconList = {"kugou.webp", "netease.webp", "qqmusic.webp", "myplayer.webp", "migu.webp"};
-        Config config = new Config();
+    public static void initIcon(Activity activity, Config config) {
+        String[] IconList = {"kugou.webp", "netease.webp", "qqmusic.webp", "myplayer.webp", "migu.webp", "kuwo.webp"};
         for (String s : IconList) {
             if (!new File(config.getIconPath(), s).exists()) {
                 copyAssets(activity, "icon/" + s, config.getIconPath() + s);
@@ -190,15 +195,15 @@ public class ActivityUtils {
         }).start();
     }
 
-    public static void checkConfig(Activity activity, int id) {
-        if (id != configId) {
+    public static void checkConfig(Activity activity, Config config) {
+        if (config.getId() != configId) {
             try {
                 new AlertDialog.Builder(activity)
                         .setTitle(activity.getString(R.string.Warn))
                         .setMessage(activity.getString(R.string.ConfigError))
                         .setNegativeButton(activity.getString(R.string.ResetNow), (dialog, which) -> cleanConfig(activity))
                         .setPositiveButton(activity.getString(R.string.NoReset), null)
-                        .setNeutralButton(activity.getString(R.string.TryFix), (dialog, which) -> fixConfig(activity))
+                        .setNeutralButton(activity.getString(R.string.TryFix), (dialog, which) -> fixConfig(activity, config))
                         .setCancelable(false)
                         .create()
                         .show();
@@ -222,8 +227,7 @@ public class ActivityUtils {
         activity.finishAffinity();
     }
 
-    public static void fixConfig(Activity activity) {
-        Config config = new Config();
+    public static void fixConfig(Activity activity, Config config) {
         config.setId(configId);
         config.setUsedCount(config.getUsedCount());
         config.setLyricService(config.getLyricService());
@@ -250,5 +254,23 @@ public class ActivityUtils {
         activity.finishAffinity();
     }
 
+    public static Config getConfig(Context context) {
+        try {
+            return new Config(getSP(context, "Lyric_Config"));
+        } catch (SecurityException ignored) {
+            return new Config();
+        }
+    }
 
+    public static SharedPreferences getSP(Context context, String key) {
+        return context.createDeviceProtectedStorageContext().getSharedPreferences(key, Context.MODE_WORLD_READABLE);
+    }
+
+    public static ApiListConfig getAppList(Context context) {
+        try {
+            return new ApiListConfig(getSP(context, "AppList_Config"));
+        } catch (SecurityException ignored) {
+            return new ApiListConfig();
+        }
+    }
 }

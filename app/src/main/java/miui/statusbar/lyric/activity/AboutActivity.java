@@ -19,14 +19,5 @@ public class AboutActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.about_preferences);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(getString(R.string.About));
-
-        // 测试activity
-        Preference about = findPreference("test");
-        assert about != null;
-        about.setOnPreferenceClickListener((preference) -> {
-            startActivity(new Intent(activity, TestActivity.class));
-            return true;
-        });
-
     }
 }

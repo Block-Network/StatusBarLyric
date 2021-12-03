@@ -16,6 +16,7 @@ public class neteaseLite {
 
     public static class Hook {
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
+            MeiZuStatusBarLyric.guiseFlyme(lpparam);
             XposedHelpers.findAndHookMethod("com.netease.cloudmusic.utils.u", lpparam.classLoader, "R", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {

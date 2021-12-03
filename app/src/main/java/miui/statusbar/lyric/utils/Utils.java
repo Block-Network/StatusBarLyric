@@ -23,9 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
-import de.robv.android.xposed.XposedBridge;
-import miui.statusbar.lyric.Config;
-import miui.statusbar.lyric.hook.MainHook;
+
 import org.json.JSONArray;
 
 import java.io.FileInputStream;
@@ -36,6 +34,12 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
+import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
+import miui.statusbar.lyric.ApiListConfig;
+import miui.statusbar.lyric.BuildConfig;
+import miui.statusbar.lyric.Config;
 
 
 public class Utils {
@@ -54,15 +58,8 @@ public class Utils {
         packName_Name.put("cn.kuwo", "kuwo");
     }
 
-    public static String packName_GetIconPath(String packName) {
-        return MainHook.config.getIconPath() + Utils.packName_Name.get(packName) + ".webp";
-    }
-
-    public static void setLocalLyric(String lyric, String packName) {
-        MainHook.icon[0] = "hook";
-        MainHook.icon[1] = Utils.packName_GetIconPath(packName);
-        MainHook.lyric = lyric;
-//        addLyricCount();
+    public static String packName_GetIconName(String packName) {
+        return Utils.packName_Name.get(packName);
     }
 
     public static int getLocalVersionCode(Context context) {
@@ -162,16 +159,50 @@ public class Utils {
 
     //歌词磁获取统计
     public static void addLyricCount(Config config) {
-        if (config.getisUsedCount()) {
-            config.setUsedCount(config.getUsedCount() + 1);
+        if (config.hasJson()) {
+            if (config.getisUsedCount()) {
+                config.setUsedCount(config.getUsedCount() + 1);
+            }
         }
     }
 
     public static void sendLyric(Context context, String lyric, String icon) {
-        if (new Config().getFileLyric()) {
+        if (Utils.getConfig().getFileLyric()) {
             setLyricFile(icon, lyric);
         } else {
             context.sendBroadcast(new Intent().setAction("Lyric_Server").putExtra("Lyric_Data", lyric).putExtra("Lyric_Icon", icon).putExtra("Lyric_Type", "hook"));
+        }
+    }
+
+    public static void sendLyric(Context context, String lyric, String icon, boolean useSystemMusicActive, String packName) {
+        if (Utils.getConfig().getFileLyric()) {
+            setLyricFile(packName, lyric, icon, useSystemMusicActive);
+        } else {
+            context.sendBroadcast(new Intent()
+                    .setAction("Lyric_Server")
+                    .putExtra("Lyric_Data", lyric)
+                    .putExtra("Lyric_Type", "app")
+                    .putExtra("Lyric_PackName", packName)
+                    .putExtra("Lyric_Icon", icon)
+                    .putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
+            );
+        }
+    }
+
+    // 写入歌词文件
+    public static void setLyricFile(String PackName, String lyric, String icon, boolean useSystemMusicActive) {
+        try {
+            FileOutputStream outputStream = new FileOutputStream(PATH + "lyric.txt");
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put("app");
+            jsonArray.put(PackName);
+            jsonArray.put(lyric);
+            jsonArray.put(icon);
+            jsonArray.put(useSystemMusicActive);
+            String json = jsonArray.toString();
+            outputStream.write(json.getBytes());
+            outputStream.close();
+        } catch (Exception ignored) {
         }
     }
 
@@ -376,9 +407,32 @@ public class Utils {
 
     // log
     public static void log(String text) {
-        if (new Config().getDebug()) {
+        if (Utils.getConfig().getDebug()) {
             XposedBridge.log("MIUI状态栏歌词： " + text);
             Log.d("MIUI状态栏歌词", text);
+        }
+    }
+
+    public static XSharedPreferences getPref(String key) {
+        XSharedPreferences pref = new XSharedPreferences(BuildConfig.APPLICATION_ID, key);
+        return pref.getFile().canRead() ? pref : null;
+    }
+
+    public static Config getConfig() {
+        XSharedPreferences xSharedPreferences = getPref("Lyric_Config");
+        if (xSharedPreferences == null) {
+            return new Config();
+        } else {
+            return new Config(xSharedPreferences);
+        }
+    }
+
+    public static ApiListConfig getAppList() {
+        XSharedPreferences xSharedPreferences = getPref("AppList_Config");
+        if (xSharedPreferences == null) {
+            return new ApiListConfig();
+        } else {
+            return new ApiListConfig(xSharedPreferences);
         }
     }
 
