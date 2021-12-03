@@ -1,11 +1,13 @@
 package miui.statusbar.lyric.hook;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.utils.Utils;
@@ -16,6 +18,7 @@ public class netease {
 
     public static class Hook {
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
+            MeiZuStatusBarLyric.guiseFlyme_NotHookNoti(lpparam);
             XposedHelpers.findAndHookMethod(XposedHelpers.findClass("com.netease.cloudmusic.NeteaseMusicApplication", lpparam.classLoader), "attachBaseContext", Context.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) {
@@ -66,21 +69,29 @@ public class netease {
                     try {
                         int cloudmusicVer = context.getPackageManager().getPackageInfo("com.netease.cloudmusic", 0).versionCode;
                         if (cloudmusicVer >= 8006000) {
-                            enableBTLyric_Class = "com.netease.cloudmusic.module.player.w.h";
-                            enableBTLyric_Method = "o";
+                            XposedHelpers.findAndHookMethod("com.netease.cloudmusic.e2.f", lpparam.classLoader, "f0", Notification.class, boolean.class, new XC_MethodHook() {
+                                @Override
+                                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                    super.beforeHookedMethod(param);
+                                }
 
-                            getMusicName_Class = "com.netease.cloudmusic.module.player.w.h";
-                            getMusicName_Method = "B";
-                            getMusicName_ClsArr = new Object[]{
-                                    String.class, String.class, String.class, long.class, Boolean.class, getMusicName_Hook
-                            };
-
-                            getMusicLyric_Class = "com.netease.cloudmusic.module.player.w.h";
-                            getMusicLyric_Method = "F";
-                            getMusicLyric_ClsArr = new Object[]{
-                                    java.lang.String.class, java.lang.String.class, getMusicLyric_Hook
-                            };
-                        } else if (cloudmusicVer > 7002022) {
+                                @Override
+                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                    super.afterHookedMethod(param);
+                                    CharSequence ticker = ((Notification) param.args[0]).tickerText;
+                                    if (ticker == null) {
+                                        return;
+                                    }
+                                    Utils.log("网易云状态栏歌词： " + ticker.toString());
+                                    if ((boolean) param.args[1]) {
+                                        Utils.sendLyric(context, ticker.toString(), "netease");
+                                    } else {
+                                        Utils.sendLyric(context, "", "netease");
+                                    }
+                                }
+                            });
+                            return;
+                        } else if (cloudmusicVer >= 7002022) {
                             enableBTLyric_Class = "com.netease.cloudmusic.module.player.t.e";
                             enableBTLyric_Method = "o";
 
