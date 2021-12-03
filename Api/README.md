@@ -5,11 +5,11 @@
 To use API, please increase the package statusbarsdk and ignore this package in the confusion
 
 Add under application in AndroidManifest.xml
-'''xml
+```xml
 <meta-data
 android:name="XStatusBarLyric"
 android:value="true" />
-'''
+```
 
 # StatusBarAPi
 
@@ -18,8 +18,8 @@ android:value="true" />
 使用 API 请增加软件包 statusbarsdk 并在混淆里忽略此包
 
 在AndroidManifest.xml 中的 application 下添加
-'''xml
+```xml
 <meta-data
 android:name="XStatusBarLyric"
 android:value="true" />
-'''
+```
