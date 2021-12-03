@@ -19,7 +19,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -145,7 +144,6 @@ public class SettingsActivity extends PreferenceActivity {
         // 歌词总开关
         SwitchPreference lyricService = (SwitchPreference) findPreference("lyricService");
         assert lyricService != null;
-        Log.d("LSPosed", config.getLyricService().toString());
         lyricService.setChecked(config.getLyricService());
         lyricService.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setLyricService((Boolean) newValue);
@@ -229,7 +227,6 @@ public class SettingsActivity extends PreferenceActivity {
             lyricMaxWidth.setEnabled(true);
             lyricWidth.setSummary(getString(R.string.Adaptive));
             lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), getString(R.string.Adaptive)));
-            config.setLyricWidth(-1);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "").replaceAll("\\+", "");
                 config.setLyricWidth(-1);
@@ -246,7 +243,6 @@ public class SettingsActivity extends PreferenceActivity {
             } catch (NumberFormatException ignored) {
                 Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
             }
-
             return true;
         });
 
@@ -589,7 +585,6 @@ public class SettingsActivity extends PreferenceActivity {
 
         if (config.hasJson()) {
             Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
-                Log.i("asaaaaa", config.getisUsedCount() + "");
                 setTitle(String.format("%s%s", getString(R.string.GetLyricNum), config.getUsedCount()));
                 return false;
             });
@@ -607,7 +602,6 @@ public class SettingsActivity extends PreferenceActivity {
             usedCount.setChecked(false);
             usedCount.setEnabled(false);
         }
-        //ActivityUtils.setData(activity);
     }
 
     @Override
