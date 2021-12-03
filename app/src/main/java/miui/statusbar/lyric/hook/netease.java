@@ -44,7 +44,7 @@ public class netease {
                             }
                         });
                     } catch (NoSuchMethodError | IllegalArgumentException e) {
-                        XposedHelpers.findAndHookMethod("androidx.core.app.NotificationCompat", lpparam.classLoader, "setTicker", CharSequence.class, new XC_MethodHook() {
+                        XposedHelpers.findAndHookMethod("com.netease.cloudmusic.module.lyric.a.a", lpparam.classLoader, "a", String.class, new XC_MethodHook() {
                             @Override
                             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                                 super.beforeHookedMethod(param);
@@ -53,17 +53,12 @@ public class netease {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                 super.afterHookedMethod(param);
-                                CharSequence ticker = (CharSequence) param.args[0];
-                                if (ticker == null) {
-                                    return;
-                                }
-                                int flags = ((Notification) XposedHelpers.findField(param.thisObject.getClass(), "mNotification").get(param.thisObject)).flags;
-                                boolean isLyric = (flags & MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER) != 0 || (flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0;
-                                XposedBridge.log("网易云状态栏歌词： " + ticker + " | " + flags);
-                                Utils.log("网易云状态栏歌词： " + ticker + " | " + flags);
+                                boolean isLyric = (boolean) XposedHelpers.findField(param.thisObject.getClass(), "i").get(param.thisObject);
+                                String ticker = (String) param.args[0];
+                                Utils.log("网易云状态栏歌词： " + ticker);
                                 if (isLyric) {
-                                    if (!ticker.toString().replace(" ", "").equals("")) {
-                                        Utils.sendLyric(context, ticker.toString(), "netease");
+                                    if (!ticker.replace(" ", "").equals("")) {
+                                        Utils.sendLyric(context, ticker, "netease");
                                     } else {
                                         Utils.sendLyric(context, "", "netease");
                                     }
