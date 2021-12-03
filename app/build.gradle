@@ -13,7 +13,7 @@ android {
         //noinspection OldTargetApi
         targetSdkVersion 29
         versionCode 56
-        versionName "3.33.3-dev"
+        versionName "3.35.3-dev"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }

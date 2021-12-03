@@ -187,6 +187,6 @@
     <string name="UseFileConfig">Use file to save configuration</string>
     <string name="SPConfigMode">SP configuration file</string>
     <string name="FileConfigMode">File configuration file</string>
-    <string name="UseApiTips">Software using API</string>
+    <string name="UseApiTips">Software using API (The software that needs to be checked in EDXposed or LSPosed)</string>
     <string name="UseApiList">Software list</string>
 </resources>

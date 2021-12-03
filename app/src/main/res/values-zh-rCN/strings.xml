@@ -190,6 +190,6 @@
     <string name="UseFileConfig">使用文件保存配置</string>
     <string name="SPConfigMode">SP 配置文件</string>
     <string name="FileConfigMode">文件配置文件</string>
-    <string name="UseApiTips">使用 API 的软件</string>
+    <string name="UseApiTips">使用 API 的软件 (需要在EDXposed或LSPosed勾选开启的软件)</string>
     <string name="UseApiList">软件列表</string>
 </resources>
