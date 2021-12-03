@@ -138,14 +138,14 @@ public class MeiZuStatusBarLyric {
                 CharSequence charSequence = notification.tickerText;
                 XposedBridge.log(notification.toString());
                 XposedBridge.log("Flags: " + notification.flags);
-                boolean isLyric = (notification.flags & MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER) != 0;
-                if ((notification.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0) {
-                    isLyric = true;
+                if (notification.flags == 0) {
+                    Utils.sendLyric(context, "", Utils.packName_GetIconName(lpparam.packageName));
+                    return;
                 }
+                boolean isLyric = (notification.flags & MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER) != 0 || (notification.flags & MeiZuNotification.FLAG_ONLY_UPDATE_TICKER) != 0;
                 if (charSequence == null || !isLyric) {
                     return;
                 }
-//                XposedBridge.log("1: " + charSequence);
                 Utils.sendLyric(context, charSequence.toString(), Utils.packName_GetIconName(lpparam.packageName));
             }
 
