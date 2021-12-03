@@ -76,7 +76,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           RELEASE: ${{ steps.sign_release.outputs.signedReleaseFile }}
           COMMIT_MESSAGE: |+
-            #Github\_CI
+            Github CI
             ```
             ${{ github.event.head_commit.message }}
             ```
