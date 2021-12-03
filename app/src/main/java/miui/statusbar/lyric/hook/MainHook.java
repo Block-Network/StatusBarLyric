@@ -28,6 +28,7 @@ import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import miui.statusbar.lyric.ApiListConfig;
 import miui.statusbar.lyric.Config;
 import miui.statusbar.lyric.utils.Utils;
 import miui.statusbar.lyric.view.LyricTextSwitchView;
@@ -131,15 +132,15 @@ public class MainHook implements IXposedHookLoadPackage {
                             }
                         } else {
                             try {
-                                clockField = XposedHelpers.findField(param.thisObject.getClass(), "mStatusClock");
-                                Utils.log("mStatusClock 反射成功");
+                                clockField = XposedHelpers.findField(param.thisObject.getClass(), "mClockView");
+                                Utils.log("尝试 mClockView 反射成功");
                             } catch (NoSuchFieldError e) {
-                                Utils.log("mStatusClock 反射失败: " + e + "\n" + Utils.dumpNoSuchFieldError(e));
+                                Utils.log("尝试 mClockView 反射失败: " + e + "\n" + Utils.dumpNoSuchFieldError(e));
                                 try {
-                                    clockField = XposedHelpers.findField(param.thisObject.getClass(), "mClockView");
-                                    Utils.log("mClockView 反射成功");
+                                    clockField = XposedHelpers.findField(param.thisObject.getClass(), "mStatusClock");
+                                    Utils.log("mStatusClock 反射成功");
                                 } catch (NoSuchFieldError mE) {
-                                    Utils.log("mClockView 反射失败: " + mE + "\n" + Utils.dumpNoSuchFieldError(mE));
+                                    Utils.log("mStatusClock 反射失败: " + mE + "\n" + Utils.dumpNoSuchFieldError(mE));
                                     return;
                                 }
                             }
@@ -410,7 +411,6 @@ public class MainHook implements IXposedHookLoadPackage {
                                                     icon[0] = strArr[0];
                                                     switch (icon[0]) {
                                                         case "hook":
-//                                                            Utils.addLyricCount();
                                                             if (!strArr[2].equals("")) {
                                                                 lyric = strArr[2];
                                                             }
@@ -419,7 +419,6 @@ public class MainHook implements IXposedHookLoadPackage {
                                                             useSystemMusicActive = true;
                                                             break;
                                                         case "app":
-//                                                            Utils.addLyricCount();
                                                             if (!strArr[2].equals("")) {
                                                                 lyric = strArr[2];
                                                             }
@@ -650,6 +649,12 @@ public class MainHook implements IXposedHookLoadPackage {
                 break;
             case "com.meizu.media.music":
                 MeiZuStatusBarLyric.guiseFlyme(lpparam);
+                break;
+            default:
+                ApiListConfig apiConfig = Utils.getAppList();
+                if (apiConfig.hasEnable(lpparam.packageName)) {
+                    new HookApi.Hook(lpparam);
+                }
         }
     }
 
@@ -676,14 +681,13 @@ public class MainHook implements IXposedHookLoadPackage {
                 if (intent.getAction().equals("Lyric_Server")) {
                     switch (intent.getStringExtra("Lyric_Type")) {
                         case "hook":
-//                            Utils.addLyricCount();
                             lyric = intent.getStringExtra("Lyric_Data");
                             icon[0] = "hook";
                             icon[1] = config.getIconPath() + intent.getStringExtra("Lyric_Icon") + ".webp";
                             Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon[1]);
+                            useSystemMusicActive = true;
                             break;
                         case "app":
-//                            Utils.addLyricCount();
                             lyric = intent.getStringExtra("Lyric_Data");
                             icon[0] = "app";
                             String icon_data = intent.getStringExtra("Lyric_Icon");
@@ -706,6 +710,7 @@ public class MainHook implements IXposedHookLoadPackage {
                                     musicServer = Utils.stringsListAdd(musicServer, packName);
                                 }
                             }
+                            useSystemMusicActive = intent.getBooleanExtra("Lyric_UseSystemMusicActive", false);
                             musicOffStatus = true;
                             Utils.log("收到广播app: lyric:" + lyric + " icon:" + icon[1] + "packName:" + packName + " isPackName: " + isPackName);
                             break;

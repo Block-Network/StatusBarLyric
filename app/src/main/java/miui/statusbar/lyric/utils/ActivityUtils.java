@@ -15,6 +15,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.widget.Toast;
+
+import miui.statusbar.lyric.ApiListConfig;
 import miui.statusbar.lyric.Config;
 import miui.statusbar.lyric.R;
 import org.json.JSONException;
@@ -254,15 +256,21 @@ public class ActivityUtils {
 
     public static Config getConfig(Context context) {
         try {
-            return new Config(getSP(context));
+            return new Config(getSP(context, "Lyric_Config"));
         } catch (SecurityException ignored) {
             return new Config();
         }
     }
 
-    public static SharedPreferences getSP(Context context) {
-        return context.createDeviceProtectedStorageContext().getSharedPreferences("Lyric_Config", Context.MODE_WORLD_READABLE);
+    public static SharedPreferences getSP(Context context, String key) {
+        return context.createDeviceProtectedStorageContext().getSharedPreferences(key, Context.MODE_WORLD_READABLE);
     }
 
-
+    public static ApiListConfig getAppList(Context context) {
+        try {
+            return new ApiListConfig(getSP(context, "AppList_Config"));
+        } catch (SecurityException ignored) {
+            return new ApiListConfig();
+        }
+    }
 }

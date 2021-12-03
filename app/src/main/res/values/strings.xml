@@ -55,11 +55,6 @@
     <string name="DonateTips">If you find it easy to use, please support me</string>
     <string name="ContactUs">contact us</string>
     <string name="Source">Project Address</string>
-    <string name="DevelopmentTest">Development test</string>
-    <string name="TestLyric">Show test lyrics</string>
-    <string name="TestIcon">Custom icon</string>
-    <string name="CustomLyric">Custom lyrics</string>
-    <string name="Stop">Stop</string>
     <string name="ThkListUrl">
         https://github.com/577fkj/MIUIStatusBarLyric/blob/main/README_EN.md#thanks-listin-no-particular-order
     </string>
@@ -192,4 +187,6 @@
     <string name="UseFileConfig">Use file to save configuration</string>
     <string name="SPConfigMode">SP configuration file</string>
     <string name="FileConfigMode">File configuration file</string>
+    <string name="UseApiTips">Software using API</string>
+    <string name="UseApiList">Software list</string>
 </resources>

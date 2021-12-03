@@ -37,6 +37,7 @@ import java.util.Objects;
 
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
+import miui.statusbar.lyric.ApiListConfig;
 import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.Config;
 
@@ -170,6 +171,38 @@ public class Utils {
             setLyricFile(icon, lyric);
         } else {
             context.sendBroadcast(new Intent().setAction("Lyric_Server").putExtra("Lyric_Data", lyric).putExtra("Lyric_Icon", icon).putExtra("Lyric_Type", "hook"));
+        }
+    }
+
+    public static void sendLyric(Context context, String lyric, String icon, boolean useSystemMusicActive, String packName) {
+        if (Utils.getConfig().getFileLyric()) {
+            setLyricFile(packName, lyric, icon, useSystemMusicActive);
+        } else {
+            context.sendBroadcast(new Intent()
+                    .setAction("Lyric_Server")
+                    .putExtra("Lyric_Data", lyric)
+                    .putExtra("Lyric_Type", "app")
+                    .putExtra("Lyric_PackName", packName)
+                    .putExtra("Lyric_Icon", icon)
+                    .putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
+            );
+        }
+    }
+
+    // 写入歌词文件
+    public static void setLyricFile(String PackName, String lyric, String icon, boolean useSystemMusicActive) {
+        try {
+            FileOutputStream outputStream = new FileOutputStream(PATH + "lyric.txt");
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put("app");
+            jsonArray.put(PackName);
+            jsonArray.put(lyric);
+            jsonArray.put(icon);
+            jsonArray.put(useSystemMusicActive);
+            String json = jsonArray.toString();
+            outputStream.write(json.getBytes());
+            outputStream.close();
+        } catch (Exception ignored) {
         }
     }
 
@@ -380,17 +413,26 @@ public class Utils {
         }
     }
 
-    public static XSharedPreferences getPref() {
-        XSharedPreferences pref = new XSharedPreferences(BuildConfig.APPLICATION_ID, "Lyric_Config");
+    public static XSharedPreferences getPref(String key) {
+        XSharedPreferences pref = new XSharedPreferences(BuildConfig.APPLICATION_ID, key);
         return pref.getFile().canRead() ? pref : null;
     }
 
     public static Config getConfig() {
-        XSharedPreferences xSharedPreferences = getPref();
+        XSharedPreferences xSharedPreferences = getPref("Lyric_Config");
         if (xSharedPreferences == null) {
             return new Config();
         } else {
             return new Config(xSharedPreferences);
+        }
+    }
+
+    public static ApiListConfig getAppList() {
+        XSharedPreferences xSharedPreferences = getPref("AppList_Config");
+        if (xSharedPreferences == null) {
+            return new ApiListConfig();
+        } else {
+            return new ApiListConfig(xSharedPreferences);
         }
     }
 

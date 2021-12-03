@@ -52,11 +52,6 @@
     <string name="DonateTips">覺得好用的話，支持一下唄</string>
     <string name="ContactUs">聯系我們</string>
     <string name="Source">項目地址</string>
-    <string name="DevelopmentTest">開發測試</string>
-    <string name="TestLyric">顯示測試歌詞</string>
-    <string name="TestIcon">自定義圖標</string>
-    <string name="CustomLyric">自定義歌詞</string>
-    <string name="Stop">停止</string>
     <string name="ThkListUrl">
         https://github.com/577fkj/MIUIStatusBarLyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95%E4%B8%8D%E5%88%86%E5%85%88%E5%90%8E
     </string>
@@ -181,4 +176,6 @@
     <string name="UseFileConfig">使用文件保存配置</string>
     <string name="FileConfigMode">文件配置文件</string>
     <string name="SPConfigMode">SP 配置文件</string>
+    <string name="UseApiTips">使用 API 的軟件</string>
+    <string name="UseApiList">軟件列表</string>
 </resources>
