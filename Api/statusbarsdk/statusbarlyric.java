@@ -66,6 +66,9 @@ public class statusbarlyric {
     }
 
     protected String drawableToBase64(Drawable drawable) {
+        if (drawable == null) {
+            return "";
+        }
         Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG,100,baos);
