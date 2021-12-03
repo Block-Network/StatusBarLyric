@@ -43,7 +43,7 @@ public class netease {
                                 }
                             }
                         });
-                    } catch (NoSuchMethodError | IllegalArgumentException e) {
+                    } catch (XposedHelpers.ClassNotFoundError e) {
                         XposedHelpers.findAndHookMethod("com.netease.cloudmusic.module.lyric.a.a", lpparam.classLoader, "a", String.class, new XC_MethodHook() {
                             @Override
                             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
