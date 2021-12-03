@@ -74,10 +74,9 @@ jobs:
         env:
           CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          RELEASE: |
-            ${{ steps.sign_release.outputs.signedReleaseFile }}
+          RELEASE: ${{ steps.sign_release.outputs.signedReleaseFile }}
           COMMIT_MESSAGE: |+
-            Github_CI
+            #Github\_CI
             ```
             ${{ github.event.head_commit.message }}
             ```
