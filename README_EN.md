@@ -37,9 +37,6 @@
 #### Theoretical support for some native classes
 
 ## Supported Music app versions
-
-### Perfect fit
-
 - __[APlayer](https://github.com/rRemix/APlayer)__ Unknown ~ 1.5.7.9
 - __QQ Music__ unknown ~ 11.0.16
 - __Migu Music__ Unknown ~ 7.7.0
