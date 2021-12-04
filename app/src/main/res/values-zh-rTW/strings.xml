@@ -64,29 +64,19 @@
     <string name="VerExplanation">版本說明</string>
     <string name="Done">關閉</string>
     <string name="CurrentVer">當前版本</string>
-    <string name="VerExp">適用情況：\n\n
-        Flyme獲取歌詞方式：\n
-        - QQ音樂\n
-        - 咪咕音樂\n
-        - 魅族音樂\n
-        - 網易云音樂\n
-        - 支持Flyme歌詞即支持\n
-        - 暫不知最低版本，歡迎反饋\n\n
+    <string name="VerExp">適用情況：\n
+        - APlayer 未知 ~ 1.5.7.9\n
+        - QQ音樂 未知 ~ 11.0.16\n
+        - 咪咕音樂 未知 ~ 7.7.0\n
+        - 網易云音樂 7.2.21 ~ 8.6.31\n
+        - 魅族音樂 未知 ~ 未知\n
+        - 酷狗音樂 未知 ~ 10.9.2\n
+        - 酷我音樂 未知 ~ 10.0.4.0\n\n
 
-        傳統Hook獲取歌詞方式：\n（標記最高適配的版本）\n
-        - APlayer：v1.5.7.9\n
-        - 酷狗音樂：v10.9.2\n
-        - 酷我音樂：v10.0.3.0\n
-        - QQ音樂 : v10.17.0.11 （另需額外連接藍牙）\n
-        - 咪咕音樂 : v7.6.1 （另需額外連接藍牙）\n
-        - 網易云音樂 : v7.2.22\n
-        - 網易云音樂 : v8.6.13\n
-        - 網易云音樂 : v8.6.26（另需額外連接藍牙）\n
-        - 其餘版本可能同樣適配，請自測\n\n
-
-        應用主動適配：\n（標記開始適配的版本）\n
-        椒鹽音樂：v4.5\n
-        Phonograph Plus: v0.0.2v0.0.3
+        - 椒鹽音樂 4.5 ~ 現今\n
+        - Phonograph Plus第三方修改版本\n
+        https://github.com/kabouzeid/Phonograph\n
+        v0.0.2(不完美適配)/v0.0.3
     </string>
     <string name="AppName">狀態欄歌詞</string>
     <string name="QuickTitle">狀態欄歌詞</string>
