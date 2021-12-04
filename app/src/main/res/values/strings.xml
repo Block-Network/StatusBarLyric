@@ -53,6 +53,7 @@
     <string name="Other">Other</string>
     <string name="Donate">Donate</string>
     <string name="DonateTips">If you find it easy to use, please support me</string>
+    <string name="Coolapk">coolapk</string>
     <string name="ContactUs">contact us</string>
     <string name="Source">Project Address</string>
     <string name="ThkListUrl">
@@ -69,29 +70,16 @@
     <string name="VerExplanation">Version explanation</string>
     <string name="Done">Done</string>
     <string name="CurrentVer">current version</string>
-    <string name="VerExp">Application:\n\n
-         Flyme obtains lyrics:\n
-        -QQ Music\n
-        -Migu Music\n
-        -Meizu Music\n
-        -NetEase Cloud Music\n
-        -Support Flyme lyrics that is support\n
-        -I don’t know the minimum version yet, feedback is welcome\n\n
+    <string name="VerExp">Applicable situation：\n
+        - APlayer Unknown ~ 1.5.7.9\n
+        - QQ Music Unknown ~ 11.0.16\n
+        - Migu Music Unknown ~ 7.7.0\n
+        - Netease Music 7.2.21 ~ 8.6.31\n
+        - Meizu Musicc Unknown ~ 未知\n
+        - Kugou Music Unknown ~ 10.9.2\n
+        - Kuwo Music Unknown ~ 10.0.4.0\n\n
 
-         Traditional Hook method of obtaining lyrics:\n(mark the most suitable version)\n
-        -APlayer: v1.5.7.9\n
-        -Kugou Music: v10.9.2\n
-        -Kuwo Music: v10.0.3.0\n
-        -QQ Music: v10.17.0.11 (additional Bluetooth connection is required)\n
-        -Migu Music: v7.6.1 (additional Bluetooth connection is required)\n
-        -NetEase Cloud Music: v7.2.22\n
-        -NetEase Cloud Music: v8.6.13\n
-        -NetEase Cloud Music: v8.6.26 (additional Bluetooth connection is required)\n
-        -Other versions may also be compatible, please self-test\n\n
-
-         Active application adaptation:\n(mark the version to start adaptation)\n
-         Salt and Pepper Music: v4.5\n
-         Phonograph Plus: v0.0.2v0.0.3
+        - SaltPlayer 4.5 ~ now
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
@@ -171,16 +159,20 @@
         Please restart the system interface and make sure the module switch is turned on\n
         Use Flyme to get the lyrics: please make sure the lyrics in the status bar of the music software is turned on\n
         Use traditional hook to get lyrics: please make sure the music software version is correct\n
-        If Flyme cannot get the lyrics through the method of obtaining lyrics, please switch to the traditional Hook method of obtaining lyrics\n\n
+        If Flyme cannot get the lyrics through the method of obtaining lyrics, please switch to the traditional Hook
+        method of obtaining lyrics\n\n
 
         The function changes with * need to restart the system interface\n\n
 
-        If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to Github Telegram for feedback. \n\n
+        If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to Github
+        Telegram for feedback. \n\n
 
         Known bug:\n
         The music software exits abnormally, the lyrics will not disappear automatically
     </string>
-    <string name="NotSupport">Xposed not supported\n or the module is not activated\nforce stop the software after activation</string>
+    <string name="NotSupport">Xposed not supported\n or the module is not activated\nforce stop the software after
+        activation
+    </string>
     <string name="MeizuLyric">Use Meizu Way to Get Lyrics</string>
     <string name="MeizuLyricTips">Cannot get lyrics using Meizu method, please turn off this switch</string>
     <string name="UseCount">* Lyric statistics</string>

@@ -19,12 +19,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
-            tools:ignore="AllowBackup" tools:targetApi="n">
-
+            tools:ignore="AllowBackup"
+            tools:targetApi="n">
+        <activity android:name=".MainActivity">
+        </activity>
         <activity android:name=".activity.AboutActivity"/>
-
         <activity android:name=".activity.ApiAPPListActivity"/>
-
         <activity
                 android:name=".activity.SettingsActivity"
                 android:exported="true"
@@ -47,6 +47,7 @@
                 android:targetActivity=".activity.SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
@@ -60,8 +61,9 @@
         <meta-data
                 android:name="xposedsharedprefs"
                 android:value="true"/>
-        <meta-data android:name="xposedscope"
-                   android:resource="@array/need_module"/>
+        <meta-data
+                android:name="xposedscope"
+                android:resource="@array/need_module"/>
 
         <service
                 android:name=".QuickTitleService"
@@ -77,8 +79,6 @@
                     android:name="android.service.quicksettings.ACTIVE_TILE"
                     android:value="true"/>
         </service>
-
-
     </application>
 
 </manifest>

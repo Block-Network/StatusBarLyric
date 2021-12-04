@@ -40,6 +40,14 @@
     <PreferenceCategory android:title="@string/Other"/>
 
     <Preference
+            android:key="coolapk"
+            android:summary=""
+            android:title="@string/Coolapk">
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://www.coolapk.com/apk/miui.statusbar.lyric"/>
+    </Preference>
+<Preference
             android:key="donate"
             android:summary="@string/DonateTips"
             android:title="@string/Donate">
