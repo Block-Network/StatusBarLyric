@@ -49,14 +49,6 @@ public class ApiListConfig {
         return str;
     }
 
-    public void update() {
-        if (config.hasJson()) {
-            config.update(getConfig());
-        } else {
-            config.update();
-        }
-    }
-
     public boolean hasJson() {
         return config.hasJson();
     }
@@ -67,6 +59,10 @@ public class ApiListConfig {
 
     public void setEnable(String packName, boolean isEnable) {
         config.put(packName, isEnable);
+    }
+
+    public void clear() {
+        config.clearConfig();
     }
 
 }

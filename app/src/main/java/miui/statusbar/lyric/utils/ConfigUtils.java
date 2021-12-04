@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -145,6 +146,14 @@ public class ConfigUtils {
             }
         } else {
             return SP.getFloat(key, f);
+        }
+    }
+
+    public void clearConfig() {
+        if (!hasJson()) {
+            SPEditor.clear().apply();
+        } else {
+            new File(Utils.PATH + "Config.json").delete();
         }
     }
 }

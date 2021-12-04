@@ -201,7 +201,7 @@ public class ActivityUtils {
                 new AlertDialog.Builder(activity)
                         .setTitle(activity.getString(R.string.Warn))
                         .setMessage(activity.getString(R.string.ConfigError))
-                        .setNegativeButton(activity.getString(R.string.ResetNow), (dialog, which) -> cleanConfig(activity))
+                        .setNegativeButton(activity.getString(R.string.ResetNow), (dialog, which) -> cleanConfig(activity, config, getAppList(activity)))
                         .setPositiveButton(activity.getString(R.string.NoReset), null)
                         .setNeutralButton(activity.getString(R.string.TryFix), (dialog, which) -> fixConfig(activity, config))
                         .setCancelable(false)
@@ -213,18 +213,19 @@ public class ActivityUtils {
         }
     }
 
-    public static void cleanConfig(Activity activity) {
-        SharedPreferences userSettings = activity.getSharedPreferences("miui.statusbar.lyric_preferences", 0);
-        SharedPreferences.Editor editor = userSettings.edit();
-        editor.clear();
-        editor.apply();
-        Toast.makeText(activity, (new File(Utils.PATH + "Config.json").delete()) + "", Toast.LENGTH_LONG).show();
-
-
+    public static void cleanConfig(Activity activity, Config config, ApiListConfig config2) {
+        activity.getSharedPreferences("miui.statusbar.lyric_preferences", 0).edit().clear().apply();
         PackageManager packageManager = Objects.requireNonNull(activity).getPackageManager();
         packageManager.setComponentEnabledSetting(new ComponentName(activity, "miui.statusbar.lyric.launcher"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         Toast.makeText(activity, activity.getString(R.string.ResetSuccess), Toast.LENGTH_LONG).show();
+        try {
+            config.clear();
+        } catch (Exception | Error ignored) {}
+        try {
+            config2.clear();
+        } catch (Exception | Error ignored) {}
         activity.finishAffinity();
+        System.exit(0);
     }
 
     public static void fixConfig(Activity activity, Config config) {
