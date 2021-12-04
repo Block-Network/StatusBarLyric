@@ -38,7 +38,7 @@
 
 ## Supported Music app versions
 
-### Perfect fit：（Mark the most suitable version）
+### Perfect fit
 
 - __[APlayer](https://github.com/rRemix/APlayer)__ Unknown ~ 1.5.7.9
 - __QQ Music__ unknown ~ 11.0.16
@@ -48,9 +48,9 @@
 - __Kugou Music__ Unknown ~ 10.9.2
 - __Kuwo Music__ Unknown ~ 10.0.4.0
 
-### App active adaptation：（Mark the start adapting version）
+### App active adaptation
 
-- [SaltPlayer](https://github.com/Moriafly/SaltPlayerSource) ：4.5 ~ now
+- __[SaltPlayer](https://github.com/Moriafly/SaltPlayerSource)__：4.5 ~ now
 
 ## Thanks list（In no particular order）
 
