@@ -40,17 +40,17 @@
 ## 支持的音乐软件版本
 
 - [APlayer](https://github.com/rRemix/APlayer) 未知 ~ 1.5.7.9
-- QQ音乐 未知 ~ 11.0.16
-- 咪咕音乐 未知 ~ 7.7.0
-- 网易云音乐 7.22.1 ~ 8.6.31
-- 魅族音乐 未知 ~ 未知
-- 酷狗音乐 未知 ~ 10.9.2
-- 酷我音乐 未知 ~ 10.0.4.0
+- __QQ音乐__ 未知 ~ 11.0.16
+- __咪咕音乐__ 未知 ~ 7.7.0
+- __网易云音乐__ 7.2.21 ~ 8.6.31
+- __魅族音乐__ 未知 ~ 未知
+- __酷狗音乐__ 未知 ~ 10.9.2
+- __酷我音乐__ 未知 ~ 10.0.4.0
 
 ### 应用主动适配：（标记开始适配的版本）
 
-- [椒盐音乐](https://github.com/Moriafly/SaltPlayerSource) 4.5 ~ 现今
-- [Phonograph Plus](https://github.com/chr56/Phonograph_Plus/) (
+- __[椒盐音乐](https://github.com/Moriafly/SaltPlayerSource)__ 4.5 ~ 现今
+- __[Phonograph Plus](https://github.com/chr56/Phonograph_Plus/)__ (
   一个[Phonograph](https://github.com/kabouzeid/Phonograph)第三方修改版本) ：v0.0.2(不完美适配)/v0.0.3
 
 ## 感谢名单（不分先后）

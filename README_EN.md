@@ -50,7 +50,7 @@
 
 ### App active adaptation：（Mark the start adapting version）
 
-- [SaltPlayer](https://github.com/Moriafly/SaltPlayerSource) ：4.5 ~ now
+- __[SaltPlayer](https://github.com/Moriafly/SaltPlayerSource)__：4.5 ~ now
 
 ## Thanks list（In no particular order）
 
