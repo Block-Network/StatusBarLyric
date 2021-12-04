@@ -37,6 +37,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
+@SuppressWarnings("deprecation")
 @SuppressLint("ExportedPreferenceActivity")
 public class SettingsActivity extends PreferenceActivity {
     private final Activity activity = this;
@@ -80,9 +81,10 @@ public class SettingsActivity extends PreferenceActivity {
 //        Utils.log("Debug On");
 
     }
+
+    @SuppressWarnings("deprecation")
     public void init() {
         ActivityUtils.checkPermissions(activity, config);
-
         String tips = "Tips1";
         SharedPreferences preferences = activity.getSharedPreferences(tips, 0);
         if (!preferences.getBoolean(tips, false)) {

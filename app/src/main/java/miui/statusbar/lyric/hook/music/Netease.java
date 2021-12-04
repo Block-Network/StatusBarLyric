@@ -1,4 +1,4 @@
-package miui.statusbar.lyric.hook;
+package miui.statusbar.lyric.hook.music;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -8,9 +8,10 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import miui.statusbar.lyric.hook.MeiZuStatusBarLyric;
 import miui.statusbar.lyric.utils.Utils;
 
-public class netease {
+public class Netease {
     @SuppressLint("StaticFieldLeak")
 
     public static class Hook {

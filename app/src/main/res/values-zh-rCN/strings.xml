@@ -98,8 +98,8 @@
         - 其余版本可能同样适配，请自测\n\n
 
         ### 应用主动适配：\n（标记开始适配的版本）\n
-        ### 椒盐音乐：v4.5\n
-        Phonograph Plus: v0.0.2/v0.0.3
+        - 椒盐音乐：v4.5\n
+        - Phonograph Plus: v0.0.2/v0.0.3
     </string>
     <string name="AppName">状态栏歌词</string>
     <string name="QuickTitle">状态栏歌词</string>
