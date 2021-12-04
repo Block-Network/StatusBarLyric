@@ -45,27 +45,57 @@ public class Netease {
                             }
                         });
                     } catch (XposedHelpers.ClassNotFoundError e) {
-                        XposedHelpers.findAndHookMethod("com.netease.cloudmusic.module.lyric.a.a", lpparam.classLoader, "a", String.class, new XC_MethodHook() {
-                            @Override
-                            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                                super.beforeHookedMethod(param);
-                            }
+                        try {
+                            XposedHelpers.findAndHookMethod("com.netease.cloudmusic.module.lyric.a.a", lpparam.classLoader, "a", String.class, new XC_MethodHook() {
+                                @Override
+                                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                    super.beforeHookedMethod(param);
+                                }
 
-                            @Override
-                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                super.afterHookedMethod(param);
-                                boolean isLyric = (boolean) XposedHelpers.findField(param.thisObject.getClass(), "i").get(param.thisObject);
-                                String ticker = (String) param.args[0];
-                                Utils.log("网易云状态栏歌词： " + ticker);
-                                if (isLyric) {
-                                    if (!ticker.replace(" ", "").equals("")) {
-                                        Utils.sendLyric(context, ticker, "netease");
-                                    } else {
-                                        Utils.sendLyric(context, "", "netease");
+                                @Override
+                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                    super.afterHookedMethod(param);
+                                    boolean isLyric = (boolean) XposedHelpers.findField(param.thisObject.getClass(), "i").get(param.thisObject);
+                                    String ticker = (String) param.args[0];
+                                    Utils.log("网易云状态栏歌词： " + ticker);
+                                    if (isLyric) {
+                                        if (!ticker.replace(" ", "").equals("")) {
+                                            Utils.sendLyric(context, ticker, "netease");
+                                        } else {
+                                            Utils.sendLyric(context, "", "netease");
+                                        }
                                     }
                                 }
+                            });
+                        } catch (XposedHelpers.ClassNotFoundError mE) {
+                            try {
+                                XposedHelpers.findAndHookMethod("com.netease.cloudmusic.f2.f", lpparam.classLoader, "f0", Notification.class, boolean.class, new XC_MethodHook() {
+                                    @Override
+                                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                        super.beforeHookedMethod(param);
+                                    }
+
+                                    @Override
+                                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                        super.afterHookedMethod(param);
+                                        CharSequence ticker = ((Notification) param.args[0]).tickerText;
+                                        if (ticker == null) {
+                                            return;
+                                        }
+                                        XposedBridge.log("网易云状态栏歌词： " + ticker + " | " + param.args[1]);
+                                        Utils.log("网易云状态栏歌词： " + ticker + " | " + param.args[1]);
+                                        if ((boolean) param.args[1] && !ticker.toString().replace(" ", "").equals("")) {
+                                            Utils.sendLyric(context, ticker.toString(), "netease");
+                                        } else {
+                                            Utils.sendLyric(context, "", "netease");
+                                        }
+                                    }
+                                });
+                            } catch (XposedHelpers.ClassNotFoundError mEe) {
+                                Utils.log("不支持的网易云版本! \n" + mEe.getMessage());
+                                Utils.showToastOnLooper(context, mEe.getMessage());
                             }
-                        });
+                        }
                     }
                 }
             });

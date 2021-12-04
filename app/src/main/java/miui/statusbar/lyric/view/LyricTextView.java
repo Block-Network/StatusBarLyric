@@ -88,12 +88,15 @@ public class LyricTextView extends TextView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        float mSpeed = speed;
         if (canvas != null && text != null) {
-            if ((System.currentTimeMillis() - time) <= 1500) {
+            if (this.getText().length() <= 20 && (System.currentTimeMillis() - time) <= 1500) {
                 float y = getHeight() / 2 + Math.abs(mPaint.ascent() + mPaint.descent()) / 2;
                 canvas.drawText(text, x, y, mPaint);
                 invalidateAfter(invalidateDelay);
                 return;
+            } else if (this.getText().length() >= 20) {
+                mSpeed = mSpeed + mSpeed;
             }
         }
         if (canvas != null && text != null) {
@@ -101,11 +104,11 @@ public class LyricTextView extends TextView {
             canvas.drawText(text, x, y, mPaint);
         }
         if (!isStop) {
-            if (viewWidth - x + speed >= textLength) {
+            if (viewWidth - x + mSpeed >= textLength) {
                 x = viewWidth > textLength ? 0 : viewWidth - textLength;
                 stopScroll();
             } else {
-                x -= speed;
+                x -= mSpeed;
             }
             invalidateAfter(invalidateDelay);
         }

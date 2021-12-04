@@ -274,4 +274,7 @@ public class Config {
         config.put("LShowOnce", bool);
     }
 
+    public void clear() {
+        config.clearConfig();
+    }
 }
