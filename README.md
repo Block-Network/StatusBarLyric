@@ -24,39 +24,46 @@
 
 ### 支持的系统版本
 
-- MIUI 10/12/12.5 (MIUI 11 大概率也是支持的[未测试])
-- Oxygen11
+- MIUI 10/11//12/12.5 (MIUI11[未测试])
+- Oxygen
 - Extension（ROG）
 - Realme UI
 - AOSP
 - Flyme
+- ColorOS
+- Joyui
+- One UI
+- LG
+
 #### 理论支持部分类原生
 
 ## 支持的音乐软件版本
-### 完美适配：（标记最高适配的版本）
-- [APlayer](https://github.com/rRemix/APlayer) : v1.5.7.9
-- QQ音乐
-- 酷狗音乐
-- 酷我音乐
-- 咪咕音乐
-- 网易云音乐
-- 支持Flyme歌词即支持
-- 暂不知最低版本，欢迎反馈
+
+- [APlayer](https://github.com/rRemix/APlayer) 未知 ~ 1.5.7.9
+- QQ音乐 未知 ~ 11.0.16
+- 咪咕音乐 未知 ~ 7.7.0
+- 网易云音乐 7.22.1 ~ 8.6.31
+- 魅族音乐 未知 ~ 未知
+- 酷狗音乐 未知 ~ 10.9.2
+- 酷我音乐 未知 ~ 10.0.4.0
 
 ### 应用主动适配：（标记开始适配的版本）
-- [椒盐音乐](https://github.com/Moriafly/SaltPlayerSource) ：v4.5+
-- [Phonograph Plus](https://github.com/chr56/Phonograph_Plus/) (一个[Phonograph](https://github.com/kabouzeid/Phonograph)第三方修改版本) ：v0.0.2(不完美适配)/v0.0.3
+
+- [椒盐音乐](https://github.com/Moriafly/SaltPlayerSource) 4.5 ~ 现今
+- [Phonograph Plus](https://github.com/chr56/Phonograph_Plus/) (
+  一个[Phonograph](https://github.com/kabouzeid/Phonograph)第三方修改版本) ：v0.0.2(不完美适配)/v0.0.3
 
 ## 感谢名单（不分先后）
+
 - @潇风残月 (感谢提供的库以及对代码的极限精简)
 - @柒猫Sebun_Neko (感谢提供的图标)
 - @Yife Playte (感谢帮忙优化矢量图)
 
 ### 下载
 
-- [Releases](https://github.com/577fkj/MIUIStatusBarLyric/releases)  
-- [酷安](https://www.coolapk.com/apk/miui.statusbar.lyric)  
-- [测试版](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)  
+- [Releases](https://github.com/577fkj/MIUIStatusBarLyric/releases)
+- [酷安](https://www.coolapk.com/apk/miui.statusbar.lyric)
+- [测试版](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
 
 ### 联系我们
 

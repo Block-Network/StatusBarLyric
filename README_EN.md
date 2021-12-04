@@ -23,29 +23,33 @@
 
 ### Supported system versions
 
-- MIUI 10/12/12.5 (MIUI 11 is also supported with a high probability [not tested])
-- Oxygen11
-- Extension (ROG)
+- MIUI 10/11//12/12.5 (MIUI11[Not tested])
+- Oxygen
+- Extension（ROG）
 - Realme UI
 - AOSP
 - Flyme
+- ColorOS
+- Joyui
+- One UI
+- LG
+
 #### Theoretical support for some native classes
 
 ## Supported Music app versions
+
 ### Perfect fit：（Mark the most suitable version）
-- [APlayer](https://github.com/rRemix/APlayer) : v1.5.7.9
-- QQ Music
-- kugou music
-- kuwo music
-- Migu Music
-- NetEase Cloud Music
-- Support Flyme lyrics that is support
-- I don’t know the minimum version yet, feedback is welcome
+
+- [APlayer](https://github.com/rRemix/APlayer) Unknown ~ 1.5.7.9 -QQ Music unknown ~ 11.0.16 -Migu Music Unknown ~ 7.7.0
+  -NetEase Cloud Music 7.22.1 ~ 8.6.31 -Meizu Music Unknown ~ Unknown -Kugou Music Unknown ~ 10.9.2 -Kuwo Music
+  Unknown ~ 10.0.4.0
 
 ### App active adaptation：（Mark the start adapting version）
-- [SaltPlayer](https://github.com/Moriafly/SaltPlayerSource) ：v4.5+
+
+- [SaltPlayer](https://github.com/Moriafly/SaltPlayerSource) ：4.5 ~ now
 
 ## Thanks list（In no particular order）
+
 - @潇风残月 (Thanks for the provided library and the extreme streamlining of the code)
 - @柒猫Sebun_Neko (Thanks for the provided icon)
 - @Yife Playte (Thanks for helping optimize vector)
