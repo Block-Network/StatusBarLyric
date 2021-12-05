@@ -233,6 +233,11 @@ public class MainHook implements IXposedHookLoadPackage {
                             return true;
                         });
 
+                        final Handler updateTextColor = new Handler(Looper.getMainLooper(), message -> {
+                            lyricTextView.setTextColor(message.arg1);
+                            return true;
+                        });
+
                         // 歌词更新 Handler
                         Handler LyricUpdate = new Handler(Looper.getMainLooper(), message -> {
                             String string = message.getData().getString(KEY_LYRIC);
@@ -460,12 +465,18 @@ public class MainHook implements IXposedHookLoadPackage {
                                             if (!config.getLyricColor().equals("off")) {
                                                 if (color != Color.parseColor(config.getLyricColor())) {
                                                     color = Color.parseColor(config.getLyricColor());
-                                                    lyricTextView.setTextColor(color);
+                                                    Message message = updateTextColor.obtainMessage();
+                                                    message.arg1 = color;
+                                                    updateTextColor.sendMessage(message);
                                                 }
                                             } else if (!Utils.isDark(clock.getTextColors().getDefaultColor())) {
-                                                lyricTextView.setTextColor(0xffffffff);
+                                                Message message = updateTextColor.obtainMessage();
+                                                message.arg1 = 0xffffffff;
+                                                updateTextColor.sendMessage(message);
                                             } else if (Utils.isDark(clock.getTextColors().getDefaultColor())) {
-                                                lyricTextView.setTextColor(0xff000000);
+                                                Message message = updateTextColor.obtainMessage();
+                                                message.arg1 = 0xff000000;
+                                                updateTextColor.sendMessage(message);
                                             }
                                             if (config.getIcon() && !icon[1].equals("")) {
                                                 Drawable createFromPath = null;
