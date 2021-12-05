@@ -41,6 +41,10 @@ import java.lang.reflect.Field;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
+
 
 public class MainHook implements IXposedHookLoadPackage {
     public static final String[] icon = new String[]{"hook", ""};
@@ -62,6 +66,7 @@ public class MainHook implements IXposedHookLoadPackage {
     static boolean useSystemMusicActive = true;
     Context context = null;
     boolean showLyric = true;
+    boolean init = false;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
@@ -72,19 +77,24 @@ public class MainHook implements IXposedHookLoadPackage {
             @Override
             protected void afterHookedMethod(MethodHookParam param) {
                 context = (Context) param.args[0];
-                if (lpparam.packageName.equals("com.android.systemui")) {
-                    // 锁屏广播
-                    IntentFilter screenOff = new IntentFilter();
-                    screenOff.addAction(Intent.ACTION_USER_PRESENT);
-                    screenOff.addAction(Intent.ACTION_SCREEN_OFF);
-                    context.registerReceiver(new LockChangeReceiver(), screenOff);
+                if (!init) {
+                    AppCenter.start((Application) param.thisObject, "5a1a7ca7-804a-4539-b57f-ba706a69ceb8",
+                            Analytics.class, Crashes.class);
+                    if (lpparam.packageName.equals("com.android.systemui")) {
+                        // 锁屏广播
+                        IntentFilter screenOff = new IntentFilter();
+                        screenOff.addAction(Intent.ACTION_USER_PRESENT);
+                        screenOff.addAction(Intent.ACTION_SCREEN_OFF);
+                        context.registerReceiver(new LockChangeReceiver(), screenOff);
 
-                    // 歌词广播
-                    IntentFilter filter = new IntentFilter();
-                    filter.addAction("Lyric_Server");
-                    context.registerReceiver(new LyricReceiver(), filter);
+                        // 歌词广播
+                        IntentFilter filter = new IntentFilter();
+                        filter.addAction("Lyric_Server");
+                        context.registerReceiver(new LyricReceiver(), filter);
 
+                    }
                 }
+                init = true;
             }
         });
 
