@@ -19,7 +19,7 @@ public class HookApi {
 
     public static class Hook {
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
-            XposedHelpers.findAndHookMethod("statusbarsdk.statusbarlyric", lpparam.classLoader, "hasEnable", new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("StatusBarLyric.StatusBarLyric", lpparam.classLoader, "hasEnable", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -31,12 +31,12 @@ public class HookApi {
                     super.afterHookedMethod(param);
                 }
             });
-            XposedHelpers.findAndHookMethod("statusbarsdk.statusbarlyric", lpparam.classLoader, "sendLyric", Context.class, String.class, String.class, boolean.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("StatusBarLyric.StatusBarLyric", lpparam.classLoader, "sendLyric", Context.class, String.class, String.class, String.class, boolean.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
-                    XposedBridge.log((String) param.args[1]);
-                    Utils.sendLyric((Context) param.args[0], (String) param.args[1], (String) param.args[2], (boolean) param.args[3], lpparam.packageName);
+                    Utils.log("API: " + param.args[1]);
+                    Utils.sendLyric((Context) param.args[0], (String) param.args[1], (String) param.args[2], (boolean) param.args[4], (String) param.args[3]);
                 }
 
                 @Override
@@ -44,7 +44,7 @@ public class HookApi {
                     super.afterHookedMethod(param);
                 }
             });
-            XposedHelpers.findAndHookMethod("statusbarsdk.statusbarlyric", lpparam.classLoader, "stopLyric", Context.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("StatusBarLyric.StatusBarLyric", lpparam.classLoader, "stopLyric", Context.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
