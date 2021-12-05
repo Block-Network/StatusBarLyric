@@ -68,3 +68,9 @@ jobs:
         with:
           name: MIUIStatusBarLyric_debug
           path: ${{ steps.sign_debug.outputs.signedReleaseFile }}
+
+      - name: Upload Release Mapping
+        uses: actions/upload-artifact@v2
+        with:
+          name: MIUIStatusBarLyric_release_mapping
+          path: ./app/build/outputs/mapping/release/mapping.txt
