@@ -1,4 +1,4 @@
-package miui.statusbar.lyric;
+package miui.statusbar.lyric.config;
 
 import static miui.statusbar.lyric.utils.Utils.PATH;
 

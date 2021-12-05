@@ -1,4 +1,4 @@
-package miui.statusbar.lyric;
+package miui.statusbar.lyric.config;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;

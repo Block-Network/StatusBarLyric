@@ -16,8 +16,8 @@ import android.os.Message;
 import android.os.Process;
 import android.widget.Toast;
 
-import miui.statusbar.lyric.ApiListConfig;
-import miui.statusbar.lyric.Config;
+import miui.statusbar.lyric.config.ApiListConfig;
+import miui.statusbar.lyric.config.Config;
 import miui.statusbar.lyric.R;
 import org.json.JSONException;
 import org.json.JSONObject;

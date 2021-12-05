@@ -6,6 +6,7 @@ import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 
+import miui.statusbar.lyric.config.Config;
 import miui.statusbar.lyric.utils.ActivityUtils;
 
 @TargetApi(Build.VERSION_CODES.N)

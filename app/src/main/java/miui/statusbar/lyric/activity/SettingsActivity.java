@@ -24,7 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.byyang.choose.ChooseFileUtils;
-import miui.statusbar.lyric.Config;
+import miui.statusbar.lyric.config.Config;
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.utils.ActivityUtils;
 import miui.statusbar.lyric.utils.ShellUtils;
