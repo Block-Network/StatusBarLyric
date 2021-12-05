@@ -52,7 +52,7 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppCenter.start(getApplication(), "5a1a7ca7-804a-4539-b57f-ba706a69ceb8",
+        AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
                 Analytics.class, Crashes.class);
         addPreferencesFromResource(R.xml.root_preferences);
         try {

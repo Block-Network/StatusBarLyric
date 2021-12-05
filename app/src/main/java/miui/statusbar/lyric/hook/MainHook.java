@@ -78,9 +78,9 @@ public class MainHook implements IXposedHookLoadPackage {
             protected void afterHookedMethod(MethodHookParam param) {
                 context = (Context) param.args[0];
                 if (!init) {
-                    AppCenter.start((Application) param.thisObject, "5a1a7ca7-804a-4539-b57f-ba706a69ceb8",
-                            Analytics.class, Crashes.class);
                     if (lpparam.packageName.equals("com.android.systemui")) {
+                        AppCenter.start((Application) param.thisObject, "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
+                                Analytics.class, Crashes.class);
                         // 锁屏广播
                         IntentFilter screenOff = new IntentFilter();
                         screenOff.addAction(Intent.ACTION_USER_PRESENT);
@@ -92,6 +92,9 @@ public class MainHook implements IXposedHookLoadPackage {
                         filter.addAction("Lyric_Server");
                         context.registerReceiver(new LyricReceiver(), filter);
 
+                    } else {
+                        AppCenter.start((Application) param.thisObject, "9b618dc1-602a-4af1-82ee-c60e4a243e1f",
+                                Analytics.class, Crashes.class);
                     }
                 }
                 init = true;
