@@ -12,8 +12,8 @@ android {
         minSdkVersion 27
         //noinspection OldTargetApi
         targetSdkVersion 29
-        versionCode 61
-        versionName "3.34.11"
+        versionCode 62
+        versionName "3.36.11"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }
@@ -53,4 +53,10 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 //    implementation files('libs/MIUI_SDK.jar')
     implementation files('libs/miui_sdk.jar')
+
+    // microsoft app center
+    def appCenterSdkVersion = '4.3.1'
+    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
+
 }

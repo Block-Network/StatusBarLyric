@@ -36,6 +36,10 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
+
 
 @SuppressWarnings("deprecation")
 @SuppressLint("ExportedPreferenceActivity")
@@ -48,6 +52,8 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCenter.start(getApplication(), "5a1a7ca7-804a-4539-b57f-ba706a69ceb8",
+                Analytics.class, Crashes.class);
         addPreferencesFromResource(R.xml.root_preferences);
         try {
             config = new Config(ActivityUtils.getSP(activity, "Lyric_Config"));
