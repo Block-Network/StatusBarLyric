@@ -8,7 +8,7 @@ import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 
-public class statusbarlyric {
+public class StatusBarLyric {
 
     String icon;
     Context context;
