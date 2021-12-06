@@ -16,7 +16,7 @@ public class QuickTitleService extends TileService {
     public void onClick() {
         super.onClick();
         Tile tile = getQsTile();
-        Config config = ActivityUtils.getConfig(getApplicationContext());
+        Config config = ActivityUtils.getConfig(getBaseContext());
         config.setLyricService(!config.getLyricService());
         set(tile, config);
     }
@@ -31,7 +31,7 @@ public class QuickTitleService extends TileService {
 
     @Override
     public void onStartListening() {
-        Config config = ActivityUtils.getConfig(getApplicationContext());
+        Config config = ActivityUtils.getConfig(getBaseContext());
         Tile tile = getQsTile();
         set(tile, config);
     }

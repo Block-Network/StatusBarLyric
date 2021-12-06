@@ -70,4 +70,4 @@
 
 ## App active adaptation
 
-please check [Api](./Api)
+please check [Api](./StatusbarLyricAPI)

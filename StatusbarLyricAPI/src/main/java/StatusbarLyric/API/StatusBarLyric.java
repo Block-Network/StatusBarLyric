@@ -24,7 +24,7 @@ public class StatusBarLyric {
      * </p>
      *
      * @param context context
-     * @param drawable (notification) icon (you can use your music service's notification icon), Drawable, format should be webp. 通知栏图标(Webp格式,Drawable)
+     * @param drawable (notification) icon (you can use your music service's notification icon), Null: do not display icon, Drawable, format should be webp. 通知栏图标, null 为不显示图标, (Webp格式, Drawable)
      * @param serviceName ServiceName, for example (demo.abc.Service) 服务名称, 例如 (demo.abc.Service)
      * @param useSystemMusicActive detect your music service running status via system. 是否使用系统检测音乐是否播放
      */

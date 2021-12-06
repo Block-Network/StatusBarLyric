@@ -30,7 +30,7 @@ public class HookApi {
                     super.afterHookedMethod(param);
                 }
             });
-            XposedHelpers.findAndHookMethod("StatusBarLyric.StatusBarLyric", lpparam.classLoader, "sendLyric", Context.class, String.class, String.class, String.class, boolean.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("StatusbarLyric.API.StatusBarLyric", lpparam.classLoader, "sendLyric", Context.class, String.class, String.class, String.class, boolean.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -43,7 +43,7 @@ public class HookApi {
                     super.afterHookedMethod(param);
                 }
             });
-            XposedHelpers.findAndHookMethod("StatusBarLyric.StatusBarLyric", lpparam.classLoader, "stopLyric", Context.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("StatusbarLyric.API.StatusBarLyric", lpparam.classLoader, "stopLyric", Context.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
