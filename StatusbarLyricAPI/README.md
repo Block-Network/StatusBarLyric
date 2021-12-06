@@ -15,7 +15,7 @@ allprojects {
 
 
 dependencies {
-    implementation 'com.github.577fkj:MIUIStatusBarLyric:3.34.12v61'
+    implementation 'com.github.577fkj:MIUIStatusBarLyric:v1.1'
 }
 ```
 
@@ -47,7 +47,7 @@ allprojects {
 
 
 dependencies {
-    implementation 'com.github.577fkj:MIUIStatusBarLyric:3.34.12v61'
+    implementation 'com.github.577fkj:MIUIStatusBarLyric:v1.1'
 }
 ```
 
