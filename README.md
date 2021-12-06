@@ -66,7 +66,6 @@
 - [测试版](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
 
 ### 联系我们
-
 - [QQ交流群](https://jq.qq.com/?_wv=1027&amp;k=KQeQjgsv)
 - [电报](https://t.me/MIUIStatusBatLyric)
 - [酷安](https://www.coolapk.com/apk/miui.statusbar.lyric)
