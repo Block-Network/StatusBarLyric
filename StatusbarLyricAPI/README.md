@@ -1,8 +1,27 @@
 # StatusBarAPi
 
-[StatusBarApiExample](https://github.com/577fkj/StatusBarApiExample)
+[APIDemo](https://github.com/577fkj/StatusBarApiExample)
 
-To use API, please increase the package statusbarsdk and ignore this package in the confusion
+[Jitpack](https://www.jitpack.io/#577fkj/MIUIStatusBarLyric/3.34.12v61)
+
+You need to add in build.gradle
+```
+allprojects {
+    repositories {
+        ....
+        maven { url 'https://www.jitpack.io' }
+    }
+}
+
+
+dependencies {
+    implementation 'com.github.577fkj:MIUIStatusBarLyric:3.34.12v61'
+}
+```
+
+```java
+import StatusbarLyric.API.StatusBarLyric;
+```
 
 Add under application in AndroidManifest.xml
 ```xml
@@ -13,9 +32,28 @@ android:value="true" />
 
 # StatusBarAPi
 
-[StatusBarApiExample](https://github.com/577fkj/StatusBarApiExample)
+[APIDemo](https://github.com/577fkj/StatusBarApiExample)
 
-使用 API 请增加软件包 statusbarsdk 并在混淆里忽略此包
+[Jitpack](https://www.jitpack.io/#577fkj/MIUIStatusBarLyric/3.34.12v61)
+
+需要在 build.gradle 添加
+```
+allprojects {
+    repositories {
+        ....
+        maven { url 'https://www.jitpack.io' }
+    }
+}
+
+
+dependencies {
+    implementation 'com.github.577fkj:MIUIStatusBarLyric:3.34.12v61'
+}
+```
+
+```java
+import StatusbarLyric.API.StatusBarLyric;
+```
 
 在AndroidManifest.xml 中的 application 下添加
 ```xml

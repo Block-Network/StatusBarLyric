@@ -74,4 +74,4 @@
 
 ## 音乐主动适配
 
-请查看 [Api](./Api)
+请查看 [Api](./StatusbarLyricAPI)
