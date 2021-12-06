@@ -7,15 +7,13 @@ import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
-import android.util.Log;
 
 import java.util.List;
 
-import miui.statusbar.lyric.ApiListConfig;
+import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.utils.APiAPPListUtils;
 import miui.statusbar.lyric.utils.ActivityUtils;
-import miui.statusbar.lyric.utils.Utils;
 
 @SuppressWarnings("deprecation")
 @SuppressLint("ExportedPreferenceActivity")

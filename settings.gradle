@@ -3,8 +3,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
+        maven { url 'https://api.xposed.info' }
+        maven { url 'https://www.jitpack.io' }
     }
 }
 rootProject.name = "MIUI状态栏歌词"
 include ':app'
+include ':StatusbarLyricAPI'

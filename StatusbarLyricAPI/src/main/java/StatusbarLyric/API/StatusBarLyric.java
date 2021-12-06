@@ -1,4 +1,4 @@
-package statusbarsdk;
+package StatusbarLyric.API;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,10 +8,11 @@ import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 
-public class statusbarlyric {
+public class StatusBarLyric {
 
     String icon;
     Context context;
+    String serviceName;
     boolean useSystemMusicActive;
 
     /**
@@ -24,12 +25,14 @@ public class statusbarlyric {
      *
      * @param context context
      * @param drawable (notification) icon (you can use your music service's notification icon), Drawable, format should be webp. 通知栏图标(Webp格式,Drawable)
+     * @param serviceName ServiceName, for example (demo.abc.Service) 服务名称, 例如 (demo.abc.Service)
      * @param useSystemMusicActive detect your music service running status via system. 是否使用系统检测音乐是否播放
      */
-    public statusbarlyric(Context context, Drawable drawable, boolean useSystemMusicActive) {
+    public StatusBarLyric(Context context, Drawable drawable, String serviceName, boolean useSystemMusicActive) {
         icon = drawableToBase64(drawable);
         this.context = context;
         this.useSystemMusicActive = useSystemMusicActive;
+        this.serviceName = serviceName;
     }
 
     /**
@@ -43,7 +46,7 @@ public class statusbarlyric {
      * @param lyric A single line lyrics 单行歌词
      */
     public void updateLyric(String lyric) {
-        sendLyric(context, lyric, icon, useSystemMusicActive);
+        sendLyric(context, lyric, icon, serviceName, useSystemMusicActive);
     }
 
     /**
@@ -76,7 +79,7 @@ public class statusbarlyric {
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
 
-    protected void sendLyric(Context context, String lyric, String icon, boolean useSystemMusicActive) {}
+    protected void sendLyric(Context context, String lyric, String icon, String serviceName, boolean useSystemMusicActive) {}
 
     protected void stopLyric(Context context) {}
 

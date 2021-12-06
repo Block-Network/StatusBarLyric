@@ -37,9 +37,9 @@ import java.util.Objects;
 
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
-import miui.statusbar.lyric.ApiListConfig;
+import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.BuildConfig;
-import miui.statusbar.lyric.Config;
+import miui.statusbar.lyric.config.Config;
 
 
 public class Utils {
