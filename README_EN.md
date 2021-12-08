@@ -70,4 +70,4 @@
 
 ## App active adaptation
 
-please check [Api](./StatusbarLyricAPI)
+please check [Api](https://github.com/577fkj/StatusBarApiExample)
