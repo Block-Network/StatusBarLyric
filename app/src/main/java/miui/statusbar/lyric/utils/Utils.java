@@ -139,7 +139,7 @@ public class Utils {
     }
 
     //歌词图标反色
-    public static Drawable reverseColor(Drawable icon, Boolean black) {
+    public static void reverseColor(Drawable icon, Boolean black) {
         ColorMatrix cm = new ColorMatrix();
         if (black) {
             cm.set(new float[]{
@@ -150,7 +150,6 @@ public class Utils {
             });
         }
         icon.setColorFilter(new ColorMatrixColorFilter(cm));
-        return icon;
     }
 
     public static boolean isDark(int color) {

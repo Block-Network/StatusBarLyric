@@ -18,7 +18,7 @@ public class HookApi {
 
     public static class Hook {
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
-            XposedHelpers.findAndHookMethod("StatusbarLyric.API.StatusBarLyric", lpparam.classLoader, "hasEnable", new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("StatusBarLyric.API.StatusBarLyric", lpparam.classLoader, "hasEnable", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -30,7 +30,7 @@ public class HookApi {
                     super.afterHookedMethod(param);
                 }
             });
-            XposedHelpers.findAndHookMethod("StatusbarLyric.API.StatusBarLyric", lpparam.classLoader, "sendLyric", Context.class, String.class, String.class, String.class, boolean.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("StatusBarLyric.API.StatusBarLyric", lpparam.classLoader, "sendLyric", Context.class, String.class, String.class, String.class, boolean.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -43,7 +43,7 @@ public class HookApi {
                     super.afterHookedMethod(param);
                 }
             });
-            XposedHelpers.findAndHookMethod("StatusbarLyric.API.StatusBarLyric", lpparam.classLoader, "stopLyric", Context.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("StatusBarLyric.API.StatusBarLyric", lpparam.classLoader, "stopLyric", Context.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);

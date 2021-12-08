@@ -9,4 +9,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MIUI状态栏歌词"
 include ':app'
-include ':StatusbarLyricAPI'

@@ -18,6 +18,7 @@ public class LyricTextSwitchView extends ViewFlipper {
     AutoMarqueeTextView autoMarqueeTextView2;
     boolean switchLyric = false;
     boolean hasMeizu;
+    boolean enable;
 
     public LyricTextSwitchView(Context context, boolean isMeizu) {
         super(context);
@@ -211,5 +212,13 @@ public class LyricTextSwitchView extends ViewFlipper {
             autoMarqueeTextView.setMaxLines(i);
             autoMarqueeTextView2.setMaxLines(i);
         }
+    }
+
+    public void setEnable(boolean bool) {
+        enable = bool;
+    }
+
+    public boolean getEnable() {
+        return enable;
     }
 }
