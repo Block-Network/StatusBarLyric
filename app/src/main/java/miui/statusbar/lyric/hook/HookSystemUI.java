@@ -138,19 +138,20 @@ public class HookSystemUI {
             config.update();
             Utils.log("歌词：" + lyric + " | 是否为Hook：" + isHook + " | Icon：" + icon);
             lyricTextView.setEnable(true);
-            if (lyric.equals("")) {
+            if (TextUtils.isEmpty(lyric.replace(" ", ""))) {
                 setOff("歌词空");
                 return;
             }
             if (config.getLyricService()) {
                 iconReverseColor = config.getIconAutoColor();
-                if (config.getIcon() && !icon.equals("")) {
+                if (config.getIcon() && !TextUtils.isEmpty(icon)) {
                     if (isHook) {
                         localIcon = Drawable.createFromPath(icon);
                     } else {
                         localIcon = new BitmapDrawable(Utils.stringToBitmap(icon));
                     }
                 } else {
+                    localIcon = null;
                     Message obtainMessage2 = iconUpdate.obtainMessage();
                     obtainMessage2.obj = Drawable.createFromPath(null);
                     iconUpdate.sendMessage(obtainMessage2);
@@ -204,6 +205,9 @@ public class HookSystemUI {
                 protected void afterHookedMethod(MethodHookParam param) {
                     Context context = (Context) param.args[0];
                     if (!init) {
+                        AppCenter.start((Application) param.thisObject, "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
+                                Analytics.class, Crashes.class);
+
                         // 锁屏广播
                         IntentFilter screenOff = new IntentFilter();
                         screenOff.addAction(Intent.ACTION_USER_PRESENT);
@@ -354,7 +358,7 @@ public class HookSystemUI {
                     // 歌词更新 Handler
                     LyricUpdate = new Handler(Looper.getMainLooper(), message -> {
                         String string = message.getData().getString(KEY_LYRIC);
-                        if (!string.equals("")) {
+                        if (!TextUtils.isEmpty(string)) {
                             if (!string.equals(lyricTextView.getText().toString())) {
                                 // 自适应/歌词宽度
                                 if (config.getLyricWidth() == -1) {
@@ -374,7 +378,6 @@ public class HookSystemUI {
                                 // 设置状态栏
                                 Utils.setStatusBar(application, false, config);
                                 lyricTextView.setText(string);
-                                Utils.addLyricCount(config);
                             }
                             // 隐藏时钟
                             if (showLyric) {
@@ -397,7 +400,8 @@ public class HookSystemUI {
                         if (config.getLyricSwitch()) {
                             clock.setOnClickListener(null);
                         }
-
+                        // 设置状态栏
+                        Utils.setStatusBar(application, true, config);
                         return true;
                     });
 
@@ -410,10 +414,11 @@ public class HookSystemUI {
                                 int color = 0;
                                 int count = 0;
                                 boolean lyricOff = false;
+                                boolean isDark = false;
 
                                 @Override
                                 public void run() {
-                                    if (count == 50) {
+                                    if (count == 100) {
                                         count = 0;
                                         if (lyricTextView.getEnable()) {
                                             if (Utils.isServiceRunningList(application, musicServer)) {
@@ -434,7 +439,7 @@ public class HookSystemUI {
                                             } else {
                                                 setOff("播放器关闭");
                                             }
-
+                                        } else if (count == 50) {
                                             if (config.getFileLyric()) {
                                                 String[] strArr = Utils.getLyricFile();
                                                 switch (strArr[0]) {
@@ -470,17 +475,19 @@ public class HookSystemUI {
                                         }
                                     }
                                     if (lyricTextView.getEnable()) {
-                                        // 设置颜色
+                                        isDark = Utils.isDark(clock.getTextColors().getDefaultColor());
+
+                                        // 设置图标
                                         if (localIcon != null) {
                                             localIcon.setBounds(0, 0, (int) clock.getTextSize(), (int) clock.getTextSize());
                                             if (iconReverseColor) {
-                                                Utils.reverseColor(localIcon, Utils.isDark(clock.getTextColors().getDefaultColor()));
+                                                Utils.reverseColor(localIcon, isDark);
                                             }
                                             Message obtainMessage2 = iconUpdate.obtainMessage();
                                             obtainMessage2.obj = localIcon;
                                             iconUpdate.sendMessage(obtainMessage2);
                                         }
-
+                                        // 设置颜色
                                         if (!config.getLyricColor().equals("off")) {
                                             if (color != Color.parseColor(config.getLyricColor())) {
                                                 color = Color.parseColor(config.getLyricColor());
@@ -488,11 +495,11 @@ public class HookSystemUI {
                                                 message.arg1 = color;
                                                 updateTextColor.sendMessage(message);
                                             }
-                                        } else if (!Utils.isDark(clock.getTextColors().getDefaultColor())) {
+                                        } else if (!isDark) { // 黑色
                                             Message message = updateTextColor.obtainMessage();
                                             message.arg1 = 0xffffffff;
                                             updateTextColor.sendMessage(message);
-                                        } else if (Utils.isDark(clock.getTextColors().getDefaultColor())) {
+                                        } else if (isDark) { // 白色
                                             Message message = updateTextColor.obtainMessage();
                                             message.arg1 = 0xff000000;
                                             updateTextColor.sendMessage(message);

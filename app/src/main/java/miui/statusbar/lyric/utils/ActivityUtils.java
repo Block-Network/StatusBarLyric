@@ -51,9 +51,6 @@ public class ActivityUtils {
         } else {
             init(activity, config);
             initIcon(activity, config);
-            if (config.hasJson()) {
-                ActivityUtils.checkConfig(activity, config);
-            }
         }
     }
 
@@ -66,40 +63,6 @@ public class ActivityUtils {
         File file = new File(Utils.PATH);
         if (!file.exists()) {
             file.mkdirs();
-        }
-        if (!config.hasJson()) {
-            return;
-        }
-        file = new File(Utils.PATH + "Config.json");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-                config.setId(configId);
-                config.setUsedCount(0);
-                config.setLyricService(false);
-                config.setLyricAutoOff(true);
-                config.setLyricSwitch(false);
-                config.setLyricWidth(-1);
-                config.setLyricMaxWidth(-1);
-                config.setAnim("off");
-                config.setLyricColor("off");
-                config.setIcon(true);
-                config.setLyricSpeed(1f);
-                config.setLyricPosition(2);
-                config.setIconPath(Utils.PATH);
-                config.setIconAutoColor(true);
-                config.setLockScreenOff(false);
-                config.sethNoticeIcon(false);
-                config.setHNetSpeed(false);
-                config.setHCUK(false);
-                config.setHAlarm(false);
-                config.setDebug(false);
-                config.setisUsedCount(true);
-                config.setHook("");
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(activity, activity.getString(R.string.InitError), Toast.LENGTH_LONG).show();
-            }
         }
     }
 
@@ -195,24 +158,6 @@ public class ActivityUtils {
         }).start();
     }
 
-    public static void checkConfig(Activity activity, Config config) {
-        if (config.getId() != configId) {
-            try {
-                new AlertDialog.Builder(activity)
-                        .setTitle(activity.getString(R.string.Warn))
-                        .setMessage(activity.getString(R.string.ConfigError))
-                        .setNegativeButton(activity.getString(R.string.ResetNow), (dialog, which) -> cleanConfig(activity, config, getAppList(activity)))
-                        .setPositiveButton(activity.getString(R.string.NoReset), null)
-                        .setNeutralButton(activity.getString(R.string.TryFix), (dialog, which) -> fixConfig(activity, config))
-                        .setCancelable(false)
-                        .create()
-                        .show();
-            } catch (RuntimeException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public static void cleanConfig(Activity activity, Config config, ApiListConfig config2) {
         activity.getSharedPreferences("miui.statusbar.lyric_preferences", 0).edit().clear().apply();
         PackageManager packageManager = Objects.requireNonNull(activity).getPackageManager();
@@ -259,7 +204,7 @@ public class ActivityUtils {
         try {
             return new Config(getSP(context, "Lyric_Config"));
         } catch (SecurityException ignored) {
-            return new Config();
+            return null;
         }
     }
 
@@ -271,7 +216,7 @@ public class ActivityUtils {
         try {
             return new ApiListConfig(getSP(context, "AppList_Config"));
         } catch (SecurityException ignored) {
-            return new ApiListConfig();
+            return null;
         }
     }
 }

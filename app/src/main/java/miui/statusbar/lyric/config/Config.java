@@ -20,12 +20,7 @@ import static miui.statusbar.lyric.utils.Utils.PATH;
 
 @SuppressLint("LongLogTag")
 public class Config {
-    static String old_Json = "";
     ConfigUtils config;
-
-    public Config() {
-        config = new ConfigUtils(getConfig());
-    }
 
     public Config(XSharedPreferences xSharedPreferences) {
         config = new ConfigUtils(xSharedPreferences);
@@ -35,34 +30,8 @@ public class Config {
         config = new ConfigUtils(sharedPreferences);
     }
 
-    public static String getConfig() {
-        String str = "";
-        try {
-            if (!new File(Utils.PATH + "Config.json").exists()) {
-                Utils.PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/miui.statusbar.lyric/";
-            }
-            FileInputStream fileInputStream = new FileInputStream(Utils.PATH + "Config.json");
-            byte[] bArr = new byte[fileInputStream.available()];
-            fileInputStream.read(bArr);
-            str = new String(bArr);
-            old_Json = str;
-            fileInputStream.close();
-        } catch (IOException e) {
-            str = old_Json;
-        }
-        return str;
-    }
-
     public void update() {
-        if (config.hasJson()) {
-            config.update(getConfig());
-        } else {
-            config.update();
-        }
-    }
-
-    public boolean hasJson() {
-        return config.hasJson();
+        config.update();
     }
 
     public int getId() {
