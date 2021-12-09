@@ -74,14 +74,6 @@ public class Utils {
         return localVersion;
     }
 
-    public static String getMiuiVer() {
-        return ShellUtils.returnShell("getprop ro.miui.ui.version.name");
-    }
-
-    public static Boolean getIsEuMiui() {
-        return !ShellUtils.returnShell("getprop ro.product.mod_device").equals("");
-    }
-
     //状态栏图标设置
     public static void setStatusBar(Context application, Boolean isOpen, Config config) {
         if (!hasMiuiSetting) {

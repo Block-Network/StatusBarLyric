@@ -11,8 +11,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -33,8 +31,6 @@ import miui.statusbar.lyric.utils.Utils;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
@@ -576,7 +572,7 @@ public class SettingsActivity extends PreferenceActivity {
             config = ActivityUtils.getConfig(getApplicationContext());
         }
         if (grantResults[0] == 0) {
-            ActivityUtils.init(activity, config);
+            ActivityUtils.init();
             ActivityUtils.initIcon(activity, config);
         } else {
             new AlertDialog.Builder(activity)

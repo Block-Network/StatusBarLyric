@@ -1,14 +1,6 @@
 package miui.statusbar.lyric.utils;
 
 import android.content.SharedPreferences;
-import android.text.TextUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import de.robv.android.xposed.XSharedPreferences;
 

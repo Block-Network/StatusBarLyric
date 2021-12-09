@@ -29,7 +29,6 @@ import java.io.InputStream;
 import java.util.Objects;
 
 public class ActivityUtils {
-    static int configId = 3;
 
     public static String getLocalVersion(Context context) {
         String localVersion = "";
@@ -49,7 +48,7 @@ public class ActivityUtils {
                     "android.permission.WRITE_EXTERNAL_STORAGE"
             }, 1);
         } else {
-            init(activity, config);
+            init();
             initIcon(activity, config);
         }
     }
@@ -59,7 +58,7 @@ public class ActivityUtils {
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void init(Activity activity, Config config) {
+    public static void init() {
         File file = new File(Utils.PATH);
         if (!file.exists()) {
             file.mkdirs();
@@ -171,33 +170,6 @@ public class ActivityUtils {
         } catch (Exception | Error ignored) {}
         activity.finishAffinity();
         System.exit(0);
-    }
-
-    public static void fixConfig(Activity activity, Config config) {
-        config.setId(configId);
-        config.setUsedCount(config.getUsedCount());
-        config.setLyricService(config.getLyricService());
-        config.setLyricAutoOff(config.getLyricAutoOff());
-        config.setLyricSwitch(config.getLyricSwitch());
-        config.setLyricWidth(config.getLyricWidth());
-        config.setLyricMaxWidth(config.getLyricMaxWidth());
-        config.setAnim(config.getAnim());
-        config.setLyricColor(config.getLyricColor());
-        config.setIcon(config.getIcon());
-        config.setLyricSpeed(config.getLyricSpeed());
-        config.setLyricPosition(config.getLyricPosition());
-        config.setIconPath(config.getIconPath());
-        config.setIconAutoColor(config.getIconAutoColor());
-        config.setLockScreenOff(config.getLockScreenOff());
-        config.sethNoticeIcon(config.getHNoticeIco());
-        config.setHNetSpeed(config.getHNetSpeed());
-        config.setHCUK(config.getHCUK());
-        config.setHAlarm(config.getHAlarm());
-        config.setDebug(config.getDebug());
-        config.setisUsedCount(config.getisUsedCount());
-        config.setHook(config.getHook());
-        Toast.makeText(activity, activity.getString(R.string.FixSuccess), Toast.LENGTH_LONG).show();
-        activity.finishAffinity();
     }
 
     public static Config getConfig(Context context) {

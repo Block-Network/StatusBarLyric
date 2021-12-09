@@ -1,22 +1,12 @@
 package miui.statusbar.lyric.config;
 
+import static miui.statusbar.lyric.utils.Utils.PATH;
+
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.os.Environment;
-import android.util.Log;
 
 import de.robv.android.xposed.XSharedPreferences;
 import miui.statusbar.lyric.utils.ConfigUtils;
-import miui.statusbar.lyric.utils.Utils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import static miui.statusbar.lyric.utils.Utils.PATH;
 
 @SuppressLint("LongLogTag")
 public class Config {
@@ -33,15 +23,6 @@ public class Config {
     public void update() {
         config.update();
     }
-
-    public int getId() {
-        return config.optInt("id", 0);
-    }
-
-    public void setId(int i) {
-        config.put("id", i);
-    }
-
 
     public Boolean getLyricService() {
         return config.optBoolean("LyricService", false);
@@ -115,14 +96,6 @@ public class Config {
         return config.optBoolean("hNoticeIcon", false);
     }
 
-    public Boolean getHAlarm() {
-        return config.optBoolean("hAlarm", false);
-    }
-
-    public void setHAlarm(Boolean bool) {
-        config.put("hAlarm", bool);
-    }
-
     public Boolean getHNetSpeed() {
         return config.optBoolean("hNetSpeed", false);
     }
@@ -149,14 +122,6 @@ public class Config {
 
     public void setDebug(Boolean bool) {
         config.put("debug", bool);
-    }
-
-    public Boolean getisUsedCount() {
-        return config.optBoolean("isusedcount", true);
-    }
-
-    public void setisUsedCount(Boolean bool) {
-        config.put("isusedcount", bool);
     }
 
     public boolean getIcon() {
@@ -197,14 +162,6 @@ public class Config {
 
     public void setAntiBurn(Boolean bool) {
         config.put("antiburn", bool);
-    }
-
-    public int getUsedCount() {
-        return config.optInt("usedcount", 0);
-    }
-
-    public void setUsedCount(int i) {
-        config.put("usedcount", i);
     }
 
     public String getAnim() {
