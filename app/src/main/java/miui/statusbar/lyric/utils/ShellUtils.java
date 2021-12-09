@@ -26,16 +26,4 @@ public final class ShellUtils {
         }
     }
 
-    public static String returnShell(String command) {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader
-                    (Runtime.getRuntime().exec(command).getInputStream()), 1024);
-            String buffer = bufferedReader.readLine();
-            bufferedReader.close();
-            return buffer;
-        } catch (IOException ignored) {
-        }
-        return "";
-    }
-
 }

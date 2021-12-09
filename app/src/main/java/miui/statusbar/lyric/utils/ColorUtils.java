@@ -99,15 +99,6 @@ public final class ColorUtils {
         outXyz[2] = 100 * (sr * 0.0193 + sg * 0.1192 + sb * 0.9505);
     }
 
-    /**
-     * Returns the euclidean distance between two LAB colors.
-     */
-    public static double distanceEuclidean(@NonNull double[] labX, @NonNull double[] labY) {
-        return Math.sqrt(Math.pow(labX[0] - labY[0], 2)
-                + Math.pow(labX[1] - labY[1], 2)
-                + Math.pow(labX[2] - labY[2], 2));
-    }
-
     private static double[] getTempDouble3Array() {
         double[] result = TEMP_ARRAY.get();
         if (result == null) {

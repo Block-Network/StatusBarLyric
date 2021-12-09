@@ -74,14 +74,6 @@ public class Utils {
         return localVersion;
     }
 
-    public static String getMiuiVer() {
-        return ShellUtils.returnShell("getprop ro.miui.ui.version.name");
-    }
-
-    public static Boolean getIsEuMiui() {
-        return !ShellUtils.returnShell("getprop ro.product.mod_device").equals("");
-    }
-
     //状态栏图标设置
     public static void setStatusBar(Context application, Boolean isOpen, Config config) {
         if (!hasMiuiSetting) {
@@ -154,15 +146,6 @@ public class Utils {
 
     public static boolean isDark(int color) {
         return ColorUtils.calculateLuminance(color) < 0.5;
-    }
-
-    //歌词磁获取统计
-    public static void addLyricCount(Config config) {
-        if (config.hasJson()) {
-            if (config.getisUsedCount()) {
-                config.setUsedCount(config.getUsedCount() + 1);
-            }
-        }
     }
 
     public static void sendLyric(Context context, String lyric, String icon) {
@@ -418,21 +401,11 @@ public class Utils {
     }
 
     public static Config getConfig() {
-        XSharedPreferences xSharedPreferences = getPref("Lyric_Config");
-        if (xSharedPreferences == null) {
-            return new Config();
-        } else {
-            return new Config(xSharedPreferences);
-        }
+        return new Config(getPref("Lyric_Config"));
     }
 
     public static ApiListConfig getAppList() {
-        XSharedPreferences xSharedPreferences = getPref("AppList_Config");
-        if (xSharedPreferences == null) {
-            return new ApiListConfig();
-        } else {
-            return new ApiListConfig(xSharedPreferences);
-        }
+        return new ApiListConfig(getPref("AppList_Config"));
     }
 
 }

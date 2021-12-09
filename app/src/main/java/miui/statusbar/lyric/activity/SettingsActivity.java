@@ -11,8 +11,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -33,8 +31,6 @@ import miui.statusbar.lyric.utils.Utils;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
@@ -60,31 +56,18 @@ public class SettingsActivity extends PreferenceActivity {
             setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.SPConfigMode)));
             init();
         } catch (SecurityException ignored) {
-            if (!activity.getSharedPreferences("isFile", 0).getBoolean("file", false)) {
-                new AlertDialog.Builder(activity)
-                        .setTitle(getString(R.string.Tips))
-                        .setIcon(R.mipmap.ic_launcher)
-                        .setMessage(getString(R.string.NotSupport))
-                        .setNegativeButton(getString(R.string.UseFileConfig), (dialog, which) -> {
-                            activity.getSharedPreferences("isFile", 0).edit().putBoolean("file", true).apply();
-                            config = new Config();
-                            setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.FileConfigMode)));
-                            init();
-                        })
-                        .setPositiveButton(getString(R.string.Quit), (dialog, which) -> {
-                            activity.finish();
-                            System.exit(0);
-                        })
-                        .setCancelable(false)
-                        .create()
-                        .show();
-            } else {
-                config = new Config();
-                setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.FileConfigMode)));
-                init();
-            }
+            new AlertDialog.Builder(activity)
+                    .setTitle(getString(R.string.Tips))
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setMessage(getString(R.string.NotSupport))
+                    .setPositiveButton(getString(R.string.Quit), (dialog, which) -> {
+                        activity.finish();
+                        System.exit(0);
+                    })
+                    .setCancelable(false)
+                    .create()
+                    .show();
         }
-//        Utils.log("Debug On");
 
     }
 
@@ -510,16 +493,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 统计次数
-        SwitchPreference usedCount = (SwitchPreference) findPreference("usedCount");
-        assert usedCount != null;
-        usedCount.setChecked(config.getisUsedCount());
-        usedCount.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setisUsedCount((Boolean) newValue);
-            usedCount.setEnabled(!(Boolean) newValue);
-            return true;
-        });
-
         // 重启SystemUI
         Preference reSystemUI = findPreference("restartUI");
         assert reSystemUI != null;
@@ -590,26 +563,6 @@ public class SettingsActivity extends PreferenceActivity {
             hCUK.setSummary(String.format("%s%s", hCUK.getSummary(), getString(R.string.YouNotMIUI)));
             config.sethNoticeIcon(false);
         }
-
-        if (config.hasJson()) {
-            Handler titleUpdate = new Handler(Looper.getMainLooper(), message -> {
-                setTitle(String.format("%s%s", getString(R.string.GetLyricNum), config.getUsedCount()));
-                return false;
-            });
-            new Thread(() -> new Timer().schedule(
-                    new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (config.getisUsedCount()) {
-                                titleUpdate.sendEmptyMessage(0);
-                            }
-                        }
-                    }, 0, 1000)).start();
-
-        } else {
-            usedCount.setChecked(false);
-            usedCount.setEnabled(false);
-        }
     }
 
     @Override
@@ -619,7 +572,7 @@ public class SettingsActivity extends PreferenceActivity {
             config = ActivityUtils.getConfig(getApplicationContext());
         }
         if (grantResults[0] == 0) {
-            ActivityUtils.init(activity, config);
+            ActivityUtils.init();
             ActivityUtils.initIcon(activity, config);
         } else {
             new AlertDialog.Builder(activity)

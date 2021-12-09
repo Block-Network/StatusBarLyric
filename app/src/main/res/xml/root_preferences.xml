@@ -167,11 +167,7 @@
             android:key="debug"
             android:summary=""
             android:title="@string/DebugMode"/>
-    <SwitchPreference
-            android:defaultValue="true"
-            android:key="usedCount"
-            android:summary=""
-            android:title="@string/UseCount"/>
+
     <PreferenceScreen
             android:key="restartUI"
             android:summary="@string/ReStartSystemUITips"

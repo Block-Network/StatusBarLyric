@@ -173,14 +173,8 @@
         已知Bug：\n
         音乐软件非正常退出，歌词不会自动消失
     </string>
-    <string name="NotSupport">不支持的Xposed版本\n或未激活本模块\n激活后强制停止本软件
-    </string>
-    <string name="MeizuLyric">使用魅族方式获取歌词</string>
-    <string name="MeizuLyricTips">使用魅族方法无法获取歌词请关闭此开关</string>
-    <string name="UseCount">* 歌词统计</string>
-    <string name="UseFileConfig">使用文件保存配置</string>
+    <string name="NotSupport">不支持的Xposed版本\n或未激活本模块\n激活后强制停止本软件</string>
     <string name="SPConfigMode">SP 配置文件</string>
-    <string name="FileConfigMode">文件配置文件</string>
-    <string name="UseApiTips">使用 API 的软件 (需要在EDXposed或LSPosed勾选开启的软件)</string>
+    <string name="UseApiTips">使用 API 的软件 (需要在LSPosed勾选开启的软件)</string>
     <string name="UseApiList">软件列表</string>
 </resources>

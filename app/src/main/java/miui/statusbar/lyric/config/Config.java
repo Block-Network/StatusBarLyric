@@ -1,31 +1,16 @@
 package miui.statusbar.lyric.config;
 
+import static miui.statusbar.lyric.utils.Utils.PATH;
+
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.os.Environment;
-import android.util.Log;
 
 import de.robv.android.xposed.XSharedPreferences;
 import miui.statusbar.lyric.utils.ConfigUtils;
-import miui.statusbar.lyric.utils.Utils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import static miui.statusbar.lyric.utils.Utils.PATH;
 
 @SuppressLint("LongLogTag")
 public class Config {
-    static String old_Json = "";
     ConfigUtils config;
-
-    public Config() {
-        config = new ConfigUtils(getConfig());
-    }
 
     public Config(XSharedPreferences xSharedPreferences) {
         config = new ConfigUtils(xSharedPreferences);
@@ -35,44 +20,9 @@ public class Config {
         config = new ConfigUtils(sharedPreferences);
     }
 
-    public static String getConfig() {
-        String str = "";
-        try {
-            if (!new File(Utils.PATH + "Config.json").exists()) {
-                Utils.PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/media/miui.statusbar.lyric/";
-            }
-            FileInputStream fileInputStream = new FileInputStream(Utils.PATH + "Config.json");
-            byte[] bArr = new byte[fileInputStream.available()];
-            fileInputStream.read(bArr);
-            str = new String(bArr);
-            old_Json = str;
-            fileInputStream.close();
-        } catch (IOException e) {
-            str = old_Json;
-        }
-        return str;
-    }
-
     public void update() {
-        if (config.hasJson()) {
-            config.update(getConfig());
-        } else {
-            config.update();
-        }
+        config.update();
     }
-
-    public boolean hasJson() {
-        return config.hasJson();
-    }
-
-    public int getId() {
-        return config.optInt("id", 0);
-    }
-
-    public void setId(int i) {
-        config.put("id", i);
-    }
-
 
     public Boolean getLyricService() {
         return config.optBoolean("LyricService", false);
@@ -146,14 +96,6 @@ public class Config {
         return config.optBoolean("hNoticeIcon", false);
     }
 
-    public Boolean getHAlarm() {
-        return config.optBoolean("hAlarm", false);
-    }
-
-    public void setHAlarm(Boolean bool) {
-        config.put("hAlarm", bool);
-    }
-
     public Boolean getHNetSpeed() {
         return config.optBoolean("hNetSpeed", false);
     }
@@ -171,19 +113,15 @@ public class Config {
     }
 
     public Boolean getDebug() {
-        return config.optBoolean("debug", false);
+        try {
+            return config.optBoolean("debug", false);
+        } catch (NullPointerException ignored) {
+            return false;
+        }
     }
 
     public void setDebug(Boolean bool) {
         config.put("debug", bool);
-    }
-
-    public Boolean getisUsedCount() {
-        return config.optBoolean("isusedcount", true);
-    }
-
-    public void setisUsedCount(Boolean bool) {
-        config.put("isusedcount", bool);
     }
 
     public boolean getIcon() {
@@ -224,14 +162,6 @@ public class Config {
 
     public void setAntiBurn(Boolean bool) {
         config.put("antiburn", bool);
-    }
-
-    public int getUsedCount() {
-        return config.optInt("usedcount", 0);
-    }
-
-    public void setUsedCount(int i) {
-        config.put("usedcount", i);
     }
 
     public String getAnim() {

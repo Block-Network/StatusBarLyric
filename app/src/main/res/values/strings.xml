@@ -173,12 +173,7 @@
     <string name="NotSupport">Xposed not supported\n or the module is not activated\nforce stop the software after
         activation
     </string>
-    <string name="MeizuLyric">Use Meizu Way to Get Lyrics</string>
-    <string name="MeizuLyricTips">Cannot get lyrics using Meizu method, please turn off this switch</string>
-    <string name="UseCount">* Lyric statistics</string>
-    <string name="UseFileConfig">Use file to save configuration</string>
     <string name="SPConfigMode">SP configuration file</string>
-    <string name="FileConfigMode">File configuration file</string>
-    <string name="UseApiTips">Software using API (The software that needs to be checked in EDXposed or LSPosed)</string>
+    <string name="UseApiTips">Software using API (The software that needs to be checked in LSPosed)</string>
     <string name="UseApiList">Software list</string>
 </resources>

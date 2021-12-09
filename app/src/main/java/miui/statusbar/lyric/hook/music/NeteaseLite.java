@@ -1,7 +1,5 @@
 package miui.statusbar.lyric.hook.music;
 
-import java.io.StringReader;
-
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -26,7 +24,7 @@ public class NeteaseLite {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
-                    XposedBridge.log(((Long) param.args[3]).toString());
+                    XposedBridge.log(param.args[3].toString());
                 }
 
                 @Override
