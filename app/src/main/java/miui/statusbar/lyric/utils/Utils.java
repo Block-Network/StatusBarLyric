@@ -152,7 +152,11 @@ public class Utils {
         if (Utils.getConfig().getFileLyric()) {
             setLyricFile(icon, lyric);
         } else {
-            context.sendBroadcast(new Intent().setAction("Lyric_Server").putExtra("Lyric_Data", lyric).putExtra("Lyric_Icon", icon).putExtra("Lyric_Type", "hook"));
+            context.sendBroadcast(new Intent()
+                    .setAction("Lyric_Server")
+                    .putExtra("Lyric_Data", lyric)
+                    .putExtra("Lyric_Icon", icon)
+                    .putExtra("Lyric_Type", "hook"));
         }
     }
 
@@ -379,10 +383,10 @@ public class Utils {
     public static boolean isPresent(String name) {
         try {
             Objects.requireNonNull(Thread.currentThread().getContextClassLoader()).loadClass(name);
-            Log.d("MIUI状态栏歌词", name + " class存在");
+            Log.d("状态栏歌词", name + " class存在");
             return true;
         } catch (ClassNotFoundException e) {
-            Log.d("MIUI状态栏歌词", name + " class不存在");
+            Log.d("状态栏歌词", name + " class不存在");
             return false;
         }
     }
@@ -390,8 +394,8 @@ public class Utils {
     // log
     public static void log(String text) {
         if (Utils.getConfig().getDebug()) {
-            XposedBridge.log("MIUI状态栏歌词： " + text);
-            Log.d("MIUI状态栏歌词", text);
+            XposedBridge.log("状态栏歌词： " + text);
+            Log.d("状态栏歌词", text);
         }
     }
 

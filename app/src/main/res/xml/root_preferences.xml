@@ -115,7 +115,7 @@
 
     <SwitchPreference
             android:defaultValue="false"
-            android:key="antiburn"
+            android:key="antiBurn"
             android:summary=""
             android:title="@string/AbScreen"/>
 
