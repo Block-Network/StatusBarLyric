@@ -140,7 +140,11 @@ public class Config {
     }
 
     public Boolean getDebug() {
-        return config.optBoolean("debug", false);
+        try {
+            return config.optBoolean("debug", false);
+        } catch (NullPointerException ignored) {
+            return false;
+        }
     }
 
     public void setDebug(Boolean bool) {
