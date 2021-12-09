@@ -395,7 +395,7 @@ public class SettingsActivity extends PreferenceActivity {
         assert hNoticeIcon != null;
         hNoticeIcon.setChecked(config.getHNoticeIco());
         hNoticeIcon.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.sethNoticeIcon((Boolean) newValue);
+            config.setHNoticeIcon((Boolean) newValue);
             return true;
         });
 
@@ -413,9 +413,9 @@ public class SettingsActivity extends PreferenceActivity {
         // 隐藏运营商名称
         SwitchPreference hCUK = (SwitchPreference) findPreference("hCUK");
         assert hCUK != null;
-        hCUK.setChecked(config.getHCUK());
+        hCUK.setChecked(config.getHCuk());
         hCUK.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setHCUK((Boolean) newValue);
+            config.setHCuk((Boolean) newValue);
             return true;
         });
 
@@ -553,15 +553,15 @@ public class SettingsActivity extends PreferenceActivity {
             hNoticeIcon.setEnabled(false);
             hNoticeIcon.setChecked(false);
             hNoticeIcon.setSummary(String.format("%s%s", hNoticeIcon.getSummary(), getString(R.string.YouNotMIUI)));
-            config.sethNoticeIcon(false);
+            config.setHNoticeIcon(false);
             hNetWork.setEnabled(false);
             hNetWork.setChecked(false);
             hNetWork.setSummary(String.format("%s%s", hNetWork.getSummary(), getString(R.string.YouNotMIUI)));
-            config.sethNoticeIcon(false);
+            config.setHNoticeIcon(false);
             hCUK.setEnabled(false);
             hCUK.setChecked(false);
             hCUK.setSummary(String.format("%s%s", hCUK.getSummary(), getString(R.string.YouNotMIUI)));
-            config.sethNoticeIcon(false);
+            config.setHNoticeIcon(false);
         }
     }
 
