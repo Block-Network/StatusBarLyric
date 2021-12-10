@@ -1,5 +1,6 @@
 package miui.statusbar.lyric.utils;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 
 import de.robv.android.xposed.XSharedPreferences;
@@ -15,12 +16,16 @@ public class ConfigUtils {
         SP = xSharedPreferences;
     }
 
+    @SuppressLint("CommitPrefEdits")
     public ConfigUtils(SharedPreferences SharedPreferences) {
         SP = SharedPreferences;
         SPEditor = SharedPreferences.edit();
     }
 
     public void update() {
+        if (xSP == null) {
+            return;
+        }
         xSP.reload();
     }
 
@@ -37,18 +42,30 @@ public class ConfigUtils {
     }
 
     public int optInt(String key, int i) {
+        if (SP == null) {
+            return i;
+        }
         return SP.getInt(key, i);
     }
 
     public Boolean optBoolean(String key, boolean bool) {
+        if (SP == null) {
+            return bool;
+        }
         return SP.getBoolean(key, bool);
     }
 
     public String optString(String key, String str) {
+        if (SP == null) {
+            return str;
+        }
         return SP.getString(key, str);
     }
 
     public Float optFloat(String key, float f) {
+        if (SP == null) {
+            return f;
+        }
         return SP.getFloat(key, f);
     }
 
