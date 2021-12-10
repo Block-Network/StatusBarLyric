@@ -35,6 +35,7 @@ import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.config.Config;
 import miui.statusbar.lyric.hook.music.Myplayer;
 import miui.statusbar.lyric.hook.music.Netease;
+import miui.statusbar.lyric.hook.music.NeteaseLite;
 import miui.statusbar.lyric.utils.Utils;
 import miui.statusbar.lyric.view.LyricTextSwitchView;
 
@@ -56,6 +57,7 @@ public class MainHook implements IXposedHookLoadPackage {
             "cn.kuwo",
             "remix.myplayer",
             "cmccwm.mobilemusic",
+            "com.netease.cloudmusic.lite"
     };
     static boolean musicOffStatus = false;
     static boolean enable = false;
@@ -639,6 +641,9 @@ public class MainHook implements IXposedHookLoadPackage {
                 break;
             case "com.meizu.media.music":
                 MeiZuStatusBarLyric.guiseFlyme(lpparam);
+                break;
+            case "com.netease.cloudmusic.lite":
+                new NeteaseLite.Hook(lpparam);
                 break;
             default:
                 ApiListConfig apiConfig = Utils.getAppList();
