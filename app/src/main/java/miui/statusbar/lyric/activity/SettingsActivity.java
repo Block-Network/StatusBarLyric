@@ -299,7 +299,7 @@ public class SettingsActivity extends PreferenceActivity {
 
 
         // 防烧屏
-        SwitchPreference antiburn = (SwitchPreference) findPreference("antiburn");
+        SwitchPreference antiburn = (SwitchPreference) findPreference("antiBurn");
         assert antiburn != null;
         antiburn.setChecked(config.getAntiBurn());
         antiburn.setOnPreferenceChangeListener((preference, newValue) -> {
