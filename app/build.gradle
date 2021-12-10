@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "miui.statusbar.lyric"
-        minSdkVersion 27
+        minSdkVersion 26
         //noinspection OldTargetApi
         targetSdkVersion 29
         versionCode 67
