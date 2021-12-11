@@ -59,8 +59,22 @@
     <string name="Tips">提示</string>
     <string name="Quit">退出</string>
     <string name="TipsIDone">我已知曉</string>
-    <string name="AppTips">請認真閱讀此一次性警告！\n\n 很抱歉花費您的時間。\n 請檢查軟件版本是否正確！\n 如果出現不生效請重新優化軟件\n
-        模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github/電報 進行反饋。
+    <string name="AppTips">請認真閱讀此一次性警告！ \n\n
+        很抱歉花費您的時間。 \n\n
+
+        模塊在官方Rom完美使用，官改可能會出問題\n\n
+
+        模塊不再支持除Lsposed的模塊\n
+        若lsp找不到本模塊，請升級lsp\n\n
+
+        若無法顯示歌詞\n
+        請重啟系統界面，確保模塊開關打開\n
+        網易云音樂（8.0.14+）/QQ音樂/椒鹽/Aplayer：請確保音樂軟件內狀態欄歌詞打開\n
+        網易云音樂/酷我音樂/酷狗音樂 ：請確保音樂軟件版本是否正確\n\n
+
+        本模塊會收集以下資訊, [ 程式的錯誤資訊, 手機型號, 手機版本 ]\n\n
+
+        模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋。
     </string>
     <string name="VerExplanation">版本說明</string>
     <string name="Done">關閉</string>
@@ -69,7 +83,8 @@
         - APlayer 未知 ~ 1.5.7.9\n
         - QQ音樂 未知 ~ 11.0.16\n
         - 咪咕音樂 未知 ~ 7.7.0\n
-        - 網易云音樂 7.2.21 ~ 8.6.31\n
+        - 網易云音樂 8.2.10 ~ 8.6.31\n
+        - 網易云音樂 未知 ~ 8.0.40（設定打開車載藍牙歌詞）\n
         - 魅族音樂 未知 ~ 未知\n
         - 酷狗音樂 未知 ~ 10.9.2\n
         - 酷我音樂 未知 ~ 10.0.4.0\n\n
@@ -148,10 +163,8 @@
         若lsp找不到本模塊，請升級lsp\n\n
 
         若無法顯示歌詞\n
-        請重啟系統界面，確保模塊開關打開\n
-        使用 Flyme獲取歌詞方式 ：請確保音樂軟件內狀態欄歌詞打開\n
-        使用 傳統Hook獲取歌詞方式 ：請確保音樂軟件版本是否正確\n
-        若 Flyme獲取歌詞方式無法獲取歌詞，請切換到 傳統Hook獲取歌詞方式\n\n
+        請重啟系統界面，並確保模塊開關打開\n
+        請確保音樂軟件內設置 狀態欄歌詞 或 車載藍牙歌詞 打開\n\n
 
         帶 * 的功能改動需要重啟系統界面\n\n
 
@@ -164,4 +177,10 @@
     <string name="SPConfigMode">SP 配置文件</string>
     <string name="UseApiTips">使用 API 的軟件 (需要在LSPosed勾選開啟的軟件)</string>
     <string name="UseApiList">軟件列表</string>
+    <string name="PrivacyPolicy">隱私政策</string>
+    <string name="UseSystemReverseColor">* 使用系統方式反色</string>
+    <string name="UseSystemReverseColorTips">若反色異常請關閉</string>
+    <string name="HookSure">Hook 系統界面</string>
+    <string name="HookSureSuccess">Hook 系统界面成功</string>
+    <string name="HookSureFail">Hook 系统界面失败\\n\n此系统不支持，打包SystemUI发作者把</string>
 </resources>

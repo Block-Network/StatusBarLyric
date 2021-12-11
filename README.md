@@ -74,3 +74,9 @@
 ## 音乐主动适配
 
 请查看 [Api](https://github.com/577fkj/StatusBarApiExample)
+
+## EULA & License
+
+[EUAL](./EUAL.md)
+
+[MIT License](./LICENSE)
