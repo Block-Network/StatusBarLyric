@@ -76,6 +76,7 @@ public class HookSystemUI {
         boolean showLyric = true;
         ImageView iconView;
         static Handler updateTextColor;
+        static boolean isLock = false;
 
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
             config = Utils.getConfig();
@@ -459,6 +460,10 @@ public class HookSystemUI {
                 offLyric("开关关闭");
                 return;
             }
+            if (isLock) {
+                offLyric("仅解锁显示");
+                return;
+            }
             enable = true;
             if (!config.getIcon() || TextUtils.isEmpty(icon)) {
                 Utils.log("关闭图标");
@@ -539,7 +544,8 @@ public class HookSystemUI {
                 try {
                     if (config.getLockScreenOff() && !intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
                         offLyric("锁屏");
-                    }
+                        isLock=true;
+                    }else{isLock=false;}
                 } catch (Exception e) {
                     Utils.log("广播接收错误 " + e + "\n" + Utils.dumpException(e));
                 }
