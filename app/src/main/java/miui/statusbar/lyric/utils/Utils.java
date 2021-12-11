@@ -92,7 +92,7 @@ public class Utils {
         if (config.getHNetSpeed() && MiuiStatusBarManager.isShowNetworkSpeed(application) != isOpen) {
             MiuiStatusBarManager.setShowNetworkSpeed(application, isOpen);
         }
-        if (config.getHCUK() && Settings.System.getInt(application.getContentResolver(), "status_bar_show_carrier_under_keyguard", 1) == isCarrier) {
+        if (config.getHCuk() && Settings.System.getInt(application.getContentResolver(), "status_bar_show_carrier_under_keyguard", 1) == isCarrier) {
             Settings.System.putInt(application.getContentResolver(), "status_bar_show_carrier_under_keyguard", notCarrier);
         }
     }
@@ -144,31 +144,23 @@ public class Utils {
         icon.setColorFilter(new ColorMatrixColorFilter(cm));
     }
 
-    public static boolean isDark(int color) {
-        return ColorUtils.calculateLuminance(color) < 0.5;
-    }
-
     public static void sendLyric(Context context, String lyric, String icon) {
-        if (Utils.getConfig().getFileLyric()) {
-            setLyricFile(icon, lyric);
-        } else {
-            context.sendBroadcast(new Intent().setAction("Lyric_Server").putExtra("Lyric_Data", lyric).putExtra("Lyric_Icon", icon).putExtra("Lyric_Type", "hook"));
-        }
+        context.sendBroadcast(new Intent()
+                .setAction("Lyric_Server")
+                .putExtra("Lyric_Data", lyric)
+                .putExtra("Lyric_Icon", icon)
+                .putExtra("Lyric_Type", "hook"));
     }
 
     public static void sendLyric(Context context, String lyric, String icon, boolean useSystemMusicActive, String packName) {
-        if (Utils.getConfig().getFileLyric()) {
-            setLyricFile(packName, lyric, icon, useSystemMusicActive);
-        } else {
-            context.sendBroadcast(new Intent()
-                    .setAction("Lyric_Server")
-                    .putExtra("Lyric_Data", lyric)
-                    .putExtra("Lyric_Type", "app")
-                    .putExtra("Lyric_PackName", packName)
-                    .putExtra("Lyric_Icon", icon)
-                    .putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
-            );
-        }
+        context.sendBroadcast(new Intent()
+                .setAction("Lyric_Server")
+                .putExtra("Lyric_Data", lyric)
+                .putExtra("Lyric_Type", "app")
+                .putExtra("Lyric_PackName", packName)
+                .putExtra("Lyric_Icon", icon)
+                .putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
+        );
     }
 
     // 写入歌词文件
@@ -379,10 +371,10 @@ public class Utils {
     public static boolean isPresent(String name) {
         try {
             Objects.requireNonNull(Thread.currentThread().getContextClassLoader()).loadClass(name);
-            Log.d("MIUI状态栏歌词", name + " class存在");
+            Log.d("状态栏歌词", name + " class存在");
             return true;
         } catch (ClassNotFoundException e) {
-            Log.d("MIUI状态栏歌词", name + " class不存在");
+            Log.d("状态栏歌词", name + " class不存在");
             return false;
         }
     }
@@ -390,8 +382,8 @@ public class Utils {
     // log
     public static void log(String text) {
         if (Utils.getConfig().getDebug()) {
-            XposedBridge.log("MIUI状态栏歌词： " + text);
-            Log.d("MIUI状态栏歌词", text);
+            XposedBridge.log("状态栏歌词： " + text);
+            Log.d("状态栏歌词", text);
         }
     }
 

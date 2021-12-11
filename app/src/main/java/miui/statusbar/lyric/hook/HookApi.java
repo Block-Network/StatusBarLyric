@@ -47,23 +47,11 @@ public class HookApi {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
-                    if (Utils.getConfig().getFileLyric()) {
-                        try {
-                            FileOutputStream outputStream = new FileOutputStream(PATH + "lyric.txt");
-                            JSONArray jsonArray = new JSONArray();
-                            jsonArray.put("app_stop");
-                            String json = jsonArray.toString();
-                            outputStream.write(json.getBytes());
-                            outputStream.close();
-                        } catch (Exception ignored) {
-                        }
-                    } else {
-                        ((Context) param.args[0]).sendBroadcast(
-                                new Intent()
-                                        .setAction("Lyric_Server")
-                                        .putExtra("Lyric_Type", "app_stop")
-                        );
-                    }
+                    ((Context) param.args[0]).sendBroadcast(
+                            new Intent()
+                                    .setAction("Lyric_Server")
+                                    .putExtra("Lyric_Type", "app_stop")
+                    );
                 }
 
                 @Override

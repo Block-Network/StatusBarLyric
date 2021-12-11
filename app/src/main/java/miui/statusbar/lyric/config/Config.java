@@ -24,144 +24,146 @@ public class Config {
         config.update();
     }
 
+
+
     public Boolean getLyricService() {
-        return config.optBoolean("LyricService", false);
+        return config.optBoolean("LService", false);
     }
 
     public void setLyricService(Boolean bool) {
-        config.put("LyricService", bool);
+        config.put("LService", bool);
     }
 
     public int getLyricWidth() {
-        return config.optInt("LyricWidth", -1);
+        return config.optInt("LWidth", -1);
     }
 
     public void setLyricWidth(int i) {
-        config.put("LyricWidth", i);
+        config.put("LWidth", i);
     }
 
     public int getLyricMaxWidth() {
-        return config.optInt("LyricMaxWidth", -1);
+        return config.optInt("LMaxWidth", -1);
     }
 
     public void setLyricMaxWidth(int i) {
-        config.put("LyricMaxWidth", i);
+        config.put("LMaxWidth", i);
     }
 
     public int getLyricPosition() {
-        return config.optInt("LyricPosition", 2);
+        return config.optInt("LPosition", 7);
     }
 
     public void setLyricPosition(int i) {
-        config.put("LyricPosition", i);
+        config.put("LPosition", i);
     }
 
     public Boolean getLyricAutoOff() {
-        return config.optBoolean("LyricAutoOff", true);
+        return config.optBoolean("LAutoOff", true);
     }
 
     public void setLyricAutoOff(Boolean bool) {
-        config.put("LyricAutoOff", bool);
+        config.put("LAutoOff", bool);
     }
 
     public Boolean getLockScreenOff() {
-        return config.optBoolean("lockScreenOff", false);
+        return config.optBoolean("LockScreenOff", false);
     }
 
     public void setLockScreenOff(Boolean bool) {
-        config.put("lockScreenOff", bool);
+        config.put("LockScreenOff", bool);
     }
 
-    public void sethNoticeIcon(Boolean bool) {
-        config.put("hNoticeIcon", bool);
+    public void setHNoticeIcon(Boolean bool) {
+        config.put("HNoticeIcon", bool);
     }
 
     public String getLyricColor() {
-        return config.optString("LyricColor", "off");
+        return config.optString("LColor", "off");
     }
 
     public void setLyricColor(String str) {
-        config.put("LyricColor", str);
+        config.put("LColor", str);
     }
 
     public Boolean getLyricSwitch() {
-        return config.optBoolean("LyricSwitch", false);
+        return config.optBoolean("LSwitch", false);
     }
 
     public void setLyricSwitch(Boolean bool) {
-        config.put("LyricSwitch", bool);
+        config.put("LSwitch", bool);
     }
 
     public Boolean getHNoticeIco() {
-        return config.optBoolean("hNoticeIcon", false);
+        return config.optBoolean("HNoticeIcon", false);
     }
 
     public Boolean getHNetSpeed() {
-        return config.optBoolean("hNetSpeed", false);
+        return config.optBoolean("HNetSpeed", false);
     }
 
     public void setHNetSpeed(Boolean bool) {
-        config.put("hNetSpeed", bool);
+        config.put("HNetSpeed", bool);
     }
 
-    public Boolean getHCUK() {
-        return config.optBoolean("hCUK", false);
+    public Boolean getHCuk() {
+        return config.optBoolean("HCuk", false);
     }
 
-    public void setHCUK(Boolean bool) {
-        config.put("hCUK", bool);
+    public void setHCuk(Boolean bool) {
+        config.put("HCuk", bool);
     }
 
     public Boolean getDebug() {
         try {
-            return config.optBoolean("debug", false);
+            return config.optBoolean("Debug", false);
         } catch (NullPointerException ignored) {
             return false;
         }
     }
 
     public void setDebug(Boolean bool) {
-        config.put("debug", bool);
+        config.put("Debug", bool);
     }
 
     public boolean getIcon() {
-        return config.optBoolean("Icon", true);
+        return config.optBoolean("I", true);
     }
 
     public void setIcon(Boolean bool) {
-        config.put("Icon", bool);
+        config.put("I", bool);
     }
 
     public Float getLyricSpeed() {
-        return config.optFloat("LyricSpeed", 1f);
+        return config.optFloat("LSpeed", 1f);
     }
 
     public void setLyricSpeed(Float f) {
-        config.put("LyricSpeed", f);
+        config.put("LSpeed", f);
     }
 
     public Boolean getIconAutoColor() {
-        return config.optBoolean("IconAutoColor", true);
+        return config.optBoolean("IAutoColor", true);
     }
 
     public void setIconAutoColor(Boolean bool) {
-        config.put("IconAutoColor", bool);
+        config.put("IAutoColor", bool);
     }
 
     public String getIconPath() {
-        return config.optString("IconPath", PATH);
+        return config.optString("IPath", PATH);
     }
 
     public void setIconPath(String str) {
-        config.put("IconPath", str);
+        config.put("IPath", str);
     }
 
     public boolean getAntiBurn() {
-        return config.optBoolean("antiburn", false);
+        return config.optBoolean("AntiBurn", false);
     }
 
     public void setAntiBurn(Boolean bool) {
-        config.put("antiburn", bool);
+        config.put("AntiBurn", bool);
     }
 
     public String getAnim() {
@@ -180,20 +182,12 @@ public class Config {
         config.put("Hook", str);
     }
 
-    public boolean getFileLyric() {
-        return config.optBoolean("FileLyric", false);
-    }
-
-    public void setFileLyric(boolean bool) {
-        config.put("FileLyric", bool);
-    }
-
     public boolean getLyricStyle() {
-        return config.optBoolean("LyricStyle", true);
+        return config.optBoolean("LStyle", true);
     }
 
     public void setLyricStyle(boolean bool) {
-        config.put("LyricStyle", bool);
+        config.put("LStyle", bool);
     }
 
     public boolean getLShowOnce() {

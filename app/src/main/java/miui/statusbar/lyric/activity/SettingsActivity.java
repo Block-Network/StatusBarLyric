@@ -299,7 +299,7 @@ public class SettingsActivity extends PreferenceActivity {
 
 
         // 防烧屏
-        SwitchPreference antiburn = (SwitchPreference) findPreference("antiburn");
+        SwitchPreference antiburn = (SwitchPreference) findPreference("antiBurn");
         assert antiburn != null;
         antiburn.setChecked(config.getAntiBurn());
         antiburn.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -349,7 +349,7 @@ public class SettingsActivity extends PreferenceActivity {
         EditTextPreference lyricPosition = (EditTextPreference) findPreference("lyricPosition");
         assert lyricPosition != null;
         lyricPosition.setSummary((String.valueOf(config.getLyricPosition())));
-        if (String.valueOf(config.getLyricPosition()).equals("2")) {
+        if (String.valueOf(config.getLyricPosition()).equals("7")) {
             lyricPosition.setSummary(getString(R.string.Default));
         }
         lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), lyricPosition.getSummary()));
@@ -395,7 +395,7 @@ public class SettingsActivity extends PreferenceActivity {
         assert hNoticeIcon != null;
         hNoticeIcon.setChecked(config.getHNoticeIco());
         hNoticeIcon.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.sethNoticeIcon((Boolean) newValue);
+            config.setHNoticeIcon((Boolean) newValue);
             return true;
         });
 
@@ -413,18 +413,9 @@ public class SettingsActivity extends PreferenceActivity {
         // 隐藏运营商名称
         SwitchPreference hCUK = (SwitchPreference) findPreference("hCUK");
         assert hCUK != null;
-        hCUK.setChecked(config.getHCUK());
+        hCUK.setChecked(config.getHCuk());
         hCUK.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setHCUK((Boolean) newValue);
-            return true;
-        });
-
-        // 文件传输歌词
-        SwitchPreference fileLyric = (SwitchPreference) findPreference("fileLyric");
-        assert fileLyric != null;
-        fileLyric.setChecked(config.getFileLyric());
-        fileLyric.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setFileLyric((Boolean) newValue);
+            config.setHCuk((Boolean) newValue);
             return true;
         });
 
@@ -553,15 +544,15 @@ public class SettingsActivity extends PreferenceActivity {
             hNoticeIcon.setEnabled(false);
             hNoticeIcon.setChecked(false);
             hNoticeIcon.setSummary(String.format("%s%s", hNoticeIcon.getSummary(), getString(R.string.YouNotMIUI)));
-            config.sethNoticeIcon(false);
+            config.setHNoticeIcon(false);
             hNetWork.setEnabled(false);
             hNetWork.setChecked(false);
             hNetWork.setSummary(String.format("%s%s", hNetWork.getSummary(), getString(R.string.YouNotMIUI)));
-            config.sethNoticeIcon(false);
+            config.setHNoticeIcon(false);
             hCUK.setEnabled(false);
             hCUK.setChecked(false);
             hCUK.setSummary(String.format("%s%s", hCUK.getSummary(), getString(R.string.YouNotMIUI)));
-            config.sethNoticeIcon(false);
+            config.setHNoticeIcon(false);
         }
     }
 
