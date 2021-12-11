@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -33,6 +34,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.config.Config;
+import miui.statusbar.lyric.utils.ColorUtils;
 import miui.statusbar.lyric.utils.Utils;
 import miui.statusbar.lyric.view.LyricTextSwitchView;
 
@@ -73,29 +75,33 @@ public class HookSystemUI {
         static TextView clock;
         boolean showLyric = true;
         ImageView iconView;
+        static Handler updateTextColor;
 
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
+            config = Utils.getConfig();
             // 使用系统方法反色
-            XposedHelpers.findAndHookMethod("com.android.systemui.plugins.DarkIconDispatcher", lpparam.classLoader, "getTint", Rect.class, View.class, int.class, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    super.beforeHookedMethod(param);
-                }
+            if (config.getUseSystemReverseColor()) {
+                XposedHelpers.findAndHookMethod("com.android.systemui.plugins.DarkIconDispatcher", lpparam.classLoader, "getTint", Rect.class, View.class, int.class, new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                        super.beforeHookedMethod(param);
+                    }
 
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    super.afterHookedMethod(param);
-                    if (lyricTextView == null || iconView == null) {
-                        return;
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
+                        if (lyricTextView == null || iconView == null) {
+                            return;
+                        }
+                        int areaTint = (int) param.args[2];
+                        if (config.getLyricColor().equals("off") && iconReverseColor) {
+                            ColorStateList color = ColorStateList.valueOf(areaTint);
+                            iconView.setImageTintList(color);
+                        }
+                        lyricTextView.setTextColor(areaTint);
                     }
-                    int areaTint = (int) param.args[2];
-                    if (iconReverseColor) {
-                        ColorStateList color = ColorStateList.valueOf(areaTint);
-                        iconView.setImageTintList(color);
-                    }
-                    lyricTextView.setTextColor(areaTint);
-                }
-            });
+                });
+            }
             // 状态栏歌词
             XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.CollapsedStatusBarFragment", lpparam.classLoader, "onViewCreated", View.class, Bundle.class, new XC_MethodHook() {
                 @Override
@@ -252,6 +258,19 @@ public class HookSystemUI {
                         return true;
                     });
 
+                    updateTextColor = new Handler(Looper.getMainLooper(), message -> {
+                        lyricTextView.setTextColor(message.arg1);
+                        return true;
+                    });
+
+                    final Handler updateIconColor = new Handler(Looper.getMainLooper(), message -> {
+                        if (iconReverseColor) {
+                            ColorStateList color = ColorStateList.valueOf(message.arg1);
+                            iconView.setImageTintList(color);
+                        }
+                        return true;
+                    });
+
                     // 更新歌词
                     LyricUpdate = new Handler(Looper.getMainLooper(), message -> {
                         String string = message.getData().getString(KEY_LYRIC);
@@ -297,6 +316,58 @@ public class HookSystemUI {
                         Utils.setStatusBar(application, true, config);
                         return true;
                     });
+
+                    if (!config.getUseSystemReverseColor()) {
+                        new Timer().schedule(
+                                new TimerTask() {
+                                    int color = 0;
+
+                                    public boolean isDark(int color) {
+                                        return ColorUtils.calculateLuminance(color) < 0.5;
+                                    }
+
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            if (!enable) {
+                                                return;
+                                            }
+                                            if (config.getLyricService()) {
+                                                // 设置颜色
+                                                if (!config.getLyricColor().equals("off")) {
+                                                    if (color != Color.parseColor(config.getLyricColor())) {
+                                                        color = Color.parseColor(config.getLyricColor());
+                                                        Message message = updateTextColor.obtainMessage();
+                                                        message.arg1 = color;
+                                                        updateTextColor.sendMessage(message);
+                                                    }
+                                                }
+                                                if (!isDark(clock.getTextColors().getDefaultColor())) {
+                                                    if (config.getLyricColor().equals("off")) {
+                                                        Message message = updateTextColor.obtainMessage();
+                                                        message.arg1 = 0xffffffff;
+                                                        updateTextColor.sendMessage(message);
+                                                    }
+                                                    Message message = updateIconColor.obtainMessage();
+                                                    message.arg1 = 0xffffffff;
+                                                    updateIconColor.sendMessage(message);
+                                                } else if (isDark(clock.getTextColors().getDefaultColor())) {
+                                                    if (config.getLyricColor().equals("off")) {
+                                                        Message message = updateTextColor.obtainMessage();
+                                                        message.arg1 = 0xff000000;
+                                                        updateTextColor.sendMessage(message);
+                                                    }
+                                                    Message message = updateIconColor.obtainMessage();
+                                                    message.arg1 = 0xff000000;
+                                                    updateIconColor.sendMessage(message);
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            Utils.log("出现错误! " + e + "\n" + Utils.dumpException(e));
+                                        }
+                                    }
+                                }, 0, 50);
+                    }
 
                     new Timer().schedule(
                             new TimerTask() {
@@ -433,6 +504,12 @@ public class HookSystemUI {
                     message.arg2 = oldPos;
                     updateMarginsIcon.sendMessage(message);
                 }
+            }
+            if (!config.getLyricColor().equals("off")) {
+                int color = Color.parseColor(config.getLyricColor());
+                Message message = updateTextColor.obtainMessage();
+                message.arg1 = color;
+                updateTextColor.sendMessage(message);
             }
 
             Message message = LyricUpdate.obtainMessage();

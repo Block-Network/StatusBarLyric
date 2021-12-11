@@ -192,4 +192,6 @@
     <string name="UseApiTips">Software using API (The software that needs to be checked in LSPosed)</string>
     <string name="UseApiList">Software list</string>
     <string name="PrivacyPolicy">Privacy Policy</string>
+    <string name="UseSystemReverseColor">* Reverse color using system mode</string>
+    <string name="UseSystemReverseColorTips">If the color reversal is abnormal, please close it</string>
 </resources>

@@ -201,4 +201,12 @@ public class Config {
     public void clear() {
         config.clearConfig();
     }
+
+    public boolean getUseSystemReverseColor() {
+        return config.optBoolean("UseSystemReverseColor", true);
+    }
+
+    public void setUseSystemReverseColor(boolean bool) {
+        config.put("UseSystemReverseColor", bool);
+    }
 }

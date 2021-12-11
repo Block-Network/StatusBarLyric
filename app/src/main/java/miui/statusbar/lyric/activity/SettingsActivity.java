@@ -153,6 +153,15 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
+        // 使用系统方法
+        SwitchPreference useSystemReverseColor = (SwitchPreference) findPreference("UseSystemReverseColor");
+        assert useSystemReverseColor != null;
+        useSystemReverseColor.setChecked(config.getUseSystemReverseColor());
+        useSystemReverseColor.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setUseSystemReverseColor((Boolean) newValue);
+            return true;
+        });
+
         // 歌词动效
         ListPreference anim = (ListPreference) findPreference("lyricAnim");
         anim.setEntryValues(new String[]{
@@ -260,6 +269,7 @@ public class SettingsActivity extends PreferenceActivity {
                     Color.parseColor(newValue.toString());
                     config.setLyricColor(newValue.toString());
                     lyricColour.setSummary(newValue.toString());
+                    lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
                 } catch (Exception e) {
                     config.setLyricColor("off");
                     lyricColour.setSummary(getString(R.string.Adaptive));

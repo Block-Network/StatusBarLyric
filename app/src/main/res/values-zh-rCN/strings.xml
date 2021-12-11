@@ -180,4 +180,6 @@
     <string name="UseApiTips">使用 API 的软件 (需要在LSPosed勾选开启的软件)</string>
     <string name="UseApiList">软件列表</string>
     <string name="PrivacyPolicy">隐私政策</string>
+    <string name="UseSystemReverseColor">* 使用系统方式反色</string>
+    <string name="UseSystemReverseColorTips">若反色异常请关闭</string>
 </resources>
