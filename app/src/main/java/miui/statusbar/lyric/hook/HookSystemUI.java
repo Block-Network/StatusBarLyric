@@ -1,5 +1,6 @@
 package miui.statusbar.lyric.hook;
 
+import android.annotation.SuppressLint;
 import android.app.AndroidAppHelper;
 import android.app.Application;
 import android.content.BroadcastReceiver;
@@ -49,6 +50,7 @@ public class HookSystemUI {
         static boolean useSystemMusicActive = true;
         static final String KEY_LYRIC = "lyric";
         boolean showLyric = true;
+        @SuppressLint("StaticFieldLeak")
         static LinearLayout lyricLayout;
         static Application application;
         static boolean enable = false;
@@ -64,6 +66,7 @@ public class HookSystemUI {
         ImageView iconView;
         static Handler iconUpdate;
         static LinearLayout.LayoutParams iconParams;
+        @SuppressLint("StaticFieldLeak")
         static TextView clock;
 
         public static class LockChangeReceiver extends BroadcastReceiver {
