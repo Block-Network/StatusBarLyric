@@ -59,8 +59,20 @@
     <string name="Tips">提示</string>
     <string name="Quit">退出</string>
     <string name="TipsIDone">我已知曉</string>
-    <string name="AppTips">請認真閱讀此一次性警告！\n\n 很抱歉花費您的時間。\n 請檢查軟件版本是否正確！\n 如果出現不生效請重新優化軟件\n
-        模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github/電報 進行反饋。
+    <string name="AppTips">請認真閱讀此一次性警告！ \n\n
+        很抱歉花費您的時間。 \n\n
+
+        模塊在官方Rom完美使用，官改可能會出問題\n\n
+
+        模塊不再支持除Lsposed的模塊\n
+        若lsp找不到本模塊，請升級lsp\n\n
+
+        若無法顯示歌詞\n
+        請重啟系統界面，確保模塊開關打開\n
+        網易云音樂QQ音樂椒鹽Aplayer：請確保音樂軟件內狀態欄歌詞打開\n
+        酷我音樂酷狗音樂 ：請確保音樂軟件版本是否正確\n
+
+        模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋。
     </string>
     <string name="VerExplanation">版本說明</string>
     <string name="Done">關閉</string>
