@@ -70,7 +70,9 @@
         若無法顯示歌詞\n
         請重啟系統界面，確保模塊開關打開\n
         網易云音樂QQ音樂椒鹽Aplayer：請確保音樂軟件內狀態欄歌詞打開\n
-        酷我音樂酷狗音樂 ：請確保音樂軟件版本是否正確\n
+        酷我音樂酷狗音樂 ：請確保音樂軟件版本是否正確\n\n
+
+        本模塊會收集以下資訊, [ 程式的錯誤資訊, 手機型號, 手機版本 ]\n\n
 
         模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋。
     </string>
@@ -81,7 +83,8 @@
         - APlayer 未知 ~ 1.5.7.9\n
         - QQ音樂 未知 ~ 11.0.16\n
         - 咪咕音樂 未知 ~ 7.7.0\n
-        - 網易云音樂 7.2.21 ~ 8.6.31\n
+        - 網易云音樂 8.2.10 ~ 8.6.31 (設定裏打開狀態列歌詞)\n
+        - 網易云音樂 未知 ~ 8.0.40（設定裏打開車載藍牙歌詞）\n
         - 魅族音樂 未知 ~ 未知\n
         - 酷狗音樂 未知 ~ 10.9.2\n
         - 酷我音樂 未知 ~ 10.0.4.0\n\n
@@ -176,4 +179,5 @@
     <string name="SPConfigMode">SP 配置文件</string>
     <string name="UseApiTips">使用 API 的軟件 (需要在LSPosed勾選開啟的軟件)</string>
     <string name="UseApiList">軟件列表</string>
+    <string name="PrivacyPolicy">隱私政策</string>
 </resources>
