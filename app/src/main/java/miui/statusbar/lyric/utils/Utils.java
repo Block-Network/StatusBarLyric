@@ -144,35 +144,23 @@ public class Utils {
         icon.setColorFilter(new ColorMatrixColorFilter(cm));
     }
 
-    public static boolean isDark(int color) {
-        return ColorUtils.calculateLuminance(color) < 0.5;
-    }
-
     public static void sendLyric(Context context, String lyric, String icon) {
-        if (Utils.getConfig().getFileLyric()) {
-            setLyricFile(icon, lyric);
-        } else {
-            context.sendBroadcast(new Intent()
-                    .setAction("Lyric_Server")
-                    .putExtra("Lyric_Data", lyric)
-                    .putExtra("Lyric_Icon", icon)
-                    .putExtra("Lyric_Type", "hook"));
-        }
+        context.sendBroadcast(new Intent()
+                .setAction("Lyric_Server")
+                .putExtra("Lyric_Data", lyric)
+                .putExtra("Lyric_Icon", icon)
+                .putExtra("Lyric_Type", "hook"));
     }
 
     public static void sendLyric(Context context, String lyric, String icon, boolean useSystemMusicActive, String packName) {
-        if (Utils.getConfig().getFileLyric()) {
-            setLyricFile(packName, lyric, icon, useSystemMusicActive);
-        } else {
-            context.sendBroadcast(new Intent()
-                    .setAction("Lyric_Server")
-                    .putExtra("Lyric_Data", lyric)
-                    .putExtra("Lyric_Type", "app")
-                    .putExtra("Lyric_PackName", packName)
-                    .putExtra("Lyric_Icon", icon)
-                    .putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
-            );
-        }
+        context.sendBroadcast(new Intent()
+                .setAction("Lyric_Server")
+                .putExtra("Lyric_Data", lyric)
+                .putExtra("Lyric_Type", "app")
+                .putExtra("Lyric_PackName", packName)
+                .putExtra("Lyric_Icon", icon)
+                .putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
+        );
     }
 
     // 写入歌词文件
