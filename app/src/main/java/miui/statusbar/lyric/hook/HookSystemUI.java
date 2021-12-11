@@ -222,10 +222,10 @@ public class HookSystemUI {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
-                    if (lyricTextView == null) {
+                    if (lyricTextView == null || iconView == null) {
                         return;
                     }
-                    int areaTint = (int) param.getResult();
+                    int areaTint = (int) param.args[2];
                     if (iconReverseColor) {
                         ColorStateList color = ColorStateList.valueOf(areaTint);
                         iconView.setImageTintList(color);
