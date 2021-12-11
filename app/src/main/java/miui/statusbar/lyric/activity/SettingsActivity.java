@@ -606,7 +606,6 @@ public class SettingsActivity extends PreferenceActivity {
             try {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(() -> {
-                    setTitle(intent.getBooleanExtra("hook_ok", false) + "");
                     String a;
                     if (intent.getBooleanExtra("hook_ok", false)) {
                         a = "Hook 成功";

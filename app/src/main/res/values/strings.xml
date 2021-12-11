@@ -74,7 +74,9 @@
         Please restart the system interface and make sure the module switch is turned on\n
         Netease Music/QQ Music/SaltPlayer/Aplayer: Please make sure that the lyrics in the status bar of the music
         software is turned on\n
-        Kuwo Music/Kugou Music: Please make sure that the music software version is correct\n
+        Kuwo Music/Kugou Music: Please make sure that the music software version is correct\n\n
+
+        This xposed module will collect the following information, [ program error information, mobile phone model, mobile phone version ]\n\n
 
         If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to Github
         Telegram for feedback.
@@ -86,8 +88,9 @@
         - APlayer Unknown ~ 1.5.7.9\n
         - QQ Music Unknown ~ 11.0.16\n
         - Migu Music Unknown ~ 7.7.0\n
-        - Netease Music 7.2.21 ~ 8.6.31\n
-        - Meizu Musicc Unknown ~ 未知\n
+        - Netease cloud music 8.2 10 ~ 8.6. 31 (Set open status bar lyrics) \ n
+        - Netease cloud music unknown ~ 8.0 40 (set to turn on the car Bluetooth lyrics) \ n
+        - Meizu Music Unknown ~ Unknown\n
         - Kugou Music Unknown ~ 10.9.2\n
         - Kuwo Music Unknown ~ 10.0.4.0\n\n
 
@@ -188,4 +191,5 @@
     <string name="SPConfigMode">SP configuration file</string>
     <string name="UseApiTips">Software using API (The software that needs to be checked in LSPosed)</string>
     <string name="UseApiList">Software list</string>
+    <string name="PrivacyPolicy">Privacy Policy</string>
 </resources>
