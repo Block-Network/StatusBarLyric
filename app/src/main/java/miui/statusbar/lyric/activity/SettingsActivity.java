@@ -616,15 +616,15 @@ public class SettingsActivity extends PreferenceActivity {
             try {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(() -> {
-                    String a;
+                    String message;
                     if (intent.getBooleanExtra("hook_ok", false)) {
-                        a = "Hook 成功";
+                        message = getString(R.string.HookSureSuccess);
                     } else {
-                        a = "Hook 失败";
+                        message = getString(R.string.HookSureFail);
                     }
                     new AlertDialog.Builder(activity)
-                            .setTitle(a)
-                            .setMessage(a)
+                            .setTitle(getString(R.string.HookSure))
+                            .setMessage(message)
                             .setPositiveButton(getString(R.string.Ok), null)
                             .create()
                             .show();
