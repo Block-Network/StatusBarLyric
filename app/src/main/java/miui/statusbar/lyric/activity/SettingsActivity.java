@@ -349,7 +349,7 @@ public class SettingsActivity extends PreferenceActivity {
         EditTextPreference lyricPosition = (EditTextPreference) findPreference("lyricPosition");
         assert lyricPosition != null;
         lyricPosition.setSummary((String.valueOf(config.getLyricPosition())));
-        if (String.valueOf(config.getLyricPosition()).equals("2")) {
+        if (String.valueOf(config.getLyricPosition()).equals("7")) {
             lyricPosition.setSummary(getString(R.string.Default));
         }
         lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), lyricPosition.getSummary()));
@@ -416,15 +416,6 @@ public class SettingsActivity extends PreferenceActivity {
         hCUK.setChecked(config.getHCuk());
         hCUK.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setHCuk((Boolean) newValue);
-            return true;
-        });
-
-        // 文件传输歌词
-        SwitchPreference fileLyric = (SwitchPreference) findPreference("fileLyric");
-        assert fileLyric != null;
-        fileLyric.setChecked(config.getFileLyric());
-        fileLyric.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setFileLyric((Boolean) newValue);
             return true;
         });
 

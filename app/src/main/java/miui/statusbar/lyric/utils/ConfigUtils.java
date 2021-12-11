@@ -24,6 +24,8 @@ public class ConfigUtils {
 
     public void update() {
         if (xSP == null) {
+            xSP = Utils.getPref("Lyric_Config");
+            SP = xSP;
             return;
         }
         xSP.reload();

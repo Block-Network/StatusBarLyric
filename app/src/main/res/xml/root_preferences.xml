@@ -144,12 +144,6 @@
             android:summary="@string/AutoHideCarrierName"
             android:title="@string/HideCarrierName"/>
 
-    <SwitchPreference
-            android:defaultValue="false"
-            android:key="fileLyric"
-            android:summary="@string/FileLyricTips"
-            android:title="@string/FileLyric"/>
-
     <PreferenceCategory android:title="@string/OtherSettings"/>
 
     <Preference

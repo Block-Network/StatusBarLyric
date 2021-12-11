@@ -51,7 +51,7 @@ public class Config {
     }
 
     public int getLyricPosition() {
-        return config.optInt("LPosition", 2);
+        return config.optInt("LPosition", 7);
     }
 
     public void setLyricPosition(int i) {
@@ -180,14 +180,6 @@ public class Config {
 
     public void setHook(String str) {
         config.put("Hook", str);
-    }
-
-    public boolean getFileLyric() {
-        return config.optBoolean("FileL", false);
-    }
-
-    public void setFileLyric(boolean bool) {
-        config.put("FileL", bool);
     }
 
     public boolean getLyricStyle() {
