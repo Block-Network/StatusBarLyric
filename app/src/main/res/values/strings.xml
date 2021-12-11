@@ -62,10 +62,22 @@
     <string name="Tips">Tips</string>
     <string name="Quit">quit</string>
     <string name="TipsIDone">I already know</string>
-    <string name="AppTips">Please read this one-time warning carefully! \n\n Sorry to take your time. \n Please check
-        whether the software version is correct! \n If it does not take effect, please re-optimize the software\n If
-        the module does not take effect, please open debug and restart SystemUI, attach the log, and go to
-        Github/Telegram for feedback.
+    <string name="AppTips">Please read this one-time warning carefully! \n\n
+        Sorry to take your time. \n\n
+
+        The module is perfectly used in the official Rom, the official change may cause problems\n\n
+
+        Modules no longer support modules other than Lsposed\n
+        If lsp cannot find this module, please upgrade lsp\n\n
+
+        If the lyrics cannot be displayed\n
+        Please restart the system interface and make sure the module switch is turned on\n
+        Netease Music/QQ Music/SaltPlayer/Aplayer: Please make sure that the lyrics in the status bar of the music
+        software is turned on\n
+        Kuwo Music/Kugou Music: Please make sure that the music software version is correct\n
+
+        If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to Github
+        Telegram for feedback.
     </string>
     <string name="VerExplanation">Version explanation</string>
     <string name="Done">Done</string>
