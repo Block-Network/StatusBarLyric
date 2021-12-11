@@ -50,7 +50,8 @@ public class HookSystemUI {
                 "cn.kuwo",
                 "remix.myplayer",
                 "cmccwm.mobilemusic",
-                "com.netease.cloudmusic.lite"
+                "com.netease.cloudmusic.lite",
+                "com.meizu.media.music"
         };
         static boolean useSystemMusicActive = true;
         @SuppressLint("StaticFieldLeak")
