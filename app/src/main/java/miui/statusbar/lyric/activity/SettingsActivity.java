@@ -4,13 +4,18 @@ package miui.statusbar.lyric.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -18,12 +23,14 @@ import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.widget.EditText;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.byyang.choose.ChooseFileUtils;
-import miui.statusbar.lyric.config.Config;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
 import miui.statusbar.lyric.R;
+import miui.statusbar.lyric.config.Config;
 import miui.statusbar.lyric.utils.ActivityUtils;
 import miui.statusbar.lyric.utils.ShellUtils;
 import miui.statusbar.lyric.utils.Utils;
@@ -31,10 +38,6 @@ import miui.statusbar.lyric.utils.Utils;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Objects;
-
-import com.microsoft.appcenter.AppCenter;
-import com.microsoft.appcenter.analytics.Analytics;
-import com.microsoft.appcenter.crashes.Crashes;
 
 
 @SuppressWarnings("deprecation")
@@ -195,10 +198,10 @@ public class SettingsActivity extends PreferenceActivity {
                     config.setLyricMaxWidth(Integer.parseInt(value));
                     lyricMaxWidth.setSummary(value);
                 } else {
-                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
+                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignored) {
-                Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
+                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
             }
 
             return true;
@@ -229,10 +232,10 @@ public class SettingsActivity extends PreferenceActivity {
                     lyricMaxWidth.setEnabled(false);
                     lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
                 } else {
-                    Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
+                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignored) {
-                Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
+                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
             }
             return true;
         });
@@ -260,7 +263,7 @@ public class SettingsActivity extends PreferenceActivity {
                 } catch (Exception e) {
                     config.setLyricColor("off");
                     lyricColour.setSummary(getString(R.string.Adaptive));
-                    Toast.makeText(activity, getString(R.string.LyricColorError), Toast.LENGTH_LONG).show();
+                    Utils.showToastOnLooper(activity, getString(R.string.LyricColorError));
                 }
             }
             return true;
@@ -299,10 +302,10 @@ public class SettingsActivity extends PreferenceActivity {
 
 
         // 防烧屏
-        SwitchPreference antiburn = (SwitchPreference) findPreference("antiBurn");
-        assert antiburn != null;
-        antiburn.setChecked(config.getAntiBurn());
-        antiburn.setOnPreferenceChangeListener((preference, newValue) -> {
+        SwitchPreference antiBurn = (SwitchPreference) findPreference("antiBurn");
+        assert antiBurn != null;
+        antiBurn.setChecked(config.getAntiBurn());
+        antiBurn.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setAntiBurn((Boolean) newValue);
             return true;
         });
@@ -315,7 +318,7 @@ public class SettingsActivity extends PreferenceActivity {
         if (config.getIconPath().equals(Utils.PATH)) {
             iconPath.setSummary(getString(R.string.DefaultPath));
         }
-        iconPath.setOnPreferenceClickListener(((preBuference) -> {
+        iconPath.setOnPreferenceClickListener(((preference) -> {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.IconPath))
                     .setNegativeButton(getString(R.string.RestoreDefaultPath), (dialog, which) -> {
@@ -363,7 +366,7 @@ public class SettingsActivity extends PreferenceActivity {
                 config.setLyricPosition(Integer.parseInt(value));
                 lyricPosition.setSummary(value);
             } else {
-                Toast.makeText(activity, getString(R.string.RangeError), Toast.LENGTH_LONG).show();
+                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
             }
             return true;
         });
@@ -426,7 +429,7 @@ public class SettingsActivity extends PreferenceActivity {
         if (config.getHook().equals("")) {
             hook.setSummary(String.format("%s Hook", getString(R.string.Default)));
         }
-        hook.setOnPreferenceClickListener((preBuference) -> {
+        hook.setOnPreferenceClickListener((preference) -> {
             EditText editText = new EditText(activity);
             editText.setText(config.getHook());
             new AlertDialog.Builder(activity)
@@ -518,7 +521,7 @@ public class SettingsActivity extends PreferenceActivity {
         assert checkUpdate != null;
         checkUpdate.setSummary(String.format("%s：%s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity)));
         checkUpdate.setOnPreferenceClickListener((preference) -> {
-            Toast.makeText(activity, getString(R.string.StartCheckUpdate), Toast.LENGTH_LONG).show();
+            Utils.showToastOnLooper(activity, getString(R.string.StartCheckUpdate));
             ActivityUtils.checkUpdate(activity);
             return true;
         });
@@ -531,7 +534,7 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // Apiactivity
+        // ApiActivity
         Preference apiAc = findPreference("apiAc");
         assert apiAc != null;
         apiAc.setOnPreferenceClickListener((preference) -> {
@@ -554,6 +557,9 @@ public class SettingsActivity extends PreferenceActivity {
             hCUK.setSummary(String.format("%s%s", hCUK.getSummary(), getString(R.string.YouNotMIUI)));
             config.setHNoticeIcon(false);
         }
+        IntentFilter HookSure = new IntentFilter();
+        HookSure.addAction("Hook_Sure");
+        activity.registerReceiver(new HookReceiver(), HookSure);
     }
 
     @Override
@@ -594,4 +600,29 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
+    public class HookReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(() -> {
+                    setTitle(intent.getBooleanExtra("hook_ok", false) + "");
+                    String a;
+                    if (intent.getBooleanExtra("hook_ok", false)) {
+                        a = "Hook 成功";
+                    } else {
+                        a = "Hook 失败";
+                    }
+                    new AlertDialog.Builder(activity)
+                            .setTitle(a)
+                            .setMessage(a)
+                            .setPositiveButton(getString(R.string.Ok), null)
+                            .create()
+                            .show();
+                });
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
