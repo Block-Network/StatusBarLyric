@@ -121,7 +121,7 @@ public class MainHook implements IXposedHookLoadPackage {
                 break;
             case "com.tencent.qqmusic":
                 Utils.log("正在hookQQ音乐");
-                MeiZuStatusBarLyric.guiseFlyme(lpparam);
+                MeiZuStatusBarLyric.guiseFlyme(lpparam, true);
                 Utils.log("hookQQ音乐结束");
                 break;
             case "remix.myplayer":
@@ -131,11 +131,11 @@ public class MainHook implements IXposedHookLoadPackage {
                 break;
             case "cmccwm.mobilemusic":
                 Utils.log("正在Hook 咪咕音乐");
-                MeiZuStatusBarLyric.guiseFlyme(lpparam);
+                MeiZuStatusBarLyric.guiseFlyme(lpparam, true);
                 Utils.log("Hook 咪咕音乐结束");
                 break;
             case "com.meizu.media.music":
-                MeiZuStatusBarLyric.guiseFlyme(lpparam);
+                MeiZuStatusBarLyric.guiseFlyme(lpparam, true);
                 break;
             case "com.netease.cloudmusic.lite":
                 new NeteaseLite.Hook(lpparam);
