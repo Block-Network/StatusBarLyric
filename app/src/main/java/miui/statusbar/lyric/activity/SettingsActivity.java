@@ -86,6 +86,12 @@ public class SettingsActivity extends PreferenceActivity {
                     .setMessage(getString(R.string.AppTips))
                     .setNegativeButton(getString(R.string.TipsIDone), (dialog, which) -> preferences.edit().putBoolean(tips, true).apply())
                     .setPositiveButton(getString(R.string.Quit), (dialog, which) -> activity.finish())
+                    .setNeutralButton(getString(R.string.PrivacyPolicy), (dialog, which) -> {
+                        Uri uri = Uri.parse("https://github.com/577fkj/MIUIStatusBarLyric/blob/main/EUAL.md");
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                        init();
+                    })
                     .setCancelable(false)
                     .create()
                     .show();

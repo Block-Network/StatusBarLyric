@@ -77,7 +77,7 @@
             android:title="@string/PrivacyPolicy">
         <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/577fkj/MIUIStatusBarLyric/EUAL.md"/>
+                android:data="https://github.com/577fkj/MIUIStatusBarLyric/blob/main/EUAL.md"/>
     </Preference>
 
 </PreferenceScreen>
