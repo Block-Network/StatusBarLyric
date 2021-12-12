@@ -267,6 +267,7 @@ public class HookSystemUI {
 
                     final Handler updateIconColor = new Handler(Looper.getMainLooper(), message -> {
                         if (iconReverseColor) {
+                            Utils.log(String.format("设置图标颜色：%s", message.arg1));
                             ColorStateList color = ColorStateList.valueOf(message.arg1);
                             iconView.setImageTintList(color);
                         }
@@ -419,7 +420,7 @@ public class HookSystemUI {
                                         } else {
                                             i -= 1;
                                         }
-                                        Utils.log("当前位移：" + i);
+                                        Utils.log(String.format("当前位移：%d", i));
                                         Message message = updateMarginsLyric.obtainMessage();
                                         message.arg1 = 10 + i;
                                         message.arg2 = 0;
