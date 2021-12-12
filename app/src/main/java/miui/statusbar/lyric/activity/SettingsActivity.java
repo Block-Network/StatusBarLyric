@@ -159,7 +159,7 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 使用系统方法
+        // 使用系统方法反色
         SwitchPreference useSystemReverseColor = (SwitchPreference) findPreference("UseSystemReverseColor");
         assert useSystemReverseColor != null;
         useSystemReverseColor.setChecked(config.getUseSystemReverseColor());
@@ -265,6 +265,7 @@ public class SettingsActivity extends PreferenceActivity {
         }
         lyricColour.setDefaultValue(String.valueOf(config.getLyricColor()));
         lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
+        lyricColour.setEnabled(!config.getUseSystemReverseColor());
         lyricColour.setOnPreferenceChangeListener((preference, newValue) -> {
             String value = newValue.toString().replaceAll(" ", "");
             if (value.equals("") | value.equals(getString(R.string.Off)) | value.equals(getString(R.string.Adaptive))) {

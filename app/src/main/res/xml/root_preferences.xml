@@ -49,6 +49,11 @@
 
     <PreferenceCategory
             android:title="歌词设置"/>
+    <SwitchPreference
+            android:defaultValue="true"
+            android:key="UseSystemReverseColor"
+            android:summary="@string/UseSystemReverseColorTips"
+            android:title="@string/UseSystemReverseColor"/>
 
     <EditTextPreference
             android:defaultValue="@string/Adaptive"
@@ -83,11 +88,6 @@
             android:maxLength="4"
             android:inputType="numberDecimal"/>
 
-    <SwitchPreference
-            android:defaultValue="true"
-            android:key="UseSystemReverseColor"
-            android:summary="@string/UseSystemReverseColorTips"
-            android:title="@string/UseSystemReverseColor"/>
 
     <PreferenceCategory
             android:title="图标设置"/>
@@ -153,9 +153,9 @@
     <PreferenceCategory android:title="@string/OtherSettings"/>
 
     <Preference
-        android:key="apiAc"
-        android:summary=""
-        android:title="@string/UseApiList"/>
+            android:key="apiAc"
+            android:summary=""
+            android:title="@string/UseApiList"/>
 
     <Preference
             android:key="lyricHook"
