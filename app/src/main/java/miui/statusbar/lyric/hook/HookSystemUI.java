@@ -73,10 +73,10 @@ public class HookSystemUI {
         static LinearLayout.LayoutParams iconParams;
         @SuppressLint("StaticFieldLeak")
         static TextView clock;
-        boolean showLyric = true;
-        ImageView iconView;
         static Handler updateTextColor;
         static boolean isLock = false;
+        boolean showLyric = true;
+        ImageView iconView;
 
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
             config = Utils.getConfig();
@@ -260,6 +260,7 @@ public class HookSystemUI {
                     });
 
                     updateTextColor = new Handler(Looper.getMainLooper(), message -> {
+                        Utils.log(String.format("设置歌词颜色：%s", message.arg1));
                         lyricTextView.setTextColor(message.arg1);
                         return true;
                     });
@@ -342,26 +343,29 @@ public class HookSystemUI {
                                                         message.arg1 = color;
                                                         updateTextColor.sendMessage(message);
                                                     }
-                                                }
-                                                if (!isDark(clock.getTextColors().getDefaultColor())) {
-                                                    if (config.getLyricColor().equals("off")) {
-                                                        Message message = updateTextColor.obtainMessage();
+                                                } else {
+                                                    Utils.log("歌词传统自动反色");
+                                                    if (!isDark(clock.getTextColors().getDefaultColor())) {
+                                                        if (config.getLyricColor().equals("off")) {
+                                                            Message message = updateTextColor.obtainMessage();
+                                                            message.arg1 = 0xffffffff;
+                                                            updateTextColor.sendMessage(message);
+                                                        }
+                                                        Message message = updateIconColor.obtainMessage();
                                                         message.arg1 = 0xffffffff;
-                                                        updateTextColor.sendMessage(message);
-                                                    }
-                                                    Message message = updateIconColor.obtainMessage();
-                                                    message.arg1 = 0xffffffff;
-                                                    updateIconColor.sendMessage(message);
-                                                } else if (isDark(clock.getTextColors().getDefaultColor())) {
-                                                    if (config.getLyricColor().equals("off")) {
-                                                        Message message = updateTextColor.obtainMessage();
+                                                        updateIconColor.sendMessage(message);
+                                                    } else if (isDark(clock.getTextColors().getDefaultColor())) {
+                                                        if (config.getLyricColor().equals("off")) {
+                                                            Message message = updateTextColor.obtainMessage();
+                                                            message.arg1 = 0xff000000;
+                                                            updateTextColor.sendMessage(message);
+                                                        }
+                                                        Message message = updateIconColor.obtainMessage();
                                                         message.arg1 = 0xff000000;
-                                                        updateTextColor.sendMessage(message);
+                                                        updateIconColor.sendMessage(message);
                                                     }
-                                                    Message message = updateIconColor.obtainMessage();
-                                                    message.arg1 = 0xff000000;
-                                                    updateIconColor.sendMessage(message);
                                                 }
+
                                             }
                                         } catch (Exception e) {
                                             Utils.log("出现错误! " + e + "\n" + Utils.dumpException(e));
@@ -544,8 +548,10 @@ public class HookSystemUI {
                 try {
                     if (config.getLockScreenOff() && !intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
                         offLyric("锁屏");
-                        isLock=true;
-                    }else{isLock=false;}
+                        isLock = true;
+                    } else {
+                        isLock = false;
+                    }
                 } catch (Exception e) {
                     Utils.log("广播接收错误 " + e + "\n" + Utils.dumpException(e));
                 }
