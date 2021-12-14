@@ -501,7 +501,8 @@ public class HookSystemUI {
             if (config.getLyricStyle()) {
                 lyricTextView.setSpeed(config.getLyricSpeed());
             }
-            if (!config.getAnim().equals(oldAnim)) {
+
+            if (!config.getAnim().equals(oldAnim) | oldAnim.equals("random")) {
                 oldAnim = config.getAnim();
                 lyricTextView.setInAnimation(Utils.inAnim(oldAnim));
                 lyricTextView.setOutAnimation(Utils.outAnim(oldAnim));
