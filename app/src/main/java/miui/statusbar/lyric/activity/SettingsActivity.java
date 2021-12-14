@@ -51,13 +51,15 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
-                Analytics.class, Crashes.class);
         addPreferencesFromResource(R.xml.root_preferences);
         try {
             config = new Config(ActivityUtils.getSP(activity, "Lyric_Config"));
             setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.SPConfigMode)));
             init();
+            AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
+                    Analytics.class, Crashes.class);
+            AppCenter.start(getApplication(), "2327bd7c-3227-42b4-bcac-977259e2e162",
+                    Analytics.class, Crashes.class);
         } catch (SecurityException ignored) {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.Tips))
