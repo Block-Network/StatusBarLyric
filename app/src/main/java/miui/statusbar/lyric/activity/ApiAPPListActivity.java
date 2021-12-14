@@ -41,8 +41,6 @@ public class ApiAPPListActivity extends PreferenceActivity {
                     });
                     getPreferenceScreen().addPreference(switchPreference);
                 }
-
-            setTitle(String.valueOf(packageInfo.applicationInfo.flags));
         }
     }
 }
