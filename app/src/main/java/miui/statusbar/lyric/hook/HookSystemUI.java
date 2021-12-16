@@ -83,40 +83,46 @@ public class HookSystemUI {
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
             config = Utils.getConfig();
             // 使用系统方法反色
-            if (config.getUseSystemReverseColor()) {
-                Class<?> inboundSmsHandlerClass = XposedHelpers.findClassIfExists("com.android.systemui.plugins.DarkIconDispatcher", lpparam.classLoader);
-                if (inboundSmsHandlerClass != null) {
-                    Method exactMethod = null;
-                    Method[] methods = inboundSmsHandlerClass.getDeclaredMethods();
-                    for (Method method : methods) {
-                        if (method.getName().equals("getTint")) {
-                            exactMethod = method;
-                            break;
-                        }
-                    }
-                    if (exactMethod != null) {
-                        XposedBridge.hookMethod(exactMethod, new XC_MethodHook() {
-                            @Override
-                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                super.afterHookedMethod(param);
-                                if (lyricTextView == null || iconView == null) {
-                                    return;
-                                }
-                                int areaTint = (int) param.args[2];
-                                if (config.getLyricColor().equals("off") && iconReverseColor) {
-                                    ColorStateList color = ColorStateList.valueOf(areaTint);
-                                    iconView.setImageTintList(color);
-                                }
-                                lyricTextView.setTextColor(areaTint);
+            try {
+                if (config.getUseSystemReverseColor()) {
+                    Class<?> inboundSmsHandlerClass = XposedHelpers.findClassIfExists("com.android.systemui.plugins.DarkIconDispatcher", lpparam.classLoader);
+                    if (inboundSmsHandlerClass != null) {
+                        Method exactMethod = null;
+                        Method[] methods = inboundSmsHandlerClass.getDeclaredMethods();
+                        for (Method method : methods) {
+                            if (method.getName().equals("getTint")) {
+                                exactMethod = method;
+                                break;
                             }
-                        });
-                    } else {
-                        Utils.log("查找反色方法失败!");
-                    }
+                        }
+                        if (exactMethod != null) {
+                            XposedBridge.hookMethod(exactMethod, new XC_MethodHook() {
+                                @Override
+                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                    super.afterHookedMethod(param);
+                                    if (lyricTextView == null || iconView == null) {
+                                        return;
+                                    }
+                                    int areaTint = (int) param.args[2];
+                                    if (config.getLyricColor().equals("off") && iconReverseColor) {
+                                        ColorStateList color = ColorStateList.valueOf(areaTint);
+                                        iconView.setImageTintList(color);
+                                    }
+                                    lyricTextView.setTextColor(areaTint);
+                                }
+                            });
+                        } else {
+                            Utils.log("查找反色方法失败!");
+                        }
 
-                } else {
-                    Utils.log("系统方法反色获取失败");
+                    } else {
+                        Utils.log("系统方法反色获取失败");
+                    }
                 }
+            } catch (Exception e) {
+                Utils.log("系统反色出现错误: " + Utils.dumpException(e));
+            } catch (Error e) {
+                Utils.log("系统反色出现错误: " + e.getMessage());
             }
             // 状态栏歌词
             XposedHelpers.findAndHookMethod("com.android.systemui.statusbar.phone.CollapsedStatusBarFragment", lpparam.classLoader, "onViewCreated", View.class, Bundle.class, new XC_MethodHook() {
