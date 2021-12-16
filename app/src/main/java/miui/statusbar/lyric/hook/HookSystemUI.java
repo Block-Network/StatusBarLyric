@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -27,22 +26,23 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import miui.statusbar.lyric.config.Config;
-import miui.statusbar.lyric.utils.ColorUtils;
-import miui.statusbar.lyric.utils.Utils;
-import miui.statusbar.lyric.view.LyricTextSwitchView;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import miui.statusbar.lyric.config.Config;
+import miui.statusbar.lyric.utils.Utils;
+import miui.statusbar.lyric.view.LyricTextSwitchView;
 
 public class HookSystemUI {
     public static class Hook {
@@ -421,6 +421,7 @@ public class HookSystemUI {
                                 boolean order = true;
                                 int oldPos = 0;
 
+                                @SuppressLint("DefaultLocale")
                                 @Override
                                 public void run() {
                                     oldPos = config.getLyricPosition();
