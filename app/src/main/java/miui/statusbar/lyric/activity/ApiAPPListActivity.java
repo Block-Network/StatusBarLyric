@@ -2,18 +2,16 @@ package miui.statusbar.lyric.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
-
-import java.util.List;
-
-import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.R;
+import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.utils.APiAPPListUtils;
 import miui.statusbar.lyric.utils.ActivityUtils;
+
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 @SuppressLint("ExportedPreferenceActivity")
@@ -28,11 +26,10 @@ public class ApiAPPListActivity extends PreferenceActivity {
         setTitle(getString(R.string.UseApiList));
 
         ApiListConfig apiConfig = ActivityUtils.getAppList(activity);
+        assert apiConfig != null;
 
         List<PackageInfo> packages = getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packages.size(); i++) {
-            PackageInfo packageInfo = packages.get(i);
-            if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+        for (PackageInfo packageInfo : packages) {
                 if (APiAPPListUtils.isApi(getPackageManager(), packageInfo.packageName)) {
                     SwitchPreference switchPreference = new SwitchPreference(this);
                     switchPreference.setChecked(apiConfig.hasEnable(packageInfo.packageName));
@@ -45,7 +42,6 @@ public class ApiAPPListActivity extends PreferenceActivity {
                     });
                     getPreferenceScreen().addPreference(switchPreference);
                 }
-            }
         }
     }
 }

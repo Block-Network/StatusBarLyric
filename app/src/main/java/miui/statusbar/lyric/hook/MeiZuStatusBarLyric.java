@@ -61,7 +61,7 @@ public class MeiZuStatusBarLyric {
                 }
             }
         });
-        if (! hookNotification) {
+        if (!hookNotification) {
             return;
         }
         XposedHelpers.findAndHookMethod("android.app.NotificationManager", lpparam.classLoader, "notify", int.class, Notification.class, new XC_MethodHook() {
@@ -70,8 +70,7 @@ public class MeiZuStatusBarLyric {
                 super.beforeHookedMethod(param);
                 Notification notification = ((Notification) param.args[1]);
                 CharSequence charSequence = notification.tickerText;
-                XposedBridge.log(notification.toString());
-                XposedBridge.log("Flags: " + notification.flags);
+                Utils.log(notification.toString());
                 if (notification.flags == 0) {
                     Utils.sendLyric(context, "", Utils.packName_GetIconName(lpparam.packageName));
                     return;

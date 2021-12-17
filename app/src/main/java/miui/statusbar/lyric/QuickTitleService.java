@@ -46,8 +46,6 @@ public class QuickTitleService extends TileService {
         Config config = ActivityUtils.getConfig(getBaseContext());
         tile = getQsTile();
         assert config != null;
-        Log.i("", String.valueOf(config.getLyricService()));
-        Utils.showToastOnLooper(getBaseContext(), config.getLyricService() + "");
         set(config);
     }
 }

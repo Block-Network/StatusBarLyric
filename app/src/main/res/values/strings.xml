@@ -142,7 +142,7 @@
     <string name="Reset">Reset defula</string>
     <string name="ResetHookTips">The default hook has been restored, please restart SystemUI</string>
     <string name="Ok">Sure</string>
-    <string name="HookSetTips">"Hook has been set to: "</string>
+    <string name="HookSetTips">Hook has been set to:\n</string>
     <string name="RestartSystemUI">Please restart SystemUI</string>
     <string name="CustomHookTips">Custom Hook</string>
     <string name="RestartUI">Are you sure to restart the system interface?</string>
@@ -184,7 +184,7 @@
         Known bug:\n
         The music software exits abnormally, the lyrics will not disappear automatically
     </string>
-    <string name="NotSupport">Xposed not supported\n or the module is not activated\nforce stop the software after
+    <string name="NotSupport">Xposed not supported,only supportsLsposed\n or the module is not activated\nforce stop the software after
         activation
     </string>
     <string name="SPConfigMode">SP configuration file</string>

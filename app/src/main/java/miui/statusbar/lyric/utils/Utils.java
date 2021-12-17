@@ -23,7 +23,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
-
+import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
+import miui.statusbar.lyric.BuildConfig;
+import miui.statusbar.lyric.config.ApiListConfig;
+import miui.statusbar.lyric.config.Config;
 import org.json.JSONArray;
 
 import java.io.FileInputStream;
@@ -34,12 +38,6 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-
-import de.robv.android.xposed.XSharedPreferences;
-import de.robv.android.xposed.XposedBridge;
-import miui.statusbar.lyric.config.ApiListConfig;
-import miui.statusbar.lyric.BuildConfig;
-import miui.statusbar.lyric.config.Config;
 
 
 public class Utils {

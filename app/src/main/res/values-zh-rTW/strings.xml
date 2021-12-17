@@ -134,7 +134,7 @@
     <string name="Reset">恢復默認</string>
     <string name="ResetHookTips">已恢復默認Hook,請重啟SystemUI</string>
     <string name="Ok">確定</string>
-    <string name="HookSetTips">"已設置Hook為: "</string>
+    <string name="HookSetTips">已設置Hook為:\n</string>
     <string name="RestartSystemUI">請重啟SystemUI</string>
     <string name="CustomHookTips">自定義Hook</string>
     <string name="RestartUI">確定重啟系統界面嗎？</string>
@@ -173,7 +173,7 @@
         已知Bug：\n
         音樂軟件非正常退出，歌詞不會自動消失
     </string>
-    <string name="NotSupport">不支持的Xposed版本\n或未激活本模塊\n激活後強制停止本軟件</string>
+    <string name="NotSupport">不支持的Xposed版本，僅支持Lsposed\n或未激活本模塊\n激活後強制停止本軟件</string>
     <string name="SPConfigMode">SP 配置文件</string>
     <string name="UseApiTips">使用 API 的軟件 (需要在LSPosed勾選開啟的軟件)</string>
     <string name="UseApiList">軟件列表</string>
