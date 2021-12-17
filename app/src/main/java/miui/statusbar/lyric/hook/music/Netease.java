@@ -67,13 +67,16 @@ public class Netease {
                 context = (Context) param.thisObject;
                 try {
                     int verCode = context.getPackageManager().getPackageInfo(lpparam.packageName, 0).versionCode;
+                    String verName = context.getPackageManager().getPackageInfo(lpparam.packageName, 0).versionName;
                     if (verCode > 8000041) {
                         MeiZuStatusBarLyric.guiseFlyme_NotHookNoti(lpparam);
                         String errorMsg = "";
                         String[] hookNotificationArr = new String[]{
+                                "com.netease.cloudmusic.d2.f#a0",
                                 "com.netease.cloudmusic.e2.f#f0",
                                 "com.netease.cloudmusic.f2.f#f0",
-                                "com.netease.cloudmusic.w1.f#e0"
+                                "com.netease.cloudmusic.w1.f#e0",
+                                "com.netease.cloudmusic.am.d#a"
                         };
                         String[] hookStringArr = new String[]{
                                 "com.netease.cloudmusic.module.lyric.a.a#a"
@@ -98,8 +101,8 @@ public class Netease {
                             }
                         }
 
-                        Utils.log("MIUI状态栏歌词 不支持的网易云版本! \n" + errorMsg);
-                        Utils.showToastOnLooper(context, "不支持的网易云版本! \n" + errorMsg);
+                        Utils.log("MIUI状态栏歌词 不支持的网易云版本! " + verName + "\n" + errorMsg);
+                        Utils.showToastOnLooper(context, "不支持的网易云版本! " + verName + "\n" + errorMsg);
                     } else {
                         String enableBTLyric_Class;
                         String enableBTLyric_Method;
@@ -135,7 +138,6 @@ public class Netease {
                                 }
                                 if (!TextUtils.isEmpty(musicName)) {
                                     param.args[0] = musicName;
-                                    param.setResult(param.args);
                                 }
                             }
 
