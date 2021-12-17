@@ -26,6 +26,7 @@ public class ApiAPPListActivity extends PreferenceActivity {
         setTitle(getString(R.string.UseApiList));
 
         ApiListConfig apiConfig = ActivityUtils.getAppList(activity);
+        assert apiConfig != null;
 
         List<PackageInfo> packages = getPackageManager().getInstalledPackages(0);
         for (PackageInfo packageInfo : packages) {

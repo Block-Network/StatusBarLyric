@@ -69,7 +69,7 @@ public class Netease {
                     int verCode = context.getPackageManager().getPackageInfo(lpparam.packageName, 0).versionCode;
                     String verName = context.getPackageManager().getPackageInfo(lpparam.packageName, 0).versionName;
                     if (verCode > 8000041) {
-                        MeiZuStatusBarLyric.guiseFlyme_NotHookNoti(lpparam);
+                        MeiZuStatusBarLyric.guiseFlyme(lpparam, false);
                         String errorMsg = "";
                         String[] hookNotificationArr = new String[]{
                                 "com.netease.cloudmusic.d2.f#a0",
