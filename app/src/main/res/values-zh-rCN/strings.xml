@@ -182,5 +182,5 @@
     <string name="UseSystemReverseColorTips">若反色异常请关闭</string>
     <string name="HookSure">Hook 系统界面</string>
     <string name="HookSureSuccess">Hook 系统界面成功</string>
-    <string name="HookSureFail">Hook 系统界面失败\\n\n此系统不支持，打包SystemUI发作者把</string>
+    <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
 </resources>
