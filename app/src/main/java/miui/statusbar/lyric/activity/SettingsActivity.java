@@ -97,7 +97,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .show();
         }
 
-        //版本介绍
+        //使用说明
         Preference verExplain = findPreference("ver_explain");
         assert verExplain != null;
         verExplain.setOnPreferenceClickListener((preference) -> {
@@ -147,80 +147,6 @@ public class SettingsActivity extends PreferenceActivity {
         lyricService.setChecked(config.getLyricService());
         lyricService.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setLyricService((Boolean) newValue);
-            return true;
-        });
-
-        // 暂停关闭歌词
-        SwitchPreference lyricOff = (SwitchPreference) findPreference("lyricOff");
-        assert lyricOff != null;
-        lyricOff.setChecked(config.getLyricAutoOff());
-        lyricOff.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLyricAutoOff((Boolean) newValue);
-            return true;
-        });
-
-
-        // 歌词颜色
-        EditTextPreference lyricColour = (EditTextPreference) findPreference("lyricColour");
-        assert lyricColour != null;
-        lyricColour.setSummary(config.getLyricColor());
-        if (config.getLyricColor().equals("off")) {
-            lyricColour.setSummary(getString(R.string.Adaptive));
-        }
-        lyricColour.setDefaultValue(String.valueOf(config.getLyricColor()));
-        lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
-        lyricColour.setEnabled(!config.getUseSystemReverseColor());
-        lyricColour.setOnPreferenceChangeListener((preference, newValue) -> {
-            String value = newValue.toString().replaceAll(" ", "");
-            if (value.equals("") | value.equals(getString(R.string.Off)) | value.equals(getString(R.string.Adaptive))) {
-                config.setLyricColor("off");
-                lyricColour.setSummary(getString(R.string.Adaptive));
-            } else {
-                try {
-                    Color.parseColor(newValue.toString());
-                    config.setLyricColor(newValue.toString());
-                    lyricColour.setSummary(newValue.toString());
-                    lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
-                } catch (Exception e) {
-                    config.setLyricColor("off");
-                    lyricColour.setSummary(getString(R.string.Adaptive));
-                    Utils.showToastOnLooper(activity, getString(R.string.LyricColorError));
-                }
-            }
-            return true;
-        });
-
-        // 歌词反色
-        SwitchPreference useSystemReverseColor = (SwitchPreference) findPreference("UseSystemReverseColor");
-        assert useSystemReverseColor != null;
-        useSystemReverseColor.setChecked(config.getUseSystemReverseColor());
-        useSystemReverseColor.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setUseSystemReverseColor((Boolean) newValue);
-            lyricColour.setEnabled((Boolean) newValue);
-            return true;
-        });
-
-        // 歌词动效
-        ListPreference anim = (ListPreference) findPreference("lyricAnim");
-        anim.setEntryValues(new String[]{
-                "off", "top", "lower",
-                "left", "right", "random"
-        });
-        anim.setEntries(new String[]{
-                getString(R.string.Off), getString(R.string.top), getString(R.string.lower),
-                getString(R.string.left), getString(R.string.right), getString(R.string.random)
-        });
-        Dictionary<String, String> dict = new Hashtable<>();
-        dict.put("off", getString(R.string.Off));
-        dict.put("top", getString(R.string.top));
-        dict.put("lower", getString(R.string.lower));
-        dict.put("left", getString(R.string.left));
-        dict.put("right", getString(R.string.right));
-        dict.put("random", getString(R.string.random));
-        anim.setSummary(dict.get(config.getAnim()));
-        anim.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setAnim(newValue.toString());
-            anim.setSummary(dict.get(config.getAnim()));
             return true;
         });
 
@@ -287,7 +213,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-
         // 歌词图标
         SwitchPreference icon = (SwitchPreference) findPreference("lyricIcon");
         assert icon != null;
@@ -298,6 +223,88 @@ public class SettingsActivity extends PreferenceActivity {
         });
 
 
+        // 歌词颜色
+        EditTextPreference lyricColour = (EditTextPreference) findPreference("lyricColour");
+        assert lyricColour != null;
+        lyricColour.setSummary(config.getLyricColor());
+        if (config.getLyricColor().equals("off")) {
+            lyricColour.setSummary(getString(R.string.Adaptive));
+        }
+        lyricColour.setDefaultValue(String.valueOf(config.getLyricColor()));
+        lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
+        lyricColour.setEnabled(!config.getUseSystemReverseColor());
+        lyricColour.setOnPreferenceChangeListener((preference, newValue) -> {
+            String value = newValue.toString().replaceAll(" ", "");
+            if (value.equals("") | value.equals(getString(R.string.Off)) | value.equals(getString(R.string.Adaptive))) {
+                config.setLyricColor("off");
+                lyricColour.setSummary(getString(R.string.Adaptive));
+            } else {
+                try {
+                    Color.parseColor(newValue.toString());
+                    config.setLyricColor(newValue.toString());
+                    lyricColour.setSummary(newValue.toString());
+                    lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
+                } catch (Exception e) {
+                    config.setLyricColor("off");
+                    lyricColour.setSummary(getString(R.string.Adaptive));
+                    Utils.showToastOnLooper(activity, getString(R.string.LyricColorError));
+                }
+            }
+            return true;
+        });
+
+        // 歌词反色
+        SwitchPreference useSystemReverseColor = (SwitchPreference) findPreference("UseSystemReverseColor");
+        assert useSystemReverseColor != null;
+        useSystemReverseColor.setChecked(config.getUseSystemReverseColor());
+        useSystemReverseColor.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setUseSystemReverseColor((Boolean) newValue);
+            lyricColour.setEnabled((Boolean) newValue);
+            return true;
+        });
+
+        // 暂停关闭歌词
+        SwitchPreference lyricOff = (SwitchPreference) findPreference("lyricOff");
+        assert lyricOff != null;
+        lyricOff.setChecked(config.getLyricAutoOff());
+        lyricOff.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLyricAutoOff((Boolean) newValue);
+            return true;
+        });
+
+        // 歌词动效
+        ListPreference anim = (ListPreference) findPreference("lyricAnim");
+        anim.setEntryValues(new String[]{
+                "off", "top", "lower",
+                "left", "right", "random"
+        });
+        anim.setEntries(new String[]{
+                getString(R.string.Off), getString(R.string.top), getString(R.string.lower),
+                getString(R.string.left), getString(R.string.right), getString(R.string.random)
+        });
+        Dictionary<String, String> dict = new Hashtable<>();
+        dict.put("off", getString(R.string.Off));
+        dict.put("top", getString(R.string.top));
+        dict.put("lower", getString(R.string.lower));
+        dict.put("left", getString(R.string.left));
+        dict.put("right", getString(R.string.right));
+        dict.put("random", getString(R.string.random));
+        anim.setSummary(dict.get(config.getAnim()));
+        anim.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setAnim(newValue.toString());
+            anim.setSummary(dict.get(config.getAnim()));
+            return true;
+        });
+
+        // 歌词滚动一次
+        SwitchPreference lShowOnce = (SwitchPreference) findPreference("lShowOnce");
+        assert lShowOnce != null;
+        lShowOnce.setEnabled(!config.getLyricStyle());
+        lShowOnce.setChecked(config.getLShowOnce());
+        lShowOnce.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLShowOnce((Boolean) newValue);
+            return true;
+        });
         // 歌词速度
         EditTextPreference lyricSpeed = (EditTextPreference) findPreference("lyricSpeed");
         assert lyricSpeed != null;
@@ -309,25 +316,20 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 歌词时间切换
-        SwitchPreference lyricSwitch = (SwitchPreference) findPreference("lyricSwitch");
-        assert lyricSwitch != null;
-        lyricSwitch.setChecked(config.getLyricSwitch());
-        lyricSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLyricSwitch((Boolean) newValue);
+        // 魅族样式歌词
+        SwitchPreference lyricStyle = (SwitchPreference) findPreference("lyricStyle");
+        assert lyricStyle != null;
+        lyricStyle.setChecked(config.getLyricStyle());
+        lyricStyle.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLyricStyle((Boolean) newValue);
+            lyricSpeed.setEnabled((Boolean) newValue);
+            lShowOnce.setEnabled(!(Boolean) newValue);
+            if ((Boolean) newValue) {
+                config.setLShowOnce(false);
+                lShowOnce.setChecked(false);
+            }
             return true;
         });
-
-
-        // 防烧屏
-        SwitchPreference antiBurn = (SwitchPreference) findPreference("antiBurn");
-        assert antiBurn != null;
-        antiBurn.setChecked(config.getAntiBurn());
-        antiBurn.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setAntiBurn((Boolean) newValue);
-            return true;
-        });
-
 
         // 图标路径
         Preference iconPath = findPreference("iconPath");
@@ -366,6 +368,7 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         }));
 
+
         // 图标上下位置
         EditTextPreference lyricPosition = (EditTextPreference) findPreference("lyricPosition");
         assert lyricPosition != null;
@@ -398,6 +401,25 @@ public class SettingsActivity extends PreferenceActivity {
         }
         iconColor.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setIconAutoColor((boolean) newValue);
+            return true;
+        });
+
+        // 歌词时间切换
+        SwitchPreference lyricSwitch = (SwitchPreference) findPreference("lyricSwitch");
+        assert lyricSwitch != null;
+        lyricSwitch.setChecked(config.getLyricSwitch());
+        lyricSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLyricSwitch((Boolean) newValue);
+            return true;
+        });
+
+
+        // 防烧屏
+        SwitchPreference antiBurn = (SwitchPreference) findPreference("antiBurn");
+        assert antiBurn != null;
+        antiBurn.setChecked(config.getAntiBurn());
+        antiBurn.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setAntiBurn((Boolean) newValue);
             return true;
         });
 
@@ -437,6 +459,14 @@ public class SettingsActivity extends PreferenceActivity {
         hCUK.setChecked(config.getHCuk());
         hCUK.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setHCuk((Boolean) newValue);
+            return true;
+        });
+
+        // ApiActivity
+        Preference apiAc = findPreference("apiAc");
+        assert apiAc != null;
+        apiAc.setOnPreferenceClickListener((preference) -> {
+            startActivity(new Intent(activity, ApiAPPListActivity.class));
             return true;
         });
 
@@ -480,30 +510,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 歌词滚动一次
-        SwitchPreference lShowOnce = (SwitchPreference) findPreference("lShowOnce");
-        assert lShowOnce != null;
-        lShowOnce.setEnabled(!config.getLyricStyle());
-        lShowOnce.setChecked(config.getLShowOnce());
-        lShowOnce.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLShowOnce((Boolean) newValue);
-            return true;
-        });
-
-        // 魅族样式歌词
-        SwitchPreference lyricStyle = (SwitchPreference) findPreference("lyricStyle");
-        assert lyricStyle != null;
-        lyricStyle.setChecked(config.getLyricStyle());
-        lyricStyle.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLyricStyle((Boolean) newValue);
-            lyricSpeed.setEnabled((Boolean) newValue);
-            lShowOnce.setEnabled(!(Boolean) newValue);
-            if ((Boolean) newValue) {
-                config.setLShowOnce(false);
-                lShowOnce.setChecked(false);
-            }
-            return true;
-        });
 
         // 重启SystemUI
         Preference reSystemUI = findPreference("restartUI");
@@ -552,13 +558,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // ApiActivity
-        Preference apiAc = findPreference("apiAc");
-        assert apiAc != null;
-        apiAc.setOnPreferenceClickListener((preference) -> {
-            startActivity(new Intent(activity, ApiAPPListActivity.class));
-            return true;
-        });
 
         // 非MIUI关闭功能
         if (!Utils.hasMiuiSetting) {
