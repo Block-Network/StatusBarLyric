@@ -1,4 +1,4 @@
-package miui.statusbar.lyric.hook;
+package miui.statusbar.lyric.hook.app;
 
 import android.annotation.SuppressLint;
 import android.app.AndroidAppHelper;
@@ -26,16 +26,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
@@ -44,7 +37,12 @@ import miui.statusbar.lyric.config.Config;
 import miui.statusbar.lyric.utils.Utils;
 import miui.statusbar.lyric.view.LyricTextSwitchView;
 
-public class HookSystemUI {
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class SystemUI {
     public static class Hook {
         static final String KEY_LYRIC = "lyric";
         static String[] musicServer = new String[]{
@@ -57,29 +55,30 @@ public class HookSystemUI {
                 "com.netease.cloudmusic.lite",
                 "com.meizu.media.music"
         };
-        static boolean useSystemMusicActive = true;
-        @SuppressLint("StaticFieldLeak")
-        static LinearLayout lyricLayout;
+
         static Application application;
-        static boolean enable = false;
-        static Handler LyricUpdate;
         static Config config;
-        static String strIcon;
         static Drawable drawableIcon;
-        static boolean iconReverseColor;
-        static LyricTextSwitchView lyricTextView;
-        static String oldAnim = "";
-        static int oldPos = 0;
-        static Handler updateMarginsIcon;
         static Handler iconUpdate;
+        static Handler LyricUpdate;
+        static Handler updateTextColor;
+        static Handler updateMarginsIcon;
+        static LyricTextSwitchView lyricTextView;
         static LinearLayout.LayoutParams iconParams;
         @SuppressLint("StaticFieldLeak")
+        static LinearLayout lyricLayout;
+        @SuppressLint("StaticFieldLeak")
         static TextView clock;
-        static Handler updateTextColor;
-        static boolean isLock = false;
-        static boolean showLyric = true;
         @SuppressLint("StaticFieldLeak")
         static ImageView iconView;
+        static String strIcon;
+        static String oldAnim = "";
+        static int oldPos = 0;
+        static boolean isLock = false;
+        static boolean enable = false;
+        static boolean showLyric = true;
+        static boolean iconReverseColor;
+        static boolean useSystemMusicActive = true;
 
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
             config = Utils.getConfig();
@@ -336,7 +335,7 @@ public class HookSystemUI {
                         Utils.log(config.getHook() + " 反射失败: " + e + "\n" + Utils.dumpNoSuchFieldError(e));
                     }
                 } else {
-                    String[] fieldList = new String[] {
+                    String[] fieldList = new String[]{
                             "mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock"
                     };
                     for (String field : fieldList) {

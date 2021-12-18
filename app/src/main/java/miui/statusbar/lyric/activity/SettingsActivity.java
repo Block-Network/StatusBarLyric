@@ -58,8 +58,6 @@ public class SettingsActivity extends PreferenceActivity {
             init();
             AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
                     Analytics.class, Crashes.class);
-            AppCenter.start(getApplication(), "2327bd7c-3227-42b4-bcac-977259e2e162",
-                    Analytics.class, Crashes.class);
         } catch (SecurityException ignored) {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.Tips))
@@ -161,12 +159,44 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 使用系统方法反色
+
+        // 歌词颜色
+        EditTextPreference lyricColour = (EditTextPreference) findPreference("lyricColour");
+        assert lyricColour != null;
+        lyricColour.setSummary(config.getLyricColor());
+        if (config.getLyricColor().equals("off")) {
+            lyricColour.setSummary(getString(R.string.Adaptive));
+        }
+        lyricColour.setDefaultValue(String.valueOf(config.getLyricColor()));
+        lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
+        lyricColour.setEnabled(!config.getUseSystemReverseColor());
+        lyricColour.setOnPreferenceChangeListener((preference, newValue) -> {
+            String value = newValue.toString().replaceAll(" ", "");
+            if (value.equals("") | value.equals(getString(R.string.Off)) | value.equals(getString(R.string.Adaptive))) {
+                config.setLyricColor("off");
+                lyricColour.setSummary(getString(R.string.Adaptive));
+            } else {
+                try {
+                    Color.parseColor(newValue.toString());
+                    config.setLyricColor(newValue.toString());
+                    lyricColour.setSummary(newValue.toString());
+                    lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
+                } catch (Exception e) {
+                    config.setLyricColor("off");
+                    lyricColour.setSummary(getString(R.string.Adaptive));
+                    Utils.showToastOnLooper(activity, getString(R.string.LyricColorError));
+                }
+            }
+            return true;
+        });
+
+        // 歌词反色
         SwitchPreference useSystemReverseColor = (SwitchPreference) findPreference("UseSystemReverseColor");
         assert useSystemReverseColor != null;
         useSystemReverseColor.setChecked(config.getUseSystemReverseColor());
         useSystemReverseColor.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setUseSystemReverseColor((Boolean) newValue);
+            lyricColour.setEnabled((Boolean) newValue);
             return true;
         });
 
@@ -253,37 +283,6 @@ public class SettingsActivity extends PreferenceActivity {
                 }
             } catch (NumberFormatException ignored) {
                 Utils.showToastOnLooper(activity, getString(R.string.RangeError));
-            }
-            return true;
-        });
-
-
-        // 歌词颜色
-        EditTextPreference lyricColour = (EditTextPreference) findPreference("lyricColour");
-        assert lyricColour != null;
-        lyricColour.setSummary(config.getLyricColor());
-        if (config.getLyricColor().equals("off")) {
-            lyricColour.setSummary(getString(R.string.Adaptive));
-        }
-        lyricColour.setDefaultValue(String.valueOf(config.getLyricColor()));
-        lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
-        lyricColour.setEnabled(!config.getUseSystemReverseColor());
-        lyricColour.setOnPreferenceChangeListener((preference, newValue) -> {
-            String value = newValue.toString().replaceAll(" ", "");
-            if (value.equals("") | value.equals(getString(R.string.Off)) | value.equals(getString(R.string.Adaptive))) {
-                config.setLyricColor("off");
-                lyricColour.setSummary(getString(R.string.Adaptive));
-            } else {
-                try {
-                    Color.parseColor(newValue.toString());
-                    config.setLyricColor(newValue.toString());
-                    lyricColour.setSummary(newValue.toString());
-                    lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
-                } catch (Exception e) {
-                    config.setLyricColor("off");
-                    lyricColour.setSummary(getString(R.string.Adaptive));
-                    Utils.showToastOnLooper(activity, getString(R.string.LyricColorError));
-                }
             }
             return true;
         });

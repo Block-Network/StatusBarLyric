@@ -1,4 +1,4 @@
-package miui.statusbar.lyric.hook.music;
+package miui.statusbar.lyric.hook.app;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;

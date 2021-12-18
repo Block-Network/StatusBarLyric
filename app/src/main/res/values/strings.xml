@@ -195,7 +195,6 @@
     <string name="UseSystemReverseColorTips">If the color reversal is abnormal, please close it</string>
     <string name="HookSure">Hook SystemUI</string>
     <string name="HookSureSuccess">Hook SystemUI Success</string>
-    <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged
-        SystemUI
+    <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged SystemUI
     </string>
 </resources>
