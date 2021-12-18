@@ -186,8 +186,8 @@ public class SystemUI {
                 lyricTextView.setOutAnimation(Utils.outAnim(oldAnim));
             }
             if (!config.getAntiBurn()) {
-                if (config.getLyricPosition() != oldPos) {
-                    oldPos = config.getLyricPosition();
+                if (config.getIconPosition() != oldPos) {
+                    oldPos = config.getIconPosition();
                     Message message = updateMarginsIcon.obtainMessage();
                     message.arg1 = 0;
                     message.arg2 = oldPos;
@@ -379,7 +379,7 @@ public class SystemUI {
                 iconView = new ImageView(application);
                 iconView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 iconParams = (LinearLayout.LayoutParams) iconView.getLayoutParams();
-                iconParams.setMargins(0, 7, 0, 0);
+                iconParams.setMargins(config.getLyricPosition(), 7, 0, 0);
                 iconView.setLayoutParams(iconParams);
 
                 // 创建布局
@@ -571,7 +571,8 @@ public class SystemUI {
                             @SuppressLint("DefaultLocale")
                             @Override
                             public void run() {
-                                Pos = config.getLyricPosition();
+                                Utils.log(String.valueOf(config.getLyricPosition()));
+                                Pos = config.getIconPosition();
                                 if (enable && config.getAntiBurn()) {
                                     if (order) {
                                         i += 1;
@@ -585,7 +586,7 @@ public class SystemUI {
                                     updateMarginsLyric.sendMessage(message);
 
                                     Message message2 = updateMarginsIcon.obtainMessage();
-                                    message2.arg1 = i;
+                                    message2.arg1 = i + config.getLyricPosition();
                                     message2.arg2 = Pos;
                                     updateMarginsIcon.sendMessage(message2);
                                     if (i == 0) {
@@ -600,7 +601,7 @@ public class SystemUI {
                                     updateMarginsLyric.sendMessage(message);
 
                                     Message message2 = updateMarginsIcon.obtainMessage();
-                                    message2.arg1 = 0;
+                                    message2.arg1 = config.getLyricPosition();
                                     message2.arg2 = Pos;
                                     updateMarginsIcon.sendMessage(message2);
                                 }

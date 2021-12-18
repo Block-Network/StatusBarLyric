@@ -185,4 +185,5 @@
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
     <string name="LyricSettings">歌词设置</string>
     <string name="IconSettings">图标设置</string>
+    <string name="LyricPos">* 歌词左右位置</string>
 </resources>

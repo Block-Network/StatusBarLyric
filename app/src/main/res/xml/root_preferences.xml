@@ -88,6 +88,14 @@
             android:maxLength="4"
             android:inputType="numberDecimal"/>
 
+    <EditTextPreference
+            android:defaultValue="0"
+            android:key="lyricPosition"
+            android:summary="@string/Default"
+            android:title="@string/LyricPos"
+            android:maxLength="4"
+            android:inputType="numberSigned"/>
+
 
     <PreferenceCategory
             android:title="@string/IconSettings"/>
@@ -98,8 +106,8 @@
             android:title="@string/IconPath"/>
 
     <EditTextPreference
-            android:defaultValue="2"
-            android:key="lyricPosition"
+            android:defaultValue="7"
+            android:key="IconPosition"
             android:summary="@string/Default"
             android:title="@string/IconPos"
             android:maxLength="4"

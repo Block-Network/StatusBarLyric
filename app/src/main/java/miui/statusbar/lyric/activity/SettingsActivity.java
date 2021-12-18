@@ -259,7 +259,7 @@ public class SettingsActivity extends PreferenceActivity {
         useSystemReverseColor.setChecked(config.getUseSystemReverseColor());
         useSystemReverseColor.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setUseSystemReverseColor((Boolean) newValue);
-            lyricColour.setEnabled((Boolean) newValue);
+            lyricColour.setEnabled(!(Boolean) newValue);
             return true;
         });
 
@@ -331,6 +331,29 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
+        // 歌词左右位置
+        EditTextPreference lyricPosition = (EditTextPreference) findPreference("lyricPosition");
+        assert lyricPosition != null;
+        lyricPosition.setSummary((String.valueOf(config.getLyricPosition())));
+        if (String.valueOf(config.getLyricPosition()).equals("0")) {
+            lyricPosition.setSummary(getString(R.string.Default));
+        }
+        lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), lyricPosition.getSummary()));
+        lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
+            lyricPosition.setSummary(getString(R.string.Default));
+            String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+            if (value.equals("0")) {
+                return true;
+            } else if (Integer.parseInt(value) <= 900 && Integer.parseInt(value) >= -900) {
+                config.setLyricPosition(Integer.parseInt(value));
+                lyricPosition.setSummary(value);
+            } else {
+                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+            }
+            return true;
+        });
+
         // 图标路径
         Preference iconPath = findPreference("iconPath");
         assert iconPath != null;
@@ -370,22 +393,22 @@ public class SettingsActivity extends PreferenceActivity {
 
 
         // 图标上下位置
-        EditTextPreference lyricPosition = (EditTextPreference) findPreference("lyricPosition");
-        assert lyricPosition != null;
-        lyricPosition.setSummary((String.valueOf(config.getLyricPosition())));
-        if (String.valueOf(config.getLyricPosition()).equals("7")) {
-            lyricPosition.setSummary(getString(R.string.Default));
+        EditTextPreference iconPosition = (EditTextPreference) findPreference("IconPosition");
+        assert iconPosition != null;
+        iconPosition.setSummary((String.valueOf(config.getIconPosition())));
+        if (String.valueOf(config.getIconPosition()).equals("7")) {
+            iconPosition.setSummary(getString(R.string.Default));
         }
-        lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), lyricPosition.getSummary()));
-        lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
-            lyricPosition.setSummary(getString(R.string.Default));
+        iconPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), iconPosition.getSummary()));
+        iconPosition.setOnPreferenceChangeListener((preference, newValue) -> {
+            iconPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
+            iconPosition.setSummary(getString(R.string.Default));
             String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-            if (value.equals("2")) {
+            if (value.equals("7")) {
                 return true;
             } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
-                config.setLyricPosition(Integer.parseInt(value));
-                lyricPosition.setSummary(value);
+                config.setIconPosition(Integer.parseInt(value));
+                iconPosition.setSummary(value);
             } else {
                 Utils.showToastOnLooper(activity, getString(R.string.RangeError));
             }

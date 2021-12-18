@@ -16,7 +16,7 @@
     <string name="LyricSpeed">歌詞滾動速度</string>
     <string name="AdvancedSettings">高級設置 (停止音樂後改動選項)</string>
     <string name="ClickLyric">* 點擊歌詞切換時鐘和歌詞</string>
-    <string name="AbScreen">* 防燒屏</string>
+    <string name="AbScreen">防燒屏</string>
     <string name="IconPath">圖標路徑</string>
     <string name="IconPos">圖標上下位置</string>
     <string name="Default">默认</string>
@@ -185,4 +185,5 @@
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
     <string name="LyricSettings">歌詞設置</string>
     <string name="IconSettings">圖標設置</string>
+    <string name="LyricPos">* 歌詞左右位置</string>
 </resources>
