@@ -123,7 +123,7 @@
 
     <SwitchPreference
             android:defaultValue="false"
-            android:key="lyricSwitch"
+            android:key="lyricToTime"
             android:summary=""
             android:title="@string/ClickLyric"/>
 

@@ -18,7 +18,7 @@
     <string name="ClickLyric">* 点击歌词切换时钟和歌词</string>
     <string name="AbScreen">* 防烧屏</string>
     <string name="IconPath">图标路径</string>
-    <string name="IconPos">图标上下位置</string>
+    <string name="IconPos">* 图标上下位置</string>
     <string name="Default">默认</string>
     <string name="IconAutoColors">图标自动反色</string>
     <string name="UnlockShow">仅解锁显示</string>
@@ -176,7 +176,7 @@
     <string name="NotSupport">不支持的Xposed版本，仅支持Lsposed\n或未激活本模块\n激活后强制停止本软件</string>
     <string name="SPConfigMode">SP 配置文件</string>
     <string name="UseApiTips">使用 API 的软件 (需要在LSPosed勾选开启的软件)</string>
-    <string name="UseApiList">软件列表</string>
+    <string name="UseApiList">扩展软件列表</string>
     <string name="PrivacyPolicy">隐私政策</string>
     <string name="UseSystemReverseColor">* 使用系统方式反色</string>
     <string name="UseSystemReverseColorTips">若反色异常请关闭</string>
