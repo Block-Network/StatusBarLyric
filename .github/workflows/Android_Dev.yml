@@ -81,7 +81,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_DEV_TOKEN }}
           RELEASE: ${{ steps.sign_release.outputs.signedReleaseFile }}
           DEBUG: ${{ steps.sign_debug.outputs.signedReleaseFile }}
-          MAPPING: ./app/build/outputs/mapping/release/mapping.txt
+          MAPPING: /app/build/outputs/mapping/release/mapping.txt
           COMMIT_MESSAGE: |+
             Github CI
             ```
