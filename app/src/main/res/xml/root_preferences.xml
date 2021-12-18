@@ -199,5 +199,9 @@
             android:summary=""
             android:title="@string/AboutModule"/>
 
-    <PreferenceCategory/>
+    <Preference>
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://b23.tv/ZenLa88"/>
+    </Preference>
 </PreferenceScreen>

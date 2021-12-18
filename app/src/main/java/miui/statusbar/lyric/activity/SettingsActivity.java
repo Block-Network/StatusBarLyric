@@ -342,14 +342,18 @@ public class SettingsActivity extends PreferenceActivity {
         lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
             lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
             lyricPosition.setSummary(getString(R.string.Default));
-            String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-            if (value.equals("0")) {
-                return true;
-            } else if (Integer.parseInt(value) <= 900 && Integer.parseInt(value) >= -900) {
-                config.setLyricPosition(Integer.parseInt(value));
-                lyricPosition.setSummary(value);
-            } else {
-                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+                if (value.equals("0")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 900 && Integer.parseInt(value) >= -900) {
+                    config.setLyricPosition(Integer.parseInt(value));
+                    lyricPosition.setSummary(value);
+                } else {
+                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                }
+            } catch (NumberFormatException ignore) {
+
             }
             return true;
         });
@@ -403,14 +407,18 @@ public class SettingsActivity extends PreferenceActivity {
         iconPosition.setOnPreferenceChangeListener((preference, newValue) -> {
             iconPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
             iconPosition.setSummary(getString(R.string.Default));
-            String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-            if (value.equals("7")) {
-                return true;
-            } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
-                config.setIconPosition(Integer.parseInt(value));
-                iconPosition.setSummary(value);
-            } else {
-                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+                if (value.equals("7")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
+                    config.setIconPosition(Integer.parseInt(value));
+                    iconPosition.setSummary(value);
+                } else {
+                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                }
+            } catch (NumberFormatException ignore) {
+
             }
             return true;
         });
@@ -428,7 +436,7 @@ public class SettingsActivity extends PreferenceActivity {
         });
 
         // 歌词时间切换
-        SwitchPreference lyricSwitch = (SwitchPreference) findPreference("lyricSwitch");
+        SwitchPreference lyricSwitch = (SwitchPreference) findPreference("lyricToTime");
         assert lyricSwitch != null;
         lyricSwitch.setChecked(config.getLyricSwitch());
         lyricSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
