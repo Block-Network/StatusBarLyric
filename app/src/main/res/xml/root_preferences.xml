@@ -48,7 +48,7 @@
             android:title="@string/LyricIcon"/>
 
     <PreferenceCategory
-            android:title="歌词设置"/>
+            android:title="@string/LyricSettings"/>
     <SwitchPreference
             android:defaultValue="true"
             android:key="UseSystemReverseColor"
@@ -90,7 +90,7 @@
 
 
     <PreferenceCategory
-            android:title="图标设置"/>
+            android:title="@string/IconSettings"/>
 
     <Preference
             android:key="iconPath"

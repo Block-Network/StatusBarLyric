@@ -183,4 +183,6 @@
     <string name="HookSure">Hook 系統界面</string>
     <string name="HookSureSuccess">Hook 系统界面成功</string>
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
+    <string name="LyricSettings">歌詞設置</string>
+    <string name="IconSettings">圖標設置</string>
 </resources>

@@ -197,4 +197,6 @@
     <string name="HookSureSuccess">Hook SystemUI Success</string>
     <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged SystemUI
     </string>
+    <string name="LyricSettings">Lyrics settings</string>
+    <string name="IconSettings">Icon settings</string>
 </resources>
