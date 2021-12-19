@@ -43,12 +43,15 @@
 - @潇风残月 (感谢提供的库以及对代码的极限精简)
 - @柒猫Sebun_Neko (感谢提供的图标)
 - @Yife Playte (感谢帮忙优化矢量图)
+- @YuKongA
+- @QQ little ice
 
 ### 下载
 
 - [Releases](https://github.com/577fkj/MIUIStatusBarLyric/releases)
 - [酷安](https://www.coolapk.com/apk/miui.statusbar.lyric)
-- [测试版](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
+- [Beta](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
+- [Canary](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android_Dev.yml)
 
 ### 联系我们
 

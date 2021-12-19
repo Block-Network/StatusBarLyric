@@ -42,12 +42,16 @@
 - @潇风残月 (Thanks for the provided library and the extreme streamlining of the code)
 - @柒猫Sebun_Neko (Thanks for the provided icon)
 - @Yife Playte (Thanks for helping optimize vector)
+- @YuKongA
+- @QQ little ice
+-
 
 ### Downloads
 
 - [Releases](https://github.com/577fkj/MIUIStatusBarLyric/releases)
 - [CoolAPK](https://www.coolapk.com/apk/miui.statusbar.lyric)
 - [Beta](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
+- [Canary](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android_Dev.yml)
 
 ### contact us
 
