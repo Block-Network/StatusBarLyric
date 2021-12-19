@@ -22,36 +22,21 @@
 
 简体中文 / [English](README_EN.md)
 
-### 支持的系统版本
-
-- MIUI 10/11//12/12.5 (MIUI11[未测试])
-- Oxygen
-- Extension（ROG）
-- Realme UI
-- AOSP
-- Flyme
-- ColorOS
-- Joyui
-- One UI
-- LG
-
-#### 理论支持部分类原生
+### 理论支持 __所有__ 官方系统版本
 
 ## 支持的音乐软件版本
 
 - [APlayer](https://github.com/rRemix/APlayer) 未知 ~ 1.5.7.9
 - __QQ音乐__ 未知 ~ 11.0.16
 - __咪咕音乐__ 未知 ~ 7.7.0
-- __网易云音乐__ 7.2.21 ~ 8.6.31
+- __网易云音乐__ 7.2.21 ~ 8.6.40
 - __魅族音乐__ 未知 ~ 未知
-- __酷狗音乐__ 未知 ~ 10.9.2
-- __酷我音乐__ 未知 ~ 10.0.4.0
+- __酷狗音乐__ 未知 ~ 11.0.2
+- __酷我音乐__ 未知 ~ 10.0.4.9
 
 ### 应用主动适配
 
 - __[椒盐音乐](https://github.com/Moriafly/SaltPlayerSource)__ 4.5 ~ 现今
-- __[Phonograph Plus](https://github.com/chr56/Phonograph_Plus/)__ (
-  一个[Phonograph](https://github.com/kabouzeid/Phonograph)第三方修改版本) ：v0.0.2(不完美适配)/v0.0.3
 
 ## 感谢名单（不分先后）
 
@@ -66,6 +51,7 @@
 - [测试版](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
 
 ### 联系我们
+
 - [QQ交流群](https://jq.qq.com/?_wv=1027&amp;k=KQeQjgsv)
 - [电报](https://t.me/MIUIStatusBatLyric)
 - [酷安](https://www.coolapk.com/apk/miui.statusbar.lyric)

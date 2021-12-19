@@ -21,29 +21,17 @@
 
 [简体中文](README.md) / English
 
-### Supported system versions
-
-- MIUI 10/11//12/12.5 (MIUI11[Not tested])
-- Oxygen
-- Extension（ROG）
-- Realme UI
-- AOSP
-- Flyme
-- ColorOS
-- Joyui
-- One UI
-- LG
-
-#### Theoretical support for some native classes
+### Theoretical support __all__ official system version
 
 ## Supported Music app versions
+
 - __[APlayer](https://github.com/rRemix/APlayer)__ Unknown ~ 1.5.7.9
 - __QQ Music__ unknown ~ 11.0.16
 - __Migu Music__ Unknown ~ 7.7.0
-- __Netease Music__ 7.22.1 ~ 8.6.31
+- __Netease Music__ 7.22.1 ~ 8.6.40
 - __Meizu Music__ Unknown ~ Unknown
-- __Kugou Music__ Unknown ~ 10.9.2
-- __Kuwo Music__ Unknown ~ 10.0.4.0
+- __Kugou Music__ Unknown ~ 11.0.2
+- __Kuwo Music__ Unknown ~ 10.0.4.9
 
 ### App active adaptation
 
