@@ -47,14 +47,14 @@
     <string name="AboutModule">About the module</string>
     <string name="Developer">Developer</string>
     <string name="AboutTips1">Mainly responsible for Hook</string>
-    <string name="AboutTips2">Mainly responsible for the GUI</string>
+    <string name="AboutTips2">Mainly responsible for the UI</string>
     <string name="ThkListTips">Thank you list (in no particular order)</string>
     <string name="ThkList">Thank you list</string>
     <string name="ClickThkList">Click to view the list of thanks</string>
     <string name="Other">Other</string>
     <string name="Donate">Donate</string>
     <string name="DonateTips">If you find it easy to use, please support me</string>
-    <string name="Coolapk">coolapk</string>
+    <string name="Coolapk">Coolapk</string>
     <string name="ContactUs">contact us</string>
     <string name="Source">Project Address</string>
     <string name="ThkListUrl">

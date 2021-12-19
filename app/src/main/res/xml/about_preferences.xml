@@ -28,26 +28,25 @@
     <PreferenceCategory android:title="@string/ThkListTips"/>
 
     <Preference
-            android:key=""
+            android:key="thkList"
             android:summary="@string/ClickThkList"
             android:title="@string/ThkList">
-        <intent
-                android:action="android.intent.action.VIEW"
-                android:data="@string/ThkListUrl"/>
+<!--        <intent-->
+<!--                android:action="android.intent.action.VIEW"-->
+<!--                android:data="@string/ThkListUrl"/>-->
     </Preference>
 
 
     <PreferenceCategory android:title="@string/Other"/>
-
     <Preference
-            android:key="coolapk"
-            android:summary=""
-            android:title="@string/Coolapk">
+            android:key="privacyPolicy"
+            android:title="@string/PrivacyPolicy">
         <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://www.coolapk.com/apk/miui.statusbar.lyric"/>
+                android:data="https://github.com/577fkj/MIUIStatusBarLyric/blob/main/EUAL.md"/>
     </Preference>
-<Preference
+
+    <Preference
             android:key="donate"
             android:summary="@string/DonateTips"
             android:title="@string/Donate">
@@ -63,7 +62,14 @@
                 android:action="android.intent.action.VIEW"
                 android:data="https://io.xiaowine.cc/app/callme"/>
     </Preference>
-
+    <Preference
+            android:key="coolapk"
+            android:summary=""
+            android:title="@string/Coolapk">
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://www.coolapk.com/apk/miui.statusbar.lyric"/>
+    </Preference>
     <Preference
             android:key="source"
             android:title="@string/Source">
@@ -72,12 +78,5 @@
                 android:data="https://github.com/577fkj/MIUIStatusBarLyric"/>
     </Preference>
 
-    <Preference
-            android:key="PrivacyPolicy"
-            android:title="@string/PrivacyPolicy">
-        <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://github.com/577fkj/MIUIStatusBarLyric/blob/main/EUAL.md"/>
-    </Preference>
 
 </PreferenceScreen>
