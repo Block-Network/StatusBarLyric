@@ -550,7 +550,10 @@ public class SettingsActivity extends PreferenceActivity {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.RestartUI))
                     .setMessage(getString(R.string.RestartUITips))
-                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ShellUtils.voidShell("pkill -f com.android.systemui", true))
+                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> {
+                        ShellUtils.voidShell("pkill -f com.android.systemui", true);
+                        Analytics.trackEvent("重启SystemUI");
+                    })
                     .setNegativeButton(getString(R.string.Cancel), null)
                     .create()
                     .show();

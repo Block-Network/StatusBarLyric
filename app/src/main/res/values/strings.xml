@@ -19,7 +19,7 @@
     <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconPath">Icon path</string>
     <string name="IconPos">Icon up and down position</string>
-    <string name="LyricPos">Lyrics left and right position</string>
+    <string name="LyricPos">Lyrics left and right position(It will take effect 1 min after Restart SystemUI)</string>
     <string name="Default">Default</string>
     <string name="IconAutoColors">The icon auto inverted colors</string>
     <string name="UnlockShow">Unlock display only</string>
@@ -30,10 +30,6 @@
     <string name="HideNetWork">Hide network speed</string>
     <string name="HideCarrierName">Hide lock screen carrier name</string>
     <string name="AutoHideCarrierName">Auto hide lock screen carrier name</string>
-    <string name="FileLyric">File transfer lyrics</string>
-    <string name="FileLyricTips">Broadcasting cannot be used, please turn on this switch (Storage space isolation,
-        please set relevant permissions)
-    </string>
     <string name="OtherSettings">Other settings</string>
     <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
     <string name="DebugMode">Debug Mode</string>
@@ -66,18 +62,6 @@
     <string name="AppTips">Please read this one-time warning carefully! \n\n
         Sorry to take your time. \n\n
 
-        The module is perfectly used in the official Rom, the official change may cause problems\n\n
-
-        Modules no longer support modules other than Lsposed\n
-        If lsp cannot find this module, please upgrade lsp\n\n
-
-        If the lyrics cannot be displayed\n
-        Please restart the system interface and make sure the module switch is turned on\n
-        Netease Music（8.0.14+）/QQ Music/SaltPlayer/Aplayer: Please make sure that the lyrics in the status bar of the
-        music
-        software is turned on\n
-        Netease Music/Kuwo Music/Kugou Music: Please make sure that the music software version is correct\n\n
-
         This xposed module will collect the following information, [ program error information, mobile phone model,
         mobile phone version ]\n\n
 
@@ -96,8 +80,10 @@
         - Meizu Music Unknown ~ Unknown\n
         - Kugou Music Unknown ~ 10.9.2\n
         - Kuwo Music Unknown ~ 10.0.4.0\n\n
-
         - SaltPlayer 4.5 ~ now
+        - Meizu Music Unknown ~ Unknown\n
+        - Phonograph Plus third-party modified version\n
+        https://github.com/kabouzeid/Phonograph\n
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
@@ -138,7 +124,7 @@
     <string name="DefaultPath">Default path</string>
     <string name="RestoreDefaultPath">Restore default path</string>
     <string name="NewPath">Choose a new path</string>
-    <string name="LyricPosTips">-100~100, currently:</string>
+    <string name="LyricPosTips">-900~900, currently:</string>
     <string name="On">ON</string>
     <string name="Reset">Reset defula</string>
     <string name="ResetHookTips">The default hook has been restored, please restart SystemUI</string>
@@ -168,26 +154,19 @@
     <string name="lShowOnce">* Lyrics only scroll once</string>
     <string name="WarnExplanation">Module Considerations</string>
     <string name="WarnExp">Module notes\n\n
-        The module is perfectly used in the official Rom, the official change may cause problems\n\n
-
-        Modules no longer support modules other than Lsposed\n
-        If lsp cannot find this module, please upgrade lsp\n\n
+        The module is perfectly used in the official Rom, the official change may be unusable or problematic\n\n
 
         If the lyrics cannot be displayed\n
         Please restart the system interface and make sure the module switch is turned on\n
-        Please make sure to set the lyrics in the StatusBar or Bluetooth lyrics in the car to turn on in the music software\n\n
+        Please make sure to set the lyrics in the StatusBar or Bluetooth lyrics in the car to turn on in the music
+        software\n\n
 
         The function changes with * need to restart the system interface\n\n
 
-        If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to Github
-        Telegram for feedback. \n\n
-
-        Known bug:\n
-        The music software exits abnormally, the lyrics will not disappear automatically
+        If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to GitHub
+        Telegram for feedback
     </string>
-    <string name="NotSupport">Xposed not supported,only supportsLsposed\n or the module is not activated\nforce stop the software after
-        activation
-    </string>
+    <string name="NotSupport">This module is not activated, please activate this module in Lsposed\nThis module only supports the latest version of Lsposed</string>
     <string name="SPConfigMode">SP configuration file</string>
     <string name="UseApiTips">Software using API (The software that needs to be checked in LSPosed)</string>
     <string name="UseApiList">Extended software list</string>
@@ -196,7 +175,8 @@
     <string name="UseSystemReverseColorTips">If the color reversal is abnormal, please close it</string>
     <string name="HookSure">Hook SystemUI</string>
     <string name="HookSureSuccess">Hook SystemUI Success</string>
-    <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged SystemUI
+    <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged
+        SystemUI
     </string>
     <string name="LyricSettings">Lyrics settings</string>
     <string name="IconSettings">Icon settings</string>
