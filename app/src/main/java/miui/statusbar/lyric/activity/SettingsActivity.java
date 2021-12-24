@@ -32,6 +32,7 @@ import com.microsoft.appcenter.crashes.Crashes;
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.config.Config;
 import miui.statusbar.lyric.utils.ActivityUtils;
+import miui.statusbar.lyric.utils.ConfigUtils;
 import miui.statusbar.lyric.utils.ShellUtils;
 import miui.statusbar.lyric.utils.Utils;
 
@@ -53,7 +54,7 @@ public class SettingsActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.root_preferences);
         try {
-            config = new Config(ActivityUtils.getSP(activity, "Lyric_Config"));
+            config = new Config(ConfigUtils.getSP(activity, "Lyric_Config"));
             setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.SPConfigMode)));
             init();
             AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
@@ -78,7 +79,7 @@ public class SettingsActivity extends PreferenceActivity {
     public void init() {
         ActivityUtils.checkPermissions(activity, config);
         String tips = "Tips1";
-        SharedPreferences preferences = activity.getSharedPreferences(tips, 0);
+        SharedPreferences preferences = activity.getSharedPreferences(tips, MODE_PRIVATE);
         if (!preferences.getBoolean(tips, false)) {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.Tips))
@@ -171,10 +172,10 @@ public class SettingsActivity extends PreferenceActivity {
                     config.setLyricMaxWidth(Integer.parseInt(value));
                     lyricMaxWidth.setSummary(value);
                 } else {
-                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignored) {
-                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
             }
 
             return true;
@@ -205,10 +206,10 @@ public class SettingsActivity extends PreferenceActivity {
                     lyricMaxWidth.setEnabled(false);
                     lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
                 } else {
-                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignored) {
-                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
             }
             return true;
         });
@@ -247,7 +248,7 @@ public class SettingsActivity extends PreferenceActivity {
                 } catch (Exception e) {
                     config.setLyricColor("off");
                     lyricColour.setSummary(getString(R.string.Adaptive));
-                    Utils.showToastOnLooper(activity, getString(R.string.LyricColorError));
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError));
                 }
             }
             return true;
@@ -350,7 +351,7 @@ public class SettingsActivity extends PreferenceActivity {
                     config.setLyricPosition(Integer.parseInt(value));
                     lyricPosition.setSummary(value);
                 } else {
-                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignore) {
 
@@ -415,7 +416,7 @@ public class SettingsActivity extends PreferenceActivity {
                     config.setIconPosition(Integer.parseInt(value));
                     iconPosition.setSummary(value);
                 } else {
-                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignore) {
 
@@ -517,7 +518,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .setNegativeButton(getString(R.string.Reset), (dialog, which) -> {
                         hook.setSummary(String.format("%s Hook", getString(R.string.Default)));
                         config.setHook("");
-                        Utils.showToastOnLooper(activity, getString(R.string.ResetHookTips));
+                        ActivityUtils.showToastOnLooper(activity, getString(R.string.ResetHookTips));
                     })
                     .setPositiveButton(getString(R.string.Ok), (dialog, which) -> {
                         config.setHook(editText.getText().toString());
@@ -525,7 +526,7 @@ public class SettingsActivity extends PreferenceActivity {
                         if (config.getHook().equals("")) {
                             hook.setSummary(String.format("%s Hook", getString(R.string.Default)));
                         }
-                        Utils.showToastOnLooper(activity, String.format("%s %s%s", getString(R.string.HookSetTips), config.getHook(), getString(R.string.RestartSystemUI)));
+                        ActivityUtils.showToastOnLooper(activity, String.format("%s %s%s", getString(R.string.HookSetTips), config.getHook(), getString(R.string.RestartSystemUI)));
                     })
                     .create()
                     .show();
@@ -563,7 +564,7 @@ public class SettingsActivity extends PreferenceActivity {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.ResetModuleDialog))
                     .setMessage(getString(R.string.ResetModuleDialogTips))
-                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ActivityUtils.cleanConfig(activity, config, ActivityUtils.getAppList(activity)))
+                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ActivityUtils.cleanConfig(activity, config, ConfigUtils.getAppList(activity)))
                     .setNegativeButton(getString(R.string.Cancel), null)
                     .create()
                     .show();
@@ -576,7 +577,7 @@ public class SettingsActivity extends PreferenceActivity {
         assert checkUpdate != null;
         checkUpdate.setSummary(String.format("%s：%s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity)));
         checkUpdate.setOnPreferenceClickListener((preference) -> {
-            Utils.showToastOnLooper(activity, getString(R.string.StartCheckUpdate));
+            ActivityUtils.showToastOnLooper(activity, getString(R.string.StartCheckUpdate));
             ActivityUtils.checkUpdate(activity);
             return true;
         });
@@ -614,7 +615,7 @@ public class SettingsActivity extends PreferenceActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (config == null) {
-            config = ActivityUtils.getConfig(getApplicationContext());
+            config = ConfigUtils.getConfig(getApplicationContext());
         }
         if (grantResults[0] == 0) {
             ActivityUtils.init();
@@ -642,7 +643,7 @@ public class SettingsActivity extends PreferenceActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 13131) {
             if (config == null) {
-                config = ActivityUtils.getConfig(getApplicationContext());
+                config = ConfigUtils.getConfig(getApplicationContext());
             }
             ActivityUtils.checkPermissions(activity, config);
         }

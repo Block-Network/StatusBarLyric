@@ -5,10 +5,8 @@ import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
-import android.util.Log;
 import miui.statusbar.lyric.config.Config;
-import miui.statusbar.lyric.utils.ActivityUtils;
-import miui.statusbar.lyric.utils.Utils;
+import miui.statusbar.lyric.utils.ConfigUtils;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class QuickTitleService extends TileService {
@@ -26,7 +24,7 @@ public class QuickTitleService extends TileService {
     @Override
     public void onClick() {
         super.onClick();
-        Config config = ActivityUtils.getConfig(getBaseContext());
+        Config config = ConfigUtils.getConfig(getBaseContext());
         assert config != null;
         config.setLyricService(!config.getLyricService());
         set(config);
@@ -43,7 +41,7 @@ public class QuickTitleService extends TileService {
     @Override
     public void onStartListening() {
         super.onStartListening();
-        Config config = ActivityUtils.getConfig(getBaseContext());
+        Config config = ConfigUtils.getConfig(getBaseContext());
         tile = getQsTile();
         assert config != null;
         set(config);

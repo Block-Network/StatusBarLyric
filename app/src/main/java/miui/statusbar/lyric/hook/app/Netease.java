@@ -11,6 +11,7 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.hook.MeiZuStatusBarLyric;
+import miui.statusbar.lyric.utils.ActivityUtils;
 import miui.statusbar.lyric.utils.Utils;
 
 public class Netease {
@@ -102,7 +103,7 @@ public class Netease {
                         }
 
                         Utils.log("MIUI状态栏歌词 不支持的网易云版本! " + verName + "\n" + errorMsg);
-                        Utils.showToastOnLooper(context, "不支持的网易云版本! " + verName + "\n" + errorMsg);
+                        ActivityUtils.showToastOnLooper(context, "不支持的网易云版本! " + verName + "\n" + errorMsg);
                     } else {
                         String enableBTLyric_Class;
                         String enableBTLyric_Method;
@@ -216,7 +217,7 @@ public class Netease {
                             } catch (NoSuchMethodError mE) {
                                 Utils.log("网易云通用Hook失败: " + mE);
                                 Utils.log("未知版本: " + verCode);
-                                Utils.showToastOnLooper(context, "MIUI状态栏歌词 未知版本: " + verCode);
+                                ActivityUtils.showToastOnLooper(context, "MIUI状态栏歌词 未知版本: " + verCode);
                             }
                         }
                     }

@@ -9,12 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
@@ -22,17 +17,12 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
-import android.widget.Toast;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.config.Config;
-import org.json.JSONArray;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -128,19 +118,6 @@ public class Utils {
         return false;
     }
 
-    //歌词图标反色
-    public static void reverseColor(Drawable icon, Boolean black) {
-        ColorMatrix cm = new ColorMatrix();
-        if (black) {
-            cm.set(new float[]{
-                    -1f, 0f, 0f, 0f, 255f,
-                    0f, -1f, 0f, 0f, 255f,
-                    0f, 0f, -1f, 0f, 255f,
-                    0f, 0f, 0f, 1f, 0f
-            });
-        }
-        icon.setColorFilter(new ColorMatrixColorFilter(cm));
-    }
 
     public static void sendLyric(Context context, String lyric, String icon) {
         context.sendBroadcast(new Intent()
@@ -161,75 +138,6 @@ public class Utils {
         );
     }
 
-    // 写入歌词文件
-    public static void setLyricFile(String PackName, String lyric, String icon, boolean useSystemMusicActive) {
-        try {
-            FileOutputStream outputStream = new FileOutputStream(PATH + "lyric.txt");
-            JSONArray jsonArray = new JSONArray();
-            jsonArray.put("app");
-            jsonArray.put(PackName);
-            jsonArray.put(lyric);
-            jsonArray.put(icon);
-            jsonArray.put(useSystemMusicActive);
-            String json = jsonArray.toString();
-            outputStream.write(json.getBytes());
-            outputStream.close();
-        } catch (Exception ignored) {
-        }
-    }
-
-    //获取歌词文件
-    public static String[] getLyricFile() {
-        String[] res = {"", ""};
-        try {
-            StringBuilder stringBuffer = new StringBuilder();
-            // 打开文件输入流
-            FileInputStream fileInputStream = new FileInputStream(PATH + "lyric.txt");
-
-            byte[] buffer = new byte[1024];
-            int len = fileInputStream.read(buffer);
-            // 读取文件内容
-            while (len > 0) {
-                stringBuffer.append(new String(buffer, 0, len));
-                // 继续将数据放到buffer中
-                len = fileInputStream.read(buffer);
-            }
-            String json = stringBuffer.toString();
-            log("获取歌词 " + json);
-            JSONArray jsonArray = new JSONArray(json);
-            res = new String[]{
-                    jsonArray.optString(0, ""),
-                    jsonArray.optString(1, ""),
-                    jsonArray.optString(2, ""),
-                    jsonArray.optString(3, ""),
-                    String.valueOf(jsonArray.optBoolean(4, true))
-            };
-        } catch (FileNotFoundException ignored) {
-        } catch (Exception e) {
-            log("歌词读取错误: " + e + "\n" + dumpException(e));
-        }
-        return res;
-    }
-
-    //写入歌词文件
-    public static void setLyricFile(String app_name, String lyric) {
-        try {
-            FileOutputStream outputStream = new FileOutputStream(PATH + "lyric.txt");
-            JSONArray jsonArray = new JSONArray();
-            jsonArray.put("hook");
-            jsonArray.put(app_name);
-            jsonArray.put(lyric);
-            jsonArray.put("");
-            jsonArray.put(true);
-            String json = jsonArray.toString();
-            log("设置歌词 " + json);
-            outputStream.write(json.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            log("写歌词错误: " + e + "\n" + dumpException(e));
-        }
-    }
-
     // 判断服务是否运行 列表
 
     public static boolean isServiceRunningList(Context context, String[] str) {
@@ -241,17 +149,6 @@ public class Utils {
             }
         }
         return false;
-    }
-
-    // 弹出toast
-
-    public static void showToastOnLooper(final Context context, final String message) {
-        try {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
     }
 
 
