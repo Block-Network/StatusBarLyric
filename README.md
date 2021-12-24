@@ -64,8 +64,12 @@
 
 请查看 [Api](https://github.com/577fkj/StatusBarApiExample)
 
+## 贡献
+
+[贡献](CONTRIBUTING.md)
+
 ## EULA & License
 
-[EUAL](./EUAL.md)
+[EUAL](EUAL.md)
 
-[GNU General Public License v3.0](./LICENSE)
+[GNU General Public License v3.0](LICENSE)
