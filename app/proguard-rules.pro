@@ -42,3 +42,8 @@
  long producerIndex;
  long consumerIndex;
 }
+
+-repackageclasses "没log玩nm"
+-obfuscationdictionary dict.txt
+-classobfuscationdictionary dict.txt
+-packageobfuscationdictionary dict.txt
