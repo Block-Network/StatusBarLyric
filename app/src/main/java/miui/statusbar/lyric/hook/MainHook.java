@@ -61,7 +61,7 @@ public class MainHook implements IXposedHookLoadPackage {
                 break;
             case "cn.kuwo.player":
                 Utils.log("正在hook酷我音乐");
-                new Kuwo.Hook(lpparam, context);
+                new Kuwo.Hook(lpparam);
                 Utils.log("hook酷我音乐结束");
                 break;
             case "com.tencent.qqmusic":
