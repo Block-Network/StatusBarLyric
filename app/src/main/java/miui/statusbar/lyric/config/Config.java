@@ -1,12 +1,11 @@
 package miui.statusbar.lyric.config;
 
-import static miui.statusbar.lyric.utils.Utils.PATH;
-
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-
 import de.robv.android.xposed.XSharedPreferences;
 import miui.statusbar.lyric.utils.ConfigUtils;
+
+import static miui.statusbar.lyric.utils.Utils.PATH;
 
 @SuppressLint("LongLogTag")
 public class Config {
@@ -23,7 +22,6 @@ public class Config {
     public void update() {
         config.update();
     }
-
 
 
     public Boolean getLyricService() {
@@ -51,11 +49,19 @@ public class Config {
     }
 
     public int getLyricPosition() {
-        return config.optInt("LPosition", 7);
+        return config.optInt("LPosition", 0);
     }
 
     public void setLyricPosition(int i) {
         config.put("LPosition", i);
+    }
+
+    public int getIconPosition() {
+        return config.optInt("IPosition", 7);
+    }
+
+    public void setIconPosition(int i) {
+        config.put("IPosition", i);
     }
 
     public Boolean getLyricAutoOff() {

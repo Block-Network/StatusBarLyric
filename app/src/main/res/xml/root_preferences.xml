@@ -48,7 +48,7 @@
             android:title="@string/LyricIcon"/>
 
     <PreferenceCategory
-            android:title="歌词设置"/>
+            android:title="@string/LyricSettings"/>
     <SwitchPreference
             android:defaultValue="true"
             android:key="UseSystemReverseColor"
@@ -88,9 +88,17 @@
             android:maxLength="4"
             android:inputType="numberDecimal"/>
 
+    <EditTextPreference
+            android:defaultValue="0"
+            android:key="lyricPosition"
+            android:summary="@string/Default"
+            android:title="@string/LyricPos"
+            android:maxLength="4"
+            android:inputType="numberSigned"/>
+
 
     <PreferenceCategory
-            android:title="图标设置"/>
+            android:title="@string/IconSettings"/>
 
     <Preference
             android:key="iconPath"
@@ -98,8 +106,8 @@
             android:title="@string/IconPath"/>
 
     <EditTextPreference
-            android:defaultValue="2"
-            android:key="lyricPosition"
+            android:defaultValue="7"
+            android:key="IconPosition"
             android:summary="@string/Default"
             android:title="@string/IconPos"
             android:maxLength="4"
@@ -115,7 +123,7 @@
 
     <SwitchPreference
             android:defaultValue="false"
-            android:key="lyricSwitch"
+            android:key="lyricToTime"
             android:summary=""
             android:title="@string/ClickLyric"/>
 
@@ -191,5 +199,9 @@
             android:summary=""
             android:title="@string/AboutModule"/>
 
-    <PreferenceCategory/>
+    <Preference>
+        <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://b23.tv/ZenLa88"/>
+    </Preference>
 </PreferenceScreen>

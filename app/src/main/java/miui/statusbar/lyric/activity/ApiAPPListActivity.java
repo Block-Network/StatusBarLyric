@@ -8,8 +8,8 @@ import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.config.ApiListConfig;
-import miui.statusbar.lyric.utils.APiAPPListUtils;
 import miui.statusbar.lyric.utils.ActivityUtils;
+import miui.statusbar.lyric.utils.ConfigUtils;
 
 import java.util.List;
 
@@ -25,12 +25,12 @@ public class ApiAPPListActivity extends PreferenceActivity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(getString(R.string.UseApiList));
 
-        ApiListConfig apiConfig = ActivityUtils.getAppList(activity);
+        ApiListConfig apiConfig = ConfigUtils.getAppList(activity);
         assert apiConfig != null;
 
         List<PackageInfo> packages = getPackageManager().getInstalledPackages(0);
         for (PackageInfo packageInfo : packages) {
-                if (APiAPPListUtils.isApi(getPackageManager(), packageInfo.packageName)) {
+                if (ActivityUtils.isApi(getPackageManager(), packageInfo.packageName)) {
                     SwitchPreference switchPreference = new SwitchPreference(this);
                     switchPreference.setChecked(apiConfig.hasEnable(packageInfo.packageName));
                     switchPreference.setSummary(packageInfo.packageName);

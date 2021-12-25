@@ -1,9 +1,11 @@
 package miui.statusbar.lyric.utils;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
-
 import de.robv.android.xposed.XSharedPreferences;
+import miui.statusbar.lyric.config.ApiListConfig;
+import miui.statusbar.lyric.config.Config;
 
 public class ConfigUtils {
 
@@ -20,6 +22,26 @@ public class ConfigUtils {
     public ConfigUtils(SharedPreferences SharedPreferences) {
         SP = SharedPreferences;
         SPEditor = SharedPreferences.edit();
+    }
+
+    public static ApiListConfig getAppList(Context context) {
+        try {
+            return new ApiListConfig(getSP(context, "AppList_Config"));
+        } catch (SecurityException ignored) {
+            return null;
+        }
+    }
+
+    public static Config getConfig(Context context) {
+        try {
+            return new Config(getSP(context, "Lyric_Config"));
+        } catch (SecurityException ignored) {
+            return null;
+        }
+    }
+
+    public static SharedPreferences getSP(Context context, String key) {
+        return context.createDeviceProtectedStorageContext().getSharedPreferences(key, Context.MODE_WORLD_READABLE);
     }
 
     public void update() {

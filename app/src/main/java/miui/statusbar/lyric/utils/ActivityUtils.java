@@ -1,11 +1,12 @@
 package miui.statusbar.lyric.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,10 +16,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.widget.Toast;
-
+import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.config.Config;
-import miui.statusbar.lyric.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,13 +28,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class ActivityUtils {
 
     public static String getLocalVersion(Context context) {
         String localVersion = "";
         try {
             PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            @SuppressLint("WrongConstant")
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), MODE_PRIVATE);
             localVersion = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -164,31 +167,37 @@ public class ActivityUtils {
         Toast.makeText(activity, activity.getString(R.string.ResetSuccess), Toast.LENGTH_LONG).show();
         try {
             config.clear();
-        } catch (Exception | Error ignored) {}
+        } catch (Exception | Error ignored) {
+        }
         try {
             config2.clear();
-        } catch (Exception | Error ignored) {}
+        } catch (Exception | Error ignored) {
+        }
         activity.finishAffinity();
         System.exit(0);
     }
 
-    public static Config getConfig(Context context) {
+    public static boolean isApi(PackageManager packageManager, String packName) {
         try {
-            return new Config(getSP(context, "Lyric_Config"));
-        } catch (SecurityException ignored) {
-            return null;
+            ApplicationInfo appInfo = packageManager.getApplicationInfo(packName, PackageManager.GET_META_DATA);
+            if (appInfo.metaData != null) {
+                return appInfo.metaData.getBoolean("XStatusBarLyric", false);
+            } else {
+                return false;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
-    public static SharedPreferences getSP(Context context, String key) {
-        return context.createDeviceProtectedStorageContext().getSharedPreferences(key, Context.MODE_WORLD_READABLE);
-    }
-
-    public static ApiListConfig getAppList(Context context) {
+    // 弹出toast
+    public static void showToastOnLooper(final Context context, final String message) {
         try {
-            return new ApiListConfig(getSP(context, "AppList_Config"));
-        } catch (SecurityException ignored) {
-            return null;
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
+        } catch (RuntimeException e) {
+            e.printStackTrace();
         }
     }
 }

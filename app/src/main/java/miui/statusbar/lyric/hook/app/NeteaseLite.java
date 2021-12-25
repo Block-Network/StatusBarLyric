@@ -1,4 +1,4 @@
-package miui.statusbar.lyric.hook.music;
+package miui.statusbar.lyric.hook.app;
 
 import android.app.Application;
 import android.content.Context;

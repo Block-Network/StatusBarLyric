@@ -11,9 +11,10 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.config.ApiListConfig;
-import miui.statusbar.lyric.hook.music.Myplayer;
-import miui.statusbar.lyric.hook.music.Netease;
-import miui.statusbar.lyric.hook.music.NeteaseLite;
+import miui.statusbar.lyric.hook.app.SystemUI;
+import miui.statusbar.lyric.hook.app.Myplayer;
+import miui.statusbar.lyric.hook.app.Netease;
+import miui.statusbar.lyric.hook.app.NeteaseLite;
 import miui.statusbar.lyric.utils.Utils;
 
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class MainHook implements IXposedHookLoadPackage {
         switch (lpparam.packageName) {
             case "com.android.systemui":
                 Utils.log("正在hook系统界面");
-                new HookSystemUI.Hook(lpparam);
+                new SystemUI.Hook(lpparam);
                 Utils.log("hook系统界面结束");
                 break;
             case "com.netease.cloudmusic":

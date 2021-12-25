@@ -16,9 +16,9 @@
     <string name="LyricSpeed">歌詞滾動速度</string>
     <string name="AdvancedSettings">高級設置 (停止音樂後改動選項)</string>
     <string name="ClickLyric">* 點擊歌詞切換時鐘和歌詞</string>
-    <string name="AbScreen">* 防燒屏</string>
+    <string name="AbScreen">防燒屏</string>
     <string name="IconPath">圖標路徑</string>
-    <string name="IconPos">圖標上下位置</string>
+    <string name="IconPos">* 圖標上下位置</string>
     <string name="Default">默认</string>
     <string name="IconAutoColors">圖標自動反色</string>
     <string name="UnlockShow">僅解鎖顯示</string>
@@ -29,8 +29,6 @@
     <string name="HideNetWork">隱藏實時網速</string>
     <string name="HideCarrierName">隱藏鎖屏運營商名稱</string>
     <string name="AutoHideCarrierName">自動隱藏鎖屏運營商名稱</string>
-    <string name="FileLyric">文件傳輸歌詞</string>
-    <string name="FileLyricTips">廣播無法使用請打開此開關 (存儲空間隔離請設置好相關權限)</string>
     <string name="OtherSettings">其他設置</string>
     <string name="CustomHook">* 自定義Hook點 (不懂勿動)</string>
     <string name="DebugMode">Debug 模式</string>
@@ -43,7 +41,7 @@
     <string name="AboutModule">關於模塊</string>
     <string name="Developer">開發者</string>
     <string name="AboutTips1">主要負責 Hook</string>
-    <string name="AboutTips2">主要負責界面</string>
+    <string name="AboutTips2">主要負責 界面</string>
     <string name="ThkListTips">感謝名單（不分先後）</string>
     <string name="ThkList">感謝名單</string>
     <string name="ClickThkList">點擊查看感謝名單</string>
@@ -62,16 +60,6 @@
     <string name="AppTips">請認真閱讀此一次性警告！ \n\n
         很抱歉花費您的時間。 \n\n
 
-        模塊在官方Rom完美使用，官改可能會出問題\n\n
-
-        模塊不再支持除Lsposed的模塊\n
-        若lsp找不到本模塊，請升級lsp\n\n
-
-        若無法顯示歌詞\n
-        請重啟系統界面，確保模塊開關打開\n
-        網易云音樂（8.0.14+）/QQ音樂/椒鹽/Aplayer：請確保音樂軟件內狀態欄歌詞打開\n
-        網易云音樂/酷我音樂/酷狗音樂 ：請確保音樂軟件版本是否正確\n\n
-
         本模塊會收集以下資訊, [ 程式的錯誤資訊, 手機型號, 手機版本 ]\n\n
 
         模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋。
@@ -88,11 +76,10 @@
         - 魅族音樂 未知 ~ 未知\n
         - 酷狗音樂 未知 ~ 10.9.2\n
         - 酷我音樂 未知 ~ 10.0.4.0\n\n
-
         - 椒鹽音樂 4.5 ~ 現今\n
+        - 魅族音乐 未知 ~ 未知\n
         - Phonograph Plus第三方修改版本\n
         https://github.com/kabouzeid/Phonograph\n
-        v0.0.2(不完美適配)/v0.0.3
     </string>
     <string name="AppName">狀態欄歌詞</string>
     <string name="QuickTitle">狀態欄歌詞</string>
@@ -157,10 +144,7 @@
     <string name="lShowOnce">* 歌詞只滾動一次</string>
     <string name="WarnExplanation">模塊注意事項</string>
     <string name="WarnExp">模塊注意事項\n\n
-        模塊在官方Rom完美使用，官改可能會出問題\n\n
-
-        模塊不再支持除Lsposed的模塊\n
-        若lsp找不到本模塊，請升級lsp\n\n
+        模塊在官方Rom完美使用，官改可能會無法使用或出問題\n\n
 
         若無法顯示歌詞\n
         請重啟系統界面，並確保模塊開關打開\n
@@ -168,19 +152,19 @@
 
         帶 * 的功能改動需要重啟系統界面\n\n
 
-        模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋。 \n\n
-
-        已知Bug：\n
-        音樂軟件非正常退出，歌詞不會自動消失
+        模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋
     </string>
-    <string name="NotSupport">不支持的Xposed版本，僅支持Lsposed\n或未激活本模塊\n激活後強制停止本軟件</string>
+    <string name="NotSupport">本模塊未激活，請在Lsposed激活本模塊\n本模塊僅支持最新版Lsposed</string>
     <string name="SPConfigMode">SP 配置文件</string>
     <string name="UseApiTips">使用 API 的軟件 (需要在LSPosed勾選開啟的軟件)</string>
-    <string name="UseApiList">軟件列表</string>
+    <string name="UseApiList">擴展軟件列表</string>
     <string name="PrivacyPolicy">隱私政策</string>
     <string name="UseSystemReverseColor">* 使用系統方式反色</string>
     <string name="UseSystemReverseColorTips">若反色異常請關閉</string>
     <string name="HookSure">Hook 系統界面</string>
     <string name="HookSureSuccess">Hook 系统界面成功</string>
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
+    <string name="LyricSettings">歌詞設置</string>
+    <string name="IconSettings">圖標設置</string>
+    <string name="LyricPos">* 歌詞左右位置（重啟界面後1min後生效）</string>
 </resources>

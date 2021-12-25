@@ -32,6 +32,7 @@ import com.microsoft.appcenter.crashes.Crashes;
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.config.Config;
 import miui.statusbar.lyric.utils.ActivityUtils;
+import miui.statusbar.lyric.utils.ConfigUtils;
 import miui.statusbar.lyric.utils.ShellUtils;
 import miui.statusbar.lyric.utils.Utils;
 
@@ -53,12 +54,10 @@ public class SettingsActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.root_preferences);
         try {
-            config = new Config(ActivityUtils.getSP(activity, "Lyric_Config"));
+            config = new Config(ConfigUtils.getSP(activity, "Lyric_Config"));
             setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.SPConfigMode)));
             init();
             AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
-                    Analytics.class, Crashes.class);
-            AppCenter.start(getApplication(), "2327bd7c-3227-42b4-bcac-977259e2e162",
                     Analytics.class, Crashes.class);
         } catch (SecurityException ignored) {
             new AlertDialog.Builder(activity)
@@ -80,7 +79,7 @@ public class SettingsActivity extends PreferenceActivity {
     public void init() {
         ActivityUtils.checkPermissions(activity, config);
         String tips = "Tips1";
-        SharedPreferences preferences = activity.getSharedPreferences(tips, 0);
+        SharedPreferences preferences = activity.getSharedPreferences(tips, MODE_PRIVATE);
         if (!preferences.getBoolean(tips, false)) {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.Tips))
@@ -99,7 +98,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .show();
         }
 
-        //版本介绍
+        //使用说明
         Preference verExplain = findPreference("ver_explain");
         assert verExplain != null;
         verExplain.setOnPreferenceClickListener((preference) -> {
@@ -152,48 +151,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 暂停关闭歌词
-        SwitchPreference lyricOff = (SwitchPreference) findPreference("lyricOff");
-        assert lyricOff != null;
-        lyricOff.setChecked(config.getLyricAutoOff());
-        lyricOff.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLyricAutoOff((Boolean) newValue);
-            return true;
-        });
-
-        // 使用系统方法反色
-        SwitchPreference useSystemReverseColor = (SwitchPreference) findPreference("UseSystemReverseColor");
-        assert useSystemReverseColor != null;
-        useSystemReverseColor.setChecked(config.getUseSystemReverseColor());
-        useSystemReverseColor.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setUseSystemReverseColor((Boolean) newValue);
-            return true;
-        });
-
-        // 歌词动效
-        ListPreference anim = (ListPreference) findPreference("lyricAnim");
-        anim.setEntryValues(new String[]{
-                "off", "top", "lower",
-                "left", "right", "random"
-        });
-        anim.setEntries(new String[]{
-                getString(R.string.Off), getString(R.string.top), getString(R.string.lower),
-                getString(R.string.left), getString(R.string.right), getString(R.string.random)
-        });
-        Dictionary<String, String> dict = new Hashtable<>();
-        dict.put("off", getString(R.string.Off));
-        dict.put("top", getString(R.string.top));
-        dict.put("lower", getString(R.string.lower));
-        dict.put("left", getString(R.string.left));
-        dict.put("right", getString(R.string.right));
-        dict.put("random", getString(R.string.random));
-        anim.setSummary(dict.get(config.getAnim()));
-        anim.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setAnim(newValue.toString());
-            anim.setSummary(dict.get(config.getAnim()));
-            return true;
-        });
-
         // 歌词最大自适应宽度
         EditTextPreference lyricMaxWidth = (EditTextPreference) findPreference("lyricMaxWidth");
         assert lyricMaxWidth != null;
@@ -215,10 +172,10 @@ public class SettingsActivity extends PreferenceActivity {
                     config.setLyricMaxWidth(Integer.parseInt(value));
                     lyricMaxWidth.setSummary(value);
                 } else {
-                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignored) {
-                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
             }
 
             return true;
@@ -249,11 +206,20 @@ public class SettingsActivity extends PreferenceActivity {
                     lyricMaxWidth.setEnabled(false);
                     lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
                 } else {
-                    Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignored) {
-                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+                ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
             }
+            return true;
+        });
+
+        // 歌词图标
+        SwitchPreference icon = (SwitchPreference) findPreference("lyricIcon");
+        assert icon != null;
+        icon.setChecked(config.getIcon());
+        icon.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setIcon((Boolean) newValue);
             return true;
         });
 
@@ -282,23 +248,64 @@ public class SettingsActivity extends PreferenceActivity {
                 } catch (Exception e) {
                     config.setLyricColor("off");
                     lyricColour.setSummary(getString(R.string.Adaptive));
-                    Utils.showToastOnLooper(activity, getString(R.string.LyricColorError));
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError));
                 }
             }
             return true;
         });
 
-
-        // 歌词图标
-        SwitchPreference icon = (SwitchPreference) findPreference("lyricIcon");
-        assert icon != null;
-        icon.setChecked(config.getIcon());
-        icon.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setIcon((Boolean) newValue);
+        // 歌词反色
+        SwitchPreference useSystemReverseColor = (SwitchPreference) findPreference("UseSystemReverseColor");
+        assert useSystemReverseColor != null;
+        useSystemReverseColor.setChecked(config.getUseSystemReverseColor());
+        useSystemReverseColor.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setUseSystemReverseColor((Boolean) newValue);
+            lyricColour.setEnabled(!(Boolean) newValue);
             return true;
         });
 
+        // 暂停关闭歌词
+        SwitchPreference lyricOff = (SwitchPreference) findPreference("lyricOff");
+        assert lyricOff != null;
+        lyricOff.setChecked(config.getLyricAutoOff());
+        lyricOff.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLyricAutoOff((Boolean) newValue);
+            return true;
+        });
 
+        // 歌词动效
+        ListPreference anim = (ListPreference) findPreference("lyricAnim");
+        anim.setEntryValues(new String[]{
+                "off", "top", "lower",
+                "left", "right", "random"
+        });
+        anim.setEntries(new String[]{
+                getString(R.string.Off), getString(R.string.top), getString(R.string.lower),
+                getString(R.string.left), getString(R.string.right), getString(R.string.random)
+        });
+        Dictionary<String, String> dict = new Hashtable<>();
+        dict.put("off", getString(R.string.Off));
+        dict.put("top", getString(R.string.top));
+        dict.put("lower", getString(R.string.lower));
+        dict.put("left", getString(R.string.left));
+        dict.put("right", getString(R.string.right));
+        dict.put("random", getString(R.string.random));
+        anim.setSummary(dict.get(config.getAnim()));
+        anim.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setAnim(newValue.toString());
+            anim.setSummary(dict.get(config.getAnim()));
+            return true;
+        });
+
+        // 歌词滚动一次
+        SwitchPreference lShowOnce = (SwitchPreference) findPreference("lShowOnce");
+        assert lShowOnce != null;
+        lShowOnce.setEnabled(!config.getLyricStyle());
+        lShowOnce.setChecked(config.getLShowOnce());
+        lShowOnce.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLShowOnce((Boolean) newValue);
+            return true;
+        });
         // 歌词速度
         EditTextPreference lyricSpeed = (EditTextPreference) findPreference("lyricSpeed");
         assert lyricSpeed != null;
@@ -310,25 +317,47 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 歌词时间切换
-        SwitchPreference lyricSwitch = (SwitchPreference) findPreference("lyricSwitch");
-        assert lyricSwitch != null;
-        lyricSwitch.setChecked(config.getLyricSwitch());
-        lyricSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLyricSwitch((Boolean) newValue);
+        // 魅族样式歌词
+        SwitchPreference lyricStyle = (SwitchPreference) findPreference("lyricStyle");
+        assert lyricStyle != null;
+        lyricStyle.setChecked(config.getLyricStyle());
+        lyricStyle.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLyricStyle((Boolean) newValue);
+            lyricSpeed.setEnabled((Boolean) newValue);
+            lShowOnce.setEnabled(!(Boolean) newValue);
+            if ((Boolean) newValue) {
+                config.setLShowOnce(false);
+                lShowOnce.setChecked(false);
+            }
             return true;
         });
 
+        // 歌词左右位置
+        EditTextPreference lyricPosition = (EditTextPreference) findPreference("lyricPosition");
+        assert lyricPosition != null;
+        lyricPosition.setSummary((String.valueOf(config.getLyricPosition())));
+        if (String.valueOf(config.getLyricPosition()).equals("0")) {
+            lyricPosition.setSummary(getString(R.string.Default));
+        }
+        lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), lyricPosition.getSummary()));
+        lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
+            lyricPosition.setSummary(getString(R.string.Default));
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+                if (value.equals("0")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 900 && Integer.parseInt(value) >= -900) {
+                    config.setLyricPosition(Integer.parseInt(value));
+                    lyricPosition.setSummary(value);
+                } else {
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
+                }
+            } catch (NumberFormatException ignore) {
 
-        // 防烧屏
-        SwitchPreference antiBurn = (SwitchPreference) findPreference("antiBurn");
-        assert antiBurn != null;
-        antiBurn.setChecked(config.getAntiBurn());
-        antiBurn.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setAntiBurn((Boolean) newValue);
+            }
             return true;
         });
-
 
         // 图标路径
         Preference iconPath = findPreference("iconPath");
@@ -367,25 +396,30 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         }));
 
+
         // 图标上下位置
-        EditTextPreference lyricPosition = (EditTextPreference) findPreference("lyricPosition");
-        assert lyricPosition != null;
-        lyricPosition.setSummary((String.valueOf(config.getLyricPosition())));
-        if (String.valueOf(config.getLyricPosition()).equals("7")) {
-            lyricPosition.setSummary(getString(R.string.Default));
+        EditTextPreference iconPosition = (EditTextPreference) findPreference("IconPosition");
+        assert iconPosition != null;
+        iconPosition.setSummary((String.valueOf(config.getIconPosition())));
+        if (String.valueOf(config.getIconPosition()).equals("7")) {
+            iconPosition.setSummary(getString(R.string.Default));
         }
-        lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), lyricPosition.getSummary()));
-        lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
-            lyricPosition.setSummary(getString(R.string.Default));
-            String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-            if (value.equals("2")) {
-                return true;
-            } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
-                config.setLyricPosition(Integer.parseInt(value));
-                lyricPosition.setSummary(value);
-            } else {
-                Utils.showToastOnLooper(activity, getString(R.string.RangeError));
+        iconPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), iconPosition.getSummary()));
+        iconPosition.setOnPreferenceChangeListener((preference, newValue) -> {
+            iconPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
+            iconPosition.setSummary(getString(R.string.Default));
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+                if (value.equals("7")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
+                    config.setIconPosition(Integer.parseInt(value));
+                    iconPosition.setSummary(value);
+                } else {
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
+                }
+            } catch (NumberFormatException ignore) {
+
             }
             return true;
         });
@@ -399,6 +433,25 @@ public class SettingsActivity extends PreferenceActivity {
         }
         iconColor.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setIconAutoColor((boolean) newValue);
+            return true;
+        });
+
+        // 歌词时间切换
+        SwitchPreference lyricSwitch = (SwitchPreference) findPreference("lyricToTime");
+        assert lyricSwitch != null;
+        lyricSwitch.setChecked(config.getLyricSwitch());
+        lyricSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setLyricSwitch((Boolean) newValue);
+            return true;
+        });
+
+
+        // 防烧屏
+        SwitchPreference antiBurn = (SwitchPreference) findPreference("antiBurn");
+        assert antiBurn != null;
+        antiBurn.setChecked(config.getAntiBurn());
+        antiBurn.setOnPreferenceChangeListener((preference, newValue) -> {
+            config.setAntiBurn((Boolean) newValue);
             return true;
         });
 
@@ -441,6 +494,14 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
+        // ApiActivity
+        Preference apiAc = findPreference("apiAc");
+        assert apiAc != null;
+        apiAc.setOnPreferenceClickListener((preference) -> {
+            startActivity(new Intent(activity, ApiAPPListActivity.class));
+            return true;
+        });
+
         // 自定义Hook
         Preference hook = findPreference("lyricHook");
         assert hook != null;
@@ -457,7 +518,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .setNegativeButton(getString(R.string.Reset), (dialog, which) -> {
                         hook.setSummary(String.format("%s Hook", getString(R.string.Default)));
                         config.setHook("");
-                        Utils.showToastOnLooper(activity, getString(R.string.ResetHookTips));
+                        ActivityUtils.showToastOnLooper(activity, getString(R.string.ResetHookTips));
                     })
                     .setPositiveButton(getString(R.string.Ok), (dialog, which) -> {
                         config.setHook(editText.getText().toString());
@@ -465,7 +526,7 @@ public class SettingsActivity extends PreferenceActivity {
                         if (config.getHook().equals("")) {
                             hook.setSummary(String.format("%s Hook", getString(R.string.Default)));
                         }
-                        Utils.showToastOnLooper(activity, String.format("%s %s%s", getString(R.string.HookSetTips), config.getHook(), getString(R.string.RestartSystemUI)));
+                        ActivityUtils.showToastOnLooper(activity, String.format("%s %s%s", getString(R.string.HookSetTips), config.getHook(), getString(R.string.RestartSystemUI)));
                     })
                     .create()
                     .show();
@@ -481,30 +542,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 歌词滚动一次
-        SwitchPreference lShowOnce = (SwitchPreference) findPreference("lShowOnce");
-        assert lShowOnce != null;
-        lShowOnce.setEnabled(!config.getLyricStyle());
-        lShowOnce.setChecked(config.getLShowOnce());
-        lShowOnce.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLShowOnce((Boolean) newValue);
-            return true;
-        });
-
-        // 魅族样式歌词
-        SwitchPreference lyricStyle = (SwitchPreference) findPreference("lyricStyle");
-        assert lyricStyle != null;
-        lyricStyle.setChecked(config.getLyricStyle());
-        lyricStyle.setOnPreferenceChangeListener((preference, newValue) -> {
-            config.setLyricStyle((Boolean) newValue);
-            lyricSpeed.setEnabled((Boolean) newValue);
-            lShowOnce.setEnabled(!(Boolean) newValue);
-            if ((Boolean) newValue) {
-                config.setLShowOnce(false);
-                lShowOnce.setChecked(false);
-            }
-            return true;
-        });
 
         // 重启SystemUI
         Preference reSystemUI = findPreference("restartUI");
@@ -513,7 +550,10 @@ public class SettingsActivity extends PreferenceActivity {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.RestartUI))
                     .setMessage(getString(R.string.RestartUITips))
-                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ShellUtils.voidShell("pkill -f com.android.systemui", true))
+                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> {
+                        ShellUtils.voidShell("pkill -f com.android.systemui", true);
+                        Analytics.trackEvent("重启SystemUI");
+                    })
                     .setNegativeButton(getString(R.string.Cancel), null)
                     .create()
                     .show();
@@ -527,7 +567,7 @@ public class SettingsActivity extends PreferenceActivity {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.ResetModuleDialog))
                     .setMessage(getString(R.string.ResetModuleDialogTips))
-                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ActivityUtils.cleanConfig(activity, config, ActivityUtils.getAppList(activity)))
+                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ActivityUtils.cleanConfig(activity, config, ConfigUtils.getAppList(activity)))
                     .setNegativeButton(getString(R.string.Cancel), null)
                     .create()
                     .show();
@@ -540,7 +580,7 @@ public class SettingsActivity extends PreferenceActivity {
         assert checkUpdate != null;
         checkUpdate.setSummary(String.format("%s：%s", getString(R.string.CurrentVer), ActivityUtils.getLocalVersion(activity)));
         checkUpdate.setOnPreferenceClickListener((preference) -> {
-            Utils.showToastOnLooper(activity, getString(R.string.StartCheckUpdate));
+            ActivityUtils.showToastOnLooper(activity, getString(R.string.StartCheckUpdate));
             ActivityUtils.checkUpdate(activity);
             return true;
         });
@@ -553,13 +593,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // ApiActivity
-        Preference apiAc = findPreference("apiAc");
-        assert apiAc != null;
-        apiAc.setOnPreferenceClickListener((preference) -> {
-            startActivity(new Intent(activity, ApiAPPListActivity.class));
-            return true;
-        });
 
         // 非MIUI关闭功能
         if (!Utils.hasMiuiSetting) {
@@ -585,7 +618,7 @@ public class SettingsActivity extends PreferenceActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (config == null) {
-            config = ActivityUtils.getConfig(getApplicationContext());
+            config = ConfigUtils.getConfig(getApplicationContext());
         }
         if (grantResults[0] == 0) {
             ActivityUtils.init();
@@ -613,7 +646,7 @@ public class SettingsActivity extends PreferenceActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 13131) {
             if (config == null) {
-                config = ActivityUtils.getConfig(getApplicationContext());
+                config = ConfigUtils.getConfig(getApplicationContext());
             }
             ActivityUtils.checkPermissions(activity, config);
         }
