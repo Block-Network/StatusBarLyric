@@ -115,7 +115,7 @@
     <string name="DefaultPath">默认路径</string>
     <string name="RestoreDefaultPath">恢复默认路径</string>
     <string name="NewPath">选择新路径</string>
-    <string name="LyricPosTips">-100~100，当前:</string>
+    <string name="LyricPosTips">-900~900（单位：像素点），当前:</string>
     <string name="On">开启</string>
     <string name="Reset">恢复默认</string>
     <string name="ResetHookTips">已恢复默认Hook,请重启SystemUI</string>
