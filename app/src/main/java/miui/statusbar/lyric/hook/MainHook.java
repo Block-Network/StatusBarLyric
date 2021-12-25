@@ -11,13 +11,13 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.config.ApiListConfig;
-import miui.statusbar.lyric.hook.app.SystemUI;
+import miui.statusbar.lyric.hook.app.Kugou;
+import miui.statusbar.lyric.hook.app.Kuwo;
 import miui.statusbar.lyric.hook.app.Myplayer;
 import miui.statusbar.lyric.hook.app.Netease;
 import miui.statusbar.lyric.hook.app.NeteaseLite;
+import miui.statusbar.lyric.hook.app.SystemUI;
 import miui.statusbar.lyric.utils.Utils;
-
-import java.util.HashMap;
 
 
 public class MainHook implements IXposedHookLoadPackage {
@@ -56,68 +56,12 @@ public class MainHook implements IXposedHookLoadPackage {
                 break;
             case "com.kugou.android":
                 Utils.log("正在hook酷狗音乐");
-                XposedHelpers.findAndHookMethod("android.media.AudioManager", lpparam.classLoader, "isBluetoothA2dpOn", new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                    }
-
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
-                        param.setResult(true);
-                    }
-                });
-                XposedHelpers.findAndHookMethod("com.kugou.framework.player.c", lpparam.classLoader, "a", HashMap.class, new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                    }
-
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
-                        Utils.log("酷狗音乐:" + ((HashMap) param.args[0]).values().toArray()[0]);
-                        Utils.sendLyric(context, "" + ((HashMap) param.args[0]).values().toArray()[0], "kugou");
-                    }
-                });
+                new Kugou.Hook(lpparam, context);
                 Utils.log("hook酷狗音乐结束");
                 break;
             case "cn.kuwo.player":
                 Utils.log("正在hook酷我音乐");
-                XposedHelpers.findAndHookMethod("android.bluetooth.BluetoothAdapter", lpparam.classLoader, "isEnabled", new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                    }
-
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
-                        param.setResult(true);
-                    }
-                });
-                XposedHelpers.findAndHookMethod("cn.kuwo.mod.playcontrol.RemoteControlLyricMgr", lpparam.classLoader, "updateLyricText", Class.forName("java.lang.String"), new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                        String str = (String) param.args[0];
-                        Utils.log("酷我音乐:" + str);
-                        if (param.args[0] != null && !str.equals("") && !str.contains(" - ")) {
-                            Utils.sendLyric(context, "" + str, "kuwo");
-                        }
-                        param.setResult(replaceHookedMethod());
-                    }
-
-                    private Object replaceHookedMethod() {
-                        return null;
-                    }
-
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
-                    }
-                });
+                new Kuwo.Hook(lpparam, context);
                 Utils.log("hook酷我音乐结束");
                 break;
             case "com.tencent.qqmusic":

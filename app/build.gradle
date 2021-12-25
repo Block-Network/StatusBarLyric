@@ -12,16 +12,13 @@ android {
         minSdkVersion 26
         //noinspection OldTargetApi
         targetSdkVersion 29
-        versionCode 73
-        versionName "3.43.19"
+        versionCode 74
+        versionName "3.44.21"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }
 
-    buildTypes {debug {
-        buildConfigField 'boolean', 'PREPROD', 'true'
-        buildConfigField 'boolean', 'STAGING', 'false'
-    }
+    buildTypes {
         release {
             minifyEnabled true
             zipAlignEnabled true
