@@ -8,13 +8,8 @@ import miui.statusbar.lyric.utils.Utils;
 
 public class Kuwo {
     public static class Hook {
-        public Hook(XC_LoadPackage.LoadPackageParam lpparam) throws ClassNotFoundException {
+        public Hook(XC_LoadPackage.LoadPackageParam lpparam, Context context) throws ClassNotFoundException {
             XposedHelpers.findAndHookMethod("android.bluetooth.BluetoothAdapter", lpparam.classLoader, "isEnabled", new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    super.beforeHookedMethod(param);
-                }
-
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
@@ -25,10 +20,9 @@ public class Kuwo {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
-                    Context context = (Context) param.thisObject;
                     String str = (String) param.args[0];
                     Utils.log("酷我音乐:" + str);
-                    if (param.args[0] != null && !str.equals("") && !str.equals("好音质 用酷我") && !str.equals("正在搜索歌词...") && !str.contains(" - ")) {
+                    if (param.args[0] != null && !str.equals("")) {
                         Utils.sendLyric(context, "" + str, "kuwo");
                     }
                     param.setResult(replaceHookedMethod());
@@ -37,11 +31,7 @@ public class Kuwo {
                 private Object replaceHookedMethod() {
                     return null;
                 }
-
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    super.afterHookedMethod(param);
-                }
             });
-    }}
+        }
+    }
 }
