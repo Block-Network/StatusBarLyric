@@ -31,8 +31,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    applicationVariants.all {variant ->
-        variant.outputs.all {output ->
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
             if (variant.buildType.name == "debug") {
                 output.outputFileName = "StatusBarLyric-${android.defaultConfig.versionName}(${android.defaultConfig.versionCode})-debug.apk"
             } else if (variant.buildType.name == "release") {
