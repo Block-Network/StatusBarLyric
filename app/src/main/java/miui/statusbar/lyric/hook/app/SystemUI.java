@@ -391,9 +391,9 @@ public class SystemUI {
                             if (config.getLyricWidth() == -1) {
                                 TextPaint paint1 = lyricTextView.getPaint(); // 获取字体
                                 if (config.getLyricMaxWidth() == -1 || ((int) paint1.measureText(string)) + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
-                                    lyricTextView.setWidth(((int) paint1.measureText(string)) + 6);
+                                    lyricTextView.setWidth(((int) paint1.measureText(string)) + 6 - config.getLyricPosition());
                                 } else {
-                                    lyricTextView.setWidth((dw * config.getLyricMaxWidth()) / 100);
+                                    lyricTextView.setWidth((dw * config.getLyricMaxWidth()) / 100 - config.getLyricPosition());
                                 }
                             } else {
                                 lyricTextView.setWidth((dw * config.getLyricWidth()) / 100);

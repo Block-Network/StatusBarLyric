@@ -1,6 +1,6 @@
 package miui.statusbar.lyric.hook.app;
 
-import android.content.Context;
+import android.app.AndroidAppHelper;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class Kugou {
     public static class Hook {
-        public Hook(XC_LoadPackage.LoadPackageParam lpparam, Context context) {
+        public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
             XposedHelpers.findAndHookMethod("android.media.AudioManager", lpparam.classLoader, "isBluetoothA2dpOn", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
@@ -23,7 +23,7 @@ public class Kugou {
                 protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     Utils.log("酷狗音乐:" + ((HashMap) param.args[0]).values().toArray()[0]);
-                    Utils.sendLyric(context, "" + ((HashMap) param.args[0]).values().toArray()[0], "kugou");
+                    Utils.sendLyric(AndroidAppHelper.currentApplication(), "" + ((HashMap) param.args[0]).values().toArray()[0], "kugou");
                 }
             });
 
