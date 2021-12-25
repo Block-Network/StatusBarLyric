@@ -57,8 +57,6 @@ public class SettingsActivity extends PreferenceActivity {
             config = new Config(ConfigUtils.getSP(activity, "Lyric_Config"));
             setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.SPConfigMode)));
             init();
-            AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
-                    Analytics.class, Crashes.class);
         } catch (SecurityException ignored) {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.Tips))
@@ -85,7 +83,10 @@ public class SettingsActivity extends PreferenceActivity {
                     .setTitle(getString(R.string.Tips))
                     .setIcon(R.mipmap.ic_launcher)
                     .setMessage(getString(R.string.AppTips))
-                    .setNegativeButton(getString(R.string.TipsIDone), (dialog, which) -> preferences.edit().putBoolean(tips, true).apply())
+                    .setNegativeButton(getString(R.string.TipsIDone), (dialog, which) -> {
+                        preferences.edit().putBoolean(tips, true).apply();
+                        ActivityUtils.getNotice(activity);
+                    })
                     .setPositiveButton(getString(R.string.Quit), (dialog, which) -> activity.finish())
                     .setNeutralButton(getString(R.string.PrivacyPolicy), (dialog, which) -> {
                         Uri uri = Uri.parse("https://github.com/577fkj/MIUIStatusBarLyric/blob/main/EUAL.md");
@@ -96,7 +97,11 @@ public class SettingsActivity extends PreferenceActivity {
                     .setCancelable(false)
                     .create()
                     .show();
+        } else {
+            ActivityUtils.getNotice(activity);
         }
+        AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
+                Analytics.class, Crashes.class);
 
         //使用说明
         Preference verExplain = findPreference("ver_explain");

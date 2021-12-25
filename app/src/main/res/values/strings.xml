@@ -179,4 +179,6 @@
     </string>
     <string name="LyricSettings">Lyrics settings</string>
     <string name="IconSettings">Icon settings</string>
+    <string name="NewNotice">NewNotice</string>
+    <string name="GetNewNoticeError">Get NewNotice Error</string>
 </resources>

@@ -18,10 +18,7 @@ android {
         aaptOptions.useNewCruncher = false
     }
 
-    buildTypes {debug {
-        buildConfigField 'boolean', 'PREPROD', 'true'
-        buildConfigField 'boolean', 'STAGING', 'false'
-    }
+    buildTypes {
         release {
             minifyEnabled true
             zipAlignEnabled true
