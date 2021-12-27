@@ -390,10 +390,11 @@ public class SystemUI {
                             // 自适应/歌词宽度
                             if (config.getLyricWidth() == -1) {
                                 TextPaint paint1 = lyricTextView.getPaint(); // 获取字体
-                                if (config.getLyricMaxWidth() == -1 || ((int) paint1.measureText(string)) + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
-                                    lyricTextView.setWidth(((int) paint1.measureText(string)) + 6 - config.getLyricPosition());
+                                if (config.getLyricMaxWidth() == -1 ||
+                                        ((int) paint1.measureText(string)) + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
+                                    lyricTextView.setWidth(((int) paint1.measureText(string)) + 6);
                                 } else {
-                                    lyricTextView.setWidth((dw * config.getLyricMaxWidth()) / 100 - config.getLyricPosition());
+                                    lyricTextView.setWidth((dw * config.getLyricMaxWidth()) / 100);
                                 }
                             } else {
                                 lyricTextView.setWidth((dw * config.getLyricWidth()) / 100);
@@ -502,14 +503,11 @@ public class SystemUI {
                             int i = 1;
                             boolean order = true;
                             int iconPos = 0;
-                            int lyricPos = 0;
 
                             @SuppressLint("DefaultLocale")
                             @Override
                             public void run() {
-                                Utils.log("当当当" + config.getLyricPosition());
                                 iconPos = config.getIconPosition();
-                                lyricPos = config.getLyricPosition();
                                 if (enable && config.getAntiBurn()) {
                                     if (order) {
                                         i += 1;
@@ -523,7 +521,7 @@ public class SystemUI {
                                     updateMarginsLyric.sendMessage(message);
 
                                     Message message2 = updateMarginsIcon.obtainMessage();
-                                    message2.arg1 = i + lyricPos;
+                                    message2.arg1 = i;
                                     message2.arg2 = iconPos;
                                     updateMarginsIcon.sendMessage(message2);
                                     if (i == 0) {
@@ -538,7 +536,7 @@ public class SystemUI {
                                     updateMarginsLyric.sendMessage(message);
 
                                     Message message2 = updateMarginsIcon.obtainMessage();
-                                    message2.arg1 = lyricPos;
+                                    message2.arg1 = 0;
                                     message2.arg2 = iconPos;
                                     updateMarginsIcon.sendMessage(message2);
                                 }

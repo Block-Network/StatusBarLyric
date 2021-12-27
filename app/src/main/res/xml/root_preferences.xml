@@ -93,6 +93,7 @@
             android:key="lyricPosition"
             android:summary="@string/Default"
             android:title="@string/LyricPos"
+            android:enabled="false"
             android:maxLength="4"
             android:inputType="numberSigned"/>
 
