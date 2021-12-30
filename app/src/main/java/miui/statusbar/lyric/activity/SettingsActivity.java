@@ -23,22 +23,25 @@ import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.widget.EditText;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.byyang.choose.ChooseFileUtils;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
+
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.Objects;
+
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.config.Config;
 import miui.statusbar.lyric.utils.ActivityUtils;
 import miui.statusbar.lyric.utils.ConfigUtils;
 import miui.statusbar.lyric.utils.ShellUtils;
 import miui.statusbar.lyric.utils.Utils;
-
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Objects;
 
 
 @SuppressWarnings("deprecation")
@@ -62,9 +65,13 @@ public class SettingsActivity extends PreferenceActivity {
                     .setTitle(getString(R.string.Tips))
                     .setIcon(R.mipmap.ic_launcher)
                     .setMessage(getString(R.string.NotSupport))
-                    .setPositiveButton(getString(R.string.Quit), (dialog, which) -> {
-                        activity.finish();
-                        System.exit(0);
+                    .setPositiveButton(getString(R.string.ReStart), (dialog, which) -> {
+                        final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
+                        //杀掉以前进程
+                        android.os.Process.killProcess(android.os.Process.myPid());
                     })
                     .setCancelable(false)
                     .create()
