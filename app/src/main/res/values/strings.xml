@@ -19,8 +19,7 @@
     <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconPath">Icon path</string>
     <string name="IconPos">Icon up and down position</string>
-    <string name="LyricPos">* Lyrics left and right position (takes effect 1 min after opening the icon and Restart
-        SystemUI)
+    <string name="LyricPos">* Lyrics left and right position
     </string>
     <string name="Default">Default</string>
     <string name="IconAutoColors">The icon auto inverted colors</string>

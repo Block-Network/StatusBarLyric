@@ -165,7 +165,7 @@
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
     <string name="LyricSettings">歌词设置</string>
     <string name="IconSettings">图标设置</string>
-    <string name="LyricPos">* 歌词左右位置（开启图标重启界面后1min后生效）</string>
+    <string name="LyricPos">* 歌词左右位置</string>
     <string name="NewNotice">新通知</string>
     <string name="GetNewNoticeError">获取新通知错误</string>
 </resources>

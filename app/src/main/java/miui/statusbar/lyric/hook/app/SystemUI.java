@@ -63,8 +63,10 @@ public class SystemUI {
         static Handler LyricUpdate;
         static Handler updateTextColor;
         static Handler updateMarginsIcon;
+        static Handler updateLyricPos;
         static LyricTextSwitchView lyricTextView;
         static LinearLayout.LayoutParams iconParams;
+        static LinearLayout.LayoutParams lyricParams;
         @SuppressLint("StaticFieldLeak")
         static LinearLayout lyricLayout;
         @SuppressLint("StaticFieldLeak")
@@ -175,6 +177,8 @@ public class SystemUI {
                     iconUpdate.sendMessage(obtainMessage2);
                 }
             }
+
+            updateLyricPos.sendEmptyMessage(0);
 
             iconReverseColor = config.getIconAutoColor();
             if (config.getLyricStyle()) {
@@ -320,6 +324,10 @@ public class SystemUI {
                 lyricLayout = new LinearLayout(application);
                 lyricLayout.addView(iconView);
                 lyricLayout.addView(lyricTextView);
+                lyricLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                lyricParams = (LinearLayout.LayoutParams) lyricLayout.getLayoutParams();
+                lyricParams.setMargins(config.getLyricPosition(), 0, 0, 0);
+                lyricLayout.setLayoutParams(lyricParams);
 
                 // 将歌词加入时钟布局
                 LinearLayout clockLayout = (LinearLayout) clock.getParent();
@@ -372,6 +380,11 @@ public class SystemUI {
 
                 updateTextColor = new Handler(Looper.getMainLooper(), message -> {
                     lyricTextView.setTextColor(message.arg1);
+                    return true;
+                });
+
+                updateLyricPos = new Handler(Looper.getMainLooper(), message -> {
+                    lyricParams.setMargins(config.getLyricPosition(), 0, 0, 0);
                     return true;
                 });
 
