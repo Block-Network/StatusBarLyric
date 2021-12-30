@@ -170,7 +170,6 @@
     <string name="NotSupport">This module is not activated, please activate this module in Lsposed\nThis module only
         supports the latest version of Lsposed
     </string>
-    <string name="SPConfigMode">SP configuration file</string>
     <string name="UseApiTips">Software using API (The software that needs to be checked in LSPosed)</string>
     <string name="UseApiList">Extended software list</string>
     <string name="PrivacyPolicy">Privacy Policy</string>

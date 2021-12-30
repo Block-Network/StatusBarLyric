@@ -154,7 +154,6 @@
         模块不生效请打开debug并重启SystemUI并附上日志，前往 Github/电报 进行反馈
     </string>
     <string name="NotSupport">本模块未激活，请在Lsposed激活本模块\n本模块仅支持最新版Lsposed</string>
-    <string name="SPConfigMode">SP 配置文件</string>
     <string name="UseApiTips">使用 API 的软件 (需要在LSPosed勾选开启的软件)</string>
     <string name="UseApiList">扩展软件列表</string>
     <string name="PrivacyPolicy">隐私政策</string>

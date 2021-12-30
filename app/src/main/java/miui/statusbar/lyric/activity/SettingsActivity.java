@@ -55,7 +55,7 @@ public class SettingsActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.root_preferences);
         try {
             config = new Config(ConfigUtils.getSP(activity, "Lyric_Config"));
-            setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.SPConfigMode)));
+            setTitle(getString(R.string.AppName));
             init();
         } catch (SecurityException ignored) {
             new AlertDialog.Builder(activity)

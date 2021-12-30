@@ -154,7 +154,6 @@
         模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋
     </string>
     <string name="NotSupport">本模塊未激活，請在Lsposed激活本模塊\n本模塊僅支持最新版Lsposed</string>
-    <string name="SPConfigMode">SP 配置文件</string>
     <string name="UseApiTips">使用 API 的軟件 (需要在LSPosed勾選開啟的軟件)</string>
     <string name="UseApiList">擴展軟件列表</string>
     <string name="PrivacyPolicy">隱私政策</string>
