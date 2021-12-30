@@ -351,8 +351,10 @@ public class SystemUI {
                 iconUpdate = new Handler(Looper.getMainLooper(), message -> {
                     if (message.obj == null) {
                         iconView.setVisibility(View.GONE);
+                        lyricTextView.setMargins(0, 0, 0, 0);
                     } else {
                         iconView.setVisibility(View.VISIBLE);
+                        lyricTextView.setMargins(10, 0, 0, 0);
                     }
                     iconView.setImageDrawable((Drawable) message.obj);
                     return true;
