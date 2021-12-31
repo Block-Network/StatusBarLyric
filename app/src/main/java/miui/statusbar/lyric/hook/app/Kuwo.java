@@ -26,7 +26,7 @@ public class Kuwo {
                     String str = (String) param.args[0];
                     Utils.log("酷我音乐:" + str);
                     if (param.args[0] != null && !str.equals("")) {
-                        Utils.sendLyric(AndroidAppHelper.currentApplication(), "" + str, "kuwo");
+                        Utils.sendLyric(AndroidAppHelper.currentApplication(), "" + str, "KuWo");
                     }
                     param.setResult(replaceHookedMethod());
                 }

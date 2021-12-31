@@ -22,6 +22,7 @@ import de.robv.android.xposed.XposedBridge;
 import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.config.Config;
+import miui.statusbar.lyric.config.IconConfig;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -38,12 +39,12 @@ public class Utils {
 
     static {
         packName_Name = new HashMap<>();
-        packName_Name.put("com.netease.cloudmusic", "netease");
-        packName_Name.put("com.kugou", "kugou");
-        packName_Name.put("com.tencent.qqmusic", "qqmusic");
-        packName_Name.put("remix.myplayer", "myplayer");
-        packName_Name.put("cmccwm.mobilemusic", "migu");
-        packName_Name.put("cn.kuwo", "kuwo");
+        packName_Name.put("com.netease.cloudmusic", "Netease");
+        packName_Name.put("com.kugou", "KuGou");
+        packName_Name.put("com.tencent.qqmusic", "QQMusic");
+        packName_Name.put("remix.myplayer", "Myplayer");
+        packName_Name.put("cmccwm.mobilemusic", "MiGu");
+        packName_Name.put("cn.kuwo", "KuWo");
     }
 
     public static String packName_GetIconName(String packName) {
@@ -293,6 +294,9 @@ public class Utils {
 
     public static ApiListConfig getAppList() {
         return new ApiListConfig(getPref("AppList_Config"));
+    }
+    public static IconConfig getIconConfig() {
+        return new IconConfig(getPref("Icon_Config"));
     }
 
 }

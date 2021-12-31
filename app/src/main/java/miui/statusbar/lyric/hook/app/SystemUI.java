@@ -34,6 +34,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.config.Config;
+import miui.statusbar.lyric.config.IconConfig;
 import miui.statusbar.lyric.utils.Utils;
 import miui.statusbar.lyric.view.LyricTextSwitchView;
 
@@ -58,6 +59,7 @@ public class SystemUI {
 
         static Application application;
         static Config config;
+        static IconConfig iconConfig;
         static Drawable drawableIcon;
         static Handler iconUpdate;
         static Handler LyricUpdate;
@@ -142,6 +144,7 @@ public class SystemUI {
                 return;
             }
             config.update();
+            iconConfig.update();
             if (!config.getLyricService()) {
                 offLyric("开关关闭");
                 return;
@@ -162,11 +165,10 @@ public class SystemUI {
                 Utils.log("开启图标");
                 if (!icon.equals(strIcon)) {
                     strIcon = icon;
-                    if (isHook) {
-                        drawableIcon = Drawable.createFromPath(strIcon);
-                    } else {
-                        drawableIcon = new BitmapDrawable(Utils.stringToBitmap(strIcon));
-                    }
+                    Utils.log(strIcon);
+                    String a = iconConfig.getIcon(strIcon);
+                    Utils.log(a);
+                    drawableIcon = new BitmapDrawable(Utils.stringToBitmap(a));
                 }
                 if (drawableIcon != null) {
                     // 设置宽高
@@ -232,6 +234,8 @@ public class SystemUI {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 config = Utils.getConfig();
+                iconConfig = Utils.getIconConfig();
+
                 Field clockField = null;
 
                 // 获取当前进程的Application
@@ -583,45 +587,44 @@ public class SystemUI {
             @Override
             public void onReceive(Context context, Intent intent) {
                 try {
-                    if (intent.getAction().equals("Lyric_Server")) {
-                        String lyric;
-                        String icon;
-                        switch (intent.getStringExtra("Lyric_Type")) {
-                            case "hook":
-                                lyric = intent.getStringExtra("Lyric_Data");
-                                icon = config.getIconPath() + intent.getStringExtra("Lyric_Icon") + ".webp";
-                                Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon);
-                                updateLyric(lyric, icon, true);
-                                useSystemMusicActive = true;
-                                break;
-                            case "app":
-                                lyric = intent.getStringExtra("Lyric_Data");
-                                icon = intent.getStringExtra("Lyric_Icon");
-                                if (TextUtils.isEmpty(icon)) {
-                                    icon = emptyIcon;
-                                }
-                                boolean isPackName = true;
-                                String packName = intent.getStringExtra("Lyric_PackName");
-                                // 修复packName为null导致报错!
-                                if (!TextUtils.isEmpty(packName)) {
-                                    for (String mStr : musicServer) {
-                                        if (mStr.equals(packName)) {
-                                            isPackName = false;
-                                            break;
-                                        }
-                                    }
-                                    if (isPackName) {
-                                        musicServer = Utils.stringsListAdd(musicServer, packName);
+                    String lyric;
+                    String icon;
+                    icon = intent.getStringExtra("Lyric_Icon");
+                    switch (intent.getStringExtra("Lyric_Type")) {
+                        case "hook":
+                            lyric = intent.getStringExtra("Lyric_Data");
+                            Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon);
+                            updateLyric(lyric, icon, true);
+                            useSystemMusicActive = true;
+                            break;
+                        case "app":
+                            lyric = intent.getStringExtra("Lyric_Data");
+
+                            if (TextUtils.isEmpty(icon)) {
+                                icon = emptyIcon;
+                            }
+                            boolean isPackName = true;
+                            String packName = intent.getStringExtra("Lyric_PackName");
+                            // 修复packName为null导致报错!
+                            if (!TextUtils.isEmpty(packName)) {
+                                for (String mStr : musicServer) {
+                                    if (mStr.equals(packName)) {
+                                        isPackName = false;
+                                        break;
                                     }
                                 }
-                                useSystemMusicActive = intent.getBooleanExtra("Lyric_UseSystemMusicActive", false);
-                                updateLyric(lyric, icon, false);
-                                Utils.log("收到广播app: lyric:" + lyric + " icon:" + icon + "packName:" + packName + " isPackName: " + isPackName);
-                                break;
-                            case "app_stop":
-                                offLyric("收到广播app_stop");
-                                break;
-                        }
+                                if (isPackName) {
+                                    musicServer = Utils.stringsListAdd(musicServer, packName);
+                                }
+                            }
+                            useSystemMusicActive = intent.getBooleanExtra("Lyric_UseSystemMusicActive", false);
+                            updateLyric(lyric, icon, false);
+                            Utils.log("收到广播app: lyric:" + lyric + " icon:" + icon + "packName:" + packName + " isPackName: " + isPackName);
+                            break;
+                        case "app_stop":
+                            offLyric("收到广播app_stop");
+                            break;
+
                     }
                 } catch (Exception e) {
                     Utils.log("广播接收错误 " + e + "\n" + Utils.dumpException(e));
