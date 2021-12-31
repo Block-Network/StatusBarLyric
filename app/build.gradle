@@ -4,14 +4,14 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 32
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "miui.statusbar.lyric"
         minSdkVersion 26
         //noinspection OldTargetApi
-        targetSdkVersion 29
+        targetSdkVersion 32
         versionCode 75
         versionName "3.44.22"
         aaptOptions.cruncherEnabled = false
