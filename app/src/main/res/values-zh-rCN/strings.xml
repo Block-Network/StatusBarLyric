@@ -56,6 +56,7 @@
     </string>
     <string name="Tips">提示</string>
     <string name="Quit">退出</string>
+    <string name="ReStart">重启APP</string>
     <string name="TipsIDone">我已知晓</string>
     <string name="AppTips">请认真阅读此一次性警告！ \n\n
         很抱歉花费您的时间\n\n
@@ -154,7 +155,6 @@
         模块不生效请打开debug并重启SystemUI并附上日志，前往 Github/电报 进行反馈
     </string>
     <string name="NotSupport">本模块未激活，请在Lsposed激活本模块\n本模块仅支持最新版Lsposed</string>
-    <string name="SPConfigMode">SP 配置文件</string>
     <string name="UseApiTips">使用 API 的软件 (需要在LSPosed勾选开启的软件)</string>
     <string name="UseApiList">扩展软件列表</string>
     <string name="PrivacyPolicy">隐私政策</string>
@@ -165,7 +165,7 @@
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
     <string name="LyricSettings">歌词设置</string>
     <string name="IconSettings">图标设置</string>
-    <string name="LyricPos">* 歌词左右位置（开启图标重启界面后1min后生效）</string>
+    <string name="LyricPos">* 歌词左右位置</string>
     <string name="NewNotice">新通知</string>
     <string name="GetNewNoticeError">获取新通知错误</string>
 </resources>

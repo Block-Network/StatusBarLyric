@@ -25,11 +25,6 @@ public class NeteaseLite {
             });
             XposedHelpers.findAndHookMethod("com.netease.cloudmusic.module.lyric.e", lpparam.classLoader, "a", String.class, long.class, boolean.class, new XC_MethodHook() {
                 @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    super.beforeHookedMethod(param);
-                }
-
-                @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     lyric = lyric.readLrc(new StringReader(param.args[0].toString()));
@@ -40,7 +35,7 @@ public class NeteaseLite {
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
                     Utils.log("网易云音乐极速版: 播放状态: " + param.args[0]);
-                    Utils.sendLyric(context, "", "netease");
+                    Utils.sendLyric(context, "", "Netease");
                 }
 
                 @Override
@@ -55,16 +50,8 @@ public class NeteaseLite {
                     param.setResult(null);
                 }
 
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    super.afterHookedMethod(param);
-                }
             });
             XposedHelpers.findAndHookMethod("com.netease.cloudmusic.module.player.g.c", lpparam.classLoader, "a", XposedHelpers.findClass("com.netease.cloudmusic.module.player.g.c", lpparam.classLoader), int.class, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    super.beforeHookedMethod(param);
-                }
 
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -73,7 +60,7 @@ public class NeteaseLite {
                     if (TextUtils.isEmpty(loclLyric)) return;
                     if (!oldLyric.equals(loclLyric)) {
                         oldLyric = loclLyric;
-                        Utils.sendLyric(context, oldLyric, "netease");
+                        Utils.sendLyric(context, oldLyric, "Netease");
                         Utils.log("网易云音乐极速版: " + loclLyric);
                     }
 

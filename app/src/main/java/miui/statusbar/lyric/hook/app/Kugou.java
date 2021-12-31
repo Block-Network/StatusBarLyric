@@ -23,7 +23,7 @@ public class Kugou {
                 protected void afterHookedMethod(XC_MethodHook.MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     Utils.log("酷狗音乐:" + ((HashMap) param.args[0]).values().toArray()[0]);
-                    Utils.sendLyric(AndroidAppHelper.currentApplication(), "" + ((HashMap) param.args[0]).values().toArray()[0], "kugou");
+                    Utils.sendLyric(AndroidAppHelper.currentApplication(), "" + ((HashMap) param.args[0]).values().toArray()[0], "KuGou");
                 }
             });
 

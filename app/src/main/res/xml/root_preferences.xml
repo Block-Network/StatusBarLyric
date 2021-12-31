@@ -100,11 +100,6 @@
     <PreferenceCategory
             android:title="@string/IconSettings"/>
 
-    <Preference
-            android:key="iconPath"
-            android:summary=""
-            android:title="@string/IconPath"/>
-
     <EditTextPreference
             android:defaultValue="7"
             android:key="IconPosition"

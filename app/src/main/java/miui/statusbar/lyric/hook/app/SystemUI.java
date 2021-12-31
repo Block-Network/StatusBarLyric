@@ -34,6 +34,7 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.config.Config;
+import miui.statusbar.lyric.config.IconConfig;
 import miui.statusbar.lyric.utils.Utils;
 import miui.statusbar.lyric.view.LyricTextSwitchView;
 
@@ -58,13 +59,16 @@ public class SystemUI {
 
         static Application application;
         static Config config;
+        static IconConfig iconConfig;
         static Drawable drawableIcon;
         static Handler iconUpdate;
         static Handler LyricUpdate;
         static Handler updateTextColor;
         static Handler updateMarginsIcon;
+        static Handler updateLyricPos;
         static LyricTextSwitchView lyricTextView;
         static LinearLayout.LayoutParams iconParams;
+        static LinearLayout.LayoutParams lyricParams;
         @SuppressLint("StaticFieldLeak")
         static LinearLayout lyricLayout;
         @SuppressLint("StaticFieldLeak")
@@ -140,6 +144,7 @@ public class SystemUI {
                 return;
             }
             config.update();
+            iconConfig.update();
             if (!config.getLyricService()) {
                 offLyric("开关关闭");
                 return;
@@ -160,11 +165,10 @@ public class SystemUI {
                 Utils.log("开启图标");
                 if (!icon.equals(strIcon)) {
                     strIcon = icon;
-                    if (isHook) {
-                        drawableIcon = Drawable.createFromPath(strIcon);
-                    } else {
-                        drawableIcon = new BitmapDrawable(Utils.stringToBitmap(strIcon));
-                    }
+                    Utils.log(strIcon);
+                    String a = iconConfig.getIcon(strIcon);
+                    Utils.log(a);
+                    drawableIcon = new BitmapDrawable(Utils.stringToBitmap(a));
                 }
                 if (drawableIcon != null) {
                     // 设置宽高
@@ -175,6 +179,8 @@ public class SystemUI {
                     iconUpdate.sendMessage(obtainMessage2);
                 }
             }
+
+            updateLyricPos.sendEmptyMessage(0);
 
             iconReverseColor = config.getIconAutoColor();
             if (config.getLyricStyle()) {
@@ -228,6 +234,8 @@ public class SystemUI {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
                 config = Utils.getConfig();
+                iconConfig = Utils.getIconConfig();
+
                 Field clockField = null;
 
                 // 获取当前进程的Application
@@ -320,6 +328,10 @@ public class SystemUI {
                 lyricLayout = new LinearLayout(application);
                 lyricLayout.addView(iconView);
                 lyricLayout.addView(lyricTextView);
+                lyricLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                lyricParams = (LinearLayout.LayoutParams) lyricLayout.getLayoutParams();
+                lyricParams.setMargins(config.getLyricPosition(), 0, 0, 0);
+                lyricLayout.setLayoutParams(lyricParams);
 
                 // 将歌词加入时钟布局
                 LinearLayout clockLayout = (LinearLayout) clock.getParent();
@@ -351,8 +363,10 @@ public class SystemUI {
                 iconUpdate = new Handler(Looper.getMainLooper(), message -> {
                     if (message.obj == null) {
                         iconView.setVisibility(View.GONE);
+                        lyricTextView.setMargins(0, 0, 0, 0);
                     } else {
                         iconView.setVisibility(View.VISIBLE);
+                        lyricTextView.setMargins(10, 0, 0, 0);
                     }
                     iconView.setImageDrawable((Drawable) message.obj);
                     return true;
@@ -373,6 +387,11 @@ public class SystemUI {
                     return true;
                 });
 
+                updateLyricPos = new Handler(Looper.getMainLooper(), message -> {
+                    lyricParams.setMargins(config.getLyricPosition(), 0, 0, 0);
+                    return true;
+                });
+
                 final Handler updateIconColor = new Handler(Looper.getMainLooper(), message -> {
                     if (iconReverseColor) {
                         ColorStateList color = ColorStateList.valueOf(message.arg1);
@@ -390,10 +409,11 @@ public class SystemUI {
                             // 自适应/歌词宽度
                             if (config.getLyricWidth() == -1) {
                                 TextPaint paint1 = lyricTextView.getPaint(); // 获取字体
-                                if (config.getLyricMaxWidth() == -1 || ((int) paint1.measureText(string)) + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
-                                    lyricTextView.setWidth(((int) paint1.measureText(string)) + 6 - config.getLyricPosition());
+                                if (config.getLyricMaxWidth() == -1 ||
+                                        ((int) paint1.measureText(string)) + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
+                                    lyricTextView.setWidth(((int) paint1.measureText(string)) + 6);
                                 } else {
-                                    lyricTextView.setWidth((dw * config.getLyricMaxWidth()) / 100 - config.getLyricPosition());
+                                    lyricTextView.setWidth((dw * config.getLyricMaxWidth()) / 100);
                                 }
                             } else {
                                 lyricTextView.setWidth((dw * config.getLyricWidth()) / 100);
@@ -502,14 +522,11 @@ public class SystemUI {
                             int i = 1;
                             boolean order = true;
                             int iconPos = 0;
-                            int lyricPos = 0;
 
                             @SuppressLint("DefaultLocale")
                             @Override
                             public void run() {
-                                Utils.log("当当当" + config.getLyricPosition());
                                 iconPos = config.getIconPosition();
-                                lyricPos = config.getLyricPosition();
                                 if (enable && config.getAntiBurn()) {
                                     if (order) {
                                         i += 1;
@@ -523,7 +540,7 @@ public class SystemUI {
                                     updateMarginsLyric.sendMessage(message);
 
                                     Message message2 = updateMarginsIcon.obtainMessage();
-                                    message2.arg1 = i + lyricPos;
+                                    message2.arg1 = i;
                                     message2.arg2 = iconPos;
                                     updateMarginsIcon.sendMessage(message2);
                                     if (i == 0) {
@@ -538,7 +555,7 @@ public class SystemUI {
                                     updateMarginsLyric.sendMessage(message);
 
                                     Message message2 = updateMarginsIcon.obtainMessage();
-                                    message2.arg1 = lyricPos;
+                                    message2.arg1 = 0;
                                     message2.arg2 = iconPos;
                                     updateMarginsIcon.sendMessage(message2);
                                 }
@@ -570,45 +587,44 @@ public class SystemUI {
             @Override
             public void onReceive(Context context, Intent intent) {
                 try {
-                    if (intent.getAction().equals("Lyric_Server")) {
-                        String lyric;
-                        String icon;
-                        switch (intent.getStringExtra("Lyric_Type")) {
-                            case "hook":
-                                lyric = intent.getStringExtra("Lyric_Data");
-                                icon = config.getIconPath() + intent.getStringExtra("Lyric_Icon") + ".webp";
-                                Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon);
-                                updateLyric(lyric, icon, true);
-                                useSystemMusicActive = true;
-                                break;
-                            case "app":
-                                lyric = intent.getStringExtra("Lyric_Data");
-                                icon = intent.getStringExtra("Lyric_Icon");
-                                if (TextUtils.isEmpty(icon)) {
-                                    icon = emptyIcon;
-                                }
-                                boolean isPackName = true;
-                                String packName = intent.getStringExtra("Lyric_PackName");
-                                // 修复packName为null导致报错!
-                                if (!TextUtils.isEmpty(packName)) {
-                                    for (String mStr : musicServer) {
-                                        if (mStr.equals(packName)) {
-                                            isPackName = false;
-                                            break;
-                                        }
-                                    }
-                                    if (isPackName) {
-                                        musicServer = Utils.stringsListAdd(musicServer, packName);
+                    String lyric;
+                    String icon;
+                    icon = intent.getStringExtra("Lyric_Icon");
+                    switch (intent.getStringExtra("Lyric_Type")) {
+                        case "hook":
+                            lyric = intent.getStringExtra("Lyric_Data");
+                            Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon);
+                            updateLyric(lyric, icon, true);
+                            useSystemMusicActive = true;
+                            break;
+                        case "app":
+                            lyric = intent.getStringExtra("Lyric_Data");
+
+                            if (TextUtils.isEmpty(icon)) {
+                                icon = emptyIcon;
+                            }
+                            boolean isPackName = true;
+                            String packName = intent.getStringExtra("Lyric_PackName");
+                            // 修复packName为null导致报错!
+                            if (!TextUtils.isEmpty(packName)) {
+                                for (String mStr : musicServer) {
+                                    if (mStr.equals(packName)) {
+                                        isPackName = false;
+                                        break;
                                     }
                                 }
-                                useSystemMusicActive = intent.getBooleanExtra("Lyric_UseSystemMusicActive", false);
-                                updateLyric(lyric, icon, false);
-                                Utils.log("收到广播app: lyric:" + lyric + " icon:" + icon + "packName:" + packName + " isPackName: " + isPackName);
-                                break;
-                            case "app_stop":
-                                offLyric("收到广播app_stop");
-                                break;
-                        }
+                                if (isPackName) {
+                                    musicServer = Utils.stringsListAdd(musicServer, packName);
+                                }
+                            }
+                            useSystemMusicActive = intent.getBooleanExtra("Lyric_UseSystemMusicActive", false);
+                            updateLyric(lyric, icon, false);
+                            Utils.log("收到广播app: lyric:" + lyric + " icon:" + icon + "packName:" + packName + " isPackName: " + isPackName);
+                            break;
+                        case "app_stop":
+                            offLyric("收到广播app_stop");
+                            break;
+
                     }
                 } catch (Exception e) {
                     Utils.log("广播接收错误 " + e + "\n" + Utils.dumpException(e));

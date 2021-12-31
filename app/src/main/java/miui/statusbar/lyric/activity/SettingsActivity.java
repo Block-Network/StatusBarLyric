@@ -21,10 +21,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
-import android.provider.Settings;
 import android.widget.EditText;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import com.byyang.choose.ChooseFileUtils;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
@@ -55,16 +52,20 @@ public class SettingsActivity extends PreferenceActivity {
         addPreferencesFromResource(R.xml.root_preferences);
         try {
             config = new Config(ConfigUtils.getSP(activity, "Lyric_Config"));
-            setTitle(String.format("%s (%s)", getString(R.string.AppName), getString(R.string.SPConfigMode)));
+            setTitle(getString(R.string.AppName));
             init();
         } catch (SecurityException ignored) {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.Tips))
                     .setIcon(R.mipmap.ic_launcher)
                     .setMessage(getString(R.string.NotSupport))
-                    .setPositiveButton(getString(R.string.Quit), (dialog, which) -> {
-                        activity.finish();
-                        System.exit(0);
+                    .setPositiveButton(getString(R.string.ReStart), (dialog, which) -> {
+                        final Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
+                        //杀掉以前进程
+                        android.os.Process.killProcess(android.os.Process.myPid());
                     })
                     .setCancelable(false)
                     .create()
@@ -75,7 +76,6 @@ public class SettingsActivity extends PreferenceActivity {
 
     @SuppressWarnings("deprecation")
     public void init() {
-        ActivityUtils.checkPermissions(activity, config);
         String tips = "Tips1";
         SharedPreferences preferences = activity.getSharedPreferences(tips, MODE_PRIVATE);
         if (!preferences.getBoolean(tips, false)) {
@@ -364,43 +364,6 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // 图标路径
-        Preference iconPath = findPreference("iconPath");
-        assert iconPath != null;
-        iconPath.setSummary(config.getIconPath());
-        if (config.getIconPath().equals(Utils.PATH)) {
-            iconPath.setSummary(getString(R.string.DefaultPath));
-        }
-        iconPath.setOnPreferenceClickListener(((preference) -> {
-            new AlertDialog.Builder(activity)
-                    .setTitle(getString(R.string.IconPath))
-                    .setNegativeButton(getString(R.string.RestoreDefaultPath), (dialog, which) -> {
-                        iconPath.setSummary(getString(R.string.DefaultPath));
-                        config.setIconPath(Utils.PATH);
-                        ActivityUtils.initIcon(activity, config);
-                    })
-                    .setPositiveButton(getString(R.string.NewPath), (dialog, which) -> {
-                        ChooseFileUtils chooseFileUtils = new ChooseFileUtils(activity);
-                        chooseFileUtils.chooseFolder(new ChooseFileUtils.ChooseListener() {
-                            @Override
-                            public void onSuccess(String filePath, Uri uri, Intent intent) {
-                                super.onSuccess(filePath, uri, intent);
-                                config.setIconPath(filePath);
-                                iconPath.setSummary(filePath);
-                                if (config.getIconPath().equals(Utils.PATH)) {
-                                    iconPath.setSummary(getString(R.string.DefaultPath));
-                                }
-                                ActivityUtils.initIcon(activity, config);
-                            }
-                        });
-                    })
-                    .create()
-                    .show();
-
-
-            return true;
-        }));
-
 
         // 图标上下位置
         EditTextPreference iconPosition = (EditTextPreference) findPreference("IconPosition");
@@ -619,43 +582,6 @@ public class SettingsActivity extends PreferenceActivity {
         activity.registerReceiver(new HookReceiver(), HookSure);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (config == null) {
-            config = ConfigUtils.getConfig(getApplicationContext());
-        }
-        if (grantResults[0] == 0) {
-            ActivityUtils.init();
-            ActivityUtils.initIcon(activity, config);
-        } else {
-            new AlertDialog.Builder(activity)
-                    .setTitle(getString(R.string.GetStorageFailed))
-                    .setMessage(getString(R.string.GetStorageFaildTips))
-                    .setNegativeButton(getString(R.string.ReAppy), (dialog, which) -> ActivityUtils.checkPermissions(activity, config))
-                    .setPositiveButton(getString(R.string.Quit), (dialog, which) -> finish())
-                    .setNeutralButton(getString(R.string.GetPermission), (dialog, which) -> {
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                .setData(Uri.fromParts("package", getPackageName(), null));
-                        startActivityForResult(intent, 13131);
-                    })
-                    .setCancelable(false)
-                    .create()
-                    .show();
-        }
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 13131) {
-            if (config == null) {
-                config = ConfigUtils.getConfig(getApplicationContext());
-            }
-            ActivityUtils.checkPermissions(activity, config);
-        }
-    }
 
     public class HookReceiver extends BroadcastReceiver {
         @Override
