@@ -95,11 +95,6 @@
     <string name="ResetSuccess">重置成功</string>
     <string name="FixSuccess">修復成功</string>
     <string name="Warn">警告</string>
-    <string name="ConfigError">配置文件錯誤\n
-        可能是文件內容丟失或者配置文件有所升級\n
-        可能造成不必要的問題\n
-        是否重置
-    </string>
     <string name="ResetNow">立即重置</string>
     <string name="NoReset">先不重置</string>
     <string name="TryFix">嘗試修復</string>

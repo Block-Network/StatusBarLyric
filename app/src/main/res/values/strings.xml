@@ -102,11 +102,6 @@
     <string name="ResetSuccess">Reset successfully</string>
     <string name="FixSuccess">Fix successfully</string>
     <string name="Warn">Warning</string>
-    <string name="ConfigError">Configuration file error\n
-        It may be that the content of the file is missing or the configuration file has been upgraded\n
-        May cause unnecessary problems\n
-        Whether to reset
-    </string>
     <string name="ResetNow">Reset now</string>
     <string name="NoReset">Don\'t reset yet</string>
     <string name="TryFix">Try to Fix</string>
