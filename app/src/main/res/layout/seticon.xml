@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:theme="@style/AppTheme"
+              android:gravity="center_horizontal">
+    <TextView
+            android:text="请输入没有前缀的Base64，推荐像素大小32*32"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"/>
+    <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:id="@+id/imageView"
+            tools:src="@tools:sample/avatars"
+            android:background="@android:color/darker_gray"
+            tools:ignore="ContentDescription" android:layout_marginTop="5dp"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:minHeight="48dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:importantForAutofill="no" android:textColor="@android:color/background_light"
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" android:inputType=""/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:layout_marginBottom="30dp"
+            tools:ignore="RtlHardcoded">
+        <TextView
+                android:text="@string/Cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:id="@+id/textView"
+                android:textColor="@color/colorAccent"
+                android:layout_marginTop="30dp"/>
+        <TextView
+                android:text="@string/Ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView1"
+                android:layout_marginEnd="40dp"
+                android:textColor="@color/colorAccent"
+                android:layout_marginTop="30dp"/>
+    </LinearLayout>
+</LinearLayout>

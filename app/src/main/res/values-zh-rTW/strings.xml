@@ -70,12 +70,12 @@
     <string name="CurrentVer">當前版本</string>
     <string name="VerExp">適用情況：\n
         - APlayer 未知 ~ 1.5.7.9\n
-        - QQ音樂 未知 ~ 11.0.16\n
-        - 咪咕音樂 未知 ~ 7.7.0\n
-        - 網易云音樂 8.2.10 ~ 8.6.45\n
+        - QQ音樂 未知 ~ 11.0.1.6\n
+        - 咪咕音樂 未知 ~ 7.8.0\n
+        - 網易云音樂 8.2.10 ~ 8.6.50\n
         - 網易云音樂 未知 ~ 8.0.40（設定打開車載藍牙歌詞）\n
-        - 酷狗音樂 未知 ~ 11.0.2\n
-        - 酷我音樂 未知 ~ 10.0.5.0\n\n
+        - 酷狗音樂 未知 ~ 11.0.4\n
+        - 酷我音樂 未知 ~ 10.0.5.1\n\n
         - 椒鹽音樂 4.5 ~ 現今\n
         - 魅族音乐 未知 ~ 未知\n
         - Phonograph Plus第三方修改版本\n
@@ -95,11 +95,6 @@
     <string name="ResetSuccess">重置成功</string>
     <string name="FixSuccess">修復成功</string>
     <string name="Warn">警告</string>
-    <string name="ConfigError">配置文件錯誤\n
-        可能是文件內容丟失或者配置文件有所升級\n
-        可能造成不必要的問題\n
-        是否重置
-    </string>
     <string name="ResetNow">立即重置</string>
     <string name="NoReset">先不重置</string>
     <string name="TryFix">嘗試修復</string>

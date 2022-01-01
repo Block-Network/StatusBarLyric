@@ -55,7 +55,7 @@ public class AboutActivity extends PreferenceActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.ThkList))
                     .setItems(new String[]{"潇风残月", "柒猫Sebun_Neko", "Moriafly", "Yife Playte", "YuKongA", "QQ little ice"}, actionListener)
-                    .setNegativeButton("知道了", null);
+                    .setNegativeButton(R.string.Done, null);
             builder.create().show();
             return true;
         });

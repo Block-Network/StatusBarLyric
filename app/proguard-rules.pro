@@ -43,7 +43,7 @@
  long consumerIndex;
 }
 
--repackageclasses "没log玩nm"
+-repackageclasses "Release看个屁的漏洞"
 -obfuscationdictionary dict.txt
 -classobfuscationdictionary dict.txt
 -packageobfuscationdictionary dict.txt

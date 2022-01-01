@@ -1,12 +1,16 @@
 package miui.statusbar.lyric.hook.app;
 
 import android.annotation.SuppressLint;
+import android.app.AndroidAppHelper;
 import android.app.Notification;
 import android.content.Context;
 
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import com.microsoft.appcenter.AppCenter;
+import com.microsoft.appcenter.analytics.Analytics;
+import com.microsoft.appcenter.crashes.Crashes;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -31,6 +35,8 @@ public class Netease {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
+                    AppCenter.start(AndroidAppHelper.currentApplication(), "257e24bd-9f54-4250-9038-d27f348bfdc5",
+                            Analytics.class, Crashes.class);
                     String lyric;
                     boolean isLyric;
                     if (param.args[0] instanceof Notification) {

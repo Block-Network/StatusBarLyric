@@ -291,7 +291,6 @@ public class Utils {
     public static Config getConfig() {
         return new Config(getPref("Lyric_Config"));
     }
-
     public static ApiListConfig getAppList() {
         return new ApiListConfig(getPref("AppList_Config"));
     }

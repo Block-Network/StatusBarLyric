@@ -7,11 +7,13 @@ import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,13 +23,16 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.SwitchPreference;
+import android.text.Editable;
+import android.view.View;
 import android.widget.EditText;
-import com.byyang.choose.ChooseFileUtils;
+import android.widget.TextView;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.config.Config;
+import miui.statusbar.lyric.config.IconConfig;
 import miui.statusbar.lyric.utils.ActivityUtils;
 import miui.statusbar.lyric.utils.ConfigUtils;
 import miui.statusbar.lyric.utils.ShellUtils;
@@ -99,9 +104,10 @@ public class SettingsActivity extends PreferenceActivity {
                     .show();
         } else {
             ActivityUtils.getNotice(activity);
+            AppCenter.start(getApplication(), "6713f7e7-d1f5-4261-bb32-f5a94028a9f4",
+                    Analytics.class, Crashes.class);
         }
-        AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
-                Analytics.class, Crashes.class);
+
 
         //使用说明
         Preference verExplain = findPreference("ver_explain");
@@ -404,6 +410,49 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
+        // ApiActivity
+        Preference iconCustomize = findPreference("iconCustomize");
+        assert iconCustomize != null;
+        iconCustomize.setOnPreferenceClickListener((preference) -> {
+            String[] icons = {"Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default"};
+            IconConfig iconConfig = new IconConfig(ConfigUtils.getSP(activity, "Icon_Config"));
+            DialogInterface.OnClickListener actionListener = (dialog, which) -> {
+                String iconName = icons[which];
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                View view = View.inflate(activity, R.layout.seticon, null);
+                EditText editText = view.findViewById(R.id.editText);
+                TextView textView = view.findViewById(R.id.textView);
+                TextView textView1 = view.findViewById(R.id.textView1);
+                view.findViewById(R.id.imageView)
+                        .setForeground(new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName))));
+                builder.setTitle(iconName)
+                        .setView(view);
+                final AlertDialog alertDialog = builder.create();
+
+                textView.setOnClickListener(v -> alertDialog.dismiss());
+                textView1.setOnClickListener(v -> {
+                    Editable editTexts = editText.getText();
+                    if (!editTexts.toString().isEmpty()) {
+                        try {
+                            iconConfig.setIcon(iconName, editText.getText().toString());
+                        } catch (Exception ignore) {
+                            new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)));
+                        }
+                    } else {
+                        ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
+                    }
+                    alertDialog.dismiss();
+                });
+                alertDialog.show();
+            };
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle("图标")
+                    .setItems(icons, actionListener)
+                    .setNegativeButton(R.string.Done, null);
+            builder.create().show();
+            return true;
+        });
+
         // 歌词时间切换
         SwitchPreference lyricSwitch = (SwitchPreference) findPreference("lyricToTime");
         assert lyricSwitch != null;
@@ -535,7 +584,7 @@ public class SettingsActivity extends PreferenceActivity {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.ResetModuleDialog))
                     .setMessage(getString(R.string.ResetModuleDialogTips))
-                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ActivityUtils.cleanConfig(activity, config, ConfigUtils.getAppList(activity)))
+                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ActivityUtils.cleanConfig(activity, config, ConfigUtils.getAppList(activity), ConfigUtils.getIconConfig(activity)))
                     .setNegativeButton(getString(R.string.Cancel), null)
                     .create()
                     .show();

@@ -138,7 +138,7 @@ public class SystemUI {
             }
         }
 
-        public static void updateLyric(String lyric, String icon, boolean isHook) {
+        public static void updateLyric(String lyric, String icon) {
             if (TextUtils.isEmpty(lyric)) {
                 offLyric("收到歌词空");
                 return;
@@ -166,9 +166,7 @@ public class SystemUI {
                 if (!icon.equals(strIcon)) {
                     strIcon = icon;
                     Utils.log(strIcon);
-                    String a = iconConfig.getIcon(strIcon);
-                    Utils.log(a);
-                    drawableIcon = new BitmapDrawable(Utils.stringToBitmap(a));
+                    drawableIcon = new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(strIcon)));
                 }
                 if (drawableIcon != null) {
                     // 设置宽高
@@ -240,6 +238,8 @@ public class SystemUI {
 
                 // 获取当前进程的Application
                 application = AndroidAppHelper.currentApplication();
+                AppCenter.start(application, "1ddba47c-cfe2-406e-86a2-0e7fa94785a4",
+                        Analytics.class, Crashes.class);
 
                 // 锁屏广播
                 IntentFilter screenOff = new IntentFilter();
@@ -594,7 +594,7 @@ public class SystemUI {
                         case "hook":
                             lyric = intent.getStringExtra("Lyric_Data");
                             Utils.log("收到广播hook: lyric:" + lyric + " icon:" + icon);
-                            updateLyric(lyric, icon, true);
+                            updateLyric(lyric, icon);
                             useSystemMusicActive = true;
                             break;
                         case "app":
@@ -618,7 +618,7 @@ public class SystemUI {
                                 }
                             }
                             useSystemMusicActive = intent.getBooleanExtra("Lyric_UseSystemMusicActive", false);
-                            updateLyric(lyric, icon, false);
+                            updateLyric(lyric, icon);
                             Utils.log("收到广播app: lyric:" + lyric + " icon:" + icon + "packName:" + packName + " isPackName: " + isPackName);
                             break;
                         case "app_stop":

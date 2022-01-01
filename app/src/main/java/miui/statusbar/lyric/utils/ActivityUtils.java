@@ -155,7 +155,7 @@ public class ActivityUtils {
     }
 
     //清除配置
-    public static void cleanConfig(Activity activity, Config config, ApiListConfig config2) {
+    public static void cleanConfig(Activity activity, Config config, ApiListConfig config2, Config config3) {
         activity.getSharedPreferences("miui.statusbar.lyric_preferences", 0).edit().clear().apply();
         PackageManager packageManager = Objects.requireNonNull(activity).getPackageManager();
         packageManager.setComponentEnabledSetting(new ComponentName(activity, "miui.statusbar.lyric.launcher"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
@@ -166,6 +166,10 @@ public class ActivityUtils {
         }
         try {
             config2.clear();
+        } catch (Exception | Error ignored) {
+        }
+        try {
+            config3.clear();
         } catch (Exception | Error ignored) {
         }
         activity.finishAffinity();

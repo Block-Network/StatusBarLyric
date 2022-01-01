@@ -19,10 +19,10 @@ public class LrcDecode {
      * 解析Lrc
      */
     public LrcDecode readLrc(Reader reader) {
-        lrcTable = new Hashtable<String, String>();
+        lrcTable = new Hashtable<>();
         try {
             BufferedReader bis = new BufferedReader(reader);
-            String str = null;
+            String str;
             while ((str = bis.readLine()) != null) {
                 decodeLine(str);
             }
@@ -37,7 +37,7 @@ public class LrcDecode {
     /**
      * 单行解析
      */
-    private LrcDecode decodeLine(String str) {
+    private void decodeLine(String str) {
 
         if (str.startsWith("[ti:")) {// 歌曲名
             lrcTable.put("ti", str.substring(4, str.lastIndexOf("]")));
@@ -61,10 +61,9 @@ public class LrcDecode {
                 int endIndex = str.indexOf("]", startIndex + 1);
                 // 添加时间戳格式
                 lrcTable.put(strToLongToTime(str.substring(startIndex + 1, endIndex)) + "",
-                        str.substring(str.lastIndexOf("]") + 1, str.length()));
+                        str.substring(str.lastIndexOf("]") + 1));
             }
         }
-        return this;
     }
 
     /**
@@ -84,15 +83,15 @@ public class LrcDecode {
     private String strToLongToTime(String str) {
         // System.out.println(str);
         int m = Integer.parseInt(str.substring(0, str.indexOf(":")));
-        int s = 0;
+        int s;
         int ms = 0;
 
         // 判断歌词时间是否有毫秒
-        if (str.indexOf(".") != -1) {
+        if (str.contains(".")) {
             s = Integer.parseInt(str.substring(str.indexOf(":") + 1, str.indexOf(".")));
-            ms = Integer.parseInt(str.substring(str.indexOf(".") + 1, str.length()));
+            ms = Integer.parseInt(str.substring(str.indexOf(".") + 1));
         } else {
-            s = Integer.parseInt(str.substring(str.indexOf(":") + 1, str.length()));
+            s = Integer.parseInt(str.substring(str.indexOf(":") + 1));
         }
         // System.out.println(timeMode(m * 60000 + s * 1000 + ms * 10));
         return timeMode(m * 60000 + s * 1000 + ms * 10);

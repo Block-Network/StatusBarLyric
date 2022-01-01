@@ -114,6 +114,11 @@
             android:summary=""
             android:title="@string/IconAutoColors"/>
 
+    <Preference
+            android:key="iconCustomize"
+            android:summary=""
+            android:title="* 图标自定义"/>
+
     <PreferenceCategory android:title="@string/AdvancedSettings"/>
 
     <SwitchPreference
