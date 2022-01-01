@@ -52,6 +52,32 @@ public class IconConfig {
         return icon;
     }
 
+    public void setIcon(String app, String str) {
+        switch (app) {
+            case "KuGou":
+                setKuGou(str);
+                break;
+            case "KuWo":
+                setKuWo(str);
+                break;
+            case "Netease":
+                setNetease(str);
+                break;
+            case "QQMusic":
+                setQQMusic(str);
+                break;
+            case "MiGu":
+                setMiGu(str);
+                break;
+            case "Myplayer":
+                setMyplayer(str);
+                break;
+            default:
+                setDefault(str);
+                break;
+        }
+    }
+
 
     public void update() {
         config.update();
