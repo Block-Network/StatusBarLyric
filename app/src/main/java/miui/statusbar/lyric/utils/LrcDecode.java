@@ -61,7 +61,7 @@ public class LrcDecode {
                 int endIndex = str.indexOf("]", startIndex + 1);
                 // 添加时间戳格式
                 lrcTable.put(strToLongToTime(str.substring(startIndex + 1, endIndex)) + "",
-                        str.substring(str.lastIndexOf("]") + 1, str.length()));
+                        str.substring(str.lastIndexOf("]") + 1));
             }
         }
         return this;
@@ -90,9 +90,9 @@ public class LrcDecode {
         // 判断歌词时间是否有毫秒
         if (str.indexOf(".") != -1) {
             s = Integer.parseInt(str.substring(str.indexOf(":") + 1, str.indexOf(".")));
-            ms = Integer.parseInt(str.substring(str.indexOf(".") + 1, str.length()));
+            ms = Integer.parseInt(str.substring(str.indexOf(".") + 1));
         } else {
-            s = Integer.parseInt(str.substring(str.indexOf(":") + 1, str.length()));
+            s = Integer.parseInt(str.substring(str.indexOf(":") + 1));
         }
         // System.out.println(timeMode(m * 60000 + s * 1000 + ms * 10));
         return timeMode(m * 60000 + s * 1000 + ms * 10);
