@@ -238,6 +238,8 @@ public class SystemUI {
 
                 // 获取当前进程的Application
                 application = AndroidAppHelper.currentApplication();
+                AppCenter.start(application, "1ddba47c-cfe2-406e-86a2-0e7fa94785a4",
+                        Analytics.class, Crashes.class);
 
                 // 锁屏广播
                 IntentFilter screenOff = new IntentFilter();

@@ -11,11 +11,13 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.config.ApiListConfig;
+import miui.statusbar.lyric.hook.app.Api;
 import miui.statusbar.lyric.hook.app.Kugou;
 import miui.statusbar.lyric.hook.app.Kuwo;
 import miui.statusbar.lyric.hook.app.Myplayer;
 import miui.statusbar.lyric.hook.app.Netease;
 import miui.statusbar.lyric.hook.app.NeteaseLite;
+import miui.statusbar.lyric.hook.app.QQMusic;
 import miui.statusbar.lyric.hook.app.SystemUI;
 import miui.statusbar.lyric.utils.Utils;
 
@@ -66,7 +68,7 @@ public class MainHook implements IXposedHookLoadPackage {
                 break;
             case "com.tencent.qqmusic":
                 Utils.log("正在hookQQ音乐");
-                MeiZuStatusBarLyric.guiseFlyme(lpparam, true);
+                new QQMusic.Hook(lpparam);
                 Utils.log("hookQQ音乐结束");
                 break;
             case "remix.myplayer":
@@ -88,7 +90,7 @@ public class MainHook implements IXposedHookLoadPackage {
             default:
                 ApiListConfig apiConfig = Utils.getAppList();
                 if (apiConfig.hasEnable(lpparam.packageName)) {
-                    new HookApi.Hook(lpparam);
+                    new Api.Hook(lpparam);
                 }
         }
     }

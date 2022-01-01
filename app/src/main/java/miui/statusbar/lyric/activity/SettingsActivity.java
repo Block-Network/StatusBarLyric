@@ -104,9 +104,10 @@ public class SettingsActivity extends PreferenceActivity {
                     .show();
         } else {
             ActivityUtils.getNotice(activity);
+            AppCenter.start(getApplication(), "6713f7e7-d1f5-4261-bb32-f5a94028a9f4",
+                    Analytics.class, Crashes.class);
         }
-        AppCenter.start(getApplication(), "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
-                Analytics.class, Crashes.class);
+
 
         //使用说明
         Preference verExplain = findPreference("ver_explain");
