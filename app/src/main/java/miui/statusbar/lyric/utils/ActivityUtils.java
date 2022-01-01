@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
 import android.widget.Toast;
+import es.dmoral.toasty.Toasty;
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.config.Config;
@@ -190,7 +191,8 @@ public class ActivityUtils {
     public static void showToastOnLooper(final Context context, final String message) {
         try {
             Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
+//            handler.post(() -> Toast.makeText(context, message, Toast.LENGTH_LONG).show());
+            handler.post(() -> Toasty.normal(context, message, context.getDrawable(R.mipmap.ic_launcher)).show());
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
