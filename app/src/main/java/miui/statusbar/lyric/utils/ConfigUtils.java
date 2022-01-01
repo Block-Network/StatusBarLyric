@@ -39,6 +39,13 @@ public class ConfigUtils {
             return null;
         }
     }
+  public static Config getIconConfig(Context context) {
+        try {
+            return new Config(getSP(context, "Icon_Config"));
+        } catch (SecurityException ignored) {
+            return null;
+        }
+    }
 
     public static SharedPreferences getSP(Context context, String key) {
         return context.createDeviceProtectedStorageContext().getSharedPreferences(key, Context.MODE_WORLD_READABLE);
