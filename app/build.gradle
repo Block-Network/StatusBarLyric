@@ -12,7 +12,7 @@ android {
         minSdkVersion 26
         //noinspection OldTargetApi
         targetSdkVersion 32
-        versionCode 77
+        versionCode 78
         versionName "3.47.23"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
