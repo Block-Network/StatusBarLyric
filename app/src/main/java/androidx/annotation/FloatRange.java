@@ -20,7 +20,7 @@ public @interface FloatRange {
      * by {@link #toInclusive} */
     double to() default Double.POSITIVE_INFINITY;
 
-    /** Whether the from value is included in the range */
+    /** Whether the form value is included in the range */
     boolean fromInclusive() default true;
 
     /** Whether the to value is included in the range */
