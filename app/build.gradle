@@ -13,7 +13,7 @@ android {
         //noinspection OldTargetApi
         targetSdkVersion 32
         versionCode 77
-        versionName "3.46.22"
+        versionName "3.47.23"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }
