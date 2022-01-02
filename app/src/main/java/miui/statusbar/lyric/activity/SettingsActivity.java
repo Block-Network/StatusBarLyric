@@ -26,7 +26,6 @@ import android.preference.SwitchPreference;
 import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
@@ -410,7 +409,7 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
-        // ApiActivity
+        // 自定义图标
         Preference iconCustomize = findPreference("iconCustomize");
         assert iconCustomize != null;
         iconCustomize.setOnPreferenceClickListener((preference) -> {
@@ -421,16 +420,11 @@ public class SettingsActivity extends PreferenceActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 View view = View.inflate(activity, R.layout.seticon, null);
                 EditText editText = view.findViewById(R.id.editText);
-                TextView textView = view.findViewById(R.id.textView);
-                TextView textView1 = view.findViewById(R.id.textView1);
                 view.findViewById(R.id.imageView)
                         .setForeground(new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName))));
                 builder.setTitle(iconName)
                         .setView(view);
-                final AlertDialog alertDialog = builder.create();
-
-                textView.setOnClickListener(v -> alertDialog.dismiss());
-                textView1.setOnClickListener(v -> {
+                builder.setPositiveButton(R.string.Ok, (dialogInterface, i) -> {
                     Editable editTexts = editText.getText();
                     if (!editTexts.toString().isEmpty()) {
                         try {
@@ -441,9 +435,9 @@ public class SettingsActivity extends PreferenceActivity {
                     } else {
                         ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                     }
-                    alertDialog.dismiss();
                 });
-                alertDialog.show();
+                builder.setNeutralButton(R.string.Cancel, null);
+                builder.show();
             };
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle("图标")
