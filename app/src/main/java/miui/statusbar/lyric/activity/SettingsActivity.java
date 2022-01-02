@@ -607,18 +607,9 @@ public class SettingsActivity extends PreferenceActivity {
 
         // 非MIUI关闭功能
         if (!Utils.hasMiuiSetting) {
-            hNoticeIcon.setEnabled(false);
-            hNoticeIcon.setChecked(false);
             hNoticeIcon.setSummary(String.format("%s%s", hNoticeIcon.getSummary(), getString(R.string.YouNotMIUI)));
-            config.setHNoticeIcon(false);
-            hNetWork.setEnabled(false);
-            hNetWork.setChecked(false);
             hNetWork.setSummary(String.format("%s%s", hNetWork.getSummary(), getString(R.string.YouNotMIUI)));
-            config.setHNoticeIcon(false);
-            hCUK.setEnabled(false);
-            hCUK.setChecked(false);
             hCUK.setSummary(String.format("%s%s", hCUK.getSummary(), getString(R.string.YouNotMIUI)));
-            config.setHNoticeIcon(false);
         }
         IntentFilter HookSure = new IntentFilter();
         HookSure.addAction("Hook_Sure");

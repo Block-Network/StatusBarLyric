@@ -46,9 +46,9 @@
     <string name="ThkList">感謝名單</string>
     <string name="ClickThkList">點擊查看感謝名單</string>
     <string name="Other">其它</string>
-    <string name="Donate">捐贈</string>
+    <string name="Donate">捐贈模塊</string>
     <string name="DonateTips">覺得好用的話，支持一下唄</string>
-    <string name="Coolapk">酷安</string>
+    <string name="Coolapk">酷安鏈接</string>
     <string name="ContactUs">聯系我們</string>
     <string name="Source">項目地址</string>
     <string name="ThkListUrl">
@@ -92,12 +92,6 @@
     <string name="NoVerUpdate">無新版可更新</string>
     <string name="CheckUpdateError">檢查失敗，請稍後再試!</string>
     <string name="CheckUpdateFailed">檢查更新失敗</string>
-    <string name="ResetSuccess">重置成功</string>
-    <string name="FixSuccess">修復成功</string>
-    <string name="Warn">警告</string>
-    <string name="ResetNow">立即重置</string>
-    <string name="NoReset">先不重置</string>
-    <string name="TryFix">嘗試修復</string>
     <string name="top">上滑</string>
     <string name="lower">下滑</string>
     <string name="left">左滑</string>
@@ -124,17 +118,7 @@
     <string name="ResetModuleDialog">是否要重置模塊</string>
     <string name="ResetModuleDialogTips">模塊沒問題請不要隨意重置</string>
     <string name="StartCheckUpdate">開始檢查是否有更新</string>
-    <string name="YouNotMIUI">" (您不是MIUI系統)"</string>
-    <string name="GetLyricNum">"已獲取歌詞數句數: "</string>
-    <string name="GetStorageFaildTips">
-        請開通存儲權限，用於存放歌詞圖標\n
-        否則無法正常使用本模塊\n
-        若不信任本模塊,請卸載
-    </string>
-    <string name="GetStorageFailed">獲取存儲權限失敗</string>
-    <string name="GetPermission">前往設置授予權限</string>
-    <string name="ReAppy">重新申請</string>
-    <string name="Notice">版本說明 內容有更新</string>
+    <string name="YouNotMIUI">（不一定支持）</string>
     <string name="MeizuStyle">* 魅族歌詞滾動樣式</string>
     <string name="lShowOnce">* 歌詞只滾動一次</string>
     <string name="WarnExplanation">模塊注意事項</string>
