@@ -48,7 +48,7 @@ public class ActivityUtils {
                 JSONObject jsonObject = new JSONObject(data);
                 if (!getLocalVersion(activity).equals("")) {
                     if (Integer.parseInt(jsonObject.getString("tag_name").split("v")[1])
-                            > Utils.getLocalVersionCode(activity)) {
+                            > getLocalVersionCode(activity)) {
 
                         new AlertDialog.Builder(activity)
                                 .setTitle(String.format("%s [%s]", activity.getString(R.string.NewVer), jsonObject.getString("name")))
@@ -139,7 +139,7 @@ public class ActivityUtils {
             String data = message.getData().getString("value");
             try {
                 JSONObject jsonObject = new JSONObject(data);
-                if (jsonObject.getString("versionCode").equals(String.valueOf(Utils.getLocalVersionCode(activity)))) {
+                if (jsonObject.getString("versionCode").equals(String.valueOf(getLocalVersionCode(activity)))) {
                     if (Boolean.parseBoolean(jsonObject.getString("forcibly"))) {
                         new AlertDialog.Builder(activity)
                                 .setTitle(activity.getString(R.string.NewNotice))
@@ -166,5 +166,17 @@ public class ActivityUtils {
                 handler.sendMessage(message);
             }
         }).start();
+    }
+
+    public static int getLocalVersionCode(Context context) {
+        int localVersion = 0;
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            localVersion = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return localVersion;
     }
 }
