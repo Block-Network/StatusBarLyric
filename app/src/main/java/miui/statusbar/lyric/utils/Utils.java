@@ -5,8 +5,6 @@ import android.app.ActivityManager;
 import android.app.MiuiStatusBarManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
@@ -51,39 +49,36 @@ public class Utils {
         return Utils.packName_Name.get(packName);
     }
 
-    public static int getLocalVersionCode(Context context) {
-        int localVersion = 0;
-        try {
-            PackageManager packageManager = context.getPackageManager();
-            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-            localVersion = packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return localVersion;
-    }
-
     //状态栏图标设置
     public static void setStatusBar(Context application, Boolean isOpen, Config config) {
-        if (!hasMiuiSetting) {
-            return;
-        }
         int isCarrier = 1;
         int notCarrier = 0;
         if (isOpen) {
             isCarrier = 0;
             notCarrier = 1;
         }
+        if (!hasMiuiSetting) {
+            if (config.getHNoticeIco() && Settings.System.getInt(application.getContentResolver(), "status_bar_show_notification_icon", 1) == notCarrier) {
+                Settings.System.putInt(application.getContentResolver(), "status_bar_show_notification_icon", isCarrier);
+            }
+            if (config.getHNetSpeed() && Settings.System.getInt(application.getContentResolver(), "status_bar_show_notification_icon", 1) == notCarrier) {
+                Settings.System.putInt(application.getContentResolver(), "status_bar_show_network_speed", isCarrier);
+            }
+        } else {
+            if (config.getHNoticeIco() && MiuiStatusBarManager.isShowNotificationIcon(application) != isOpen) {
+                MiuiStatusBarManager.setShowNotificationIcon(application, isOpen);
+                Settings.System.putInt(application.getContentResolver(), "status_bar_show_notification_icon", notCarrier);
+            }
+            if (config.getHNetSpeed() && MiuiStatusBarManager.isShowNetworkSpeed(application) != isOpen) {
+                MiuiStatusBarManager.setShowNetworkSpeed(application, isOpen);
+                Settings.System.putInt(application.getContentResolver(), "status_bar_show_network_speed", notCarrier);
+            }
 
-        if (config.getHNoticeIco() && MiuiStatusBarManager.isShowNotificationIcon(application) != isOpen) {
-            MiuiStatusBarManager.setShowNotificationIcon(application, isOpen);
-        }
-        if (config.getHNetSpeed() && MiuiStatusBarManager.isShowNetworkSpeed(application) != isOpen) {
-            MiuiStatusBarManager.setShowNetworkSpeed(application, isOpen);
         }
         if (config.getHCuk() && Settings.System.getInt(application.getContentResolver(), "status_bar_show_carrier_under_keyguard", 1) == isCarrier) {
             Settings.System.putInt(application.getContentResolver(), "status_bar_show_carrier_under_keyguard", notCarrier);
         }
+
     }
 
     // 判断服务是否运行
@@ -140,7 +135,6 @@ public class Utils {
     }
 
     // 判断服务是否运行 列表
-
     public static boolean isServiceRunningList(Context context, String[] str) {
         for (String mStr : str) {
             if (mStr != null) {
@@ -151,7 +145,6 @@ public class Utils {
         }
         return false;
     }
-
 
     public static Bitmap stringToBitmap(String string) {
         Bitmap bitmap = null;
@@ -291,9 +284,11 @@ public class Utils {
     public static Config getConfig() {
         return new Config(getPref("Lyric_Config"));
     }
+
     public static ApiListConfig getAppList() {
         return new ApiListConfig(getPref("AppList_Config"));
     }
+
     public static IconConfig getIconConfig() {
         return new IconConfig(getPref("Icon_Config"));
     }

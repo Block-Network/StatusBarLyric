@@ -49,9 +49,9 @@
     <string name="ThkList">Thank you list</string>
     <string name="ClickThkList">Click to view the list of thanks</string>
     <string name="Other">Other</string>
-    <string name="Donate">Donate</string>
+    <string name="Donate">Donation module</string>
     <string name="DonateTips">If you find it easy to use, please support me</string>
-    <string name="Coolapk">Coolapk</string>
+    <string name="Coolapk">CoolApk Link</string>
     <string name="ContactUs">contact us</string>
     <string name="Source">Project Address</string>
     <string name="ThkListUrl">
@@ -99,12 +99,6 @@
     <string name="NoVerUpdate">No new version to update</string>
     <string name="CheckUpdateError">Check failed, please try again later!</string>
     <string name="CheckUpdateFailed">Check for update failed</string>
-    <string name="ResetSuccess">Reset successfully</string>
-    <string name="FixSuccess">Fix successfully</string>
-    <string name="Warn">Warning</string>
-    <string name="ResetNow">Reset now</string>
-    <string name="NoReset">Don\'t reset yet</string>
-    <string name="TryFix">Try to Fix</string>
     <string name="top">Slide up</string>
     <string name="lower">Decline</string>
     <string name="left">Swipe left</string>
@@ -135,17 +129,7 @@
     <string name="ResetModuleDialog">Do you want to reset the module</string>
     <string name="ResetModuleDialogTips">The module is OK, please don\'t reset it at will</string>
     <string name="StartCheckUpdate">Start checking for updates</string>
-    <string name="YouNotMIUI">" (You are not a MIUI system)"</string>
-    <string name="GetLyricNum">Number of lyrics obtained:</string>
-    <string name="GetStorageFaildTips">
-        Please activate storage permissions,used to store the lyrics icon\n
-        Otherwise, this module cannot be used normally\n
-        If you don\'t trust this module, please uninstall
-    </string>
-    <string name="GetPermission">Go to settings to grant permissions</string>
-    <string name="ReAppy">Re-apply</string>
-    <string name="GetStorageFailed">Failed to obtain storage permissions</string>
-    <string name="Notice">Version description The content has been updated</string>
+    <string name="YouNotMIUI">(Not necessarily supported)</string>
     <string name="MeizuStyle">* Meizu lyrics scroll style</string>
     <string name="lShowOnce">* Lyrics only scroll once</string>
     <string name="WarnExplanation">Module Considerations</string>
@@ -179,4 +163,5 @@
     <string name="IconSettings">Icon settings</string>
     <string name="NewNotice">NewNotice</string>
     <string name="GetNewNoticeError">Get NewNotice Error</string>
+    <string name="ResetSuccess">Reset successfully</string>
 </resources>

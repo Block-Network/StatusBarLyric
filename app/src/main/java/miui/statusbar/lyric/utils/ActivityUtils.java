@@ -93,7 +93,7 @@ public class ActivityUtils {
         activity.getSharedPreferences("miui.statusbar.lyric_preferences", 0).edit().clear().apply();
         PackageManager packageManager = Objects.requireNonNull(activity).getPackageManager();
         packageManager.setComponentEnabledSetting(new ComponentName(activity, "miui.statusbar.lyric.launcher"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        Toast.makeText(activity, activity.getString(R.string.ResetSuccess), Toast.LENGTH_LONG).show();
+
         try {
             config.clear();
         } catch (Exception | Error ignored) {
@@ -106,6 +106,8 @@ public class ActivityUtils {
             config3.clear();
         } catch (Exception | Error ignored) {
         }
+
+        showToastOnLooper(activity,activity.getString(R.string.ResetSuccess));
         activity.finishAffinity();
         System.exit(0);
     }
