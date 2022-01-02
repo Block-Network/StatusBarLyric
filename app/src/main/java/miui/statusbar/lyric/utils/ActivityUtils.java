@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.Process;
 import android.widget.Toast;
 import miui.statusbar.lyric.R;
 import miui.statusbar.lyric.config.ApiListConfig;
@@ -22,10 +21,6 @@ import miui.statusbar.lyric.config.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -43,67 +38,6 @@ public class ActivityUtils {
             e.printStackTrace();
         }
         return localVersion;
-    }
-
-    public static void checkPermissions(Activity activity, Config config) {
-        if (checkSelfPermission(activity) == -1) {
-            activity.requestPermissions(new String[]{
-                    "android.permission.WRITE_EXTERNAL_STORAGE"
-            }, 1);
-        } else {
-            init();
-            initIcon(activity, config);
-        }
-    }
-
-    private static int checkSelfPermission(Context context) {
-        return context.checkPermission("android.permission.WRITE_EXTERNAL_STORAGE", android.os.Process.myPid(), Process.myUid());
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void init() {
-        File file = new File(Utils.PATH);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void initIcon(Activity activity, Config config) {
-        String[] IconList = {"kugou.webp", "netease.webp", "qqmusic.webp", "myplayer.webp", "migu.webp", "kuwo.webp"};
-        for (String s : IconList) {
-            if (!new File(config.getIconPath(), s).exists()) {
-                copyAssets(activity, "icon/" + s, config.getIconPath() + s);
-            }
-        }
-        if (!new File(config.getIconPath(), ".nomedia").exists()) {
-            try {
-                new File(config.getIconPath(), ".nomedia").createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private static void copyAssets(Activity activity, String str, String str2) {
-        try {
-            File file = new File(str2);
-            InputStream open = activity.getAssets().open(str);
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            byte[] bArr = new byte[1024];
-            while (true) {
-                int read = open.read(bArr);
-                if (read == -1) {
-                    fileOutputStream.flush();
-                    open.close();
-                    fileOutputStream.close();
-                    return;
-                }
-                fileOutputStream.write(bArr, 0, read);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     //检查更新
@@ -211,7 +145,9 @@ public class ActivityUtils {
                                 .setTitle(activity.getString(R.string.NewNotice))
                                 .setIcon(R.mipmap.ic_launcher)
                                 .setMessage(jsonObject.getString("data"))
-                                .setNegativeButton(activity.getString(R.string.Done), null).create().show();
+                                .setNegativeButton(activity.getString(R.string.Done), null)
+                                .create()
+                                .show();
                     }
                 }
                 return true;
@@ -228,8 +164,6 @@ public class ActivityUtils {
                 bundle.putString("value", value);
                 message.setData(bundle);
                 handler.sendMessage(message);
-            } else {
-//                showToastOnLooper(activity, activity.getString(R.string.GetNewNoticeError));
             }
         }).start();
     }
