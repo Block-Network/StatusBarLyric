@@ -25,8 +25,8 @@
             android:minHeight="48dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:importantForAutofill="no" android:textColor="@android:color/background_light"
-            tools:ignore="LabelFor,SpeakableTextPresentCheck" android:inputType=""/>
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -34,6 +34,7 @@
             android:layout_weight="1"
             android:gravity="right"
             android:layout_marginBottom="30dp"
+            android:visibility="gone"
             tools:ignore="RtlHardcoded">
         <TextView
                 android:text="@string/Cancel"
