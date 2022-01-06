@@ -316,6 +316,7 @@ public class SettingsActivity extends PreferenceActivity {
             config.setLShowOnce((Boolean) newValue);
             return true;
         });
+
         // 歌词速度
         EditTextPreference lyricSpeed = (EditTextPreference) findPreference("lyricSpeed");
         assert lyricSpeed != null;
@@ -423,21 +424,32 @@ public class SettingsActivity extends PreferenceActivity {
                 view.findViewById(R.id.imageView)
                         .setForeground(new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName))));
                 builder.setTitle(iconName)
-                        .setView(view);
-                builder.setPositiveButton(R.string.Ok, (dialogInterface, i) -> {
-                    Editable editTexts = editText.getText();
-                    if (!editTexts.toString().isEmpty()) {
-                        try {
-                            iconConfig.setIcon(iconName, editText.getText().toString());
-                        } catch (Exception ignore) {
-                            new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)));
-                        }
-                    } else {
-                        ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
-                    }
-                });
-                builder.setNeutralButton(R.string.Cancel, null);
-                builder.show();
+                        .setView(view)
+                        .setPositiveButton(R.string.Ok, (dialogInterface, i) -> {
+                            Editable editTexts = editText.getText();
+                            if (!editTexts.toString().isEmpty()) {
+                                try {
+                                    iconConfig.setIcon(iconName, editText.getText().toString());
+                                } catch (Exception ignore) {
+                                    new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)));
+                                }
+                            } else {
+                                ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
+                            }
+                        })
+                        .setPositiveButton(R.string.Cancel, null)
+                        .setNeutralButton("制作图标", (dialogInterface, i) -> {
+                            ComponentName componentName = new ComponentName("com.byyoung.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity");
+                            Intent intent = new Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity");
+                            intent.putExtra("PackageName", componentName.getPackageName());
+                            intent.putExtra("PackageClass", componentName.getClassName());
+                            try {
+                                activity.startActivity(intent);
+                            } catch (Exception ignore) {
+                                ActivityUtils.showToastOnLooper(activity, "无法跳转，请检查是否安装\n爱玩机工具箱");
+                            }
+                        })
+                        .show();
             };
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle("图标")
