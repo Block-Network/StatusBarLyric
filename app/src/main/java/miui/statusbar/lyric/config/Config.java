@@ -56,12 +56,20 @@ public class Config {
         config.put("LPosition", i);
     }
 
-    public int getIconPosition() {
-        return config.optInt("IPosition", 7);
+    public int getLyricHigh() {
+        return config.optInt("LHigh", 0);
     }
 
-    public void setIconPosition(int i) {
-        config.put("IPosition", i);
+    public void setLyricHigh(int i) {
+        config.put("LHigh", i);
+    }
+
+    public int getIconHigh() {
+        return config.optInt("IHigh", 7);
+    }
+
+    public void setIconHigh(int i) {
+        config.put("IHigh", i);
     }
 
     public Boolean getLyricAutoOff() {

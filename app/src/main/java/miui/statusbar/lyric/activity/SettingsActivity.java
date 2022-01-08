@@ -365,30 +365,28 @@ public class SettingsActivity extends PreferenceActivity {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignore) {
-
             }
             return true;
         });
 
-
-        // 图标上下位置
-        EditTextPreference iconPosition = (EditTextPreference) findPreference("IconPosition");
-        assert iconPosition != null;
-        iconPosition.setSummary((String.valueOf(config.getIconPosition())));
-        if (String.valueOf(config.getIconPosition()).equals("7")) {
-            iconPosition.setSummary(getString(R.string.Default));
+        // 歌词上下位置
+        EditTextPreference lyricHigh = (EditTextPreference) findPreference("lyricHigh");
+        assert lyricHigh != null;
+        lyricHigh.setSummary((String.valueOf(config.getLyricHigh())));
+        if (String.valueOf(config.getLyricHigh()).equals("0")) {
+            lyricHigh.setSummary(getString(R.string.Default));
         }
-        iconPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), iconPosition.getSummary()));
-        iconPosition.setOnPreferenceChangeListener((preference, newValue) -> {
-            iconPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
-            iconPosition.setSummary(getString(R.string.Default));
+        lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), lyricHigh.getSummary()));
+        lyricHigh.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), getString(R.string.Default)));
+            lyricHigh.setSummary(getString(R.string.Default));
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-                if (value.equals("7")) {
+                if (value.equals("0")) {
                     return true;
                 } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
-                    config.setIconPosition(Integer.parseInt(value));
-                    iconPosition.setSummary(value);
+                    config.setLyricHigh(Integer.parseInt(value));
+                    lyricHigh.setSummary(value);
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
@@ -410,6 +408,32 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
+        // 图标上下位置
+        EditTextPreference iconHigh = (EditTextPreference) findPreference("iconHigh");
+        assert iconHigh != null;
+        iconHigh.setSummary((String.valueOf(config.getIconHigh())));
+        if (String.valueOf(config.getIconHigh()).equals("7")) {
+            iconHigh.setSummary(getString(R.string.Default));
+        }
+        iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), iconHigh.getSummary()));
+        iconHigh.setOnPreferenceChangeListener((preference, newValue) -> {
+            iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
+            iconHigh.setSummary(getString(R.string.Default));
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+                if (value.equals("7")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
+                    config.setIconHigh(Integer.parseInt(value));
+                    iconHigh.setSummary(value);
+                } else {
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
+                }
+            } catch (NumberFormatException ignore) {
+
+            }
+            return true;
+        });
         // 自定义图标
         Preference iconCustomize = findPreference("iconCustomize");
         assert iconCustomize != null;
@@ -429,9 +453,9 @@ public class SettingsActivity extends PreferenceActivity {
                             Editable editTexts = editText.getText();
                             if (!editTexts.toString().isEmpty()) {
                                 try {
+                                    new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)));
                                     iconConfig.setIcon(iconName, editText.getText().toString());
                                 } catch (Exception ignore) {
-                                    new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)));
                                 }
                             } else {
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
