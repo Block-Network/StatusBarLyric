@@ -18,7 +18,7 @@
     <string name="ClickLyric">* 點擊歌詞切換時鐘和歌詞</string>
     <string name="AbScreen">防燒屏</string>
     <string name="IconPath">圖標路徑</string>
-    <string name="IconPos">* 圖標上下位置</string>
+    <string name="IconHigh">* 圖標上下位置</string>
     <string name="Default">默认</string>
     <string name="IconAutoColors">圖標自動反色</string>
     <string name="UnlockShow">僅解鎖顯示</string>
@@ -106,6 +106,7 @@
     <string name="RestoreDefaultPath">恢復默認路徑</string>
     <string name="NewPath">選擇新路徑</string>
     <string name="LyricPosTips">-900~900（單位：像素點），當前:</string>
+    <string name="LyricHighTips">-100~100（單位：像素點），當前：</string>
     <string name="On">開啟</string>
     <string name="Reset">恢復默認</string>
     <string name="ResetHookTips">已恢復默認Hook,請重啟SystemUI</string>
@@ -151,4 +152,5 @@
     <string name="MakeIcon">製作圖標</string>
     <string name="MakeIconError">無法跳轉，請檢查是否安裝\n爱玩机工具箱</string>
     <string name="MakeIconTitle">請輸入沒有前綴的Base 64，推薦像素大小3232</string>
+    <string name="LyricHigh">* 歌詞上下位置</string>
 </resources>

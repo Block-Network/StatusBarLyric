@@ -77,7 +77,6 @@ public class SystemUI {
         static ImageView iconView;
         static String strIcon;
         static String oldAnim = "";
-        static String emptyIcon = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==";
         static int oldPos = 0;
         static boolean isLock = false;
         static boolean enable = false;
@@ -191,8 +190,8 @@ public class SystemUI {
                 lyricTextView.setOutAnimation(Utils.outAnim(oldAnim));
             }
             if (!config.getAntiBurn()) {
-                if (config.getIconPosition() != oldPos) {
-                    oldPos = config.getIconPosition();
+                if (config.getIconHigh() != oldPos) {
+                    oldPos = config.getIconHigh();
                     Message message = updateMarginsIcon.obtainMessage();
                     message.arg1 = 0;
                     message.arg2 = oldPos;
@@ -330,7 +329,7 @@ public class SystemUI {
                 lyricLayout.addView(lyricTextView);
                 lyricLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 lyricParams = (LinearLayout.LayoutParams) lyricLayout.getLayoutParams();
-                lyricParams.setMargins(config.getLyricPosition(), 0, 0, 0);
+                lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0);
                 lyricLayout.setLayoutParams(lyricParams);
 
                 // 将歌词加入时钟布局
@@ -388,7 +387,7 @@ public class SystemUI {
                 });
 
                 updateLyricPos = new Handler(Looper.getMainLooper(), message -> {
-                    lyricParams.setMargins(config.getLyricPosition(), 0, 0, 0);
+                    lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0);
                     return true;
                 });
 
@@ -526,7 +525,7 @@ public class SystemUI {
                             @SuppressLint("DefaultLocale")
                             @Override
                             public void run() {
-                                iconPos = config.getIconPosition();
+                                iconPos = config.getIconHigh();
                                 if (enable && config.getAntiBurn()) {
                                     if (order) {
                                         i += 1;
@@ -599,10 +598,6 @@ public class SystemUI {
                             break;
                         case "app":
                             lyric = intent.getStringExtra("Lyric_Data");
-
-                            if (TextUtils.isEmpty(icon)) {
-                                icon = emptyIcon;
-                            }
                             boolean isPackName = true;
                             String packName = intent.getStringExtra("Lyric_PackName");
                             // 修复packName为null导致报错!
