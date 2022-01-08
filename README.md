@@ -66,9 +66,9 @@
 
 ## 贡献
 
-[贡献](CONTRIBUTING.md)
+[贡献](doc/CONTRIBUTING.md)
 
-[赞助列表](SPONSOR.md)
+[赞助列表](doc/SPONSOR.md)
 
 <img height="400px" src="./images/3to1.jpg" />
 

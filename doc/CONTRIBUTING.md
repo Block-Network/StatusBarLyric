@@ -44,4 +44,4 @@
 
 ## License
 
-通过为 状态栏歌词 做出贡献，您同意您的贡献将根据其获得许可 [GNU General Public License v3.0](LICENSE).
+通过为 状态栏歌词 做出贡献，您同意您的贡献将根据其获得许可 [GNU General Public License v3.0](../LICENSE).

@@ -44,4 +44,4 @@ Please make sure the following is done when submitting a pull request:
 
 ## License
 
-By contributing to StatusBarLyric, you agree that your contributions will be licensed under its [GNU General Public License v3.0](LICENSE).
+By contributing to StatusBarLyric, you agree that your contributions will be licensed under its [GNU General Public License v3.0](../LICENSE).

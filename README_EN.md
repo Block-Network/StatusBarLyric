@@ -66,9 +66,9 @@ please check [Api](https://github.com/577fkj/StatusBarApiExample)
 
 ## Contributing
 
-[Contributing](CONTRIBUTING_EN.md)
+[Contributing](doc/CONTRIBUTING_EN.md)
 
-[Sponsorship list](SPONSOR.md)
+[Sponsorship list](doc/SPONSOR.md)
 
 <img height="400px" src="./images/3to1.jpg" />
 
