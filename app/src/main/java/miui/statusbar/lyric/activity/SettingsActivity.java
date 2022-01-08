@@ -437,7 +437,7 @@ public class SettingsActivity extends PreferenceActivity {
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                             }
                         })
-                        .setPositiveButton(R.string.Cancel, null)
+                        .setNegativeButton(R.string.Cancel, null)
                         .setNeutralButton(getString(R.string.MakeIcon), (dialogInterface, i) -> {
                             ComponentName componentName = new ComponentName("com.byyoung.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity");
                             Intent intent = new Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity");
