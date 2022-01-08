@@ -438,7 +438,7 @@ public class SettingsActivity extends PreferenceActivity {
                             }
                         })
                         .setPositiveButton(R.string.Cancel, null)
-                        .setNeutralButton("制作图标", (dialogInterface, i) -> {
+                        .setNeutralButton(getString(R.string.MakeIcon), (dialogInterface, i) -> {
                             ComponentName componentName = new ComponentName("com.byyoung.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity");
                             Intent intent = new Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity");
                             intent.putExtra("PackageName", componentName.getPackageName());
@@ -446,7 +446,7 @@ public class SettingsActivity extends PreferenceActivity {
                             try {
                                 activity.startActivity(intent);
                             } catch (Exception ignore) {
-                                ActivityUtils.showToastOnLooper(activity, "无法跳转，请检查是否安装\n爱玩机工具箱");
+                                ActivityUtils.showToastOnLooper(activity, getString(R.string.MakeIconError));
                             }
                         })
                         .show();

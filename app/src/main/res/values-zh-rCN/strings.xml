@@ -148,4 +148,7 @@
     <string name="NewNotice">新通知</string>
     <string name="GetNewNoticeError">获取新通知错误</string>
     <string name="ResetSuccess">重置成功</string>
+    <string name="MakeIcon">制作图标</string>
+    <string name="MakeIconError">无法跳转，请检查是否安装\n爱玩机工具箱</string>
+    <string name="MakeIconTitle">请输入没有前缀的Base64，推荐像素大小32*32</string>
 </resources>

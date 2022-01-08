@@ -164,4 +164,7 @@
     <string name="NewNotice">NewNotice</string>
     <string name="GetNewNoticeError">Get NewNotice Error</string>
     <string name="ResetSuccess">Reset successfully</string>
+    <string name="MakeIcon">Make Icon</string>
+    <string name="MakeIconError">Can\'t jump，Please check if it is installed\n爱玩机工具箱</string>
+    <string name="MakeIconTitle">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
 </resources>
