@@ -344,6 +344,32 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
+        // 歌词大小
+        EditTextPreference lyricSize = (EditTextPreference) findPreference("lyricSize");
+        assert lyricSize != null;
+        lyricSize.setSummary((String.valueOf(config.getLyricSize())));
+        if (String.valueOf(config.getLyricSize()).equals("7")) {
+            lyricSize.setSummary(getString(R.string.Default));
+        }
+        lyricSize.setDialogMessage(String.format("%s%s", "0~50，当前:", lyricSize.getSummary()));
+        lyricSize.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricSize.setDialogMessage(String.format("%s%s", "0~50，当前:", config.getLyricSize()));
+            lyricSize.setSummary(getString(R.string.Default));
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+                if (value.equals("7")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 50 && Integer.parseInt(value) >= 0) {
+                    config.setLyricSize(Integer.parseInt(value));
+                    lyricSize.setSummary(value);
+                } else {
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
+                }
+            } catch (NumberFormatException ignore) {
+            }
+            return true;
+        });
+
         // 歌词左右位置
         EditTextPreference lyricPosition = (EditTextPreference) findPreference("lyricPosition");
         assert lyricPosition != null;
@@ -353,7 +379,7 @@ public class SettingsActivity extends PreferenceActivity {
         }
         lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), lyricPosition.getSummary()));
         lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
+            lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), config.getLyricPosition()));
             lyricPosition.setSummary(getString(R.string.Default));
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
@@ -379,7 +405,7 @@ public class SettingsActivity extends PreferenceActivity {
         }
         lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), lyricHigh.getSummary()));
         lyricHigh.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), getString(R.string.Default)));
+            lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), config.getLyricHigh()));
             lyricHigh.setSummary(getString(R.string.Default));
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
@@ -418,7 +444,7 @@ public class SettingsActivity extends PreferenceActivity {
         }
         iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), iconHigh.getSummary()));
         iconHigh.setOnPreferenceChangeListener((preference, newValue) -> {
-            iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
+            iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), config.getIconHigh()));
             iconHigh.setSummary(getString(R.string.Default));
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");

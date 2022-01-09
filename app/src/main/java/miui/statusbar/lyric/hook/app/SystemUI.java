@@ -165,7 +165,7 @@ public class SystemUI {
                 if (!icon.equals(strIcon)) {
                     strIcon = icon;
                     Utils.log(strIcon);
-                    drawableIcon = new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(strIcon)));
+                    drawableIcon = new BitmapDrawable(application.getResources(), Utils.stringToBitmap(iconConfig.getIcon(strIcon)));
                 }
                 if (drawableIcon != null) {
                     // 设置宽高
@@ -303,7 +303,11 @@ public class SystemUI {
                 lyricTextView.setWidth((dw * 35) / 100);
                 lyricTextView.setHeight(clock.getHeight());
                 lyricTextView.setTypeface(clock.getTypeface());
-                lyricTextView.setTextSize(0, clock.getTextSize());
+                if (config.getLyricSize() == 7) {
+                    lyricTextView.setTextSize(0, clock.getTextSize());
+                } else {
+                    lyricTextView.setTextSize(0, config.getLyricSize());
+                }
                 lyricTextView.setMargins(10, 0, 0, 0);
                 if (!config.getLyricStyle()) {
                     if (config.getLShowOnce()) {

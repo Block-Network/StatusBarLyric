@@ -89,6 +89,14 @@
             android:inputType="numberDecimal"/>
 
     <EditTextPreference
+            android:defaultValue="7"
+            android:key="lyricSize"
+            android:summary="@string/Default"
+            android:title="@string/LyricSize"
+            android:maxLength="2"
+            android:inputType="number"/>
+
+    <EditTextPreference
             android:defaultValue="0"
             android:key="lyricPosition"
             android:summary="@string/Default"

@@ -64,6 +64,14 @@ public class Config {
         config.put("LHigh", i);
     }
 
+    public int getLyricSize() {
+        return config.optInt("LSize", 7);
+    }
+
+    public void setLyricSize(int i) {
+        config.put("LSize", i);
+    }
+
     public int getIconHigh() {
         return config.optInt("IHigh", 7);
     }

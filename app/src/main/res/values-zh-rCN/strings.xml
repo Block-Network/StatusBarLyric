@@ -153,4 +153,5 @@
     <string name="MakeIconError">无法跳转，请检查是否安装\n爱玩机工具箱</string>
     <string name="MakeIconTitle">请输入没有前缀的Base64，推荐像素大小32*32</string>
     <string name="LyricHigh">* 歌词上下位置</string>
+    <string name="LyricSize">* 歌词大小</string>
 </resources>
