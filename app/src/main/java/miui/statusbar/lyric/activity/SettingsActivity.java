@@ -158,6 +158,7 @@ public class SettingsActivity extends PreferenceActivity {
         lyricService.setChecked(config.getLyricService());
         lyricService.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setLyricService((Boolean) newValue);
+            Analytics.trackEvent(String.format("开关 %s", newValue.toString()));
             return true;
         });
 
@@ -169,7 +170,7 @@ public class SettingsActivity extends PreferenceActivity {
         if (String.valueOf(config.getLyricMaxWidth()).equals("-1")) {
             lyricMaxWidth.setSummary(getString(R.string.Off));
         }
-        lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), lyricMaxWidth.getSummary()));
+        lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), getString(R.string.Adaptive)));
         lyricMaxWidth.setOnPreferenceChangeListener((preference, newValue) -> {
             lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), getString(R.string.Adaptive)));
             lyricMaxWidth.setSummary(getString(R.string.Adaptive));
@@ -180,6 +181,7 @@ public class SettingsActivity extends PreferenceActivity {
                     return true;
                 } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
                     config.setLyricMaxWidth(Integer.parseInt(value));
+                    lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), value));
                     lyricMaxWidth.setSummary(value);
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
@@ -202,9 +204,10 @@ public class SettingsActivity extends PreferenceActivity {
         lyricWidth.setDefaultValue(String.valueOf(config.getLyricWidth()));
         lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), lyricWidth.getSummary()));
         lyricWidth.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), getString(R.string.Adaptive)));
             lyricMaxWidth.setEnabled(true);
             lyricWidth.setSummary(getString(R.string.Adaptive));
-            lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), getString(R.string.Adaptive)));
+            config.setLyricWidth(-1);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "").replaceAll("\\+", "");
                 config.setLyricWidth(-1);
@@ -212,9 +215,9 @@ public class SettingsActivity extends PreferenceActivity {
                     return true;
                 } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
                     config.setLyricWidth(Integer.parseInt(value));
+                    lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
                     lyricWidth.setSummary(value);
                     lyricMaxWidth.setEnabled(false);
-                    lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
@@ -245,16 +248,18 @@ public class SettingsActivity extends PreferenceActivity {
         lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
         lyricColour.setEnabled(!config.getUseSystemReverseColor());
         lyricColour.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), getString(R.string.Adaptive)));
+            lyricColour.setSummary(getString(R.string.Adaptive));
+            config.setLyricColor("off");
             String value = newValue.toString().replaceAll(" ", "");
-            if (value.equals("") | value.equals(getString(R.string.Off)) | value.equals(getString(R.string.Adaptive))) {
-                config.setLyricColor("off");
-                lyricColour.setSummary(getString(R.string.Adaptive));
+            if (value.equals("") | value.equals(getString(R.string.Adaptive))) {
+                return true;
             } else {
                 try {
                     Color.parseColor(newValue.toString());
-                    config.setLyricColor(newValue.toString());
-                    lyricColour.setSummary(newValue.toString());
                     lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
+                    lyricColour.setSummary(newValue.toString());
+                    config.setLyricColor(newValue.toString());
                 } catch (Exception e) {
                     config.setLyricColor("off");
                     lyricColour.setSummary(getString(R.string.Adaptive));
@@ -343,6 +348,34 @@ public class SettingsActivity extends PreferenceActivity {
             return true;
         });
 
+        // 歌词大小
+        EditTextPreference lyricSize = (EditTextPreference) findPreference("lyricSize");
+        assert lyricSize != null;
+        lyricSize.setSummary((String.valueOf(config.getLyricSize())));
+        if (String.valueOf(config.getLyricSize()).equals("7")) {
+            lyricSize.setSummary(getString(R.string.Default));
+        }
+        lyricSize.setDialogMessage(String.format("%s%s", getString(R.string.LyricSizeTips), lyricSize.getSummary()));
+        lyricSize.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricSize.setDialogMessage(String.format("%s%s", getString(R.string.LyricSizeTips), getString(R.string.Default)));
+            lyricSize.setSummary(getString(R.string.Default));
+            config.setLyricSize(7);
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+                if (value.equals("7")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 50 && Integer.parseInt(value) >= 0) {
+                    config.setLyricSize(Integer.parseInt(value));
+                    lyricSize.setDialogMessage(String.format("%s%s", "0~50，当前:", value));
+                    lyricSize.setSummary(value);
+                } else {
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
+                }
+            } catch (NumberFormatException ignore) {
+            }
+            return true;
+        });
+
         // 歌词左右位置
         EditTextPreference lyricPosition = (EditTextPreference) findPreference("lyricPosition");
         assert lyricPosition != null;
@@ -354,46 +387,47 @@ public class SettingsActivity extends PreferenceActivity {
         lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
             lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
             lyricPosition.setSummary(getString(R.string.Default));
+            config.setLyricPosition(0);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
                 if (value.equals("0")) {
                     return true;
                 } else if (Integer.parseInt(value) <= 900 && Integer.parseInt(value) >= -900) {
                     config.setLyricPosition(Integer.parseInt(value));
+                    lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), value));
                     lyricPosition.setSummary(value);
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignore) {
-
             }
             return true;
         });
 
-
-        // 图标上下位置
-        EditTextPreference iconPosition = (EditTextPreference) findPreference("IconPosition");
-        assert iconPosition != null;
-        iconPosition.setSummary((String.valueOf(config.getIconPosition())));
-        if (String.valueOf(config.getIconPosition()).equals("7")) {
-            iconPosition.setSummary(getString(R.string.Default));
+        // 歌词上下位置
+        EditTextPreference lyricHigh = (EditTextPreference) findPreference("lyricHigh");
+        assert lyricHigh != null;
+        lyricHigh.setSummary((String.valueOf(config.getLyricHigh())));
+        if (String.valueOf(config.getLyricHigh()).equals("0")) {
+            lyricHigh.setSummary(getString(R.string.Default));
         }
-        iconPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), iconPosition.getSummary()));
-        iconPosition.setOnPreferenceChangeListener((preference, newValue) -> {
-            iconPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
-            iconPosition.setSummary(getString(R.string.Default));
+        lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), lyricHigh.getSummary()));
+        lyricHigh.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), config.getLyricHigh()));
+            lyricHigh.setSummary(getString(R.string.Default));
+            config.setLyricHigh(0);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-                if (value.equals("7")) {
+                if (value.equals("0")) {
                     return true;
                 } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
-                    config.setIconPosition(Integer.parseInt(value));
-                    iconPosition.setSummary(value);
+                    config.setLyricHigh(Integer.parseInt(value));
+                    lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), value));
+                    lyricHigh.setSummary(value);
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignore) {
-
             }
             return true;
         });
@@ -407,6 +441,35 @@ public class SettingsActivity extends PreferenceActivity {
         }
         iconColor.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setIconAutoColor((boolean) newValue);
+            return true;
+        });
+
+        // 图标上下位置
+        EditTextPreference iconHigh = (EditTextPreference) findPreference("iconHigh");
+        assert iconHigh != null;
+        iconHigh.setSummary((String.valueOf(config.getIconHigh())));
+        if (String.valueOf(config.getIconHigh()).equals("7")) {
+            iconHigh.setSummary(getString(R.string.Default));
+        }
+        iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), iconHigh.getSummary()));
+        iconHigh.setOnPreferenceChangeListener((preference, newValue) -> {
+            iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), config.getIconHigh()));
+            iconHigh.setSummary(getString(R.string.Default));
+            config.setIconHigh(7);
+            try {
+                String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
+                if (value.equals("7")) {
+                    return true;
+                } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
+                    config.setIconHigh(Integer.parseInt(value));
+                    iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), value));
+                    iconHigh.setSummary(value);
+                } else {
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
+                }
+            } catch (NumberFormatException ignore) {
+
+            }
             return true;
         });
 
@@ -429,16 +492,16 @@ public class SettingsActivity extends PreferenceActivity {
                             Editable editTexts = editText.getText();
                             if (!editTexts.toString().isEmpty()) {
                                 try {
+                                    new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)));
                                     iconConfig.setIcon(iconName, editText.getText().toString());
                                 } catch (Exception ignore) {
-                                    new BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)));
                                 }
                             } else {
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                             }
                         })
-                        .setPositiveButton(R.string.Cancel, null)
-                        .setNeutralButton("制作图标", (dialogInterface, i) -> {
+                        .setNegativeButton(R.string.Cancel, null)
+                        .setNeutralButton(getString(R.string.MakeIcon), (dialogInterface, i) -> {
                             ComponentName componentName = new ComponentName("com.byyoung.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity");
                             Intent intent = new Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity");
                             intent.putExtra("PackageName", componentName.getPackageName());
@@ -446,7 +509,7 @@ public class SettingsActivity extends PreferenceActivity {
                             try {
                                 activity.startActivity(intent);
                             } catch (Exception ignore) {
-                                ActivityUtils.showToastOnLooper(activity, "无法跳转，请检查是否安装\n爱玩机工具箱");
+                                ActivityUtils.showToastOnLooper(activity, getString(R.string.MakeIconError));
                             }
                         })
                         .show();
@@ -590,7 +653,8 @@ public class SettingsActivity extends PreferenceActivity {
             new AlertDialog.Builder(activity)
                     .setTitle(getString(R.string.ResetModuleDialog))
                     .setMessage(getString(R.string.ResetModuleDialogTips))
-                    .setPositiveButton(getString(R.string.Ok), (dialog, which) -> ActivityUtils.cleanConfig(activity, config, ConfigUtils.getAppList(activity), ConfigUtils.getIconConfig(activity)))
+                    .setPositiveButton(getString(R.string.Ok), (dialog, which) ->
+                            ActivityUtils.cleanConfig(activity))
                     .setNegativeButton(getString(R.string.Cancel), null)
                     .create()
                     .show();

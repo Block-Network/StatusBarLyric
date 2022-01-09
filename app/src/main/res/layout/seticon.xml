@@ -7,7 +7,7 @@
               android:theme="@style/AppTheme"
               android:gravity="center_horizontal">
     <TextView
-            android:text="请输入没有前缀的Base64，推荐像素大小32*32"
+            android:text="@string/MakeIconTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"/>
@@ -26,7 +26,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:importantForAutofill="no"
-            tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+            tools:ignore="LabelFor,SpeakableTextPresentCheck"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"

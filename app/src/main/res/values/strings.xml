@@ -18,7 +18,7 @@
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
     <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconPath">Icon path</string>
-    <string name="IconPos">Icon up and down position</string>
+    <string name="IconHigh">Icon up and down position</string>
     <string name="LyricPos">* Lyrics left and right position
     </string>
     <string name="Default">Default</string>
@@ -115,6 +115,7 @@
     <string name="RestoreDefaultPath">Restore default path</string>
     <string name="NewPath">Choose a new path</string>
     <string name="LyricPosTips">-900~900(Unit:pixel), currently:</string>
+    <string name="LyricHighTips">-100~100(Unit:pixel), currently:</string>
     <string name="On">ON</string>
     <string name="Reset">Reset defula</string>
     <string name="ResetHookTips">The default hook has been restored, please restart SystemUI</string>
@@ -164,4 +165,10 @@
     <string name="NewNotice">NewNotice</string>
     <string name="GetNewNoticeError">Get NewNotice Error</string>
     <string name="ResetSuccess">Reset successfully</string>
+    <string name="MakeIcon">Make Icon</string>
+    <string name="MakeIconError">Can\'t jump，Please check if it is installed\n爱玩机工具箱</string>
+    <string name="MakeIconTitle">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
+    <string name="LyricHigh">* Lyrics up and down position</string>
+    <string name="LyricSize">* Lyrics Size</string>
+    <string name="LyricSizeTips">0~50, current:</string>
 </resources>
