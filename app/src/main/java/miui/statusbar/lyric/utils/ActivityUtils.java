@@ -89,27 +89,16 @@ public class ActivityUtils {
     }
 
     //清除配置
-    public static void cleanConfig(Activity activity, Config config, ApiListConfig config2, Config config3) {
+    public static void cleanConfig(Activity activity) {
+        showToastOnLooper(activity, activity.getString(R.string.ResetSuccess));
         activity.getSharedPreferences("miui.statusbar.lyric_preferences", 0).edit().clear().apply();
         PackageManager packageManager = Objects.requireNonNull(activity).getPackageManager();
         packageManager.setComponentEnabledSetting(new ComponentName(activity, "miui.statusbar.lyric.launcher"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-
-        try {
-            config.clear();
-        } catch (Exception | Error ignored) {
-        }
-        try {
-            config2.clear();
-        } catch (Exception | Error ignored) {
-        }
-        try {
-            config3.clear();
-        } catch (Exception | Error ignored) {
-        }
-
-        showToastOnLooper(activity,activity.getString(R.string.ResetSuccess));
+        ConfigUtils.getSP(activity, "Lyric_Config").edit().clear().apply();
+        ConfigUtils.getSP(activity, "AppList_Config").edit().clear().apply();
+        ConfigUtils.getSP(activity, "Icon_Config").edit().clear().apply();
         activity.finishAffinity();
-        System.exit(0);
+
     }
 
     public static boolean isApi(PackageManager packageManager, String packName) {

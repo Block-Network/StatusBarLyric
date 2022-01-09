@@ -616,7 +616,7 @@ public class SettingsActivity extends PreferenceActivity {
                     .setTitle(getString(R.string.ResetModuleDialog))
                     .setMessage(getString(R.string.ResetModuleDialogTips))
                     .setPositiveButton(getString(R.string.Ok), (dialog, which) ->
-                            ActivityUtils.cleanConfig(activity, config, ConfigUtils.getAppList(activity), ConfigUtils.getIconConfig(activity)))
+                            ActivityUtils.cleanConfig(activity))
                     .setNegativeButton(getString(R.string.Cancel), null)
                     .create()
                     .show();
