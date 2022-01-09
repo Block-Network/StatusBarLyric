@@ -36,7 +36,7 @@ public class AboutActivity extends PreferenceActivity {
                 Url = "https://github.com/qqlittleice";
                 break;
             case 6:
-                Url = "http://www.coolapk.com/u/1854895";
+                Url = "https://www.coolapk.com/u/1854895";
                 break;
         }
         Intent intent = new Intent(
