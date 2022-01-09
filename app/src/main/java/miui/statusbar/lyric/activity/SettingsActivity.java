@@ -170,7 +170,7 @@ public class SettingsActivity extends PreferenceActivity {
         if (String.valueOf(config.getLyricMaxWidth()).equals("-1")) {
             lyricMaxWidth.setSummary(getString(R.string.Off));
         }
-        lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), lyricMaxWidth.getSummary()));
+        lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), getString(R.string.Adaptive)));
         lyricMaxWidth.setOnPreferenceChangeListener((preference, newValue) -> {
             lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), getString(R.string.Adaptive)));
             lyricMaxWidth.setSummary(getString(R.string.Adaptive));
@@ -181,6 +181,7 @@ public class SettingsActivity extends PreferenceActivity {
                     return true;
                 } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
                     config.setLyricMaxWidth(Integer.parseInt(value));
+                    lyricMaxWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricMaxWidthTips), value));
                     lyricMaxWidth.setSummary(value);
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
@@ -203,9 +204,10 @@ public class SettingsActivity extends PreferenceActivity {
         lyricWidth.setDefaultValue(String.valueOf(config.getLyricWidth()));
         lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), lyricWidth.getSummary()));
         lyricWidth.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), getString(R.string.Adaptive)));
             lyricMaxWidth.setEnabled(true);
             lyricWidth.setSummary(getString(R.string.Adaptive));
-            lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), getString(R.string.Adaptive)));
+            config.setLyricWidth(-1);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "").replaceAll("\\+", "");
                 config.setLyricWidth(-1);
@@ -213,9 +215,9 @@ public class SettingsActivity extends PreferenceActivity {
                     return true;
                 } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= 0) {
                     config.setLyricWidth(Integer.parseInt(value));
+                    lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
                     lyricWidth.setSummary(value);
                     lyricMaxWidth.setEnabled(false);
-                    lyricWidth.setDialogMessage(String.format("%s%s", getString(R.string.LyricWidthTips), value));
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
@@ -246,16 +248,18 @@ public class SettingsActivity extends PreferenceActivity {
         lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
         lyricColour.setEnabled(!config.getUseSystemReverseColor());
         lyricColour.setOnPreferenceChangeListener((preference, newValue) -> {
+            lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), getString(R.string.Adaptive)));
+            lyricColour.setSummary(getString(R.string.Adaptive));
+            config.setLyricColor("off");
             String value = newValue.toString().replaceAll(" ", "");
-            if (value.equals("") | value.equals(getString(R.string.Off)) | value.equals(getString(R.string.Adaptive))) {
-                config.setLyricColor("off");
-                lyricColour.setSummary(getString(R.string.Adaptive));
+            if (value.equals("") | value.equals(getString(R.string.Adaptive))) {
+                return true;
             } else {
                 try {
                     Color.parseColor(newValue.toString());
-                    config.setLyricColor(newValue.toString());
-                    lyricColour.setSummary(newValue.toString());
                     lyricColour.setDialogMessage(String.format("%s%s", getString(R.string.LyricColorTips), config.getLyricColor()));
+                    lyricColour.setSummary(newValue.toString());
+                    config.setLyricColor(newValue.toString());
                 } catch (Exception e) {
                     config.setLyricColor("off");
                     lyricColour.setSummary(getString(R.string.Adaptive));
@@ -351,16 +355,18 @@ public class SettingsActivity extends PreferenceActivity {
         if (String.valueOf(config.getLyricSize()).equals("7")) {
             lyricSize.setSummary(getString(R.string.Default));
         }
-        lyricSize.setDialogMessage(String.format("%s%s", "0~50，当前:", lyricSize.getSummary()));
+        lyricSize.setDialogMessage(String.format("%s%s", getString(R.string.LyricSizeTips), lyricSize.getSummary()));
         lyricSize.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricSize.setDialogMessage(String.format("%s%s", "0~50，当前:", config.getLyricSize()));
+            lyricSize.setDialogMessage(String.format("%s%s", getString(R.string.LyricSizeTips), getString(R.string.Default)));
             lyricSize.setSummary(getString(R.string.Default));
+            config.setLyricSize(7);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
                 if (value.equals("7")) {
                     return true;
                 } else if (Integer.parseInt(value) <= 50 && Integer.parseInt(value) >= 0) {
                     config.setLyricSize(Integer.parseInt(value));
+                    lyricSize.setDialogMessage(String.format("%s%s", "0~50，当前:", value));
                     lyricSize.setSummary(value);
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
@@ -379,14 +385,16 @@ public class SettingsActivity extends PreferenceActivity {
         }
         lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), lyricPosition.getSummary()));
         lyricPosition.setOnPreferenceChangeListener((preference, newValue) -> {
-            lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), config.getLyricPosition()));
+            lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), getString(R.string.Default)));
             lyricPosition.setSummary(getString(R.string.Default));
+            config.setLyricPosition(0);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
                 if (value.equals("0")) {
                     return true;
                 } else if (Integer.parseInt(value) <= 900 && Integer.parseInt(value) >= -900) {
                     config.setLyricPosition(Integer.parseInt(value));
+                    lyricPosition.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), value));
                     lyricPosition.setSummary(value);
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
@@ -407,18 +415,19 @@ public class SettingsActivity extends PreferenceActivity {
         lyricHigh.setOnPreferenceChangeListener((preference, newValue) -> {
             lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), config.getLyricHigh()));
             lyricHigh.setSummary(getString(R.string.Default));
+            config.setLyricHigh(0);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
                 if (value.equals("0")) {
                     return true;
                 } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
                     config.setLyricHigh(Integer.parseInt(value));
+                    lyricHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricHighTips), value));
                     lyricHigh.setSummary(value);
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));
                 }
             } catch (NumberFormatException ignore) {
-
             }
             return true;
         });
@@ -446,12 +455,14 @@ public class SettingsActivity extends PreferenceActivity {
         iconHigh.setOnPreferenceChangeListener((preference, newValue) -> {
             iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), config.getIconHigh()));
             iconHigh.setSummary(getString(R.string.Default));
+            config.setIconHigh(7);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
                 if (value.equals("7")) {
                     return true;
                 } else if (Integer.parseInt(value) <= 100 && Integer.parseInt(value) >= -100) {
                     config.setIconHigh(Integer.parseInt(value));
+                    iconHigh.setDialogMessage(String.format("%s%s", getString(R.string.LyricPosTips), value));
                     iconHigh.setSummary(value);
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError));

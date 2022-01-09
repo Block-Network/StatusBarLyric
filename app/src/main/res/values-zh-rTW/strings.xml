@@ -154,4 +154,5 @@
     <string name="MakeIconTitle">請輸入沒有前綴的Base 64，推薦像素大小3232</string>
     <string name="LyricHigh">* 歌詞上下位置</string>
     <string name="LyricSize">* 歌詞大小</string>
+    <string name="LyricSizeTips">0~50，當前:</string>
 </resources>
