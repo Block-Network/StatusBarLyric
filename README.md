@@ -74,6 +74,6 @@
 
 ## EULA & License
 
-[EUAL](EUAL.md)
+[EULA](doc/EULA.md)
 
 [GNU General Public License v3.0](LICENSE)
