@@ -164,7 +164,7 @@ public class SystemUI {
                 Utils.log("开启图标");
                 if (!icon.equals(strIcon)) {
                     strIcon = icon;
-                    Utils.log(strIcon);
+                    Utils.log(strIcon + "  " + iconConfig.getIcon(strIcon));
                     drawableIcon = new BitmapDrawable(application.getResources(), Utils.stringToBitmap(iconConfig.getIcon(strIcon)));
                 }
                 if (drawableIcon != null) {
@@ -602,6 +602,9 @@ public class SystemUI {
                             break;
                         case "app":
                             lyric = intent.getStringExtra("Lyric_Data");
+                            if (TextUtils.isEmpty(icon)) {
+                                icon = "Api";
+                            }
                             boolean isPackName = true;
                             String packName = intent.getStringExtra("Lyric_PackName");
                             // 修复packName为null导致报错!
