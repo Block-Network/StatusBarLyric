@@ -44,7 +44,7 @@
 - @Yife Playte (Thanks for helping optimize vector)
 - @YuKongA
 - @QQ little ice
--
+- @咕灵谷灵咕 (Thanks for providing technical support for flyme to get lyrics)
 
 ### Downloads
 

@@ -35,6 +35,9 @@ public class AboutActivity extends PreferenceActivity {
             case 5:
                 Url = "https://github.com/qqlittleice";
                 break;
+            case 6:
+                Url = "http://www.coolapk.com/u/1854895";
+                break;
         }
         Intent intent = new Intent(
                 Intent.ACTION_VIEW, Uri.parse(Url));
@@ -54,7 +57,7 @@ public class AboutActivity extends PreferenceActivity {
         ThkList.setOnPreferenceClickListener((preference) -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.ThkList))
-                    .setItems(new String[]{"潇风残月", "柒猫Sebun_Neko", "Moriafly", "Yife Playte", "YuKongA", "QQ little ice"}, actionListener)
+                    .setItems(new String[]{"潇风残月", "柒猫Sebun_Neko", "Moriafly", "Yife Playte", "YuKongA", "QQ little ice","咕灵谷灵咕"}, actionListener)
                     .setNegativeButton(R.string.Done, null);
             builder.create().show();
             return true;

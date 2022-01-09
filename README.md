@@ -45,6 +45,7 @@
 - @Yife Playte (感谢帮忙优化矢量图)
 - @YuKongA
 - @QQ little ice
+- @咕灵谷灵咕 （感谢提供flyme获取歌词的技术支持）
 
 ### 下载
 
