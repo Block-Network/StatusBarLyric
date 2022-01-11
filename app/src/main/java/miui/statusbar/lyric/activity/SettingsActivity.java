@@ -352,19 +352,19 @@ public class SettingsActivity extends PreferenceActivity {
         EditTextPreference lyricSize = (EditTextPreference) findPreference("lyricSize");
         assert lyricSize != null;
         lyricSize.setSummary((String.valueOf(config.getLyricSize())));
-        if (String.valueOf(config.getLyricSize()).equals("7")) {
+        if (String.valueOf(config.getLyricSize()).equals("0")) {
             lyricSize.setSummary(getString(R.string.Default));
         }
         lyricSize.setDialogMessage(String.format("%s%s", getString(R.string.LyricSizeTips), lyricSize.getSummary()));
         lyricSize.setOnPreferenceChangeListener((preference, newValue) -> {
             lyricSize.setDialogMessage(String.format("%s%s", getString(R.string.LyricSizeTips), getString(R.string.Default)));
             lyricSize.setSummary(getString(R.string.Default));
-            config.setLyricSize(7);
+            config.setLyricSize(0);
             try {
                 String value = newValue.toString().replaceAll(" ", "").replaceAll("\n", "");
-                if (value.equals("7")) {
+                if (value.equals("0")) {
                     return true;
-                } else if (Integer.parseInt(value) <= 50 && Integer.parseInt(value) >= 0) {
+                } else if (Integer.parseInt(value) <= 50 && Integer.parseInt(value) > 0) {
                     config.setLyricSize(Integer.parseInt(value));
                     lyricSize.setDialogMessage(String.format("%s%s", "0~50，当前:", value));
                     lyricSize.setSummary(value);

@@ -303,7 +303,7 @@ public class SystemUI {
                 lyricTextView.setWidth((dw * 35) / 100);
                 lyricTextView.setHeight(clock.getHeight());
                 lyricTextView.setTypeface(clock.getTypeface());
-                if (config.getLyricSize() == 7) {
+                if (config.getLyricSize() == 0) {
                     lyricTextView.setTextSize(0, clock.getTextSize());
                 } else {
                     lyricTextView.setTextSize(0, config.getLyricSize());

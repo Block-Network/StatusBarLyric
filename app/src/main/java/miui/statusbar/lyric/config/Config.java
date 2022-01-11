@@ -65,7 +65,7 @@ public class Config {
     }
 
     public int getLyricSize() {
-        return config.optInt("LSize", 7);
+        return config.optInt("LSize", 0);
     }
 
     public void setLyricSize(int i) {
