@@ -58,14 +58,14 @@ public class Utils {
             notCarrier = 1;
         }
         if (!hasMiuiSetting) {
-            if (config.getHNoticeIco() && Settings.System.getInt(application.getContentResolver(), "status_bar_show_notification_icon", 1) == notCarrier) {
+            if (config.getHNoticeIcon() && Settings.System.getInt(application.getContentResolver(), "status_bar_show_notification_icon", 1) == notCarrier) {
                 Settings.System.putInt(application.getContentResolver(), "status_bar_show_notification_icon", isCarrier);
             }
             if (config.getHNetSpeed() && Settings.System.getInt(application.getContentResolver(), "status_bar_show_notification_icon", 1) == notCarrier) {
                 Settings.System.putInt(application.getContentResolver(), "status_bar_show_network_speed", isCarrier);
             }
         } else {
-            if (config.getHNoticeIco() && MiuiStatusBarManager.isShowNotificationIcon(application) != isOpen) {
+            if (config.getHNoticeIcon() && MiuiStatusBarManager.isShowNotificationIcon(application) != isOpen) {
                 MiuiStatusBarManager.setShowNotificationIcon(application, isOpen);
                 Settings.System.putInt(application.getContentResolver(), "status_bar_show_notification_icon", notCarrier);
             }

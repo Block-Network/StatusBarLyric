@@ -116,7 +116,7 @@ public class Config {
         config.put("LSwitch", bool);
     }
 
-    public Boolean getHNoticeIco() {
+    public Boolean getHNoticeIcon() {
         return config.optBoolean("HNoticeIcon", false);
     }
 

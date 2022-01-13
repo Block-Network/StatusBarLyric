@@ -554,7 +554,7 @@ public class SettingsActivity extends PreferenceActivity {
         // 隐藏通知图标
         SwitchPreference hNoticeIcon = (SwitchPreference) findPreference("hNoticeIcon");
         assert hNoticeIcon != null;
-        hNoticeIcon.setChecked(config.getHNoticeIco());
+        hNoticeIcon.setChecked(config.getHNoticeIcon());
         hNoticeIcon.setOnPreferenceChangeListener((preference, newValue) -> {
             config.setHNoticeIcon((Boolean) newValue);
             return true;
