@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
@@ -36,16 +35,6 @@ public class Netease {
 
             XC_MethodHook.Unhook hooked = null;
 
-            private boolean containsUpperCase(String source) {
-                boolean flag = false;
-                for (char c : source.toCharArray()) {
-                    if (Character.isUpperCase(c)) {
-                        flag = true;
-                    }
-                }
-                return flag;
-            }
-
             public void startFilterAndHook() {
                 hooked = XposedHelpers.findAndHookConstructor(BroadcastReceiver.class, new XC_MethodHook() {
                     @Override
@@ -58,12 +47,8 @@ public class Netease {
                                 Parameter[] parameters = m.getParameters();
                                 if (parameters.length == 2) {
                                     if (parameters[0].getType().getName().equals("android.app.Notification") && parameters[1].getType().getName().equals("boolean")){
-                                        Log.d("iceLogger", m.getDeclaringClass().getName());
-                                        Log.d("iceLogger", m.getName());
                                         XposedBridge.log("find = " + m.getDeclaringClass().getName() + " " + m.getName());
-                                        if (! containsUpperCase(m.getName())) {
-                                            XposedHelpers.findAndHookMethod(clazz, m.getName(), Notification.class, boolean.class, getHook());
-                                        }
+                                        XposedHelpers.findAndHookMethod(clazz, m.getName(), Notification.class, boolean.class, getHook());
                                     }
                                 }
                             }
