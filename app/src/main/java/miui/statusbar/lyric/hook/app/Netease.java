@@ -183,8 +183,8 @@ public class Netease {
                             }
                         }
 
-                        Utils.log("状态栏歌词 不支持的网易云版本! " + verName + "\n" + errorMsg);
-                        ActivityUtils.showToastOnLooper(context, "不支持的网易云版本! " + verName + "\n" + errorMsg);
+                        Utils.log("状态栏歌词 不一定支持的网易云版本! " + verName + "\n" + errorMsg);
+                        ActivityUtils.showToastOnLooper(context, "不一定支持的网易云版本! " + verName + "\n" + errorMsg);
                     } else {
                         String enableBTLyric_Class;
                         String enableBTLyric_Method;
