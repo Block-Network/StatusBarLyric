@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
@@ -15,6 +16,7 @@ import com.microsoft.appcenter.crashes.Crashes;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.HashMap;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
@@ -31,9 +33,12 @@ public class Netease {
 
     public static class Hook {
 
+        HookFilter filter = new HookFilter();
+
         private class HookFilter {
 
             XC_MethodHook.Unhook hooked = null;
+            HashMap<String, XC_MethodHook.Unhook> unhookMap = new HashMap<>();
 
             public void startFilterAndHook() {
                 hooked = XposedHelpers.findAndHookConstructor(BroadcastReceiver.class, new XC_MethodHook() {
@@ -48,7 +53,9 @@ public class Netease {
                                 if (parameters.length == 2) {
                                     if (parameters[0].getType().getName().equals("android.app.Notification") && parameters[1].getType().getName().equals("boolean")){
                                         XposedBridge.log("find = " + m.getDeclaringClass().getName() + " " + m.getName());
-                                        XposedHelpers.findAndHookMethod(clazz, m.getName(), Notification.class, boolean.class, getHook());
+                                        Log.d("iceLogger", "find = " + m.getDeclaringClass().getName() + " " + m.getName());
+                                        Unhook unhook = XposedHelpers.findAndHookMethod(clazz, m.getName(), Notification.class, boolean.class, getHook());
+                                        unhookMap.put(m.getName(), unhook);
                                     }
                                 }
                             }
@@ -60,6 +67,25 @@ public class Netease {
             public void stopFilter() {
                 if (hooked != null) {
                     hooked.unhook();
+                }
+            }
+
+            public void fixShowingRubbish() {
+                for (String key : unhookMap.keySet()) {
+                    boolean flag = false;
+                    for (char c : key.toCharArray()) {
+                        if (Character.isUpperCase(c)) {
+                            flag = true;
+                        }
+                    }
+                    if (flag) {
+                        Log.d("iceLogger", "正在unhook " + key);
+                        XC_MethodHook.Unhook unhook = unhookMap.get(key);
+                        if (unhook != null) {
+                            unhook.unhook();
+                            unhookMap.remove(key);
+                        }
+                    }
                 }
             }
 
@@ -97,6 +123,10 @@ public class Netease {
                     } else {
                         return;
                     }
+                    if (lyric.equals("网易云音乐正在播放")) {
+                        Log.d("iceLogger", "正在显示垃圾信息，尝试修复");
+                        filter.fixShowingRubbish();
+                    }
                     if (isLyric && !lyric.replace(" ", "").equals("")) {
                         Utils.sendLyric(context, lyric, "Netease");
                     } else {
@@ -108,7 +138,6 @@ public class Netease {
         }
 
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
-            HookFilter filter = new HookFilter();
             XposedHelpers.findAndHookMethod(XposedHelpers.findClass("com.netease.cloudmusic.NeteaseMusicApplication", lpparam.classLoader), "attachBaseContext", Context.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) {
