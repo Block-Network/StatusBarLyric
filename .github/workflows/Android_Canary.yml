@@ -1,8 +1,8 @@
-name: Android CI Dev
+name: Android CI Canary
 
 on:
   push:
-    branches: [ Dev ]
+    branches: [ kt ]
 
 
 jobs:
