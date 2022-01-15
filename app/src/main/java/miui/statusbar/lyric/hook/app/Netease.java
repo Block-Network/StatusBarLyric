@@ -3,15 +3,23 @@ package miui.statusbar.lyric.hook.app;
 import android.annotation.SuppressLint;
 import android.app.AndroidAppHelper;
 import android.app.Notification;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.HashMap;
+
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import miui.statusbar.lyric.hook.MeiZuStatusBarLyric;
@@ -24,6 +32,62 @@ public class Netease {
     static String musicName;
 
     public static class Hook {
+
+        HookFilter filter = new HookFilter();
+
+        private class HookFilter {
+
+            XC_MethodHook.Unhook hooked = null;
+            HashMap<String, XC_MethodHook.Unhook> unhookMap = new HashMap<>();
+
+            public void startFilterAndHook() {
+                hooked = XposedHelpers.findAndHookConstructor(BroadcastReceiver.class, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param){
+                        Class<?> clazz = param.thisObject.getClass();
+                        String className = param.thisObject.getClass().getName();
+                        if (className.startsWith("com.netease.cloudmusic")) {
+                            Method[] methods = clazz.getDeclaredMethods();
+                            for (Method m : methods) {
+                                Parameter[] parameters = m.getParameters();
+                                if (parameters.length == 2) {
+                                    if (parameters[0].getType().getName().equals("android.app.Notification") && parameters[1].getType().getName().equals("boolean")){
+                                        XposedBridge.log("find = " + m.getDeclaringClass().getName() + " " + m.getName());
+                                        Unhook unhook = XposedHelpers.findAndHookMethod(clazz, m.getName(), Notification.class, boolean.class, getHook());
+                                        unhookMap.put(m.getName(), unhook);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            public void stopFilter() {
+                if (hooked != null) {
+                    hooked.unhook();
+                }
+            }
+
+            public void fixShowingRubbish() {
+                for (String key : unhookMap.keySet()) {
+                    boolean flag = false;
+                    for (char c : key.toCharArray()) {
+                        if (Character.isUpperCase(c)) {
+                            flag = true;
+                        }
+                    }
+                    if (flag) {
+                        XC_MethodHook.Unhook unhook = unhookMap.get(key);
+                        if (unhook != null) {
+                            unhook.unhook();
+                            unhookMap.remove(key);
+                        }
+                    }
+                }
+            }
+
+        }
 
         public XC_MethodHook getHook() {
             return new XC_MethodHook() {
@@ -57,6 +121,9 @@ public class Netease {
                     } else {
                         return;
                     }
+                    if (lyric.equals("网易云音乐正在播放")) {
+                        filter.fixShowingRubbish();
+                    }
                     if (isLyric && !lyric.replace(" ", "").equals("")) {
                         Utils.sendLyric(context, lyric, "Netease");
                     } else {
@@ -67,7 +134,15 @@ public class Netease {
             };
         }
 
+        private void disableTinker(XC_LoadPackage.LoadPackageParam lpparam) {
+            try{
+                Class<?> tinkerApp = XposedHelpers.findClass("com.tencent.tinker.loader.app.TinkerApplication", lpparam.classLoader);
+                XposedHelpers.findAndHookMethod(tinkerApp, "getTinkerFlags", XC_MethodReplacement.returnConstant(0));
+            } catch (Exception ignored) {}
+        }
+
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
+            disableTinker(lpparam);
             XposedHelpers.findAndHookMethod(XposedHelpers.findClass("com.netease.cloudmusic.NeteaseMusicApplication", lpparam.classLoader), "attachBaseContext", Context.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) {
@@ -88,7 +163,7 @@ public class Netease {
                         String[] hookStringArr = new String[]{
                                 "com.netease.cloudmusic.module.lyric.a.a#a"
                         };
-
+                        filter.startFilterAndHook();
 
                         for (String hookNotification : hookNotificationArr) {
                             try {
@@ -108,8 +183,8 @@ public class Netease {
                             }
                         }
 
-                        Utils.log("状态栏歌词 不支持的网易云版本! " + verName + "\n" + errorMsg);
-                        ActivityUtils.showToastOnLooper(context, "不支持的网易云版本! " + verName + "\n" + errorMsg);
+                        Utils.log("状态栏歌词 不一定支持的网易云版本! " + verName + "\n" + errorMsg);
+                        ActivityUtils.showToastOnLooper(context, "不一定支持的网易云版本! " + verName + "\n" + errorMsg);
                     } else {
                         String enableBTLyric_Class;
                         String enableBTLyric_Method;
