@@ -53,7 +53,6 @@ public class Netease {
                                 if (parameters.length == 2) {
                                     if (parameters[0].getType().getName().equals("android.app.Notification") && parameters[1].getType().getName().equals("boolean")){
                                         XposedBridge.log("find = " + m.getDeclaringClass().getName() + " " + m.getName());
-                                        Log.d("iceLogger", "find = " + m.getDeclaringClass().getName() + " " + m.getName());
                                         Unhook unhook = XposedHelpers.findAndHookMethod(clazz, m.getName(), Notification.class, boolean.class, getHook());
                                         unhookMap.put(m.getName(), unhook);
                                     }
@@ -79,7 +78,6 @@ public class Netease {
                         }
                     }
                     if (flag) {
-                        Log.d("iceLogger", "正在unhook " + key);
                         XC_MethodHook.Unhook unhook = unhookMap.get(key);
                         if (unhook != null) {
                             unhook.unhook();
@@ -124,7 +122,6 @@ public class Netease {
                         return;
                     }
                     if (lyric.equals("网易云音乐正在播放")) {
-                        Log.d("iceLogger", "正在显示垃圾信息，尝试修复");
                         filter.fixShowingRubbish();
                     }
                     if (isLyric && !lyric.replace(" ", "").equals("")) {
