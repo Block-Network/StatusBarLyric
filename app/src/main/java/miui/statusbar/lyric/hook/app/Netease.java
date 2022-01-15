@@ -18,6 +18,7 @@ import java.lang.reflect.Parameter;
 import java.util.HashMap;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -133,7 +134,15 @@ public class Netease {
             };
         }
 
+        private void disableTinker(XC_LoadPackage.LoadPackageParam lpparam) {
+            try{
+                Class<?> tinkerApp = XposedHelpers.findClass("com.tencent.tinker.loader.app.TinkerApplication", lpparam.classLoader);
+                XposedHelpers.findAndHookMethod(tinkerApp, "getTinkerFlags", XC_MethodReplacement.returnConstant(0));
+            } catch (Exception ignored) {}
+        }
+
         public Hook(XC_LoadPackage.LoadPackageParam lpparam) {
+            disableTinker(lpparam);
             XposedHelpers.findAndHookMethod(XposedHelpers.findClass("com.netease.cloudmusic.NeteaseMusicApplication", lpparam.classLoader), "attachBaseContext", Context.class, new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) {
