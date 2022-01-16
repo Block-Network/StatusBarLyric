@@ -16,6 +16,7 @@ import com.microsoft.appcenter.crashes.Crashes;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -38,7 +39,7 @@ public class Netease {
         private class HookFilter {
 
             XC_MethodHook.Unhook hooked = null;
-            HashMap<String, XC_MethodHook.Unhook> unhookMap = new HashMap<>();
+            final HashMap<String, XC_MethodHook.Unhook> unhookMap = new HashMap<>();
 
             public void startFilterAndHook() {
                 hooked = XposedHelpers.findAndHookConstructor(BroadcastReceiver.class, new XC_MethodHook() {
@@ -70,18 +71,23 @@ public class Netease {
             }
 
             public void fixShowingRubbish() {
-                for (String key : unhookMap.keySet()) {
-                    boolean flag = false;
-                    for (char c : key.toCharArray()) {
-                        if (Character.isUpperCase(c)) {
-                            flag = true;
+                synchronized (unhookMap) {
+                    Iterator<HashMap.Entry<String, XC_MethodHook.Unhook>> iterator = unhookMap.entrySet().iterator();
+                    while (iterator.hasNext()) {
+                        HashMap.Entry<String, XC_MethodHook.Unhook> next = iterator.next();
+                        boolean flag = false;
+                        for (char c : next.getKey().toCharArray()) {
+                            if (Character.isUpperCase(c)) {
+                                flag = true;
+                            }
                         }
-                    }
-                    if (flag) {
-                        XC_MethodHook.Unhook unhook = unhookMap.get(key);
-                        if (unhook != null) {
-                            unhook.unhook();
-                            unhookMap.remove(key);
+                        if (flag) {
+                            XC_MethodHook.Unhook unhook = next.getValue();
+                            if (unhook != null) {
+                                unhook.unhook();
+                                XposedBridge.log("unhooked " + next.getKey());
+                                iterator.remove();
+                            }
                         }
                     }
                 }
