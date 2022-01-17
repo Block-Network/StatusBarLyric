@@ -39,8 +39,7 @@ android {
     }
     applicationVariants.all{
         outputs.all {
-            if(name.contains("release"))
-                (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$name-$versionName-$buildType.apk"
+            (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName($versionCode)-$name.apk"
         }
     }
 }
