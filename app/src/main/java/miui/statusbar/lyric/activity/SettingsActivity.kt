@@ -697,9 +697,14 @@ class SettingsActivity : PreferenceActivity() {
         }
 
         // 关于activity
-        val about = findPreference("about")!!
-        about.onPreferenceClickListener = OnPreferenceClickListener {
-            startActivity(Intent(activity, AboutActivity::class.java))
+        val test = findPreference("test")!!
+        test.onPreferenceClickListener = OnPreferenceClickListener {
+            activity.sendBroadcast(
+                Intent().apply {
+                    action = "Lyric_Server"
+                    putExtra("Lyric_Type", "test")
+                }
+            )
             true
         }
 

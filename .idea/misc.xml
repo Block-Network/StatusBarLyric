@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/program/Android/MIUIStatusBarLyric/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.20052083333333334" />
+        <entry key="..\:/program/Android/MIUIStatusBarLyric/app/src/main/res/drawable/title_icon.xml" value="0.20052083333333334" />
         <entry key="..\:/program/Android/MIUIStatusBarLyric/app/src/main/res/layout/seticon.xml" value="0.18489583333333334" />
         <entry key="..\:/program/Android/MIUIStatusBarLyric/app/src/main/res/xml/root_preferences.xml" value="0.358695652173913" />
       </map>

@@ -3,6 +3,7 @@
 package miui.statusbar.lyric.hook.app
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.AndroidAppHelper
 import android.app.Application
 import android.content.BroadcastReceiver
@@ -15,12 +16,15 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.os.*
+import android.preference.Preference
+import android.text.Layout
 import android.text.TextPaint
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -30,18 +34,17 @@ import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import miui.statusbar.lyric.R
 import miui.statusbar.lyric.utils.LogUtils
 import miui.statusbar.lyric.utils.Utils
 import miui.statusbar.lyric.utils.XposedOwnSP.config
 import miui.statusbar.lyric.utils.XposedOwnSP.iconConfig
-import miui.statusbar.lyric.utils.ktx.findClassOrNull
-import miui.statusbar.lyric.utils.ktx.hookAfterMethod
-import miui.statusbar.lyric.utils.ktx.hookConstructor
-import miui.statusbar.lyric.utils.ktx.hookMethod
+import miui.statusbar.lyric.utils.ktx.*
 import miui.statusbar.lyric.view.LyricTextSwitchView
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.util.*
+import kotlin.system.exitProcess
 
 
 class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
@@ -67,6 +70,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     var lyricTextView: LyricTextSwitchView? = null
     private lateinit var iconParams: LinearLayout.LayoutParams
     private lateinit var lyricParams: LinearLayout.LayoutParams
+    private var test = false
 
     @SuppressLint("StaticFieldLeak")
     lateinit var lyricLayout: LinearLayout
@@ -359,6 +363,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             object:TimerTask(){
                 override fun run() {
                     try {
+                        if (test) {
+                            return
+                        }
                         if (!enable) {
                             return
                         }
@@ -543,7 +550,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                                     val areaTint = param.args[2] as Int
                                     if (config.getLyricColor() == "off" && !iconReverseColor) {
                                         val color = ColorStateList.valueOf(areaTint)
-                                        iconView.imageTintList = color
+                                        iconView?.imageTintList = color
                                     }
                                     lyricTextView?.setTextColor(areaTint)
                                 }
@@ -587,6 +594,43 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
     }
 
+    inner class ShowDialog {
+        @SuppressLint("SetTextI18n")
+        fun show(){
+            val dialog = "com.android.systemui.statusbar.phone.SystemUIDialog".findClass(lpparam.classLoader)
+            (dialog.new(application) as AlertDialog).apply {
+                setTitle("StatusBarLyric Test")
+                val view = LinearLayout(application)
+                view.addView(Button(application).let {
+                    it.text = "Show test lyric"
+                    it.setOnClickListener {
+                        updateLyric((Math.random() * 4).toInt().toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "")
+                        test = true
+                    }
+                    it
+                })
+                view.addView(Button(application).let {
+                    it.text = "Stop lyric"
+                    it.setOnClickListener {
+                        offLyric("Test Off lyric")
+                        test = false
+                    }
+                    it
+                })
+                view.addView(Button(application).let {
+                    it.text = "Restart"
+                    it.setOnClickListener {
+                        exitProcess(0)
+                    }
+                    it
+                })
+                setView(view)
+                show()
+            }
+
+        }
+    }
+
     private inner class LyricReceiver: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
@@ -623,6 +667,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             LogUtils.e("收到广播app: lyric:$lyric icon:$icon packName:$packName isPackName: $isPackName")
                         }
                     "app_stop" -> offLyric("收到广播app_stop")
+                    "test" -> ShowDialog().show()
                 }
             } catch (e: Exception) {
                 LogUtils.e("广播接收错误 " + e + "\n" + Utils.dumpException(e))
