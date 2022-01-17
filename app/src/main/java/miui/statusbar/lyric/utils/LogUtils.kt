@@ -27,15 +27,15 @@ object LogUtils {
             for (i in 0..chunkCount) {
                 val max = 4000 * (i + 1)
                 if (max >= content.length) {
-                    if (toXposed) XposedBridge.log("$TAG:" + content.substring(maxLength * i))
+                    if (toXposed) XposedBridge.log("$TAG: " + content.substring(maxLength * i))
                     if (toLogd) Log.d(TAG, content.substring(maxLength * i))
                 } else {
-                    if (toXposed) XposedBridge.log("$TAG:" + content.substring(maxLength * i, max))
+                    if (toXposed) XposedBridge.log("$TAG: " + content.substring(maxLength * i, max))
                     if (toLogd) Log.d(TAG, content.substring(maxLength * i, max))
                 }
             }
         } else {
-            if (toXposed) XposedBridge.log("$TAG:$content")
+            if (toXposed) XposedBridge.log("$TAG: $content")
             if (toLogd) Log.d(TAG, content)
         }
     }

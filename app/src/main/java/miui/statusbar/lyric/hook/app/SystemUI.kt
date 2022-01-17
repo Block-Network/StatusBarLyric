@@ -214,7 +214,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     // 歌词显示
                     lyricLayout.visibility = View.VISIBLE
                     // 设置歌词文本
-                    lyricTextView?.setSourceText(lyricTextView?.getText())
+                    lyricTextView!!.setSourceText(lyricTextView!!.text)
                     // 隐藏时钟
                     clock.layoutParams = LinearLayout.LayoutParams(0, 0)
                     showLyric = true
@@ -226,18 +226,18 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         iconUpdate = Handler(Looper.getMainLooper()) { message ->
             if (message.obj == null) {
                 iconView.visibility = View.GONE
-                lyricTextView?.setMargins(0, 0, 0, 0)
+                lyricTextView!!.setMargins(0, 0, 0, 0)
                 iconView.setImageDrawable(null)
             } else {
                 iconView.visibility = View.VISIBLE
-                lyricTextView?.setMargins(10, 0, 0, 0)
+                lyricTextView!!.setMargins(10, 0, 0, 0)
                 iconView.setImageDrawable(message.obj as Drawable)
             }
             true
         }
 
         val updateMarginsLyric = Handler(Looper.getMainLooper()) { message ->
-            lyricTextView?.setMargins(message.arg1, message.arg2, 0, 0)
+            lyricTextView!!.setMargins(message.arg1, message.arg2, 0, 0)
             true
         }
 
@@ -247,7 +247,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
 
         updateTextColor = Handler(Looper.getMainLooper()) { message ->
-            lyricTextView?.setTextColor(message.arg1)
+            lyricTextView!!.setTextColor(message.arg1)
             true
         }
 
@@ -267,20 +267,20 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         // 更新歌词
         lyricUpdate = Handler(Looper.getMainLooper()) { message ->
             val string: String? = message.data.getString(lyricKey)
-            LogUtils.e("更新歌词: $string")
             if (!TextUtils.isEmpty(string)) {
-                if (!string.equals(lyricTextView?.getText().toString())) {
+                LogUtils.e("更新歌词: $string")
+                if (!string.equals(lyricTextView!!.text.toString())) {
                     val maxWidth: Int = config.getLyricMaxWidth()
                     // 自适应/歌词宽度
                     if (config.getLyricWidth() == -1) {
-                        val paint1: TextPaint = lyricTextView?.getPaint()!! // 获取字体
+                        val paint1: TextPaint = lyricTextView!!.paint!! // 获取字体
                         if (config.getLyricMaxWidth() == -1 || paint1.measureText(string).toInt() + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
-                            lyricTextView?.width = paint1.measureText(string).toInt() + 6
+                            lyricTextView!!.width = paint1.measureText(string).toInt() + 6
                         } else {
-                            lyricTextView?.width = (dw * maxWidth) / 100
+                            lyricTextView!!.width = (dw * maxWidth) / 100
                         }
                     } else {
-                        lyricTextView?.width = (dw * maxWidth) / 100
+                        lyricTextView!!.width = (dw * maxWidth) / 100
                     }
                     // 歌词显示
                     if (showLyric) {
@@ -289,24 +289,26 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     }
                     // 设置状态栏
                     config.let { Utils.setStatusBar(application, false, it) }
-                    lyricTextView?.setText(string)
+                    lyricTextView!!.setText(string)
                 }
-            }
-            lyricTextView?.setSourceText("")
-            // 清除图标
-            iconView.setImageDrawable(null)
-            // 歌词隐藏
+            } else {
+                LogUtils.e("关闭歌词")
+                lyricTextView!!.setSourceText("")
+                // 清除图标
+                iconView.setImageDrawable(null)
+                // 歌词隐藏
                 lyricLayout.visibility = View.GONE
 
-            // 显示时钟
-            clock.layoutParams = LinearLayout.LayoutParams(-2, -2)
-            // 清除时钟点击事件
-            if (config.getLyricSwitch()) {
-                clock.setOnClickListener(null)
-            }
+                // 显示时钟
+                clock.layoutParams = LinearLayout.LayoutParams(-2, -2)
+                // 清除时钟点击事件
+                if (config.getLyricSwitch()) {
+                    clock.setOnClickListener(null)
+                }
 
-            // 恢复状态栏
-            config.let { Utils.setStatusBar(application, true, it) }
+                // 恢复状态栏
+                config.let { Utils.setStatusBar(application, true, it) }
+            }
             true
         }
 
@@ -485,12 +487,12 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         updateLyricPos.sendEmptyMessage(0)
         iconReverseColor = config.getIconAutoColor() == false
         if (config.getLyricStyle()) {
-            lyricTextView?.setSpeed(config.getLyricSpeed())
+            lyricTextView!!.setSpeed(config.getLyricSpeed())
         }
         if (oldAnim == "random" || config.getAnim() != oldAnim) {
             oldAnim = config.getAnim()
-            lyricTextView?.inAnimation = Utils.inAnim(oldAnim)
-            lyricTextView?.outAnimation = Utils.outAnim(oldAnim)
+            lyricTextView!!.inAnimation = Utils.inAnim(oldAnim)
+            lyricTextView!!.outAnimation = Utils.outAnim(oldAnim)
         }
         if (config.getAntiBurn()) {
             if (config.getIconHigh() != oldPos) {
