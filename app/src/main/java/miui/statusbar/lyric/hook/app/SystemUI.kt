@@ -76,7 +76,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
     @SuppressLint("StaticFieldLeak")
     lateinit var iconView: ImageView
-    private lateinit var strIcon: String
+    private var strIcon: String = ""
     private var oldAnim: String = "off"
     private var oldPos = 0
     var isLock = false
@@ -460,7 +460,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             return
         }
         enable = true
-        if (config.getIcon() || TextUtils.isEmpty(icon)) {
+        if (!config.getIcon() || TextUtils.isEmpty(icon)) {
             LogUtils.e("关闭图标")
             strIcon = ""
             drawableIcon = null
@@ -541,7 +541,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                                 override fun afterHookedMethod(param: MethodHookParam) {
                                     super.afterHookedMethod(param)
                                     val areaTint = param.args[2] as Int
-                                    if (config.getLyricColor() == "off" && iconReverseColor) {
+                                    if (config.getLyricColor() == "off" && !iconReverseColor) {
                                         val color = ColorStateList.valueOf(areaTint)
                                         iconView.imageTintList = color
                                     }

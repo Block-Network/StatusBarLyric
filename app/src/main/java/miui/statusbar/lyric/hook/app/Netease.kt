@@ -6,7 +6,6 @@ import android.app.AndroidAppHelper
 import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.text.TextUtils
 import com.microsoft.appcenter.AppCenter
@@ -14,7 +13,6 @@ import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
-import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import miui.statusbar.lyric.hook.MeiZuStatusBarLyric
@@ -54,7 +52,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                             val parameters: Array<Parameter> = m.parameters
                             if (parameters.size == 2) {
                                 if (parameters[0].type.name == "android.app.Notification" && parameters[1].type.name == "boolean") {
-                                    XposedBridge.log("find = ${m.declaringClass.name} ${m.name}")
+                                    LogUtils.e("find = ${m.declaringClass.name} ${m.name}")
                                     val unhook = XposedHelpers.findAndHookMethod(
                                         clazz, m.name,
                                         Notification::class.java,
@@ -83,7 +81,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                     if (flag) {
                         next.value?.let {
                             it.unhook()
-                            XposedBridge.log("unhooked " + next.key)
+                            LogUtils.e("unhooked " + next.key)
                             iterator.remove()
                         }
                     }
