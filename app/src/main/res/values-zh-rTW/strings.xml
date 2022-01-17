@@ -155,4 +155,6 @@
     <string name="LyricHigh">* 歌詞上下位置</string>
     <string name="LyricSize">* 歌詞大小</string>
     <string name="LyricSizeTips">0~50，當前:</string>
+    <string name="app_name">狀態欄歌詞</string>
+    <string name="IconError">圖標輸入錯誤</string>
 </resources>

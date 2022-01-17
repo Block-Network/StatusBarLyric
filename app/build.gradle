@@ -1,6 +1,6 @@
-//file:noinspection GroovyAssignabilityCheck
 plugins {
     id 'com.android.application'
+    id 'kotlin-android'
 }
 
 android {
@@ -24,26 +24,23 @@ android {
             zipAlignEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            // multiDexEnabled true
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            if (variant.buildType.name == "debug") {
-                output.outputFileName = "StatusBarLyric-${android.defaultConfig.versionName}(${android.defaultConfig.versionCode})-debug.apk"
-            } else if (variant.buildType.name == "release") {
-                output.outputFileName = "StatusBarLyric-${android.defaultConfig.versionName}(${android.defaultConfig.versionCode})-release.apk"
-            }
+            output.outputFileName = "StatusBarLyric-${android.defaultConfig.versionName}(${android.defaultConfig.versionCode})-${variant.buildType.name}.apk"
         }
     }
 }
 
 dependencies {
-    //implementation 'androidx.preference:preference:1.1.1'
     //API
     compileOnly 'de.robv.android.xposed:api:82'
     //带源码Api
