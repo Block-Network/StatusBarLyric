@@ -13,6 +13,7 @@ import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
@@ -95,8 +96,8 @@ class Netease(private val lpparam: LoadPackageParam) {
         try {
             disableTinker(lpparam)
             "com.netease.cloudmusic.NeteaseMusicApplication".hookAfterMethod("attachBaseContext", Context::class.java, classLoader = lpparam.classLoader) {
-                context = it.thisObject as Context
                 try {
+                    context = it.thisObject as Context
                     val verCode: Int? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode
                     val verName: String? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionName
                     if (verCode!! > 8000041) {
@@ -139,7 +140,6 @@ class Netease(private val lpparam: LoadPackageParam) {
                         val enableBTLyricMethod: String
                         val getMusicNameClass: String
                         val getMusicNameMethod: String
-                        val getMusicNameClsArr: Array<Any>
                         val getMusicNameHook = object: XC_MethodHook() {
                             override fun afterHookedMethod(param: MethodHookParam){
                                 super.afterHookedMethod(param)
@@ -152,7 +152,6 @@ class Netease(private val lpparam: LoadPackageParam) {
                         }
                         val getMusicLyricClass: String
                         val getMusicLyricMethod: String
-                        val getMusicLyricClsArr: Array<Any>
                         val getMusicLyricHook = object: XC_MethodHook() {
                             override fun beforeHookedMethod(param: MethodHookParam){
                                 super.beforeHookedMethod(param)
@@ -167,43 +166,27 @@ class Netease(private val lpparam: LoadPackageParam) {
 
 
                         }
-                        if (verCode > 7002022) {
-                            enableBTLyricClass = "com.netease.cloudmusic.module.player.t.e"
-                            enableBTLyricMethod = "o"
-
-                            getMusicNameClass = "com.netease.cloudmusic.module.player.t.e"
-                            getMusicNameMethod = "B"
-                            getMusicNameClsArr = arrayOf(
-                                String::class.java, String::class.java, String::class.java, Long::class.java, Boolean::class.java, getMusicNameHook
-                            )
-
-                            getMusicLyricClass = "com.netease.cloudmusic.module.player.t.e"
-                            getMusicLyricMethod = "F"
-                            getMusicLyricClsArr = arrayOf(
-                                String::class.java, String::class.java, getMusicLyricHook
-                            )
-                        } else {
-                            enableBTLyricClass = "com.netease.cloudmusic.module.player.f.e"
-                            enableBTLyricMethod = "b"
-
-                            getMusicNameClass = ""
-                            getMusicNameMethod = ""
-                            getMusicNameClsArr = arrayOf()
-
-                            getMusicLyricClass = "com.netease.cloudmusic.module.player.f.e"
-                            getMusicLyricMethod = "a"
-                            getMusicLyricClsArr = arrayOf(
-                                String::class.java, String::class.java, String::class.java, Long::class.java, Bitmap::class.java, String::class.java, getMusicLyricHook
-                            )
-                        }
                         try {
-                            enableBTLyricClass.hookAfterMethod(enableBTLyricMethod, classLoader = lpparam.classLoader) { it1 ->
-                                it1.result = true
+                            if (verCode > 7002022) {
+                                enableBTLyricClass = "com.netease.cloudmusic.module.player.t.e"
+                                enableBTLyricMethod = "o"
+
+                                getMusicNameClass = "com.netease.cloudmusic.module.player.t.e"
+                                getMusicNameMethod = "B"
+                                XposedHelpers.findAndHookMethod(getMusicNameClass, lpparam.classLoader, getMusicNameMethod, String::class.java, String::class.java, String::class.java, Long::class.java, Boolean::class.java, getMusicNameHook)
+
+                                getMusicLyricClass = "com.netease.cloudmusic.module.player.t.e"
+                                getMusicLyricMethod = "F"
+                                XposedHelpers.findAndHookMethod(getMusicLyricClass, lpparam.classLoader, getMusicLyricMethod, String::class.java, String::class.java, getMusicLyricHook)
+                            } else {
+                                enableBTLyricClass = "com.netease.cloudmusic.module.player.f.e"
+                                enableBTLyricMethod = "b"
+
+                                getMusicLyricClass = "com.netease.cloudmusic.module.player.f.e"
+                                getMusicLyricMethod = "a"
+                                XposedHelpers.findAndHookMethod(getMusicLyricClass, lpparam.classLoader, getMusicLyricMethod, String::class.java, String::class.java, String::class.java, Long::class.javaPrimitiveType, Bitmap::class.java, String::class.java, getMusicLyricHook)
                             }
-                            if (getMusicNameClass != "") {
-                                XposedHelpers.findAndHookMethod(getMusicNameClass, lpparam.classLoader, getMusicNameMethod, getMusicNameClsArr)
-                            }
-                            XposedHelpers.findAndHookMethod(getMusicLyricClass, lpparam.classLoader, getMusicLyricMethod, getMusicLyricClsArr)
+                            XposedHelpers.findAndHookMethod(enableBTLyricClass, lpparam.classLoader, enableBTLyricMethod, XC_MethodReplacement.returnConstant(true))
                         } catch (e: NoSuchMethodError) {
                             LogUtils.e("网易云Hook失败: $e")
                             LogUtils.e("正在尝试通用Hook")
@@ -223,8 +206,8 @@ class Netease(private val lpparam: LoadPackageParam) {
                             }
                         }
                     }
-                } catch (e: PackageManager.NameNotFoundException) {
-                    e.printStackTrace()
+                } catch (e: Throwable) {
+                    LogUtils.e("网易云状态栏歌词错误： " + e.message)
                 }
             }
         } catch (e: Throwable) {
