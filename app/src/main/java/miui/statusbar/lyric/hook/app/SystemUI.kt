@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
 import android.app.Application
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -17,17 +18,13 @@ import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.os.*
 import android.preference.Preference
-import android.text.Layout
-import android.text.TextPaint
-import android.text.TextUtils
+import android.text.*
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
@@ -67,7 +64,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     lateinit var updateTextColor: Handler
     lateinit var updateMarginsIcon: Handler
     private lateinit var updateLyricPos: Handler
-    var lyricTextView: LyricTextSwitchView? = null
+    lateinit var lyricTextView: LyricTextSwitchView
     private lateinit var iconParams: LinearLayout.LayoutParams
     private lateinit var lyricParams: LinearLayout.LayoutParams
     private var test = false
@@ -163,24 +160,24 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
         // 创建TextView
         lyricTextView = LyricTextSwitchView(application, config.getLyricStyle())
-        lyricTextView!!.width = (dw * 35) / 100
-        lyricTextView!!.height = clock.height
-        lyricTextView!!.setTypeface(clock.typeface)
+        lyricTextView.width = (dw * 35) / 100
+        lyricTextView.height = clock.height
+        lyricTextView.setTypeface(clock.typeface)
         if (config.getLyricSize() == 0) {
-            lyricTextView!!.setTextSize(0, clock.textSize)
+            lyricTextView.setTextSize(0, clock.textSize)
         } else {
-            lyricTextView!!.setTextSize(0, config.getLyricSize().toFloat())
+            lyricTextView.setTextSize(0, config.getLyricSize().toFloat())
         }
-        lyricTextView!!.setMargins(10, 0, 0, 0)
+        lyricTextView.setMargins(10, 0, 0, 0)
         if (config.getLyricStyle()) {
             if (config.getLShowOnce()) {
-                lyricTextView!!.setMarqueeRepeatLimit(1) // 设置跑马灯为1次
+                lyricTextView.setMarqueeRepeatLimit(1) // 设置跑马灯为1次
             } else {
-                lyricTextView!!.setMarqueeRepeatLimit(-1) // 设置跑马灯重复次数，-1为无限重复
+                lyricTextView.setMarqueeRepeatLimit(-1) // 设置跑马灯重复次数，-1为无限重复
             }
         }
-        lyricTextView!!.setSingleLine(true)
-        lyricTextView!!.setMaxLines(1)
+        lyricTextView.setSingleLine(true)
+        lyricTextView.setMaxLines(1)
 
         // 创建图标
         iconView = ImageView(application).apply {
@@ -218,7 +215,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     // 歌词显示
                     lyricLayout.visibility = View.VISIBLE
                     // 设置歌词文本
-                    lyricTextView!!.setSourceText(lyricTextView!!.text)
+                    lyricTextView.setSourceText(lyricTextView.text)
                     // 隐藏时钟
                     clock.layoutParams = LinearLayout.LayoutParams(0, 0)
                     showLyric = true
@@ -230,18 +227,18 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         iconUpdate = Handler(Looper.getMainLooper()) { message ->
             if (message.obj == null) {
                 iconView.visibility = View.GONE
-                lyricTextView!!.setMargins(0, 0, 0, 0)
+                lyricTextView.setMargins(0, 0, 0, 0)
                 iconView.setImageDrawable(null)
             } else {
                 iconView.visibility = View.VISIBLE
-                lyricTextView!!.setMargins(10, 0, 0, 0)
+                lyricTextView.setMargins(10, 0, 0, 0)
                 iconView.setImageDrawable(message.obj as Drawable)
             }
             true
         }
 
         val updateMarginsLyric = Handler(Looper.getMainLooper()) { message ->
-            lyricTextView!!.setMargins(message.arg1, message.arg2, 0, 0)
+            lyricTextView.setMargins(message.arg1, message.arg2, 0, 0)
             true
         }
 
@@ -251,7 +248,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
 
         updateTextColor = Handler(Looper.getMainLooper()) { message ->
-            lyricTextView!!.setTextColor(message.arg1)
+            lyricTextView.setTextColor(message.arg1)
             true
         }
 
@@ -273,18 +270,18 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             val string: String? = message.data.getString(lyricKey)
             if (!TextUtils.isEmpty(string)) {
                 LogUtils.e("更新歌词: $string")
-                if (!string.equals(lyricTextView!!.text.toString())) {
+                if (!string.equals(lyricTextView.text.toString())) {
                     val maxWidth: Int = config.getLyricMaxWidth()
                     // 自适应/歌词宽度
                     if (config.getLyricWidth() == -1) {
-                        val paint1: TextPaint = lyricTextView!!.paint!! // 获取字体
+                        val paint1: TextPaint = lyricTextView.paint!! // 获取字体
                         if (config.getLyricMaxWidth() == -1 || paint1.measureText(string).toInt() + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
-                            lyricTextView!!.width = paint1.measureText(string).toInt() + 6
+                            lyricTextView.width = paint1.measureText(string).toInt() + 6
                         } else {
-                            lyricTextView!!.width = (dw * maxWidth) / 100
+                            lyricTextView.width = (dw * maxWidth) / 100
                         }
                     } else {
-                        lyricTextView!!.width = (dw * maxWidth) / 100
+                        lyricTextView.width = (dw * maxWidth) / 100
                     }
                     // 歌词显示
                     if (showLyric) {
@@ -293,11 +290,11 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     }
                     // 设置状态栏
                     config.let { Utils.setStatusBar(application, false, it) }
-                    lyricTextView!!.setText(string)
+                    lyricTextView.setText(string)
                 }
             } else {
                 LogUtils.e("关闭歌词")
-                lyricTextView!!.setSourceText("")
+                lyricTextView.setSourceText("")
                 // 清除图标
                 iconView.setImageDrawable(null)
                 // 歌词隐藏
@@ -494,12 +491,12 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         updateLyricPos.sendEmptyMessage(0)
         iconReverseColor = config.getIconAutoColor() == false
         if (config.getLyricStyle()) {
-            lyricTextView!!.setSpeed(config.getLyricSpeed())
+            lyricTextView.setSpeed(config.getLyricSpeed())
         }
         if (oldAnim == "random" || config.getAnim() != oldAnim) {
             oldAnim = config.getAnim()
-            lyricTextView!!.inAnimation = Utils.inAnim(oldAnim)
-            lyricTextView!!.outAnimation = Utils.outAnim(oldAnim)
+            lyricTextView.inAnimation = Utils.inAnim(oldAnim)
+            lyricTextView.outAnimation = Utils.outAnim(oldAnim)
         }
         if (config.getAntiBurn()) {
             if (config.getIconHigh() != oldPos) {
@@ -546,13 +543,15 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         if (exactMethod != null) {
                             exactMethod.hookMethod(object : XC_MethodHook() {
                                 override fun afterHookedMethod(param: MethodHookParam) {
-                                    super.afterHookedMethod(param)
-                                    val areaTint = param.args[2] as Int
-                                    if (config.getLyricColor() == "off" && !iconReverseColor) {
-                                        val color = ColorStateList.valueOf(areaTint)
-                                        iconView?.imageTintList = color
-                                    }
-                                    lyricTextView?.setTextColor(areaTint)
+                                    try {
+                                        super.afterHookedMethod(param)
+                                        val areaTint = param.args[2] as Int
+                                        if (config.getLyricColor() == "off" && !iconReverseColor) {
+                                            val color = ColorStateList.valueOf(areaTint)
+                                            iconView.imageTintList = color
+                                        }
+                                        lyricTextView.setTextColor(areaTint)
+                                    } catch (_: UninitializedPropertyAccessException) {}
                                 }
                             })
                             LogUtils.e("查找反色方法成功!")
@@ -597,34 +596,59 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     inner class ShowDialog {
         @SuppressLint("SetTextI18n")
         fun show(){
+            var icon = "Api"
             val dialog = "com.android.systemui.statusbar.phone.SystemUIDialog".findClass(lpparam.classLoader)
             (dialog.new(application) as AlertDialog).apply {
                 setTitle("StatusBarLyric Test")
-                val view = LinearLayout(application)
-                view.addView(Button(application).let {
-                    it.text = "Show test lyric"
-                    it.setOnClickListener {
-                        updateLyric((Math.random() * 4).toInt().toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "")
-                        test = true
-                    }
+                setView(LinearLayout(application).let {
+                    it.orientation = LinearLayout.VERTICAL
+                    setCancelable(false)
+                    it.addView(Button(application).let { it1 ->
+                        it1.text = "Show test lyric"
+                        it1.setOnClickListener {
+                            updateLyric((Math.random() * 4).toInt().toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", icon)
+                            test = true
+                        }
+                        it1
+                    })
+                    it.addView(EditText(application).apply {
+                        setText(icon)
+                        addTextChangedListener(object :TextWatcher{
+                            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                            }
+
+                            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                                icon = p0 as String
+                            }
+
+                            override fun afterTextChanged(p0: Editable?) {
+                            }
+                        })
+                    })
+                    it.addView(Button(application).let { it1 ->
+                        it1.text = "Stop lyric"
+                        it1.setOnClickListener {
+                            offLyric("Test Off lyric")
+                            test = false
+                        }
+                        it1
+                    })
+                    it.addView(Button(application).let { it1 ->
+                        it1.text = "Restart"
+                        it1.setOnClickListener {
+                            exitProcess(0)
+                        }
+                        it1
+                    })
+                    it.addView(Button(application).let { it1 ->
+                        it1.text = "Exit"
+                        it1.setOnClickListener {
+                            dismiss()
+                        }
+                        it1
+                    })
                     it
                 })
-                view.addView(Button(application).let {
-                    it.text = "Stop lyric"
-                    it.setOnClickListener {
-                        offLyric("Test Off lyric")
-                        test = false
-                    }
-                    it
-                })
-                view.addView(Button(application).let {
-                    it.text = "Restart"
-                    it.setOnClickListener {
-                        exitProcess(0)
-                    }
-                    it
-                })
-                setView(view)
                 show()
             }
 
