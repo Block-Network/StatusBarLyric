@@ -7,6 +7,7 @@ import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import miui.statusbar.lyric.BuildConfig
 import miui.statusbar.lyric.hook.app.*
 import miui.statusbar.lyric.utils.Utils
 import miui.statusbar.lyric.utils.ktx.hookAfterMethod
@@ -31,7 +32,10 @@ class MainHook: IXposedHookLoadPackage {
             }
             init = true
         }
+        LogUtils.e("Debug已开启")
+        LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})")
         LogUtils.e("当前包名: " + lpparam.packageName)
+
         when (lpparam.packageName) {
             "com.android.systemui" -> {
                 LogUtils.e("正在hook系统界面")

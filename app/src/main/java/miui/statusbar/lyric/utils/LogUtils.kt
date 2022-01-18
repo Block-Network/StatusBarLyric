@@ -6,17 +6,12 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import de.robv.android.xposed.XposedBridge
-import miui.statusbar.lyric.BuildConfig
 import miui.statusbar.lyric.utils.XposedOwnSP.config
 
 object LogUtils {
     private const val maxLength = 4000
     private val handler by lazy{ Handler(Looper.getMainLooper()) }
     private const val TAG = "StatusBarLyric"
-
-    init {
-        log("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})", toXposed = true)
-    }
 
     @JvmStatic
     fun toast(context: Context?, msg: String) {
