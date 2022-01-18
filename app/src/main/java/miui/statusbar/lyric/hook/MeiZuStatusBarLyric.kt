@@ -45,26 +45,20 @@ object MeiZuStatusBarLyric {
         if (!hookNotification) {
             return
         }
-        XposedHelpers.findAndHookMethod("android.app.NotificationManager", lpparam.classLoader, "notify",
-            Int::class.javaPrimitiveType,
-            Notification::class.java, object : XC_MethodHook() {
-                @Throws(Throwable::class)
-                override fun beforeHookedMethod(param: MethodHookParam) {
-                    super.beforeHookedMethod(param)
-                    val notification = param.args[1] as Notification
-                    val charSequence = notification.tickerText
-                    LogUtils.e(notification.toString())
-                    if (notification.flags == 0) {
-                        context?.let { Utils.sendLyric(it, "", Utils.packNameGetIconName(lpparam.packageName)) }
-                        return
-                    }
-                    val isLyric =
-                        notification.flags and MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER != 0 || notification.flags and MeiZuNotification.FLAG_ONLY_UPDATE_TICKER != 0
-                    if (charSequence == null || !isLyric) {
-                        return
-                    }
-                    context?.let { Utils.sendLyric(it, charSequence.toString(), Utils.packNameGetIconName(lpparam.packageName)) }
-                }
-            })
+        "android.app.NotificationManager".hookAfterMethod("notify", Int::class.javaPrimitiveType, Notification::class.java, classLoader = lpparam.classLoader) {
+            val notification = it.args[1] as Notification
+            val charSequence = notification.tickerText
+            LogUtils.e(notification.toString())
+            if (notification.flags == 0) {
+                context?.let { it1 -> Utils.sendLyric(it1, "", Utils.packNameGetIconName(lpparam.packageName)) }
+                return@hookAfterMethod
+            }
+            val isLyric =
+                notification.flags and MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER != 0 || notification.flags and MeiZuNotification.FLAG_ONLY_UPDATE_TICKER != 0
+            if (charSequence == null || !isLyric) {
+                return@hookAfterMethod
+            }
+            context?.let { it1 -> Utils.sendLyric(it1, charSequence.toString(), Utils.packNameGetIconName(lpparam.packageName)) }
+        }
     }
 }
