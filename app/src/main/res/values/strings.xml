@@ -172,5 +172,4 @@
     <string name="LyricSize">* Lyrics Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
     <string name="IconError">Icon input error</string>
-    <string name="app_name">StatusBarLyric</string>
 </resources>
