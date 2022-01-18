@@ -131,7 +131,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                             }
                         }
 
-                        LogUtils.e("状态栏歌词 不一定支持的网易云版本! $verName\n$errorMsg")
+                        LogUtils.e("墨 • 状态栏歌词\n不一定支持的网易云版本! $verName\n$errorMsg")
                         LogUtils.toast(context, "不一定支持的网易云版本! $verName\n$errorMsg")
                     } else {
                         val enableBTLyricClass: String
@@ -200,7 +200,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                             } catch (mE: NoSuchMethodError) {
                                 LogUtils.e("网易云通用Hook失败: $mE")
                                 LogUtils.e("未知版本: $verCode")
-                                LogUtils.toast(context, "状态栏歌词 未知版本: $verCode")
+                                LogUtils.toast(context, "墨 • 状态栏歌词\n 未知版本: $verCode")
                             }
                         }
                     }
