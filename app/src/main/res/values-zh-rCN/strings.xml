@@ -81,7 +81,7 @@
         - Phonograph Plus第三方修改版本\n
         https://github.com/kabouzeid/Phonograph\n
     </string>
-    <string name="AppName">墨 • 状态栏歌词</string>
+    <string name="AppName">墨•状态栏歌词</string>
     <string name="QuickTitle">状态栏歌词</string>
     <string name="XposedTips">如果无法显示歌词，请尝试停止音乐软件并重启系统界面\n或查看 使用说明 自己是否使用正确版本</string>
     <string name="InitError">初始化失败，请重启软件</string>
