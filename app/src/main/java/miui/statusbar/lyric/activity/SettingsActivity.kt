@@ -70,7 +70,7 @@ class SettingsActivity : PreferenceActivity() {
                 setMessage(getString(R.string.AppTips))
                 setNegativeButton(R.string.TipsIDone) { _, _ ->
                     preferences.edit().putBoolean(tips, true).apply()
-//                    ActivityUtils.getNotice(activity)
+                    ActivityUtils.getNotice(activity)
                 }
                 setPositiveButton(R.string.Quit) { _, _ -> activity.finish() }
                 setNeutralButton(R.string.PrivacyPolicy) { _, _ ->
@@ -83,7 +83,7 @@ class SettingsActivity : PreferenceActivity() {
                 show()
             }
         } else {
-//            ActivityUtils.getNotice(activity)
+            ActivityUtils.getNotice(activity)
             AppCenter.start(
                 application, "6713f7e7-d1f5-4261-bb32-f5a94028a9f4",
                 Analytics::class.java, Crashes::class.java

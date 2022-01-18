@@ -14,6 +14,7 @@ import android.os.Message
 import android.widget.Toast
 import miui.statusbar.lyric.BuildConfig
 import miui.statusbar.lyric.R
+import miui.statusbar.lyric.utils.HttpUtils.Get
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -117,5 +118,38 @@ object ActivityUtils {
             e.printStackTrace()
             false
         }
+    }
+
+    fun getNotice(activity: Activity) {
+        val handler = Handler(Looper.getMainLooper()) { message: Message ->
+            try {
+                val jsonObject = JSONObject(message.data.getString("value")!!)
+                if (jsonObject.getString("versionCode") == BuildConfig.VERSION_CODE.toString()) {
+                    if (java.lang.Boolean.parseBoolean(jsonObject.getString("forcibly"))) {
+                        AlertDialog.Builder(activity)
+                            .setTitle(activity.getString(R.string.NewNotice))
+                            .setIcon(R.mipmap.ic_launcher)
+                            .setMessage(jsonObject.getString("data"))
+                            .setNegativeButton(activity.getString(R.string.Done), null)
+                            .create()
+                            .show()
+                    }
+                }
+                return@Handler true
+            } catch (ignored: JSONException) {
+            }
+            showToastOnLooper(activity, activity.getString(R.string.GetNewNoticeError))
+            false
+        }
+        Thread {
+            val value = Get("https://app.xiaowine.cc/app/notice.json")
+            if (value != "") {
+                val message = handler.obtainMessage()
+                val bundle = Bundle()
+                bundle.putString("value", value)
+                message.data = bundle
+                handler.sendMessage(message)
+            }
+        }.start()
     }
 }
