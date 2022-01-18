@@ -13,9 +13,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
-import android.preference.*
+import android.preference.EditTextPreference
+import android.preference.ListPreference
 import android.preference.Preference.OnPreferenceChangeListener
 import android.preference.Preference.OnPreferenceClickListener
+import android.preference.PreferenceActivity
+import android.preference.SwitchPreference
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -27,6 +30,7 @@ import miui.statusbar.lyric.R
 import miui.statusbar.lyric.config.Config
 import miui.statusbar.lyric.config.IconConfig
 import miui.statusbar.lyric.utils.ActivityUtils
+import miui.statusbar.lyric.utils.ActivityUtils.showToastOnLooper
 import miui.statusbar.lyric.utils.LogUtils
 import miui.statusbar.lyric.utils.ShellUtils
 import miui.statusbar.lyric.utils.Utils
@@ -75,11 +79,11 @@ class SettingsActivity : PreferenceActivity() {
                 }
                 setPositiveButton(R.string.Quit) { _, _ -> activity.finish() }
                 setNeutralButton(R.string.PrivacyPolicy) { _, _ ->
-                        val uri: Uri = Uri.parse("https://github.com/577fkj/MIUIStatusBarLyric/blob/main/EUAL.md")
-                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                        startActivity(intent)
-                        init()
-                    }
+                    val uri: Uri = Uri.parse("https://github.com/577fkj/MIUIStatusBarLyric/blob/main/EUAL.md")
+                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
+                    init()
+                }
                 setCancelable(false)
                 show()
             }
@@ -182,7 +186,7 @@ class SettingsActivity : PreferenceActivity() {
                     val value =
                         newValue.toString().replace(" ", "").replace("\n", "")
                             .replace("\\+", "")
-                    if (value != "-1" && value.toInt() <= 100 && value.toInt() >= 0) {
+                    if ((value.toInt() <= 100) && (value.toInt() >= 0)) {
                         config!!.setLyricMaxWidth(value.toInt())
                         lyricMaxWidth.dialogMessage = String.format(
                             "%s%s",
@@ -222,7 +226,7 @@ class SettingsActivity : PreferenceActivity() {
                     newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
                         .replace("\\+".toRegex(), "")
                 config!!.setLyricWidth(-1)
-                if (value != "-1" && value.toInt() <= 100 && value.toInt() >= 0) {
+                if ((value.toInt() <= 100) && (value.toInt() >= 0)) {
                     config!!.setLyricWidth(value.toInt())
                     lyricWidth.dialogMessage = String.format("%s%s", getString(R.string.LyricWidthTips), value)
                     lyricWidth.summary = value
@@ -263,22 +267,21 @@ class SettingsActivity : PreferenceActivity() {
             lyricColour.summary = getString(R.string.Adaptive)
             config!!.setLyricColor("off")
             val value = newValue.toString().replace(" ".toRegex(), "")
-            if (((value != "") or (value != getString(R.string.Adaptive)))) {
-                try {
-                    Color.parseColor(newValue.toString())
-                    lyricColour.dialogMessage = String.format(
-                        "%s%s",
-                        getString(R.string.LyricColorTips),
-                        config!!.getLyricColor()
-                    )
-                    lyricColour.summary = newValue.toString()
-                    config!!.setLyricColor(newValue.toString())
-                } catch (e: Exception) {
-                    config!!.setLyricColor("off")
-                    lyricColour.summary = getString(R.string.Adaptive)
-                    ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
-                }
+            try {
+                Color.parseColor(newValue.toString())
+                lyricColour.dialogMessage = String.format(
+                    "%s%s",
+                    getString(R.string.LyricColorTips),
+                    config!!.getLyricColor()
+                )
+                lyricColour.summary = value
+                config!!.setLyricColor(value)
+            } catch (e: Exception) {
+                config!!.setLyricColor("off")
+                lyricColour.summary = getString(R.string.Adaptive)
+                ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
             }
+
             true
         }
 
@@ -374,7 +377,7 @@ class SettingsActivity : PreferenceActivity() {
             config!!.setLyricSize(0)
             try {
                 val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
-                if (value != "0" && value.toInt() <= 50 && value.toInt() > 0) {
+                if ((value.toInt() <= 50) && (value.toInt() > 0)) {
                     config!!.setLyricSize(value.toInt())
                     lyricSize.dialogMessage = String.format("%s%s", "0~50，当前:", value)
                     lyricSize.summary = value
@@ -404,7 +407,7 @@ class SettingsActivity : PreferenceActivity() {
                 config!!.setLyricPosition(0)
                 try {
                     val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
-                    if (value != "0" && value.toInt() <= 900 && value.toInt() >= -900) {
+                    if (value.toInt() <= 900 && value.toInt() >= -900) {
                         config!!.setLyricPosition(value.toInt())
                         lyricPosition.dialogMessage =
                             String.format("%s%s", getString(R.string.LyricPosTips), value)
@@ -434,7 +437,7 @@ class SettingsActivity : PreferenceActivity() {
             config!!.setLyricHigh(0)
             try {
                 val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
-                if (value != "0" && value.toInt() <= 100 && value.toInt() >= -100) {
+                if (value.toInt() <= 100 && value.toInt() >= -100) {
                     config!!.setLyricHigh(value.toInt())
                     lyricHigh.dialogMessage = String.format("%s%s", getString(R.string.LyricHighTips), value)
                     lyricHigh.summary = value
@@ -474,10 +477,40 @@ class SettingsActivity : PreferenceActivity() {
             config!!.setIconHigh(7)
             try {
                 val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
-                if (value != "7" && value.toInt() <= 100 && value.toInt() >= -100) {
+                if (value.toInt() <= 100 && value.toInt() >= -100) {
                     config!!.setIconHigh(value.toInt())
                     iconHigh.dialogMessage = String.format("%s%s", getString(R.string.LyricPosTips), value)
                     iconHigh.summary = value
+                } else {
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                }
+            } catch (ignore: NumberFormatException) {
+            }
+            true
+        }
+
+        showToastOnLooper(activity, config!!.getIconSize().toString())
+        // 图标大小
+        val iconSize = (findPreference("iconSize") as EditTextPreference)
+        iconSize.summary = config!!.getIconSize().toString()
+        if (config!!.getIconSize() == 0) {
+            lyricSize.summary = getString(R.string.Default)
+        }
+        iconSize.dialogMessage = String.format("%s%s", getString(R.string.LyricSizeTips), iconSize.summary)
+        iconSize.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue: Any ->
+            iconSize.dialogMessage = String.format(
+                "%s%s",
+                getString(R.string.LyricSizeTips),
+                getString(R.string.Default)
+            )
+            iconSize.summary = getString(R.string.Default)
+            config!!.setIconSize(0)
+            try {
+                val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
+                if ((value.toInt() <= 50) && (value.toInt() > 0)) {
+                    config!!.setIconSize(value.toInt())
+                    iconSize.dialogMessage = String.format("%s%s", "0~50，当前:", value)
+                    iconSize.summary = value
                 } else {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
                 }
@@ -506,7 +539,8 @@ class SettingsActivity : PreferenceActivity() {
                             val editTexts = editText.text
                             if (editTexts.toString().isNotEmpty()) {
                                 try {
-                                    imageView.foreground = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
+                                    imageView.foreground =
+                                        BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
                                     iconConfig.setIcon(iconName, editText.text.toString())
                                 } catch (ignore: Exception) {
                                     ActivityUtils.showToastOnLooper(activity, getString(R.string.IconError))
@@ -517,7 +551,8 @@ class SettingsActivity : PreferenceActivity() {
                         }
                         setNegativeButton(R.string.Cancel, null)
                         setNeutralButton(
-                            getString(R.string.MakeIcon)) { _, _ ->
+                            getString(R.string.MakeIcon)
+                        ) { _, _ ->
                             val componentName =
                                 ComponentName(
                                     "com.byyoung.setting",
@@ -710,7 +745,7 @@ class SettingsActivity : PreferenceActivity() {
             AlertDialog.Builder(activity).apply {
                 setTitle(R.string.Test)
                 setMessage(R.string.TestDialogTips)
-                setPositiveButton(R.string.Start) {_, _ ->
+                setPositiveButton(R.string.Start) { _, _ ->
                     LogUtils.toast(application, "尝试唤醒界面")
                     activity.sendBroadcast(
                         Intent().apply {

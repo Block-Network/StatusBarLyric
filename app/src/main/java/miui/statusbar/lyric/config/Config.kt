@@ -66,6 +66,13 @@ class Config{
     fun setLyricSize(i: Int) {
         config.put("LSize", i)
     }
+    fun getIconSize(): Int{
+        return config.optInt("ISize", 0)
+    }
+
+    fun setIconSize(i: Int) {
+        config.put("ISize", i)
+    }
 
     fun getIconHigh(): Int{
         return config.optInt("IHigh", 7)

@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
 import android.app.Application
-import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -17,13 +16,14 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.os.*
-import android.preference.Preference
-import android.text.*
+import android.text.Editable
+import android.text.TextPaint
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
@@ -31,7 +31,6 @@ import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import miui.statusbar.lyric.R
 import miui.statusbar.lyric.utils.LogUtils
 import miui.statusbar.lyric.utils.Utils
 import miui.statusbar.lyric.utils.XposedOwnSP.config
@@ -182,6 +181,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         iconParams = iconView.layoutParams as LinearLayout.LayoutParams
         iconParams.setMargins(0, 7, 0, 0)
+        LogUtils.d(""+config.getIconSize())
+        if (config.getIconSize()!=0){iconParams.width = config.getIconSize()}
         iconView.layoutParams = iconParams
 
         // 创建布局
