@@ -27,6 +27,7 @@ import miui.statusbar.lyric.R
 import miui.statusbar.lyric.config.Config
 import miui.statusbar.lyric.config.IconConfig
 import miui.statusbar.lyric.utils.ActivityUtils
+import miui.statusbar.lyric.utils.LogUtils
 import miui.statusbar.lyric.utils.ShellUtils
 import miui.statusbar.lyric.utils.Utils
 
@@ -696,18 +697,33 @@ class SettingsActivity : PreferenceActivity() {
             true
         }
 
-        // 关于activity
-        val test = findPreference("test")!!
-        test.onPreferenceClickListener = OnPreferenceClickListener {
-            activity.sendBroadcast(
-                Intent().apply {
-                    action = "Lyric_Server"
-                    putExtra("Lyric_Type", "test")
-                }
-            )
+        // 关于Activity
+        val about = findPreference("about")!!
+        about.onPreferenceClickListener = OnPreferenceClickListener {
+            startActivity(Intent(activity, AboutActivity::class.java))
             true
         }
 
+        // Test
+        val test = findPreference("test")!!
+        test.onPreferenceClickListener = OnPreferenceClickListener {
+            AlertDialog.Builder(activity).apply {
+                setTitle(R.string.Test)
+                setMessage(R.string.TestDialogTips)
+                setPositiveButton(R.string.Start) {_, _ ->
+                    LogUtils.toast(application, "尝试唤醒界面")
+                    activity.sendBroadcast(
+                        Intent().apply {
+                            action = "Lyric_Server"
+                            putExtra("Lyric_Type", "test")
+                        }
+                    )
+                }
+                setNegativeButton(R.string.Back, null)
+                show()
+            }
+            true
+        }
 
         // 非MIUI关闭功能
         if (!Utils.hasMiuiSetting) {

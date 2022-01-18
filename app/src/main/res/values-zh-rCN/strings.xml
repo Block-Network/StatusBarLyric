@@ -156,4 +156,9 @@
     <string name="LyricSize">* 歌词大小</string>
     <string name="LyricSizeTips">0~50，当前:</string>
     <string name="IconError">图标输入错误</string>
+    <string name="Test">测试</string>
+    <string name="TestDialogTips">这个功能是内嵌在SystemUI里的，可能会导致SystemUI崩溃重启！</string>
+    <string name="TestTips">功能测试</string>
+    <string name="Start">启动</string>
+    <string name="Back">返回</string>
 </resources>
