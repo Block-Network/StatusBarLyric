@@ -626,7 +626,6 @@ public class SystemUI {
                         case "app_stop":
                             offLyric("收到广播app_stop");
                             break;
-
                     }
                 } catch (Exception e) {
                     Utils.log("广播接收错误 " + e + "\n" + Utils.dumpException(e));
