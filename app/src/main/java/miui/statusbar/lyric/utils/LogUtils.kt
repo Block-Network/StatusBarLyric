@@ -6,6 +6,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import de.robv.android.xposed.XposedBridge
+import miui.statusbar.lyric.BuildConfig
 import miui.statusbar.lyric.utils.XposedOwnSP.config
 
 object LogUtils {
@@ -41,6 +42,7 @@ object LogUtils {
     }
 
     fun e(obj: Any?) {
+        log("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})", toXposed = true)
         log(obj, toXposed = true)
     }
 
