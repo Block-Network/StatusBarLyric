@@ -14,6 +14,10 @@ object LogUtils {
     private val handler by lazy{ Handler(Looper.getMainLooper()) }
     private const val TAG = "StatusBarLyric"
 
+    init {
+        log("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})", toXposed = true)
+    }
+
     @JvmStatic
     fun toast(context: Context?, msg: String) {
         handler.post { Toast.makeText(context, msg, Toast.LENGTH_SHORT).show() }
@@ -42,7 +46,6 @@ object LogUtils {
     }
 
     fun e(obj: Any?) {
-        log("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})", toXposed = true)
         log(obj, toXposed = true)
     }
 
