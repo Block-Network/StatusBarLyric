@@ -112,9 +112,6 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             addAction("Lyric_Server")
         })
 
-        AppCenter.start(application, "1a36c976-87ea-4f22-a8d8-4aba01ad973d",
-            Analytics::class.java, Crashes::class.java) // 注册AppCenter
-
         // 获取音频管理器
         val audioManager: AudioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
