@@ -38,7 +38,6 @@ class Netease(private val lpparam: LoadPackageParam) {
     var musicName = ""
     lateinit var subView: TextView
     var appLog = " (点击刷新)"
-    var otherLog = " (模糊Hook未启用)"
 
     private fun disableTinker(lpparam: LoadPackageParam) {
         val tinkerApp = "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull(lpparam.classLoader)
@@ -52,6 +51,7 @@ class Netease(private val lpparam: LoadPackageParam) {
     inner class HookFilter {
         private var hooked: XC_MethodHook.Unhook? = null
         val unhookMap: HashMap<String, XC_MethodHook.Unhook?> = HashMap()
+        var unhookInt = 0
 
         fun startFilterAndHook() {
             hooked = XposedHelpers.findAndHookConstructor(BroadcastReceiver::class.java, object : XC_MethodHook() {
@@ -74,10 +74,13 @@ class Netease(private val lpparam: LoadPackageParam) {
                                 }
                             }
                         }
-                        otherLog = " (模糊Hook, 已找到[${unhookMap.size}])"
                     }
                 }
             })
+        }
+
+        fun refresh(): String {
+            return " (模糊Hook, 已找到[${unhookMap.size}], Unhook [$unhookInt])"
         }
 
         fun fixShowingRubbish() {
@@ -96,10 +99,10 @@ class Netease(private val lpparam: LoadPackageParam) {
                             it.unhook()
                             LogUtils.e("unhooked " + next.key)
                             iterator.remove()
+                            unhookInt += 1
                         }
                     }
                 }
-                otherLog = " (模糊Hook, 已找到[${unhookMap.size}])"
             }
         }
     }
@@ -136,7 +139,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                                 XposedHelpers.findAndHookMethod(hookNotification.split("#")[0], lpparam.classLoader, hookNotification.split("#")[1], Notification::class.java, Boolean::class.javaPrimitiveType, HookMethod())
                                 appLog = " (状态栏歌词模式)"
                                 return@hookAfterMethod
-                            } catch (e: XposedHelpers.ClassNotFoundError) {
+                            } catch (e: Throwable) {
                                 errorMsg = e.message.toString()
                             }
                         }
@@ -146,7 +149,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                                 XposedHelpers.findAndHookMethod(hookString.split("#")[0], lpparam.classLoader, hookString.split("#")[1], String::class.java, HookMethod())
                                 appLog = " (状态栏歌词模式)"
                                 return@hookAfterMethod
-                            } catch (e: XposedHelpers.ClassNotFoundError) {
+                            } catch (e: Throwable) {
                                 errorMsg = e.message.toString()
                             }
                         }
@@ -279,7 +282,7 @@ class Netease(private val lpparam: LoadPackageParam) {
             subView = TextView(context)
             linearLayout.addView(subView)
             titleView.text = "状态栏歌词"
-            subView.text = appLog + otherLog
+            subView.text = appLog + filter.refresh()
             start@ for (i in 0 until parent.childCount) {
                 if (parent.getChildAt(i) is TextView) {
                     originalText = parent.getChildAt(i) as TextView
@@ -308,7 +311,7 @@ class Netease(private val lpparam: LoadPackageParam) {
             }
 
             linearLayout.setOnClickListener {
-                subView.text = appLog + otherLog
+                subView.text = appLog + filter.refresh()
             }
         }
     }
