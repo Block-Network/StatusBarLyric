@@ -3,14 +3,14 @@
 package miui.statusbar.lyric.hook.app
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
 import android.app.AndroidAppHelper
 import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Process
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
@@ -36,7 +36,8 @@ import java.lang.reflect.Parameter
 class Netease(private val lpparam: LoadPackageParam) {
     var context: Context? = null
     var musicName = ""
-    lateinit var subView: TextView
+    var subView: TextView? = null
+    lateinit var broadcastHandler: BroadcastHandler
     var appLog = " (点击刷新)"
 
     private fun disableTinker(lpparam: LoadPackageParam) {
@@ -47,6 +48,83 @@ class Netease(private val lpparam: LoadPackageParam) {
     }
 
     private var filter = HookFilter()
+
+    interface OnBroadcastReceiveListener {
+        fun onReceive(s: String)
+    }
+
+    inner class BroadcastHandler(lpparam: LoadPackageParam): BroadcastReceiver() {
+
+        private val idMAIN = "com.netease.cloudmusic"
+        private val idPLAY = "com.netease.cloudmusic:play"
+        private var callback: OnBroadcastReceiveListener? = null
+        private var mContext: Context? = null
+        private val action = "StatusBarLyricReceiver."
+
+        private var client = ""
+
+        init {
+            client = lpparam.processName
+        }
+
+        fun sendBroadcast(s: String) {
+            LogUtils.e("$client 尝试发送Broadcast $s")
+            val intent = Intent()
+            when(client) {
+                idMAIN -> {
+                    intent.action = action + "PLAY"
+                    intent.putExtra("fromMAIN", s)
+                    if (context != null) {
+                        context?.sendBroadcast(intent)
+                    } else {
+                        LogUtils.e("${client}尝试发送Broadcast，但context为null")
+                    }
+                }
+                idPLAY -> {
+                    intent.action = action + "MAIN"
+                    intent.putExtra("fromPLAY", s)
+                    if (context != null) {
+                        context?.sendBroadcast(intent)
+                    } else {
+                        LogUtils.e("${client}尝试发送Broadcast，但context为null")
+                    }
+                }
+            }
+        }
+
+        fun init(context: Context, callback: OnBroadcastReceiveListener): BroadcastHandler {
+            when(client) {
+                idMAIN -> {
+                    context.registerReceiver(this, IntentFilter(action + "MAIN"))
+                    LogUtils.e("$client 尝试注册BroadcastReceiver ${action + "MAIN"}")
+                }
+                idPLAY -> {
+                    context.registerReceiver(this, IntentFilter(action + "PLAY"))
+                    LogUtils.e("$client 尝试注册BroadcastReceiver ${action + "PLAY"}")
+                }
+            }
+            this.mContext = context
+            this.callback = callback
+            return this
+        }
+
+        override fun onReceive(p0: Context, p1: Intent) {
+            LogUtils.e("${client}接收到数据，${p1.getStringExtra("fromPLAY")}")
+            when(client) {
+                idMAIN -> {
+                    p1.getStringExtra("fromPLAY")?.let {
+                        callback?.onReceive(it)
+                    }
+                }
+                idPLAY -> {
+                    p1.getStringExtra("fromMAIN")?.let {
+                        callback?.onReceive(it)
+                    }
+                }
+            }
+        }
+
+    }
 
     inner class HookFilter {
         private var hooked: XC_MethodHook.Unhook? = null
@@ -79,8 +157,12 @@ class Netease(private val lpparam: LoadPackageParam) {
             })
         }
 
-        fun refresh(): String {
-            return " (模糊Hook, 已找到[${unhookMap.size}], Unhook [$unhookInt])"
+        fun refresh() {
+            if (lpparam.processName == "com.netease.cloudmusic:play") {
+                broadcastHandler.sendBroadcast(" (模糊Hook, 已找到[${unhookMap.size}], Unhook [$unhookInt])")
+            } else {
+                broadcastHandler.sendBroadcast("RequestRefresh")
+            }
         }
 
         fun fixShowingRubbish() {
@@ -115,6 +197,21 @@ class Netease(private val lpparam: LoadPackageParam) {
                 try {
                     context = it.thisObject as Context
                     if (lpparam.processName !in arrayOf("com.netease.cloudmusic", "com.netease.cloudmusic:play")) return@hookAfterMethod
+                    if (lpparam.processName == "com.netease.cloudmusic") {
+                        broadcastHandler = BroadcastHandler(lpparam).init(context!!, object : OnBroadcastReceiveListener {
+                            override fun onReceive(s: String) {
+                                subView?.text = appLog + s
+                            }
+                        })
+                    } else {
+                        broadcastHandler = BroadcastHandler(lpparam).init(context!!, object : OnBroadcastReceiveListener {
+                            override fun onReceive(s: String) {
+                                if (s == "RequestRefresh") {
+                                    filter.refresh()
+                                }
+                            }
+                        })
+                    }
                     LogUtils.e("网易云Hook Process: ${lpparam.processName}")
                     context?.let { it1 -> SettingHook(it1) }
                     val verCode: Int? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode
@@ -282,7 +379,7 @@ class Netease(private val lpparam: LoadPackageParam) {
             subView = TextView(context)
             linearLayout.addView(subView)
             titleView.text = "状态栏歌词"
-            subView.text = appLog + filter.refresh()
+            subView?.text = appLog
             start@ for (i in 0 until parent.childCount) {
                 if (parent.getChildAt(i) is TextView) {
                     originalText = parent.getChildAt(i) as TextView
@@ -306,13 +403,14 @@ class Netease(private val lpparam: LoadPackageParam) {
                         10F
                     ) else originalText.paddingLeft, 0, 0, 0
                 )
-                subView.setTextColor(originalText.textColors)
-                subView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (originalText.textSize / 3.0 * 2.0).toInt().toFloat())
+                subView?.setTextColor(originalText.textColors)
+                subView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, (originalText.textSize / 3.0 * 2.0).toInt().toFloat())
             }
 
             linearLayout.setOnClickListener {
-                subView.text = appLog + filter.refresh()
+                filter.refresh()
             }
+            filter.refresh()
         }
     }
 
