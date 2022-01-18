@@ -23,7 +23,13 @@ android {
             isMinifyEnabled = true
             isZipAlignEnabled = true
             isShrinkResources = true
-            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro", "proguard-log.pro"))
+            setProguardFiles(
+                listOf(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro",
+                    "proguard-log.pro"
+                )
+            )
         }
     }
 //    compileOptions {
@@ -31,13 +37,21 @@ android {
 //        targetCompatibility(JavaVersion.VERSION_1_8)
 //    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/**"
+            excludes += "/kotlin/**"
+            excludes += "/*.txt"
+            excludes += "/*.bin"
+        }
+        dex {
+            useLegacyPackaging = true
+        }
     }
-    applicationVariants.all{
+    applicationVariants.all {
         outputs.all {
             (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName($versionCode)-$name.apk"
         }
