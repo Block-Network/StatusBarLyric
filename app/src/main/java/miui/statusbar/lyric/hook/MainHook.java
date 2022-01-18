@@ -6,10 +6,14 @@ import android.content.Context;
 import com.microsoft.appcenter.AppCenter;
 import com.microsoft.appcenter.analytics.Analytics;
 import com.microsoft.appcenter.crashes.Crashes;
+
+import java.util.Locale;
+
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import miui.statusbar.lyric.BuildConfig;
 import miui.statusbar.lyric.config.ApiListConfig;
 import miui.statusbar.lyric.hook.app.Api;
 import miui.statusbar.lyric.hook.app.Kugou;
@@ -29,6 +33,7 @@ public class MainHook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         Utils.log("Debug已开启");
+        Utils.log(String.format(Locale.getDefault(), "%s(%d) - %s", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, BuildConfig.BUILD_TYPE));
 
         // 获取Context
         XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
