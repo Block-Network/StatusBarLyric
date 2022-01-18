@@ -112,7 +112,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                 try {
                     context = it.thisObject as Context
                     if (lpparam.processName !in arrayOf("com.netease.cloudmusic", "com.netease.cloudmusic:play")) return@hookAfterMethod
-                    LogUtils.e("网易云Hook Process: " + context?.let { it1 -> getCurrentProcessName(it1) })
+                    LogUtils.e("网易云Hook Process: ${lpparam.processName}")
                     context?.let { it1 -> SettingHook(it1) }
                     val verCode: Int? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode
                     val verName: String? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionName
