@@ -7,3 +7,4 @@ app/debug
 /.idea/inspectionProfiles/
 local.properties
 build
+/.idea/misc.xml
