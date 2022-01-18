@@ -54,6 +54,10 @@
 - [Beta](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
 - [Canary](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android_Dev.yml)
 
+### 使用教程
+
+[HELP](doc/HELP.md)
+
 ### 联系我们
 
 - [QQ交流群](https://jq.qq.com/?_wv=1027&amp;k=KQeQjgsv)
