@@ -172,4 +172,11 @@
     <string name="LyricSize">* Lyrics Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
     <string name="IconError">Icon input error</string>
+    <string name="Test">Test</string>
+    <string name="TestDialogTips">This function is embedded in the system UI and may cause the system UI to crash and
+        restart!
+    </string>
+    <string name="TestTips">Functional testing</string>
+    <string name="Start">Start</string>
+    <string name="Back">Back</string>
 </resources>

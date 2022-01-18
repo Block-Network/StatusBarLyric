@@ -216,8 +216,8 @@
 
     <Preference
             android:key="test"
-            android:summary=""
-            android:title="Test"/>
+            android:summary="@string/TestTips"
+            android:title="@string/Test"/>
 
     <Preference>
         <intent

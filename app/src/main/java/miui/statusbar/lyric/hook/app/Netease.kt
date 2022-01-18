@@ -104,17 +104,6 @@ class Netease(private val lpparam: LoadPackageParam) {
         }
     }
 
-    private fun getCurrentProcessName(context: Context): String {
-        val pid = Process.myPid()
-        val mActivityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        for (appProcess in mActivityManager.runningAppProcesses) {
-            if (appProcess.pid == pid) {
-                return appProcess.processName
-            }
-        }
-        return ""
-    }
-
     @SuppressLint("SetTextI18n")
     fun hook(){
         try {
@@ -122,8 +111,8 @@ class Netease(private val lpparam: LoadPackageParam) {
             "com.netease.cloudmusic.NeteaseMusicApplication".hookAfterMethod("attachBaseContext", Context::class.java, classLoader = lpparam.classLoader) {
                 try {
                     context = it.thisObject as Context
-                    if (context?.let { it1 -> getCurrentProcessName(it1) } !in arrayOf("com.netease.cloudmusic", "com.netease.cloudmusic:play")) return@hookAfterMethod
-                    LogUtils.e("网易云Hook Process: " + context?.let { it1 -> getCurrentProcessName(it1) })
+                    if (lpparam.processName !in arrayOf("com.netease.cloudmusic", "com.netease.cloudmusic:play")) return@hookAfterMethod
+                    LogUtils.e("网易云Hook Process: ${lpparam.processName}")
                     context?.let { it1 -> SettingHook(it1) }
                     val verCode: Int? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode
                     val verName: String? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionName
@@ -238,17 +227,18 @@ class Netease(private val lpparam: LoadPackageParam) {
                     }
                 } catch (e: Throwable) {
                     LogUtils.e("网易云状态栏歌词错误： " + e.message)
+                    appLog = " (发生错误[${e.message}])"
                 }
             }
         } catch (e: Throwable) {
             LogUtils.e("网易云状态栏歌词错误： " + e.message)
+            appLog = " (发生错误[${e.message}])"
         }
     }
 
     inner class SettingHook(context: Context) {
         private var switchViewName = ""
         private lateinit var titleView: TextView
-
 
         init {
             val settingActivityClass = "com.netease.cloudmusic.activity.SettingActivity".findClassOrNull(context.classLoader)

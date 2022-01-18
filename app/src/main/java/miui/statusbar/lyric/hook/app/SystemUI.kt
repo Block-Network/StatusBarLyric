@@ -596,62 +596,68 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     inner class ShowDialog {
         @SuppressLint("SetTextI18n")
         fun show(){
-            var icon = "Api"
-            val dialog = "com.android.systemui.statusbar.phone.SystemUIDialog".findClass(lpparam.classLoader)
-            (dialog.new(application) as AlertDialog).apply {
-                setTitle("StatusBarLyric Test")
-                setView(LinearLayout(application).let {
-                    it.orientation = LinearLayout.VERTICAL
-                    setCancelable(false)
-                    it.addView(Button(application).let { it1 ->
-                        it1.text = "Show test lyric"
-                        it1.setOnClickListener {
-                            updateLyric((Math.random() * 4).toInt().toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", icon)
-                            test = true
-                        }
-                        it1
-                    })
-                    it.addView(EditText(application).apply {
-                        setText(icon)
-                        addTextChangedListener(object :TextWatcher{
-                            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            try {
+                var icon = "Api"
+                val dialog = "com.android.systemui.statusbar.phone.SystemUIDialog".findClass(lpparam.classLoader)
+                (dialog.new(application) as AlertDialog).apply {
+                    setTitle("StatusBarLyric Test")
+                    setView(LinearLayout(application).let {
+                        it.orientation = LinearLayout.VERTICAL
+                        setCancelable(false)
+                        it.addView(Button(application).let { it1 ->
+                            it1.text = "Show test lyric"
+                            it1.setOnClickListener {
+                                updateLyric(
+                                    (Math.random() * 4).toInt()
+                                        .toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", icon
+                                )
+                                test = true
                             }
-
-                            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                                icon = p0 as String
-                            }
-
-                            override fun afterTextChanged(p0: Editable?) {
-                            }
+                            it1
                         })
-                    })
-                    it.addView(Button(application).let { it1 ->
-                        it1.text = "Stop lyric"
-                        it1.setOnClickListener {
-                            offLyric("Test Off lyric")
-                            test = false
-                        }
-                        it1
-                    })
-                    it.addView(Button(application).let { it1 ->
-                        it1.text = "Restart"
-                        it1.setOnClickListener {
-                            exitProcess(0)
-                        }
-                        it1
-                    })
-                    it.addView(Button(application).let { it1 ->
-                        it1.text = "Exit"
-                        it1.setOnClickListener {
-                            dismiss()
-                        }
-                        it1
-                    })
-                    it
-                })
-                show()
-            }
+                        it.addView(EditText(application).apply {
+                            setText(icon)
+                            addTextChangedListener(object : TextWatcher {
+                                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                                }
 
+                                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                                    icon = p0 as String
+                                }
+
+                                override fun afterTextChanged(p0: Editable?) {
+                                }
+                            })
+                        })
+                        it.addView(Button(application).let { it1 ->
+                            it1.text = "Stop lyric"
+                            it1.setOnClickListener {
+                                offLyric("Test Off lyric")
+                                test = false
+                            }
+                            it1
+                        })
+                        it.addView(Button(application).let { it1 ->
+                            it1.text = "Restart"
+                            it1.setOnClickListener {
+                                exitProcess(0)
+                            }
+                            it1
+                        })
+                        it.addView(Button(application).let { it1 ->
+                            it1.text = "Exit"
+                            it1.setOnClickListener {
+                                dismiss()
+                            }
+                            it1
+                        })
+                        it
+                    })
+                    show()
+                }
+            } catch (e: Throwable) {
+                LogUtils.e("唤醒失败 可能系统不支持\n${e.message}")
+            }
         }
     }
 
