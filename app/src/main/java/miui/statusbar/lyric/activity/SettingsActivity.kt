@@ -31,7 +31,6 @@ import miui.statusbar.lyric.config.Config
 import miui.statusbar.lyric.config.IconConfig
 import miui.statusbar.lyric.utils.ActivityUtils
 import miui.statusbar.lyric.utils.ActivityUtils.showToastOnLooper
-import miui.statusbar.lyric.utils.LogUtils
 import miui.statusbar.lyric.utils.ShellUtils
 import miui.statusbar.lyric.utils.Utils
 
@@ -195,10 +194,10 @@ class SettingsActivity : PreferenceActivity() {
                         )
                         lyricMaxWidth.summary = value
                     } else {
-                        ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                        showToastOnLooper(activity, getString(R.string.RangeError))
                     }
                 } catch (ignored: NumberFormatException) {
-                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                    showToastOnLooper(activity, getString(R.string.RangeError))
                 }
                 true
             }
@@ -232,10 +231,10 @@ class SettingsActivity : PreferenceActivity() {
                     lyricWidth.summary = value
                     lyricMaxWidth.isEnabled = false
                 } else {
-                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                    showToastOnLooper(activity, getString(R.string.RangeError))
                 }
             } catch (ignored: NumberFormatException) {
-                ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                showToastOnLooper(activity, getString(R.string.RangeError))
             }
             true
         }
@@ -279,7 +278,7 @@ class SettingsActivity : PreferenceActivity() {
             } catch (e: Exception) {
                 config!!.setLyricColor("off")
                 lyricColour.summary = getString(R.string.Adaptive)
-                ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
+                showToastOnLooper(activity, getString(R.string.LyricColorError))
             }
 
             true
@@ -382,7 +381,7 @@ class SettingsActivity : PreferenceActivity() {
                     lyricSize.dialogMessage = String.format("%s%s", "0~50，当前:", value)
                     lyricSize.summary = value
                 } else {
-                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                    showToastOnLooper(activity, getString(R.string.RangeError))
                 }
             } catch (ignore: NumberFormatException) {
             }
@@ -413,7 +412,7 @@ class SettingsActivity : PreferenceActivity() {
                             String.format("%s%s", getString(R.string.LyricPosTips), value)
                         lyricPosition.summary = value
                     } else {
-                        ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                        showToastOnLooper(activity, getString(R.string.RangeError))
                     }
                 } catch (ignore: NumberFormatException) {
                 }
@@ -442,7 +441,7 @@ class SettingsActivity : PreferenceActivity() {
                     lyricHigh.dialogMessage = String.format("%s%s", getString(R.string.LyricHighTips), value)
                     lyricHigh.summary = value
                 } else {
-                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                    showToastOnLooper(activity, getString(R.string.RangeError))
                 }
             } catch (ignore: NumberFormatException) {
             }
@@ -482,14 +481,13 @@ class SettingsActivity : PreferenceActivity() {
                     iconHigh.dialogMessage = String.format("%s%s", getString(R.string.LyricPosTips), value)
                     iconHigh.summary = value
                 } else {
-                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                    showToastOnLooper(activity, getString(R.string.RangeError))
                 }
             } catch (ignore: NumberFormatException) {
             }
             true
         }
 
-        showToastOnLooper(activity, config!!.getIconSize().toString())
         // 图标大小
         val iconSize = (findPreference("iconSize") as EditTextPreference)
         iconSize.summary = config!!.getIconSize().toString()
@@ -512,7 +510,7 @@ class SettingsActivity : PreferenceActivity() {
                     iconSize.dialogMessage = String.format("%s%s", "0~50，当前:", value)
                     iconSize.summary = value
                 } else {
-                    ActivityUtils.showToastOnLooper(activity, getString(R.string.RangeError))
+                    showToastOnLooper(activity, getString(R.string.RangeError))
                 }
             } catch (ignore: NumberFormatException) {
             }
@@ -543,10 +541,10 @@ class SettingsActivity : PreferenceActivity() {
                                         BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
                                     iconConfig.setIcon(iconName, editText.text.toString())
                                 } catch (ignore: Exception) {
-                                    ActivityUtils.showToastOnLooper(activity, getString(R.string.IconError))
+                                    showToastOnLooper(activity, getString(R.string.IconError))
                                 }
                             } else {
-                                ActivityUtils.showToastOnLooper(activity, getString(R.string.IconError))
+                                showToastOnLooper(activity, getString(R.string.IconError))
                             }
                         }
                         setNegativeButton(R.string.Cancel, null)
@@ -564,7 +562,7 @@ class SettingsActivity : PreferenceActivity() {
                             try {
                                 activity.startActivity(intent)
                             } catch (ignore: Exception) {
-                                ActivityUtils.showToastOnLooper(activity, getString(R.string.MakeIconError))
+                                showToastOnLooper(activity, getString(R.string.MakeIconError))
                             }
                         }
                         show()
@@ -656,7 +654,7 @@ class SettingsActivity : PreferenceActivity() {
                 ) { _, _ ->
                     hook.summary = String.format("%s Hook", getString(R.string.Default))
                     config!!.setHook("")
-                    ActivityUtils.showToastOnLooper(activity, getString(R.string.ResetHookTips))
+                    showToastOnLooper(activity, getString(R.string.ResetHookTips))
                 }
                 setPositiveButton(R.string.Ok) { _, _ ->
                     config!!.setHook(editText.text.toString())
@@ -664,7 +662,7 @@ class SettingsActivity : PreferenceActivity() {
                     if (config!!.getHook() == "") {
                         hook.summary = String.format("%s Hook", getString(R.string.Default))
                     }
-                    ActivityUtils.showToastOnLooper(
+                    showToastOnLooper(
                         activity,
                         String.format(
                             "%s %s%s",
@@ -727,7 +725,7 @@ class SettingsActivity : PreferenceActivity() {
         checkUpdate.summary =
             java.lang.String.format("%s：%s", getString(R.string.CurrentVer), BuildConfig.VERSION_NAME)
         checkUpdate.onPreferenceClickListener = OnPreferenceClickListener {
-            ActivityUtils.showToastOnLooper(activity, getString(R.string.StartCheckUpdate))
+            showToastOnLooper(activity, getString(R.string.StartCheckUpdate))
             ActivityUtils.checkUpdate(activity)
             true
         }
@@ -746,7 +744,7 @@ class SettingsActivity : PreferenceActivity() {
                 setTitle(R.string.Test)
                 setMessage(R.string.TestDialogTips)
                 setPositiveButton(R.string.Start) { _, _ ->
-                    LogUtils.toast(application, "尝试唤醒界面")
+                    showToastOnLooper(activity, "尝试唤醒界面")
                     activity.sendBroadcast(
                         Intent().apply {
                             action = "Lyric_Server"

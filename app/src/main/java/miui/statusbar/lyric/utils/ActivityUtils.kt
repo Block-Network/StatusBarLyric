@@ -20,11 +20,12 @@ import org.json.JSONObject
 
 
 object ActivityUtils {
+    private val handler by lazy { Handler(Looper.getMainLooper()) }
+
     // 弹出toast
     @JvmStatic
     fun showToastOnLooper(context: Context?, message: String?) {
         try {
-            val handler = Handler(Looper.getMainLooper())
             handler.post { Toast.makeText(context, message, Toast.LENGTH_LONG).show() }
         } catch (e: RuntimeException) {
             e.printStackTrace()
