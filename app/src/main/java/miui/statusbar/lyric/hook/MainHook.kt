@@ -54,7 +54,7 @@ class MainHook: IXposedHookLoadPackage {
             }
             "cn.kuwo.player" -> {
                 LogUtils.e("正在hook酷我音乐")
-                Kugou(lpparam).hook()
+                Kuwo(lpparam).hook()
                 LogUtils.e("hook酷我音乐结束")
             }
             "com.tencent.qqmusic" -> {
