@@ -12,8 +12,8 @@ android {
         applicationId = "miui.statusbar.lyric"
         minSdk = 26
         targetSdk = 32
-        versionCode = 82
-        versionName = "3.50.25"
+        versionCode = 83
+        versionName = "3.56.25"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }
