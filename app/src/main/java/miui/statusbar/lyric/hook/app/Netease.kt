@@ -38,7 +38,8 @@ class Netease(private val lpparam: LoadPackageParam) {
     var musicName = ""
     var subView: TextView? = null
     lateinit var broadcastHandler: BroadcastHandler
-    var appLog = " (点击刷新)"
+    var appLog = ""
+    var isNewVer = false
 
     private fun disableTinker(lpparam: LoadPackageParam) {
         val tinkerApp = "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull(lpparam.classLoader)
@@ -159,7 +160,12 @@ class Netease(private val lpparam: LoadPackageParam) {
 
         fun refresh() {
             if (lpparam.processName == "com.netease.cloudmusic:play") {
-                broadcastHandler.sendBroadcast(" (模糊Hook, 已找到[${unhookMap.size}], Unhook [$unhookInt])")
+                if (isNewVer) {
+
+                    broadcastHandler.sendBroadcast(" (Hook [${unhookMap.size}], Unhook [$unhookInt])")
+                } else {
+                    broadcastHandler.sendBroadcast(" (模糊Hook未启用)")
+                }
             } else {
                 broadcastHandler.sendBroadcast("RequestRefresh")
             }
@@ -217,6 +223,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                     val verCode: Int? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode
                     val verName: String? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionName
                     if (verCode!! > 8000041) {
+                        isNewVer = true
                         MeiZuStatusBarLyric.guiseFlyme(lpparam, false)
                         var errorMsg = ""
                         val hookNotificationArr = arrayOf(
@@ -250,7 +257,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                                 errorMsg = e.message.toString()
                             }
                         }
-                        appLog = " (不一定支持的网易云版本! $verName\n$errorMsg)"
+                        appLog = " (不一定支持的网易云版本! $verName)"
                         LogUtils.e("不一定支持的网易云版本! $verName\n$errorMsg")
                     } else {
                         val enableBTLyricClass: String
@@ -378,7 +385,7 @@ class Netease(private val lpparam: LoadPackageParam) {
             linearLayout.addView(titleView)
             subView = TextView(context)
             linearLayout.addView(subView)
-            titleView.text = "状态栏歌词"
+            titleView.text = "状态栏歌词\n(点击刷新)"
             subView?.text = appLog
             start@ for (i in 0 until parent.childCount) {
                 if (parent.getChildAt(i) is TextView) {
@@ -408,6 +415,7 @@ class Netease(private val lpparam: LoadPackageParam) {
             }
 
             linearLayout.setOnClickListener {
+                LogUtils.toast(context, "刷新中")
                 filter.refresh()
             }
             filter.refresh()
