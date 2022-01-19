@@ -181,9 +181,6 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         iconParams = iconView.layoutParams as LinearLayout.LayoutParams
         iconParams.setMargins(0, 7, 0, 0)
-        LogUtils.d(""+config.getIconSize())
-        if (config.getIconSize()!=0){iconParams.width = config.getIconSize()}
-        iconView.layoutParams = iconParams
 
         // 创建布局
         lyricLayout = LinearLayout(application).apply {
@@ -479,8 +476,13 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     BitmapDrawable(application.resources, Utils.stringToBitmap(iconConfig.getIcon(strIcon)))
             }
             // 设置宽高
-            iconParams.width = clock.textSize.toInt()
-            iconParams.height = clock.textSize.toInt()
+            if (config.getIconSize() == 0){
+                iconParams.width = clock.textSize.toInt()
+                iconParams.height = clock.textSize.toInt()
+            } else {
+                iconParams.width = config.getIconSize()
+                iconParams.height = config.getIconSize()
+            }
             iconUpdate.obtainMessage().let {
                 it.obj = drawableIcon
                 iconUpdate.sendMessage(it)

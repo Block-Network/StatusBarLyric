@@ -170,6 +170,7 @@
     <string name="MakeIconTitle">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
     <string name="LyricHigh">* Lyrics up and down position</string>
     <string name="LyricSize">* Lyrics Size</string>
+    <string name="IconSize">Icon Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
     <string name="IconError">Icon input error</string>
     <string name="Test">Test</string>

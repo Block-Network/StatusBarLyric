@@ -222,8 +222,8 @@ class SettingsActivity : PreferenceActivity() {
             config!!.setLyricWidth(-1)
             try {
                 val value =
-                    newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
-                        .replace("\\+".toRegex(), "")
+                    newValue.toString().replace(" ", "").replace("\n", "")
+                        .replace("\\+", "")
                 config!!.setLyricWidth(-1)
                 if ((value.toInt() <= 100) && (value.toInt() >= 0)) {
                     config!!.setLyricWidth(value.toInt())
@@ -265,7 +265,7 @@ class SettingsActivity : PreferenceActivity() {
             )
             lyricColour.summary = getString(R.string.Adaptive)
             config!!.setLyricColor("off")
-            val value = newValue.toString().replace(" ".toRegex(), "")
+            val value = newValue.toString().replace(" ", "")
             try {
                 Color.parseColor(newValue.toString())
                 lyricColour.dialogMessage = String.format(
@@ -375,7 +375,7 @@ class SettingsActivity : PreferenceActivity() {
             lyricSize.summary = getString(R.string.Default)
             config!!.setLyricSize(0)
             try {
-                val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
+                val value = newValue.toString().replace(" ", "").replace("\n", "")
                 if ((value.toInt() <= 50) && (value.toInt() > 0)) {
                     config!!.setLyricSize(value.toInt())
                     lyricSize.dialogMessage = String.format("%s%s", "0~50，当前:", value)
@@ -405,7 +405,7 @@ class SettingsActivity : PreferenceActivity() {
                 lyricPosition.summary = getString(R.string.Default)
                 config!!.setLyricPosition(0)
                 try {
-                    val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
+                    val value = newValue.toString().replace(" ", "").replace("\n", "")
                     if (value.toInt() <= 900 && value.toInt() >= -900) {
                         config!!.setLyricPosition(value.toInt())
                         lyricPosition.dialogMessage =
@@ -435,7 +435,7 @@ class SettingsActivity : PreferenceActivity() {
             lyricHigh.summary = getString(R.string.Default)
             config!!.setLyricHigh(0)
             try {
-                val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
+                val value = newValue.toString().replace(" ", "").replace("\n", "")
                 if (value.toInt() <= 100 && value.toInt() >= -100) {
                     config!!.setLyricHigh(value.toInt())
                     lyricHigh.dialogMessage = String.format("%s%s", getString(R.string.LyricHighTips), value)
@@ -475,7 +475,7 @@ class SettingsActivity : PreferenceActivity() {
             iconHigh.summary = getString(R.string.Default)
             config!!.setIconHigh(7)
             try {
-                val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
+                val value = newValue.toString().replace(" ", "").replace("\n", "")
                 if (value.toInt() <= 100 && value.toInt() >= -100) {
                     config!!.setIconHigh(value.toInt())
                     iconHigh.dialogMessage = String.format("%s%s", getString(R.string.LyricPosTips), value)
@@ -504,7 +504,7 @@ class SettingsActivity : PreferenceActivity() {
             iconSize.summary = getString(R.string.Default)
             config!!.setIconSize(0)
             try {
-                val value = newValue.toString().replace(" ".toRegex(), "").replace("\n".toRegex(), "")
+                val value = newValue.toString().replace(" ", "").replace("\n", "")
                 if ((value.toInt() <= 50) && (value.toInt() > 0)) {
                     config!!.setIconSize(value.toInt())
                     iconSize.dialogMessage = String.format("%s%s", "0~50，当前:", value)
@@ -513,6 +513,7 @@ class SettingsActivity : PreferenceActivity() {
                     showToastOnLooper(activity, getString(R.string.RangeError))
                 }
             } catch (ignore: NumberFormatException) {
+                showToastOnLooper(activity, getString(R.string.RangeError))
             }
             true
         }

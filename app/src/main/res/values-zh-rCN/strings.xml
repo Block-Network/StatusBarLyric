@@ -154,6 +154,7 @@
     <string name="MakeIconTitle">请输入没有前缀的Base64，推荐像素大小32*32</string>
     <string name="LyricHigh">* 歌词上下位置</string>
     <string name="LyricSize">* 歌词大小</string>
+    <string name="IconSize">图标大小</string>
     <string name="LyricSizeTips">0~50，当前:</string>
     <string name="IconError">图标输入错误</string>
     <string name="Test">测试</string>
