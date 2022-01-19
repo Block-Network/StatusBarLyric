@@ -71,6 +71,7 @@
             android:key="lyricAnim"
             android:summary="@string/Off"
             android:title="@string/LyricsAnimation"/>
+
     <SwitchPreference
             android:defaultValue="true"
             android:key="lyricStyle"
@@ -89,7 +90,7 @@
             android:inputType="numberDecimal"/>
 
     <EditTextPreference
-            android:defaultValue="7"
+            android:defaultValue="0"
             android:key="lyricSize"
             android:summary="@string/Default"
             android:title="@string/LyricSize"
@@ -128,6 +129,14 @@
             android:title="@string/IconHigh"
             android:maxLength="4"
             android:inputType="numberSigned"/>
+
+    <EditTextPreference
+            android:defaultValue="0"
+            android:key="iconSize"
+            android:summary="@string/Default"
+            android:title="@string/IconSize"
+            android:maxLength="2"
+            android:inputType="number"/>
 
     <Preference
             android:key="iconCustomize"
@@ -213,6 +222,11 @@
             android:key="about"
             android:summary=""
             android:title="@string/AboutModule"/>
+
+    <Preference
+            android:key="test"
+            android:summary="@string/TestTips"
+            android:title="@string/Test"/>
 
     <Preference>
         <intent

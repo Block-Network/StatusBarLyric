@@ -45,6 +45,7 @@
 - @Yife Playte (感谢帮忙优化矢量图)
 - @YuKongA
 - @QQ little ice
+- @咕灵谷灵咕 （感谢提供flyme获取歌词的技术支持）
 
 ### 下载
 
@@ -52,6 +53,10 @@
 - [酷安](https://www.coolapk.com/apk/miui.statusbar.lyric)
 - [Beta](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
 - [Canary](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android_Dev.yml)
+
+### 使用教程
+
+[HELP](doc/HELP.md)
 
 ### 联系我们
 
@@ -74,6 +79,6 @@
 
 ## EULA & License
 
-[EUAL](EUAL.md)
+[EULA](doc/EULA.md)
 
 [GNU General Public License v3.0](LICENSE)

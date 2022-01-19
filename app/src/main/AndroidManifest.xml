@@ -61,7 +61,7 @@
                 android:resource="@array/need_module"/>
 
         <service
-                android:name=".QuickTitleService"
+                android:name=".service.QuickTitleService"
                 android:exported="true"
                 android:icon="@drawable/title_icon"
                 android:label="@string/QuickTitle"

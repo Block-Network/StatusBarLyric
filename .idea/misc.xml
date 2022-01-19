@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/program/Android/MIUIStatusBarLyric/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.20052083333333334" />
+        <entry key="..\:/program/Android/MIUIStatusBarLyric/app/src/main/res/drawable/title_icon.xml" value="0.20052083333333334" />
+        <entry key="..\:/program/Android/MIUIStatusBarLyric/app/src/main/res/layout/seticon.xml" value="0.18489583333333334" />
+        <entry key="..\:/program/Android/MIUIStatusBarLyric/app/src/main/res/xml/root_preferences.xml" value="0.358695652173913" />
+      </map>
+    </option>
+  </component>
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16_PREVIEW" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

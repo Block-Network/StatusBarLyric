@@ -81,7 +81,7 @@
         - Phonograph Plus第三方修改版本\n
         https://github.com/kabouzeid/Phonograph\n
     </string>
-    <string name="AppName">狀態欄歌詞</string>
+    <string name="AppName">墨•狀態欄歌詞</string>
     <string name="QuickTitle">狀態欄歌詞</string>
     <string name="XposedTips">如果無法顯示歌詞，請嘗試停止音樂軟件並重啟系統界面\n或查看 使用說明 自己是否使用正確版本</string>
     <string name="InitError">初始化失敗，請重啟軟件</string>
@@ -154,5 +154,12 @@
     <string name="MakeIconTitle">請輸入沒有前綴的Base 64，推薦像素大小3232</string>
     <string name="LyricHigh">* 歌詞上下位置</string>
     <string name="LyricSize">* 歌詞大小</string>
+    <string name="IconSize">圖標大小</string>
     <string name="LyricSizeTips">0~50，當前:</string>
+    <string name="IconError">圖標輸入錯誤</string>
+    <string name="Test">測試</string>
+    <string name="TestDialogTips">這個功能是內嵌在SystemUI裏的，可能會導致SystemUI崩潰重啓！</string>
+    <string name="TestTips">功能測試</string>
+    <string name="Back">返回</string>
+    <string name="Start">啓動</string>
 </resources>
