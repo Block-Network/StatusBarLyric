@@ -117,7 +117,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         // 获取屏幕宽度
         val displayMetrics = DisplayMetrics()
         (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
-        val dw: Int = displayMetrics.widthPixels
+        val displayWidth: Int = displayMetrics.widthPixels
 
         // 获取系统版本
         LogUtils.e("Android: " + Build.VERSION.SDK_INT)
@@ -156,7 +156,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
         // 创建TextView
         lyricTextView = LyricTextSwitchView(application, config.getLyricStyle())
-        lyricTextView.width = (dw * 35) / 100
+        lyricTextView.width = (displayWidth * 35) / 100
         lyricTextView.height = clock.height
         lyricTextView.setTypeface(clock.typeface)
         if (config.getLyricSize() == 0) {
@@ -269,13 +269,13 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     // 自适应/歌词宽度
                     if (config.getLyricWidth() == -1) {
                         val paint1: TextPaint = lyricTextView.paint!! // 获取字体
-                        if (config.getLyricMaxWidth() == -1 || paint1.measureText(string).toInt() + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
+                        if (config.getLyricMaxWidth() == -1 || paint1.measureText(string).toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100) {
                             lyricTextView.width = paint1.measureText(string).toInt() + 6
                         } else {
-                            lyricTextView.width = (dw * config.getLyricMaxWidth()) / 100
+                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth()) / 100
                         }
                     } else {
-                        lyricTextView.width = (dw * config.getLyricWidth()) / 100
+                        lyricTextView.width = (displayWidth * config.getLyricWidth()) / 100
                     }
                     // 歌词显示
                     if (showLyric) {
