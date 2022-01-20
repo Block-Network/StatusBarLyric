@@ -266,17 +266,16 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             if (!TextUtils.isEmpty(string)) {
                 LogUtils.e("更新歌词: $string")
                 if (!string.equals(lyricTextView.text.toString())) {
-                    val maxWidth: Int = config.getLyricMaxWidth()
                     // 自适应/歌词宽度
                     if (config.getLyricWidth() == -1) {
                         val paint1: TextPaint = lyricTextView.paint!! // 获取字体
                         if (config.getLyricMaxWidth() == -1 || paint1.measureText(string).toInt() + 6 <= (dw * config.getLyricMaxWidth()) / 100) {
                             lyricTextView.width = paint1.measureText(string).toInt() + 6
                         } else {
-                            lyricTextView.width = (dw * maxWidth) / 100
+                            lyricTextView.width = (dw * config.getLyricMaxWidth()) / 100
                         }
                     } else {
-                        lyricTextView.width = (dw * maxWidth) / 100
+                        lyricTextView.width = (dw * config.getLyricWidth()) / 100
                     }
                     // 歌词显示
                     if (showLyric) {
