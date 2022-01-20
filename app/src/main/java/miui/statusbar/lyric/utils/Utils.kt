@@ -188,12 +188,6 @@ object Utils {
             "lower" -> TranslateAnimation(0F, 0F, -100F, 0F)
             "left" -> TranslateAnimation(100F, 0F, 0F, 0F)
             "right" -> TranslateAnimation(-100F, 0F, 0F, 0F)
-            "random" -> return inAnim(
-                arrayOf(
-                    "off", "top", "lower",
-                    "left", "right", "random"
-                )[(Math.random() * 4).toInt()]
-            )
             else -> return null
         }
         // 设置动画300ms
@@ -214,12 +208,6 @@ object Utils {
             "lower" -> TranslateAnimation(0F, 0F, 0F, 100F)
             "left" -> TranslateAnimation(0F, -100F, 0F, 0F)
             "right" -> TranslateAnimation(0F, 100F, 0F, 0F)
-            "random" -> return outAnim(
-                arrayOf(
-                    "off", "top", "lower",
-                    "left", "right", "random"
-                )[(Math.random() * 4).toInt()]
-            )
             else -> return null
         }
         // 设置动画300ms
