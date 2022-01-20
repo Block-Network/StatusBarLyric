@@ -493,10 +493,19 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         if (config.getLyricStyle()) {
             lyricTextView.setSpeed(config.getLyricSpeed())
         }
-        if (oldAnim == "random" || config.getAnim() != oldAnim) {
+        if (config.getAnim() != oldAnim) {
             oldAnim = config.getAnim()
             lyricTextView.inAnimation = Utils.inAnim(oldAnim)
             lyricTextView.outAnimation = Utils.outAnim(oldAnim)
+        }
+        if (config.getAnim() == "random") {
+            oldAnim = config.getAnim()
+            val anim = arrayOf(
+                "top", "lower",
+                "left", "right"
+            )[(Math.random() * 4).toInt()]
+            lyricTextView.inAnimation = Utils.inAnim(anim)
+            lyricTextView.outAnimation = Utils.outAnim(anim)
         }
         if (config.getAntiBurn()) {
             if (config.getIconHigh() != oldPos) {
