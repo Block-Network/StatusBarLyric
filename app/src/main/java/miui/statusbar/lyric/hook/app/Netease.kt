@@ -161,7 +161,6 @@ class Netease(private val lpparam: LoadPackageParam) {
         fun refresh() {
             if (lpparam.processName == "com.netease.cloudmusic:play") {
                 if (isNewVer) {
-
                     broadcastHandler.sendBroadcast(" (Hook [${unhookMap.size}], Unhook [$unhookInt])")
                 } else {
                     broadcastHandler.sendBroadcast(" (模糊Hook未启用)")
@@ -260,76 +259,21 @@ class Netease(private val lpparam: LoadPackageParam) {
                         appLog = " (不一定支持的网易云版本! $verName)"
                         LogUtils.e("不一定支持的网易云版本! $verName\n$errorMsg")
                     } else {
-                        val enableBTLyricClass: String
-                        val enableBTLyricMethod: String
-                        val getMusicNameClass: String
-                        val getMusicNameMethod: String
-                        val getMusicNameHook = object: XC_MethodHook() {
-                            override fun afterHookedMethod(param: MethodHookParam){
-                                super.afterHookedMethod(param)
-                                if (param.args[0] != null) {
-                                    Utils.sendLyric(context, param.args[0].toString(), "Netease")
-                                    musicName = param.args[0].toString()
-                                    LogUtils.e("网易云： " + param.args[0].toString())
-                                }
-                            }
-                        }
-                        val getMusicLyricClass: String
-                        val getMusicLyricMethod: String
-                        val getMusicLyricHook = object: XC_MethodHook() {
-                            override fun beforeHookedMethod(param: MethodHookParam){
-                                super.beforeHookedMethod(param)
-                                if (param.args[0] != null) {
-                                    Utils.sendLyric(context, param.args[0].toString(), "Netease")
-                                    LogUtils.e("网易云： " + param.args[0].toString())
-                                }
-                                if (!TextUtils.isEmpty(musicName)) {
-                                    param.args[0] = musicName
-                                }
-                            }
-
-
-                        }
+                        LogUtils.e("正在尝试通用Hook")
                         try {
-                            if (verCode > 7002022) {
-                                enableBTLyricClass = "com.netease.cloudmusic.module.player.t.e"
-                                enableBTLyricMethod = "o"
-
-                                getMusicNameClass = "com.netease.cloudmusic.module.player.t.e"
-                                getMusicNameMethod = "B"
-                                XposedHelpers.findAndHookMethod(getMusicNameClass, lpparam.classLoader, getMusicNameMethod, String::class.java, String::class.java, String::class.java, Long::class.java, Boolean::class.java, getMusicNameHook)
-
-                                getMusicLyricClass = "com.netease.cloudmusic.module.player.t.e"
-                                getMusicLyricMethod = "F"
-                                XposedHelpers.findAndHookMethod(getMusicLyricClass, lpparam.classLoader, getMusicLyricMethod, String::class.java, String::class.java, getMusicLyricHook)
-                            } else {
-                                enableBTLyricClass = "com.netease.cloudmusic.module.player.f.e"
-                                enableBTLyricMethod = "b"
-
-                                getMusicLyricClass = "com.netease.cloudmusic.module.player.f.e"
-                                getMusicLyricMethod = "a"
-                                XposedHelpers.findAndHookMethod(getMusicLyricClass, lpparam.classLoader, getMusicLyricMethod, String::class.java, String::class.java, String::class.java, Long::class.javaPrimitiveType, Bitmap::class.java, String::class.java, getMusicLyricHook)
-                            }
-                            XposedHelpers.findAndHookMethod(enableBTLyricClass, lpparam.classLoader, enableBTLyricMethod, XC_MethodReplacement.returnConstant(true))
-                            appLog = " (蓝牙歌词模式)"
-                        } catch (e: NoSuchMethodError) {
-                            LogUtils.e("网易云Hook失败: $e")
-                            LogUtils.e("正在尝试通用Hook")
-                            try {
-                                "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java, classLoader = lpparam.classLoader){ it1 ->
-                                    if (it1.args[0].toString() == "android.media.metadata.TITLE") {
-                                        if (it1.args[1] != null) {
-                                            Utils.sendLyric(context, it1.args[1].toString(), "Netease")
-                                            LogUtils.e("网易云通用： " + it1.args[1].toString())
-                                            appLog = " (通用方法)"
-                                        }
+                            "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java, classLoader = lpparam.classLoader){ it1 ->
+                                if (it1.args[0].toString() == "android.media.metadata.TITLE") {
+                                    if (it1.args[1] != null) {
+                                        Utils.sendLyric(context, it1.args[1].toString(), "Netease")
+                                        LogUtils.e("网易云通用： " + it1.args[1].toString())
                                     }
                                 }
-                            } catch (mE: NoSuchMethodError) {
-                                LogUtils.e("网易云通用Hook失败: $mE")
-                                LogUtils.e("未知版本: $verCode")
-                                appLog = " (未知版本: $verCode)"
                             }
+                            appLog = " (蓝牙歌词通用方法)"
+                        } catch (mE: Throwable) {
+                            LogUtils.e("网易云通用Hook失败: $mE")
+                            LogUtils.e("未知版本: $verCode")
+                            appLog = " (未知版本: $verCode)"
                         }
                     }
                 } catch (e: Throwable) {
