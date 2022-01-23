@@ -8,3 +8,4 @@ app/debug
 local.properties
 build
 /.idea/misc.xml
+hs_err_*.log
