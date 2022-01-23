@@ -61,9 +61,9 @@
     <Preference
             android:key="contact"
             android:title="@string/ContactUs">
-        <intent
-                android:action="android.intent.action.VIEW"
-                android:data="https://io.xiaowine.cc/app/callme"/>
+<!--        <intent-->
+<!--                android:action="android.intent.action.VIEW"-->
+<!--                android:data="https://io.xiaowine.cc/app/callme"/>-->
     </Preference>
     <Preference
             android:key="coolapk"
