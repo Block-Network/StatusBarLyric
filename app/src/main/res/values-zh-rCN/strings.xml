@@ -162,4 +162,19 @@
     <string name="TestTips">功能测试</string>
     <string name="Start">启动</string>
     <string name="Back">返回</string>
+    <string name="pseudoTime">伪时间</string>
+    <string name="PseudoTimeTips">在歌词前加上时间，时间为歌词最初显示时时间</string>
+    <string name="pseudoTimeStyle">伪时间格式/自定义文字</string>
+    <string name="pseudoTimeStyleTips">yyyy：年\n
+        MM：月\n
+        dd：日\n
+        hh：1~12小时制(1-12)\n
+        HH：24小时制(0-23)\n
+        mm：分\n
+        ss：秒\n
+        E：星期几\n
+        a：上下午标识\n
+        z：表示时区\n
+        若要显示自定义文字，在下面编辑框里填写即可\n
+        当前格式：</string>
 </resources>

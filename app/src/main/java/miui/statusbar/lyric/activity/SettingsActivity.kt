@@ -171,7 +171,7 @@ class SettingsActivity : PreferenceActivity() {
             lyricMaxWidth.summary = getString(R.string.Off)
         }
         lyricMaxWidth.dialogMessage =
-            String.format("%s%s", getString(R.string.LyricMaxWidthTips), lyricMaxWidth.summary )
+            String.format("%s%s", getString(R.string.LyricMaxWidthTips), lyricMaxWidth.summary)
         lyricMaxWidth.onPreferenceChangeListener =
             OnPreferenceChangeListener { _, newValue: Any ->
                 lyricMaxWidth.dialogMessage = String.format(
@@ -255,7 +255,7 @@ class SettingsActivity : PreferenceActivity() {
             lyricColour.summary = getString(R.string.Adaptive)
         }
         lyricColour.setDefaultValue(config!!.getLyricColor())
-        lyricColour.dialogMessage = String.format("%s%s", getString(R.string.LyricColorTips),  lyricColour.summary)
+        lyricColour.dialogMessage = String.format("%s%s", getString(R.string.LyricColorTips), lyricColour.summary)
         lyricColour.isEnabled = !config!!.getUseSystemReverseColor()
         lyricColour.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue: Any ->
             lyricColour.dialogMessage = String.format(
@@ -445,6 +445,33 @@ class SettingsActivity : PreferenceActivity() {
                 }
             } catch (ignore: NumberFormatException) {
             }
+            true
+        }
+
+//      伪时间样式/自定义文字
+        val pseudoTimeStyle = (findPreference("pseudoTimeStyle") as EditTextPreference)
+        pseudoTimeStyle.isEnabled = config!!.getPseudoTime()
+        pseudoTimeStyle.summary = config!!.getPseudoTimeStyle()
+        if (!config!!.getPseudoTime()) {
+            pseudoTimeStyle.summary = getString(R.string.Default)
+        }
+        pseudoTimeStyle.dialogMessage =
+            String.format("%s%s", getString(R.string.pseudoTimeStyleTips), pseudoTimeStyle.summary)
+        pseudoTimeStyle.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue: Any ->
+            try {
+                val value = newValue.toString().replace(" ", "").replace("\n", "")
+                config!!.setPseudoTimeStyle(value)
+            } catch (ignore: NumberFormatException) {
+            }
+            true
+        }
+
+//        伪时间
+        val pseudoTime = (findPreference("pseudoTime") as SwitchPreference)
+        pseudoTime.isChecked = config!!.getPseudoTime()
+        pseudoTime.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue: Any ->
+            config!!.setPseudoTime((newValue as Boolean))
+            pseudoTimeStyle.isEnabled = newValue
             true
         }
 

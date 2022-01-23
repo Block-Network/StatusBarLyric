@@ -1,21 +1,21 @@
 package miui.statusbar.lyric.config
 
 import android.content.SharedPreferences
-import miui.statusbar.lyric.utils.ConfigUtils
 import de.robv.android.xposed.XSharedPreferences
+import miui.statusbar.lyric.utils.ConfigUtils
 
-class Config{
+class Config {
     private var config: ConfigUtils
 
-    constructor(xSharedPreferences: XSharedPreferences?){
+    constructor(xSharedPreferences: XSharedPreferences?) {
         config = ConfigUtils(xSharedPreferences)
     }
 
-    constructor(sharedPreferences: SharedPreferences){
+    constructor(sharedPreferences: SharedPreferences) {
         config = ConfigUtils(sharedPreferences)
     }
 
-    fun update(){
+    fun update() {
         config.update()
     }
 
@@ -23,11 +23,11 @@ class Config{
         return config.optBoolean("LService", false)
     }
 
-    fun setLyricService(bool: Boolean){
+    fun setLyricService(bool: Boolean) {
         config.put("LService", bool)
     }
 
-    fun getLyricWidth(): Int{
+    fun getLyricWidth(): Int {
         return config.optInt("LWidth", -1)
     }
 
@@ -35,7 +35,7 @@ class Config{
         config.put("LWidth", i)
     }
 
-    fun getLyricMaxWidth(): Int{
+    fun getLyricMaxWidth(): Int {
         return config.optInt("LMaxWidth", -1)
     }
 
@@ -43,7 +43,7 @@ class Config{
         config.put("LMaxWidth", i)
     }
 
-    fun getLyricPosition(): Int{
+    fun getLyricPosition(): Int {
         return config.optInt("LPosition", 0)
     }
 
@@ -51,7 +51,7 @@ class Config{
         config.put("LPosition", i)
     }
 
-    fun getLyricHigh(): Int{
+    fun getLyricHigh(): Int {
         return config.optInt("LHigh", 0)
     }
 
@@ -59,14 +59,15 @@ class Config{
         config.put("LHigh", i)
     }
 
-    fun getLyricSize(): Int{
+    fun getLyricSize(): Int {
         return config.optInt("LSize", 0)
     }
 
     fun setLyricSize(i: Int) {
         config.put("LSize", i)
     }
-    fun getIconSize(): Int{
+
+    fun getIconSize(): Int {
         return config.optInt("ISize", 0)
     }
 
@@ -74,7 +75,7 @@ class Config{
         config.put("ISize", i)
     }
 
-    fun getIconHigh(): Int{
+    fun getIconHigh(): Int {
         return config.optInt("IHigh", 7)
     }
 
@@ -82,7 +83,7 @@ class Config{
         config.put("IHigh", i)
     }
 
-    fun getLyricAutoOff(): Boolean{
+    fun getLyricAutoOff(): Boolean {
         return config.optBoolean("LAutoOff", true)
     }
 
@@ -90,7 +91,7 @@ class Config{
         config.put("LAutoOff", bool)
     }
 
-    fun getLockScreenOff(): Boolean{
+    fun getLockScreenOff(): Boolean {
         return config.optBoolean("LockScreenOff", false)
     }
 
@@ -102,7 +103,7 @@ class Config{
         config.put("HNoticeIcon", bool)
     }
 
-    fun getLyricColor(): String{
+    fun getLyricColor(): String {
         return config.optString("LColor", "off")
     }
 
@@ -110,7 +111,15 @@ class Config{
         config.put("LColor", str)
     }
 
-    fun getLyricSwitch(): Boolean{
+    fun getPseudoTimeStyle(): String {
+        return config.optString("PseudoTimeStyle", "HH:mm")
+    }
+
+    fun setPseudoTimeStyle(str: String) {
+        config.put("PseudoTimeStyle", str)
+    }
+
+    fun getLyricSwitch(): Boolean {
         return config.optBoolean("LSwitch", false)
     }
 
@@ -118,11 +127,11 @@ class Config{
         config.put("LSwitch", bool)
     }
 
-    fun getHNoticeIcon(): Boolean{
+    fun getHNoticeIcon(): Boolean {
         return config.optBoolean("HNoticeIcon", false)
     }
 
-    fun getHNetSpeed(): Boolean{
+    fun getHNetSpeed(): Boolean {
         return config.optBoolean("HNetSpeed", false)
     }
 
@@ -130,7 +139,7 @@ class Config{
         config.put("HNetSpeed", bool)
     }
 
-    fun getHCuk(): Boolean{
+    fun getHCuk(): Boolean {
         return config.optBoolean("HCuk", false)
     }
 
@@ -138,7 +147,7 @@ class Config{
         config.put("HCuk", bool)
     }
 
-    fun getDebug(): Boolean{
+    fun getDebug(): Boolean {
         return config.optBoolean("Debug", true)
     }
 
@@ -146,7 +155,7 @@ class Config{
         config.put("Debug", bool)
     }
 
-    fun getIcon(): Boolean{
+    fun getIcon(): Boolean {
         return config.optBoolean("I", true)
     }
 
@@ -154,7 +163,7 @@ class Config{
         config.put("I", bool)
     }
 
-    fun getLyricSpeed(): Float{
+    fun getLyricSpeed(): Float {
         return config.optFloat("LSpeed", 1f)
     }
 
@@ -162,7 +171,7 @@ class Config{
         config.put("LSpeed", f)
     }
 
-    fun getIconAutoColor(): Boolean{
+    fun getIconAutoColor(): Boolean {
         return config.optBoolean("IAutoColor", true)
     }
 
@@ -170,7 +179,7 @@ class Config{
         config.put("IAutoColor", bool)
     }
 
-    fun getAntiBurn(): Boolean{
+    fun getAntiBurn(): Boolean {
         return config.optBoolean("AntiBurn", false)
     }
 
@@ -178,7 +187,7 @@ class Config{
         config.put("AntiBurn", bool)
     }
 
-    fun getAnim(): String{
+    fun getAnim(): String {
         return config.optString("Anim", "off")
     }
 
@@ -186,7 +195,7 @@ class Config{
         config.put("Anim", str)
     }
 
-    fun getHook(): String{
+    fun getHook(): String {
         return config.optString("Hook", "")
     }
 
@@ -194,7 +203,7 @@ class Config{
         config.put("Hook", str)
     }
 
-    fun getLyricStyle(): Boolean{
+    fun getLyricStyle(): Boolean {
         return config.optBoolean("LStyle", true)
     }
 
@@ -202,7 +211,15 @@ class Config{
         config.put("LStyle", bool)
     }
 
-    fun getLShowOnce(): Boolean{
+    fun getPseudoTime(): Boolean {
+        return config.optBoolean("PseudoTime", false)
+    }
+
+    fun setPseudoTime(bool: Boolean) {
+        config.put("PseudoTime", bool)
+    }
+
+    fun getLShowOnce(): Boolean {
         return config.optBoolean("LShowOnce", false)
     }
 

@@ -180,4 +180,21 @@
     <string name="TestTips">Functional testing</string>
     <string name="Start">Start</string>
     <string name="Back">Back</string>
+    <string name="pseudoTime">Pseudo Time</string>
+    <string name="PseudoTimeTips">Add the time before the lyrics, the time is the time when the lyrics were originally
+        displayed
+    </string>
+    <string name="pseudoTimeStyle">Pseudo time format/Custom text</string>
+    <string name="pseudoTimeStyleTips">yyyy: year\n
+        MM: month\n
+        dd: day\n
+        hh: 1~12 hour clock (1-12)\n
+        HH: 24-hour clock (0-23)\n
+        mm: minutes\n
+        ss: seconds\n
+        E: day of the week\n
+        a: morning and afternoon signs\n
+        z: indicates the time zone\n
+        To display custom text, fill in the edit box below\n
+        Current format:</string>
 </resources>
