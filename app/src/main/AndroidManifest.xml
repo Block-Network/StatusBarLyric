@@ -3,9 +3,9 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="miui.statusbar.lyric">
 
-    <uses-permission
-            android:name="android.permission.FORCE_STOP_PACKAGES"
-            tools:ignore="ProtectedPermissions"/>
+<!--    <uses-permission-->
+<!--            android:name="android.permission.FORCE_STOP_PACKAGES"-->
+<!--            tools:ignore="ProtectedPermissions"/>-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission"/>
     <application
