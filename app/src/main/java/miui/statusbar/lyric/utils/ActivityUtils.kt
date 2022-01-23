@@ -87,8 +87,9 @@ object ActivityUtils {
                     Toast.makeText(activity, activity.getString(R.string.NoVerUpdate), Toast.LENGTH_LONG).show()
                 }
             } catch (ignored: JSONException) {
+                showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
             }
-            showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
+
             true
         }
         Thread {

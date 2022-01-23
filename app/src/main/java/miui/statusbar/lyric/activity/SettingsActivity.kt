@@ -171,7 +171,7 @@ class SettingsActivity : PreferenceActivity() {
             lyricMaxWidth.summary = getString(R.string.Off)
         }
         lyricMaxWidth.dialogMessage =
-            String.format("%s%s", getString(R.string.LyricMaxWidthTips), getString(R.string.Adaptive))
+            String.format("%s%s", getString(R.string.LyricMaxWidthTips), lyricMaxWidth.summary )
         lyricMaxWidth.onPreferenceChangeListener =
             OnPreferenceChangeListener { _, newValue: Any ->
                 lyricMaxWidth.dialogMessage = String.format(
@@ -255,7 +255,7 @@ class SettingsActivity : PreferenceActivity() {
             lyricColour.summary = getString(R.string.Adaptive)
         }
         lyricColour.setDefaultValue(config!!.getLyricColor())
-        lyricColour.dialogMessage = String.format("%s%s", getString(R.string.LyricColorTips), config!!.getLyricColor())
+        lyricColour.dialogMessage = String.format("%s%s", getString(R.string.LyricColorTips),  lyricColour.summary)
         lyricColour.isEnabled = !config!!.getUseSystemReverseColor()
         lyricColour.onPreferenceChangeListener = OnPreferenceChangeListener { _, newValue: Any ->
             lyricColour.dialogMessage = String.format(
