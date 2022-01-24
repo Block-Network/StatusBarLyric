@@ -2,11 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:background="@color/white"
               android:orientation="vertical">
 
     <LinearLayout
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:background="@drawable/ic_click_check"
             android:orientation="horizontal">
 
         <TextView
@@ -21,7 +26,16 @@
                 android:text=""
                 android:textSize="18sp"
                 android:visibility="gone" />
-        <miui.statusbar.lyric.view.SettingsSwitch
+
+        <ImageView
+                android:id="@+id/RightArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:background="@drawable/ic_right_arrow"
+                android:visibility="gone" />
+
+        <miui.statusbar.lyric.view.miuiview.SettingsSwitch
                 android:id="@+id/settings_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,15 +45,29 @@
                 android:track="@drawable/switch_track"
                 android:background="@null"
                 android:visibility="gone" />
-
     </LinearLayout>
+
+    <SeekBar
+            android:id="@+id/settings_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:thumb="@null"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:paddingBottom="5dp"
+            android:background="@null"
+            style="@style/CustomSeekbarStyle"
+            android:visibility="gone" />
 
     <View
             android:id="@+id/settings_line"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="5dp"
             android:background="@color/line"
             android:visibility="gone" />
 

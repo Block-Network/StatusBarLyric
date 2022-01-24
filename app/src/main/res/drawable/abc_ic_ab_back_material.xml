@@ -2,7 +2,7 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
         android:autoMirrored="true"
         android:height="24dp"
-        android:tint="@color/menu"
+        android:tint="@color/black"
         android:viewportHeight="24.0"
         android:viewportWidth="24.0"
         android:width="24dp">

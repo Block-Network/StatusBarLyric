@@ -100,7 +100,7 @@
     <string name="LyricMaxWidthTips">(-1~100，-1为关闭，仅在歌词宽度为自适应时生效)，当前:</string>
     <string name="RangeError">范围输入错误，恢复默认</string>
     <string name="LyricWidthTips">(-1~100，-1为自适应)，当前：</string>
-    <string name="LyricColorTips">请输入16进制颜色代码，例如: #C0C0C0，当前：</string>
+    <string name="LyricColorTips">请输入16进制颜色代码，例如: #C0C0C0</string>
     <string name="LyricColorError">颜色代码不正确!</string>
     <string name="DefaultPath">默认路径</string>
     <string name="RestoreDefaultPath">恢复默认路径</string>
@@ -177,4 +177,6 @@
         z：表示时区\n
         若要显示自定义文字，在下面编辑框里填写即可\n
         当前格式：</string>
+    <string name="Custom">自定义</string>
+    <string name="InputCustomHook">自定义Hook点，空关闭</string>
 </resources>

@@ -343,7 +343,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             }
                             if (config.getLyricService()) {
                                 // 设置颜色
-                                if (config.getLyricColor() != "off") {
+                                if (config.getLyricColor() != "") {
                                     if (color != Color.parseColor(config.getLyricColor())) {
                                         color = Color.parseColor(config.getLyricColor())
                                         val message: Message = updateTextColor.obtainMessage()
@@ -355,7 +355,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                                         return
                                     }
                                     clockColor = clock.textColors.defaultColor
-                                    if (config.getLyricColor() == "off") {
+                                    if (config.getLyricColor() == "") {
                                         val message: Message = updateTextColor.obtainMessage()
                                         message.arg1 = clockColor
                                         updateTextColor.sendMessage(message)
@@ -542,7 +542,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 }
             }
         }
-        if (config.getLyricColor() != "off") {
+        if (config.getLyricColor() != "") {
             val color = Color.parseColor(config.getLyricColor())
             updateTextColor.obtainMessage().let {
                 it.arg1 = color
@@ -580,7 +580,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                                     try {
                                         super.afterHookedMethod(param)
                                         val areaTint = param.args[2] as Int
-                                        if (config.getLyricColor() == "off" && !iconReverseColor) {
+                                        if (config.getLyricColor() == "" && !iconReverseColor) {
                                             val color = ColorStateList.valueOf(areaTint)
                                             iconView.imageTintList = color
                                         }

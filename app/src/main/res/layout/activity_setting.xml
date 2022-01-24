@@ -3,18 +3,21 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:padding="25dp"
+              android:background="@color/white"
               android:orientation="vertical">
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="30dp"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
             android:paddingBottom="15dp"
             android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
+            tools:ignore="RtlSymmetry,UseCompoundDrawables">
 
         <TextView
+                android:id="@+id/Title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -29,10 +32,9 @@
                 tools:ignore="ContentDescription" />
 
     </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/settings_recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
 </LinearLayout>

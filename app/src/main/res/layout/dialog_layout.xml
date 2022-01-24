@@ -16,33 +16,71 @@
                 android:id="@+id/Title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textColor="@color/whiteText"
                 android:gravity="center"
                 android:paddingTop="20dp"
-                android:text="3256283"
-                android:layout_margin="13dp" />
+                android:layout_marginTop="13dp" />
 
         <LinearLayout
                 android:id="@+id/View"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" />
+                android:orientation="vertical" >
+
+            <TextView
+                    android:id="@+id/Message"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/whiteText"
+                    android:gravity="center"
+                    android:layout_margin="13dp"
+                    android:visibility="gone" />
+
+            <EditText
+                    android:id="@+id/EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="8dp"
+                    android:textSize="16sp"
+                    android:background="@drawable/editview_background"
+                    android:visibility="gone" />
+
+
+        </LinearLayout>
 
         <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
+                android:paddingTop="16dp"
                 android:paddingBottom="35dp">
 
             <Button
+                    android:id="@+id/CancelButton"
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:paddingStart="45dp"
+                    android:paddingEnd="45dp"
+                    android:layout_marginEnd="45dp"
+                    android:background="@drawable/cancel_button_background"
+                    android:textColor="@color/whiteText"
+                    android:layout_gravity="center"
+                    android:stateListAnimator="@null"
+                    android:visibility="gone"/>
+
+            <Button
                     android:id="@+id/Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="35dp"
-                    android:paddingEnd="35dp"
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:paddingStart="45dp"
+                    android:paddingEnd="45dp"
                     android:background="@drawable/button_background"
-                    android:textColor="@color/white"
+                    android:textColor="@color/whiteText"
                     android:layout_gravity="center"
                     android:stateListAnimator="@null" />
         </LinearLayout>

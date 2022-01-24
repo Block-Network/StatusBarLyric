@@ -1,4 +1,4 @@
-package miui.statusbar.lyric.view
+package miui.statusbar.lyric.view.miuiview
 
 import android.content.Context
 import android.util.AttributeSet

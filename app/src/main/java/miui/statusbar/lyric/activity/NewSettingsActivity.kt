@@ -2,6 +2,7 @@ package miui.statusbar.lyric.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.Window
@@ -12,11 +13,14 @@ import androidx.recyclerview.widget.RecyclerView
 import miui.statusbar.lyric.R
 import miui.statusbar.lyric.utils.ActivityOwnSP
 import miui.statusbar.lyric.utils.Rom
+import miui.statusbar.lyric.utils.Utils
+import miui.statusbar.lyric.view.miuiview.MIUIDialog
 import miui.statusbar.lyric.view.adapter.ItemAdapter
 import miui.statusbar.lyric.view.data.DataHelper
 import miui.statusbar.lyric.view.data.Item
 import java.lang.reflect.Field
 import java.lang.reflect.Method
+import kotlin.system.exitProcess
 
 class NewSettingsActivity: Activity() {
 
@@ -30,6 +34,7 @@ class NewSettingsActivity: Activity() {
         setWhiteStatusBar()
         setContentView(R.layout.activity_setting)
         actionBar?.hide()
+        if (!checkLSPosed()) return
         ActivityOwnSP.activity = this
         DataHelper.currentActivity = this
         itemList.addAll(DataHelper.getItems())
@@ -43,20 +48,44 @@ class NewSettingsActivity: Activity() {
 
     }
 
+    private fun checkLSPosed(): Boolean {
+        return try {
+            Utils.getSP(this, "Lyric_Config")
+            true
+        } catch (e: Throwable) {
+            MIUIDialog(this).apply {
+                setTitle(R.string.Tips)
+                setMessage(R.string.NotSupport)
+                setButton(R.string.ReStart) {
+                    val intent = packageManager.getLaunchIntentForPackage(packageName)
+                    intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+
+                    exitProcess(0)
+                }
+                setCancelable(false)
+                show()
+            }
+            false
+        }
+    }
+
     private fun initMenu() {
         menu = findViewById(R.id.settings_menu)
+        DataHelper.backView = menu
         menu.setOnClickListener {
-            DataHelper.isMenu = !DataHelper.isMenu
-            recreate()
+            if (DataHelper.thisItems == DataHelper.main) {
+                DataHelper.setItems(DataHelper.menu)
+            } else {
+                DataHelper.setItems(DataHelper.main)
+            }
         }
-        menu.setImageResource(if (DataHelper.isMenu) R.drawable.abc_ic_ab_back_material else R.drawable.abc_ic_menu_overflow_material)
+        DataHelper.setBackButton()
     }
 
     override fun onBackPressed() {
-        if (DataHelper.isMenu) {
-            DataHelper.isMenu = !DataHelper.isMenu
-            recreate()
-            menu.setImageResource(R.drawable.abc_ic_menu_overflow_material)
+        if (DataHelper.thisItems != DataHelper.main) {
+            DataHelper.setItems(DataHelper.main)
         } else {
             super.onBackPressed()
         }

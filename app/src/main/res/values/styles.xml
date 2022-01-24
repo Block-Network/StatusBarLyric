@@ -22,4 +22,13 @@
         <!--是否模糊-->
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
+    <style name="CustomSeekbarStyle" >
+        <item name="android:maxHeight">35dp</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">@color/colorAccent</item>
+        <item name="android:progressDrawable">@drawable/seekbar_progress_drawable</item>
+        <item name="android:minHeight">35dp</item>
+        <item name="android:thumb">@null</item>
+    </style>
 </resources>

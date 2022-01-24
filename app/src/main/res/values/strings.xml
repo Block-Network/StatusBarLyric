@@ -109,7 +109,7 @@
     </string>
     <string name="RangeError">Range input error, restore default</string>
     <string name="LyricWidthTips">(-1~100, -1 is adaptive), currently:</string>
-    <string name="LyricColorTips">Please enter the hexadecimal color code, for example: #C0C0C0, currently:</string>
+    <string name="LyricColorTips">Please enter the hexadecimal color code, for example: #C0C0C0</string>
     <string name="LyricColorError">The color code is incorrect!</string>
     <string name="DefaultPath">Default path</string>
     <string name="RestoreDefaultPath">Restore default path</string>
@@ -197,4 +197,6 @@
         z: indicates the time zone\n
         To display custom text, fill in the edit box below\n
         Current format:</string>
+    <string name="Custom">Custom</string>
+    <string name="InputCustomHook">Input custom hook, Input empty of off</string>
 </resources>

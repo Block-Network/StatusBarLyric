@@ -8,6 +8,7 @@ data class Text(
     val text: String? = null,
     @StringRes
     val resId: Int? = null,
+    val showArrow: Boolean = false,
     val textSize: Float? = null,
     @ColorInt
     val textColor: Int? = null,

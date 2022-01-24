@@ -104,7 +104,7 @@ class Config {
     }
 
     fun getLyricColor(): String {
-        return config.optString("LColor", "off")
+        return config.optString("LColor", "")
     }
 
     fun setLyricColor(str: String) {

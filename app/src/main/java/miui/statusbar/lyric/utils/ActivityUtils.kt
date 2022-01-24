@@ -1,7 +1,6 @@
 package miui.statusbar.lyric.utils
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -15,6 +14,7 @@ import android.widget.Toast
 import miui.statusbar.lyric.BuildConfig
 import miui.statusbar.lyric.R
 import miui.statusbar.lyric.utils.HttpUtils.Get
+import miui.statusbar.lyric.view.miuiview.MIUIDialog
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -56,7 +56,7 @@ object ActivityUtils {
             try {
                 val jsonObject = JSONObject(data)
                 if (jsonObject.getString("tag_name").split("v").toTypedArray()[1].toInt() > BuildConfig.VERSION_CODE) {
-                    AlertDialog.Builder(activity).apply {
+                    MIUIDialog(activity).apply {
                         setTitle(
                             String.format(
                                 "%s [%s]",
@@ -64,9 +64,8 @@ object ActivityUtils {
                                 jsonObject.getString("name")
                             )
                         )
-                        setIcon(R.mipmap.ic_launcher)
                         setMessage(jsonObject.getString("body").replace("#", ""))
-                        setPositiveButton(R.string.Update) { _, _ ->
+                        setButton(R.string.Update) {
                             try {
                                 val uri: Uri = Uri.parse(
                                     jsonObject.getJSONArray("assets").getJSONObject(0)
@@ -79,8 +78,9 @@ object ActivityUtils {
                             } catch (e: JSONException) {
                                 showToastOnLooper(activity, activity.getString(R.string.GetNewVerError) + e)
                             }
+                            dismiss()
                         }
-                        setNegativeButton(R.string.Cancel, null)
+                        setCancelButton(R.string.Cancel) { dismiss() }
                         show()
                     }
                 } else {
@@ -128,13 +128,12 @@ object ActivityUtils {
                 val jsonObject = JSONObject(message.data.getString("value")!!)
                 if (jsonObject.getString("versionCode") == BuildConfig.VERSION_CODE.toString()) {
                     if (java.lang.Boolean.parseBoolean(jsonObject.getString("forcibly"))) {
-                        AlertDialog.Builder(activity)
-                            .setTitle(activity.getString(R.string.NewNotice))
-                            .setIcon(R.mipmap.ic_launcher)
-                            .setMessage(jsonObject.getString("data"))
-                            .setNegativeButton(activity.getString(R.string.Done), null)
-                            .create()
-                            .show()
+                        MIUIDialog(activity).apply {
+                            setTitle(activity.getString(R.string.NewNotice))
+                            setMessage(jsonObject.getString("data"))
+                            setButton(activity.getString(R.string.Done)) { dismiss() }
+                            show()
+                        }
                     }
                 }
                 return@Handler true
