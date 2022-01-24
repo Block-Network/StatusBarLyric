@@ -3,9 +3,6 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="miui.statusbar.lyric">
 
-<!--    <uses-permission-->
-<!--            android:name="android.permission.FORCE_STOP_PACKAGES"-->
-<!--            tools:ignore="ProtectedPermissions"/>-->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission"/>
     <application
@@ -21,7 +18,7 @@
         <activity android:name=".activity.AboutActivity"/>
         <activity android:name=".activity.ApiAPPListActivity"/>
         <activity
-                android:name=".activity.SettingsActivity"
+                android:name=".activity.NewSettingsActivity"
                 android:exported="true"
                 android:screenOrientation="portrait"
                 tools:ignore="LockedOrientationActivity">
@@ -39,7 +36,7 @@
                 android:name=".launcher"
                 android:enabled="true"
                 android:exported="true"
-                android:targetActivity=".activity.SettingsActivity">
+                android:targetActivity=".activity.NewSettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

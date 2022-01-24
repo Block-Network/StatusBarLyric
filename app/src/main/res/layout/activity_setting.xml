@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <ListView android:id="@android:id/list"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content">
-    </ListView>
+              android:layout_height="match_parent"
+              android:padding="25dp"
+              android:orientation="vertical">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:paddingBottom="15dp"
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:text="@string/AppName"
+                android:textSize="30sp" />
+        <ImageView
+                android:id="@+id/settings_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/settings_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
 </LinearLayout>
