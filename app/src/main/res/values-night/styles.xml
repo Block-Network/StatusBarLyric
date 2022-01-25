@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Material">
+    <style name="AppTheme" parent="android:Theme.Material.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:colorPrimary">@color/black</item>
         <item name="android:colorPrimaryDark">@color/black</item>
@@ -9,6 +9,18 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:colorBackground">@color/black</item>
     </style>
+
+    <style name="OldAppTheme" parent="android:Theme.Material">
+        <!-- Customize your theme here. -->
+        <item name="android:colorPrimary">@color/black</item>
+        <item name="android:colorPrimaryDark">@color/black</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <!-- Customize your theme here. -->
+        <item name="android:textAllCaps">false</item>
+        <item name="android:colorBackground">@color/black</item>
+    </style>
+
+
     <!-- 定义dialog的样式-->
     <style name="CustomDialog" parent="android:style/Theme.Dialog">
         <!--背景颜色及和透明程度-->

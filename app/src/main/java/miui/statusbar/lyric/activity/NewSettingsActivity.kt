@@ -39,16 +39,15 @@ class NewSettingsActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val window: Window = this.window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        ActivityUtils.showToastOnLooper(this, isNightMode().toString())
-        if (isNightMode()) {
-            window.statusBarColor = resources.getColor(R.color.black)
-        } else {
-            window.statusBarColor = resources.getColor(R.color.white)
-//            setWhiteStatusBar()
-        }
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+//        val window: Window = this.window
+//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//        if (isNightMode()) {
+//            window.statusBarColor = resources.getColor(R.color.black)
+//        } else {
+//            window.statusBarColor = resources.getColor(R.color.white)
+            setWhiteStatusBar()
+//        }
+//        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         setContentView(R.layout.activity_setting)
         actionBar?.hide()
