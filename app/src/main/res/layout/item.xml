@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/white"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/foreground"
+    android:orientation="vertical">
 
     <LinearLayout
-            android:id="@+id/layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:background="@drawable/ic_click_check"
-            android:orientation="horizontal">
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:background="@drawable/ic_click_check"
+        android:orientation="horizontal">
 
         <TextView
                 android:id="@+id/settings_text"

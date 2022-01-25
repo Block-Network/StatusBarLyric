@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import miui.statusbar.lyric.R
 import miui.statusbar.lyric.utils.ActivityOwnSP
-import miui.statusbar.lyric.utils.ActivityUtils
 import miui.statusbar.lyric.utils.Rom
 import miui.statusbar.lyric.utils.Utils
 import miui.statusbar.lyric.view.adapter.ItemAdapter
@@ -45,7 +44,7 @@ class NewSettingsActivity : Activity() {
 //            window.statusBarColor = resources.getColor(R.color.black)
 //        } else {
 //            window.statusBarColor = resources.getColor(R.color.white)
-            setWhiteStatusBar()
+        //setWhiteStatusBar()
 //        }
 //        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 

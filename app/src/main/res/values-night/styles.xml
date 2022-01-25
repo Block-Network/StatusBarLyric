@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Material.NoActionBar">
         <!-- Customize your theme here. -->
@@ -8,6 +8,8 @@
         <!-- Customize your theme here. -->
         <item name="android:textAllCaps">false</item>
         <item name="android:colorBackground">@color/black</item>
+        <item name="android:statusBarColor">@color/black</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 
     <style name="OldAppTheme" parent="android:Theme.Material">

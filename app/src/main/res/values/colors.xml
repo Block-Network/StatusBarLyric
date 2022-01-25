@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#FFFFFF</color>
+    <color name="foreground">#FFFFFF</color>
     <color name="colorTrack">#e6e6e6</color>
     <color name="whiteClick">#D3D3D3</color>
     <color name="whiteText">#000000</color>
@@ -8,4 +8,5 @@
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorAccent">#0374A7</color>
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
 </resources>
