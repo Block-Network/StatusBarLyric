@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/foreground"
-    android:orientation="vertical">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/foreground"
+        android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/layout"
@@ -12,7 +14,8 @@
         android:paddingStart="25dp"
         android:paddingEnd="25dp"
         android:background="@drawable/ic_click_check"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:descendantFocusability="blocksDescendants" >
 
         <TextView
                 android:id="@+id/settings_text"
@@ -35,6 +38,36 @@
                 android:background="@drawable/ic_right_arrow"
                 android:visibility="gone" />
 
+        <LinearLayout
+                android:id="@+id/settings_select_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@drawable/ic_click_check"
+                android:layout_weight="1"
+                android:descendantFocusability="blocksDescendants" >
+
+            <TextView
+                    android:id="@+id/settings_select"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|right"
+                    android:paddingTop="17dp"
+                    android:paddingBottom="15dp"
+                    android:text=""
+                    android:textSize="14sp"
+                    tools:ignore="NestedWeights,RtlHardcoded,SmallSp"/>
+
+            <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/ic_up_down" />
+
+        </LinearLayout>
+
         <miui.statusbar.lyric.view.miuiview.SettingsSwitch
                 android:id="@+id/settings_switch"
                 android:layout_width="wrap_content"
@@ -45,6 +78,7 @@
                 android:track="@drawable/switch_track"
                 android:background="@null"
                 android:visibility="gone" />
+
     </LinearLayout>
 
     <SeekBar

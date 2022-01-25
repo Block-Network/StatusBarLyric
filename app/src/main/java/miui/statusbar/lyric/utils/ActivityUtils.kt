@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -120,6 +121,10 @@ object ActivityUtils {
             e.printStackTrace()
             false
         }
+    }
+
+    fun dp2px(dpValue: Float): Int {
+        return (0.5f + dpValue * Resources.getSystem().displayMetrics.density).toInt()
     }
 
     fun getNotice(activity: Activity) {

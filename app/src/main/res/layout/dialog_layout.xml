@@ -62,25 +62,27 @@
 
             <Button
                     android:id="@+id/CancelButton"
-                    android:layout_width="150dp"
+                    android:layout_width="160dp"
                     android:layout_height="60dp"
                     android:paddingStart="45dp"
                     android:paddingEnd="45dp"
-                    android:layout_marginEnd="45dp"
+                    android:layout_marginEnd="12dp"
                     android:background="@drawable/cancel_button_background"
                     android:textColor="@color/whiteText"
+                    android:textSize="20sp"
                     android:layout_gravity="center"
                     android:stateListAnimator="@null"
                     android:visibility="gone"/>
 
             <Button
                     android:id="@+id/Button"
-                    android:layout_width="150dp"
+                    android:layout_width="160dp"
                     android:layout_height="60dp"
                     android:paddingStart="45dp"
                     android:paddingEnd="45dp"
                     android:background="@drawable/button_background"
-                    android:textColor="@color/whiteText"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
                     android:layout_gravity="center"
                     android:stateListAnimator="@null" />
         </LinearLayout>

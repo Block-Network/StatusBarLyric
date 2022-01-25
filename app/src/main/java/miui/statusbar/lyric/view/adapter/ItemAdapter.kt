@@ -1,20 +1,18 @@
 package miui.statusbar.lyric.view.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.TypedValue
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.SeekBar
-import android.widget.TextView
+import android.view.*
+import android.widget.*
+import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.RecyclerView
 import miui.statusbar.lyric.R
-import miui.statusbar.lyric.view.miuiview.SettingsSwitch
+import miui.statusbar.lyric.utils.ActivityUtils
 import miui.statusbar.lyric.view.data.Item
+import miui.statusbar.lyric.view.miuiview.SettingsSwitch
+
 
 class ItemAdapter(private val itemList: List<Item>): RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
@@ -25,6 +23,9 @@ class ItemAdapter(private val itemList: List<Item>): RecyclerView.Adapter<ItemAd
         val settingSeekBar: SeekBar = view.findViewById(R.id.settings_seekbar)
         val rightArrow: ImageView = view.findViewById(R.id.RightArrow)
         val layout: LinearLayout = view.findViewById(R.id.layout)
+
+        val spinnerSelect: TextView = view.findViewById(R.id.settings_select)
+        val spinnerLayout: LinearLayout = view.findViewById(R.id.settings_select_layout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,11 +37,13 @@ class ItemAdapter(private val itemList: List<Item>): RecyclerView.Adapter<ItemAd
         return position
     }
 
+    @SuppressLint("RtlHardcoded")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemList[position]
         val textInfo = item.text
         val switchInfo = item.switch
         val seekBarInfo = item.seekBar
+        val spinnerInfo = item.spinner
         val context = holder.settingsText.context
 
         textInfo?.let {
@@ -49,7 +52,7 @@ class ItemAdapter(private val itemList: List<Item>): RecyclerView.Adapter<ItemAd
             textInfo.textSize?.let { holder.settingsText.textSize = sp2px(context, it) }
             textInfo.textColor?.let { holder.settingsText.setTextColor(it) }
             textInfo.onClickListener?.let { holder.layout.setOnClickListener(it) }
-            if (textInfo.showArrow && switchInfo == null && seekBarInfo == null) {
+            if (textInfo.showArrow && switchInfo == null && seekBarInfo == null && spinnerInfo == null) {
                 holder.rightArrow.visibility = View.VISIBLE
             }
             if (textInfo.isTitle) {
@@ -83,6 +86,36 @@ class ItemAdapter(private val itemList: List<Item>): RecyclerView.Adapter<ItemAd
             seekBarInfo.max?.let { holder.settingSeekBar.max = it }
             seekBarInfo.progress?.let { holder.settingSeekBar.progress = it }
             holder.settingSeekBar.visibility = View.VISIBLE
+        }
+
+        spinnerInfo?.let {
+            val mListPop = ListPopupWindow(spinnerInfo.context)
+            mListPop.setBackgroundDrawable(spinnerInfo.context.getDrawable(R.drawable.rounded_corners_pop))
+            mListPop.setAdapter(ArrayAdapter(spinnerInfo.context, android.R.layout.simple_list_item_1, spinnerInfo.array))
+            mListPop.verticalOffset = -ActivityUtils.dp2px(100F)
+            mListPop.width = ActivityUtils.dp2px(150F)
+            mListPop.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            mListPop.isModal = true
+
+            mListPop.setOnItemClickListener { parent, _, position, _ ->
+                holder.spinnerSelect.text = parent.getItemAtPosition(position).toString()
+                spinnerInfo.callBacks?.let { it1 -> it1(parent.getItemAtPosition(position).toString()) }
+                mListPop.dismiss()
+            }
+            holder.spinnerLayout.setOnClickListener {
+                mListPop.horizontalOffset = 0
+                mListPop.setDropDownGravity(Gravity.RIGHT)
+                mListPop.anchorView = it
+                mListPop.show()
+            }
+            holder.layout.setOnClickListener {
+                mListPop.horizontalOffset = ActivityUtils.dp2px(24F)
+                mListPop.setDropDownGravity(Gravity.LEFT)
+                mListPop.anchorView = it
+                mListPop.show()
+            }
+            spinnerInfo.select?.let { it1 -> holder.spinnerSelect.text = it1 }
+            holder.spinnerLayout.visibility = View.VISIBLE
         }
 
         if (item.line) {

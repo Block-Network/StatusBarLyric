@@ -2,10 +2,16 @@ package miui.statusbar.lyric.view.data
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ComponentName
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.microsoft.appcenter.analytics.Analytics
@@ -13,9 +19,11 @@ import miui.statusbar.lyric.BuildConfig
 import miui.statusbar.lyric.R
 import miui.statusbar.lyric.activity.AboutActivity
 import miui.statusbar.lyric.activity.ApiAPPListActivity
+import miui.statusbar.lyric.config.IconConfig
 import miui.statusbar.lyric.utils.ActivityOwnSP
 import miui.statusbar.lyric.utils.ActivityUtils
 import miui.statusbar.lyric.utils.ShellUtils
+import miui.statusbar.lyric.utils.Utils
 import miui.statusbar.lyric.view.miuiview.MIUIDialog
 
 
@@ -57,6 +65,20 @@ object DataHelper {
     private fun loadMenuItems(): ArrayList<Item> {
         val itemList = arrayListOf<Item>()
         itemList.apply {
+            add(Item(Text(resId = R.string.ResetModule, showArrow = true, onClickListener = {
+                MIUIDialog(currentActivity).apply {
+                    setTitle(R.string.ResetModuleDialog)
+                    setMessage(R.string.ResetModuleDialogTips)
+                    setButton(R.string.Ok) {
+                        ActivityUtils.cleanConfig(
+                            currentActivity
+                        )
+                        dismiss()
+                    }
+                    setCancelButton(R.string.Cancel) { dismiss() }
+                    show()
+                }
+            })))
             add(Item(Text("Module Version", isTitle = true), null, line = true))
             add(Item(Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}"), null))
         }
@@ -96,6 +118,22 @@ object DataHelper {
                     }
                 })))
             }
+            add(Item(Text(
+                "${currentActivity.getString(R.string.LyricSize)} (${
+                    if (ActivityOwnSP.ownSPConfig.getLyricSize() != 0) ActivityOwnSP.ownSPConfig.getLyricSize() else currentActivity.getString(
+                        R.string.Adaptive
+                    )
+                })"
+            ), seekBar = SeekBar(0, 100, ActivityOwnSP.ownSPConfig.getLyricSize()) { pos, text ->
+                ActivityOwnSP.ownSPConfig.setLyricSize(pos)
+                if (pos == 0) {
+                    text.text = "${currentActivity.getString(R.string.LyricSize)} (${
+                        currentActivity.getString(R.string.Adaptive)
+                    })"
+                } else {
+                    text.text = "${currentActivity.getString(R.string.LyricSize)} (${pos})"
+                }
+            }))
             add(
                 Item(
                     Text(
@@ -134,6 +172,196 @@ object DataHelper {
                     })
                 )
             }
+            add(
+                Item(Text(
+                    "${currentActivity.getString(R.string.LyricPos)} (${
+                        if (ActivityOwnSP.ownSPConfig.getLyricPosition() != 0) ActivityOwnSP.ownSPConfig.getLyricPosition() else currentActivity.getString(
+                            R.string.Adaptive
+                        )
+                    })", onClickListener = {
+                        MIUIDialog(currentActivity).apply {
+                            setTitle(R.string.LyricPos)
+                            setMessage(R.string.LyricPosTips)
+                            setEditText(ActivityOwnSP.ownSPConfig.getLyricPosition().toString(), "0")
+                            setButton(R.string.Ok) {
+                                ActivityOwnSP.ownSPConfig.setLyricPosition(getEditText().toInt())
+                                dismiss()
+                            }
+                            setCancelButton(R.string.Cancel) { dismiss() }
+                            show()
+                        }
+                    }
+                ), seekBar = SeekBar(-900, 900, ActivityOwnSP.ownSPConfig.getLyricPosition()) { pos, text ->
+                    ActivityOwnSP.ownSPConfig.setLyricPosition(pos)
+                    if (pos == 0) {
+                        text.text = "${currentActivity.getString(R.string.LyricPos)} (${
+                            currentActivity.getString(R.string.Adaptive)
+                        })"
+                    } else {
+                        text.text = "${currentActivity.getString(R.string.LyricPos)} (${pos})"
+                    }
+                })
+            )
+            add(Item(Text(
+                "${currentActivity.getString(R.string.LyricHigh)} (${
+                    if (ActivityOwnSP.ownSPConfig.getLyricPosition() != 0) ActivityOwnSP.ownSPConfig.getLyricPosition() else currentActivity.getString(
+                        R.string.Adaptive
+                    )
+                })", onClickListener = {
+                    MIUIDialog(currentActivity).apply {
+                        setTitle(R.string.LyricHigh)
+                        setMessage(R.string.LyricHighTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricHigh().toString(), "0")
+                        setButton(R.string.Ok) {
+                            ActivityOwnSP.ownSPConfig.setLyricHigh(getEditText().toInt())
+                            dismiss()
+                        }
+                        setCancelButton(R.string.Cancel) { dismiss() }
+                        show()
+                    }
+                }
+            ), seekBar = SeekBar(-100, 100, ActivityOwnSP.ownSPConfig.getLyricPosition()) { pos, text ->
+                ActivityOwnSP.ownSPConfig.setLyricHigh(pos)
+                if (pos == 0) {
+                    text.text = "${currentActivity.getString(R.string.LyricHigh)} (${
+                        currentActivity.getString(R.string.Adaptive)
+                    })"
+                } else {
+                    text.text = "${currentActivity.getString(R.string.LyricHigh)} (${pos})"
+                }
+            }))
+            val anim = arrayListOf(
+                currentActivity.getString(R.string.Off), currentActivity.getString(R.string.top), currentActivity.getString(R.string.lower),
+                currentActivity.getString(R.string.left), currentActivity.getString(R.string.right), currentActivity.getString(R.string.random)
+            )
+            val dict: HashMap<String, String> = hashMapOf()
+            dict["off"] = currentActivity.getString(R.string.Off)
+            dict["top"] = currentActivity.getString(R.string.top)
+            dict["lower"] = currentActivity.getString(R.string.lower)
+            dict["left"] = currentActivity.getString(R.string.left)
+            dict["right"] = currentActivity.getString(R.string.right)
+            dict["random"] = currentActivity.getString(R.string.random)
+            dict[currentActivity.getString(R.string.Off)] = "off"
+            dict[currentActivity.getString(R.string.top)] = "top"
+            dict[currentActivity.getString(R.string.lower)] = "lower"
+            dict[currentActivity.getString(R.string.left)] = "left"
+            dict[currentActivity.getString(R.string.right)] = "right"
+            dict[currentActivity.getString(R.string.random)] = "random"
+            dict[""] = "off"
+            add(Item(Text(resId = R.string.LyricsAnimation), spinner = Spinner(anim, select = dict[ActivityOwnSP.ownSPConfig.getAnim()]!!, context = currentActivity, callBacks = {
+                ActivityOwnSP.ownSPConfig.setAnim(dict[it]!!)
+            })))
+            add(Item(Text(resId = R.string.ClickLyric), Switch("LSwitch")))
+            add(Item(Text(resId = R.string.MeizuStyle), Switch("LStyle")))
+            if (!ActivityOwnSP.ownSPConfig.getLyricStyle()) add(Item(Text(resId = R.string.lShowOnce), Switch("LShowOnce")))
+            if (ActivityOwnSP.ownSPConfig.getLyricStyle()) {
+                add(Item(Text(resId = R.string.LyricSpeed, showArrow = true, onClickListener = {
+                    MIUIDialog(currentActivity).apply {
+                        setTitle(R.string.LyricSpeed)
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricSpeed().toString(), "1.0")
+                        setButton(R.string.Ok) {
+                            if (getEditText() == "") {
+                                ActivityOwnSP.ownSPConfig.setLyricSpeed(1f)
+                            } else {
+                                ActivityOwnSP.ownSPConfig.setLyricSpeed(getEditText().toFloat())
+                            }
+                            dismiss()
+                        }
+                        setCancelButton(R.string.Cancel) { dismiss() }
+                        show()
+                    }
+                })))
+            }
+            add(Item(Text(resId = R.string.IconSettings, isTitle = true), line = true))
+            add(Item(Text("${currentActivity.getString(R.string.IconSize)} (${
+                if (ActivityOwnSP.ownSPConfig.getIconSize() != 0) ActivityOwnSP.ownSPConfig.getIconSize() else currentActivity.getString(
+                    R.string.Adaptive
+                )
+            })"), seekBar = SeekBar(0, 100, ActivityOwnSP.ownSPConfig.getIconSize()) { pos, text ->
+                ActivityOwnSP.ownSPConfig.setIconSize(pos)
+                if (pos == 0) {
+                    text.text = "${currentActivity.getString(R.string.LyricHigh)} (${
+                        currentActivity.getString(R.string.Adaptive)
+                    })"
+                } else {
+                    text.text = "${currentActivity.getString(R.string.LyricHigh)} (${pos})"
+                }
+            }))
+            add(Item(Text(
+                "${currentActivity.getString(R.string.IconHigh)} (${ActivityOwnSP.ownSPConfig.getIconHigh()})", onClickListener = {
+                    MIUIDialog(currentActivity).apply {
+                        setTitle(R.string.IconHigh)
+                        setMessage(R.string.LyricSizeTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getIconHigh().toString(), "7")
+                        setButton(R.string.Ok) {
+                            ActivityOwnSP.ownSPConfig.setIconHigh(getEditText().toInt())
+                            dismiss()
+                        }
+                        setCancelButton(R.string.Cancel) { dismiss() }
+                        show()
+                    }
+                }
+            ), seekBar = SeekBar(-100, 100, ActivityOwnSP.ownSPConfig.getIconHigh()) { pos, text ->
+                ActivityOwnSP.ownSPConfig.setIconHigh(pos)
+                text.text = "${currentActivity.getString(R.string.IconHigh)} (${pos})"
+            }))
+            add(Item(Text(resId = R.string.IconAutoColors), Switch("IAutoColor")))
+            add(Item(Text(resId = R.string.IconSettings, showArrow = true, onClickListener = {
+                val icons =
+                    arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")
+                val iconConfig = IconConfig(Utils.getSP(currentActivity, "Icon_Config"))
+                val actionListener =
+                    DialogInterface.OnClickListener { _, which ->
+                        val iconName = icons[which]
+                        val view: View = View.inflate(currentActivity, R.layout.seticon, null)
+                        val editText: EditText = view.findViewById(R.id.editText)!!
+                        val imageView: ImageView = view.findViewById(R.id.imageView)
+                        imageView.foreground = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
+                        AlertDialog.Builder(currentActivity).apply {
+                            setTitle(iconName)
+                            setView(view)
+                            setPositiveButton(R.string.Ok) { _, _ ->
+                                val editTexts = editText.text
+                                if (editTexts.toString().isNotEmpty()) {
+                                    try {
+                                        imageView.foreground =
+                                            BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
+                                        iconConfig.setIcon(iconName, editText.text.toString())
+                                    } catch (ignore: Exception) {
+                                        ActivityUtils.showToastOnLooper(currentActivity, currentActivity.getString(R.string.IconError))
+                                    }
+                                } else {
+                                    ActivityUtils.showToastOnLooper(currentActivity, currentActivity.getString(R.string.IconError))
+                                }
+                            }
+                            setNegativeButton(R.string.Cancel, null)
+                            setNeutralButton(
+                                currentActivity.getString(R.string.MakeIcon)
+                            ) { _, _ ->
+                                val componentName =
+                                    ComponentName(
+                                        "com.byyoung.setting",
+                                        "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity"
+                                    )
+                                val intent = Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity")
+                                intent.putExtra("PackageName", componentName.packageName)
+                                intent.putExtra("PackageClass", componentName.className)
+                                try {
+                                    currentActivity.startActivity(intent)
+                                } catch (ignore: Exception) {
+                                    ActivityUtils.showToastOnLooper(currentActivity, currentActivity.getString(R.string.MakeIconError))
+                                }
+                            }
+                            show()
+                        }
+                    }
+                AlertDialog.Builder(currentActivity).apply {
+                    setTitle("图标")
+                    setItems(icons, actionListener)
+                    setNegativeButton(R.string.Done, null)
+                    show()
+                }
+            })))
         }
         return itemList
     }
@@ -202,6 +430,7 @@ object DataHelper {
                         })
                 )
             )
+            add(Item(Text(resId = R.string.AbScreen), Switch("AntiBurn")))
             add(
                 Item(
                     Text(resId = R.string.HideDeskIcon),
@@ -222,6 +451,10 @@ object DataHelper {
             ) //  使用系统反色
             add(Item(Text(resId = R.string.UseSystemReverseColor), Switch("UseSystemReverseColor"))) //  使用系统反色
             add(Item(Text(resId = R.string.SongPauseCloseLyrics), Switch("LAutoOff"))) // 暂停歌词自动关闭歌词
+            add(Item(Text(resId = R.string.UnlockShow), Switch("LockScreenOff"))) // 仅锁屏显示
+            add(Item(Text(resId = R.string.AutoHideNotiIcon), Switch("HNoticeIcon"))) // 隐藏通知图标
+            add(Item(Text(resId = R.string.HideNetWork), Switch("HNetSpeed"))) // 隐藏实时网速
+            add(Item(Text(resId = R.string.AutoHideCarrierName), Switch("HCuk"))) // 隐藏运营商名称
             add(Item(Text(resId = R.string.Other, isTitle = true), line = true)) // 其他分割线
             add(Item(Text(resId = R.string.CustomHook, showArrow = true, onClickListener = {
                 MIUIDialog(currentActivity).apply {
