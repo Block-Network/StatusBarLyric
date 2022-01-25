@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package miui.statusbar.lyric.activity
 
 import android.annotation.SuppressLint
@@ -43,7 +45,6 @@ class NewSettingsActivity: Activity() {
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         adapter = ItemAdapter(itemList)
-
         recyclerView.adapter = adapter
 
     }
@@ -96,7 +97,6 @@ class NewSettingsActivity: Activity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         window.statusBarColor = resources.getColor(android.R.color.white)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-
         if (Rom.isMiui) {
             setMiuiStatusBarDarkMode(this, true)
         } else if (Rom.isFlyme) {
@@ -113,7 +113,7 @@ class NewSettingsActivity: Activity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         val clazz: Class<out Window?> = activity.window.javaClass
         try {
-            var darkModeFlag = 0
+            val darkModeFlag: Int
             val layoutParams = Class.forName("android.view.MiuiWindowManager\$LayoutParams")
             val field: Field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE")
             darkModeFlag = field.getInt(layoutParams)
@@ -127,7 +127,7 @@ class NewSettingsActivity: Activity() {
         return false
     }
 
-    fun setMeizuStatusBarDarkIcon(activity: Activity?, dark: Boolean): Boolean {
+    private fun setMeizuStatusBarDarkIcon(activity: Activity?, dark: Boolean): Boolean {
         var result = false
         if (activity != null) {
             try {
@@ -136,8 +136,8 @@ class NewSettingsActivity: Activity() {
                     .getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON")
                 val meizuFlags: Field = WindowManager.LayoutParams::class.java
                     .getDeclaredField("meizuFlags")
-                darkFlag.setAccessible(true)
-                meizuFlags.setAccessible(true)
+                darkFlag.isAccessible = true
+                meizuFlags.isAccessible = true
                 val bit: Int = darkFlag.getInt(null)
                 var value: Int = meizuFlags.getInt(lp)
                 value = if (dark) {
@@ -148,7 +148,7 @@ class NewSettingsActivity: Activity() {
                 meizuFlags.setInt(lp, value)
                 activity.window.attributes = lp
                 result = true
-            } catch (e: java.lang.Exception) {
+            } catch (_: java.lang.Exception) {
             }
         }
         return result
