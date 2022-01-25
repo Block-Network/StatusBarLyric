@@ -7,5 +7,5 @@
     <color name="line">#1affffff</color>
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorAccent">#0374A7</color>
-    <color name="black">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>
