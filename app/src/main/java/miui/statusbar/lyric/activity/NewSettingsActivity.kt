@@ -5,6 +5,9 @@ package miui.statusbar.lyric.activity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.Window
@@ -14,17 +17,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import miui.statusbar.lyric.R
 import miui.statusbar.lyric.utils.ActivityOwnSP
+import miui.statusbar.lyric.utils.ActivityUtils
 import miui.statusbar.lyric.utils.Rom
 import miui.statusbar.lyric.utils.Utils
-import miui.statusbar.lyric.view.miuiview.MIUIDialog
 import miui.statusbar.lyric.view.adapter.ItemAdapter
 import miui.statusbar.lyric.view.data.DataHelper
 import miui.statusbar.lyric.view.data.Item
+import miui.statusbar.lyric.view.miuiview.MIUIDialog
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.system.exitProcess
 
-class NewSettingsActivity: Activity() {
+
+class NewSettingsActivity : Activity() {
 
     private val itemList = arrayListOf<Item>()
     private lateinit var recyclerView: RecyclerView
@@ -33,7 +38,18 @@ class NewSettingsActivity: Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setWhiteStatusBar()
+
+        val window: Window = this.window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        ActivityUtils.showToastOnLooper(this, isNightMode().toString())
+        if (isNightMode()) {
+            window.statusBarColor = resources.getColor(R.color.black)
+        } else {
+            window.statusBarColor = resources.getColor(R.color.white)
+//            setWhiteStatusBar()
+        }
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+
         setContentView(R.layout.activity_setting)
         actionBar?.hide()
         if (!checkLSPosed()) return
@@ -121,8 +137,8 @@ class NewSettingsActivity: Activity() {
                 clazz.getMethod("setExtraFlags", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
             extraFlagField.invoke(activity.window, if (darkmode) darkModeFlag else 0, darkModeFlag)
             return true
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (_: Exception) {
+
         }
         return false
     }
@@ -148,9 +164,21 @@ class NewSettingsActivity: Activity() {
                 meizuFlags.setInt(lp, value)
                 activity.window.attributes = lp
                 result = true
-            } catch (_: java.lang.Exception) {
+            } catch (_: Exception) {
             }
         }
         return result
     }
+
+    private fun isNightMode(): Boolean {
+        val resources: Resources = this.resources
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            resources.configuration.isNightModeActive
+        } else {
+            val mode: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            mode == Configuration.UI_MODE_NIGHT_YES
+        }
+    }
+
+
 }
