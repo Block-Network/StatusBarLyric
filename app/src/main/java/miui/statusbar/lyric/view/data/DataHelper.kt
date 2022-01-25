@@ -16,22 +16,32 @@ import miui.statusbar.lyric.activity.ApiAPPListActivity
 import miui.statusbar.lyric.utils.ActivityOwnSP
 import miui.statusbar.lyric.utils.ActivityUtils
 import miui.statusbar.lyric.utils.ShellUtils
-import miui.statusbar.lyric.utils.XposedOwnSP
 import miui.statusbar.lyric.view.miuiview.MIUIDialog
+
 
 @SuppressLint("StaticFieldLeak")
 object DataHelper {
     var thisItems = "Main"
     var main = "Main"
-    val menu = "Menu"
-    val custom = "Custom"
+    const val menu = "Menu"
+    private const val custom = "Custom"
     var backView: ImageView? = null
     lateinit var currentActivity: Activity
 
-    fun setItems(string: String) {
+    fun setItems(string: String, goto: Boolean) {
         backView?.setImageResource(if (string != main) R.drawable.abc_ic_ab_back_material else R.drawable.abc_ic_menu_overflow_material)
         thisItems = string
-        currentActivity.recreate()
+//        currentActivity.recreate()
+
+        val intent = currentActivity.intent
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        currentActivity.finish()
+        if (goto) {
+            currentActivity.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left)
+        } else {
+            currentActivity.overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right)
+        }
+        currentActivity.startActivity(intent)
     }
 
     fun getItems(): ArrayList<Item> = when (thisItems) {
@@ -72,7 +82,10 @@ object DataHelper {
                                     Color.parseColor(getEditText())
                                     ActivityOwnSP.ownSPConfig.setLyricColor(getEditText())
                                 } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(currentActivity, currentActivity.getString(R.string.LyricColorError))
+                                    ActivityUtils.showToastOnLooper(
+                                        currentActivity,
+                                        currentActivity.getString(R.string.LyricColorError)
+                                    )
                                     ActivityOwnSP.ownSPConfig.setLyricColor("")
                                 }
                             }
@@ -83,31 +96,42 @@ object DataHelper {
                     }
                 })))
             }
-            add(Item(Text("${currentActivity.getString(R.string.LyricWidth)} (${if (ActivityOwnSP.ownSPConfig.getLyricWidth() != -1) ActivityOwnSP.ownSPConfig.getLyricWidth() else currentActivity.getString(R.string.Adaptive)}"), seekBar = SeekBar(-1, 100, ActivityOwnSP.ownSPConfig.getLyricWidth()) { pos, text ->
-                ActivityOwnSP.ownSPConfig.setLyricWidth(pos)
-                if (pos == -1) {
-                    text.text = "${currentActivity.getString(R.string.LyricWidth)} (${currentActivity.getString(R.string.Adaptive)})"
-                } else {
-                    text.text = "${currentActivity.getString(R.string.LyricWidth)} (${pos})"
-                }
-            }))
+            add(
+                Item(
+                    Text(
+                        "${currentActivity.getString(R.string.LyricWidth)} (${
+                            if (ActivityOwnSP.ownSPConfig.getLyricWidth() != -1) ActivityOwnSP.ownSPConfig.getLyricWidth() else currentActivity.getString(
+                                R.string.Adaptive
+                            )
+                        }"
+                    ), seekBar = SeekBar(-1, 100, ActivityOwnSP.ownSPConfig.getLyricWidth()) { pos, text ->
+                        ActivityOwnSP.ownSPConfig.setLyricWidth(pos)
+                        if (pos == -1) {
+                            text.text =
+                                "${currentActivity.getString(R.string.LyricWidth)} (${currentActivity.getString(R.string.Adaptive)})"
+                        } else {
+                            text.text = "${currentActivity.getString(R.string.LyricWidth)} (${pos})"
+                        }
+                    })
+            )
             if (ActivityOwnSP.ownSPConfig.getLyricWidth() == -1) {
-                add(Item(Text(
-                    "${currentActivity.getString(R.string.LyricAutoMaxWidth)} (${
-                        if (ActivityOwnSP.ownSPConfig.getLyricMaxWidth() != -1) ActivityOwnSP.ownSPConfig.getLyricMaxWidth() else currentActivity.getString(
-                            R.string.Adaptive
-                        )
-                    })"
-                ), seekBar = SeekBar(-1, 100, ActivityOwnSP.ownSPConfig.getLyricMaxWidth()) { pos, text ->
-                    ActivityOwnSP.ownSPConfig.setLyricMaxWidth(pos)
-                    if (pos == -1) {
-                        text.text = "${currentActivity.getString(R.string.LyricAutoMaxWidth)} (${
-                            currentActivity.getString(R.string.Adaptive)
+                add(
+                    Item(Text(
+                        "${currentActivity.getString(R.string.LyricAutoMaxWidth)} (${
+                            if (ActivityOwnSP.ownSPConfig.getLyricMaxWidth() != -1) ActivityOwnSP.ownSPConfig.getLyricMaxWidth() else currentActivity.getString(
+                                R.string.Adaptive
+                            )
                         })"
-                    } else {
-                        text.text = "${currentActivity.getString(R.string.LyricAutoMaxWidth)} (${pos})"
-                    }
-                })
+                    ), seekBar = SeekBar(-1, 100, ActivityOwnSP.ownSPConfig.getLyricMaxWidth()) { pos, text ->
+                        ActivityOwnSP.ownSPConfig.setLyricMaxWidth(pos)
+                        if (pos == -1) {
+                            text.text = "${currentActivity.getString(R.string.LyricAutoMaxWidth)} (${
+                                currentActivity.getString(R.string.Adaptive)
+                            })"
+                        } else {
+                            text.text = "${currentActivity.getString(R.string.LyricAutoMaxWidth)} (${pos})"
+                        }
+                    })
                 )
             }
         }
@@ -120,12 +144,14 @@ object DataHelper {
             add(Item(Text(resId = R.string.UseInfo, showArrow = true, onClickListener = { // 使用说明
                 MIUIDialog(currentActivity).apply {
                     setTitle(R.string.VerExplanation)
-                    setMessage(String.format(
-                        " %s [%s] %s",
-                        currentActivity.getString(R.string.CurrentVer),
-                        BuildConfig.VERSION_NAME,
-                        currentActivity.getString(R.string.VerExp)
-                    ))
+                    setMessage(
+                        String.format(
+                            " %s [%s] %s",
+                            currentActivity.getString(R.string.CurrentVer),
+                            BuildConfig.VERSION_NAME,
+                            currentActivity.getString(R.string.VerExp)
+                        )
+                    )
                     setButton(R.string.Done) {
                         dismiss()
                     }
@@ -135,12 +161,14 @@ object DataHelper {
             add(Item(Text(resId = R.string.WarnExplanation, showArrow = true, onClickListener = { // 模块注意事项
                 MIUIDialog(currentActivity).apply {
                     setTitle(R.string.WarnExplanation)
-                    setMessage(String.format(
-                        " %s [%s] %s",
-                        currentActivity.getString(R.string.CurrentVer),
-                        BuildConfig.VERSION_NAME,
-                        currentActivity.getString(R.string.WarnExp)
-                    ))
+                    setMessage(
+                        String.format(
+                            " %s [%s] %s",
+                            currentActivity.getString(R.string.CurrentVer),
+                            BuildConfig.VERSION_NAME,
+                            currentActivity.getString(R.string.WarnExp)
+                        )
+                    )
                     setButton(R.string.Done) {
                         dismiss()
                     }
@@ -150,29 +178,58 @@ object DataHelper {
             add(Item(Text(resId = R.string.BaseSetting, isTitle = true), line = true)) // 基础设置分割线
             add(Item(Text(resId = R.string.AllSwitch), Switch("LService"))) // 总开关
             add(Item(Text(resId = R.string.LyricIcon), Switch("I"))) // 图标
-            add(Item(Text(resId = R.string.Custom, showArrow = true, onClickListener = { setItems(custom) }))) // 个性化
-            add(Item(Text(resId = R.string.AdvancedSettings, isTitle = true), line = true)) // 高级设置分割线
-            add(Item(Text(resId = R.string.UseApiList, showArrow = true, onClickListener = { currentActivity.startActivity(Intent(currentActivity, ApiAPPListActivity::class.java)) })))
-            add(Item(Text(resId = R.string.HideDeskIcon), Switch("hLauncherIcon", onCheckedChangeListener = { _, newValue -> // 隐藏桌面图标
-                val packageManager: PackageManager = currentActivity.packageManager
-                val mode: Int = if (newValue) {
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-                } else {
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                }
-                packageManager.setComponentEnabledSetting(
-                    ComponentName(currentActivity, "miui.statusbar.lyric.launcher"),
-                    mode,
-                    PackageManager.DONT_KILL_APP
+            add(
+                Item(
+                    Text(
+                        resId = R.string.Custom,
+                        showArrow = true,
+                        onClickListener = { setItems(custom, true) })
                 )
-            }))) //  使用系统反色
+            ) // 个性化
+            add(Item(Text(resId = R.string.AdvancedSettings, isTitle = true), line = true)) // 高级设置分割线
+            add(
+                Item(
+                    Text(
+                        resId = R.string.UseApiList,
+                        showArrow = true,
+                        onClickListener = {
+                            currentActivity.startActivity(
+                                Intent(
+                                    currentActivity,
+                                    ApiAPPListActivity::class.java
+                                )
+                            )
+                        })
+                )
+            )
+            add(
+                Item(
+                    Text(resId = R.string.HideDeskIcon),
+                    Switch("hLauncherIcon", onCheckedChangeListener = { _, newValue -> // 隐藏桌面图标
+                        val packageManager: PackageManager = currentActivity.packageManager
+                        val mode: Int = if (newValue) {
+                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                        } else {
+                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                        }
+                        packageManager.setComponentEnabledSetting(
+                            ComponentName(currentActivity, "miui.statusbar.lyric.launcher"),
+                            mode,
+                            PackageManager.DONT_KILL_APP
+                        )
+                    })
+                )
+            ) //  使用系统反色
             add(Item(Text(resId = R.string.UseSystemReverseColor), Switch("UseSystemReverseColor"))) //  使用系统反色
             add(Item(Text(resId = R.string.SongPauseCloseLyrics), Switch("LAutoOff"))) // 暂停歌词自动关闭歌词
             add(Item(Text(resId = R.string.Other, isTitle = true), line = true)) // 其他分割线
             add(Item(Text(resId = R.string.CustomHook, showArrow = true, onClickListener = {
                 MIUIDialog(currentActivity).apply {
                     setTitle(R.string.HookSetTips)
-                    setEditText(ActivityOwnSP.ownSPConfig.getHook(), currentActivity.getString(R.string.InputCustomHook))
+                    setEditText(
+                        ActivityOwnSP.ownSPConfig.getHook(),
+                        currentActivity.getString(R.string.InputCustomHook)
+                    )
                     setButton(R.string.Ok) {
                         ActivityOwnSP.ownSPConfig.setHook(getEditText())
                         ActivityUtils.showToastOnLooper(
@@ -225,14 +282,33 @@ object DataHelper {
                 }
             }), null))
             add(Item(Text(resId = R.string.About, isTitle = true), line = true)) // 关于分割线
-            add(Item(Text("${currentActivity.getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClickListener = {
-                ActivityUtils.showToastOnLooper(
-                    currentActivity,
-                    currentActivity.getString(R.string.StartCheckUpdate)
+            add(
+                Item(
+                    Text(
+                        "${currentActivity.getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})",
+                        onClickListener = {
+                            ActivityUtils.showToastOnLooper(
+                                currentActivity,
+                                currentActivity.getString(R.string.StartCheckUpdate)
+                            )
+                            ActivityUtils.checkUpdate(currentActivity)
+                        })
                 )
-                ActivityUtils.checkUpdate(currentActivity)
-            })))
-            add(Item(Text(resId = R.string.AboutModule, onClickListener = { currentActivity.startActivity(Intent(currentActivity, AboutActivity::class.java)) })))
+            )
+            add(
+                Item(
+                    Text(
+                        resId = R.string.AboutModule,
+                        onClickListener = {
+                            currentActivity.startActivity(
+                                Intent(
+                                    currentActivity,
+                                    AboutActivity::class.java
+                                )
+                            )
+                        })
+                )
+            )
         }
         return itemList
     }

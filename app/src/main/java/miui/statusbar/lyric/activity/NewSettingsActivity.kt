@@ -90,9 +90,9 @@ class NewSettingsActivity : Activity() {
         DataHelper.backView = menu
         menu.setOnClickListener {
             if (DataHelper.thisItems == DataHelper.main) {
-                DataHelper.setItems(DataHelper.menu)
+                DataHelper.setItems(DataHelper.menu,true)
             } else {
-                DataHelper.setItems(DataHelper.main)
+                DataHelper.setItems(DataHelper.main,false)
             }
         }
         DataHelper.setBackButton()
@@ -100,83 +100,9 @@ class NewSettingsActivity : Activity() {
 
     override fun onBackPressed() {
         if (DataHelper.thisItems != DataHelper.main) {
-            DataHelper.setItems(DataHelper.main)
+            DataHelper.setItems(DataHelper.main,false)
         } else {
             super.onBackPressed()
         }
     }
-
-    private fun setWhiteStatusBar() {
-        val window = window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = resources.getColor(android.R.color.white)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        if (Rom.isMiui) {
-            setMiuiStatusBarDarkMode(this, true)
-        } else if (Rom.isFlyme) {
-            setMeizuStatusBarDarkIcon(this, true)
-        }
-
-    }
-
-    @SuppressLint("PrivateApi")
-    fun setMiuiStatusBarDarkMode(activity: Activity, darkmode: Boolean): Boolean {
-        val window = window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        val clazz: Class<out Window?> = activity.window.javaClass
-        try {
-            val darkModeFlag: Int
-            val layoutParams = Class.forName("android.view.MiuiWindowManager\$LayoutParams")
-            val field: Field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE")
-            darkModeFlag = field.getInt(layoutParams)
-            val extraFlagField: Method =
-                clazz.getMethod("setExtraFlags", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
-            extraFlagField.invoke(activity.window, if (darkmode) darkModeFlag else 0, darkModeFlag)
-            return true
-        } catch (_: Exception) {
-
-        }
-        return false
-    }
-
-    private fun setMeizuStatusBarDarkIcon(activity: Activity?, dark: Boolean): Boolean {
-        var result = false
-        if (activity != null) {
-            try {
-                val lp = activity.window.attributes
-                val darkFlag: Field = WindowManager.LayoutParams::class.java
-                    .getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON")
-                val meizuFlags: Field = WindowManager.LayoutParams::class.java
-                    .getDeclaredField("meizuFlags")
-                darkFlag.isAccessible = true
-                meizuFlags.isAccessible = true
-                val bit: Int = darkFlag.getInt(null)
-                var value: Int = meizuFlags.getInt(lp)
-                value = if (dark) {
-                    value or bit
-                } else {
-                    value and bit.inv()
-                }
-                meizuFlags.setInt(lp, value)
-                activity.window.attributes = lp
-                result = true
-            } catch (_: Exception) {
-            }
-        }
-        return result
-    }
-
-    private fun isNightMode(): Boolean {
-        val resources: Resources = this.resources
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            resources.configuration.isNightModeActive
-        } else {
-            val mode: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            mode == Configuration.UI_MODE_NIGHT_YES
-        }
-    }
-
-
 }
