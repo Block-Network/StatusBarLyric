@@ -9,7 +9,7 @@ android {
     compileSdk = 32
 
     defaultConfig {
-        applicationId = "miui.statusbar.lyric"
+        applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 32
         versionCode = 83

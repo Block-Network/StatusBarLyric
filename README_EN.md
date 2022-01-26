@@ -49,7 +49,7 @@
 ### Downloads
 
 - [Releases](https://github.com/577fkj/MIUIStatusBarLyric/releases)
-- [CoolAPK](https://www.coolapk.com/apk/miui.statusbar.lyric)
+- [CoolAPK](https://www.coolapk.com/apk/statusbar.lyric)
 - [Beta](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
 - [Canary](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android_Dev.yml)
 
@@ -57,7 +57,7 @@
 
 - [QQ Group](https://jq.qq.com/?_wv=1027&amp;k=KQeQjgsv)
 - [Telegram](https://t.me/MIUIStatusBatLyric)
-- [CoolAPK](https://www.coolapk.com/apk/miui.statusbar.lyric)
+- [CoolAPK](https://www.coolapk.com/apk/statusbar.lyric)
 - [BUG feedback (Github)](https://github.com/577fkj/MIUIStatusBarLyric/issues/new)
 
 ## App active adaptation

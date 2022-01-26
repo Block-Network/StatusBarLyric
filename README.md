@@ -50,7 +50,7 @@
 ### 下载
 
 - [Releases](https://github.com/577fkj/MIUIStatusBarLyric/releases)
-- [酷安](https://www.coolapk.com/apk/miui.statusbar.lyric)
+- [酷安](https://www.coolapk.com/apk/statusbar.lyric)
 - [Beta](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android.yml)
 - [Canary](https://github.com/577fkj/MIUIStatusBarLyric/actions/workflows/Android_Dev.yml)
 
@@ -62,7 +62,7 @@
 
 - [QQ交流群](https://jq.qq.com/?_wv=1027&amp;k=KQeQjgsv)
 - [电报](https://t.me/MIUIStatusBatLyric)
-- [酷安](https://www.coolapk.com/apk/miui.statusbar.lyric)
+- [酷安](https://www.coolapk.com/apk/statusbar.lyric)
 - [BUG反馈(Github)](https://github.com/577fkj/MIUIStatusBarLyric/issues/new)
 
 ## 音乐主动适配
