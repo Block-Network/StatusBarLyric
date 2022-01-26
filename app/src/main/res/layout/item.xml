@@ -68,7 +68,7 @@
 
         </LinearLayout>
 
-        <statusbar.lyric.view.miuiview.SettingsSwitch
+        <cn.fkj233.xposed.statusbarlyric.view.miuiview.SettingsSwitch
                 android:id="@+id/settings_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

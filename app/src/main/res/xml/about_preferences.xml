@@ -71,7 +71,7 @@
             android:title="@string/Coolapk">
         <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://www.coolapk.com/apk/miui.statusbar.lyric"/>
+                android:data="https://www.coolapk.com/apk/miui.cn.fkj233.xposed.statusbarlyric"/>
     </Preference>
     <Preference
             android:key="source"
