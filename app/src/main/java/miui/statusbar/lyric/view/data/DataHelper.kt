@@ -43,13 +43,14 @@ object DataHelper {
 //        currentActivity.recreate()
 
         val intent = currentActivity.intent
+        currentActivity.finish()
         if (goto) {
             currentActivity.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left)
         } else {
             currentActivity.overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right)
         }
         currentActivity.startActivity(intent)
-        currentActivity.finish()
+
     }
 
     fun getItems(): ArrayList<Item> = when (thisItems) {
