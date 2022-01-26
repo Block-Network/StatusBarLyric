@@ -3,8 +3,14 @@
 package cn.fkj233.xposed.statusbarlyric.activity
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +45,9 @@ class NewSettingsActivity : Activity() {
         recyclerView.layoutManager = layoutManager
         adapter = ItemAdapter(itemList)
         recyclerView.adapter = adapter
+        registerReceiver(HookReceiver(), IntentFilter().apply {
+            addAction("Hook_Sure")
+        })
 
     }
 
@@ -81,6 +90,28 @@ class NewSettingsActivity : Activity() {
             DataHelper.setItems(DataHelper.main,false)
         } else {
             super.onBackPressed()
+        }
+    }
+
+    inner class HookReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                Handler(Looper.getMainLooper()).post {
+                    val message: String = if (intent.getBooleanExtra("hook_ok", false)) {
+                        getString(R.string.HookSureSuccess)
+                    } else {
+                        getString(R.string.HookSureFail)
+                    }
+                    MIUIDialog(this@NewSettingsActivity).apply {
+                        setTitle(getString(R.string.HookSure))
+                        setMessage(message)
+                        setButton(getString(R.string.Ok)) { dismiss() }
+                        show()
+                    }
+                }
+            } catch (e: RuntimeException) {
+                e.printStackTrace()
+            }
         }
     }
 }
