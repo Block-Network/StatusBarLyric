@@ -62,11 +62,13 @@
 
             <Button
                     android:id="@+id/CancelButton"
-                    android:layout_width="160dp"
+                    android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:paddingStart="45dp"
                     android:paddingEnd="45dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1"
                     android:background="@drawable/cancel_button_background"
                     android:textColor="@color/whiteText"
                     android:textSize="20sp"
@@ -76,10 +78,13 @@
 
             <Button
                     android:id="@+id/Button"
-                    android:layout_width="160dp"
+                    android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:paddingStart="45dp"
+                    android:layout_weight="1"
                     android:paddingEnd="45dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:background="@drawable/button_background"
                     android:textColor="@color/white"
                     android:textSize="20sp"
