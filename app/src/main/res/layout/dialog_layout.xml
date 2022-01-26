@@ -64,8 +64,6 @@
                     android:id="@+id/CancelButton"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:paddingStart="45dp"
-                    android:paddingEnd="45dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:layout_weight="1"
@@ -74,15 +72,13 @@
                     android:textSize="20sp"
                     android:layout_gravity="center"
                     android:stateListAnimator="@null"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             <Button
                     android:id="@+id/Button"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:paddingStart="45dp"
                     android:layout_weight="1"
-                    android:paddingEnd="45dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/button_background"
