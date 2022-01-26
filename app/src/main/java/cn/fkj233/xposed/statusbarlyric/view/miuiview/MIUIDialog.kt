@@ -3,45 +3,40 @@ package cn.fkj233.xposed.statusbarlyric.view.miuiview
 import android.app.Dialog
 import android.content.Context
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
 import cn.fkj233.xposed.statusbarlyric.R
+import cn.fkj233.xposed.statusbarlyric.databinding.DialogLayoutBinding
 
 
 class MIUIDialog(context: Context) : Dialog(context, R.style.CustomDialog) {
-    var view: View
+
+    private lateinit var binding: DialogLayoutBinding
 
     init {
         window?.setGravity(Gravity.BOTTOM)
-        view = createView(context, R.layout.dialog_layout)
+        createView()
     }
 
-    private fun createView(context: Context, dialog_layout: Int): View {
-        val inflate: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view: View = inflate.inflate(dialog_layout, null)
-        setContentView(view)
-        return view
+    private fun createView() {
+        binding = DialogLayoutBinding.inflate(layoutInflater, null, false)
+        setContentView(binding.root)
     }
 
     fun addView(mView: View) {
-        view.findViewById<LinearLayout>(R.id.View).addView(mView)
+        binding.View.addView(mView)
     }
 
     override fun setTitle(title: CharSequence?) {
-        view.findViewById<TextView>(R.id.Title).text = title
+        binding.Title.text = title
     }
 
     override fun setTitle(titleId: Int) {
-        view.findViewById<TextView>(R.id.Title).setText(titleId)
+        binding.Title.setText(titleId)
     }
 
     fun setButton(text: CharSequence?, callBacks: (it: View) -> Unit) {
-        view.findViewById<Button>(R.id.Button).apply {
+        binding.Button.apply {
             setText(text)
             setOnClickListener {
                 callBacks(it)
@@ -50,7 +45,7 @@ class MIUIDialog(context: Context) : Dialog(context, R.style.CustomDialog) {
     }
 
     fun setButton(textId: Int, callBacks: () -> Unit) {
-        view.findViewById<Button>(R.id.Button).apply {
+        binding.Button.apply {
             setText(textId)
             setOnClickListener {
                 callBacks()
@@ -59,7 +54,7 @@ class MIUIDialog(context: Context) : Dialog(context, R.style.CustomDialog) {
     }
 
     fun setCancelButton(text: CharSequence?, callBacks: (it: View) -> Unit) {
-        view.findViewById<Button>(R.id.CancelButton).apply {
+        binding.CancelButton.apply {
             setText(text)
             setOnClickListener {
                 callBacks(it)
@@ -69,7 +64,7 @@ class MIUIDialog(context: Context) : Dialog(context, R.style.CustomDialog) {
     }
 
     fun setCancelButton(textId: Int, callBacks: () -> Unit) {
-        view.findViewById<Button>(R.id.CancelButton).apply {
+        binding.CancelButton.apply {
             setText(textId)
             setOnClickListener {
                 callBacks()
@@ -79,6 +74,7 @@ class MIUIDialog(context: Context) : Dialog(context, R.style.CustomDialog) {
     }
 
     override fun show() {
+        window!!.setWindowAnimations(R.style.DialogAnim)
         super.show()
         val layoutParams = window!!.attributes
         layoutParams.dimAmount = 0.3F
@@ -88,26 +84,26 @@ class MIUIDialog(context: Context) : Dialog(context, R.style.CustomDialog) {
     }
 
     fun setMessage(textId: Int) {
-        view.findViewById<TextView>(R.id.Message).apply {
+        binding.Message.apply {
             setText(textId)
             visibility = View.VISIBLE
         }
     }
 
     fun setMessage(text: CharSequence?) {
-        view.findViewById<TextView>(R.id.Message).apply {
+        binding.Message.apply {
             this.text = text
             visibility = View.VISIBLE
         }
     }
 
     fun setEditText(text: String, hint: String) {
-        view.findViewById<EditText>(R.id.EditText).apply {
+        binding.EditText.apply {
             setText(text.toCharArray(), 0, text.length)
             this.hint = hint
             visibility = View.VISIBLE
         }
     }
 
-    fun getEditText(): String = view.findViewById<EditText>(R.id.EditText).text.toString()
+    fun getEditText(): String = binding.EditText.text.toString()
 }

@@ -3,7 +3,6 @@
 package cn.fkj233.xposed.statusbarlyric.activity
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -11,40 +10,30 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.ImageView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import cn.fkj233.xposed.statusbarlyric.R
+import cn.fkj233.xposed.statusbarlyric.databinding.ActivitySettingBinding
+import cn.fkj233.xposed.statusbarlyric.fragment.NewSettingsFragment
 import cn.fkj233.xposed.statusbarlyric.utils.ActivityOwnSP
 import cn.fkj233.xposed.statusbarlyric.utils.Utils
-import cn.fkj233.xposed.statusbarlyric.view.adapter.ItemAdapter
 import cn.fkj233.xposed.statusbarlyric.view.data.DataHelper
-import cn.fkj233.xposed.statusbarlyric.view.data.Item
+import cn.fkj233.xposed.statusbarlyric.view.data.DataItem
 import cn.fkj233.xposed.statusbarlyric.view.miuiview.MIUIDialog
 import kotlin.system.exitProcess
 
 
 class NewSettingsActivity : Activity() {
 
-    private val itemList = arrayListOf<Item>()
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ItemAdapter
-    private lateinit var menu: ImageView
+    lateinit var binding: ActivitySettingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setting)
+        binding = ActivitySettingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         actionBar?.hide()
         if (!checkLSPosed()) return
         ActivityOwnSP.activity = this
         DataHelper.currentActivity = this
-        itemList.addAll(DataHelper.getItems())
-        initMenu()
-        recyclerView = findViewById(R.id.settings_recycler)
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-        adapter = ItemAdapter(itemList)
-        recyclerView.adapter = adapter
+        showFragment(DataItem.Main)
         registerReceiver(HookReceiver(), IntentFilter().apply {
             addAction("Hook_Sure")
         })
@@ -72,24 +61,26 @@ class NewSettingsActivity : Activity() {
         }
     }
 
-    private fun initMenu() {
-        menu = findViewById(R.id.settings_menu)
-        DataHelper.backView = menu
-        menu.setOnClickListener {
-            if (DataHelper.thisItems == DataHelper.main) {
-                DataHelper.setItems(DataHelper.menu,true)
+    private fun setMenu(isMain: Boolean) {
+        binding.settingsMenu.setImageResource(if (!isMain) R.drawable.abc_ic_ab_back_material else R.drawable.abc_ic_menu_overflow_material)
+        binding.settingsMenu.setOnClickListener {
+            if (isMain) {
+                showFragment(DataItem.Menu)
             } else {
-                DataHelper.setItems(DataHelper.main,false)
+                onBackPressed()
             }
         }
-        DataHelper.setBackButton()
     }
 
     override fun onBackPressed() {
-        if (DataHelper.thisItems != DataHelper.main) {
-            DataHelper.setItems(DataHelper.main,false)
+        if (fragmentManager.backStackEntryCount <= 1) {
+            finish()
         } else {
-            super.onBackPressed()
+            val string =
+                fragmentManager.getBackStackEntryAt(fragmentManager.backStackEntryCount - 2).name
+            setMenu(string == DataHelper.getTitle(DataItem.Main))
+            binding.Title.text = string
+            fragmentManager.popBackStack()
         }
     }
 
@@ -114,4 +105,18 @@ class NewSettingsActivity : Activity() {
             }
         }
     }
+
+    fun showFragment(dataItem: DataItem) {
+        setMenu(dataItem == DataItem.Main)
+        val fragment = NewSettingsFragment().setDataItem(dataItem)
+        val title = DataHelper.getTitle(dataItem)
+        binding.Title.text = title
+        fragmentManager.beginTransaction().setCustomAnimations(
+            R.animator.slide_right_in,
+            R.animator.slide_left_out,
+            R.animator.slide_left_in,
+            R.animator.slide_right_out
+        ).replace(R.id.settings_fragment_container, fragment).addToBackStack(title).commit()
+    }
+
 }

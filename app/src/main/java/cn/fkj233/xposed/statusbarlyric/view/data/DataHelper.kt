@@ -3,7 +3,6 @@
 package cn.fkj233.xposed.statusbarlyric.view.data
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.DialogInterface
@@ -14,8 +13,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
-import com.microsoft.appcenter.analytics.Analytics
 import cn.fkj233.xposed.statusbarlyric.BuildConfig
 import cn.fkj233.xposed.statusbarlyric.R
 import cn.fkj233.xposed.statusbarlyric.activity.AboutActivity
@@ -27,38 +24,26 @@ import cn.fkj233.xposed.statusbarlyric.utils.ActivityUtils
 import cn.fkj233.xposed.statusbarlyric.utils.ShellUtils
 import cn.fkj233.xposed.statusbarlyric.utils.Utils
 import cn.fkj233.xposed.statusbarlyric.view.miuiview.MIUIDialog
+import com.microsoft.appcenter.analytics.Analytics
 
+enum class DataItem {
+    Main, Menu, Custom
+}
 
 @SuppressLint("StaticFieldLeak")
 object DataHelper {
-    var thisItems = "Main"
-    var main = "Main"
-    const val menu = "Menu"
-    private const val custom = "Custom"
-    var backView: ImageView? = null
-    lateinit var currentActivity: Activity
 
-    fun setItems(string: String, goto: Boolean) {
-        backView?.setImageResource(if (string != main) R.drawable.abc_ic_ab_back_material else R.drawable.abc_ic_menu_overflow_material)
-        thisItems = string
+    lateinit var currentActivity: NewSettingsActivity
 
-        if (goto) {
-            currentActivity.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left)
-        } else {
-            currentActivity.overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right)
-        }
-        currentActivity.startActivity(Intent(currentActivity, NewSettingsActivity::class.java))
-
-    }
-
-    fun getItems(): ArrayList<Item> = when (thisItems) {
-        menu -> loadMenuItems()
-        custom -> loadCustomItems()
+    fun getItems(thisItems: DataItem = DataItem.Main): ArrayList<Item> = when (thisItems) {
+        DataItem.Menu -> loadMenuItems()
+        DataItem.Custom -> loadCustomItems()
         else -> loadItems()
     }
 
-    fun setBackButton() {
-        backView?.setImageResource(if (thisItems != main) R.drawable.abc_ic_ab_back_material else R.drawable.abc_ic_menu_overflow_material)
+    fun getTitle(dataItem: DataItem): String = when (dataItem) {
+        DataItem.Custom -> currentActivity.getString(R.string.Custom)
+        else -> currentActivity.getString(R.string.AppName)
     }
 
     private fun loadMenuItems(): ArrayList<Item> {
@@ -124,7 +109,6 @@ object DataHelper {
 
     @SuppressLint("SetTextI18n")
     private fun loadCustomItems(): ArrayList<Item> {
-        currentActivity.findViewById<TextView>(R.id.Title).setText(R.string.Custom)
         val itemList = arrayListOf<Item>()
         itemList.apply {
 //            歌词大小
@@ -527,7 +511,7 @@ object DataHelper {
                     Text(
                         resId = R.string.Custom,
                         showArrow = true,
-                        onClickListener = { setItems(custom, true) })
+                        onClickListener = { currentActivity.showFragment(DataItem.Custom) })
                 )
             )
 //             高级设置分割线

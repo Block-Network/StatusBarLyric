@@ -36,6 +36,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.majorVersion
+    }
     packagingOptions {
         resources {
             excludes += "/META-INF/**"
@@ -47,9 +50,13 @@ android {
             useLegacyPackaging = true
         }
     }
+    buildFeatures {
+        viewBinding = true
+    }
     applicationVariants.all {
         outputs.all {
-            (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName($versionCode)-$name.apk"
+            (this as BaseVariantOutputImpl).outputFileName =
+                "StatusBarLyric-$versionName($versionCode)-$name.apk"
         }
     }
 }
