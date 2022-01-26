@@ -2,6 +2,7 @@
 <resources>
     <color name="foreground">#000000</color>
     <color name="rounded_pop">#333333</color>
+    <color name="menu">#FFFFFF</color>
     <color name="colorTrack">#333333</color>
     <color name="whiteClick">#292929</color>
     <color name="whiteText">#FFFFFF</color>
