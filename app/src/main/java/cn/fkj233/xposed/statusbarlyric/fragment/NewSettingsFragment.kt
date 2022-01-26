@@ -15,12 +15,12 @@ import cn.fkj233.xposed.statusbarlyric.view.data.DataItem
 
 class NewSettingsFragment : Fragment() {
 
-    private lateinit var dataItem: DataItem
+    private var dataItem: DataItem? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View =
         RecyclerView(context).apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = ItemAdapter(DataHelper.getItems(dataItem))
+            adapter = ItemAdapter(DataHelper.getItems(if (dataItem == null) DataItem.Main else dataItem!!))
         }
 
     fun setDataItem(mDataItem: DataItem): NewSettingsFragment {
