@@ -193,8 +193,7 @@ object DataHelper {
                         }
                     })
             )
-
-//            歌词左右位置
+            // 歌词最大自适应宽度
             if (ActivityOwnSP.ownSPConfig.getLyricWidth() == -1) {
                 add(
                     Item(Text(
@@ -215,6 +214,7 @@ object DataHelper {
                     })
                 )
             }
+            // 歌词左右位置
             add(
                 Item(Text(
                     "${currentActivity.getString(R.string.LyricPos)} (${
@@ -248,7 +248,7 @@ object DataHelper {
 //          歌词高度
             add(Item(Text(
                 "${currentActivity.getString(R.string.LyricHigh)} (${
-                    if (ActivityOwnSP.ownSPConfig.getLyricPosition() != 0) ActivityOwnSP.ownSPConfig.getLyricPosition() else currentActivity.getString(
+                    if (ActivityOwnSP.ownSPConfig.getLyricHigh() != 0) ActivityOwnSP.ownSPConfig.getLyricHigh() else currentActivity.getString(
                         R.string.Adaptive
                     )
                 })", onClickListener = {
@@ -264,7 +264,7 @@ object DataHelper {
                         show()
                     }
                 }
-            ), seekBar = SeekBar(-100, 100, ActivityOwnSP.ownSPConfig.getLyricPosition()) { pos, text ->
+            ), seekBar = SeekBar(-100, 100, ActivityOwnSP.ownSPConfig.getLyricHigh()) { pos, text ->
                 ActivityOwnSP.ownSPConfig.setLyricHigh(pos)
                 if (pos == 0) {
                     text.text = "${currentActivity.getString(R.string.LyricHigh)} (${
