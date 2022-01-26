@@ -96,7 +96,7 @@ object ActivityUtils {
         }
         Thread {
             val value: String =
-                HttpUtils.Get("https://api.github.com/repos/577fkj/MIUIStatusBarLyric/releases/latest")
+                HttpUtils.Get("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
             if (value != "") {
                 handler.obtainMessage().let {
                     it.data = Bundle().apply {

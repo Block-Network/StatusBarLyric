@@ -60,19 +60,19 @@ jobs:
       - name: Upload Release APK
         uses: actions/upload-artifact@v2
         with:
-          name: MIUIStatusBarLyric_release
+          name: StatusBarLyric_release
           path: ${{ steps.sign_release.outputs.signedReleaseFile }}
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v2
         with:
-          name: MIUIStatusBarLyric_debug
+          name: StatusBarLyric_debug
           path: ${{ steps.sign_debug.outputs.signedReleaseFile }}
 
       - name: Upload Release Mapping
         uses: actions/upload-artifact@v2
         with:
-          name: MIUIStatusBarLyric_release_mapping
+          name: StatusBarLyric_release_mapping
           path: ./app/build/outputs/mapping/release/mapping.txt
 
       - name: Post to channel

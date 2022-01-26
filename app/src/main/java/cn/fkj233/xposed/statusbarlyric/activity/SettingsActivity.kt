@@ -78,7 +78,7 @@ class SettingsActivity : PreferenceActivity() {
                 }
                 setPositiveButton(R.string.Quit) { _, _ -> activity.finish() }
                 setNeutralButton(R.string.PrivacyPolicy) { _, _ ->
-                    val uri: Uri = Uri.parse("https://github.com/577fkj/MIUIStatusBarLyric/blob/main/EUAL.md")
+                    val uri: Uri = Uri.parse("https://github.com/577fkj/StatusBarLyric/blob/main/EUAL.md")
                     val intent = Intent(Intent.ACTION_VIEW, uri)
                     startActivity(intent)
                     init()

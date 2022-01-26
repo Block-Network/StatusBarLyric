@@ -33,7 +33,7 @@
             android:title="@string/ThkList">
         <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/577fkj/MIUIStatusBarLyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95%E4%B8%8D%E5%88%86%E5%85%88%E5%90%8E"/>
+                android:data="https://github.com/577fkj/StatusBarLyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95%E4%B8%8D%E5%88%86%E5%85%88%E5%90%8E"/>
 <!--        <intent-->
 <!--                android:action="android.intent.action.VIEW"-->
 <!--                android:data="@string/ThkListUrl"/>-->
@@ -46,7 +46,7 @@
             android:title="@string/PrivacyPolicy">
         <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/577fkj/MIUIStatusBarLyric/blob/main/EUAL.md"/>
+                android:data="https://github.com/577fkj/StatusBarLyric/blob/main/EUAL.md"/>
     </Preference>
 
     <Preference
@@ -78,7 +78,7 @@
             android:title="@string/Source">
         <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://github.com/577fkj/MIUIStatusBarLyric"/>
+                android:data="https://github.com/577fkj/StatusBarLyric"/>
     </Preference>
 
 
