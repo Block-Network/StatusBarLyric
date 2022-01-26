@@ -74,9 +74,7 @@ class MainHook: IXposedHookLoadPackage {
             }
             "com.meizu.media.music" -> MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
             else -> {
-                if (apiList.hasEnable(lpparam.packageName) == true) {
-                    Api(lpparam).hook(lpparam)
-                }
+                Api(lpparam).hook()
             }
         }
     }

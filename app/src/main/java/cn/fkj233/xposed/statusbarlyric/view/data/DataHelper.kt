@@ -15,9 +15,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import cn.fkj233.xposed.statusbarlyric.BuildConfig
 import cn.fkj233.xposed.statusbarlyric.R
-import cn.fkj233.xposed.statusbarlyric.activity.AboutActivity
-import cn.fkj233.xposed.statusbarlyric.activity.ApiAPPListActivity
-import cn.fkj233.xposed.statusbarlyric.activity.NewSettingsActivity
+import cn.fkj233.xposed.statusbarlyric.activity.SettingsActivity
 import cn.fkj233.xposed.statusbarlyric.config.IconConfig
 import cn.fkj233.xposed.statusbarlyric.utils.ActivityOwnSP
 import cn.fkj233.xposed.statusbarlyric.utils.ActivityUtils
@@ -27,23 +25,40 @@ import cn.fkj233.xposed.statusbarlyric.view.miuiview.MIUIDialog
 import com.microsoft.appcenter.analytics.Analytics
 
 enum class DataItem {
-    Main, Menu, Custom
+    Main, Menu, Custom, Author
 }
 
 @SuppressLint("StaticFieldLeak")
 object DataHelper {
 
-    lateinit var currentActivity: NewSettingsActivity
+    lateinit var currentActivity: SettingsActivity
 
     fun getItems(thisItems: DataItem = DataItem.Main): ArrayList<Item> = when (thisItems) {
         DataItem.Menu -> loadMenuItems()
         DataItem.Custom -> loadCustomItems()
+        DataItem.Author -> loadAboutItems()
         else -> loadItems()
     }
 
     fun getTitle(dataItem: DataItem): String = when (dataItem) {
         DataItem.Custom -> currentActivity.getString(R.string.Custom)
+        DataItem.Author -> currentActivity.getString(R.string.About)
         else -> currentActivity.getString(R.string.AppName)
+    }
+
+    private fun loadAboutItems(): ArrayList<Item> {
+        val itemList = arrayListOf<Item>()
+        itemList.apply {
+            add(Item(Text(resId = R.string.Developer, isTitle = true)))
+            add(Item(author = Author("577fkj", tipsId = R.string.AboutTips1, head = currentActivity.getDrawable(R.drawable.header_577fkj)!!)))
+            add(Item(author = Author("xiaowine", tipsId = R.string.AboutTips2, head = currentActivity.getDrawable(R.drawable.header_xiaowine)!!)))
+            add(Item(Text(resId = R.string.ThkListTips, isTitle = true), line = true))
+            add(Item(Text(resId = R.string.ThkList, showArrow = true, onClickListener = { ActivityUtils.openUrl(currentActivity, "https://github.com/577fkj/StatusBarLyric/blob/Dev/doc/SPONSOR.md") })))
+            add(Item(Text(resId = R.string.Other, isTitle = true), line = true))
+            add(Item(Text(resId = R.string.PrivacyPolicy, showArrow = true, onClickListener = { ActivityUtils.openUrl(currentActivity, "https://github.com/577fkj/StatusBarLyric/blob/main/EUAL.md") })))
+            add(Item(Text(resId = R.string.Source, showArrow = true, onClickListener = { ActivityUtils.openUrl(currentActivity, "https://github.com/577fkj/StatusBarLyric") })))
+        }
+        return itemList
     }
 
     private fun loadMenuItems(): ArrayList<Item> {
@@ -296,7 +311,7 @@ object DataHelper {
             )
 
 //            隐藏时间
-            add(Item(Text(resId = R.string.HideTime), Switch("HideTime")))
+            add(Item(Text(resId = R.string.HideTime), Switch("HideTime", true)))
 //            点击切换时间和歌词
             add(Item(Text(resId = R.string.ClickLyric), Switch("LSwitch")))
 //            伪时间
@@ -318,12 +333,12 @@ object DataHelper {
                 }
             })))
 //            魅族歌词滚动样式
-            add(Item(Text(resId = R.string.MeizuStyle), Switch("LStyle")))
+            add(Item(Text(resId = R.string.MeizuStyle), Switch("LStyle", true)))
 //            仅滚动一次
             if (!ActivityOwnSP.ownSPConfig.getLyricStyle()) add(
                 Item(
                     Text(resId = R.string.lShowOnce),
-                    Switch("LShowOnce")
+                    Switch("LShowOnce", true)
                 )
             )
 //            歌词速度
@@ -388,7 +403,7 @@ object DataHelper {
             })
             )
 //            歌词自动反色
-            add(Item(Text(resId = R.string.IconAutoColors), Switch("IAutoColor")))
+            add(Item(Text(resId = R.string.IconAutoColors), Switch("IAutoColor", true)))
 //            图标设置
             add(Item(Text(resId = R.string.IconSettings, showArrow = true, onClickListener = {
                 val icons =
@@ -455,7 +470,7 @@ object DataHelper {
                     show()
                 }
             })))
-            add(Item(Text(null), null))
+            add(Item(Text(null)))
         }
         return itemList
     }
@@ -504,38 +519,15 @@ object DataHelper {
 //             总开关
             add(Item(Text(resId = R.string.AllSwitch), Switch("LService")))
 //             图标
-            add(Item(Text(resId = R.string.LyricIcon), Switch("I")))
+            add(Item(Text(resId = R.string.LyricIcon), Switch("I", true)))
 //             个性化
-            add(
-                Item(
-                    Text(
-                        resId = R.string.Custom,
-                        showArrow = true,
-                        onClickListener = { currentActivity.showFragment(DataItem.Custom) })
-                )
-            )
+            add(Item(Text(resId = R.string.Custom, showArrow = true, onClickListener = { currentActivity.showFragment(DataItem.Custom) })))
 //             高级设置分割线
             add(Item(Text(resId = R.string.AdvancedSettings, isTitle = true), line = true))
-//            扩展软件列表
-            add(
-                Item(
-                    Text(
-                        resId = R.string.UseApiList,
-                        showArrow = true,
-                        onClickListener = {
-                            currentActivity.startActivity(
-                                Intent(
-                                    currentActivity,
-                                    ApiAPPListActivity::class.java
-                                )
-                            )
-                        })
-                )
-            )
 //            防烧屏
             add(Item(Text(resId = R.string.AbScreen), Switch("AntiBurn")))
 //              使用系统反色
-            add(Item(Text(resId = R.string.UseSystemReverseColor), Switch("UseSystemReverseColor")))
+            add(Item(Text(resId = R.string.UseSystemReverseColor), Switch("UseSystemReverseColor", true)))
 //             暂停歌词自动关闭歌词
             add(Item(Text(resId = R.string.SongPauseCloseLyrics), Switch("LAutoOff")))
 //             仅锁屏显示
@@ -548,7 +540,7 @@ object DataHelper {
             add(Item(Text(resId = R.string.AutoHideCarrierName), Switch("HCuk")))
 //             其他分割线
             add(Item(Text(resId = R.string.Other, isTitle = true), line = true))
-//            自定义HOKK
+//            自定义Hook
             add(Item(Text(resId = R.string.CustomHook, showArrow = true, onClickListener = {
                 MIUIDialog(currentActivity).apply {
                     setTitle(R.string.HookSetTips)
@@ -597,34 +589,15 @@ object DataHelper {
 //            关于分割线
             add(Item(Text(resId = R.string.About, isTitle = true), line = true))
 //            检查更新
-            add(
-                Item(
-                    Text(
-                        "${currentActivity.getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})",
-                        onClickListener = {
-                            ActivityUtils.showToastOnLooper(
-                                currentActivity,
-                                currentActivity.getString(R.string.StartCheckUpdate)
-                            )
-                            ActivityUtils.checkUpdate(currentActivity)
-                        })
+            add(Item(Text("${currentActivity.getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClickListener = {
+                ActivityUtils.showToastOnLooper(
+                    currentActivity,
+                    currentActivity.getString(R.string.StartCheckUpdate)
                 )
-            )
+                ActivityUtils.checkUpdate(currentActivity)
+            })))
 //            关于模块
-            add(
-                Item(
-                    Text(
-                        resId = R.string.AboutModule,
-                        onClickListener = {
-                            currentActivity.startActivity(
-                                Intent(
-                                    currentActivity,
-                                    AboutActivity::class.java
-                                )
-                            )
-                        })
-                )
-            )
+            add(Item(Text(resId = R.string.AboutModule, onClickListener = { currentActivity.showFragment(DataItem.Author) })))
         }
         return itemList
     }

@@ -25,6 +25,11 @@ class ItemAdapter(private val itemList: List<Item>): RecyclerView.Adapter<ItemAd
 
         val spinnerSelect: TextView = view.findViewById(R.id.settings_select)
         val spinnerLayout: LinearLayout = view.findViewById(R.id.settings_select_layout)
+
+        val author: LinearLayout = view.findViewById(R.id.author)
+        val authorHead: ImageView = view.findViewById(R.id.author_head)
+        val authorName: TextView = view.findViewById(R.id.author_name)
+        val authorTips: TextView = view.findViewById(R.id.author_tips)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,7 +48,17 @@ class ItemAdapter(private val itemList: List<Item>): RecyclerView.Adapter<ItemAd
         val switchInfo = item.switch
         val seekBarInfo = item.seekBar
         val spinnerInfo = item.spinner
+        val authorInfo = item.author
         val context = holder.settingsText.context
+
+        authorInfo?.let {
+            authorInfo.name?.let { holder.authorName.text = it }
+            authorInfo.nameId?.let { holder.authorName.setText(it) }
+            authorInfo.tips?.let { holder.authorTips.text = it }
+            authorInfo.tipsId?.let { holder.authorTips.setText(it) }
+            holder.authorHead.background = authorInfo.head
+            holder.author.visibility = View.VISIBLE
+        }
 
         textInfo?.let {
             textInfo.text?.let { holder.settingsText.text = it }
@@ -65,6 +80,7 @@ class ItemAdapter(private val itemList: List<Item>): RecyclerView.Adapter<ItemAd
             switchInfo.onCheckedChangeListener?.let { holder.settingSwitch.customCheckedChangeListener = it }
             if (! switchInfo.key.isNullOrEmpty()) {
                 holder.settingSwitch.key = switchInfo.key
+                holder.settingSwitch.defValue = switchInfo.defValue
                 holder.settingSwitch.visibility = View.VISIBLE
             }
         }

@@ -3,9 +3,9 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@color/foreground"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout"
@@ -37,6 +37,54 @@
                 android:layout_marginTop="13dp"
                 android:background="@drawable/ic_right_arrow"
                 android:visibility="gone" />
+
+        <LinearLayout
+                android:id="@+id/author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:visibility="gone" >
+
+            <cn.fkj233.xposed.statusbarlyric.view.RoundCornerImageView
+                    android:id="@+id/author_head"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:roundWidth="30dp"
+                    app:roundHeight="30dp" />
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1" >
+                <TextView
+                        android:id="@+id/author_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="5dp"
+                        android:textSize="17sp"
+                        android:textColor="@color/menu"
+                        android:paddingStart="15dp"
+                        tools:ignore="RtlSymmetry"/>
+
+                <TextView
+                        android:id="@+id/author_tips"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="12sp"
+                        android:textColor="@color/author_tips"
+                        android:paddingStart="16dp"
+                        tools:ignore="RtlSymmetry"/>
+            </LinearLayout>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/ic_right_arrow" />
+
+        </LinearLayout>
 
         <LinearLayout
                 android:id="@+id/settings_select_layout"

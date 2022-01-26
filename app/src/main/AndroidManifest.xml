@@ -19,11 +19,8 @@
                 android:name="EasyGoClient"
                 android:value="true" />
 
-        <activity android:theme="@style/OldAppTheme" android:name=".activity.AboutActivity"/>
-        <activity android:theme="@style/OldAppTheme" android:name=".activity.ApiAPPListActivity"/>
-        <activity android:theme="@style/OldAppTheme" android:name=".activity.SettingsActivity"/>
         <activity
-                android:name=".activity.NewSettingsActivity"
+                android:name=".activity.SettingsActivity"
                 android:exported="true"
                 android:screenOrientation="portrait"
                 tools:ignore="LockedOrientationActivity">
@@ -41,7 +38,7 @@
                 android:name=".launcher"
                 android:enabled="true"
                 android:exported="true"
-                android:targetActivity=".activity.NewSettingsActivity">
+                android:targetActivity=".activity.SettingsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

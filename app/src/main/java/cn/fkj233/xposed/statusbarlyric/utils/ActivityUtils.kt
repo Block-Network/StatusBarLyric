@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import cn.fkj233.xposed.statusbarlyric.BuildConfig
 import cn.fkj233.xposed.statusbarlyric.R
 import cn.fkj233.xposed.statusbarlyric.config.Config
@@ -126,6 +127,10 @@ object ActivityUtils {
 
     fun dp2px(dpValue: Float): Int {
         return (0.5f + dpValue * Resources.getSystem().displayMetrics.density).toInt()
+    }
+
+    fun openUrl(context: Context, url: String) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
     fun getNotice(activity: Activity) {

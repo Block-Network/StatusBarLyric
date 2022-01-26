@@ -10,9 +10,10 @@ class SettingsSwitch(context: Context, attributeSet: AttributeSet): Switch(conte
     private val editor by lazy { ActivityOwnSP.ownSP.edit() }
     var customCheckedChangeListener: OnCheckedChangeListener? = null
 
+    var defValue = false
     var key = ""
         set(value) {
-            isChecked = ActivityOwnSP.ownSP.getBoolean(value, false)
+            isChecked = ActivityOwnSP.ownSP.getBoolean(value, defValue)
             setOnCheckedChangeListener { a, b ->
                 customCheckedChangeListener?.onCheckedChanged(a, b)
                 editor.putBoolean(value, b)

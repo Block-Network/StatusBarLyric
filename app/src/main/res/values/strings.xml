@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="UseInfo">Instructions for use</string>
-    <string name="ClickDetails">Click for details</string>
     <string name="HideDeskIcon">Hide desktop icons</string>
     <string name="BaseSetting">Basic Settings</string>
     <string name="AllSwitch">Master switch</string>
@@ -17,59 +16,31 @@
     <string name="AdvancedSettings">Advanced settings (change options after stopping music)</string>
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
     <string name="AbScreen">* Anti-burn screen</string>
-    <string name="IconPath">Icon path</string>
     <string name="IconHigh">Icon up and down position</string>
     <string name="LyricPos">* Lyrics left and right position
     </string>
     <string name="Default">Default</string>
     <string name="IconAutoColors">The icon auto inverted colors</string>
     <string name="UnlockShow">Unlock display only</string>
-    <string name="UnlockShowTips">Lyrics are not displayed on the lock screen and the rest screen</string>
-    <string name="HideNotiIcon">Hide notification icon</string>
     <string name="AutoHideNotiIcon">Auto hide notification icons</string>
-    <string name="AutoHideNetWork">Auto hide network speed</string>
     <string name="HideNetWork">Hide network speed</string>
-    <string name="HideCarrierName">Hide lock screen carrier name</string>
     <string name="AutoHideCarrierName">Auto hide lock screen carrier name</string>
-    <string name="OtherSettings">Other settings</string>
     <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
     <string name="DebugMode">Debug Mode</string>
-    <string name="ReStartSystemUITips">After LSPosed is activated, the SystemUI needs to be restarted to take effect
-    </string>
     <string name="ReStartSystemUI">Restart SystemUI</string>
     <string name="ResetModule">Reset module</string>
-    <string name="ResetModuleTips">If there are some inexplicable problems, please click here</string>
     <string name="About">About</string>
     <string name="CheckUpdate">Check update</string>
     <string name="AboutModule">About the module</string>
     <string name="Developer">Developer</string>
-    <string name="AboutTips1">Mainly responsible for Hook</string>
+    <string name="AboutTips1">Mainly responsible for Hook and UI</string>
     <string name="AboutTips2">Mainly responsible for the UI</string>
     <string name="ThkListTips">Thank you list (in no particular order)</string>
     <string name="ThkList">Thank you list</string>
-    <string name="ClickThkList">Click to view the list of thanks</string>
     <string name="Other">Other</string>
-    <string name="Donate">Donation module</string>
-    <string name="DonateTips">If you find it easy to use, please support me</string>
-    <string name="Coolapk">CoolApk Link</string>
-    <string name="ContactUs">contact us</string>
     <string name="Source">Project Address</string>
-    <string name="ThkListUrl">
-        https://github.com/577fkj/StatusBarLyric/blob/main/README_EN.md#thanks-listin-no-particular-order
-    </string>
     <string name="Tips">Tips</string>
-    <string name="Quit">quit</string>
     <string name="ReStart">Restart APP</string>
-    <string name="TipsIDone">I already know</string>
-    <string name="AppTips">Please read this one-time warning carefully! \n\n
-        Sorry to take your time. \n\n
-
-        This xposed module will collect the following information, [ program error information, mobile phone model,
-        mobile phone version ]\n\n
-
-        If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to Github
-        Telegram for feedback.
-    </string>
     <string name="VerExplanation">Version explanation</string>
     <string name="Done">Done</string>
     <string name="CurrentVer">current version</string>
@@ -91,7 +62,6 @@
     <string name="XposedTips">If the lyrics cannot be displayed, please try to stop the music software and restart the
         SystemUI\n or check the instructions for use. Are you using the correct version?
     </string>
-    <string name="InitError">Initialization failed, please restart the software</string>
     <string name="NewVer">New version found</string>
     <string name="Update">Update</string>
     <string name="GetNewVerError">Failed to get the latest version download address:</string>
@@ -104,25 +74,13 @@
     <string name="left">Swipe left</string>
     <string name="right">Swipe right</string>
     <string name="random">random</string>
-    <string name="LyricMaxWidthTips">(-1~100, -1 is off, only takes effect when the lyrics width is adaptive),
-        currently:
-    </string>
-    <string name="RangeError">Range input error, restore default</string>
-    <string name="LyricWidthTips">(-1~100, -1 is adaptive), currently:</string>
     <string name="LyricColorTips">Please enter the hexadecimal color code, for example: #C0C0C0</string>
     <string name="LyricColorError">The color code is incorrect!</string>
-    <string name="DefaultPath">Default path</string>
-    <string name="RestoreDefaultPath">Restore default path</string>
-    <string name="NewPath">Choose a new path</string>
     <string name="LyricPosTips">-900~900(Unit:pixel), currently:</string>
     <string name="LyricHighTips">-100~100(Unit:pixel), currently:</string>
-    <string name="On">ON</string>
-    <string name="Reset">Reset defula</string>
-    <string name="ResetHookTips">The default hook has been restored, please restart SystemUI</string>
     <string name="Ok">Sure</string>
     <string name="HookSetTips">Hook has been set to:\n</string>
     <string name="RestartSystemUI">Please restart SystemUI</string>
-    <string name="CustomHookTips">Custom Hook</string>
     <string name="RestartUI">Are you sure to restart the system interface?</string>
     <string name="RestartUITips">If you suddenly find that you cannot use it during use, you can try to restart the
         SystemUI.
@@ -130,7 +88,6 @@
     <string name="ResetModuleDialog">Do you want to reset the module</string>
     <string name="ResetModuleDialogTips">The module is OK, please don\'t reset it at will</string>
     <string name="StartCheckUpdate">Start checking for updates</string>
-    <string name="YouNotMIUI">(Not necessarily supported)</string>
     <string name="MeizuStyle">* Meizu lyrics scroll style</string>
     <string name="lShowOnce">* Lyrics only scroll once</string>
     <string name="WarnExplanation">Module Considerations</string>
@@ -150,17 +107,13 @@
     <string name="NotSupport">This module is not activated, please activate this module in Lsposed\nThis module only
         supports the latest version of Lsposed
     </string>
-    <string name="UseApiTips">Software using API (The software that needs to be checked in LSPosed)</string>
-    <string name="UseApiList">Extended software list</string>
     <string name="PrivacyPolicy">Privacy Policy</string>
     <string name="UseSystemReverseColor">* Reverse color using system mode</string>
-    <string name="UseSystemReverseColorTips">If the color reversal is abnormal, please close it</string>
     <string name="HookSure">Hook SystemUI</string>
     <string name="HookSureSuccess">Hook SystemUI Success</string>
     <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged
         SystemUI
     </string>
-    <string name="LyricSettings">Lyrics settings</string>
     <string name="IconSettings">Icon settings</string>
     <string name="NewNotice">NewNotice</string>
     <string name="GetNewNoticeError">Get NewNotice Error</string>
@@ -177,13 +130,9 @@
     <string name="TestDialogTips">This function is embedded in the system UI and may cause the system UI to crash and
         restart!
     </string>
-    <string name="TestTips">Functional testing</string>
     <string name="Start">Start</string>
     <string name="Back">Back</string>
     <string name="pseudoTime">Pseudo Time</string>
-    <string name="PseudoTimeTips">Add the time before the lyrics, the time is the time when the lyrics were originally
-        displayed
-    </string>
     <string name="pseudoTimeStyle">Pseudo time format/Custom text</string>
     <string name="pseudoTimeStyleTips">yyyy: year\n
         MM: month\n

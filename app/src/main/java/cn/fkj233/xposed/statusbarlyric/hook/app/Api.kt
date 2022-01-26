@@ -3,18 +3,19 @@ package cn.fkj233.xposed.statusbarlyric.hook.app
 import android.app.AndroidAppHelper
 import android.content.Context
 import android.content.Intent
+import cn.fkj233.xposed.statusbarlyric.utils.LogUtils
+import cn.fkj233.xposed.statusbarlyric.utils.Utils
+import cn.fkj233.xposed.statusbarlyric.utils.ktx.findClassOrNull
+import cn.fkj233.xposed.statusbarlyric.utils.ktx.hookAfterMethod
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
-import cn.fkj233.xposed.statusbarlyric.utils.LogUtils
-import cn.fkj233.xposed.statusbarlyric.utils.Utils
-import cn.fkj233.xposed.statusbarlyric.utils.ktx.hookAfterMethod
 
 
 class Api(private val lpparam: XC_LoadPackage.LoadPackageParam) {
-    fun hook(lpparam: LoadPackageParam) {
+    fun hook() {
+        if ("StatusBarLyric.API.StatusBarLyric".findClassOrNull(lpparam.classLoader) == null) return
         "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("hasEnable", classLoader = lpparam.classLoader) {
             it.result = true
         }

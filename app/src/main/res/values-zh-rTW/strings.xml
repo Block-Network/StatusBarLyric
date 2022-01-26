@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="UseInfo">使用說明</string>
-    <string name="ClickDetails">點擊查看詳情</string>
     <string name="HideDeskIcon">隱藏桌面圖標</string>
     <string name="BaseSetting">基礎設置</string>
     <string name="AllSwitch">總開關</string>
@@ -17,54 +16,29 @@
     <string name="AdvancedSettings">高級設置 (停止音樂後改動選項)</string>
     <string name="ClickLyric">* 點擊歌詞切換時鐘和歌詞</string>
     <string name="AbScreen">防燒屏</string>
-    <string name="IconPath">圖標路徑</string>
     <string name="IconHigh">* 圖標上下位置</string>
     <string name="Default">默认</string>
     <string name="IconAutoColors">圖標自動反色</string>
     <string name="UnlockShow">僅解鎖顯示</string>
-    <string name="UnlockShowTips">鎖屏和息屏不顯示歌詞</string>
-    <string name="HideNotiIcon">隱藏通知圖標</string>
     <string name="AutoHideNotiIcon">自動隱藏通知圖標</string>
-    <string name="AutoHideNetWork">自动隐藏实时网速</string>
     <string name="HideNetWork">隱藏實時網速</string>
-    <string name="HideCarrierName">隱藏鎖屏運營商名稱</string>
     <string name="AutoHideCarrierName">自動隱藏鎖屏運營商名稱</string>
-    <string name="OtherSettings">其他設置</string>
     <string name="CustomHook">* 自定義Hook點 (不懂勿動)</string>
     <string name="DebugMode">Debug 模式</string>
-    <string name="ReStartSystemUITips">LSPosed 激活後需重啟系統界面生效</string>
     <string name="ReStartSystemUI">重啟 SystemUI</string>
     <string name="ResetModule">重置模塊</string>
-    <string name="ResetModuleTips">如果出現某些莫名其妙的問題請點擊此處</string>
     <string name="About">關於</string>
     <string name="CheckUpdate">檢查更新</string>
     <string name="AboutModule">關於模塊</string>
     <string name="Developer">開發者</string>
-    <string name="AboutTips1">主要負責 Hook</string>
+    <string name="AboutTips1">主要負責 Hook 和 界面</string>
     <string name="AboutTips2">主要負責 界面</string>
     <string name="ThkListTips">感謝名單（不分先後）</string>
     <string name="ThkList">感謝名單</string>
-    <string name="ClickThkList">點擊查看感謝名單</string>
     <string name="Other">其它</string>
-    <string name="Donate">捐贈模塊</string>
-    <string name="DonateTips">覺得好用的話，支持一下唄</string>
-    <string name="Coolapk">酷安鏈接</string>
-    <string name="ContactUs">聯系我們</string>
     <string name="Source">項目地址</string>
-    <string name="ThkListUrl">
-        https://github.com/577fkj/StatusBarLyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95%E4%B8%8D%E5%88%86%E5%85%88%E5%90%8E
-    </string>
     <string name="Tips">提示</string>
-    <string name="Quit">退出</string>
     <string name="ReStart">重啓APP</string>
-    <string name="TipsIDone">我已知曉</string>
-    <string name="AppTips">請認真閱讀此一次性警告！ \n\n
-        很抱歉花費您的時間。 \n\n
-
-        本模塊會收集以下資訊, [ 程式的錯誤資訊, 手機型號, 手機版本 ]\n\n
-
-        模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋。
-    </string>
     <string name="VerExplanation">版本說明</string>
     <string name="Done">關閉</string>
     <string name="CurrentVer">當前版本</string>
@@ -84,7 +58,6 @@
     <string name="AppName">墨•狀態欄歌詞</string>
     <string name="QuickTitle">狀態欄歌詞</string>
     <string name="XposedTips">如果無法顯示歌詞，請嘗試停止音樂軟件並重啟系統界面\n或查看 使用說明 自己是否使用正確版本</string>
-    <string name="InitError">初始化失敗，請重啟軟件</string>
     <string name="NewVer">發現新版本</string>
     <string name="Update">更新</string>
     <string name="GetNewVerError">"獲取最新版下載地址失敗: "</string>
@@ -97,29 +70,18 @@
     <string name="left">左滑</string>
     <string name="right">右滑</string>
     <string name="random">隨機</string>
-    <string name="LyricMaxWidthTips">(-1~100，-1為關閉，僅在歌詞寬度為自適應時生效)，當前:</string>
-    <string name="RangeError">範圍輸入錯誤，恢復默認</string>
-    <string name="LyricWidthTips">(-1~100，-1為自適應)，當前：</string>
     <string name="LyricColorTips">請輸入16進製顏色代碼，例如: #C0C0C0</string>
     <string name="LyricColorError">顏色代碼不正確!</string>
-    <string name="DefaultPath">默認路徑</string>
-    <string name="RestoreDefaultPath">恢復默認路徑</string>
-    <string name="NewPath">選擇新路徑</string>
     <string name="LyricPosTips">-900~900（單位：像素點），當前:</string>
     <string name="LyricHighTips">-100~100（單位：像素點），當前：</string>
-    <string name="On">開啟</string>
-    <string name="Reset">恢復默認</string>
-    <string name="ResetHookTips">已恢復默認Hook,請重啟SystemUI</string>
     <string name="Ok">確定</string>
     <string name="HookSetTips">已設置Hook為:\n</string>
     <string name="RestartSystemUI">請重啟SystemUI</string>
-    <string name="CustomHookTips">自定義Hook</string>
     <string name="RestartUI">確定重啟系統界面嗎？</string>
     <string name="RestartUITips">若使用中突然發現不能使用，可嘗試重啟系統界面。</string>
     <string name="ResetModuleDialog">是否要重置模塊</string>
     <string name="ResetModuleDialogTips">模塊沒問題請不要隨意重置</string>
     <string name="StartCheckUpdate">開始檢查是否有更新</string>
-    <string name="YouNotMIUI">（不一定支持）</string>
     <string name="MeizuStyle">* 魅族歌詞滾動樣式</string>
     <string name="lShowOnce">* 歌詞只滾動一次</string>
     <string name="WarnExplanation">模塊注意事項</string>
@@ -135,15 +97,11 @@
         模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋
     </string>
     <string name="NotSupport">本模塊未激活，請在Lsposed激活本模塊\n本模塊僅支持最新版Lsposed</string>
-    <string name="UseApiTips">使用 API 的軟件 (需要在LSPosed勾選開啟的軟件)</string>
-    <string name="UseApiList">擴展軟件列表</string>
     <string name="PrivacyPolicy">隱私政策</string>
     <string name="UseSystemReverseColor">* 使用系統方式反色</string>
-    <string name="UseSystemReverseColorTips">若反色異常請關閉</string>
     <string name="HookSure">Hook 系統界面</string>
     <string name="HookSureSuccess">Hook 系统界面成功</string>
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
-    <string name="LyricSettings">歌詞設置</string>
     <string name="IconSettings">圖標設置</string>
     <string name="LyricPos">* 歌詞左右位置</string>
     <string name="NewNotice">新通知</string>
@@ -159,11 +117,9 @@
     <string name="IconError">圖標輸入錯誤</string>
     <string name="Test">測試</string>
     <string name="TestDialogTips">這個功能是內嵌在SystemUI裏的，可能會導致SystemUI崩潰重啓！</string>
-    <string name="TestTips">功能測試</string>
     <string name="Back">返回</string>
     <string name="Start">啓動</string>
     <string name="pseudoTime">偽時間</string>
-    <string name="PseudoTimeTips">在歌詞前加上時間，時間為歌詞最初顯示時時間</string>
     <string name="pseudoTimeStyle">偽時間格式/自定義文字</string>
     <string name="pseudoTimeStyleTips">yyyy：年\n
         MM：月\n
