@@ -20,6 +20,7 @@ import cn.fkj233.xposed.statusbarlyric.BuildConfig
 import cn.fkj233.xposed.statusbarlyric.R
 import cn.fkj233.xposed.statusbarlyric.activity.AboutActivity
 import cn.fkj233.xposed.statusbarlyric.activity.ApiAPPListActivity
+import cn.fkj233.xposed.statusbarlyric.activity.NewSettingsActivity
 import cn.fkj233.xposed.statusbarlyric.config.IconConfig
 import cn.fkj233.xposed.statusbarlyric.utils.ActivityOwnSP
 import cn.fkj233.xposed.statusbarlyric.utils.ActivityUtils
@@ -40,16 +41,13 @@ object DataHelper {
     fun setItems(string: String, goto: Boolean) {
         backView?.setImageResource(if (string != main) R.drawable.abc_ic_ab_back_material else R.drawable.abc_ic_menu_overflow_material)
         thisItems = string
-//        currentActivity.recreate()
 
-        val intent = currentActivity.intent
-        currentActivity.finish()
         if (goto) {
             currentActivity.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left)
         } else {
             currentActivity.overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right)
         }
-        currentActivity.startActivity(intent)
+        currentActivity.startActivity(Intent(currentActivity, NewSettingsActivity::class.java))
 
     }
 
