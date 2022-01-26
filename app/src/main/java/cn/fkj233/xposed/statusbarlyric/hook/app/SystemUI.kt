@@ -564,47 +564,45 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     fun hook() {
         // 使用系统方法反色
         LogUtils.e("使用系统反色: " + config.getUseSystemReverseColor().toString())
-        config.getUseSystemReverseColor().let {
-            if (it) {
-                try {
-                    val darkIconDispatcher =
-                        "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
-                    if (darkIconDispatcher != null) {
-                        var exactMethod: Method? = null
-                        val methods: Array<Method> = darkIconDispatcher.declaredMethods
-                        for (method in methods) {
-                            if (method.name.equals("getTint")) {
-                                exactMethod = method
-                                break
-                            }
+        if (config.getUseSystemReverseColor()) {
+            try {
+                val darkIconDispatcher =
+                    "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
+                if (darkIconDispatcher != null) {
+                    var exactMethod: Method? = null
+                    val methods: Array<Method> = darkIconDispatcher.declaredMethods
+                    for (method in methods) {
+                        if (method.name.equals("getTint")) {
+                            exactMethod = method
+                            break
                         }
-                        if (exactMethod != null) {
-                            exactMethod.hookMethod(object : XC_MethodHook() {
-                                override fun afterHookedMethod(param: MethodHookParam) {
-                                    try {
-                                        super.afterHookedMethod(param)
-                                        val areaTint = param.args[2] as Int
-                                        if (config.getLyricColor() == "" && !iconReverseColor) {
-                                            val color = ColorStateList.valueOf(areaTint)
-                                            iconView.imageTintList = color
-                                        }
-                                        lyricTextView.setTextColor(areaTint)
-                                    } catch (_: UninitializedPropertyAccessException) {
-                                    }
-                                }
-                            })
-                            LogUtils.e("查找反色方法成功!")
-                        } else {
-                            LogUtils.e("查找反色方法失败!")
-                        }
-                    } else {
-                        LogUtils.e("系统方法反色获取失败")
                     }
-                } catch (e: Exception) {
-                    LogUtils.e("系统反色出现错误: " + Utils.dumpException(e))
-                } catch (e: Error) {
-                    LogUtils.e("系统反色出现错误: " + e.message)
+                    if (exactMethod != null) {
+                        exactMethod.hookMethod(object : XC_MethodHook() {
+                            override fun afterHookedMethod(param: MethodHookParam) {
+                                try {
+                                    super.afterHookedMethod(param)
+                                    val areaTint = param.args[2] as Int
+                                    if (config.getLyricColor() == "" && !iconReverseColor) {
+                                        val color = ColorStateList.valueOf(areaTint)
+                                        iconView?.imageTintList = color
+                                    }
+                                    lyricTextView?.setTextColor(areaTint)
+                                } catch (_: UninitializedPropertyAccessException) {
+                                }
+                            }
+                        })
+                        LogUtils.e("查找反色方法成功!")
+                    } else {
+                        LogUtils.e("查找反色方法失败!")
+                    }
+                } else {
+                    LogUtils.e("系统方法反色获取失败")
                 }
+            } catch (e: Exception) {
+                LogUtils.e("系统反色出现错误: " + Utils.dumpException(e))
+            } catch (e: Error) {
+                LogUtils.e("系统反色出现错误: " + e.message)
             }
         }
 
