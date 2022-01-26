@@ -54,7 +54,6 @@ class NewSettingsActivity : Activity() {
                     val intent = packageManager.getLaunchIntentForPackage(packageName)
                     intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(intent)
-
                     exitProcess(0)
                 }
                 setCancelable(false)

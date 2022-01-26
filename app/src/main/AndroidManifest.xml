@@ -17,6 +17,7 @@
 
         <activity android:theme="@style/OldAppTheme" android:name=".activity.AboutActivity"/>
         <activity android:theme="@style/OldAppTheme" android:name=".activity.ApiAPPListActivity"/>
+        <activity android:theme="@style/OldAppTheme" android:name=".activity.SettingsActivity"/>
         <activity
                 android:name=".activity.NewSettingsActivity"
                 android:exported="true"
@@ -29,18 +30,6 @@
 
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS"/>
-            </intent-filter>
-        </activity>
-
-        <activity
-                android:name=".activity.SettingsActivity"
-                android:theme="@style/OldAppTheme"
-                android:label="旧Activity"
-                android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 

@@ -179,4 +179,5 @@
         當前格式：</string>
     <string name="Custom">自定義</string>
     <string name="InputCustomHook">自定義Hook點，空關閉</string>
+    <string name="HideTime">隱藏時間</string>
 </resources>

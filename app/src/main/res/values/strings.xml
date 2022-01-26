@@ -199,4 +199,5 @@
         Current format:</string>
     <string name="Custom">Custom</string>
     <string name="InputCustomHook">Input custom hook, Input empty of off</string>
+    <string name="HideTime">Hide Time</string>
 </resources>

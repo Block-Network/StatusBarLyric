@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package miui.statusbar.lyric.view.data
 
 import android.annotation.SuppressLint
@@ -10,7 +12,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -42,7 +43,6 @@ object DataHelper {
 //        currentActivity.recreate()
 
         val intent = currentActivity.intent
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         currentActivity.finish()
         if (goto) {
             currentActivity.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left)
@@ -65,6 +65,26 @@ object DataHelper {
     private fun loadMenuItems(): ArrayList<Item> {
         val itemList = arrayListOf<Item>()
         itemList.apply {
+//            隐藏桌面图标
+            add(
+                Item(
+                    Text(resId = R.string.HideDeskIcon),
+                    Switch("hLauncherIcon", onCheckedChangeListener = { _, newValue -> // 隐藏桌面图标
+                        val packageManager: PackageManager = currentActivity.packageManager
+                        val mode: Int = if (newValue) {
+                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                        } else {
+                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                        }
+                        packageManager.setComponentEnabledSetting(
+                            ComponentName(currentActivity, "miui.statusbar.lyric.launcher"),
+                            mode,
+                            PackageManager.DONT_KILL_APP
+                        )
+                    })
+                )
+            )
+//            重置模块
             add(Item(Text(resId = R.string.ResetModule, showArrow = true, onClickListener = {
                 MIUIDialog(currentActivity).apply {
                     setTitle(R.string.ResetModuleDialog)
@@ -79,7 +99,25 @@ object DataHelper {
                     show()
                 }
             })))
+//            重启系统界面
+            add(Item(Text(resId = R.string.ReStartSystemUI, onClickListener = { // 重启SystemUI
+                MIUIDialog(currentActivity).apply {
+                    setTitle(R.string.RestartUI)
+                    setMessage(R.string.RestartUITips)
+                    setButton(R.string.Ok) {
+                        ShellUtils.voidShell("pkill -f com.android.systemui", true)
+                        Analytics.trackEvent("重启SystemUI")
+                        dismiss()
+                    }
+                    setCancelButton(R.string.Cancel) {
+                        dismiss()
+                    }
+                    show()
+                }
+            }), null))
+//            分割线
             add(Item(Text("Module Version", isTitle = true), null, line = true))
+//            模块版本
             add(Item(Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}"), null))
         }
         return itemList
@@ -90,6 +128,7 @@ object DataHelper {
         currentActivity.findViewById<TextView>(R.id.Title).setText(R.string.Custom)
         val itemList = arrayListOf<Item>()
         itemList.apply {
+//            歌词大小
             if (!ActivityOwnSP.ownSPConfig.getUseSystemReverseColor()) {
                 add(Item(Text(resId = R.string.LyricColor, showArrow = true, onClickListener = {
                     MIUIDialog(currentActivity).apply {
@@ -118,22 +157,25 @@ object DataHelper {
                     }
                 })))
             }
-            add(Item(Text(
-                "${currentActivity.getString(R.string.LyricSize)} (${
-                    if (ActivityOwnSP.ownSPConfig.getLyricSize() != 0) ActivityOwnSP.ownSPConfig.getLyricSize() else currentActivity.getString(
-                        R.string.Adaptive
-                    )
-                })"
-            ), seekBar = SeekBar(0, 100, ActivityOwnSP.ownSPConfig.getLyricSize()) { pos, text ->
-                ActivityOwnSP.ownSPConfig.setLyricSize(pos)
-                if (pos == 0) {
-                    text.text = "${currentActivity.getString(R.string.LyricSize)} (${
-                        currentActivity.getString(R.string.Adaptive)
+            add(
+                Item(Text(
+                    "${currentActivity.getString(R.string.LyricSize)} (${
+                        if (ActivityOwnSP.ownSPConfig.getLyricSize() != 0) ActivityOwnSP.ownSPConfig.getLyricSize() else currentActivity.getString(
+                            R.string.Adaptive
+                        )
                     })"
-                } else {
-                    text.text = "${currentActivity.getString(R.string.LyricSize)} (${pos})"
-                }
-            }))
+                ), seekBar = SeekBar(0, 100, ActivityOwnSP.ownSPConfig.getLyricSize()) { pos, text ->
+                    ActivityOwnSP.ownSPConfig.setLyricSize(pos)
+                    if (pos == 0) {
+                        text.text = "${currentActivity.getString(R.string.LyricSize)} (${
+                            currentActivity.getString(R.string.Adaptive)
+                        })"
+                    } else {
+                        text.text = "${currentActivity.getString(R.string.LyricSize)} (${pos})"
+                    }
+                })
+            )
+//            歌词宽度
             add(
                 Item(
                     Text(
@@ -152,6 +194,8 @@ object DataHelper {
                         }
                     })
             )
+
+//            歌词左右位置
             if (ActivityOwnSP.ownSPConfig.getLyricWidth() == -1) {
                 add(
                     Item(Text(
@@ -202,6 +246,7 @@ object DataHelper {
                     }
                 })
             )
+//          歌词高度
             add(Item(Text(
                 "${currentActivity.getString(R.string.LyricHigh)} (${
                     if (ActivityOwnSP.ownSPConfig.getLyricPosition() != 0) ActivityOwnSP.ownSPConfig.getLyricPosition() else currentActivity.getString(
@@ -229,10 +274,16 @@ object DataHelper {
                 } else {
                     text.text = "${currentActivity.getString(R.string.LyricHigh)} (${pos})"
                 }
-            }))
+            })
+            )
+//            歌词动效
             val anim = arrayListOf(
-                currentActivity.getString(R.string.Off), currentActivity.getString(R.string.top), currentActivity.getString(R.string.lower),
-                currentActivity.getString(R.string.left), currentActivity.getString(R.string.right), currentActivity.getString(R.string.random)
+                currentActivity.getString(R.string.Off),
+                currentActivity.getString(R.string.top),
+                currentActivity.getString(R.string.lower),
+                currentActivity.getString(R.string.left),
+                currentActivity.getString(R.string.right),
+                currentActivity.getString(R.string.random)
             )
             val dict: HashMap<String, String> = hashMapOf()
             dict["off"] = currentActivity.getString(R.string.Off)
@@ -248,12 +299,51 @@ object DataHelper {
             dict[currentActivity.getString(R.string.right)] = "right"
             dict[currentActivity.getString(R.string.random)] = "random"
             dict[""] = "off"
-            add(Item(Text(resId = R.string.LyricsAnimation), spinner = Spinner(anim, select = dict[ActivityOwnSP.ownSPConfig.getAnim()]!!, context = currentActivity, callBacks = {
-                ActivityOwnSP.ownSPConfig.setAnim(dict[it]!!)
-            })))
+            add(
+                Item(
+                    Text(resId = R.string.LyricsAnimation),
+                    spinner = Spinner(
+                        anim,
+                        select = dict[ActivityOwnSP.ownSPConfig.getAnim()]!!,
+                        context = currentActivity,
+                        callBacks = {
+                            ActivityOwnSP.ownSPConfig.setAnim(dict[it]!!)
+                        })
+                )
+            )
+
+//            隐藏时间
+            add(Item(Text(resId = R.string.HideTime), Switch("HideTime")))
+//            点击切换时间和歌词
             add(Item(Text(resId = R.string.ClickLyric), Switch("LSwitch")))
+//            伪时间
+            add(Item(Text(resId = R.string.pseudoTime), Switch("PseudoTime")))
+//            伪时间格式
+            add(Item(Text(resId = R.string.pseudoTimeStyle, showArrow = true, onClickListener = {
+                MIUIDialog(currentActivity).apply {
+                    setTitle(R.string.pseudoTimeStyleTips)
+                    setEditText(
+                        ActivityOwnSP.ownSPConfig.getPseudoTimeStyle(),
+                        ""
+                    )
+                    setButton(R.string.Ok) {
+                        ActivityOwnSP.ownSPConfig.setPseudoTimeStyle(getEditText())
+                        dismiss()
+                    }
+                    setCancelButton(R.string.Cancel) { dismiss() }
+                    show()
+                }
+            })))
+//            魅族歌词滚动样式
             add(Item(Text(resId = R.string.MeizuStyle), Switch("LStyle")))
-            if (!ActivityOwnSP.ownSPConfig.getLyricStyle()) add(Item(Text(resId = R.string.lShowOnce), Switch("LShowOnce")))
+//            仅滚动一次
+            if (!ActivityOwnSP.ownSPConfig.getLyricStyle()) add(
+                Item(
+                    Text(resId = R.string.lShowOnce),
+                    Switch("LShowOnce")
+                )
+            )
+//            歌词速度
             if (ActivityOwnSP.ownSPConfig.getLyricStyle()) {
                 add(Item(Text(resId = R.string.LyricSpeed, showArrow = true, onClickListener = {
                     MIUIDialog(currentActivity).apply {
@@ -272,23 +362,31 @@ object DataHelper {
                     }
                 })))
             }
+//            图标分割线
             add(Item(Text(resId = R.string.IconSettings, isTitle = true), line = true))
-            add(Item(Text("${currentActivity.getString(R.string.IconSize)} (${
-                if (ActivityOwnSP.ownSPConfig.getIconSize() != 0) ActivityOwnSP.ownSPConfig.getIconSize() else currentActivity.getString(
-                    R.string.Adaptive
-                )
-            })"), seekBar = SeekBar(0, 100, ActivityOwnSP.ownSPConfig.getIconSize()) { pos, text ->
-                ActivityOwnSP.ownSPConfig.setIconSize(pos)
-                if (pos == 0) {
-                    text.text = "${currentActivity.getString(R.string.LyricHigh)} (${
-                        currentActivity.getString(R.string.Adaptive)
+//            歌词大小
+            add(
+                Item(Text(
+                    "${currentActivity.getString(R.string.IconSize)} (${
+                        if (ActivityOwnSP.ownSPConfig.getIconSize() != 0) ActivityOwnSP.ownSPConfig.getIconSize() else currentActivity.getString(
+                            R.string.Adaptive
+                        )
                     })"
-                } else {
-                    text.text = "${currentActivity.getString(R.string.LyricHigh)} (${pos})"
-                }
-            }))
+                ), seekBar = SeekBar(0, 100, ActivityOwnSP.ownSPConfig.getIconSize()) { pos, text ->
+                    ActivityOwnSP.ownSPConfig.setIconSize(pos)
+                    if (pos == 0) {
+                        text.text = "${currentActivity.getString(R.string.LyricHigh)} (${
+                            currentActivity.getString(R.string.Adaptive)
+                        })"
+                    } else {
+                        text.text = "${currentActivity.getString(R.string.LyricHigh)} (${pos})"
+                    }
+                })
+            )
+//            歌词上下位置
             add(Item(Text(
-                "${currentActivity.getString(R.string.IconHigh)} (${ActivityOwnSP.ownSPConfig.getIconHigh()})", onClickListener = {
+                "${currentActivity.getString(R.string.IconHigh)} (${ActivityOwnSP.ownSPConfig.getIconHigh()})",
+                onClickListener = {
                     MIUIDialog(currentActivity).apply {
                         setTitle(R.string.IconHigh)
                         setMessage(R.string.LyricSizeTips)
@@ -304,8 +402,11 @@ object DataHelper {
             ), seekBar = SeekBar(-100, 100, ActivityOwnSP.ownSPConfig.getIconHigh()) { pos, text ->
                 ActivityOwnSP.ownSPConfig.setIconHigh(pos)
                 text.text = "${currentActivity.getString(R.string.IconHigh)} (${pos})"
-            }))
+            })
+            )
+//            歌词自动反色
             add(Item(Text(resId = R.string.IconAutoColors), Switch("IAutoColor")))
+//            图标设置
             add(Item(Text(resId = R.string.IconSettings, showArrow = true, onClickListener = {
                 val icons =
                     arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")
@@ -328,10 +429,16 @@ object DataHelper {
                                             BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
                                         iconConfig.setIcon(iconName, editText.text.toString())
                                     } catch (ignore: Exception) {
-                                        ActivityUtils.showToastOnLooper(currentActivity, currentActivity.getString(R.string.IconError))
+                                        ActivityUtils.showToastOnLooper(
+                                            currentActivity,
+                                            currentActivity.getString(R.string.IconError)
+                                        )
                                     }
                                 } else {
-                                    ActivityUtils.showToastOnLooper(currentActivity, currentActivity.getString(R.string.IconError))
+                                    ActivityUtils.showToastOnLooper(
+                                        currentActivity,
+                                        currentActivity.getString(R.string.IconError)
+                                    )
                                 }
                             }
                             setNegativeButton(R.string.Cancel, null)
@@ -349,7 +456,10 @@ object DataHelper {
                                 try {
                                     currentActivity.startActivity(intent)
                                 } catch (ignore: Exception) {
-                                    ActivityUtils.showToastOnLooper(currentActivity, currentActivity.getString(R.string.MakeIconError))
+                                    ActivityUtils.showToastOnLooper(
+                                        currentActivity,
+                                        currentActivity.getString(R.string.MakeIconError)
+                                    )
                                 }
                             }
                             show()
@@ -362,6 +472,7 @@ object DataHelper {
                     show()
                 }
             })))
+            add(Item(Text(null), null))
         }
         return itemList
     }
@@ -369,6 +480,7 @@ object DataHelper {
     private fun loadItems(): ArrayList<Item> {
         val itemList = arrayListOf<Item>()
         itemList.apply {
+//            使用说明
             add(Item(Text(resId = R.string.UseInfo, showArrow = true, onClickListener = { // 使用说明
                 MIUIDialog(currentActivity).apply {
                     setTitle(R.string.VerExplanation)
@@ -386,6 +498,7 @@ object DataHelper {
                     show()
                 }
             })))
+//            模块注意事项
             add(Item(Text(resId = R.string.WarnExplanation, showArrow = true, onClickListener = { // 模块注意事项
                 MIUIDialog(currentActivity).apply {
                     setTitle(R.string.WarnExplanation)
@@ -403,9 +516,13 @@ object DataHelper {
                     show()
                 }
             })))
-            add(Item(Text(resId = R.string.BaseSetting, isTitle = true), line = true)) // 基础设置分割线
-            add(Item(Text(resId = R.string.AllSwitch), Switch("LService"))) // 总开关
-            add(Item(Text(resId = R.string.LyricIcon), Switch("I"))) // 图标
+//             基础设置分割线
+            add(Item(Text(resId = R.string.BaseSetting, isTitle = true), line = true))
+//             总开关
+            add(Item(Text(resId = R.string.AllSwitch), Switch("LService")))
+//             图标
+            add(Item(Text(resId = R.string.LyricIcon), Switch("I")))
+//             个性化
             add(
                 Item(
                     Text(
@@ -413,8 +530,10 @@ object DataHelper {
                         showArrow = true,
                         onClickListener = { setItems(custom, true) })
                 )
-            ) // 个性化
-            add(Item(Text(resId = R.string.AdvancedSettings, isTitle = true), line = true)) // 高级设置分割线
+            )
+//             高级设置分割线
+            add(Item(Text(resId = R.string.AdvancedSettings, isTitle = true), line = true))
+//            扩展软件列表
             add(
                 Item(
                     Text(
@@ -430,32 +549,23 @@ object DataHelper {
                         })
                 )
             )
+//            防烧屏
             add(Item(Text(resId = R.string.AbScreen), Switch("AntiBurn")))
-            add(
-                Item(
-                    Text(resId = R.string.HideDeskIcon),
-                    Switch("hLauncherIcon", onCheckedChangeListener = { _, newValue -> // 隐藏桌面图标
-                        val packageManager: PackageManager = currentActivity.packageManager
-                        val mode: Int = if (newValue) {
-                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-                        } else {
-                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                        }
-                        packageManager.setComponentEnabledSetting(
-                            ComponentName(currentActivity, "miui.statusbar.lyric.launcher"),
-                            mode,
-                            PackageManager.DONT_KILL_APP
-                        )
-                    })
-                )
-            ) //  使用系统反色
-            add(Item(Text(resId = R.string.UseSystemReverseColor), Switch("UseSystemReverseColor"))) //  使用系统反色
-            add(Item(Text(resId = R.string.SongPauseCloseLyrics), Switch("LAutoOff"))) // 暂停歌词自动关闭歌词
-            add(Item(Text(resId = R.string.UnlockShow), Switch("LockScreenOff"))) // 仅锁屏显示
-            add(Item(Text(resId = R.string.AutoHideNotiIcon), Switch("HNoticeIcon"))) // 隐藏通知图标
-            add(Item(Text(resId = R.string.HideNetWork), Switch("HNetSpeed"))) // 隐藏实时网速
-            add(Item(Text(resId = R.string.AutoHideCarrierName), Switch("HCuk"))) // 隐藏运营商名称
-            add(Item(Text(resId = R.string.Other, isTitle = true), line = true)) // 其他分割线
+//              使用系统反色
+            add(Item(Text(resId = R.string.UseSystemReverseColor), Switch("UseSystemReverseColor")))
+//             暂停歌词自动关闭歌词
+            add(Item(Text(resId = R.string.SongPauseCloseLyrics), Switch("LAutoOff")))
+//             仅锁屏显示
+            add(Item(Text(resId = R.string.UnlockShow), Switch("LockScreenOff")))
+//             隐藏通知图标
+            add(Item(Text(resId = R.string.AutoHideNotiIcon), Switch("HNoticeIcon")))
+//             隐藏实时网速
+            add(Item(Text(resId = R.string.HideNetWork), Switch("HNetSpeed")))
+//            隐藏运营商名称
+            add(Item(Text(resId = R.string.AutoHideCarrierName), Switch("HCuk")))
+//             其他分割线
+            add(Item(Text(resId = R.string.Other, isTitle = true), line = true))
+//            自定义HOKK
             add(Item(Text(resId = R.string.CustomHook, showArrow = true, onClickListener = {
                 MIUIDialog(currentActivity).apply {
                     setTitle(R.string.HookSetTips)
@@ -480,7 +590,9 @@ object DataHelper {
                     show()
                 }
             })))
+//            Debug模式
             add(Item(Text(resId = R.string.DebugMode), Switch("Debug")))
+//            测试
             add(Item(Text(resId = R.string.Test, showArrow = true, onClickListener = {
                 MIUIDialog(currentActivity).apply {
                     setTitle(R.string.Test)
@@ -499,22 +611,9 @@ object DataHelper {
                     show()
                 }
             })))
-            add(Item(Text(resId = R.string.ReStartSystemUI, onClickListener = { // 重启SystemUI
-                MIUIDialog(currentActivity).apply {
-                    setTitle(R.string.RestartUI)
-                    setMessage(R.string.RestartUITips)
-                    setButton(R.string.Ok) {
-                        ShellUtils.voidShell("pkill -f com.android.systemui", true)
-                        Analytics.trackEvent("重启SystemUI")
-                        dismiss()
-                    }
-                    setCancelButton(R.string.Cancel) {
-                        dismiss()
-                    }
-                    show()
-                }
-            }), null))
-            add(Item(Text(resId = R.string.About, isTitle = true), line = true)) // 关于分割线
+//            关于分割线
+            add(Item(Text(resId = R.string.About, isTitle = true), line = true))
+//            检查更新
             add(
                 Item(
                     Text(
@@ -528,6 +627,7 @@ object DataHelper {
                         })
                 )
             )
+//            关于模块
             add(
                 Item(
                     Text(

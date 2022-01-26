@@ -227,9 +227,6 @@ class Config {
         config.put("LShowOnce", bool)
     }
 
-    fun clear() {
-        config.clearConfig()
-    }
 
     fun getUseSystemReverseColor(): Boolean {
         return config.optBoolean("UseSystemReverseColor", true)
@@ -237,5 +234,16 @@ class Config {
 
     fun setUseSystemReverseColor(bool: Boolean) {
         config.put("UseSystemReverseColor", bool)
+    }
+    fun getHideTime(): Boolean {
+        return config.optBoolean("HideTime", true)
+    }
+
+    fun setHideTime(bool: Boolean) {
+        config.put("HideTime", bool)
+    }
+
+    fun clear() {
+        config.clearConfig()
     }
 }

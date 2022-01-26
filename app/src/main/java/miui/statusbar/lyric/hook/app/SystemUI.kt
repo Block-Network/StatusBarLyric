@@ -203,7 +203,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         val clockLayout: LinearLayout = clock.parent as LinearLayout
         clockLayout.gravity = Gravity.CENTER
         clockLayout.orientation = LinearLayout.HORIZONTAL
-        clockLayout.addView(lyricLayout, 1)
+        clockLayout.addView(lyricLayout)
 
         // 歌词点击事件
         if (config.getLyricSwitch()) {
@@ -299,7 +299,11 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     // 歌词显示
                     if (showLyric) {
                         lyricLayout.visibility = View.VISIBLE
-                        clock.layoutParams = LinearLayout.LayoutParams(0, 0)
+                        if (config.getHideTime()) {
+                            clock.layoutParams = LinearLayout.LayoutParams(0, 0)
+                        } else {
+                            clock.layoutParams = LinearLayout.LayoutParams(-2, -2)
+                        }
                     }
                     // 设置状态栏
                     config.let { Utils.setStatusBar(application, false, it) }

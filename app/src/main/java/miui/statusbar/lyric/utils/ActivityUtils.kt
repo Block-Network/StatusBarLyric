@@ -14,6 +14,7 @@ import android.os.Message
 import android.widget.Toast
 import miui.statusbar.lyric.BuildConfig
 import miui.statusbar.lyric.R
+import miui.statusbar.lyric.config.Config
 import miui.statusbar.lyric.utils.HttpUtils.Get
 import miui.statusbar.lyric.view.miuiview.MIUIDialog
 import org.json.JSONException
@@ -44,7 +45,7 @@ object ActivityUtils {
             PackageManager.DONT_KILL_APP
         )
         for (name in arrayOf("Lyric_Config", "AppList_Config", "Icon_Config")) {
-            Utils.getSP(activity, name)?.edit()?.clear()?.apply()
+            Utils.getSP(activity, name)?.let { Config(it) }?.clear()
         }
         showToastOnLooper(activity, activity.getString(R.string.ResetSuccess))
         activity.finishAffinity()
