@@ -76,7 +76,7 @@ object DataHelper {
                             PackageManager.COMPONENT_ENABLED_STATE_ENABLED
                         }
                         packageManager.setComponentEnabledSetting(
-                            ComponentName(currentActivity, "miui.cn.fkj233.xposed.statusbarlyric.launcher"),
+                            ComponentName(currentActivity, "${BuildConfig.APPLICATION_ID}.launcher"),
                             mode,
                             PackageManager.DONT_KILL_APP
                         )
