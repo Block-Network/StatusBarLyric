@@ -9,7 +9,7 @@ android {
     compileSdk = 32
 
     defaultConfig {
-        applicationId = "cn.fkj233.xposed.statusbarlyric"
+        applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 32
         versionCode = 83
