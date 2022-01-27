@@ -52,6 +52,10 @@ object DataHelper {
             add(Item(Text(resId = R.string.Developer, isTitle = true)))
             add(
                 Item(
+                    Text(null, onClickListener = {ActivityUtils.openUrl(
+                        currentActivity,
+                        "https://github.com/577fkj"
+                    )}),
                     author = Author(
                         "577fkj",
                         tipsId = R.string.AboutTips1,
@@ -60,7 +64,10 @@ object DataHelper {
                 )
             )
             add(
-                Item(
+                Item(Text(null, onClickListener = {ActivityUtils.openUrl(
+                    currentActivity,
+                    "https://github.com/xiaowine"
+                )}),
                     author = Author(
                         "xiaowine",
                         tipsId = R.string.AboutTips2,
