@@ -32,9 +32,9 @@
     <string name="AboutModule">关于模块</string>
     <string name="Developer">开发者</string>
     <string name="AboutTips1">主要负责 Hook 和 界面</string>
-    <string name="AboutTips2">主要负责 界面</string>
+    <string name="AboutTips2">主要负责 摸鱼</string>
     <string name="ThkListTips">感谢名单（不分先后）</string>
-    <string name="ThkList">感谢名单</string>
+    <string name="ThkList">技术支持</string>
     <string name="Other">其它</string>
     <string name="Source">项目地址</string>
     <string name="Tips">提示</string>
@@ -136,4 +136,6 @@
     <string name="Custom">自定义</string>
     <string name="InputCustomHook">自定义Hook点，空关闭</string>
     <string name="HideTime">隐藏时间</string>
+    <string name="SponsoredList">赞助名单</string>
+    <string name="Donate">支持我们</string>
 </resources>

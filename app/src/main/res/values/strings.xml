@@ -34,9 +34,9 @@
     <string name="AboutModule">About the module</string>
     <string name="Developer">Developer</string>
     <string name="AboutTips1">Mainly responsible for Hook and UI</string>
-    <string name="AboutTips2">Mainly responsible for the UI</string>
+    <string name="AboutTips2">Mainly responsible for 摸鱼</string>
     <string name="ThkListTips">Thank you list (in no particular order)</string>
-    <string name="ThkList">Thank you list</string>
+    <string name="ThkList">Technical Support</string>
     <string name="Other">Other</string>
     <string name="Source">Project Address</string>
     <string name="Tips">Tips</string>
@@ -149,4 +149,6 @@
     <string name="Custom">Custom</string>
     <string name="InputCustomHook">Input custom hook, Input empty of off</string>
     <string name="HideTime">Hide Time</string>
+    <string name="SponsoredList">Sponsored List</string>
+    <string name="Donate">Support us</string>
 </resources>

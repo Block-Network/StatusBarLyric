@@ -77,11 +77,17 @@ object DataHelper {
                         onClickListener = {
                             ActivityUtils.openUrl(
                                 currentActivity,
-                                "https://github.com/577fkj/StatusBarLyric/blob/Dev/doc/SPONSOR.md"
+                                "https://github.com/577fkj/StatusBarLyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95%E4%B8%8D%E5%88%86%E5%85%88%E5%90%8E"
                             )
                         })
                 )
             )
+            add(Item(Text(resId = R.string.SponsoredList, showArrow = true, onClickListener = {
+                ActivityUtils.openUrl(
+                    currentActivity,
+                    "https://github.com/577fkj/StatusBarLyric/blob/Dev/doc/SPONSOR.md"
+                )
+            })))
             add(Item(Text(resId = R.string.Other, isTitle = true), line = true))
             add(
                 Item(
@@ -105,6 +111,19 @@ object DataHelper {
                             ActivityUtils.openUrl(
                                 currentActivity,
                                 "https://github.com/577fkj/StatusBarLyric"
+                            )
+                        })
+                )
+            )
+            add(
+                Item(
+                    Text(
+                        resId = R.string.Donate,
+                        showArrow = true,
+                        onClickListener = {
+                            ActivityUtils.openUrl(
+                                currentActivity,
+                                "https://fkj2005.gitee.io/merger/"
                             )
                         })
                 )
@@ -682,6 +701,7 @@ object DataHelper {
                         onClickListener = { currentActivity.showFragment(DataItem.Author) })
                 )
             )
+            add(Item(Text(null)))
         }
         return itemList
     }
