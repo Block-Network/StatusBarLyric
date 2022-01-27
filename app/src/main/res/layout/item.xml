@@ -46,7 +46,7 @@
                 android:paddingBottom="10dp"
                 android:visibility="gone" >
 
-            <cn.fkj233.xposed.statusbarlyric.view.RoundCornerImageView
+            <statusbar.lyric.view.RoundCornerImageView
                     android:id="@+id/author_head"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
@@ -116,7 +116,7 @@
 
         </LinearLayout>
 
-        <cn.fkj233.xposed.statusbarlyric.view.miuiview.SettingsSwitch
+        <statusbar.lyric.view.miuiview.SettingsSwitch
                 android:id="@+id/settings_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

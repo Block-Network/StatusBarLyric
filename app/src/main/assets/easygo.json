@@ -1,6 +1,6 @@
 {
   "easyGoVersion": "1.0",
-  "client": "cn.fkj233.xposed.statusbarlyric",
+  "client": "statusbar.lyric",
   "logicEntities": [
     {
       "head": {
@@ -13,7 +13,7 @@
           {
             "from": "*",
             "to": "*"
-          },
+          }
         ],
         "transActivities": [
           "*",
