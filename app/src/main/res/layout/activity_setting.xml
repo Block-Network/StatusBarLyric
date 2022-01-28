@@ -17,13 +17,14 @@
         tools:ignore="RtlSymmetry,UseCompoundDrawables">
 
         <ImageView
-            android:id="@+id/settings_menu"
+            android:id="@+id/settings_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
+            android:layout_gravity="center_vertical"
             android:paddingEnd="25dp"
-            android:tint="@color/whiteText"
-            tools:ignore="ContentDescription" />
+            android:background="@drawable/abc_ic_ab_back_material"
+            tools:ignore="ContentDescription"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/Title"
@@ -33,6 +34,16 @@
             android:layout_gravity="center_vertical"
             android:text="@string/AppName"
             android:textSize="30sp" />
+
+        <ImageView
+                android:id="@+id/settings_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingEnd="25dp"
+                android:background="@drawable/abc_ic_menu_overflow_material"
+                android:tint="@color/whiteText"
+                tools:ignore="ContentDescription" />
 
     </LinearLayout>
 

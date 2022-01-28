@@ -10,6 +10,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import statusbar.lyric.R
 import statusbar.lyric.databinding.ActivitySettingBinding
 import statusbar.lyric.fragment.NewSettingsFragment
@@ -62,13 +63,9 @@ class SettingsActivity : Activity() {
     }
 
     private fun setMenu(isMain: Boolean) {
-        binding.settingsMenu.setImageResource(if (!isMain) R.drawable.abc_ic_ab_back_material else R.drawable.abc_ic_menu_overflow_material)
+        binding.settingsMenu.visibility = if (isMain) View.VISIBLE else View.GONE
         binding.settingsMenu.setOnClickListener {
-            if (isMain) {
-                showFragment(DataItem.Menu)
-            } else {
-                onBackPressed()
-            }
+            showFragment(DataItem.Menu)
         }
     }
 
