@@ -87,20 +87,8 @@ class Config {
         return config.optBoolean("LAutoOff", true)
     }
 
-    fun setLyricAutoOff(bool: Boolean) {
-        config.put("LAutoOff", bool)
-    }
-
     fun getLockScreenOff(): Boolean {
         return config.optBoolean("LockScreenOff", false)
-    }
-
-    fun setLockScreenOff(bool: Boolean) {
-        config.put("LockScreenOff", bool)
-    }
-
-    fun setHNoticeIcon(bool: Boolean) {
-        config.put("HNoticeIcon", bool)
     }
 
     fun getLyricColor(): String {
@@ -123,10 +111,6 @@ class Config {
         return config.optBoolean("LSwitch", false)
     }
 
-    fun setLyricSwitch(bool: Boolean) {
-        config.put("LSwitch", bool)
-    }
-
     fun getHNoticeIcon(): Boolean {
         return config.optBoolean("HNoticeIcon", false)
     }
@@ -135,32 +119,16 @@ class Config {
         return config.optBoolean("HNetSpeed", false)
     }
 
-    fun setHNetSpeed(bool: Boolean) {
-        config.put("HNetSpeed", bool)
-    }
-
     fun getHCuk(): Boolean {
         return config.optBoolean("HCuk", false)
-    }
-
-    fun setHCuk(bool: Boolean) {
-        config.put("HCuk", bool)
     }
 
     fun getDebug(): Boolean {
         return config.optBoolean("Debug", true)
     }
 
-    fun setDebug(bool: Boolean) {
-        config.put("Debug", bool)
-    }
-
     fun getIcon(): Boolean {
         return config.optBoolean("I", true)
-    }
-
-    fun setIcon(bool: Boolean) {
-        config.put("I", bool)
     }
 
     fun getLyricSpeed(): Float {
@@ -175,16 +143,8 @@ class Config {
         return config.optBoolean("IAutoColor", true)
     }
 
-    fun setIconAutoColor(bool: Boolean) {
-        config.put("IAutoColor", bool)
-    }
-
     fun getAntiBurn(): Boolean {
         return config.optBoolean("AntiBurn", false)
-    }
-
-    fun setAntiBurn(bool: Boolean) {
-        config.put("AntiBurn", bool)
     }
 
     fun getAnim(): String {
@@ -207,40 +167,20 @@ class Config {
         return config.optBoolean("LStyle", true)
     }
 
-    fun setLyricStyle(bool: Boolean) {
-        config.put("LStyle", bool)
-    }
-
     fun getPseudoTime(): Boolean {
         return config.optBoolean("PseudoTime", false)
-    }
-
-    fun setPseudoTime(bool: Boolean) {
-        config.put("PseudoTime", bool)
     }
 
     fun getLShowOnce(): Boolean {
         return config.optBoolean("LShowOnce", false)
     }
 
-    fun setLShowOnce(bool: Boolean) {
-        config.put("LShowOnce", bool)
-    }
-
-
     fun getUseSystemReverseColor(): Boolean {
         return config.optBoolean("UseSystemReverseColor", true)
     }
 
-    fun setUseSystemReverseColor(bool: Boolean) {
-        config.put("UseSystemReverseColor", bool)
-    }
     fun getHideTime(): Boolean {
         return config.optBoolean("HideTime", true)
-    }
-
-    fun setHideTime(bool: Boolean) {
-        config.put("HideTime", bool)
     }
 
     fun clear() {
