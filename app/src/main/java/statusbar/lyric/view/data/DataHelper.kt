@@ -38,7 +38,7 @@ object DataHelper {
     }
 
     fun getTitle(dataItem: DataItem): String = when (dataItem) {
-        DataItem.Custom -> currentActivity.getString(statusbar.lyric.R.string.Custom)
+        DataItem.Custom -> currentActivity.getString(R.string.Custom)
         DataItem.Author -> currentActivity.getString(R.string.About)
         DataItem.CustomIcon -> currentActivity.getString(R.string.IconSettings)
         else -> currentActivity.getString(R.string.AppName)
@@ -388,7 +388,23 @@ object DataHelper {
                 }
             })
             )
-//            歌词动效
+
+//            歌词颜色
+            add(Item(Text(resId = R.string.LyricColor, onClickListener = {
+                MIUIDialog(currentActivity).apply {
+                    setTitle(R.string.LyricColor)
+                    setMessage(R.string.LyricColorTips)
+                    setEditText(ActivityOwnSP.ownSPConfig.getLyricColor(), "#C0C0C0")
+                    setButton(R.string.Ok) {
+                        ActivityOwnSP.ownSPConfig.setLyricColor(getEditText())
+                        dismiss()
+                    }
+                    setCancelButton(R.string.Cancel) { dismiss() }
+                    show()
+                }
+            })))
+
+            //            歌词动效
             val anim = arrayListOf(
                 currentActivity.getString(R.string.Off),
                 currentActivity.getString(R.string.top),
