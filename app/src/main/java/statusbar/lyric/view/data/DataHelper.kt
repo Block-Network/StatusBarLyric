@@ -208,6 +208,8 @@ object DataHelper {
         itemList.apply {
             val iconConfig = IconConfig(Utils.getSP(currentActivity, "Icon_Config"))
             for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
+                val drawable=  BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
+                drawable.setTint(currentActivity.resources.getColor(android.R.color.background_dark))
                 add(
                     Item(
                         Text(null, onClickListener = {
@@ -226,7 +228,7 @@ object DataHelper {
                         }),
                         author = Author(
                             icon,
-                            head = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
+                            head = drawable
                         )
                     )
                 )
