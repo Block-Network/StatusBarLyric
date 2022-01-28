@@ -3,16 +3,11 @@
 package statusbar.lyric.view.data
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.ComponentName
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
 import com.microsoft.appcenter.analytics.Analytics
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
@@ -24,8 +19,9 @@ import statusbar.lyric.utils.ShellUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.view.miuiview.MIUIDialog
 
+
 enum class DataItem {
-    Main, Menu, Custom, Author
+    Main, Menu, Custom, Author, CustomIcon
 }
 
 @SuppressLint("StaticFieldLeak")
@@ -37,12 +33,14 @@ object DataHelper {
         DataItem.Menu -> loadMenuItems()
         DataItem.Custom -> loadCustomItems()
         DataItem.Author -> loadAboutItems()
+        DataItem.CustomIcon -> loadCustomIconItems()
         else -> loadItems()
     }
 
     fun getTitle(dataItem: DataItem): String = when (dataItem) {
-        DataItem.Custom -> currentActivity.getString(R.string.Custom)
+        DataItem.Custom -> currentActivity.getString(statusbar.lyric.R.string.Custom)
         DataItem.Author -> currentActivity.getString(R.string.About)
+        DataItem.CustomIcon -> currentActivity.getString(R.string.IconSettings)
         else -> currentActivity.getString(R.string.AppName)
     }
 
@@ -52,10 +50,12 @@ object DataHelper {
             add(Item(Text(resId = R.string.Developer, isTitle = true)))
             add(
                 Item(
-                    Text(null, onClickListener = {ActivityUtils.openUrl(
-                        currentActivity,
-                        "https://github.com/577fkj"
-                    )}),
+                    Text(null, onClickListener = {
+                        ActivityUtils.openUrl(
+                            currentActivity,
+                            "https://github.com/577fkj"
+                        )
+                    }),
                     author = Author(
                         "577fkj",
                         tipsId = R.string.AboutTips1,
@@ -64,10 +64,13 @@ object DataHelper {
                 )
             )
             add(
-                Item(Text(null, onClickListener = {ActivityUtils.openUrl(
-                    currentActivity,
-                    "https://github.com/xiaowine"
-                )}),
+                Item(
+                    Text(null, onClickListener = {
+                        ActivityUtils.openUrl(
+                            currentActivity,
+                            "https://github.com/xiaowine"
+                        )
+                    }),
                     author = Author(
                         "xiaowine",
                         tipsId = R.string.AboutTips2,
@@ -196,6 +199,39 @@ object DataHelper {
             add(Item(Text("Module Version", isTitle = true), null, line = true))
 //            模块版本
             add(Item(Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}"), null))
+        }
+        return itemList
+    }
+
+    private fun loadCustomIconItems(): ArrayList<Item> {
+        val itemList = arrayListOf<Item>()
+        itemList.apply {
+            val iconConfig = IconConfig(Utils.getSP(currentActivity, "Icon_Config"))
+            for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
+                add(
+                    Item(
+                        Text(null, onClickListener = {
+                            MIUIDialog(currentActivity).apply {
+                                setTitle(icon)
+                                setMessage(R.string.MakeIconTitle)
+                                setEditText(iconConfig.getIcon(icon).toString(), "")
+                                setButton(R.string.Ok) {
+                                    ActivityOwnSP.ownSPConfig.setLyricPosition(getEditText().toInt())
+                                    iconConfig.setIcon(icon, getEditText())
+                                    dismiss()
+                                }
+                                setCancelButton(R.string.Cancel) { dismiss() }
+                                show()
+                            }
+                        }),
+                        author = Author(
+                            icon,
+                            head = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
+                        )
+                    )
+                )
+            }
+
         }
         return itemList
     }
@@ -496,71 +532,78 @@ object DataHelper {
 //            歌词自动反色
             add(Item(Text(resId = R.string.IconAutoColors), Switch("IAutoColor", true)))
 //            图标设置
-            add(Item(Text(resId = R.string.IconSettings, showArrow = true, onClickListener = {
-                val icons =
-                    arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")
-                val iconConfig = IconConfig(Utils.getSP(currentActivity, "Icon_Config"))
-                val actionListener =
-                    DialogInterface.OnClickListener { _, which ->
-                        val iconName = icons[which]
-                        val view: View = View.inflate(currentActivity, R.layout.seticon, null)
-                        val editText: EditText = view.findViewById(R.id.editText)!!
-                        val imageView: ImageView = view.findViewById(R.id.imageView)
-                        imageView.foreground = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
-                        AlertDialog.Builder(currentActivity).apply {
-                            setTitle(iconName)
-                            setView(view)
-                            setPositiveButton(R.string.Ok) { _, _ ->
-                                val editTexts = editText.text
-                                if (editTexts.toString().isNotEmpty()) {
-                                    try {
-                                        imageView.foreground =
-                                            BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
-                                        iconConfig.setIcon(iconName, editText.text.toString())
-                                    } catch (ignore: Exception) {
-                                        ActivityUtils.showToastOnLooper(
-                                            currentActivity,
-                                            currentActivity.getString(R.string.IconError)
-                                        )
-                                    }
-                                } else {
-                                    ActivityUtils.showToastOnLooper(
-                                        currentActivity,
-                                        currentActivity.getString(R.string.IconError)
-                                    )
-                                }
-                            }
-                            setNegativeButton(R.string.Cancel, null)
-                            setNeutralButton(
-                                currentActivity.getString(R.string.MakeIcon)
-                            ) { _, _ ->
-                                val componentName =
-                                    ComponentName(
-                                        "com.byyoung.setting",
-                                        "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity"
-                                    )
-                                val intent = Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity")
-                                intent.putExtra("PackageName", componentName.packageName)
-                                intent.putExtra("PackageClass", componentName.className)
-                                try {
-                                    currentActivity.startActivity(intent)
-                                } catch (ignore: Exception) {
-                                    ActivityUtils.showToastOnLooper(
-                                        currentActivity,
-                                        currentActivity.getString(R.string.MakeIconError)
-                                    )
-                                }
-                            }
-                            show()
-                        }
-                    }
-                AlertDialog.Builder(currentActivity).apply {
-                    setTitle("图标")
-                    setItems(icons, actionListener)
-                    setNegativeButton(R.string.Done, null)
-                    show()
-                }
-            })))
+            add(
+                Item(
+                    Text(
+                        resId = R.string.IconSettings,
+                        onClickListener = { currentActivity.showFragment(DataItem.CustomIcon) })
+                )
+            )
+//            add(Item(Text(resId = R.string.IconSettings, showArrow = true, onClickListener = {
+//                val icons =
+//                    arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")
+//                val iconConfig = IconConfig(Utils.getSP(currentActivity, "Icon_Config"))
+//                val actionListener =
+//                    DialogInterface.OnClickListener { _, which ->
+//                        val iconName = icons[which]
+//                        val view: View = View.inflate(currentActivity, R.layout.seticon, null)
+//                        val editText: EditText = view.findViewById(R.id.editText)!!
+//                        val imageView: ImageView = view.findViewById(R.id.imageView)
+//                        imageView.foreground = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
+//                        AlertDialog.Builder(currentActivity).apply {
+//                            setTitle(iconName)
+//                            setView(view)
+//                            setPositiveButton(R.string.Ok) { _, _ ->
+//                                val editTexts = editText.text
+//                                if (editTexts.toString().isNotEmpty()) {
+//                                    try {
+//                                        imageView.foreground =
+//                                            BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(iconName)))
+//                                        iconConfig.setIcon(iconName, editText.text.toString())
+//                                    } catch (ignore: Exception) {
+//                                        ActivityUtils.showToastOnLooper(
+//                                            currentActivity,
+//                                            currentActivity.getString(R.string.IconError)
+//                                        )
+//                                    }
+//                                } else {
+//                                    ActivityUtils.showToastOnLooper(
+//                                        currentActivity,
+//                                        currentActivity.getString(R.string.IconError)
+//                                    )
+//                                }
+//                            }
+//                            setNegativeButton(R.string.Cancel, null)
+//                            setNeutralButton(
+//                                currentActivity.getString(R.string.MakeIcon)
+//                            ) { _, _ ->
+//                                val componentName =
+//                                    ComponentName(
+//                                        "com.byyoung.setting",
+//                                        "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity"
+//                                    )
+//                                val intent = Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity")
+//                                intent.putExtra("PackageName", componentName.packageName)
+//                                intent.putExtra("PackageClass", componentName.className)
+//                                try {
+//                                    currentActivity.startActivity(intent)
+//                                } catch (ignore: Exception) {
+//                                    ActivityUtils.showToastOnLooper(
+//                                        currentActivity,
+//                                        currentActivity.getString(R.string.MakeIconError)
+//                                    )
+//                                }
+//                            }
+//                            show()
+//                        }
+//                    }
+//                AlertDialog.Builder(currentActivity).apply {
+//                    setTitle("图标")
+//                    setItems(icons, actionListener)
+//                    setNegativeButton(R.string.Done, null)
+//                    show()
+//                }
+//            })))
             add(Item(Text(null)))
         }
         return itemList
