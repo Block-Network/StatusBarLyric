@@ -1,4 +1,4 @@
-package cn.fkj233.ui.miui.data
+package cn.fkj233.ui.activity.data
 
 import android.view.View
 import android.view.ViewGroup

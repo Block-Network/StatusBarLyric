@@ -32,5 +32,5 @@ android {
 }
 
 dependencies {
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("cn.luliangdev:DevShapeUtils:1.0.2")
 }

@@ -1,4 +1,4 @@
-package cn.fkj233.ui.miui.view
+package cn.fkj233.ui.activity.view
 
 import android.content.Context
 import android.os.Build
@@ -7,16 +7,17 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import cn.fkj233.miui.R
-import cn.fkj233.ui.miui.OwnSP
-import cn.fkj233.ui.miui.dp2px
+import cn.fkj233.ui.activity.OwnSP
+import cn.fkj233.ui.activity.data.DataBinding
+import cn.fkj233.ui.activity.dp2px
 
-class SeekBarV(val key: String = "", val min: Int, val max: Int, val divide: Int = 1, val defaultProgress: Int, val callBacks: ((Int, TextView) -> Unit)? = null): BaseView() {
+class SeekBarV(val key: String = "", val min: Int, val max: Int, val divide: Int = 1, val defaultProgress: Int, private val dataBinding: DataBinding? = null, val callBacks: ((Int, TextView) -> Unit)? = null): BaseView() {
 
     override var outside = true
 
     override fun getType(): BaseView = this
 
-    override fun create(context: Context): View {
+    override fun create(context: Context, callBacks: (() -> Unit)?): View {
         return SeekBar(context).also { view ->
             view.thumb = null
             view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -34,6 +35,7 @@ class SeekBarV(val key: String = "", val min: Int, val max: Int, val divide: Int
             }
             view.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                    callBacks?.let { it() }
                     OwnSP.ownSP.edit().run {
                         putFloat(key, p1.toFloat() / divide)
                         apply()
@@ -43,6 +45,7 @@ class SeekBarV(val key: String = "", val min: Int, val max: Int, val divide: Int
                 override fun onStartTrackingTouch(p0: SeekBar?) {}
                 override fun onStopTrackingTouch(p0: SeekBar?) {}
             })
+            dataBinding?.add(dataBinding.Recv(view))
         }
     }
 }

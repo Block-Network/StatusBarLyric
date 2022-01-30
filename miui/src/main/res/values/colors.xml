@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="foreground">#FFFFFF</color>
+    <color name="popupSelect">#E6F2FF</color>
+    <color name="popupSelectClick">#D4DFEB</color>
     <color name="rounded_pop">#FFFFFF</color>
     <color name="menu">#000000</color>
     <color name="author_tips">#656565</color>
@@ -12,4 +14,6 @@
     <color name="colorAccent">#0374A7</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="RButtonDisable">#F0F0F0</color>
+    <color name="LButtonDisable">#F0F0F0</color>
 </resources>

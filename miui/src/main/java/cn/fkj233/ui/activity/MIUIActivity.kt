@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package cn.fkj233.ui.miui
+package cn.fkj233.ui.activity
 
 import android.app.Activity
 import android.content.SharedPreferences
@@ -8,12 +8,11 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import cn.fkj233.miui.R
-import cn.fkj233.ui.miui.data.Item
+import cn.fkj233.ui.activity.data.Item
+import cn.fkj233.ui.activity.fragment.MIUIFragment
+import com.luliang.shapeutils.DevShapeUtils
 
 open class MIUIActivity : Activity() {
 
@@ -28,6 +27,9 @@ open class MIUIActivity : Activity() {
             background = getDrawable(R.drawable.abc_ic_ab_back_material)
             setPadding(0, 0, dp2px(activity, 25f),0)
             visibility = View.GONE
+            setOnClickListener {
+                this@MIUIActivity.onBackPressed()
+            }
         }
     }
 
@@ -36,6 +38,10 @@ open class MIUIActivity : Activity() {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.gravity = Gravity.CENTER_VERTICAL }
             background = getDrawable(R.drawable.abc_ic_menu_overflow_material)
             setPadding(0, 0, dp2px(activity, 25f),0)
+            if (menuItems().size == 0) visibility = View.GONE
+            setOnClickListener {
+                if (menuItems().size != 0) showFragment(menuItems(), menuName())
+            }
         }
     }
 
@@ -59,6 +65,7 @@ open class MIUIActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        DevShapeUtils.init(application)
         actionBar?.hide()
         setContentView(LinearLayout(activity).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -74,10 +81,27 @@ open class MIUIActivity : Activity() {
             })
             addView(frameLayout)
         })
+        showFragment(mainItems(), mainName())
     }
 
     override fun setTitle(title: CharSequence?) {
         titleView.text = title
+    }
+
+    open fun mainItems(): ArrayList<Item> {
+        return ArrayList()
+    }
+
+    open fun mainName(): String {
+        return ""
+    }
+
+    open fun menuItems(): ArrayList<Item> {
+        return ArrayList()
+    }
+
+    open fun menuName(): String {
+        return ""
     }
 
     fun setSP(sharedPreferences: SharedPreferences) {
@@ -86,13 +110,17 @@ open class MIUIActivity : Activity() {
 
     fun showFragment(dataItem:  List<Item>, title: CharSequence?) {
         this.title = title
-        val fragment = MIUIFragment(callbacks).setDataItem(dataItem)
+        val fragment = MIUIFragment(callbacks).setDataItem(dataItem.ifEmpty { mainItems() })
         fragmentManager.beginTransaction().setCustomAnimations(
             R.animator.slide_right_in,
             R.animator.slide_left_out,
             R.animator.slide_left_in,
             R.animator.slide_right_out
         ).replace(frameLayoutId, fragment).addToBackStack(title.toString()).commit()
+        if (fragmentManager.backStackEntryCount != 0) {
+            backButton.visibility = View.VISIBLE
+            if (menuItems().size != 0) menuButton.visibility = View.GONE
+        }
     }
 
     fun setAllCallBacks(callbacks: () -> Unit) {
@@ -103,9 +131,11 @@ open class MIUIActivity : Activity() {
         if (fragmentManager.backStackEntryCount <= 1) {
             finish()
         } else {
-            val string =
-                fragmentManager.getBackStackEntryAt(fragmentManager.backStackEntryCount - 2).name
-            titleView.text = string
+            if (fragmentManager.backStackEntryCount <= 2) {
+                backButton.visibility = View.GONE
+                if (menuItems().size != 0) menuButton.visibility = View.VISIBLE
+            }
+            titleView.text = fragmentManager.getBackStackEntryAt(fragmentManager.backStackEntryCount - 2).name
             fragmentManager.popBackStack()
         }
     }

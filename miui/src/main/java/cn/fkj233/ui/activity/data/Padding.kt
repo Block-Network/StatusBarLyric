@@ -1,4 +1,4 @@
-package cn.fkj233.ui.miui.data
+package cn.fkj233.ui.activity.data
 
 data class Padding(
     val left: Int,

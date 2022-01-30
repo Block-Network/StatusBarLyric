@@ -1,4 +1,4 @@
-package cn.fkj233.ui.miui.view
+package cn.fkj233.ui.activity.view
 
 import android.content.Context
 import android.view.View
@@ -9,7 +9,7 @@ abstract class BaseView: BaseProperties {
 
     abstract fun getType(): BaseView
 
-    abstract fun create(context: Context): View
+    abstract fun create(context: Context, callBacks: (() -> Unit)?): View
 
 }
 
