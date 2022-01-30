@@ -218,7 +218,6 @@ object DataHelper {
                                 setMessage(R.string.MakeIconTitle)
                                 setEditText(iconConfig.getIcon(icon).toString(), "")
                                 setButton(R.string.Ok) {
-                                    ActivityOwnSP.ownSPConfig.setLyricPosition(getEditText().toInt())
                                     iconConfig.setIcon(icon, getEditText())
                                     dismiss()
                                 }
