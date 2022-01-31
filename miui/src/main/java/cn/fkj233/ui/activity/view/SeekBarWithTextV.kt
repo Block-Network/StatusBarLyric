@@ -36,10 +36,10 @@ class SeekBarWithTextV(val key: String = "", val min: Int, val max: Int, val def
             view.min = min
             view.max = max
             view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            OwnSP.ownSP.getFloat(key, -2333f).let {
-                if (it != -2333f) {
-                    view.progress = it.toInt()
-                    (mutableText as TextView).text = it.toInt().toString()
+            OwnSP.ownSP.getInt(key, -2333).let {
+                if (it != -2333) {
+                    view.progress = it
+                    (mutableText as TextView).text = it.toString()
                 } else {
                     view.progress = defaultProgress
                     (mutableText as TextView).text = defaultProgress.toString()
@@ -51,7 +51,7 @@ class SeekBarWithTextV(val key: String = "", val min: Int, val max: Int, val def
                     dataBindingSend?.send(p1)
                     OwnSP.ownSP.edit().run {
                         (mutableText as TextView).text = p1.toString()
-                        putFloat(key, p1.toFloat() / divide)
+                        putInt(key, p1 / divide)
                         apply()
                     }
                 }

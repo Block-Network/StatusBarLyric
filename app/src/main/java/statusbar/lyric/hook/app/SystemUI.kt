@@ -278,9 +278,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     val time = ft.format(dNow)
                     val addTimeStr = String.format("%s %s", time, string)
                     // 自适应/歌词宽度
-                    if (config.getLyricWidth().toInt() == -1) {
+                    if (config.getLyricWidth() == -1) {
                         val paint1: TextPaint = lyricTextView.paint!! // 获取字体
-                        if (config.getLyricMaxWidth().toInt() == -1 || paint1.measureText(string)
+                        if (config.getLyricMaxWidth() == -1 || paint1.measureText(string)
                                 .toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100
                         ) {
                             if (config.getPseudoTime()) {

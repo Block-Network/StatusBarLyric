@@ -342,8 +342,8 @@ class NewSettingsActivity: MIUIActivity() {
                 }))
                 val dataBinding = getDataBinding(ActivityOwnSP.ownSPConfig.getLyricWidth()) { view, flags, data ->
                     when (flags) {
-                        1 -> view.visibility = if ((data as Float).toInt() == -1) View.VISIBLE else View.GONE
-                        2 -> view.visibility = if ((data as Float).toInt() == -1) View.VISIBLE else View.GONE
+                        1 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
+                        2 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
                     }
                 }
                 add(Item(arrayListOf<BaseView>().apply {
@@ -361,7 +361,7 @@ class NewSettingsActivity: MIUIActivity() {
                             setMessage(R.string.LyricPosTips)
                             setEditText(ActivityOwnSP.ownSPConfig.getLyricPosition().toString(), "0")
                             setRButton(R.string.Ok) {
-                                ActivityOwnSP.ownSPConfig.setLyricPosition(getEditText().toFloat())
+                                ActivityOwnSP.ownSPConfig.setLyricPosition(getEditText().toInt())
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
@@ -377,7 +377,7 @@ class NewSettingsActivity: MIUIActivity() {
                             setMessage(R.string.LyricHighTips)
                             setEditText(ActivityOwnSP.ownSPConfig.getLyricHigh().toString(), "0")
                             setRButton(R.string.Ok) {
-                                ActivityOwnSP.ownSPConfig.setLyricHigh(getEditText().toFloat())
+                                ActivityOwnSP.ownSPConfig.setLyricHigh(getEditText().toInt())
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
@@ -470,7 +470,7 @@ class NewSettingsActivity: MIUIActivity() {
                             setMessage(R.string.LyricHighTips)
                             setEditText(ActivityOwnSP.ownSPConfig.getIconSize().toString(), "0")
                             setRButton(R.string.Ok) {
-                                ActivityOwnSP.ownSPConfig.setIconSize(getEditText().toFloat())
+                                ActivityOwnSP.ownSPConfig.setIconSize(getEditText().toInt())
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
@@ -486,7 +486,7 @@ class NewSettingsActivity: MIUIActivity() {
                             setMessage(R.string.LyricSizeTips)
                             setEditText(ActivityOwnSP.ownSPConfig.getIconHigh().toString(), "7")
                             setRButton(R.string.Ok) {
-                                ActivityOwnSP.ownSPConfig.setIconHigh(getEditText().toFloat())
+                                ActivityOwnSP.ownSPConfig.setIconHigh(getEditText().toInt())
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }

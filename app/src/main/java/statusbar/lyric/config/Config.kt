@@ -27,47 +27,47 @@ class Config {
         config.put("LService", bool)
     }
 
-    fun getLyricWidth(): Float {
-        return config.optFloat("LWidth", -1f)
+    fun getLyricWidth(): Int {
+        return config.optInt("LWidth", -1)
     }
 
-    fun getLyricMaxWidth(): Float {
-        return config.optFloat("LMaxWidth", -1f)
+    fun getLyricMaxWidth(): Int {
+        return config.optInt("LMaxWidth", -1)
     }
 
-    fun getLyricPosition(): Float {
-        return config.optFloat("LPosition", 0f)
+    fun getLyricPosition(): Int {
+        return config.optInt("LPosition", 0)
     }
 
-    fun setLyricPosition(i: Float) {
+    fun setLyricPosition(i: Int) {
         config.put("LPosition", i)
     }
 
-    fun getLyricHigh(): Float {
-        return config.optFloat("LHigh", 0f)
+    fun getLyricHigh(): Int {
+        return config.optInt("LHigh", 0)
     }
 
-    fun setLyricHigh(i: Float) {
+    fun setLyricHigh(i: Int) {
         config.put("LHigh", i)
     }
 
-    fun getLyricSize(): Float {
-        return config.optFloat("LSize", 0f)
+    fun getLyricSize(): Int {
+        return config.optInt("LSize", 0)
     }
 
-    fun getIconSize(): Float {
-        return config.optFloat("ISize", 0f)
+    fun getIconSize(): Int {
+        return config.optInt("ISize", 0)
     }
 
-    fun setIconSize(i: Float) {
+    fun setIconSize(i: Int) {
         config.put("ISize", i)
     }
 
-    fun getIconHigh(): Float {
-        return config.optFloat("IHigh", 7f)
+    fun getIconHigh(): Int {
+        return config.optInt("IHigh", 7)
     }
 
-    fun setIconHigh(i: Float) {
+    fun setIconHigh(i: Int) {
         config.put("IHigh", i)
     }
 
