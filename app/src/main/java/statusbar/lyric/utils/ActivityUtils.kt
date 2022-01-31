@@ -12,11 +12,11 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.widget.Toast
+import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.Config
 import statusbar.lyric.utils.HttpUtils.Get
-import statusbar.lyric.view.miuiview.MIUIDialog
 import org.json.JSONException
 import org.json.JSONObject
 import kotlin.system.exitProcess
@@ -61,7 +61,7 @@ object ActivityUtils {
                             )
                         )
                         setMessage(jsonObject.getString("body").replace("#", ""))
-                        setButton(R.string.Update) {
+                        setRButton(R.string.Update) {
                             try {
                                 val uri: Uri = Uri.parse(
                                     jsonObject.getJSONArray("assets").getJSONObject(0)
@@ -76,7 +76,7 @@ object ActivityUtils {
                             }
                             dismiss()
                         }
-                        setCancelButton(R.string.Cancel) { dismiss() }
+                        setLButton(R.string.Cancel) { dismiss() }
                         show()
                     }
                 } else {
@@ -135,7 +135,7 @@ object ActivityUtils {
                         MIUIDialog(activity).apply {
                             setTitle(activity.getString(R.string.NewNotice))
                             setMessage(jsonObject.getString("data"))
-                            setButton(activity.getString(R.string.Done)) { dismiss() }
+                            setRButton(activity.getString(R.string.Done)) { dismiss() }
                             show()
                         }
                     }

@@ -1,11 +1,12 @@
 package statusbar.lyric.activity
 
-import android.content.ComponentName
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.activity.MIUIActivity
@@ -33,9 +34,37 @@ class NewSettingsActivity: MIUIActivity() {
         ActivityOwnSP.activity = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
+        registerReceiver(HookReceiver(), IntentFilter().apply {
+            addAction("Hook_Sure")
+        })
+        setAllCallBacks {
+            sendBroadcast(
+                Intent().apply {
+                    action = "Lyric_Server"
+                    putExtra("Lyric_Type", "refresh")
+                }
+            )
+        }
     }
 
-
+    inner class HookReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                Handler(Looper.getMainLooper()).post {
+                    val message: String = if (intent.getBooleanExtra("hook_ok", false)) {
+                        getString(R.string.HookSureSuccess)
+                    } else {
+                        getString(R.string.HookSureFail)
+                    }
+                    MIUIDialog(activity).apply {
+                        setTitle(getString(R.string.HookSure))
+                        setMessage(message)
+                        setRButton(getString(R.string.Ok)) { dismiss() }
+                    }
+                }
+            } catch (_: Throwable) {}
+        }
+    }
 
     private fun checkLSPosed(): Boolean {
         return try {
@@ -313,8 +342,8 @@ class NewSettingsActivity: MIUIActivity() {
                 }))
                 val dataBinding = getDataBinding(ActivityOwnSP.ownSPConfig.getLyricWidth()) { view, flags, data ->
                     when (flags) {
-                        1 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
-                        2 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
+                        1 -> view.visibility = if ((data as Float).toInt() == -1) View.VISIBLE else View.GONE
+                        2 -> view.visibility = if ((data as Float).toInt() == -1) View.VISIBLE else View.GONE
                     }
                 }
                 add(Item(arrayListOf<BaseView>().apply {
@@ -332,7 +361,7 @@ class NewSettingsActivity: MIUIActivity() {
                             setMessage(R.string.LyricPosTips)
                             setEditText(ActivityOwnSP.ownSPConfig.getLyricPosition().toString(), "0")
                             setRButton(R.string.Ok) {
-                                ActivityOwnSP.ownSPConfig.setLyricPosition(getEditText().toInt())
+                                ActivityOwnSP.ownSPConfig.setLyricPosition(getEditText().toFloat())
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
@@ -348,7 +377,7 @@ class NewSettingsActivity: MIUIActivity() {
                             setMessage(R.string.LyricHighTips)
                             setEditText(ActivityOwnSP.ownSPConfig.getLyricHigh().toString(), "0")
                             setRButton(R.string.Ok) {
-                                ActivityOwnSP.ownSPConfig.setLyricHigh(getEditText().toInt())
+                                ActivityOwnSP.ownSPConfig.setLyricHigh(getEditText().toFloat())
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
@@ -441,14 +470,14 @@ class NewSettingsActivity: MIUIActivity() {
                             setMessage(R.string.LyricHighTips)
                             setEditText(ActivityOwnSP.ownSPConfig.getIconSize().toString(), "0")
                             setRButton(R.string.Ok) {
-                                ActivityOwnSP.ownSPConfig.setIconSize(getEditText().toInt())
+                                ActivityOwnSP.ownSPConfig.setIconSize(getEditText().toFloat())
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
                             show()
                         }
                     }))
-                    add(SeekBarWithTextV("ISize", 0, 100, ActivityOwnSP.ownSPConfig.getIconSize()))
+                    add(SeekBarWithTextV("ISize", 0, 100, ActivityOwnSP.ownSPConfig.getIconSize().toInt()))
                 }))
                 add(Item(arrayListOf<BaseView>().apply {
                     add(TextV(resId = R.string.IconSize, onClickListener = {
@@ -457,14 +486,14 @@ class NewSettingsActivity: MIUIActivity() {
                             setMessage(R.string.LyricSizeTips)
                             setEditText(ActivityOwnSP.ownSPConfig.getIconHigh().toString(), "7")
                             setRButton(R.string.Ok) {
-                                ActivityOwnSP.ownSPConfig.setIconHigh(getEditText().toInt())
+                                ActivityOwnSP.ownSPConfig.setIconHigh(getEditText().toFloat())
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
                             show()
                         }
                     }))
-                    add(SeekBarWithTextV("IHigh", -100, 100, ActivityOwnSP.ownSPConfig.getIconSize()))
+                    add(SeekBarWithTextV("IHigh", -100, 100, ActivityOwnSP.ownSPConfig.getIconSize().toInt()))
                 }))
                 add(Item(arrayListOf<BaseView>().apply {
                     add(TextWithSwitchV(TextV(resId = R.string.IconAutoColors), SwitchV("IAutoColor", true)))

@@ -162,7 +162,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         lyricTextView.width = (displayWidth * 35) / 100
         lyricTextView.height = clock.height
         lyricTextView.setTypeface(clock.typeface)
-        if (config.getLyricSize() == 0) {
+        if (config.getLyricSize().toInt() == 0) {
             lyricTextView.setTextSize(0, clock.textSize)
         } else {
             lyricTextView.setTextSize(0, config.getLyricSize().toFloat())
@@ -196,7 +196,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         lyricLayout.layoutParams =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lyricParams = lyricLayout.layoutParams as LinearLayout.LayoutParams
-        lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
+        lyricParams.setMargins(config.getLyricPosition().toInt(), config.getLyricHigh().toInt(), 0, 0)
         lyricLayout.layoutParams = lyricParams
 
         // 将歌词加入时钟布局
@@ -255,7 +255,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
 
         updateLyricPos = Handler(Looper.getMainLooper()) {
-            lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
+            lyricParams.setMargins(config.getLyricPosition().toInt(), config.getLyricHigh().toInt(), 0, 0)
             true
         }
 
@@ -278,9 +278,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     val time = ft.format(dNow)
                     val addTimeStr = String.format("%s %s", time, string)
                     // 自适应/歌词宽度
-                    if (config.getLyricWidth() == -1) {
+                    if (config.getLyricWidth().toInt() == -1) {
                         val paint1: TextPaint = lyricTextView.paint!! // 获取字体
-                        if (config.getLyricMaxWidth() == -1 || paint1.measureText(string)
+                        if (config.getLyricMaxWidth().toInt() == -1 || paint1.measureText(string)
                                 .toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100
                         ) {
                             if (config.getPseudoTime()) {
@@ -291,10 +291,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             }
 
                         } else {
-                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth()) / 100
+                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth().toInt()) / 100
                         }
                     } else {
-                        lyricTextView.width = (displayWidth * config.getLyricWidth()) / 100
+                        lyricTextView.width = (displayWidth * config.getLyricWidth().toInt()) / 100
                     }
                     // 歌词显示
                     if (showLyric) {
@@ -416,7 +416,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 @SuppressLint("DefaultLocale")
                 @Override
                 override fun run() {
-                    iconPos = config.getIconHigh()
+                    iconPos = config.getIconHigh().toInt()
                     if (enable && config.getAntiBurn()) {
                         if (order) {
                             i += 1
@@ -473,7 +473,18 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     }
 
     fun updateLyric(lyric: String?, icon: String) {
-        if (TextUtils.isEmpty(lyric)) {
+        var mLyric = ""
+        var mIcon = ""
+        if (lyric == "refresh" && icon == "refresh") {
+            mLyric = lyricTextView.text.toString()
+            mIcon = strIcon
+        } else {
+            if (lyric != null) {
+                mLyric = lyric
+            }
+            mIcon = icon
+        }
+        if (TextUtils.isEmpty(mLyric)) {
             offLyric("收到歌词空")
             return
         }
@@ -488,7 +499,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             return
         }
         enable = true
-        if (!config.getIcon() || TextUtils.isEmpty(icon)) {
+        if (!config.getIcon() || TextUtils.isEmpty(mIcon)) {
             LogUtils.e("关闭图标")
             strIcon = ""
             drawableIcon = null
@@ -498,19 +509,19 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             }
         } else {
             LogUtils.e("开启图标")
-            if (icon != strIcon) {
-                strIcon = icon
+            if (mIcon != strIcon) {
+                strIcon = mIcon
                 LogUtils.e(strIcon + "  " + iconConfig.getIcon(strIcon))
                 drawableIcon =
                     BitmapDrawable(application.resources, Utils.stringToBitmap(iconConfig.getIcon(strIcon)))
             }
             // 设置宽高
-            if (config.getIconSize() == 0) {
+            if (config.getIconSize().toInt() == 0) {
                 iconParams.width = clock.textSize.toInt()
                 iconParams.height = clock.textSize.toInt()
             } else {
-                iconParams.width = config.getIconSize()
-                iconParams.height = config.getIconSize()
+                iconParams.width = config.getIconSize().toInt()
+                iconParams.height = config.getIconSize().toInt()
             }
             iconUpdate.obtainMessage().let {
                 it.obj = drawableIcon
@@ -536,8 +547,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             lyricTextView.outAnimation = Utils.outAnim(anim)
         }
         if (config.getAntiBurn()) {
-            if (config.getIconHigh() != oldPos) {
-                oldPos = config.getIconHigh()
+            if (config.getIconHigh().toInt() != oldPos) {
+                oldPos = config.getIconHigh().toInt()
                 updateMarginsIcon.obtainMessage().let {
                     it.arg1 = 0
                     it.arg2 = oldPos
@@ -554,7 +565,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         lyricUpdate.obtainMessage().let {
             it.data = Bundle().apply {
-                putString(lyricKey, lyric)
+                putString(lyricKey, mLyric)
             }
             lyricUpdate.sendMessage(it)
         }
@@ -741,6 +752,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     }
                     "app_stop" -> offLyric("收到广播app_stop")
                     "test" -> ShowDialog().show()
+                    "refresh" -> updateLyric("refresh", "refresh")
                 }
             } catch (e: Exception) {
                 LogUtils.e("广播接收错误 " + e + "\n" + Utils.dumpException(e))

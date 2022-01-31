@@ -228,5 +228,5 @@ class MIUIDialog(context: Context): Dialog(context, R.style.CustomDialog) {
         }
     }
 
-    fun getEditText(): String = message.text.toString()
+    fun getEditText(): String = editText.text.toString()
 }

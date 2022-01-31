@@ -140,4 +140,9 @@
     <string name="HideTime">Hide Time</string>
     <string name="SponsoredList">Sponsored List</string>
     <string name="Donate">Support us</string>
+    <string name="HookSure">Hook SystemUI</string>
+    <string name="HookSureSuccess">Hook SystemUI Success</string>
+    <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged
+        SystemUI
+    </string>
 </resources>
