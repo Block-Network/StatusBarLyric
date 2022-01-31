@@ -1,6 +1,7 @@
 package cn.fkj233.ui.activity.view
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -11,7 +12,7 @@ import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.sp2px
 
-class TextSummaryV(private val text: String? = null, private val textId: Int? = null, private val tips: String? = null, private val tipsId: Int? = null, private val dataBinding: DataBinding? = null, val onClick: (() -> Unit)? = null): BaseView() {
+class TextSummaryV(private val text: String? = null, private val textId: Int? = null, private val tips: String? = null, private val tipsId: Int? = null, private val dataBindingRecv: DataBinding.Binding.Recv? = null, val onClick: (() -> Unit)? = null): BaseView() {
 
     override fun getType(): BaseView {
         return this
@@ -27,6 +28,7 @@ class TextSummaryV(private val text: String? = null, private val textId: Int? = 
                             view.setTextColor(context.getColor(R.color.menu))
                             text?.let { it1 -> view.text = it1 }
                             textId?.let { it1 -> view.setText(it1) }
+                            view.paint.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                         },
                         LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -43,6 +45,7 @@ class TextSummaryV(private val text: String? = null, private val textId: Int? = 
                                 tips?.let { it1 -> it.text = it1 }
                                 tipsId?.let { it1 -> it.setText(it1) }
                             }
+                            it.paint.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                         },
                         LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -75,7 +78,7 @@ class TextSummaryV(private val text: String? = null, private val textId: Int? = 
         ).also {
             it.setMargins(0, dp2px(context, 15f), dp2px(context, 5f), dp2px(context, 15f))
         }).create(context, callBacks).also {
-            dataBinding?.add(dataBinding.Recv(it))
+            dataBindingRecv?.setView(it)
         }
     }
 }

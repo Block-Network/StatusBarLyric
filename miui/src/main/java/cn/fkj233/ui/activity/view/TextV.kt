@@ -11,7 +11,7 @@ import cn.fkj233.ui.activity.data.Padding
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.sp2px
 
-class TextV(val text: String? = null, private val resId: Int? = null, val textSize: Float? = null, private val textColor: Int? = null, private val padding: Padding? = null, private val dataBinding: DataBinding? = null, val onClickListener: (() -> Unit)? = null): BaseView() {
+class TextV(val text: String? = null, private val resId: Int? = null, val textSize: Float? = null, private val textColor: Int? = null, private val padding: Padding? = null, private val dataBindingRecv: DataBinding.Binding.Recv? = null, val onClickListener: (() -> Unit)? = null): BaseView() {
 
     override fun getType(): BaseView = this
 
@@ -21,7 +21,7 @@ class TextV(val text: String? = null, private val resId: Int? = null, val textSi
             text?.let { view.text = it }
             resId?.let { view.setText(it) }
             if (textSize == null)
-                view.textSize = sp2px(context, 6.5f)
+                view.textSize = sp2px(context, 6f)
             else
                 view.textSize = textSize
             textColor?.let { view.setTextColor(it) }
@@ -30,7 +30,7 @@ class TextV(val text: String? = null, private val resId: Int? = null, val textSi
             view.paint.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
             view.setPadding(0, dp2px(context, 20f), dp2px(context, 5f), dp2px(context, 20f))
             padding?.let { view.setPadding(it.left, it.top, it.right, it.bottom) }
-            dataBinding?.add(dataBinding.Recv(view))
+            dataBindingRecv?.setView(view)
         }
     }
 }

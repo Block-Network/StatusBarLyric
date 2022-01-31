@@ -32,5 +32,4 @@ android {
 }
 
 dependencies {
-    implementation("cn.luliangdev:DevShapeUtils:1.0.2")
 }

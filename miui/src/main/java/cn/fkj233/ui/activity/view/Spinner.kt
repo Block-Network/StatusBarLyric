@@ -14,7 +14,7 @@ import cn.fkj233.ui.activity.data.MIUIPopupData
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.sp2px
 
-class Spinner(val arrayList: ArrayList<MIUIPopupData>, var currentValue: String, private val dataBinding: DataBinding? = null): BaseView() {
+class Spinner(val arrayList: ArrayList<MIUIPopupData>, var currentValue: String, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
     private lateinit var context: Context
 
     lateinit var select: TextView
@@ -50,7 +50,7 @@ class Spinner(val arrayList: ArrayList<MIUIPopupData>, var currentValue: String,
             descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS,
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         ).create(context, callBacks).also {
-            dataBinding?.add(dataBinding.Recv(it))
+            dataBindingRecv?.setView(it)
         }
     }
 }

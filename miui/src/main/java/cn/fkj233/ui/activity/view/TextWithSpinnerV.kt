@@ -10,7 +10,7 @@ import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.data.MIUIPopupData
 import cn.fkj233.ui.activity.dp2px
 
-class TextWithSpinnerV(private val textV: TextV, val spinner: Spinner, private val dataBinding: DataBinding? = null): BaseView() {
+class TextWithSpinnerV(private val textV: TextV, val spinner: Spinner, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
 
     override fun getType(): BaseView = this
 
@@ -27,7 +27,7 @@ class TextWithSpinnerV(private val textV: TextV, val spinner: Spinner, private v
             descendantFocusability = LinearContainerV.FOCUS_BLOCK_DESCENDANTS,
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
         ).create(context, callBacks).also {
-            dataBinding?.add(dataBinding.Recv(it))
+            dataBindingRecv?.setView(it)
         }
     }
 }

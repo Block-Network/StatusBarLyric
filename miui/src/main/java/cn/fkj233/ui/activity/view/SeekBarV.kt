@@ -11,7 +11,7 @@ import cn.fkj233.ui.activity.OwnSP
 import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.dp2px
 
-class SeekBarV(val key: String = "", val min: Int, val max: Int, val divide: Int = 1, val defaultProgress: Int, private val dataBinding: DataBinding? = null, val callBacks: ((Int, TextView) -> Unit)? = null): BaseView() {
+class SeekBarV(val key: String = "", val min: Int, val max: Int, val divide: Int = 1, private val defaultProgress: Int, private val dataBindingRecv: DataBinding.Binding.Recv? = null, val callBacks: ((Int, TextView) -> Unit)? = null): BaseView() {
 
     override var outside = true
 
@@ -45,7 +45,7 @@ class SeekBarV(val key: String = "", val min: Int, val max: Int, val divide: Int
                 override fun onStartTrackingTouch(p0: SeekBar?) {}
                 override fun onStopTrackingTouch(p0: SeekBar?) {}
             })
-            dataBinding?.add(dataBinding.Recv(view))
+            dataBindingRecv?.setView(view)
         }
     }
 }

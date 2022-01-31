@@ -1,24 +1,62 @@
 package cn.fkj233.ui.activity.data
 
 import android.view.View
+import java.io.Serializable
 
-class DataBinding(val recvCallbacks: (View, Any) -> Unit) {
+class DataBinding : Serializable {
+    private var bindingData = arrayListOf<BindingData>()
 
-    var data: ArrayList<Recv> = arrayListOf()
+    fun get(defValue: Any, recvCallbacks: (View, Int, Any) -> Unit): BindingData {
+        val binding = Binding(recvCallbacks)
+        return BindingData(defValue, binding, binding.getSend(), recvCallbacks).also { bindingData.add(it) }
+    }
 
-    fun send(any: Any) {
-        for (recv in data) {
-            recv.recv(any)
+    fun initAll() {
+        for (binding in bindingData) {
+            binding.bindingSend.send(binding.defValue)
         }
     }
 
-    fun add(recv: Recv) {
-        data.add(recv)
-    }
+    data class BindingData (
+        val defValue: Any,
+        val binding: Binding,
+        val bindingSend: Binding.Send,
+        val recvCallbacks: (View, Int, Any) -> Unit
+        )
 
-    inner class Recv(val view: View) {
-        fun recv(any: Any) {
-            recvCallbacks(view, any)
+    inner class Binding(val recvCallbacks: (View, Int, Any) -> Unit) {
+        var data: ArrayList<Recv> = arrayListOf()
+
+        inner class Send {
+            fun send(any: Any) {
+                for (recv in data) {
+                    recv.recv(any)
+                }
+            }
+        }
+
+        fun add(recv: Recv) {
+            data.add(recv)
+        }
+
+        fun getSend(): Send {
+            return Send()
+        }
+
+        fun getRecv(flags: Int): Recv {
+            return Recv(flags).also { add(it) }
+        }
+
+        inner class Recv(private val flags: Int) {
+            lateinit var mView: View
+
+            fun setView(view: View) {
+                mView = view
+            }
+
+            fun recv(any: Any) {
+                recvCallbacks(mView, flags, any)
+            }
         }
     }
 }

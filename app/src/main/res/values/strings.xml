@@ -5,7 +5,6 @@
     <string name="BaseSetting">Basic Settings</string>
     <string name="AllSwitch">Master switch</string>
     <string name="SongPauseCloseLyrics">Song Pause Close Lyrics</string>
-    <string name="Adaptive">Adaptive</string>
     <string name="LyricWidth">Lyric width</string>
     <string name="Off">Off</string>
     <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
@@ -32,11 +31,9 @@
     <string name="About">About</string>
     <string name="CheckUpdate">Check update</string>
     <string name="AboutModule">About the module</string>
-    <string name="Developer">Developer</string>
     <string name="AboutTips1">Mainly responsible for Hook and UI</string>
     <string name="AboutTips2">Mainly responsible for 摸鱼</string>
     <string name="ThkListTips">Thank you list (in no particular order)</string>
-    <string name="ThkList">Technical Support</string>
     <string name="Other">Other</string>
     <string name="Source">Project Address</string>
     <string name="Tips">Tips</string>
@@ -109,23 +106,15 @@
     </string>
     <string name="PrivacyPolicy">Privacy Policy</string>
     <string name="UseSystemReverseColor">* Reverse color using system mode</string>
-    <string name="HookSure">Hook SystemUI</string>
-    <string name="HookSureSuccess">Hook SystemUI Success</string>
-    <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged
-        SystemUI
-    </string>
     <string name="IconSettings">Icon settings</string>
     <string name="NewNotice">NewNotice</string>
     <string name="GetNewNoticeError">Get NewNotice Error</string>
     <string name="ResetSuccess">Reset successfully</string>
-    <string name="MakeIcon">Make Icon</string>
-    <string name="MakeIconError">Can\'t jump，Please check if it is installed\n爱玩机工具箱</string>
     <string name="MakeIconTitle">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
     <string name="LyricHigh">* Lyrics up and down position</string>
     <string name="LyricSize">* Lyrics Size</string>
     <string name="IconSize">Icon Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
-    <string name="IconError">Icon input error</string>
     <string name="Test">Test</string>
     <string name="TestDialogTips">This function is embedded in the system UI and may cause the system UI to crash and
         restart!

@@ -12,7 +12,7 @@ import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.sp2px
 
-class AuthorV(private val authorHead: Drawable, private val authorName: String, private val authorTips: String? = null, val onClick: (() -> Unit)? = null, private val dataBinding: DataBinding? = null): BaseView() {
+class AuthorV(private val authorHead: Drawable, private val authorName: String, private val authorTips: String? = null, val onClick: (() -> Unit)? = null, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
 
     override fun getType(): BaseView {
         return this
@@ -85,7 +85,7 @@ class AuthorV(private val authorHead: Drawable, private val authorName: String, 
         ).also {
                it.setMargins(0, dp2px(context, 10f), 0, dp2px(context, 10f))
         }).create(context, callBacks).also {
-            dataBinding?.add(dataBinding.Recv(it))
+            dataBindingRecv?.setView(it)
         }
     }
 }

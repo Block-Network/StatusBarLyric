@@ -12,4 +12,9 @@
     <color name="colorAccent">#0374A7</color>
     <color name="RButtonDisable">#343434</color>
     <color name="LButtonDisable">#222222</color>
+
+    <color name="popup_background">#242424</color>
+    <color name="popup_background_click">#454545</color>
+    <color name="popup_select">#1F2F4C</color>
+    <color name="popup_select_click">#404E67</color>
 </resources>

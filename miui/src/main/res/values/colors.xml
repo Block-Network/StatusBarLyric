@@ -16,4 +16,9 @@
     <color name="white">#FFFFFF</color>
     <color name="RButtonDisable">#F0F0F0</color>
     <color name="LButtonDisable">#F0F0F0</color>
+
+    <color name="popup_background">#FFFFFF</color>
+    <color name="popup_background_click">#EBEBEB</color>
+    <color name="popup_select">#E6F2FF</color>
+    <color name="popup_select_click">#D4DFEB</color>
 </resources>

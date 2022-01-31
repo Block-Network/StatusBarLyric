@@ -19,6 +19,7 @@ import statusbar.lyric.utils.HttpUtils.Get
 import statusbar.lyric.view.miuiview.MIUIDialog
 import org.json.JSONException
 import org.json.JSONObject
+import kotlin.system.exitProcess
 
 
 object ActivityUtils {
@@ -37,17 +38,11 @@ object ActivityUtils {
     //清除配置
     @JvmStatic
     fun cleanConfig(activity: Activity) {
-        val packageManager: PackageManager = activity.packageManager
-        packageManager.setComponentEnabledSetting(
-            ComponentName(activity, "statusbar.lyric"),
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            PackageManager.DONT_KILL_APP
-        )
         for (name in arrayOf("Lyric_Config", "AppList_Config", "Icon_Config")) {
             Utils.getSP(activity, name)?.let { Config(it) }?.clear()
         }
         showToastOnLooper(activity, activity.getString(R.string.ResetSuccess))
-        activity.finishAffinity()
+        exitProcess(0)
     }
 
     //检查更新

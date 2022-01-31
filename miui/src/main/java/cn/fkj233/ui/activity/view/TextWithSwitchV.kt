@@ -7,7 +7,7 @@ import android.widget.LinearLayout
 import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.data.LayoutPair
 
-class TextWithSwitchV(private val textV: TextV, private val switchV: SwitchV, private val dataBinding: DataBinding? = null): BaseView() {
+class TextWithSwitchV(private val textV: TextV, private val switchV: SwitchV, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
 
     override fun getType(): BaseView = this
 
@@ -20,7 +20,7 @@ class TextWithSwitchV(private val textV: TextV, private val switchV: SwitchV, pr
             ),
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
         ).create(context, callBacks).also {
-            dataBinding?.add(dataBinding.Recv(it))
+            dataBindingRecv?.setView(it)
         }
     }
 }

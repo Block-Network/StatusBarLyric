@@ -7,7 +7,7 @@ import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.dp2px
 
-class LineV(private val dataBinding: DataBinding? = null): BaseView() {
+class LineV(private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
 
     override fun getType(): BaseView {
         return this
@@ -19,7 +19,7 @@ class LineV(private val dataBinding: DataBinding? = null): BaseView() {
             layoutParams.setMargins(0, dp2px(context, 2f), 0, dp2px(context, 2f))
             it.layoutParams = layoutParams
             it.setBackgroundColor(context.resources.getColor(R.color.line, null))
-            dataBinding?.add(dataBinding.Recv(it))
+            dataBindingRecv?.setView(it)
         }
     }
 

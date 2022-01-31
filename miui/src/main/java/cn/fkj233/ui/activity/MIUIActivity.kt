@@ -10,9 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import cn.fkj233.miui.R
+import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.data.Item
+import cn.fkj233.ui.activity.data.Person
 import cn.fkj233.ui.activity.fragment.MIUIFragment
-import com.luliang.shapeutils.DevShapeUtils
 
 open class MIUIActivity : Activity() {
 
@@ -20,6 +21,8 @@ open class MIUIActivity : Activity() {
     private val activity = this
 
     private var callbacks: (() -> Unit)? = null
+
+    private val dataBinding: DataBinding = DataBinding()
 
     private val backButton by lazy {
         ImageView(activity).apply {
@@ -63,9 +66,10 @@ open class MIUIActivity : Activity() {
         mFrameLayout
     }
 
+    var isLoad = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        DevShapeUtils.init(application)
         actionBar?.hide()
         setContentView(LinearLayout(activity).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
@@ -81,11 +85,15 @@ open class MIUIActivity : Activity() {
             })
             addView(frameLayout)
         })
-        showFragment(mainItems(), mainName())
+        if (isLoad) showFragment(mainItems(), mainName())
     }
 
     override fun setTitle(title: CharSequence?) {
         titleView.text = title
+    }
+
+    fun getDataBinding(defValue: Any, recvCallBacks: (View, Int, Any) -> Unit): DataBinding.BindingData {
+        return dataBinding.get(defValue, recvCallBacks)
     }
 
     open fun mainItems(): ArrayList<Item> {
@@ -110,13 +118,12 @@ open class MIUIActivity : Activity() {
 
     fun showFragment(dataItem:  List<Item>, title: CharSequence?) {
         this.title = title
-        val fragment = MIUIFragment(callbacks).setDataItem(dataItem.ifEmpty { mainItems() })
         fragmentManager.beginTransaction().setCustomAnimations(
             R.animator.slide_right_in,
             R.animator.slide_left_out,
             R.animator.slide_left_in,
             R.animator.slide_right_out
-        ).replace(frameLayoutId, fragment).addToBackStack(title.toString()).commit()
+        ).replace(frameLayoutId, MIUIFragment.newInstance(dataBinding, dataItem.ifEmpty { mainItems() }, callbacks)).addToBackStack(title.toString()).commit()
         if (fragmentManager.backStackEntryCount != 0) {
             backButton.visibility = View.VISIBLE
             if (menuItems().size != 0) menuButton.visibility = View.GONE

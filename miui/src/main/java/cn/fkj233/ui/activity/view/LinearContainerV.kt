@@ -7,7 +7,7 @@ import android.widget.LinearLayout
 import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.data.LayoutPair
 
-class LinearContainerV(private val orientation: Int, private val pairs: Array<LayoutPair>, val descendantFocusability: Int? = null, private val dataBinding: DataBinding? = null, private val click: ((View) -> Unit)? = null, val layoutParams: ViewGroup.LayoutParams? = null): BaseView() {
+class LinearContainerV(private val orientation: Int, private val pairs: Array<LayoutPair>, val descendantFocusability: Int? = null, private val dataBindingRecv: DataBinding.Binding.Recv? = null, private val click: ((View) -> Unit)? = null, val layoutParams: ViewGroup.LayoutParams? = null): BaseView() {
     companion object {
         const val VERTICAL = LinearLayout.VERTICAL
         const val HORIZONTAL = LinearLayout.HORIZONTAL
@@ -27,7 +27,7 @@ class LinearContainerV(private val orientation: Int, private val pairs: Array<La
             for (pair in pairs) {
                 it.addView(pair.view, pair.layoutParams)
             }
-            dataBinding?.add(dataBinding.Recv(it))
+            dataBindingRecv?.setView(it)
         }
     }
 }

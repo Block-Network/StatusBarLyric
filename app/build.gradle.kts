@@ -13,7 +13,7 @@ android {
         minSdk = 26
         targetSdk = 32
         versionCode = 100
-        versionName = "4.0.0beta"
+        versionName = "4.0.0"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }

@@ -14,7 +14,7 @@ import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.sp2px
 
-class SeekBarWithTextV(val key: String = "", val min: Int, val max: Int, val defaultProgress: Int = 0, val divide: Int = 1, private val dataBinding: DataBinding? = null, private val send: Boolean = false, val callBacks: ((Int, TextView) -> Unit)? = null): BaseView() {
+class SeekBarWithTextV(val key: String = "", val min: Int, val max: Int, val defaultProgress: Int = 0, val divide: Int = 1, private val dataBindingRecv: DataBinding.Binding.Recv? = null, private val dataBindingSend: DataBinding.Binding.Send? = null, val callBacks: ((Int, TextView) -> Unit)? = null): BaseView() {
 
     override var outside = true
 
@@ -48,7 +48,7 @@ class SeekBarWithTextV(val key: String = "", val min: Int, val max: Int, val def
             view.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                     callBacks?.let { it() }
-                    if (send) dataBinding?.send(p1)
+                    dataBindingSend?.send(p1)
                     OwnSP.ownSP.edit().run {
                         (mutableText as TextView).text = p1.toString()
                         putFloat(key, p1.toFloat() / divide)
@@ -68,7 +68,7 @@ class SeekBarWithTextV(val key: String = "", val min: Int, val max: Int, val def
                     dp2px(context, 25f), 0, dp2px(context, 25f), 0) }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
             )
         ).create(context, callBacks).also {
-            if (!send) dataBinding?.add(dataBinding.Recv(it))
+            dataBindingRecv?.setView(it)
         }
     }
 }
