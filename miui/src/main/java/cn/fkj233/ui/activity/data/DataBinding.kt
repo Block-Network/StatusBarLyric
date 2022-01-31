@@ -1,9 +1,19 @@
 package cn.fkj233.ui.activity.data
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.View
-import java.io.Serializable
 
-class DataBinding : Serializable {
+class DataBinding : Parcelable {
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(p0: Parcel?, p1: Int) {
+        p0?.writeList(bindingData)
+    }
+
     private var bindingData = arrayListOf<BindingData>()
 
     fun get(defValue: Any, recvCallbacks: (View, Int, Any) -> Unit): BindingData {
@@ -24,10 +34,26 @@ class DataBinding : Serializable {
         val recvCallbacks: (View, Int, Any) -> Unit
         )
 
-    inner class Binding(val recvCallbacks: (View, Int, Any) -> Unit) {
+    inner class Binding(val recvCallbacks: (View, Int, Any) -> Unit): Parcelable {
         var data: ArrayList<Recv> = arrayListOf()
 
-        inner class Send {
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        override fun writeToParcel(p0: Parcel?, p1: Int) {
+            p0?.writeList(data)
+        }
+
+        inner class Send: Parcelable {
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(p0: Parcel?, p1: Int) {
+                p0?.writeList(data)
+            }
+
             fun send(any: Any) {
                 for (recv in data) {
                     recv.recv(any)
@@ -47,8 +73,16 @@ class DataBinding : Serializable {
             return Recv(flags).also { add(it) }
         }
 
-        inner class Recv(private val flags: Int) {
+        inner class Recv(private val flags: Int): Parcelable {
             lateinit var mView: View
+
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            override fun writeToParcel(p0: Parcel?, p1: Int) {
+                p0?.writeValue(mView)
+            }
 
             fun setView(view: View) {
                 mView = view

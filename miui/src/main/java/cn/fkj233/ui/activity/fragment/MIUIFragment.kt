@@ -10,16 +10,16 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.data.DataBinding
+import cn.fkj233.ui.activity.data.FragmentData
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.activity.data.Item
-import cn.fkj233.ui.activity.data.Person
 import cn.fkj233.ui.activity.dp2px
 
 object MIUIFragment {
     fun newInstance(dataBinding: DataBinding, mDataItem: List<Item>, callBacks: (() -> Unit)?): Fragment {
         return MIUIFragment().apply {
             arguments = Bundle().apply {
-                putSerializable("value", Person().also {
+                putParcelable("value", FragmentData().also {
                     it.dataBinding = dataBinding
                     it.callBacks = callBacks
                     it.mDataItem = mDataItem
@@ -33,10 +33,10 @@ object MIUIFragment {
         @SuppressLint("ClickableViewAccessibility")
         override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View =
             ScrollView(context).apply {
-                val person = arguments.getSerializable("value") as Person
-                val dataBinding = person.dataBinding
-                val callBacks = person.callBacks
-                val itemList = person.mDataItem
+                val person = arguments.getParcelable<FragmentData>("value")
+                val dataBinding = person?.dataBinding
+                val callBacks = person?.callBacks
+                val itemList = person?.mDataItem
                 layoutParams =
                     ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT)
                 addView(

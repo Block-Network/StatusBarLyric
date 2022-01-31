@@ -12,7 +12,6 @@ import android.widget.*
 import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.data.Item
-import cn.fkj233.ui.activity.data.Person
 import cn.fkj233.ui.activity.fragment.MIUIFragment
 
 open class MIUIActivity : Activity() {
