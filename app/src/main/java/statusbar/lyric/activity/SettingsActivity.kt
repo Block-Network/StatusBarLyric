@@ -37,14 +37,14 @@ class NewSettingsActivity: MIUIActivity() {
         registerReceiver(HookReceiver(), IntentFilter().apply {
             addAction("Hook_Sure")
         })
-        setAllCallBacks {
-            sendBroadcast(
-                Intent().apply {
-                    action = "Lyric_Server"
-                    putExtra("Lyric_Type", "refresh")
-                }
-            )
-        }
+//        setAllCallBacks {
+//            sendBroadcast(
+//                Intent().apply {
+//                    action = "Lyric_Server"
+//                    putExtra("Lyric_Type", "refresh")
+//                }
+//            )
+//        }
     }
 
     inner class HookReceiver : BroadcastReceiver() {
