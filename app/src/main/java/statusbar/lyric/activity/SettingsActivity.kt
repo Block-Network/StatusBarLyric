@@ -406,7 +406,7 @@ class SettingsActivity: MIUIActivity() {
                     }
                 }))
                 add(SeekBarWithTextV("ISize", 0, 100, ActivityOwnSP.ownSPConfig.getIconSize()))
-                add(TextV(resId = R.string.IconSize, onClickListener = {
+                add(TextV(resId = R.string.IconHigh, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.IconHigh)
                         setMessage(R.string.LyricSizeTips)
