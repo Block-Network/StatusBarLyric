@@ -32,7 +32,6 @@ class MIUIFragment : Fragment() {
                     )
                     orientation = LinearLayout.VERTICAL
                     background = context.getDrawable(R.color.foreground)
-                    setPadding(dp2px(context, 25f), 0, dp2px(context, 25f), 0)
                     for (item: BaseView in itemList) {
                         addView(LinearLayout(context).apply { // 控件布局
                             layoutParams = ViewGroup.LayoutParams(
@@ -40,6 +39,7 @@ class MIUIFragment : Fragment() {
                                 ViewGroup.LayoutParams.MATCH_PARENT
                             )
                             background = context.getDrawable(R.drawable.ic_click_check)
+                            setPadding(dp2px(context, 25f), 0, dp2px(context, 25f), 0)
                             when (item) {
                                 is SeekBarV -> { // 滑动条
                                     addView(LinearLayout(context).apply {
@@ -54,16 +54,13 @@ class MIUIFragment : Fragment() {
                                     })
                                 }
                                 is SeekBarWithTextV -> { // 滑动条 带文本
-                                    addView(LinearLayout(context).apply {
-                                        setPadding(dp2px(activity, 12f), 0, dp2px(activity, 12f), 0)
-                                        addView(
-                                            item.create(context, callBacks),
-                                            LinearLayout.LayoutParams(
-                                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                                LinearLayout.LayoutParams.WRAP_CONTENT
-                                            )
+                                    addView(
+                                        item.create(context, callBacks),
+                                        LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.MATCH_PARENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
                                         )
-                                    })
+                                    )
                                 }
                                 is TextV -> { // 文本
                                     addView(item.create(context, callBacks))
