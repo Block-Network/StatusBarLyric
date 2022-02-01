@@ -27,7 +27,6 @@
     <string name="ReStartSystemUI">重啟 SystemUI</string>
     <string name="ResetModule">重置模塊</string>
     <string name="About">關於</string>
-    <string name="CheckUpdate">檢查更新</string>
     <string name="AboutModule">關於模塊</string>
     <string name="AboutTips1">主要負責 Hook 和 界面</string>
     <string name="AboutTips2">主要負責 摸鱼</string>

@@ -23,6 +23,8 @@ open class MIUIActivity : Activity() {
 
     private val dataBinding: DataBinding = DataBinding()
 
+    private var thisItems: List<Item> = mainItems()
+
     private val backButton by lazy {
         ImageView(activity).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.gravity = Gravity.CENTER_VERTICAL }
@@ -117,16 +119,29 @@ open class MIUIActivity : Activity() {
 
     fun showFragment(dataItem:  List<Item>, title: CharSequence?) {
         this.title = title
+        thisItems = dataItem.ifEmpty { mainItems() }
         fragmentManager.beginTransaction().setCustomAnimations(
             R.animator.slide_right_in,
             R.animator.slide_left_out,
             R.animator.slide_left_in,
             R.animator.slide_right_out
-        ).replace(frameLayoutId, MIUIFragment.newInstance(dataBinding, dataItem.ifEmpty { mainItems() }, callbacks)).addToBackStack(title.toString()).commit()
+        ).replace(frameLayoutId, MIUIFragment()).addToBackStack(title.toString()).commit()
         if (fragmentManager.backStackEntryCount != 0) {
             backButton.visibility = View.VISIBLE
             if (menuItems().size != 0) menuButton.visibility = View.GONE
         }
+    }
+
+    fun getThisItems(): List<Item> {
+        return thisItems
+    }
+
+    fun getAllCallBacks(): (() -> Unit)? {
+        return callbacks
+    }
+
+    fun getDataBinding(): DataBinding {
+        return dataBinding
     }
 
     fun setAllCallBacks(callbacks: () -> Unit) {

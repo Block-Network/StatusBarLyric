@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.Toast
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.Item
@@ -27,7 +28,7 @@ enum class DataItem {
     Custom, Author, CustomIcon
 }
 
-class NewSettingsActivity: MIUIActivity() {
+class SettingsActivity: MIUIActivity() {
     private val activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -291,7 +292,7 @@ class NewSettingsActivity: MIUIActivity() {
                 add(LineV())
             }))
             add(Item(arrayListOf<BaseView>().apply {
-                add(TextSummaryV("${getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClick = {
+                add(TextSummaryV("CheckUpdate (${BuildConfig.VERSION_NAME})", onClick = {
                     ActivityUtils.showToastOnLooper(
                         activity,
                         getString(R.string.StartCheckUpdate)

@@ -4,15 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
 
-class DataBinding : Parcelable {
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(p0: Parcel?, p1: Int) {
-        p0?.writeList(bindingData)
-    }
+class DataBinding {
 
     private var bindingData = arrayListOf<BindingData>()
 
@@ -27,33 +19,17 @@ class DataBinding : Parcelable {
         }
     }
 
-    data class BindingData (
+    data class BindingData(
         val defValue: Any,
         val binding: Binding,
         val bindingSend: Binding.Send,
         val recvCallbacks: (View, Int, Any) -> Unit
         )
 
-    inner class Binding(val recvCallbacks: (View, Int, Any) -> Unit): Parcelable {
+    inner class Binding(val recvCallbacks: (View, Int, Any) -> Unit) {
         var data: ArrayList<Recv> = arrayListOf()
 
-        override fun describeContents(): Int {
-            return 0
-        }
-
-        override fun writeToParcel(p0: Parcel?, p1: Int) {
-            p0?.writeList(data)
-        }
-
-        inner class Send: Parcelable {
-            override fun describeContents(): Int {
-                return 0
-            }
-
-            override fun writeToParcel(p0: Parcel?, p1: Int) {
-                p0?.writeList(data)
-            }
-
+        inner class Send {
             fun send(any: Any) {
                 for (recv in data) {
                     recv.recv(any)
