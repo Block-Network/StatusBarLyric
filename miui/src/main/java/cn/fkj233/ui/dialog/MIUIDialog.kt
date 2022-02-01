@@ -32,13 +32,14 @@ class MIUIDialog(context: Context): Dialog(context, R.style.CustomDialog) {
     private val message by lazy {
         TextView(context).also { textView ->
             textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
-                it.setMargins(0, dp2px(context, 3f), 0, 0)
+                it.setMargins(dp2px(context, 10f), dp2px(context, 3f), dp2px(context, 10f), 0)
             }
             textView.textSize = sp2px(context, 5f)
             textView.setTextColor(context.getColor(R.color.whiteText))
             textView.gravity = Gravity.CENTER
             textView.setPadding(0, dp2px(context, 3f), 0, 0)
             textView.visibility = View.GONE
+            textView.setPadding(dp2px(context, 10f), 0, dp2px(context, 10f), 0)
         }
     }
 
