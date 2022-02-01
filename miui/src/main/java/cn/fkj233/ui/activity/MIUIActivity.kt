@@ -13,6 +13,7 @@ import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.fragment.MIUIFragment
 import cn.fkj233.ui.activity.view.BaseView
+import kotlin.system.exitProcess
 
 open class MIUIActivity : Activity() {
 
@@ -23,7 +24,9 @@ open class MIUIActivity : Activity() {
 
     private val dataBinding: DataBinding = DataBinding()
 
-    private var thisItems: List<BaseView> = mainItems()
+    private var thisItems: ArrayList<List<BaseView>> = arrayListOf()
+
+    var isExit = false
 
     private val backButton by lazy {
         ImageView(activity).apply {
@@ -119,7 +122,7 @@ open class MIUIActivity : Activity() {
 
     fun showFragment(dataItem:  List<BaseView>, title: CharSequence?) {
         this.title = title
-        thisItems = dataItem.ifEmpty { mainItems() }
+        thisItems.add(dataItem)
         fragmentManager.beginTransaction().setCustomAnimations(
             R.animator.slide_right_in,
             R.animator.slide_left_out,
@@ -133,7 +136,7 @@ open class MIUIActivity : Activity() {
     }
 
     fun getThisItems(): List<BaseView> {
-        return thisItems
+        return thisItems[thisItems.size - 1]
     }
 
     fun getAllCallBacks(): (() -> Unit)? {
@@ -151,7 +154,9 @@ open class MIUIActivity : Activity() {
     override fun onBackPressed() {
         if (fragmentManager.backStackEntryCount <= 1) {
             finish()
+            if (isExit) exitProcess(0)
         } else {
+            thisItems.removeAt(thisItems.size - 1)
             if (fragmentManager.backStackEntryCount <= 2) {
                 backButton.visibility = View.GONE
                 if (menuItems().size != 0) menuButton.visibility = View.VISIBLE
