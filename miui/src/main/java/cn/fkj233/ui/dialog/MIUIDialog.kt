@@ -17,14 +17,12 @@ import cn.fkj233.ui.activity.sp2px
 
 
 class MIUIDialog(context: Context): Dialog(context, R.style.CustomDialog) {
-    private var callbacks: (() -> Unit)? = null
-
     private val title by lazy {
         TextView(context).also { textView ->
             textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {
                 it.setMargins(0, dp2px(context, 5f), 0, 0)
             }
-            textView.textSize = sp2px(context, 8f)
+            textView.textSize = sp2px(context, 7f)
             textView.setTextColor(context.getColor(R.color.whiteText))
             textView.gravity = Gravity.CENTER
             textView.setPadding(0, dp2px(context, 10f), 0, 0)
@@ -137,7 +135,6 @@ class MIUIDialog(context: Context): Dialog(context, R.style.CustomDialog) {
             setText(text)
             setOnClickListener {
                 callBacks(it)
-                callbacks?.let { it1 -> it1() }
             }
         }
     }
@@ -149,7 +146,6 @@ class MIUIDialog(context: Context): Dialog(context, R.style.CustomDialog) {
             setText(textId)
             setOnClickListener {
                 callBacks(it)
-                callbacks?.let { it1 -> it1() }
             }
         }
     }
@@ -160,7 +156,6 @@ class MIUIDialog(context: Context): Dialog(context, R.style.CustomDialog) {
             this.isEnabled = enable
             setOnClickListener {
                 callBacks(it)
-                callbacks?.let { it1 -> it1() }
             }
             visibility = View.VISIBLE
         }
@@ -172,7 +167,6 @@ class MIUIDialog(context: Context): Dialog(context, R.style.CustomDialog) {
             this.isEnabled = enable
             setOnClickListener {
                 callBacks(it)
-                callbacks?.let { it1 -> it1() }
             }
             visibility = View.VISIBLE
         }

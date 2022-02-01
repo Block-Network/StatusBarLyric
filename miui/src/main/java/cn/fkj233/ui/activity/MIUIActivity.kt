@@ -11,8 +11,8 @@ import android.view.ViewGroup
 import android.widget.*
 import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.data.DataBinding
-import cn.fkj233.ui.activity.data.Item
 import cn.fkj233.ui.activity.fragment.MIUIFragment
+import cn.fkj233.ui.activity.view.BaseView
 
 open class MIUIActivity : Activity() {
 
@@ -23,7 +23,7 @@ open class MIUIActivity : Activity() {
 
     private val dataBinding: DataBinding = DataBinding()
 
-    private var thisItems: List<Item> = mainItems()
+    private var thisItems: List<BaseView> = mainItems()
 
     private val backButton by lazy {
         ImageView(activity).apply {
@@ -97,7 +97,7 @@ open class MIUIActivity : Activity() {
         return dataBinding.get(defValue, recvCallBacks)
     }
 
-    open fun mainItems(): ArrayList<Item> {
+    open fun mainItems(): ArrayList<BaseView> {
         return ArrayList()
     }
 
@@ -105,7 +105,7 @@ open class MIUIActivity : Activity() {
         return ""
     }
 
-    open fun menuItems(): ArrayList<Item> {
+    open fun menuItems(): ArrayList<BaseView> {
         return ArrayList()
     }
 
@@ -117,7 +117,7 @@ open class MIUIActivity : Activity() {
         OwnSP.ownSP = sharedPreferences
     }
 
-    fun showFragment(dataItem:  List<Item>, title: CharSequence?) {
+    fun showFragment(dataItem:  List<BaseView>, title: CharSequence?) {
         this.title = title
         thisItems = dataItem.ifEmpty { mainItems() }
         fragmentManager.beginTransaction().setCustomAnimations(
@@ -132,7 +132,7 @@ open class MIUIActivity : Activity() {
         }
     }
 
-    fun getThisItems(): List<Item> {
+    fun getThisItems(): List<BaseView> {
         return thisItems
     }
 
