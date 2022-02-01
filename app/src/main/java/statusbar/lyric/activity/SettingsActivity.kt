@@ -1,5 +1,8 @@
 package statusbar.lyric.activity
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -36,14 +39,6 @@ class SettingsActivity: MIUIActivity() {
         registerReceiver(HookReceiver(), IntentFilter().apply {
             addAction("Hook_Sure")
         })
-//        setAllCallBacks {
-//            sendBroadcast(
-//                Intent().apply {
-//                    action = "Lyric_Server"
-//                    putExtra("Lyric_Type", "refresh")
-//                }
-//            )
-//        }
     }
 
     inner class HookReceiver : BroadcastReceiver() {
@@ -59,6 +54,24 @@ class SettingsActivity: MIUIActivity() {
                         setTitle(getString(R.string.HookSure))
                         setMessage(message)
                         setRButton(getString(R.string.Ok)) { dismiss() }
+                        show()
+                    }
+                    val channelId = "Hook_Ok"
+                    (applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager).apply {
+                        createNotificationChannel(
+                            NotificationChannel(
+                                channelId,
+                                "Hook",
+                                NotificationManager.IMPORTANCE_DEFAULT
+                            )
+                        )
+                        notify(0, Notification.Builder(applicationContext).let {
+                            it.setChannelId(channelId)
+                            it.setSmallIcon(R.mipmap.ic_launcher)
+                            it.setContentTitle(getString(R.string.HookSure))
+                            it.setContentText(message)
+                            it.build()
+                        })
                     }
                 }
             } catch (_: Throwable) {}
