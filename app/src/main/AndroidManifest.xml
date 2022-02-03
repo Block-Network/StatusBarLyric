@@ -15,9 +15,6 @@
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup">
 
-        <meta-data
-                android:name="EasyGoClient"
-                android:value="true" />
 
         <activity
                 android:name=".activity.SettingsActivity"
@@ -46,6 +43,21 @@
             </intent-filter>
         </activity-alias>
 
+        <service
+                android:name=".service.QuickTitleService"
+                android:exported="true"
+                android:icon="@drawable/title_icon"
+                android:label="@string/QuickTitle"
+                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+                android:name="EasyGoClient"
+                android:value="true" />
+
         <meta-data
                 android:name="xposeddescription"
                 android:value="@string/XposedTips"/>
@@ -59,16 +71,6 @@
                 android:name="xposedscope"
                 android:resource="@array/need_module"/>
 
-        <service
-                android:name=".service.QuickTitleService"
-                android:exported="true"
-                android:icon="@drawable/title_icon"
-                android:label="@string/QuickTitle"
-                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE"/>
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>

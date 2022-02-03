@@ -70,7 +70,7 @@ class SettingsActivity : MIUIActivity() {
                         notify(0, Notification.Builder(applicationContext).let {
                             it.setChannelId(channelId)
                             it.setSmallIcon(R.mipmap.ic_launcher)
-                            it.setContentTitle(getString(R.string.HookSure))
+                            it.setContentTitle(getString(R.string.AppName))
                             it.setContentText(message)
                             it.build()
                         })
@@ -474,21 +474,13 @@ class SettingsActivity : MIUIActivity() {
                 }))
                 val meiZuStyle = getDataBinding(ActivityOwnSP.ownSPConfig.getLyricStyle()) { view, flags, data ->
                     when (flags) {
-                        1 -> view.visibility = if (data as Boolean) View.GONE else View.VISIBLE
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
                 add(
                     TextWithSwitchV(
-                        TextV(resId = R.string.MeizuStyle),
+                        TextV(resId = R.string.MeizuStyle, dataBindingRecv = meiZuStyle.binding.getRecv(1)),
                         SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend)
-                    )
-                )
-                add(
-                    TextWithSwitchV(
-                        TextV(resId = R.string.lShowOnce),
-                        SwitchV("LShowOnce", true),
-                        dataBindingRecv = meiZuStyle.binding.getRecv(1)
                     )
                 )
                 add(TextSummaryV(textId = R.string.LyricSpeed, onClick = {

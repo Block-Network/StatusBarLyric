@@ -169,11 +169,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         lyricTextView.setMargins(10, 0, 0, 0)
         if (config.getLyricStyle()) {
-            if (config.getLShowOnce()) {
-                lyricTextView.setMarqueeRepeatLimit(1) // 设置跑马灯为1次
-            } else {
-                lyricTextView.setMarqueeRepeatLimit(-1) // 设置跑马灯重复次数，-1为无限重复
-            }
+            lyricTextView.setMarqueeRepeatLimit(1) // 设置跑马灯为1次
+        } else {
+            lyricTextView.setMarqueeRepeatLimit(-1) // 设置跑马灯重复次数，-1为无限重复
         }
         lyricTextView.setSingleLine(true)
         lyricTextView.setMaxLines(1)
