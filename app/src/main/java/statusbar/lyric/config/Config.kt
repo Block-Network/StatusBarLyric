@@ -152,6 +152,13 @@ class Config {
     fun setAnim(str: String) {
         config.put("Anim", str)
     }
+    fun getViewPosition(): String {
+        return config.optString("ViewPosition", "first")
+    }
+
+    fun setViewPosition(str: String) {
+        config.put("ViewPosition", str)
+    }
 
     fun getHook(): String {
         return config.optString("Hook", "")
@@ -167,10 +174,6 @@ class Config {
 
     fun getPseudoTime(): Boolean {
         return config.optBoolean("PseudoTime", false)
-    }
-
-    fun getLShowOnce(): Boolean {
-        return config.optBoolean("LShowOnce", false)
     }
 
     fun getUseSystemReverseColor(): Boolean {

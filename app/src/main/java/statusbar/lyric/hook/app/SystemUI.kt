@@ -201,7 +201,12 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         val clockLayout: LinearLayout = clock.parent as LinearLayout
         clockLayout.gravity = Gravity.CENTER
         clockLayout.orientation = LinearLayout.HORIZONTAL
-        clockLayout.addView(lyricLayout)
+        if (config.getViewPosition() == "first") {
+            clockLayout.addView(lyricLayout, 1)
+        } else {
+            clockLayout.addView(lyricLayout)
+        }
+
 
         // 歌词点击事件
         if (config.getLyricSwitch()) {

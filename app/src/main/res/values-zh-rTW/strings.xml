@@ -130,4 +130,7 @@
     <string name="HookSure">Hook 系统界面</string>
     <string name="HookSureSuccess">Hook 系统界面成功</string>
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
+    <string name="First">控件首</string>
+    <string name="Latest">控件尾</string>
+    <string name="ViewPosition">控件添加位置</string>
 </resources>

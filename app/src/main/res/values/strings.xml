@@ -143,4 +143,7 @@
     <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged
         SystemUI
     </string>
+    <string name="First">View Header</string>
+    <string name="Latest">View Latest</string>
+    <string name="ViewPosition">View add position</string>
 </resources>

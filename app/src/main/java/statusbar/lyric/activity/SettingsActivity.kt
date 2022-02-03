@@ -215,6 +215,13 @@ class SettingsActivity : MIUIActivity() {
             add(TextWithSwitchV(TextV(resId = R.string.AutoHideNotiIcon), SwitchV("HNoticeIcon")))
             add(TextWithSwitchV(TextV(resId = R.string.HideNetWork), SwitchV("HNetSpeed")))
             add(TextWithSwitchV(TextV(resId = R.string.AutoHideCarrierName), SwitchV("HCuk")))
+            val dict: HashMap<String, String> = hashMapOf()
+            dict["first"] = getString(R.string.First)
+            dict["latest"] = getString(R.string.Latest)
+            add(TextWithSpinnerV(TextV(resId = R.string.ViewPosition), Spinner(arrayListOf(
+                MIUIPopupData(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setViewPosition("first") },
+                MIUIPopupData(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setViewPosition("latest") }
+            ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!)))
             add(LineV())
             add(TitleTextV(resId = R.string.Other))
             add(TextSummaryV(textId = R.string.CustomHook, onClick = {
@@ -540,7 +547,7 @@ class SettingsActivity : MIUIActivity() {
                 arrayListOf<BaseView>().apply {
                     val iconConfig = IconConfig(Utils.getSP(activity, "Icon_Config"))
                     for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
-                        val drawable:Drawable = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
+                        val drawable: Drawable = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
                         drawable.setTint(getColor(android.R.color.background_dark))
                         add(AuthorV(drawable, icon, onClick = {
                             MIUIDialog(activity).apply {
