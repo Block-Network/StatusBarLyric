@@ -14,18 +14,15 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.MIUIPopupData
+import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.dialog.MIUIDialog
 import com.microsoft.appcenter.analytics.Analytics
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
-import statusbar.lyric.utils.ActivityOwnSP
-import statusbar.lyric.utils.ActivityUtils
-import statusbar.lyric.utils.ShellUtils
-import statusbar.lyric.utils.Utils
+import statusbar.lyric.utils.*
 import kotlin.system.exitProcess
 
 enum class DataItem {
@@ -42,6 +39,22 @@ class SettingsActivity : MIUIActivity() {
         registerReceiver(HookReceiver(), IntentFilter().apply {
             addAction("Hook_Sure")
         })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode != RESULT_OK) return
+        when (requestCode) {
+            BackupUtils.CREATE_DOCUMENT_CODE -> {
+                if (data != null) {
+                    BackupUtils.handleCreateDocument(activity, data.data)
+                }
+            }
+            BackupUtils.OPEN_DOCUMENT_CODE -> {
+                if (data != null) {
+                    BackupUtils.handleReadDocument(activity, data.data)
+                }
+            }
+        }
     }
 
     inner class HookReceiver : BroadcastReceiver() {
@@ -150,6 +163,12 @@ class SettingsActivity : MIUIActivity() {
                     setLButton(R.string.Cancel) { dismiss() }
                     show()
                 }
+            }))
+            add(TextSummaryV("Backup", onClick = {
+                BackupUtils.backup(activity, getSP())
+            }))
+            add(TextSummaryV("Recovery", onClick = {
+                BackupUtils.recovery(activity, getSP())
             }))
             add(LineV())
             add(TitleTextV("Module Version"))

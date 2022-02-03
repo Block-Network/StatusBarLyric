@@ -125,6 +125,10 @@ open class MIUIActivity : Activity() {
         OwnSP.ownSP = sharedPreferences
     }
 
+    fun getSP(): SharedPreferences {
+        return OwnSP.ownSP
+    }
+
     fun showFragment(dataItem:  List<BaseView>, title: CharSequence?) {
         this.title = title
         thisItems.add(dataItem)
