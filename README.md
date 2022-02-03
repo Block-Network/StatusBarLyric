@@ -26,17 +26,7 @@
 
 ## 支持的音乐软件版本
 
-- [APlayer](https://github.com/rRemix/APlayer) 未知 ~ 1.5.7.9
-- __QQ音乐__ 未知 ~ 11.0.16
-- __咪咕音乐__ 未知 ~ 7.7.0
-- __网易云音乐__ 7.2.21 ~ 8.6.40
-- __魅族音乐__ 未知 ~ 未知
-- __酷狗音乐__ 未知 ~ 11.0.2
-- __酷我音乐__ 未知 ~ 10.0.4.9
-
-### 应用主动适配
-
-- __[椒盐音乐](https://github.com/Moriafly/SaltPlayerSource)__ 4.5 ~ 现今
+- __请查看模块内的使用说明__
 
 ## 感谢名单（不分先后）
 
@@ -69,11 +59,12 @@
 
 请查看 [Api](https://github.com/577fkj/StatusBarApiExample)
 
+
 ## 贡献
 
-[贡献](doc/CONTRIBUTING.md)
-
-[赞助列表](doc/SPONSOR.md)
+[想做贡献？](doc/CONTRIBUTING.md)  
+[合作名单](doc/Cooperate.md)   
+[赞助列表](doc/SPONSOR.md)  
 
 <img height="400px" src="./images/3to1.jpg" />
 

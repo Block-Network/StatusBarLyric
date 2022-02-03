@@ -25,17 +25,7 @@
 
 ## Supported Music app versions
 
-- __[APlayer](https://github.com/rRemix/APlayer)__ Unknown ~ 1.5.7.9
-- __QQ Music__ unknown ~ 11.0.16
-- __Migu Music__ Unknown ~ 7.7.0
-- __Netease Music__ 7.22.1 ~ 8.6.40
-- __Meizu Music__ Unknown ~ Unknown
-- __Kugou Music__ Unknown ~ 11.0.2
-- __Kuwo Music__ Unknown ~ 10.0.4.9
-
-### App active adaptation
-
-- __[SaltPlayer](https://github.com/Moriafly/SaltPlayerSource)__：4.5 ~ now
+- __Please check the instructions in the module__
 
 ## Thanks list（In no particular order）
 
@@ -66,9 +56,9 @@ please check [Api](https://github.com/577fkj/StatusBarApiExample)
 
 ## Contributing
 
-[Contributing](doc/CONTRIBUTING_EN.md)
-
-[Sponsorship list](doc/SPONSOR.md)
+[Want to contribute?](doc/CONTRIBUTING_EN.md)  
+[Cooperate Lists](doc/Cooperate.md)  
+[Sponsorship list](doc/SPONSOR.md)  
 
 <img height="400px" src="./images/3to1.jpg" />
 
