@@ -39,17 +39,15 @@
     <string name="Done">關閉</string>
     <string name="CurrentVer">當前版本</string>
     <string name="VerExp">適用情況：\n
-        - APlayer 未知 ~ 1.5.7.9\n
-        - QQ音樂 未知 ~ 11.0.1.6\n
-        - 咪咕音樂 未知 ~ 7.8.0\n
-        - 網易云音樂 8.2.10 ~ 8.6.50\n
-        - 網易云音樂 未知 ~ 8.0.40（設定打開車載藍牙歌詞）\n
-        - 酷狗音樂 未知 ~ 11.0.4\n
-        - 酷我音樂 未知 ~ 10.0.5.1\n\n
-        - 椒鹽音樂 4.5 ~ 現今\n
-        - 魅族音乐 未知 ~ 未知\n
-        - Phonograph Plus第三方修改版本\n
-        https://github.com/kabouzeid/Phonograph\n
+        - APlayer 未知 ~ 1.5.8.0（狀態欄歌詞版）\n
+        - QQ音樂 未知 ~ 11.0.1.6（狀態欄歌詞版）\n
+        - 咪咕音樂 未知 ~ 7.9.0(車載藍牙歌詞版)\n
+        - 網易云音樂 8.2.10 ~ 現今（狀態欄歌詞版）\n
+        - 網易云音樂 未知 ~ 8.0.40 (車載藍牙歌詞版)\n
+        - 酷狗音樂 未知 ~ 11.0.8(車載藍牙歌詞版)\n
+        - 酷我音樂 未知 ~ 10.0.7.0(車載藍牙歌詞版)\n
+        - 椒鹽音樂 4.5 ~ 現今（API版）\n
+        - 魅族音樂 未知 ~ 現今（狀態欄歌詞版）
     </string>
     <string name="AppName">墨•狀態欄歌詞</string>
     <string name="QuickTitle">狀態欄歌詞</string>

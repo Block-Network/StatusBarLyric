@@ -39,17 +39,15 @@
     <string name="Done">关闭</string>
     <string name="CurrentVer">当前版本</string>
     <string name="VerExp">适用情况：\n
-        - APlayer 未知 ~ 1.5.7.9\n
-        - QQ音乐 未知 ~ 11.0.1.6\n
-        - 咪咕音乐 未知 ~ 7.8.0\n
-        - 网易云音乐 8.2.10 ~ 8.6.50\n
-        - 网易云音乐 未知 ~ 8.0.40 (设置打开车载蓝牙歌词)\n
-        - 酷狗音乐 未知 ~ 11.0.4\n
-        - 酷我音乐 未知 ~ 10.0.5.1\n\n
-        - 椒盐音乐 4.5 ~ 现今\n
-        - 魅族音乐 未知 ~ 未知\n
-        - Phonograph Plus第三方修改版本\n
-        https://github.com/kabouzeid/Phonograph\n
+        - APlayer 未知 ~ 1.5.8.0（状态栏歌词版）\n
+        - QQ音乐 未知 ~ 11.0.1.6（状态栏歌词版）\n
+        - 咪咕音乐 未知 ~ 7.9.0(车载蓝牙歌词版)\n
+        - 网易云音乐 8.2.10 ~ 现今（状态栏歌词版）\n
+        - 网易云音乐 未知 ~ 8.0.40 (车载蓝牙歌词版)\n
+        - 酷狗音乐 未知 ~ 11.0.8(车载蓝牙歌词版)\n
+        - 酷我音乐 未知 ~ 10.0.7.0(车载蓝牙歌词版)\n
+        - 椒盐音乐 4.5 ~ 现今（API版）\n
+        - 魅族音乐 未知 ~ 现今（状态栏歌词版）
     </string>
     <string name="AppName">墨•状态栏歌词</string>
     <string name="QuickTitle">状态栏歌词</string>
@@ -123,7 +121,8 @@
         a：上下午标识\n
         z：表示时区\n
         若要显示自定义文字，在下面编辑框里填写即可\n
-        当前格式：</string>
+        当前格式：
+    </string>
     <string name="Custom">自定义</string>
     <string name="InputCustomHook">自定义Hook点，空关闭</string>
     <string name="HideTime">隐藏时间</string>
