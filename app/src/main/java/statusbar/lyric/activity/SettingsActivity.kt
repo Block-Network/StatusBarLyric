@@ -273,6 +273,7 @@ class SettingsActivity : MIUIActivity() {
                     textId = R.string.AboutModule,
                     onClick = { showFragment(getItems(DataItem.Author), getString(R.string.AboutModule)) })
             )
+            add(TextV())
         }
     }
 
@@ -554,6 +555,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                         }))
                     }
+                    add(TextV())
                 }
             }
             DataItem.Author -> {
@@ -616,6 +618,7 @@ class SettingsActivity : MIUIActivity() {
                             "https://fkj2005.gitee.io/merger/"
                         )
                     }))
+                    add(TextV())
                 }
             }
         }
