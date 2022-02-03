@@ -1,11 +1,19 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="android:colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/foreground</item>
         <item name="android:colorAccent">@color/colorAccent</item>
         <!-- Customize your theme here. -->
         <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="Q">true</item>
     </style>
+
+
+    <!-- 定义dialog的样式-->
+
 </resources>

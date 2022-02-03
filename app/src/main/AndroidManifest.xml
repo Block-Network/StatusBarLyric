@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="miui.statusbar.lyric">
+          package="statusbar.lyric">
 
-    <uses-permission
-            android:name="android.permission.FORCE_STOP_PACKAGES"
-            tools:ignore="ProtectedPermissions"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission"/>
     <application
@@ -18,8 +15,7 @@
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup">
 
-        <activity android:name=".activity.AboutActivity"/>
-        <activity android:name=".activity.ApiAPPListActivity"/>
+
         <activity
                 android:name=".activity.SettingsActivity"
                 android:exported="true"
@@ -27,7 +23,7 @@
                 tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <action android:name="miui.statusbar.lyric.SettingsFragment"/>
+                <action android:name="miui.cn.fkj233.xposed.statusbarlyric.SettingsFragment"/>
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -47,6 +43,21 @@
             </intent-filter>
         </activity-alias>
 
+        <service
+                android:name=".service.QuickTitleService"
+                android:exported="true"
+                android:icon="@drawable/title_icon"
+                android:label="@string/QuickTitle"
+                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+                android:name="EasyGoClient"
+                android:value="true" />
+
         <meta-data
                 android:name="xposeddescription"
                 android:value="@string/XposedTips"/>
@@ -60,16 +71,6 @@
                 android:name="xposedscope"
                 android:resource="@array/need_module"/>
 
-        <service
-                android:name=".service.QuickTitleService"
-                android:exported="true"
-                android:icon="@drawable/title_icon"
-                android:label="@string/QuickTitle"
-                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE"/>
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>

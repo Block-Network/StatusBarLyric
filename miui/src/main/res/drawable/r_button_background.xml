@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:Android="http://schemas.android.com/apk/res/android">
+    <!-- 定义禁用时的图片 -->
+    <item Android:drawable="@drawable/r_button_background_disable" Android:state_enabled="false" />
+    <!-- 定义按钮按下时的图片 -->
+    <item Android:drawable="@drawable/r_button_background_pressed" Android:state_pressed="true"/>
+    <!-- 定义按钮默认的图片 -->
+    <item Android:drawable="@drawable/r_button_background_no_pressed"/>
+</selector>

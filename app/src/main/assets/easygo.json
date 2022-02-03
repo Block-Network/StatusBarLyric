@@ -1,0 +1,25 @@
+{
+  "easyGoVersion": "1.0",
+  "client": "statusbar.lyric",
+  "logicEntities": [
+    {
+      "head": {
+        "function": "magicwindow",
+        "required": "true"
+      },
+      "body": {
+        "mode": "0",
+        "activityPairs": [
+          {
+            "from": "*",
+            "to": "*"
+          }
+        ],
+        "transActivities": [
+          "*",
+          "*"
+        ]
+      }
+    }
+  ]
+}

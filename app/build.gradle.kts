@@ -9,11 +9,11 @@ android {
     compileSdk = 32
 
     defaultConfig {
-        applicationId = "miui.statusbar.lyric"
+        applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 32
-        versionCode = 83
-        versionName = "3.56.25"
+        versionCode = 100
+        versionName = "4.0.0"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }
@@ -36,6 +36,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.majorVersion
+    }
     packagingOptions {
         resources {
             excludes += "/META-INF/**"
@@ -47,9 +50,13 @@ android {
             useLegacyPackaging = true
         }
     }
+    buildFeatures {
+        viewBinding = true
+    }
     applicationVariants.all {
         outputs.all {
-            (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName($versionCode)-$name.apk"
+            (this as BaseVariantOutputImpl).outputFileName =
+                "StatusBarLyric-$versionName($versionCode)-$name.apk"
         }
     }
 }
@@ -65,5 +72,6 @@ dependencies {
     val appCenterSdkVersion = "4.4.2"
     implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
     implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
-
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation(project(":miui"))
 }
