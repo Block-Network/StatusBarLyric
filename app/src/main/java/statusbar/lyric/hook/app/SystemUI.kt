@@ -25,6 +25,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
+import androidx.core.graphics.drawable.DrawableCompat.setTint
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
@@ -258,10 +259,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
 
         val updateIconColor = Handler(Looper.getMainLooper()) { message ->
-            if (iconReverseColor) {
-                val color: ColorStateList = ColorStateList.valueOf(message.arg1)
-                iconView.imageTintList = color
-            }
+            iconView.setColorFilter(message.arg1)
+
             true
         }
 
@@ -332,48 +331,48 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             true
         }
 
-        if (config.getUseSystemReverseColor()) {
-            Timer().schedule(
-                object : TimerTask() {
-                    var color = 0
-                    var clockColor = 0
 
-                    override fun run() {
-                        try {
-                            if (!enable) {
-                                return
-                            }
-                            if (config.getLyricService()) {
-                                // 设置颜色
-                                if (config.getLyricColor() != "") {
-                                    if (color != Color.parseColor(config.getLyricColor())) {
-                                        color = Color.parseColor(config.getLyricColor())
-                                        val message: Message = updateTextColor.obtainMessage()
-                                        message.arg1 = color
-                                        updateTextColor.sendMessage(message)
-                                    }
-                                } else {
-                                    if (clockColor == clock.textColors.defaultColor) {
-                                        return
-                                    }
-                                    clockColor = clock.textColors.defaultColor
-                                    if (config.getLyricColor() == "") {
-                                        val message: Message = updateTextColor.obtainMessage()
-                                        message.arg1 = clockColor
-                                        updateTextColor.sendMessage(message)
-                                    }
-                                    val message: Message = updateIconColor.obtainMessage()
-                                    message.arg1 = clockColor
-                                    updateIconColor.sendMessage(message)
-                                }
-                            }
-                        } catch (e: Exception) {
-                            LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
+        Timer().schedule(
+            object : TimerTask() {
+                var color = 0
+
+                override fun run() {
+                    try {
+                        if (!enable) {
+                            return
                         }
+
+                        // 设置颜色
+                        if (config.getLyricColor().isEmpty() && !config.getUseSystemReverseColor()) {
+                            if (color != clock.textColors.defaultColor) {
+                                color = clock.textColors.defaultColor
+                                val message1: Message = updateTextColor.obtainMessage()
+                                message1.arg1 = color
+                                updateTextColor.sendMessage(message1)
+
+                                val message2: Message = updateIconColor.obtainMessage()
+                                message2.arg1 = color
+                                updateIconColor.sendMessage(message2)
+                            }
+                        } else if (config.getLyricColor().isNotEmpty()) {
+                            if (color != Color.parseColor(config.getLyricColor())) {
+                                color = Color.parseColor(config.getLyricColor())
+                                val message: Message = updateTextColor.obtainMessage()
+                                message.arg1 = color
+                                updateTextColor.sendMessage(message)
+
+                                val message2: Message = updateIconColor.obtainMessage()
+                                message2.arg1 = color
+                                updateIconColor.sendMessage(message2)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
                     }
-                }, 0, 25
-            )
-        }
+                }
+            }, 0, 25
+        )
+
 
         // 检测音乐是否关闭
         Timer().schedule(
@@ -527,7 +526,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             }
         }
         updateLyricPos.sendEmptyMessage(0)
-        iconReverseColor = config.getIconAutoColor() == false
+        iconReverseColor = config.getIconAutoColor()
         if (config.getLyricStyle()) {
             lyricTextView.setSpeed(config.getLyricSpeed())
         }
@@ -572,7 +571,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     fun hook() {
         // 使用系统方法反色
         LogUtils.e("使用系统反色: " + config.getUseSystemReverseColor().toString())
-        if (config.getUseSystemReverseColor()) {
+        if (config.getUseSystemReverseColor() && config.getLyricColor().isEmpty()) {
             try {
                 val darkIconDispatcher =
                     "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
@@ -591,11 +590,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                                 try {
                                     super.afterHookedMethod(param)
                                     val areaTint = param.args[2] as Int
-                                    if (config.getLyricColor() == "" && !iconReverseColor) {
-                                        val color = ColorStateList.valueOf(areaTint)
-                                        iconView?.imageTintList = color
-                                    }
-                                    lyricTextView?.setTextColor(areaTint)
+
+                                    val color = ColorStateList.valueOf(areaTint)
+                                    iconView.imageTintList = color
+                                    lyricTextView.setTextColor(areaTint)
                                 } catch (_: UninitializedPropertyAccessException) {
                                 }
                             }

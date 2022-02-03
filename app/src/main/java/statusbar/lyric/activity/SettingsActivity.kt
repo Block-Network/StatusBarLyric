@@ -9,6 +9,7 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -440,7 +441,7 @@ class SettingsActivity : MIUIActivity() {
                 ), dict[ActivityOwnSP.ownSPConfig.getAnim()]!!)))
                 val timeBinding = getDataBinding(ActivityOwnSP.ownSPConfig.getHideTime()) { view, flags, data ->
                     when (flags) {
-                        2 -> view.visibility = if (data as Boolean) View.GONE else View.VISIBLE
+                        2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
                 add(
@@ -539,7 +540,7 @@ class SettingsActivity : MIUIActivity() {
                 arrayListOf<BaseView>().apply {
                     val iconConfig = IconConfig(Utils.getSP(activity, "Icon_Config"))
                     for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
-                        val drawable = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
+                        val drawable:Drawable = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
                         drawable.setTint(getColor(android.R.color.background_dark))
                         add(AuthorV(drawable, icon, onClick = {
                             MIUIDialog(activity).apply {

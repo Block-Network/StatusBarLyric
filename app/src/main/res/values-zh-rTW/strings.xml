@@ -9,7 +9,7 @@
     <string name="Off">關閉</string>
     <string name="LyricAutoMaxWidth">歌詞自適應最大寬度</string>
     <string name="LyricsAnimation">歌詞動效</string>
-    <string name="LyricColor">歌詞顏色</string>
+    <string name="LyricColor">* 歌詞顏色</string>
     <string name="LyricIcon">歌詞圖標</string>
     <string name="LyricSpeed">歌詞滾動速度</string>
     <string name="AdvancedSettings">高級設置 (停止音樂後改動選項)</string>
