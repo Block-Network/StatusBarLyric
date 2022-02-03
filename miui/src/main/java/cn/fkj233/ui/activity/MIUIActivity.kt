@@ -5,6 +5,7 @@ package cn.fkj233.ui.activity
 import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -90,6 +91,8 @@ open class MIUIActivity : Activity() {
             addView(frameLayout)
         })
         if (isLoad) showFragment(mainItems(), mainName())
+        if (menuItems().size == 0) menuButton.visibility = View.GONE else menuButton.visibility = View.VISIBLE
+        backButton.visibility = View.GONE
     }
 
     override fun setTitle(title: CharSequence?) {
@@ -136,7 +139,7 @@ open class MIUIActivity : Activity() {
     }
 
     fun getThisItems(): List<BaseView> {
-        return thisItems[thisItems.size - 1]
+        return thisItems[thisItems.lastSize()]
     }
 
     fun getAllCallBacks(): (() -> Unit)? {
@@ -156,7 +159,7 @@ open class MIUIActivity : Activity() {
             finish()
             if (isExit) exitProcess(0)
         } else {
-            thisItems.removeAt(thisItems.size - 1)
+            thisItems.removeAt(thisItems.lastSize())
             if (fragmentManager.backStackEntryCount <= 2) {
                 backButton.visibility = View.GONE
                 if (menuItems().size != 0) menuButton.visibility = View.VISIBLE
@@ -165,5 +168,7 @@ open class MIUIActivity : Activity() {
             fragmentManager.popBackStack()
         }
     }
+
+    private fun ArrayList<*>.lastSize(): Int = this.size - 1
 
 }
