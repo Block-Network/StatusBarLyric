@@ -8,7 +8,10 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import cn.fkj233.miui.R
 import cn.fkj233.ui.activity.data.DataBinding
 import cn.fkj233.ui.activity.fragment.MIUIFragment
@@ -90,6 +93,8 @@ open class MIUIActivity : Activity() {
             addView(frameLayout)
         })
         if (isLoad) showFragment(mainItems(), mainName())
+        if (menuItems().size == 0) menuButton.visibility = View.GONE else menuButton.visibility = View.VISIBLE
+        backButton.visibility = View.GONE
     }
 
     override fun setTitle(title: CharSequence?) {
@@ -136,7 +141,7 @@ open class MIUIActivity : Activity() {
     }
 
     fun getThisItems(): List<BaseView> {
-        return thisItems[thisItems.size - 1]
+        return thisItems[thisItems.lastSize()]
     }
 
     fun getAllCallBacks(): (() -> Unit)? {
@@ -156,7 +161,7 @@ open class MIUIActivity : Activity() {
             finish()
             if (isExit) exitProcess(0)
         } else {
-            thisItems.removeAt(thisItems.size - 1)
+            thisItems.removeAt(thisItems.lastSize())
             if (fragmentManager.backStackEntryCount <= 2) {
                 backButton.visibility = View.GONE
                 if (menuItems().size != 0) menuButton.visibility = View.VISIBLE
@@ -165,5 +170,7 @@ open class MIUIActivity : Activity() {
             fragmentManager.popBackStack()
         }
     }
+
+    private fun ArrayList<*>.lastSize(): Int = this.size - 1
 
 }
