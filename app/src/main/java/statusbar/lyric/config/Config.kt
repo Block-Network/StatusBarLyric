@@ -30,9 +30,16 @@ class Config {
     fun getLyricWidth(): Int {
         return config.optInt("LWidth", -1)
     }
+    fun setLyricWidth(i: Int) {
+        config.put("LWidth", i)
+    }
 
     fun getLyricMaxWidth(): Int {
         return config.optInt("LMaxWidth", -1)
+    }
+
+    fun setLyricMaxWidth(i: Int) {
+        config.put("LMaxWidth", i)
     }
 
     fun getLyricPosition(): Int {
@@ -53,6 +60,9 @@ class Config {
 
     fun getLyricSize(): Int {
         return config.optInt("LSize", 0)
+    }
+    fun setLyricSize(i: Int) {
+        config.put("LSize", i)
     }
 
     fun getIconSize(): Int {

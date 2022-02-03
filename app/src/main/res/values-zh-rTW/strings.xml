@@ -105,6 +105,7 @@
     <string name="LyricSize">* 歌詞大小</string>
     <string name="IconSize">圖標大小</string>
     <string name="LyricSizeTips">0~50，當前:</string>
+    <string name="LyricTips">0%~100%，當前:</string>
     <string name="Test">測試</string>
     <string name="TestDialogTips">這個功能是內嵌在SystemUI裏的，可能會導致SystemUI崩潰重啓！</string>
     <string name="Back">返回</string>

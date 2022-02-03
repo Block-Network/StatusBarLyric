@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package statusbar.lyric.activity
 
 import android.app.Notification
@@ -29,7 +31,7 @@ enum class DataItem {
     Custom, Author, CustomIcon
 }
 
-class SettingsActivity: MIUIActivity() {
+class SettingsActivity : MIUIActivity() {
     private val activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +76,8 @@ class SettingsActivity: MIUIActivity() {
                         })
                     }
                 }
-            } catch (_: Throwable) {}
+            } catch (_: Throwable) {
+            }
         }
     }
 
@@ -197,7 +200,11 @@ class SettingsActivity: MIUIActivity() {
             add(TitleTextV(resId = R.string.BaseSetting))
             add(TextWithSwitchV(TextV(resId = R.string.AllSwitch), SwitchV("LService")))
             add(TextWithSwitchV(TextV(resId = R.string.LyricIcon), SwitchV("I", true)))
-            add(TextSummaryV(textId = R.string.Custom, onClick = { showFragment(getItems(DataItem.Custom), getString(R.string.Custom)) }))
+            add(
+                TextSummaryV(
+                    textId = R.string.Custom,
+                    onClick = { showFragment(getItems(DataItem.Custom), getString(R.string.Custom)) })
+            )
             add(LineV())
             add(TitleTextV(resId = R.string.AdvancedSettings))
             add(TextWithSwitchV(TextV(resId = R.string.AbScreen), SwitchV("AntiBurn")))
@@ -261,7 +268,11 @@ class SettingsActivity: MIUIActivity() {
                 )
                 ActivityUtils.checkUpdate(activity)
             }))
-            add(TextSummaryV(textId = R.string.AboutModule, onClick = { showFragment(getItems(DataItem.Author), getString(R.string.AboutModule)) }))
+            add(
+                TextSummaryV(
+                    textId = R.string.AboutModule,
+                    onClick = { showFragment(getItems(DataItem.Author), getString(R.string.AboutModule)) })
+            )
         }
     }
 
@@ -294,17 +305,89 @@ class SettingsActivity: MIUIActivity() {
                         show()
                     }
                 }))
-                add(TextV(resId = R.string.LyricSize))
-                add(SeekBarWithTextV("LSize", 0, 100))
+                add(TextV(resId = R.string.LyricSize, onClickListener = {
+                    MIUIDialog(activity).apply {
+                        setTitle(R.string.LyricSize)
+                        setMessage(R.string.LyricSizeTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricSize().toString(), "0")
+                        setRButton(R.string.Ok) {
+                            if (getEditText() == "") {
+                                ActivityOwnSP.ownSPConfig.setLyricSize(0)
+                            } else {
+                                try {
+                                    ActivityOwnSP.ownSPConfig.setLyricSize(getEditText().toInt())
+                                } catch (e: Throwable) {
+                                    ActivityUtils.showToastOnLooper(
+                                        activity,
+                                        getString(R.string.LyricColorError)
+                                    )
+                                    ActivityOwnSP.ownSPConfig.setLyricSize(0)
+                                }
+                            }
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                        show()
+                    }
+                }))
+                add(SeekBarWithTextV("LSize", 0, 50))
                 val dataBinding = getDataBinding(ActivityOwnSP.ownSPConfig.getLyricWidth()) { view, flags, data ->
                     when (flags) {
                         1 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
                         2 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
                     }
                 }
-                add(TextV(resId = R.string.LyricWidth))
+                add(TextV(resId = R.string.LyricWidth, onClickListener = {
+                    MIUIDialog(activity).apply {
+                        setTitle(R.string.LyricWidth)
+                        setMessage(R.string.LyricTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricWidth().toString(), "-1")
+                        setRButton(R.string.Ok) {
+                            if (getEditText() == "") {
+                                ActivityOwnSP.ownSPConfig.setLyricSize(-1)
+                            } else {
+                                try {
+                                    ActivityOwnSP.ownSPConfig.setLyricWidth(getEditText().toInt())
+                                } catch (e: Throwable) {
+                                    ActivityUtils.showToastOnLooper(
+                                        activity,
+                                        getString(R.string.LyricColorError)
+                                    )
+                                    ActivityOwnSP.ownSPConfig.setLyricSize(-1)
+                                }
+                            }
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                        show()
+                    }
+                }))
                 add(SeekBarWithTextV("LWidth", -1, 100, dataBindingSend = dataBinding.bindingSend))
-                add(TextV(resId = R.string.LyricAutoMaxWidth, dataBindingRecv = dataBinding.binding.getRecv(1)))
+                add(TextV(resId = R.string.LyricAutoMaxWidth, dataBindingRecv = dataBinding.binding.getRecv(1), onClickListener = {
+                    MIUIDialog(activity).apply {
+                        setTitle(R.string.LyricAutoMaxWidth)
+                        setMessage(R.string.LyricTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricMaxWidth().toString(), "-1")
+                        setRButton(R.string.Ok) {
+                            if (getEditText() == "") {
+                                ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
+                            } else {
+                                try {
+                                    ActivityOwnSP.ownSPConfig.setLyricMaxWidth(getEditText().toInt())
+                                } catch (e: Throwable) {
+                                    ActivityUtils.showToastOnLooper(
+                                        activity,
+                                        getString(R.string.LyricColorError)
+                                    )
+                                    ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
+                                }
+                            }
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                        show()
+                    }
+                }))
                 add(SeekBarWithTextV("LMaxWidth", -1, 100, dataBindingRecv = dataBinding.binding.getRecv(2)))
                 add(TextV(resId = R.string.LyricPos, onClickListener = {
                     MIUIDialog(activity).apply {
@@ -334,13 +417,13 @@ class SettingsActivity: MIUIActivity() {
                     }
                 }))
                 add(SeekBarWithTextV("LHigh", -100, 100))
-            val dict: HashMap<String, String> = hashMapOf()
-            dict["off"] = getString(R.string.Off)
-            dict["top"] = getString(R.string.top)
-            dict["lower"] = getString(R.string.lower)
-            dict["left"] = getString(R.string.left)
-            dict["right"] = getString(R.string.right)
-            dict["random"] = getString(R.string.random)
+                val dict: HashMap<String, String> = hashMapOf()
+                dict["off"] = getString(R.string.Off)
+                dict["top"] = getString(R.string.top)
+                dict["lower"] = getString(R.string.lower)
+                dict["left"] = getString(R.string.left)
+                dict["right"] = getString(R.string.right)
+                dict["random"] = getString(R.string.random)
                 add(TextWithSpinnerV(TextV(resId = R.string.LyricsAnimation), Spinner(arrayListOf(
                     MIUIPopupData(getString(R.string.Off)) { ActivityOwnSP.ownSPConfig.setAnim("off") },
                     MIUIPopupData(getString(R.string.top)) { ActivityOwnSP.ownSPConfig.setAnim("top") },
@@ -373,8 +456,19 @@ class SettingsActivity: MIUIActivity() {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
-                add(TextWithSwitchV(TextV(resId = R.string.MeizuStyle), SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend)))
-                add(TextWithSwitchV(TextV(resId = R.string.lShowOnce), SwitchV("LShowOnce", true), dataBindingRecv = meiZuStyle.binding.getRecv(1)))
+                add(
+                    TextWithSwitchV(
+                        TextV(resId = R.string.MeizuStyle),
+                        SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend)
+                    )
+                )
+                add(
+                    TextWithSwitchV(
+                        TextV(resId = R.string.lShowOnce),
+                        SwitchV("LShowOnce", true),
+                        dataBindingRecv = meiZuStyle.binding.getRecv(1)
+                    )
+                )
                 add(TextSummaryV(textId = R.string.LyricSpeed, onClick = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricSpeed)
@@ -405,7 +499,7 @@ class SettingsActivity: MIUIActivity() {
                         show()
                     }
                 }))
-                add(SeekBarWithTextV("ISize", 0, 100, ActivityOwnSP.ownSPConfig.getIconSize()))
+                add(SeekBarWithTextV("ISize", 0, 50, ActivityOwnSP.ownSPConfig.getIconSize()))
                 add(TextV(resId = R.string.IconHigh, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.IconHigh)
@@ -430,7 +524,7 @@ class SettingsActivity: MIUIActivity() {
                 arrayListOf<BaseView>().apply {
                     val iconConfig = IconConfig(Utils.getSP(activity, "Icon_Config"))
                     for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
-                        val drawable=  BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
+                        val drawable = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
                         drawable.setTint(getColor(android.R.color.background_dark))
                         add(AuthorV(drawable, icon, onClick = {
                             MIUIDialog(activity).apply {
@@ -450,18 +544,30 @@ class SettingsActivity: MIUIActivity() {
             }
             DataItem.Author -> {
                 arrayListOf<BaseView>().apply {
-                    add(AuthorV(getDrawable(R.drawable.header_577fkj)!!, "577fkj", getString(R.string.AboutTips1), onClick = {
-                        ActivityUtils.openUrl(
-                            activity,
-                            "https://github.com/577fkj"
-                        )
-                    }))
-                    add(AuthorV(getDrawable(R.drawable.header_xiaowine)!!, "xiaowine", getString(R.string.AboutTips2), onClick = {
-                        ActivityUtils.openUrl(
-                            activity,
-                            "https://github.com/xiaowine"
-                        )
-                    }))
+                    add(
+                        AuthorV(
+                            getDrawable(R.drawable.header_577fkj)!!,
+                            "577fkj",
+                            getString(R.string.AboutTips1),
+                            onClick = {
+                                ActivityUtils.openUrl(
+                                    activity,
+                                    "https://github.com/577fkj"
+                                )
+                            })
+                    )
+                    add(
+                        AuthorV(
+                            getDrawable(R.drawable.header_xiaowine)!!,
+                            "xiaowine",
+                            getString(R.string.AboutTips2),
+                            onClick = {
+                                ActivityUtils.openUrl(
+                                    activity,
+                                    "https://github.com/xiaowine"
+                                )
+                            })
+                    )
                     add(LineV())
                     add(TitleTextV(resId = R.string.ThkListTips))
                     add(TextSummaryV(textId = R.string.ThkListTips, onClick = {
