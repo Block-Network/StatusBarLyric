@@ -72,6 +72,5 @@ dependencies {
     val appCenterSdkVersion = "4.4.2"
     implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
     implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation(project(":miui"))
 }

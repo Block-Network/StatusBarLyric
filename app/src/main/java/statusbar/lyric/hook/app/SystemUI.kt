@@ -25,7 +25,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
-import androidx.core.graphics.drawable.DrawableCompat.setTint
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
@@ -84,7 +83,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     var isLock = false
     var enable = false
     private var showLyric = true
-    var iconReverseColor = false
+    private var iconReverseColor = false
     var useSystemMusicActive = true
 
     private val lyricConstructorXCMethodHook: XC_MethodHook = object : XC_MethodHook() {
@@ -163,7 +162,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         lyricTextView.width = (displayWidth * 35) / 100
         lyricTextView.height = clock.height
         lyricTextView.setTypeface(clock.typeface)
-        if (config.getLyricSize().toInt() == 0) {
+        if (config.getLyricSize() == 0) {
             lyricTextView.setTextSize(0, clock.textSize)
         } else {
             lyricTextView.setTextSize(0, config.getLyricSize().toFloat())
@@ -195,7 +194,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         lyricLayout.layoutParams =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lyricParams = lyricLayout.layoutParams as LinearLayout.LayoutParams
-        lyricParams.setMargins(config.getLyricPosition().toInt(), config.getLyricHigh().toInt(), 0, 0)
+        lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
         lyricLayout.layoutParams = lyricParams
 
         // 将歌词加入时钟布局
@@ -254,7 +253,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
 
         updateLyricPos = Handler(Looper.getMainLooper()) {
-            lyricParams.setMargins(config.getLyricPosition().toInt(), config.getLyricHigh().toInt(), 0, 0)
+            lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
             true
         }
 
@@ -288,10 +287,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             }
 
                         } else {
-                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth().toInt()) / 100
+                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth()) / 100
                         }
                     } else {
-                        lyricTextView.width = (displayWidth * config.getLyricWidth().toInt()) / 100
+                        lyricTextView.width = (displayWidth * config.getLyricWidth()) / 100
                     }
                     // 歌词显示
                     if (showLyric) {
@@ -413,7 +412,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 @SuppressLint("DefaultLocale")
                 @Override
                 override fun run() {
-                    iconPos = config.getIconHigh().toInt()
+                    iconPos = config.getIconHigh()
                     if (enable && config.getAntiBurn()) {
                         if (order) {
                             i += 1
@@ -471,7 +470,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
     fun updateLyric(lyric: String?, icon: String) {
         var mLyric = ""
-        var mIcon = ""
+        val mIcon: String
         if (lyric == "refresh" && icon == "refresh") {
             mLyric = lyricTextView.text.toString()
             mIcon = strIcon
@@ -513,12 +512,12 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     BitmapDrawable(application.resources, Utils.stringToBitmap(iconConfig.getIcon(strIcon)))
             }
             // 设置宽高
-            if (config.getIconSize().toInt() == 0) {
+            if (config.getIconSize() == 0) {
                 iconParams.width = clock.textSize.toInt()
                 iconParams.height = clock.textSize.toInt()
             } else {
-                iconParams.width = config.getIconSize().toInt()
-                iconParams.height = config.getIconSize().toInt()
+                iconParams.width = config.getIconSize()
+                iconParams.height = config.getIconSize()
             }
             iconUpdate.obtainMessage().let {
                 it.obj = drawableIcon
@@ -544,8 +543,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             lyricTextView.outAnimation = Utils.outAnim(anim)
         }
         if (config.getAntiBurn()) {
-            if (config.getIconHigh().toInt() != oldPos) {
-                oldPos = config.getIconHigh().toInt()
+            if (config.getIconHigh() != oldPos) {
+                oldPos = config.getIconHigh()
                 updateMarginsIcon.obtainMessage().let {
                     it.arg1 = 0
                     it.arg2 = oldPos
