@@ -30,8 +30,15 @@ class SeekBarV(val key: String = "", val min: Int, val max: Int, val divide: Int
             view.indeterminateDrawable = context.getDrawable(R.color.colorAccent)
             view.min = min
             view.max = max
-            OwnSP.ownSP.getInt(key, -2333).let {
-                if (it != -2333) view.progress = it else view.progress = defaultProgress
+            if (OwnSP.ownSP.all.containsKey(key)) {
+                OwnSP.ownSP.getInt(key, defaultProgress).let {
+                    view.progress = it
+                }
+            } else {
+                OwnSP.ownSP.edit().run {
+                    putInt(key, defaultProgress)
+                    apply()
+                }
             }
             view.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {

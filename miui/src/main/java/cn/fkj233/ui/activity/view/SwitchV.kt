@@ -14,12 +14,16 @@ class SwitchV(val key: String, private val defValue: Boolean = false, private va
 
     override fun create(context: Context, callBacks: (() -> Unit)?): View {
         return Switch(context).also {
-            dataBindingRecv?.let { dataBinding ->
-                dataBinding.setView(it)
-            }
+            dataBindingRecv?.setView(it)
             it.background = null
             it.setThumbResource(R.drawable.switch_thumb)
             it.setTrackResource(R.drawable.switch_track)
+            if (!OwnSP.ownSP.all.containsKey(key)) {
+                OwnSP.ownSP.edit().run {
+                    putBoolean(key, defValue)
+                    apply()
+                }
+            }
             it.isChecked = OwnSP.ownSP.getBoolean(key, defValue)
             it.setOnCheckedChangeListener { _, b ->
                 dataBindingSend?.let { send ->
