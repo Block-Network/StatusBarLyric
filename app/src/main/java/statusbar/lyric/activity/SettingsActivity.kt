@@ -25,10 +25,6 @@ import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
 import kotlin.system.exitProcess
 
-enum class DataItem {
-    Custom, Author, CustomIcon
-}
-
 class SettingsActivity : MIUIActivity() {
     private val activity = this
 
@@ -116,7 +112,7 @@ class SettingsActivity : MIUIActivity() {
     }
 
     override fun menuName(): String {
-        return getString(R.string.AppName)
+        return getString(R.string.Menu)
     }
 
     override fun menuItems(): ArrayList<BaseView> {
@@ -223,7 +219,7 @@ class SettingsActivity : MIUIActivity() {
             add(
                 TextSummaryV(
                     textId = R.string.Custom,
-                    onClick = { showFragment(getItems(DataItem.Custom), getString(R.string.Custom)) })
+                    onClick = { showFragment(getString(R.string.Custom)) })
             )
             add(LineV())
             add(TitleTextV(resId = R.string.AdvancedSettings))
@@ -298,15 +294,15 @@ class SettingsActivity : MIUIActivity() {
             add(
                 TextSummaryV(
                     textId = R.string.AboutModule,
-                    onClick = { showFragment(getItems(DataItem.Author), getString(R.string.AboutModule)) })
+                    onClick = { showFragment(getString(R.string.AboutModule)) })
             )
             add(TextV())
         }
     }
 
-    private fun getItems(dataItem: DataItem): ArrayList<BaseView> {
-        return when (dataItem) {
-            DataItem.Custom -> arrayListOf<BaseView>().apply {
+    override fun getItems(item: String): ArrayList<BaseView> {
+        return when (item) {
+            getString(R.string.Custom) -> arrayListOf<BaseView>().apply {
                 add(TextSummaryV(textId = R.string.LyricColor, onClick = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricColor)
@@ -558,11 +554,11 @@ class SettingsActivity : MIUIActivity() {
                 add(SeekBarWithTextV("IHigh", -100, 100, ActivityOwnSP.ownSPConfig.getIconSize()))
                 add(TextWithSwitchV(TextV(resId = R.string.IconAutoColors), SwitchV("IAutoColor", true)))
                 add(TextSummaryV(textId = R.string.IconSettings, onClick = {
-                    showFragment(getItems(DataItem.CustomIcon), getString(R.string.IconSettings))
+                    showFragment(getString(R.string.IconSettings))
                 }))
                 add(TextV())
             }
-            DataItem.CustomIcon -> {
+            getString(R.string.IconSettings) -> {
                 arrayListOf<BaseView>().apply {
                     val iconConfig = IconConfig(Utils.getSP(activity, "Icon_Config"))
                     for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
@@ -585,7 +581,7 @@ class SettingsActivity : MIUIActivity() {
                     add(TextV())
                 }
             }
-            DataItem.Author -> {
+            getString(R.string.AboutModule) -> {
                 arrayListOf<BaseView>().apply {
                     add(
                         AuthorV(
@@ -648,6 +644,8 @@ class SettingsActivity : MIUIActivity() {
                     add(TextV())
                 }
             }
+            menuName() -> menuItems()
+            else -> mainItems()
         }
     }
 }

@@ -146,4 +146,5 @@
     <string name="First">View Header</string>
     <string name="Latest">View Latest</string>
     <string name="ViewPosition">View add position</string>
+    <string name="Menu">Menu</string>
 </resources>

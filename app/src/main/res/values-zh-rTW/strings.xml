@@ -133,4 +133,5 @@
     <string name="First">控件首</string>
     <string name="Latest">控件尾</string>
     <string name="ViewPosition">控件添加位置</string>
+    <string name="Menu">菜單</string>
 </resources>
