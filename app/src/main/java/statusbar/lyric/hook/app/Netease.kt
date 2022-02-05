@@ -1,3 +1,25 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/577fkj/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as published
+ * by 577fkj.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 @file:Suppress("DEPRECATION")
 
 package statusbar.lyric.hook.app
@@ -32,7 +54,6 @@ import java.lang.reflect.Parameter
 
 class Netease(private val lpparam: LoadPackageParam) {
     var context: Context? = null
-    var musicName = ""
     var subView: TextView? = null
     lateinit var broadcastHandler: BroadcastHandler
     var appLog = ""
@@ -127,7 +148,7 @@ class Netease(private val lpparam: LoadPackageParam) {
     inner class HookFilter {
         private var hooked: XC_MethodHook.Unhook? = null
         val unhookMap: HashMap<String, XC_MethodHook.Unhook?> = HashMap()
-        var unhookInt = 0
+        private var unhookInt = 0
 
         fun startFilterAndHook() {
             hooked = XposedHelpers.findAndHookConstructor(BroadcastReceiver::class.java, object : XC_MethodHook() {
@@ -225,7 +246,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                         appLog = " (网易云版本! $verName)"
                     } else {
                         LogUtils.e("正在尝试通用Hook")
-                        try {
+                        appLog = try {
                             "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java, classLoader = lpparam.classLoader){ it1 ->
                                 if (it1.args[0].toString() == "android.media.metadata.TITLE") {
                                     if (it1.args[1] != null) {
@@ -234,11 +255,11 @@ class Netease(private val lpparam: LoadPackageParam) {
                                     }
                                 }
                             }
-                            appLog = " (蓝牙歌词通用方法)"
+                            " (蓝牙歌词通用方法)"
                         } catch (mE: Throwable) {
                             LogUtils.e("网易云通用Hook失败: $mE")
                             LogUtils.e("未知版本: $verCode")
-                            appLog = " (未知版本: $verCode)"
+                            " (未知版本: $verCode)"
                         }
                     }
                 } catch (e: Throwable) {
