@@ -42,7 +42,8 @@ class SeekBarWithTextV(val key: String = "", val min: Int, val max: Int, val def
                     (mutableText as TextView).text = it.toString()
                 }
             } else {
-                OwnSP.ownSP.edit().run {
+                (mutableText as TextView).text = defaultProgress.toString()
+                    OwnSP.ownSP.edit().run {
                     putInt(key, defaultProgress)
                     apply()
                 }

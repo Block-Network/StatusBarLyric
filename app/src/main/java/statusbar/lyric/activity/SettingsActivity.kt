@@ -386,7 +386,7 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }))
-                add(SeekBarWithTextV("LWidth", -1, 100, dataBindingSend = dataBinding.bindingSend))
+                add(SeekBarWithTextV("LWidth", -1, 100, defaultProgress = -1, dataBindingSend = dataBinding.bindingSend))
                 add(
                     TextV(
                         resId = R.string.LyricAutoMaxWidth,
@@ -417,7 +417,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                         })
                 )
-                add(SeekBarWithTextV("LMaxWidth", -1, 100, dataBindingRecv = dataBinding.binding.getRecv(2)))
+                add(SeekBarWithTextV("LMaxWidth", -1, 100, defaultProgress = -1, dataBindingRecv = dataBinding.binding.getRecv(2)))
                 add(TextV(resId = R.string.LyricPos, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricPos)
@@ -483,7 +483,8 @@ class SettingsActivity : MIUIActivity() {
                 add(TextWithSwitchV(TextV(resId = R.string.pseudoTime), SwitchV("PseudoTime", true)))
                 add(TextSummaryV(textId = R.string.pseudoTimeStyle, onClick = {
                     MIUIDialog(activity).apply {
-                        setTitle(R.string.pseudoTimeStyleTips)
+                        setTitle(R.string.pseudoTime)
+                        setMessage(R.string.pseudoTimeStyleTips)
                         setEditText(
                             ActivityOwnSP.ownSPConfig.getPseudoTimeStyle(),
                             ""
@@ -551,7 +552,7 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }))
-                add(SeekBarWithTextV("IHigh", -100, 100, ActivityOwnSP.ownSPConfig.getIconSize()))
+                add(SeekBarWithTextV("IHigh", -100, 100, defaultProgress = 7, ActivityOwnSP.ownSPConfig.getIconSize()))
                 add(TextWithSwitchV(TextV(resId = R.string.IconAutoColors), SwitchV("IAutoColor", true)))
                 add(TextSummaryV(textId = R.string.IconSettings, onClick = {
                     showFragment(getString(R.string.IconSettings))
