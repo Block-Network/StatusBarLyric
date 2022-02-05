@@ -86,6 +86,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private var iconReverseColor = false
     var useSystemMusicActive = true
 
+    var thisLyric = ""
+
     private val lyricConstructorXCMethodHook: XC_MethodHook = object : XC_MethodHook() {
         override fun afterHookedMethod(param: MethodHookParam) {
             super.afterHookedMethod(param)
@@ -270,20 +272,16 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
         // 更新歌词
         lyricUpdate = Handler(Looper.getMainLooper()) { message ->
-            val string: String? = message.data.getString(lyricKey)
+            val string: String = message.data.getString(lyricKey)!!
             if (!TextUtils.isEmpty(string)) {
                 LogUtils.e("更新歌词: $string")
-                if (!string.equals(lyricTextView.text.toString())) {
-                    val dNow = Date()
-                    val ft = SimpleDateFormat(config.getPseudoTimeStyle(), Locale.getDefault())
-                    val time = ft.format(dNow)
-                    val addTimeStr = String.format("%s %s", time, string)
+                if (string != thisLyric) {
+                    thisLyric = string
+                    val addTimeStr = String.format("%s %s", SimpleDateFormat(config.getPseudoTimeStyle(), Locale.getDefault()).format(Date()), string)
                     // 自适应/歌词宽度
                     if (config.getLyricWidth() == -1) {
-                        val paint1: TextPaint = lyricTextView.paint!! // 获取字体
-                        if (config.getLyricMaxWidth() == -1 || paint1.measureText(string)
-                                .toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100
-                        ) {
+                        val paint1: TextPaint = lyricTextView.paint // 获取字体
+                        if (config.getLyricMaxWidth() == -1 || paint1.measureText(string).toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100) {
                             if (config.getPseudoTime()) {
                                 lyricTextView.width =
                                     paint1.measureText(addTimeStr).toInt() + 6
