@@ -221,40 +221,8 @@ class Netease(private val lpparam: LoadPackageParam) {
                     if (verCode!! > 8000041) {
                         isNewVer = true
                         MeiZuStatusBarLyric.guiseFlyme(lpparam, false)
-                        var errorMsg = ""
-                        val hookNotificationArr = arrayOf(
-                            "com.netease.cloudmusic.d2.f#a0",
-                            "com.netease.cloudmusic.e2.f#f0",
-                            "com.netease.cloudmusic.f2.f#f0",
-                            "com.netease.cloudmusic.w1.f#e0",
-                            "com.netease.cloudmusic.am.d#a"
-                        )
-                        val hookStringArr = arrayOf(
-                            "com.netease.cloudmusic.module.lyric.a.a#a"
-                                )
                         filter.startFilterAndHook()
-
-                        for (hookNotification: String in hookNotificationArr) {
-                            try {
-                                XposedHelpers.findAndHookMethod(hookNotification.split("#")[0], lpparam.classLoader, hookNotification.split("#")[1], Notification::class.java, Boolean::class.javaPrimitiveType, HookMethod())
-                                appLog = " (状态栏歌词模式)"
-                                return@hookAfterMethod
-                            } catch (e: Throwable) {
-                                errorMsg = e.message.toString()
-                            }
-                        }
-
-                        for (hookString: String in hookStringArr) {
-                            try {
-                                XposedHelpers.findAndHookMethod(hookString.split("#")[0], lpparam.classLoader, hookString.split("#")[1], String::class.java, HookMethod())
-                                appLog = " (状态栏歌词模式)"
-                                return@hookAfterMethod
-                            } catch (e: Throwable) {
-                                errorMsg = e.message.toString()
-                            }
-                        }
-                        appLog = " (不一定支持的网易云版本! $verName)"
-                        LogUtils.e("不一定支持的网易云版本! $verName\n$errorMsg")
+                        appLog = " (网易云版本! $verName)"
                     } else {
                         LogUtils.e("正在尝试通用Hook")
                         try {
