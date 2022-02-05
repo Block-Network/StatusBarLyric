@@ -7,6 +7,7 @@ import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
+import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
 
@@ -26,6 +27,10 @@ class Kugou(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 "" + (it.args[0] as HashMap<*, *>).values.toList()[0],
                 "KuGou"
             )
+        }
+        val tinkerApp = "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull(lpparam.classLoader)
+        tinkerApp?.hookAfterMethod("getTinkerFlags") {
+            it.result = 0
         }
     }
 }
