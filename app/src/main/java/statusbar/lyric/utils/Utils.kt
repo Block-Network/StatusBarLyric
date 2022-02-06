@@ -130,24 +130,22 @@ object Utils {
             notCarrier = 1
         }
         if (!hasMiuiSetting) {
-            if (config.getHNoticeIcon() == true && Settings.System.getInt(application.contentResolver, "status_bar_show_notification_icon", 1) == notCarrier) {
+            if (config.getHNoticeIcon() && Settings.System.getInt(application.contentResolver, "status_bar_show_notification_icon", 1) == notCarrier) {
                 Settings.System.putInt(application.contentResolver, "status_bar_show_notification_icon", isCarrier)
             }
-            if (config.getHNetSpeed() == true && Settings.System.getInt(application.contentResolver, "status_bar_show_notification_icon", 1) == notCarrier) {
+            if (config.getHNetSpeed() && Settings.System.getInt(application.contentResolver, "status_bar_show_notification_icon", 1) == notCarrier) {
                 Settings.System.putInt(application.contentResolver, "status_bar_show_network_speed", isCarrier)
             }
         } else {
-            if (config.getHNoticeIcon() == true && MiuiStatusBarManager.isShowNotificationIcon(application) != isOpen) {
+            if (config.getHNoticeIcon() && MiuiStatusBarManager.isShowNotificationIcon(application) != isOpen) {
                 MiuiStatusBarManager.setShowNotificationIcon(application, isOpen)
-                Settings.System.putInt(application.contentResolver, "status_bar_show_notification_icon", notCarrier)
             }
-            if (config.getHNetSpeed() == true && MiuiStatusBarManager.isShowNetworkSpeed(application) != isOpen) {
+            if (config.getHNetSpeed() && MiuiStatusBarManager.isShowNetworkSpeed(application) != isOpen) {
                 MiuiStatusBarManager.setShowNetworkSpeed(application, isOpen)
-                Settings.System.putInt(application.contentResolver, "status_bar_show_network_speed", notCarrier)
             }
 
         }
-        if (config.getHCuk() == true && Settings.System.getInt(application.contentResolver, "status_bar_show_carrier_under_keyguard", 1) == isCarrier) {
+        if (config.getHCuk() && Settings.System.getInt(application.contentResolver, "status_bar_show_carrier_under_keyguard", 1) == isCarrier) {
             Settings.System.putInt(application.contentResolver, "status_bar_show_carrier_under_keyguard", notCarrier)
         }
 

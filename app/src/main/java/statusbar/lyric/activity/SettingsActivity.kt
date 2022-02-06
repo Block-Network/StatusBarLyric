@@ -623,18 +623,7 @@ class SettingsActivity : MIUIActivity() {
                 arrayListOf<BaseView>().apply {
                     val iconConfig = IconConfig(Utils.getSP(activity, "Icon_Config"))
                     for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
-                        val drawable: Drawable = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
-                        val resources: Resources = activity.resources
-                        val isNightMode: Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            resources.configuration.isNightModeActive
-                        } else {
-                            val mode: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-                            mode == Configuration.UI_MODE_NIGHT_YES
-                        }
-                        if (!isNightMode) {
-                            drawable.setTint(getColor(android.R.color.background_dark))
-                        }
-                        add(AuthorV(drawable, icon, onClick = {
+                        add(AuthorV(BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon))).also { it.setTint(getColor(R.color.customIconColor)) }, icon, round = 0f, onClick = {
                             MIUIDialog(activity).apply {
                                 setTitle(icon)
                                 setMessage(R.string.MakeIconTitle)

@@ -34,7 +34,7 @@ import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.sp2px
 
-class AuthorV(private val authorHead: Drawable, private val authorName: String, private val authorTips: String? = null, val onClick: (() -> Unit)? = null, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
+class AuthorV(private val authorHead: Drawable, private val authorName: String, private val authorTips: String? = null, private val round: Float = 30f, val onClick: (() -> Unit)? = null, private val dataBindingRecv: DataBinding.Binding.Recv? = null): BaseView() {
 
     override fun getType(): BaseView {
         return this
@@ -43,7 +43,7 @@ class AuthorV(private val authorHead: Drawable, private val authorName: String, 
     override fun create(context: Context, callBacks: (() -> Unit)?): View {
         return LinearContainerV(LinearContainerV.HORIZONTAL, arrayOf(
             LayoutPair(
-                RoundCornerImageView(context, dp2px(context, 30f), dp2px(context, 30f)).also {
+                RoundCornerImageView(context, dp2px(context, round), dp2px(context, round)).also {
                     it.setPadding(0, dp2px(context, 10f), 0, dp2px(context, 10f))
                     it.background = authorHead
                 },
