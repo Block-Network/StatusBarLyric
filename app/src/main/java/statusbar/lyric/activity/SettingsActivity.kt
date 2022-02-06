@@ -29,9 +29,12 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -46,6 +49,7 @@ import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
 import kotlin.system.exitProcess
+
 
 class SettingsActivity : MIUIActivity() {
     private val activity = this
@@ -408,7 +412,15 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }))
-                add(SeekBarWithTextV("LWidth", -1, 100, defaultProgress = -1, dataBindingSend = dataBinding.bindingSend))
+                add(
+                    SeekBarWithTextV(
+                        "LWidth",
+                        -1,
+                        100,
+                        defaultProgress = -1,
+                        dataBindingSend = dataBinding.bindingSend
+                    )
+                )
                 add(
                     TextV(
                         resId = R.string.LyricAutoMaxWidth,
@@ -439,7 +451,15 @@ class SettingsActivity : MIUIActivity() {
                             }
                         })
                 )
-                add(SeekBarWithTextV("LMaxWidth", -1, 100, defaultProgress = -1, dataBindingRecv = dataBinding.binding.getRecv(2)))
+                add(
+                    SeekBarWithTextV(
+                        "LMaxWidth",
+                        -1,
+                        100,
+                        defaultProgress = -1,
+                        dataBindingRecv = dataBinding.binding.getRecv(2)
+                    )
+                )
                 add(TextV(resId = R.string.LyricPos, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricPos)
@@ -586,7 +606,17 @@ class SettingsActivity : MIUIActivity() {
                     val iconConfig = IconConfig(Utils.getSP(activity, "Icon_Config"))
                     for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
                         val drawable: Drawable = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
-                        drawable.setTint(getColor(android.R.color.background_dark))
+                        val resources: Resources = activity.resources
+                        var isNightMode = false
+                        isNightMode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                            resources.configuration.isNightModeActive
+                        } else {
+                            val mode: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                            mode == Configuration.UI_MODE_NIGHT_YES
+                        }
+                        if (!isNightMode) {
+                            drawable.setTint(getColor(android.R.color.background_dark))
+                        }
                         add(AuthorV(drawable, icon, onClick = {
                             MIUIDialog(activity).apply {
                                 setTitle(icon)
