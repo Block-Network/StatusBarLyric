@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="UseInfo">Instructions for use</string>
+    <string name="ApplicableVersion">Applicable version</string>
     <string name="HideDeskIcon">Hide desktop icons</string>
     <string name="BaseSetting">Basic Settings</string>
     <string name="AllSwitch">Master switch</string>
@@ -150,4 +150,5 @@
     <string name="CheckUpdate">Check Update</string>
     <string name="Backup">Backup Config</string>
     <string name="Recovery">Recovery Config</string>
+    <string name="Manual">Help Manual</string>
 </resources>

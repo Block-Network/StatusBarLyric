@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="UseInfo">使用说明</string>
+    <string name="ApplicableVersion">适用版本</string>
     <string name="HideDeskIcon">隐藏桌面图标</string>
     <string name="BaseSetting">基础设置</string>
     <string name="AllSwitch">总开关</string>
@@ -138,4 +138,5 @@
     <string name="CheckUpdate">检查更新</string>
     <string name="Backup">备份配置</string>
     <string name="Recovery">恢复配置</string>
+    <string name="Manual">帮助手册</string>
 </resources>

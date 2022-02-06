@@ -204,7 +204,7 @@ class SettingsActivity : MIUIActivity() {
 
     override fun mainItems(): ArrayList<BaseView> {
         return arrayListOf<BaseView>().apply {
-            add(TextSummaryV(textId = R.string.UseInfo, onClick = {
+            add(TextSummaryV(textId = R.string.ApplicableVersion, onClick = {
                 MIUIDialog(activity).apply {
                     setTitle(R.string.VerExplanation)
                     setMessage(
@@ -238,6 +238,11 @@ class SettingsActivity : MIUIActivity() {
                     show()
                 }
             }))
+            add(
+                TextSummaryV(
+                    textId = R.string.Manual,
+                    onClick = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") })
+            )
             add(LineV())
             add(TitleTextV(resId = R.string.BaseSetting))
             add(TextWithSwitchV(TextV(resId = R.string.AllSwitch), SwitchV("LService")))
