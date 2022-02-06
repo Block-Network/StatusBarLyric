@@ -658,13 +658,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         val clazz: Class<*>? =
             "com.android.systemui.statusbar.phone.ClockController".findClassOrNull(lpparam.classLoader) // 某些ROM写了控制器
         if (clazz != null) {
-            try {
-                clazz.hookConstructor(Context::class.java, View::class.java, lyricConstructorXCMethodHook)
-            } catch (e: Throwable) {
-                try {
-                    clazz.hookConstructor(View::class.java, lyricConstructorXCMethodHook)
-                } catch (e: Throwable) {
-                    LogUtils.e("不支持的rom请打包日志和Log发给作者!!")
+            if (clazz.hookConstructor(Context::class.java, View::class.java, lyricConstructorXCMethodHook) == null) {
+                if (clazz.hookConstructor(View::class.java, lyricConstructorXCMethodHook) == null) {
+                    LogUtils.e("不支持的rom请打包日志和系统界面发给作者!!")
                 }
             }
         } else {
