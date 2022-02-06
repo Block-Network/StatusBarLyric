@@ -26,7 +26,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-import android.util.Log
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.BufferedWriter
@@ -81,7 +80,6 @@ object BackupUtils {
                         line = readLine()
                     }
                     val read = sb.toString()
-                    Log.d("TASFFFFFFFFFFFF", read)
                     JSONObject(read).apply {
                         val key = keys()
                         while (key.hasNext()) {
@@ -105,7 +103,6 @@ object BackupUtils {
             edit.commit()
             ActivityUtils.showToastOnLooper(activity, "load ok")
         } catch (e: Throwable) {
-            Log.d("TASFFFFFFFFFFFF", e.toString())
             ActivityUtils.showToastOnLooper(activity, "load fail\n$e")
         }
     }

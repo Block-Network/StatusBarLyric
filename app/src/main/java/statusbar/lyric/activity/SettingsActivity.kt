@@ -48,7 +48,7 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
-import statusbar.lyric.utils.ActivityUtils.getNotice
+import java.io.File
 import kotlin.system.exitProcess
 
 

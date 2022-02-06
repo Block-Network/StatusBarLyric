@@ -34,6 +34,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
@@ -59,6 +60,7 @@ import statusbar.lyric.utils.XposedOwnSP.config
 import statusbar.lyric.utils.XposedOwnSP.iconConfig
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricTextSwitchView
+import java.io.File
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
@@ -108,7 +110,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private var iconReverseColor = false
     var useSystemMusicActive = true
 
-    var thisLyric = ""
+    private var thisLyric = ""
 
     private val lyricConstructorXCMethodHook: XC_MethodHook = object : XC_MethodHook() {
         override fun afterHookedMethod(param: MethodHookParam) {
@@ -185,7 +187,6 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         lyricTextView = LyricTextSwitchView(application, config.getLyricStyle())
         lyricTextView.width = (displayWidth * 35) / 100
         lyricTextView.height = clock.height
-        lyricTextView.setTypeface(clock.typeface)
         if (config.getLyricSize() == 0) {
             lyricTextView.setTextSize(0, clock.textSize)
         } else {
@@ -199,6 +200,21 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         lyricTextView.setSingleLine(true)
         lyricTextView.setMaxLines(1)
+        var isFontFormat = false
+        val fontFormats = arrayOf("otf", "ttf")
+        for (fontFormat in fontFormats) {
+            if (File(application.filesDir.path + "/font.$fontFormat").isFile && !isFontFormat) {
+                lyricTextView.setTypeface(
+                    Typeface.createFromFile(application.filesDir.path + "/font.$fontFormat")
+                )
+                isFontFormat = true
+            }
+        }
+        if (!isFontFormat) {
+            lyricTextView.setTypeface(clock.typeface)
+        }
+
+        LogUtils.e("是否个性化字体：$isFontFormat")
 
         // 创建图标
         iconView = ImageView(application).apply {
@@ -299,11 +315,17 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 LogUtils.e("更新歌词: $string")
                 if (string != thisLyric) {
                     thisLyric = string
-                    val addTimeStr = String.format("%s %s", SimpleDateFormat(config.getPseudoTimeStyle(), Locale.getDefault()).format(Date()), string)
+                    val addTimeStr = String.format(
+                        "%s %s",
+                        SimpleDateFormat(config.getPseudoTimeStyle(), Locale.getDefault()).format(Date()),
+                        string
+                    )
                     // 自适应/歌词宽度
                     if (config.getLyricWidth() == -1) {
                         val paint1: TextPaint = lyricTextView.paint // 获取字体
-                        if (config.getLyricMaxWidth() == -1 || paint1.measureText(string).toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100) {
+                        if (config.getLyricMaxWidth() == -1 || paint1.measureText(string)
+                                .toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100
+                        ) {
                             if (config.getPseudoTime()) {
                                 lyricTextView.width =
                                     paint1.measureText(addTimeStr).toInt() + 6
