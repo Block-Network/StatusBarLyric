@@ -151,4 +151,7 @@
     <string name="Backup">Backup Config</string>
     <string name="Recovery">Recovery Config</string>
     <string name="Manual">Help Manual</string>
+    <string name="CustomFont">Custom font</string>
+    <string name="CustomFontSuccess">Set custom font success</string>
+    <string name="CustomFoneFail">Set custom font fail</string>
 </resources>

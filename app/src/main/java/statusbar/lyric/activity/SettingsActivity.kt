@@ -55,12 +55,19 @@ import kotlin.system.exitProcess
 class SettingsActivity : MIUIActivity() {
     private val activity = this
 
+    companion object {
+        const val OPEN_FONT_FILE = 2114745
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         ActivityOwnSP.activity = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
         registerReceiver(HookReceiver(), IntentFilter().apply {
             addAction("Hook_Sure")
+        })
+        registerReceiver(CustomFontReceiver(), IntentFilter().apply {
+            addAction("SetCustomFont")
         })
         ActivityUtils.getNotice(activity)
     }
@@ -78,9 +85,41 @@ class SettingsActivity : MIUIActivity() {
                     BackupUtils.handleReadDocument(activity, data.data)
                 }
             }
+            OPEN_FONT_FILE -> {
+                if (data != null) {
+                    data.data?.let {
+                        activity.sendBroadcast(
+                            Intent().apply {
+                                action = "Lyric_Server"
+                                putExtra("Lyric_Type", "copy_font")
+                                putExtra("Font_Path", FileUtils(activity).getFilePathByUri(it))
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
-
+    inner class CustomFontReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                Handler(Looper.getMainLooper()).post {
+                    val message: String = if (intent.getBooleanExtra("font_ok", false)) {
+                        getString(R.string.CustomFontSuccess)
+                    } else {
+                        getString(R.string.CustomFoneFail) + "\n" + intent.getStringExtra("font_error")
+                    }
+                    MIUIDialog(activity).apply {
+                        setTitle(getString(R.string.CustomFont))
+                        setMessage(message)
+                        setRButton(getString(R.string.Ok)) { dismiss() }
+                        show()
+                    }
+                }
+            } catch (_: Throwable) {
+            }
+        }
+    }
     inner class HookReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
@@ -133,6 +172,7 @@ class SettingsActivity : MIUIActivity() {
                     startActivity(intent)
                     exitProcess(0)
                 }
+                setCancelable(false)
                 show()
             }
             false
@@ -584,6 +624,14 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }, dataBindingRecv = meiZuStyle.binding.getRecv(2)))
+                add(TextSummaryV(textId = R.string.CustomFont, onClick = {
+                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                    intent.addCategory(Intent.CATEGORY_OPENABLE)
+                    intent.type = "*/*"
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+                    startActivityForResult(intent, OPEN_FONT_FILE)
+                }))
+                add(LineV())
                 add(TitleTextV(resId = R.string.IconSettings))
                 add(TextV(resId = R.string.IconSize, onClickListener = {
                     MIUIDialog(activity).apply {

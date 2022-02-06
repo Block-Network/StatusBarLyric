@@ -61,6 +61,7 @@ import statusbar.lyric.utils.XposedOwnSP.iconConfig
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricTextSwitchView
 import java.io.File
+import java.io.IOException
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
@@ -109,8 +110,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private var showLyric = true
     private var iconReverseColor = false
     var useSystemMusicActive = true
-
     private var thisLyric = ""
+    private var isHook = false
 
     private val lyricConstructorXCMethodHook: XC_MethodHook = object : XC_MethodHook() {
         override fun afterHookedMethod(param: MethodHookParam) {
@@ -200,21 +201,15 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         lyricTextView.setSingleLine(true)
         lyricTextView.setMaxLines(1)
-        var isFontFormat = false
-        val fontFormats = arrayOf("otf", "ttf")
-        for (fontFormat in fontFormats) {
-            if (File(application.filesDir.path + "/font.$fontFormat").isFile && !isFontFormat) {
-                lyricTextView.setTypeface(
-                    Typeface.createFromFile(application.filesDir.path + "/font.$fontFormat")
-                )
-                isFontFormat = true
-            }
-        }
-        if (!isFontFormat) {
+        val file = File(application.filesDir.path + "/font")
+        if (file.exists() || file.isFile || file.canRead()) {
+            lyricTextView.setTypeface(
+                Typeface.createFromFile(application.filesDir.path + "/font")
+            )
+            LogUtils.e("加载个性化字体")
+        } else {
             lyricTextView.setTypeface(clock.typeface)
         }
-
-        LogUtils.e("是否个性化字体：$isFontFormat")
 
         // 创建图标
         iconView = ImageView(application).apply {
@@ -615,6 +610,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     }
 
     fun hook() {
+        if (isHook) return else isHook = true
         // 使用系统方法反色
         LogUtils.e("使用系统反色: " + config.getUseSystemReverseColor().toString())
         if (config.getUseSystemReverseColor() && config.getLyricColor().isEmpty()) {
@@ -664,10 +660,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         if (clazz != null) {
             try {
                 clazz.hookConstructor(Context::class.java, View::class.java, lyricConstructorXCMethodHook)
-            } catch (e: NoSuchMethodError) {
+            } catch (e: Throwable) {
                 try {
                     clazz.hookConstructor(View::class.java, lyricConstructorXCMethodHook)
-                } catch (e: NoSuchMethodError) {
+                } catch (e: Throwable) {
                     LogUtils.e("不支持的rom请打包日志和Log发给作者!!")
                 }
             }
@@ -803,6 +799,32 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     "app_stop" -> offLyric("收到广播app_stop")
                     "test" -> ShowDialog().show()
                     "refresh" -> updateLyric("refresh", "refresh")
+                    "copy_font" -> {
+                        val path = intent.getStringExtra("Font_Path")!!
+                        LogUtils.e("自定义字体: $path")
+                        val file = File(application.filesDir.path + "/font")
+                        if (file.exists()) {
+                            file.delete()
+                        }
+                        val error = Utils.copyFile(File(path), application.filesDir.path, "font")
+                        if (error.isEmpty()) {
+                            lyricTextView.setTypeface(
+                                Typeface.createFromFile(application.filesDir.path + "/font")
+                            )
+                            LogUtils.e("加载个性化字体")
+                            application.sendBroadcast(Intent().apply {
+                                action = "SetCustomFont"
+                                putExtra("font_ok", true)
+                            })
+                        } else {
+                            LogUtils.e("个性化字体复制失败")
+                            application.sendBroadcast(Intent().apply {
+                                action = "SetCustomFont"
+                                putExtra("font_ok", false)
+                                putExtra("font_error", error)
+                            })
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 LogUtils.e("广播接收错误 " + e + "\n" + Utils.dumpException(e))

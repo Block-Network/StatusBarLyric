@@ -138,4 +138,7 @@
     <string name="Backup">備份配置</string>
     <string name="Recovery">恢復配置</string>
     <string name="Manual">幫助手冊</string>
+    <string name="CustomFont">自定義字體</string>
+    <string name="CustomFontSuccess">設置自定義字體成功</string>
+    <string name="CustomFoneFail">設置自定義字體失敗</string>
 </resources>

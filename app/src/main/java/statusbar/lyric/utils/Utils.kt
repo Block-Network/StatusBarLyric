@@ -41,8 +41,8 @@ import android.view.animation.TranslateAnimation
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.Config
-import java.io.PrintWriter
-import java.io.StringWriter
+import java.io.*
+import java.nio.channels.FileChannel
 import java.util.*
 
 
@@ -97,7 +97,15 @@ object Utils {
 
     // 报错转内容
     @JvmStatic
-    fun dumpException(e: java.lang.Exception): String {
+    fun dumpException(e: Exception): String {
+        val sw = StringWriter()
+        val pw = PrintWriter(sw)
+        e.printStackTrace(pw)
+        return sw.toString()
+    }
+
+    @JvmStatic
+    fun dumpIOException(e: IOException): String {
         val sw = StringWriter()
         val pw = PrintWriter(sw)
         e.printStackTrace(pw)
@@ -269,6 +277,45 @@ object Utils {
                 putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
             }
         )
+    }
+
+    /**
+     * 根据文件路径拷贝文件
+     * @param src 源文件
+     * @param destPath 目标文件路径
+     * @return boolean 成功true、失败false
+     */
+    fun copyFile(src: File?, destPath: String?, destFileName: String): String {
+        if (src == null || destPath == null) {
+            return "Param error"
+        }
+        val dest = File(destPath, destFileName)
+        if (dest.exists()) {
+            if (!dest.delete()) {
+                return "Delete file fail"
+            }
+        }
+        try {
+            if (!dest.createNewFile()) {
+                return "Create file fail"
+            }
+        } catch (e: IOException) {
+            return dumpIOException(e)
+        }
+        try {
+            val srcChannel = FileInputStream(src).channel
+            val dstChannel = FileOutputStream(dest).channel
+            srcChannel.transferTo(0, srcChannel.size(), dstChannel)
+            try {
+                srcChannel.close()
+                dstChannel.close()
+            } catch (e: IOException) {
+                return dumpIOException(e)
+            }
+        } catch (e: IOException) {
+            return dumpIOException(e)
+        }
+        return ""
     }
 
     /**
