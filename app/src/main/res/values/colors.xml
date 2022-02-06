@@ -3,6 +3,7 @@
     <color name="foreground">#FFFFFF</color>
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorAccent">#0374A7</color>
+    <color name="customIconColor">#000000</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 </resources>
