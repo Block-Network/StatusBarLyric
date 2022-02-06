@@ -132,6 +132,9 @@
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
     <string name="First">控件首</string>
     <string name="Latest">控件尾</string>
-    <string name="ViewPosition">控件添加位置</string>
+    <string name="ViewPosition">* 控件添加位置</string>
     <string name="Menu">菜單</string>
+    <string name="CheckUpdate">檢查更新</string>
+    <string name="Backup">備份配置</string>
+    <string name="Recovery">恢復配置</string>
 </resources>

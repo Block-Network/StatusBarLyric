@@ -186,10 +186,10 @@ class SettingsActivity : MIUIActivity() {
                     show()
                 }
             }))
-            add(TextSummaryV("Backup", onClick = {
+            add(TextSummaryV(textId = R.string.Backup, onClick = {
                 BackupUtils.backup(activity, getSP())
             }))
-            add(TextSummaryV("Recovery", onClick = {
+            add(TextSummaryV(textId = R.string.Recovery, onClick = {
                 BackupUtils.recovery(activity, getSP())
             }))
             add(LineV())
@@ -310,7 +310,7 @@ class SettingsActivity : MIUIActivity() {
             }))
             add(LineV())
             add(TitleTextV(resId = R.string.About))
-            add(TextSummaryV("CheckUpdate (${BuildConfig.VERSION_NAME})", onClick = {
+            add(TextSummaryV("${getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClick = {
                 ActivityUtils.showToastOnLooper(
                     activity,
                     getString(R.string.StartCheckUpdate)
@@ -518,11 +518,22 @@ class SettingsActivity : MIUIActivity() {
                 add(
                     TextWithSwitchV(
                         TextV(resId = R.string.ClickLyric),
-                        SwitchV("LSwitch", false, dataBindingSend = timeBinding.bindingSend),
+                        SwitchV("LSwitch", false),
                         dataBindingRecv = timeBinding.binding.getRecv(2)
                     )
                 )
-                add(TextWithSwitchV(TextV(resId = R.string.pseudoTime), SwitchV("PseudoTime", true)))
+                val pseudoTimeBinding = getDataBinding(ActivityOwnSP.ownSPConfig.getPseudoTime()) { view, flags, data ->
+                    when (flags) {
+                        2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+                    }
+                }
+                add(
+                    TextWithSwitchV(
+                        TextV(resId = R.string.pseudoTime),
+                        SwitchV("PseudoTime", false, dataBindingSend = pseudoTimeBinding.bindingSend),
+                        dataBindingRecv = pseudoTimeBinding.binding.getRecv(1)
+                    )
+                )
                 add(TextSummaryV(textId = R.string.pseudoTimeStyle, onClick = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.pseudoTime)
@@ -538,7 +549,7 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                         show()
                     }
-                }))
+                }, dataBindingRecv = pseudoTimeBinding.binding.getRecv(2)))
                 val meiZuStyle = getDataBinding(ActivityOwnSP.ownSPConfig.getLyricStyle()) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE

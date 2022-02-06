@@ -39,7 +39,7 @@ object BackupUtils {
     const val CREATE_DOCUMENT_CODE = 255774
     const val OPEN_DOCUMENT_CODE = 277451
 
-    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
 
     fun backup(activity: Activity, sp: SharedPreferences) {
         sharedPreferences = sp

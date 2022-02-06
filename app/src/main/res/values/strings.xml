@@ -145,6 +145,9 @@
     </string>
     <string name="First">View Header</string>
     <string name="Latest">View Latest</string>
-    <string name="ViewPosition">View add position</string>
+    <string name="ViewPosition">* View add position</string>
     <string name="Menu">Menu</string>
+    <string name="CheckUpdate">Check Update</string>
+    <string name="Backup">Backup Config</string>
+    <string name="Recovery">Recovery Config</string>
 </resources>
