@@ -48,6 +48,7 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
+import statusbar.lyric.utils.ActivityUtils.getNotice
 import kotlin.system.exitProcess
 
 
@@ -61,6 +62,7 @@ class SettingsActivity : MIUIActivity() {
         registerReceiver(HookReceiver(), IntentFilter().apply {
             addAction("Hook_Sure")
         })
+        ActivityUtils.getNotice(activity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -623,8 +625,7 @@ class SettingsActivity : MIUIActivity() {
                     for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
                         val drawable: Drawable = BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon)))
                         val resources: Resources = activity.resources
-                        var isNightMode = false
-                        isNightMode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        val isNightMode: Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                             resources.configuration.isNightModeActive
                         } else {
                             val mode: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
