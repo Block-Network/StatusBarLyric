@@ -1,3 +1,25 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/577fkj/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as published
+ * by 577fkj.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 @file:Suppress("DEPRECATION")
 
 package statusbar.lyric.hook.app
@@ -12,6 +34,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
@@ -37,6 +60,7 @@ import statusbar.lyric.utils.XposedOwnSP.config
 import statusbar.lyric.utils.XposedOwnSP.iconConfig
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricTextSwitchView
+import java.io.File
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
@@ -83,8 +107,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     var isLock = false
     var enable = false
     private var showLyric = true
-    var iconReverseColor = false
+    private var iconReverseColor = false
     var useSystemMusicActive = true
+    private var thisLyric = ""
+    private var isHook = false
 
     private val lyricConstructorXCMethodHook: XC_MethodHook = object : XC_MethodHook() {
         override fun afterHookedMethod(param: MethodHookParam) {
@@ -149,8 +175,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             }
         }
         application.sendBroadcast(Intent().apply {
-            action = "Hook_Sure"
-            putExtra("hook_ok", hookOk)
+            action = "App_Server"
+            putExtra("app_Type", "Hook")
+            putExtra("Hook", hookOk)
         })
         if (!hookOk || clockField == null) {
             return
@@ -161,8 +188,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         lyricTextView = LyricTextSwitchView(application, config.getLyricStyle())
         lyricTextView.width = (displayWidth * 35) / 100
         lyricTextView.height = clock.height
-        lyricTextView.setTypeface(clock.typeface)
-        if (config.getLyricSize().toInt() == 0) {
+        if (config.getLyricSize() == 0) {
             lyricTextView.setTextSize(0, clock.textSize)
         } else {
             lyricTextView.setTextSize(0, config.getLyricSize().toFloat())
@@ -175,6 +201,15 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         lyricTextView.setSingleLine(true)
         lyricTextView.setMaxLines(1)
+        val file = File(application.filesDir.path + "/font")
+        if (file.exists() || file.isFile || file.canRead()) {
+            lyricTextView.setTypeface(
+                Typeface.createFromFile(application.filesDir.path + "/font")
+            )
+            LogUtils.e("加载个性化字体")
+        } else {
+            lyricTextView.setTypeface(clock.typeface)
+        }
 
         // 创建图标
         iconView = ImageView(application).apply {
@@ -194,14 +229,19 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         lyricLayout.layoutParams =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lyricParams = lyricLayout.layoutParams as LinearLayout.LayoutParams
-        lyricParams.setMargins(config.getLyricPosition().toInt(), config.getLyricHigh().toInt(), 0, 0)
+        lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
         lyricLayout.layoutParams = lyricParams
 
         // 将歌词加入时钟布局
         val clockLayout: LinearLayout = clock.parent as LinearLayout
         clockLayout.gravity = Gravity.CENTER
         clockLayout.orientation = LinearLayout.HORIZONTAL
-        clockLayout.addView(lyricLayout)
+        if (config.getViewPosition() == "first") {
+            clockLayout.addView(lyricLayout, 1)
+        } else {
+            clockLayout.addView(lyricLayout)
+        }
+
 
         // 歌词点击事件
         if (config.getLyricSwitch()) {
@@ -253,31 +293,31 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
 
         updateLyricPos = Handler(Looper.getMainLooper()) {
-            lyricParams.setMargins(config.getLyricPosition().toInt(), config.getLyricHigh().toInt(), 0, 0)
+            lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
             true
         }
 
         val updateIconColor = Handler(Looper.getMainLooper()) { message ->
-            if (iconReverseColor) {
-                val color: ColorStateList = ColorStateList.valueOf(message.arg1)
-                iconView.imageTintList = color
-            }
+            iconView.setColorFilter(message.arg1)
+
             true
         }
 
         // 更新歌词
         lyricUpdate = Handler(Looper.getMainLooper()) { message ->
-            val string: String? = message.data.getString(lyricKey)
+            val string: String = message.data.getString(lyricKey)!!
             if (!TextUtils.isEmpty(string)) {
                 LogUtils.e("更新歌词: $string")
-                if (!string.equals(lyricTextView.text.toString())) {
-                    val dNow = Date()
-                    val ft = SimpleDateFormat(config.getPseudoTimeStyle(), Locale.getDefault())
-                    val time = ft.format(dNow)
-                    val addTimeStr = String.format("%s %s", time, string)
+                if (string != thisLyric) {
+                    thisLyric = string
+                    val addTimeStr = String.format(
+                        "%s %s",
+                        SimpleDateFormat(config.getPseudoTimeStyle(), Locale.getDefault()).format(Date()),
+                        string
+                    )
                     // 自适应/歌词宽度
                     if (config.getLyricWidth() == -1) {
-                        val paint1: TextPaint = lyricTextView.paint!! // 获取字体
+                        val paint1: TextPaint = lyricTextView.paint // 获取字体
                         if (config.getLyricMaxWidth() == -1 || paint1.measureText(string)
                                 .toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100
                         ) {
@@ -289,10 +329,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             }
 
                         } else {
-                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth().toInt()) / 100
+                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth()) / 100
                         }
                     } else {
-                        lyricTextView.width = (displayWidth * config.getLyricWidth().toInt()) / 100
+                        lyricTextView.width = (displayWidth * config.getLyricWidth()) / 100
                     }
                     // 歌词显示
                     if (showLyric) {
@@ -332,48 +372,48 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             true
         }
 
-        if (config.getUseSystemReverseColor()) {
-            Timer().schedule(
-                object : TimerTask() {
-                    var color = 0
-                    var clockColor = 0
 
-                    override fun run() {
-                        try {
-                            if (!enable) {
-                                return
-                            }
-                            if (config.getLyricService()) {
-                                // 设置颜色
-                                if (config.getLyricColor() != "") {
-                                    if (color != Color.parseColor(config.getLyricColor())) {
-                                        color = Color.parseColor(config.getLyricColor())
-                                        val message: Message = updateTextColor.obtainMessage()
-                                        message.arg1 = color
-                                        updateTextColor.sendMessage(message)
-                                    }
-                                } else {
-                                    if (clockColor == clock.textColors.defaultColor) {
-                                        return
-                                    }
-                                    clockColor = clock.textColors.defaultColor
-                                    if (config.getLyricColor() == "") {
-                                        val message: Message = updateTextColor.obtainMessage()
-                                        message.arg1 = clockColor
-                                        updateTextColor.sendMessage(message)
-                                    }
-                                    val message: Message = updateIconColor.obtainMessage()
-                                    message.arg1 = clockColor
-                                    updateIconColor.sendMessage(message)
-                                }
-                            }
-                        } catch (e: Exception) {
-                            LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
+        Timer().schedule(
+            object : TimerTask() {
+                var color = 0
+
+                override fun run() {
+                    try {
+                        if (!enable) {
+                            return
                         }
+
+                        // 设置颜色
+                        if (config.getLyricColor().isEmpty() && !config.getUseSystemReverseColor()) {
+                            if (color != clock.textColors.defaultColor) {
+                                color = clock.textColors.defaultColor
+                                val message1: Message = updateTextColor.obtainMessage()
+                                message1.arg1 = color
+                                updateTextColor.sendMessage(message1)
+
+                                val message2: Message = updateIconColor.obtainMessage()
+                                message2.arg1 = color
+                                updateIconColor.sendMessage(message2)
+                            }
+                        } else if (config.getLyricColor().isNotEmpty()) {
+                            if (color != Color.parseColor(config.getLyricColor())) {
+                                color = Color.parseColor(config.getLyricColor())
+                                val message: Message = updateTextColor.obtainMessage()
+                                message.arg1 = color
+                                updateTextColor.sendMessage(message)
+
+                                val message2: Message = updateIconColor.obtainMessage()
+                                message2.arg1 = color
+                                updateIconColor.sendMessage(message2)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
                     }
-                }, 0, 25
-            )
-        }
+                }
+            }, 0, 25
+        )
+
 
         // 检测音乐是否关闭
         Timer().schedule(
@@ -414,7 +454,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 @SuppressLint("DefaultLocale")
                 @Override
                 override fun run() {
-                    iconPos = config.getIconHigh().toInt()
+                    iconPos = config.getIconHigh()
                     if (enable && config.getAntiBurn()) {
                         if (order) {
                             i += 1
@@ -472,7 +512,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
     fun updateLyric(lyric: String?, icon: String) {
         var mLyric = ""
-        var mIcon = ""
+        val mIcon: String
         if (lyric == "refresh" && icon == "refresh") {
             mLyric = lyricTextView.text.toString()
             mIcon = strIcon
@@ -514,12 +554,12 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     BitmapDrawable(application.resources, Utils.stringToBitmap(iconConfig.getIcon(strIcon)))
             }
             // 设置宽高
-            if (config.getIconSize().toInt() == 0) {
+            if (config.getIconSize() == 0) {
                 iconParams.width = clock.textSize.toInt()
                 iconParams.height = clock.textSize.toInt()
             } else {
-                iconParams.width = config.getIconSize().toInt()
-                iconParams.height = config.getIconSize().toInt()
+                iconParams.width = config.getIconSize()
+                iconParams.height = config.getIconSize()
             }
             iconUpdate.obtainMessage().let {
                 it.obj = drawableIcon
@@ -527,7 +567,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             }
         }
         updateLyricPos.sendEmptyMessage(0)
-        iconReverseColor = config.getIconAutoColor() == false
+        iconReverseColor = config.getIconAutoColor()
         if (config.getLyricStyle()) {
             lyricTextView.setSpeed(config.getLyricSpeed())
         }
@@ -545,8 +585,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             lyricTextView.outAnimation = Utils.outAnim(anim)
         }
         if (config.getAntiBurn()) {
-            if (config.getIconHigh().toInt() != oldPos) {
-                oldPos = config.getIconHigh().toInt()
+            if (config.getIconHigh() != oldPos) {
+                oldPos = config.getIconHigh()
                 updateMarginsIcon.obtainMessage().let {
                     it.arg1 = 0
                     it.arg2 = oldPos
@@ -570,9 +610,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     }
 
     fun hook() {
+        if (isHook) return else isHook = true
         // 使用系统方法反色
         LogUtils.e("使用系统反色: " + config.getUseSystemReverseColor().toString())
-        if (config.getUseSystemReverseColor()) {
+        if (config.getUseSystemReverseColor() && config.getLyricColor().isEmpty()) {
             try {
                 val darkIconDispatcher =
                     "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
@@ -591,11 +632,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                                 try {
                                     super.afterHookedMethod(param)
                                     val areaTint = param.args[2] as Int
-                                    if (config.getLyricColor() == "" && !iconReverseColor) {
-                                        val color = ColorStateList.valueOf(areaTint)
-                                        iconView?.imageTintList = color
-                                    }
-                                    lyricTextView?.setTextColor(areaTint)
+
+                                    val color = ColorStateList.valueOf(areaTint)
+                                    iconView.imageTintList = color
+                                    lyricTextView.setTextColor(areaTint)
                                 } catch (_: UninitializedPropertyAccessException) {
                                 }
                             }
@@ -618,7 +658,11 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         val clazz: Class<*>? =
             "com.android.systemui.statusbar.phone.ClockController".findClassOrNull(lpparam.classLoader) // 某些ROM写了控制器
         if (clazz != null) {
-            clazz.hookConstructor(Context::class.java, View::class.java, lyricConstructorXCMethodHook)
+            if (clazz.hookConstructor(Context::class.java, View::class.java, lyricConstructorXCMethodHook) == null) {
+                if (clazz.hookConstructor(View::class.java, lyricConstructorXCMethodHook) == null) {
+                    LogUtils.e("不支持的rom请打包日志和系统界面发给作者!!")
+                }
+            }
         } else {
             "com.android.systemui.statusbar.phone.CollapsedStatusBarFragment".hookAfterMethod(
                 "onViewCreated",
@@ -751,6 +795,45 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     "app_stop" -> offLyric("收到广播app_stop")
                     "test" -> ShowDialog().show()
                     "refresh" -> updateLyric("refresh", "refresh")
+                    "copy_font" -> {
+                        val path = intent.getStringExtra("Font_Path")!!
+                        LogUtils.e("自定义字体: $path")
+                        val file = File(application.filesDir.path + "/font")
+                        if (file.exists()) {
+                            file.delete()
+                        }
+                        val error = Utils.copyFile(File(path), application.filesDir.path, "font")
+                        if (error.isEmpty()) {
+                            lyricTextView.setTypeface(
+                                Typeface.createFromFile(application.filesDir.path + "/font")
+                            )
+                            LogUtils.e("加载个性化字体")
+                            application.sendBroadcast(Intent().apply {
+                                action = "App_Server"
+                                putExtra("app_Type", "CopyFont")
+                                putExtra("CopyFont", true)
+                            })
+                        } else {
+                            LogUtils.e("个性化字体复制失败")
+                            application.sendBroadcast(Intent().apply {
+                                action = "App_Server"
+                                putExtra("app_Type", "CopyFont")
+                                putExtra("font_error", error)
+                            })
+                        }
+                    }
+                    "delete_font" -> {
+                        var isOK = false
+                        val file = File(application.filesDir.path + "/font")
+                        if (file.exists() && file.canWrite()) {
+                            isOK = file.delete()
+                        }
+                        application.sendBroadcast(Intent().apply {
+                            action = "App_Server"
+                            putExtra("app_Type", "DeleteFont")
+                            putExtra("DeleteFont", isOK)
+                        })
+                    }
                 }
             } catch (e: Exception) {
                 LogUtils.e("广播接收错误 " + e + "\n" + Utils.dumpException(e))

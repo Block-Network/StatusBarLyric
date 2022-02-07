@@ -1,11 +1,30 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/577fkj/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as published
+ * by 577fkj.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 package statusbar.lyric.utils
 
 import android.app.Activity
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -13,13 +32,12 @@ import android.os.Looper
 import android.os.Message
 import android.widget.Toast
 import cn.fkj233.ui.dialog.MIUIDialog
+import org.json.JSONException
+import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.Config
 import statusbar.lyric.utils.HttpUtils.Get
-import org.json.JSONException
-import org.json.JSONObject
-import kotlin.system.exitProcess
 
 
 object ActivityUtils {
@@ -42,7 +60,7 @@ object ActivityUtils {
             Utils.getSP(activity, name)?.let { Config(it) }?.clear()
         }
         showToastOnLooper(activity, activity.getString(R.string.ResetSuccess))
-        exitProcess(0)
+        activity.finishActivity(0)
     }
 
     //检查更新
@@ -90,7 +108,7 @@ object ActivityUtils {
         }
         Thread {
             val value: String =
-                HttpUtils.Get("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
+                Get("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
             if (value != "") {
                 handler.obtainMessage().let {
                     it.data = Bundle().apply {
@@ -104,24 +122,6 @@ object ActivityUtils {
         }.start()
     }
 
-    fun isApi(packageManager: PackageManager, packName: String?): Boolean {
-        return try {
-            val appInfo = packageManager.getApplicationInfo(packName!!, PackageManager.GET_META_DATA)
-            if (appInfo.metaData != null) {
-                appInfo.metaData.getBoolean("XStatusBarLyric", false)
-            } else {
-                false
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-            false
-        }
-    }
-
-    fun dp2px(dpValue: Float): Int {
-        return (0.5f + dpValue * Resources.getSystem().displayMetrics.density).toInt()
-    }
-
     fun openUrl(context: Context, url: String) {
         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
@@ -130,12 +130,18 @@ object ActivityUtils {
         val handler = Handler(Looper.getMainLooper()) { message: Message ->
             try {
                 val jsonObject = JSONObject(message.data.getString("value")!!)
-                if (jsonObject.getString("versionCode") == BuildConfig.VERSION_CODE.toString()) {
-                    if (java.lang.Boolean.parseBoolean(jsonObject.getString("forcibly"))) {
+                if (jsonObject.getInt("versionCode") == BuildConfig.VERSION_CODE) {
+                    if (jsonObject.getBoolean("forcibly")) {
                         MIUIDialog(activity).apply {
                             setTitle(activity.getString(R.string.NewNotice))
                             setMessage(jsonObject.getString("data"))
                             setRButton(activity.getString(R.string.Done)) { dismiss() }
+                            if (jsonObject.getBoolean("isLButton")) {
+                                setLButton(jsonObject.getString("lButton")) {
+                                    openUrl(activity, jsonObject.getString("url"))
+                                    dismiss()
+                                }
+                            }
                             show()
                         }
                     }

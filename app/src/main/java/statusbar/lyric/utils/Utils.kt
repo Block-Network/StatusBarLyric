@@ -1,3 +1,25 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/577fkj/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as published
+ * by 577fkj.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 @file:Suppress("DEPRECATION")
 
 package statusbar.lyric.utils
@@ -19,14 +41,14 @@ import android.view.animation.TranslateAnimation
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.Config
-import java.io.PrintWriter
-import java.io.StringWriter
+import java.io.*
+import java.nio.channels.FileChannel
 import java.util.*
 
 
 @SuppressLint("StaticFieldLeak")
 object Utils {
-    val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
+    private val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
     var context: Context? = null
     private val packNameToIconName = HashMap<String, String>().apply {
         put("com.netease.cloudmusic", "Netease")
@@ -75,7 +97,15 @@ object Utils {
 
     // 报错转内容
     @JvmStatic
-    fun dumpException(e: java.lang.Exception): String {
+    fun dumpException(e: Exception): String {
+        val sw = StringWriter()
+        val pw = PrintWriter(sw)
+        e.printStackTrace(pw)
+        return sw.toString()
+    }
+
+    @JvmStatic
+    fun dumpIOException(e: IOException): String {
         val sw = StringWriter()
         val pw = PrintWriter(sw)
         e.printStackTrace(pw)
@@ -108,24 +138,22 @@ object Utils {
             notCarrier = 1
         }
         if (!hasMiuiSetting) {
-            if (config.getHNoticeIcon() == true && Settings.System.getInt(application.contentResolver, "status_bar_show_notification_icon", 1) == notCarrier) {
+            if (config.getHNoticeIcon() && Settings.System.getInt(application.contentResolver, "status_bar_show_notification_icon", 1) == notCarrier) {
                 Settings.System.putInt(application.contentResolver, "status_bar_show_notification_icon", isCarrier)
             }
-            if (config.getHNetSpeed() == true && Settings.System.getInt(application.contentResolver, "status_bar_show_notification_icon", 1) == notCarrier) {
+            if (config.getHNetSpeed() && Settings.System.getInt(application.contentResolver, "status_bar_show_notification_icon", 1) == notCarrier) {
                 Settings.System.putInt(application.contentResolver, "status_bar_show_network_speed", isCarrier)
             }
         } else {
-            if (config.getHNoticeIcon() == true && MiuiStatusBarManager.isShowNotificationIcon(application) != isOpen) {
+            if (config.getHNoticeIcon() && MiuiStatusBarManager.isShowNotificationIcon(application) != isOpen) {
                 MiuiStatusBarManager.setShowNotificationIcon(application, isOpen)
-                Settings.System.putInt(application.contentResolver, "status_bar_show_notification_icon", notCarrier)
             }
-            if (config.getHNetSpeed() == true && MiuiStatusBarManager.isShowNetworkSpeed(application) != isOpen) {
+            if (config.getHNetSpeed() && MiuiStatusBarManager.isShowNetworkSpeed(application) != isOpen) {
                 MiuiStatusBarManager.setShowNetworkSpeed(application, isOpen)
-                Settings.System.putInt(application.contentResolver, "status_bar_show_network_speed", notCarrier)
             }
 
         }
-        if (config.getHCuk() == true && Settings.System.getInt(application.contentResolver, "status_bar_show_carrier_under_keyguard", 1) == isCarrier) {
+        if (config.getHCuk() && Settings.System.getInt(application.contentResolver, "status_bar_show_carrier_under_keyguard", 1) == isCarrier) {
             Settings.System.putInt(application.contentResolver, "status_bar_show_carrier_under_keyguard", notCarrier)
         }
 
@@ -249,6 +277,45 @@ object Utils {
                 putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
             }
         )
+    }
+
+    /**
+     * 根据文件路径拷贝文件
+     * @param src 源文件
+     * @param destPath 目标文件路径
+     * @return boolean 成功true、失败false
+     */
+    fun copyFile(src: File?, destPath: String?, destFileName: String): String {
+        if (src == null || destPath == null) {
+            return "Param error"
+        }
+        val dest = File(destPath, destFileName)
+        if (dest.exists()) {
+            if (!dest.delete()) {
+                return "Delete file fail"
+            }
+        }
+        try {
+            if (!dest.createNewFile()) {
+                return "Create file fail"
+            }
+        } catch (e: IOException) {
+            return dumpIOException(e)
+        }
+        try {
+            val srcChannel = FileInputStream(src).channel
+            val dstChannel = FileOutputStream(dest).channel
+            srcChannel.transferTo(0, srcChannel.size(), dstChannel)
+            try {
+                srcChannel.close()
+                dstChannel.close()
+            } catch (e: IOException) {
+                return dumpIOException(e)
+            }
+        } catch (e: IOException) {
+            return dumpIOException(e)
+        }
+        return ""
     }
 
     /**

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="UseInfo">Instructions for use</string>
+    <string name="ApplicableVersion">Applicable version</string>
     <string name="HideDeskIcon">Hide desktop icons</string>
     <string name="BaseSetting">Basic Settings</string>
     <string name="AllSwitch">Master switch</string>
@@ -9,7 +9,7 @@
     <string name="Off">Off</string>
     <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
     <string name="LyricsAnimation">Lyrics animation</string>
-    <string name="LyricColor">Lyric color</string>
+    <string name="LyricColor">* Lyric color</string>
     <string name="LyricIcon">Lyrcs icon</string>
     <string name="LyricSpeed">Lyrics scroll speed</string>
     <string name="AdvancedSettings">Advanced settings (change options after stopping music)</string>
@@ -132,7 +132,8 @@
         a: morning and afternoon signs\n
         z: indicates the time zone\n
         To display custom text, fill in the edit box below\n
-        Current format:</string>
+        Current format:
+    </string>
     <string name="Custom">Custom</string>
     <string name="InputCustomHook">Input custom hook, Input empty of off</string>
     <string name="HideTime">Hide Time</string>
@@ -143,4 +144,20 @@
     <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged
         SystemUI
     </string>
+    <string name="First">View Header</string>
+    <string name="Latest">View Latest</string>
+    <string name="ViewPosition">* View add position</string>
+    <string name="Menu">Menu</string>
+    <string name="CheckUpdate">Check Update</string>
+    <string name="Backup">Backup Config</string>
+    <string name="Recovery">Recovery Config</string>
+    <string name="Manual">Help Manual</string>
+    <string name="CustomFont">Custom font</string>
+    <string name="DeleteFont">Delete font</string>
+    <string name="CustomFontSuccess">Set custom font success</string>
+    <string name="CustomFoneFail">Set custom font fail</string>
+    <string name="DeleteFontSuccess">Delete font success</string>
+    <string name="DeleteFoneFail">Delete font fail</string>
+    <string name="ChooseFont">Choose font</string>
+    <string name="Reset">Reset</string>
 </resources>
