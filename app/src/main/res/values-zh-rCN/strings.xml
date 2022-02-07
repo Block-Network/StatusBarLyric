@@ -54,7 +54,7 @@
     <string name="XposedTips">如果无法显示歌词，请尝试停止音乐软件并重启系统界面\n或查看 使用说明 自己是否使用正确版本</string>
     <string name="NewVer">发现新版本</string>
     <string name="Update">更新</string>
-    <string name="GetNewVerError">"获取最新版下载地址失败: "</string>
+    <string name="GetNewVerError">获取最新版下载地址失败: </string>
     <string name="Cancel">取消</string>
     <string name="NoVerUpdate">无新版可更新</string>
     <string name="CheckUpdateError">检查失败，请稍后再试!</string>
@@ -66,8 +66,8 @@
     <string name="random">随机</string>
     <string name="LyricColorTips">请输入16进制颜色代码，例如: #C0C0C0</string>
     <string name="LyricColorError">颜色代码不正确!</string>
-    <string name="LyricPosTips">-900~900（单位：像素点），当前:</string>
-    <string name="LyricHighTips">-100~100（单位：像素），目前：</string>
+    <string name="LyricPosTips">-900~900（单位：像素点）</string>
+    <string name="LyricHighTips">-100~100（单位：像素）</string>
     <string name="Ok">确定</string>
     <string name="HookSetTips">已设置Hook为:\n</string>
     <string name="RestartSystemUI">请重启SystemUI</string>
@@ -102,8 +102,8 @@
     <string name="LyricHigh">* 歌词上下位置</string>
     <string name="LyricSize">* 歌词大小</string>
     <string name="IconSize">图标大小</string>
-    <string name="LyricSizeTips">0~50，当前:</string>
-    <string name="LyricTips">0%~100%，当前:</string>
+    <string name="LyricSizeTips">0~50</string>
+    <string name="LyricTips">0%~100%</string>
     <string name="Test">测试</string>
     <string name="TestDialogTips">这个功能是内嵌在SystemUI里的，可能会导致SystemUI崩溃重启！</string>
     <string name="Start">启动</string>
@@ -120,8 +120,7 @@
         E：星期几\n
         a：上下午标识\n
         z：表示时区\n
-        若要显示自定义文字，在下面编辑框里填写即可\n
-        当前格式：
+        若要显示自定义文字，在下面编辑框里填写即可
     </string>
     <string name="Custom">自定义</string>
     <string name="InputCustomHook">自定义Hook点，空关闭</string>

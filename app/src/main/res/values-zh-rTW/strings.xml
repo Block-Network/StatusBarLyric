@@ -66,8 +66,8 @@
     <string name="random">隨機</string>
     <string name="LyricColorTips">請輸入16進製顏色代碼，例如: #C0C0C0</string>
     <string name="LyricColorError">顏色代碼不正確!</string>
-    <string name="LyricPosTips">-900~900（單位：像素點），當前:</string>
-    <string name="LyricHighTips">-100~100（單位：像素點），當前：</string>
+    <string name="LyricPosTips">-900~900（單位：像素點）</string>
+    <string name="LyricHighTips">-100~100（單位：像素點）</string>
     <string name="Ok">確定</string>
     <string name="HookSetTips">已設置Hook為:\n</string>
     <string name="RestartSystemUI">請重啟SystemUI</string>
@@ -102,8 +102,8 @@
     <string name="LyricHigh">* 歌詞上下位置</string>
     <string name="LyricSize">* 歌詞大小</string>
     <string name="IconSize">圖標大小</string>
-    <string name="LyricSizeTips">0~50，當前:</string>
-    <string name="LyricTips">0%~100%，當前:</string>
+    <string name="LyricSizeTips">0~50</string>
+    <string name="LyricTips">0%~100%</string>
     <string name="Test">測試</string>
     <string name="TestDialogTips">這個功能是內嵌在SystemUI裏的，可能會導致SystemUI崩潰重啓！</string>
     <string name="Back">返回</string>
