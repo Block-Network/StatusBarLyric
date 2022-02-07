@@ -72,5 +72,5 @@ dependencies {
     val appCenterSdkVersion = "4.4.2"
     implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
     implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
-    implementation(project(":miui"))
+    implementation(project(":blockmiui"))
 }
