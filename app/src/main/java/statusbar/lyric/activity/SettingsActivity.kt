@@ -34,6 +34,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.MIUIPopupData
@@ -58,31 +59,24 @@ class SettingsActivity : MIUIActivity() {
         ActivityOwnSP.activity = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
-        registerReceiver(HookReceiver(), IntentFilter().apply {
-            addAction("Hook_Sure")
-        })
-        registerReceiver(CustomFontReceiver(), IntentFilter().apply {
-            addAction("SetCustomFont")
+        registerReceiver(AppReceiver(), IntentFilter().apply {
+            addAction("App_Server")
         })
         ActivityUtils.getNotice(activity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode != RESULT_OK) return
-        when (requestCode) {
-            BackupUtils.CREATE_DOCUMENT_CODE -> {
-                if (data != null) {
+        if (data != null && resultCode == RESULT_OK) {
+            when (requestCode) {
+                BackupUtils.CREATE_DOCUMENT_CODE -> {
                     BackupUtils.handleCreateDocument(activity, data.data)
                 }
-            }
-            BackupUtils.OPEN_DOCUMENT_CODE -> {
-                if (data != null) {
+                BackupUtils.OPEN_DOCUMENT_CODE -> {
                     BackupUtils.handleReadDocument(activity, data.data)
                 }
-            }
-            OPEN_FONT_FILE -> {
-                if (data != null) {
+                OPEN_FONT_FILE -> {
                     data.data?.let {
+                        Log.e("Lyric_Server", data.data?.toString().toString())
                         activity.sendBroadcast(
                             Intent().apply {
                                 action = "Lyric_Server"
@@ -95,59 +89,72 @@ class SettingsActivity : MIUIActivity() {
             }
         }
     }
-    inner class CustomFontReceiver : BroadcastReceiver() {
+
+
+    inner class AppReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
                 Handler(Looper.getMainLooper()).post {
-                    val message: String = if (intent.getBooleanExtra("font_ok", false)) {
-                        getString(R.string.CustomFontSuccess)
-                    } else {
-                        getString(R.string.CustomFoneFail) + "\n" + intent.getStringExtra("font_error")
-                    }
-                    MIUIDialog(activity).apply {
-                        setTitle(getString(R.string.CustomFont))
-                        setMessage(message)
-                        setRButton(getString(R.string.Ok)) { dismiss() }
-                        show()
+                    when (intent.getStringExtra("app_Type")) {
+                        "Hook" -> {
+                            val message: String = if (intent.getBooleanExtra("Hook", false)) {
+                                getString(R.string.HookSureSuccess)
+                            } else {
+                                getString(R.string.HookSureFail)
+                            }
+                            MIUIDialog(activity).apply {
+                                setTitle(getString(R.string.HookSure))
+                                setMessage(message)
+                                setRButton(getString(R.string.Ok)) { dismiss() }
+                                show()
+                            }
+                            val channelId = "Hook_Ok"
+                            (applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager).apply {
+                                createNotificationChannel(
+                                    NotificationChannel(
+                                        channelId,
+                                        "Hook",
+                                        NotificationManager.IMPORTANCE_DEFAULT
+                                    )
+                                )
+                                notify(0, Notification.Builder(applicationContext).let {
+                                    it.setChannelId(channelId)
+                                    it.setSmallIcon(R.mipmap.ic_launcher)
+                                    it.setContentTitle(getString(R.string.AppName))
+                                    it.setContentText(message)
+                                    it.build()
+                                })
+                            }
+                        }
+                        "CopyFont" -> {
+                            val message: String = if (intent.getBooleanExtra("CopyFont", false)) {
+                                getString(R.string.CustomFontSuccess)
+                            } else {
+                                getString(R.string.CustomFoneFail) + "\n" + intent.getStringExtra("font_error")
+                            }
+                            MIUIDialog(activity).apply {
+                                setTitle(getString(R.string.CustomFont))
+                                setMessage(message)
+                                setRButton(getString(R.string.Ok)) { dismiss() }
+                                show()
+                            }
+                        }
+                        "DeleteFont" -> {
+                            val message: String = if (intent.getBooleanExtra("DeleteFont", false)) {
+                                getString(R.string.DeleteFontSuccess)
+                            } else {
+                                getString(R.string.DeleteFoneFail)
+                            }
+                            MIUIDialog(activity).apply {
+                                setTitle(getString(R.string.DeleteFont))
+                                setMessage(message)
+                                setRButton(getString(R.string.Ok)) { dismiss() }
+                                show()
+                            }
+                        }
                     }
                 }
-            } catch (_: Throwable) {
-            }
-        }
-    }
-    inner class HookReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            try {
-                Handler(Looper.getMainLooper()).post {
-                    val message: String = if (intent.getBooleanExtra("hook_ok", false)) {
-                        getString(R.string.HookSureSuccess)
-                    } else {
-                        getString(R.string.HookSureFail)
-                    }
-                    MIUIDialog(activity).apply {
-                        setTitle(getString(R.string.HookSure))
-                        setMessage(message)
-                        setRButton(getString(R.string.Ok)) { dismiss() }
-                        show()
-                    }
-                    val channelId = "Hook_Ok"
-                    (applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager).apply {
-                        createNotificationChannel(
-                            NotificationChannel(
-                                channelId,
-                                "Hook",
-                                NotificationManager.IMPORTANCE_DEFAULT
-                            )
-                        )
-                        notify(0, Notification.Builder(applicationContext).let {
-                            it.setChannelId(channelId)
-                            it.setSmallIcon(R.mipmap.ic_launcher)
-                            it.setContentTitle(getString(R.string.AppName))
-                            it.setContentText(message)
-                            it.build()
-                        })
-                    }
-                }
+
             } catch (_: Throwable) {
             }
         }
@@ -293,7 +300,7 @@ class SettingsActivity : MIUIActivity() {
             add(TitleTextV(resId = R.string.AdvancedSettings))
             add(TextWithSwitchV(TextV(resId = R.string.AbScreen), SwitchV("AntiBurn")))
             add(TextWithSwitchV(TextV(resId = R.string.UseSystemReverseColor), SwitchV("UseSystemReverseColor", true)))
-            add(TextWithSwitchV(TextV(resId = R.string.SongPauseCloseLyrics), SwitchV("LAutoOff")))
+            add(TextWithSwitchV(TextV(resId = R.string.SongPauseCloseLyrics), SwitchV("LAutoOff", true)))
             add(TextWithSwitchV(TextV(resId = R.string.UnlockShow), SwitchV("LockScreenOff")))
             add(TextWithSwitchV(TextV(resId = R.string.AutoHideNotiIcon), SwitchV("HNoticeIcon")))
             add(TextWithSwitchV(TextV(resId = R.string.HideNetWork), SwitchV("HNetSpeed")))
@@ -319,9 +326,9 @@ class SettingsActivity : MIUIActivity() {
                         ActivityUtils.showToastOnLooper(
                             activity,
                             String.format(
-                                "%s %s%s",
+                                "%s %s\n%s",
                                 getString(R.string.HookSetTips),
-                                if (ActivityOwnSP.ownSPConfig.getHook() == "") getString(R.string.Default) else ActivityOwnSP.ownSPConfig.getHook(),
+                                ActivityOwnSP.ownSPConfig.getHook().ifEmpty { getString(R.string.Default) },
                                 getString(R.string.RestartSystemUI)
                             )
                         )
@@ -377,7 +384,7 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricColorTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricColor(), "#FFFFFF")
                         setRButton(R.string.Ok) {
-                            if (getEditText() == "") {
+                            if (getEditText().isEmpty()) {
                                 ActivityOwnSP.ownSPConfig.setLyricColor("")
                             } else {
                                 try {
@@ -403,7 +410,7 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricSizeTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSize().toString(), "0")
                         setRButton(R.string.Ok) {
-                            if (getEditText() == "") {
+                            if (getEditText().isEmpty()) {
                                 ActivityOwnSP.ownSPConfig.setLyricSize(0)
                             } else {
                                 try {
@@ -435,7 +442,7 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricWidth().toString(), "-1")
                         setRButton(R.string.Ok) {
-                            if (getEditText() == "") {
+                            if (getEditText().isEmpty()) {
                                 ActivityOwnSP.ownSPConfig.setLyricSize(-1)
                             } else {
                                 try {
@@ -473,7 +480,7 @@ class SettingsActivity : MIUIActivity() {
                                 setMessage(R.string.LyricTips)
                                 setEditText(ActivityOwnSP.ownSPConfig.getLyricMaxWidth().toString(), "-1")
                                 setRButton(R.string.Ok) {
-                                    if (getEditText() == "") {
+                                    if (getEditText().isEmpty()) {
                                         ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
                                     } else {
                                         try {
@@ -608,7 +615,7 @@ class SettingsActivity : MIUIActivity() {
                         setTitle(R.string.LyricSpeed)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSpeed().toString(), "1.0")
                         setRButton(R.string.Ok) {
-                            if (getEditText() == "") {
+                            if (getEditText().isEmpty()) {
                                 ActivityOwnSP.ownSPConfig.setLyricSpeed(1f)
                             } else {
                                 ActivityOwnSP.ownSPConfig.setLyricSpeed(getEditText().toFloat())
@@ -620,11 +627,25 @@ class SettingsActivity : MIUIActivity() {
                     }
                 }, dataBindingRecv = meiZuStyle.binding.getRecv(2)))
                 add(TextSummaryV(textId = R.string.CustomFont, onClickListener = {
-                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                    intent.addCategory(Intent.CATEGORY_OPENABLE)
-                    intent.type = "*/*"
-                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
-                    startActivityForResult(intent, OPEN_FONT_FILE)
+                    MIUIDialog(activity).apply {
+                        setTitle(R.string.CustomFont)
+                        setRButton(R.string.ChooseFont) {
+                            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                            intent.addCategory(Intent.CATEGORY_OPENABLE)
+                            intent.type = "*/*"
+                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+                            startActivityForResult(intent, OPEN_FONT_FILE)
+                            dismiss()
+                        }
+                        setLButton(R.string.Reset) {
+                            application.sendBroadcast(Intent().apply {
+                                action = "Lyric_Server"
+                                putExtra("Lyric_Type", "delete_font")
+                            })
+                            dismiss()
+                        }
+                        show()
+                    }
                 }))
                 add(LineV())
                 add(TitleTextV(resId = R.string.IconSettings))
@@ -666,7 +687,11 @@ class SettingsActivity : MIUIActivity() {
                 arrayListOf<BaseView>().apply {
                     val iconConfig = IconConfig(Utils.getSP(activity, "Icon_Config"))
                     for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
-                        add(AuthorV(BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon))).also { it.setTint(getColor(R.color.customIconColor)) }, icon, round = 0f, onClick = {
+                        add(AuthorV(BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon))).also {
+                            it.setTint(
+                                getColor(R.color.customIconColor)
+                            )
+                        }, icon, round = 0f, onClick = {
                             MIUIDialog(activity).apply {
                                 setTitle(icon)
                                 setMessage(R.string.MakeIconTitle)

@@ -61,7 +61,6 @@ import statusbar.lyric.utils.XposedOwnSP.iconConfig
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricTextSwitchView
 import java.io.File
-import java.io.IOException
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
@@ -176,8 +175,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             }
         }
         application.sendBroadcast(Intent().apply {
-            action = "Hook_Sure"
-            putExtra("hook_ok", hookOk)
+            action = "App_Server"
+            putExtra("app_Type", "Hook")
+            putExtra("Hook", hookOk)
         })
         if (!hookOk || clockField == null) {
             return
@@ -809,17 +809,30 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             )
                             LogUtils.e("加载个性化字体")
                             application.sendBroadcast(Intent().apply {
-                                action = "SetCustomFont"
-                                putExtra("font_ok", true)
+                                action = "App_Server"
+                                putExtra("app_Type", "CopyFont")
+                                putExtra("CopyFont", true)
                             })
                         } else {
                             LogUtils.e("个性化字体复制失败")
                             application.sendBroadcast(Intent().apply {
-                                action = "SetCustomFont"
-                                putExtra("font_ok", false)
+                                action = "App_Server"
+                                putExtra("app_Type", "CopyFont")
                                 putExtra("font_error", error)
                             })
                         }
+                    }
+                    "delete_font" -> {
+                        var isOK = false
+                        val file = File(application.filesDir.path + "/font")
+                        if (file.exists() && file.canWrite()) {
+                            isOK = file.delete()
+                        }
+                        application.sendBroadcast(Intent().apply {
+                            action = "App_Server"
+                            putExtra("app_Type", "DeleteFont")
+                            putExtra("DeleteFont", isOK)
+                        })
                     }
                 }
             } catch (e: Exception) {

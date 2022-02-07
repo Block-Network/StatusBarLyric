@@ -36,7 +36,7 @@
     <string name="Tips">提示</string>
     <string name="ReStart">重啓APP</string>
     <string name="VerExplanation">版本說明</string>
-    <string name="Done">關閉</string>
+    <string name="Done">完成</string>
     <string name="CurrentVer">當前版本</string>
     <string name="VerExp">適用情況：\n
         - APlayer 未知 ~ 1.5.8.0（狀態欄歌詞版）\n
@@ -129,7 +129,7 @@
     <string name="Donate">支持我們</string>
     <string name="HookSure">Hook 系统界面</string>
     <string name="HookSureSuccess">Hook 系统界面成功</string>
-    <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者把</string>
+    <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者吧</string>
     <string name="First">控件首</string>
     <string name="Latest">控件尾</string>
     <string name="ViewPosition">* 控件添加位置</string>
@@ -139,6 +139,11 @@
     <string name="Recovery">恢復配置</string>
     <string name="Manual">幫助手冊</string>
     <string name="CustomFont">自定義字體</string>
+    <string name="DeleteFont">刪除字體</string>
     <string name="CustomFontSuccess">設置自定義字體成功</string>
     <string name="CustomFoneFail">設置自定義字體失敗</string>
+    <string name="DeleteFontSuccess">刪除自定義字體成功</string>
+    <string name="DeleteFoneFail">刪除自定義字體失敗</string>
+    <string name="ChooseFont">選擇字體</string>
+    <string name="Reset">恢復默認</string>
 </resources>
