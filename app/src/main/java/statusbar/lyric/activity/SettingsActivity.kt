@@ -29,12 +29,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -48,7 +44,6 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
-import java.io.File
 import kotlin.system.exitProcess
 
 
@@ -201,7 +196,7 @@ class SettingsActivity : MIUIActivity() {
                     })
                 )
             )
-            add(TextSummaryV(textId = R.string.ResetModule, onClick = {
+            add(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
                 MIUIDialog(activity).apply {
                     setTitle(R.string.ResetModuleDialog)
                     setMessage(R.string.ResetModuleDialogTips)
@@ -215,7 +210,7 @@ class SettingsActivity : MIUIActivity() {
                     show()
                 }
             }))
-            add(TextSummaryV(textId = R.string.ReStartSystemUI, onClick = {
+            add(TextSummaryV(textId = R.string.ReStartSystemUI, onClickListener = {
                 MIUIDialog(activity).apply {
                     setTitle(R.string.RestartUI)
                     setMessage(R.string.RestartUITips)
@@ -228,10 +223,10 @@ class SettingsActivity : MIUIActivity() {
                     show()
                 }
             }))
-            add(TextSummaryV(textId = R.string.Backup, onClick = {
+            add(TextSummaryV(textId = R.string.Backup, onClickListener = {
                 BackupUtils.backup(activity, getSP())
             }))
-            add(TextSummaryV(textId = R.string.Recovery, onClick = {
+            add(TextSummaryV(textId = R.string.Recovery, onClickListener = {
                 BackupUtils.recovery(activity, getSP())
             }))
             add(LineV())
@@ -246,7 +241,7 @@ class SettingsActivity : MIUIActivity() {
 
     override fun mainItems(): ArrayList<BaseView> {
         return arrayListOf<BaseView>().apply {
-            add(TextSummaryV(textId = R.string.ApplicableVersion, onClick = {
+            add(TextSummaryV(textId = R.string.ApplicableVersion, onClickListener = {
                 MIUIDialog(activity).apply {
                     setTitle(R.string.VerExplanation)
                     setMessage(
@@ -263,7 +258,7 @@ class SettingsActivity : MIUIActivity() {
                     show()
                 }
             }))
-            add(TextSummaryV(textId = R.string.WarnExplanation, onClick = {
+            add(TextSummaryV(textId = R.string.WarnExplanation, onClickListener = {
                 MIUIDialog(activity).apply {
                     setTitle(R.string.WarnExplanation)
                     setMessage(
@@ -283,7 +278,7 @@ class SettingsActivity : MIUIActivity() {
             add(
                 TextSummaryV(
                     textId = R.string.Manual,
-                    onClick = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") })
+                    onClickListener = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") })
             )
             add(LineV())
             add(TitleTextV(resId = R.string.BaseSetting))
@@ -292,7 +287,7 @@ class SettingsActivity : MIUIActivity() {
             add(
                 TextSummaryV(
                     textId = R.string.Custom,
-                    onClick = { showFragment(getString(R.string.Custom)) })
+                    onClickListener = { showFragment(getString(R.string.Custom)) })
             )
             add(LineV())
             add(TitleTextV(resId = R.string.AdvancedSettings))
@@ -306,13 +301,13 @@ class SettingsActivity : MIUIActivity() {
             val dict: HashMap<String, String> = hashMapOf()
             dict["first"] = getString(R.string.First)
             dict["latest"] = getString(R.string.Latest)
-            add(TextWithSpinnerV(TextV(resId = R.string.ViewPosition), Spinner(arrayListOf(
+            add(TextWithSpinnerV(TextV(resId = R.string.ViewPosition), SpinnerV(arrayListOf(
                 MIUIPopupData(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setViewPosition("first") },
                 MIUIPopupData(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setViewPosition("latest") }
             ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!)))
             add(LineV())
             add(TitleTextV(resId = R.string.Other))
-            add(TextSummaryV(textId = R.string.CustomHook, onClick = {
+            add(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
                 MIUIDialog(activity).apply {
                     setTitle(R.string.HookSetTips)
                     setEditText(
@@ -337,7 +332,7 @@ class SettingsActivity : MIUIActivity() {
                 }
             }))
             add(TextWithSwitchV(TextV(resId = R.string.DebugMode), SwitchV("Debug")))
-            add(TextSummaryV(textId = R.string.Test, onClick = {
+            add(TextSummaryV(textId = R.string.Test, onClickListener = {
                 MIUIDialog(activity).apply {
                     setTitle(R.string.Test)
                     setMessage(R.string.TestDialogTips)
@@ -357,7 +352,7 @@ class SettingsActivity : MIUIActivity() {
             }))
             add(LineV())
             add(TitleTextV(resId = R.string.About))
-            add(TextSummaryV("${getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClick = {
+            add(TextSummaryV("${getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClickListener = {
                 ActivityUtils.showToastOnLooper(
                     activity,
                     getString(R.string.StartCheckUpdate)
@@ -367,7 +362,7 @@ class SettingsActivity : MIUIActivity() {
             add(
                 TextSummaryV(
                     textId = R.string.AboutModule,
-                    onClick = { showFragment(getString(R.string.AboutModule)) })
+                    onClickListener = { showFragment(getString(R.string.AboutModule)) })
             )
             add(TextV())
         }
@@ -376,7 +371,7 @@ class SettingsActivity : MIUIActivity() {
     override fun getItems(item: String): ArrayList<BaseView> {
         return when (item) {
             getString(R.string.Custom) -> arrayListOf<BaseView>().apply {
-                add(TextSummaryV(textId = R.string.LyricColor, onClick = {
+                add(TextSummaryV(textId = R.string.LyricColor, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricColor)
                         setMessage(R.string.LyricColorTips)
@@ -542,7 +537,7 @@ class SettingsActivity : MIUIActivity() {
                 dict["left"] = getString(R.string.left)
                 dict["right"] = getString(R.string.right)
                 dict["random"] = getString(R.string.random)
-                add(TextWithSpinnerV(TextV(resId = R.string.LyricsAnimation), Spinner(arrayListOf(
+                add(TextWithSpinnerV(TextV(resId = R.string.LyricsAnimation), SpinnerV(arrayListOf(
                     MIUIPopupData(getString(R.string.Off)) { ActivityOwnSP.ownSPConfig.setAnim("off") },
                     MIUIPopupData(getString(R.string.top)) { ActivityOwnSP.ownSPConfig.setAnim("top") },
                     MIUIPopupData(getString(R.string.lower)) { ActivityOwnSP.ownSPConfig.setAnim("lower") },
@@ -581,7 +576,7 @@ class SettingsActivity : MIUIActivity() {
                         dataBindingRecv = pseudoTimeBinding.binding.getRecv(1)
                     )
                 )
-                add(TextSummaryV(textId = R.string.pseudoTimeStyle, onClick = {
+                add(TextSummaryV(textId = R.string.pseudoTimeStyle, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.pseudoTime)
                         setMessage(R.string.pseudoTimeStyleTips)
@@ -608,7 +603,7 @@ class SettingsActivity : MIUIActivity() {
                         SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend)
                     )
                 )
-                add(TextSummaryV(textId = R.string.LyricSpeed, onClick = {
+                add(TextSummaryV(textId = R.string.LyricSpeed, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricSpeed)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSpeed().toString(), "1.0")
@@ -624,7 +619,7 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }, dataBindingRecv = meiZuStyle.binding.getRecv(2)))
-                add(TextSummaryV(textId = R.string.CustomFont, onClick = {
+                add(TextSummaryV(textId = R.string.CustomFont, onClickListener = {
                     val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                     intent.addCategory(Intent.CATEGORY_OPENABLE)
                     intent.type = "*/*"
@@ -662,7 +657,7 @@ class SettingsActivity : MIUIActivity() {
                 }))
                 add(SeekBarWithTextV("IHigh", -100, 100, defaultProgress = 7, ActivityOwnSP.ownSPConfig.getIconSize()))
                 add(TextWithSwitchV(TextV(resId = R.string.IconAutoColors), SwitchV("IAutoColor", true)))
-                add(TextSummaryV(textId = R.string.IconSettings, onClick = {
+                add(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment(getString(R.string.IconSettings))
                 }))
                 add(TextV())
@@ -716,13 +711,13 @@ class SettingsActivity : MIUIActivity() {
                     )
                     add(LineV())
                     add(TitleTextV(resId = R.string.ThkListTips))
-                    add(TextSummaryV(textId = R.string.ThkListTips, onClick = {
+                    add(TextSummaryV(textId = R.string.ThkListTips, onClickListener = {
                         ActivityUtils.openUrl(
                             activity,
                             "https://github.com/577fkj/StatusBarLyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95%E4%B8%8D%E5%88%86%E5%85%88%E5%90%8E"
                         )
                     }))
-                    add(TextSummaryV(textId = R.string.SponsoredList, onClick = {
+                    add(TextSummaryV(textId = R.string.SponsoredList, onClickListener = {
                         ActivityUtils.openUrl(
                             activity,
                             "https://github.com/577fkj/StatusBarLyric/blob/Dev/doc/SPONSOR.md"
@@ -730,19 +725,19 @@ class SettingsActivity : MIUIActivity() {
                     }))
                     add(LineV())
                     add(TitleTextV(resId = R.string.Other))
-                    add(TextSummaryV(textId = R.string.PrivacyPolicy, onClick = {
+                    add(TextSummaryV(textId = R.string.PrivacyPolicy, onClickListener = {
                         ActivityUtils.openUrl(
                             activity,
                             "https://github.com/577fkj/StatusBarLyric/blob/main/EUAL.md"
                         )
                     }))
-                    add(TextSummaryV(textId = R.string.Source, onClick = {
+                    add(TextSummaryV(textId = R.string.Source, onClickListener = {
                         ActivityUtils.openUrl(
                             activity,
                             "https://github.com/577fkj/StatusBarLyric"
                         )
                     }))
-                    add(TextSummaryV(textId = R.string.Donate, onClick = {
+                    add(TextSummaryV(textId = R.string.Donate, onClickListener = {
                         ActivityUtils.openUrl(
                             activity,
                             "https://fkj2005.gitee.io/merger/"
