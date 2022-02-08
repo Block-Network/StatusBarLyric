@@ -96,7 +96,7 @@ class Config {
     }
 
     fun getIconHigh(): Int {
-        return config.optInt("IHigh", 7)
+        return config.optInt("IHigh", 0)
     }
 
     fun setIconHigh(i: Int) {
@@ -151,12 +151,12 @@ class Config {
         return config.optBoolean("I", true)
     }
 
-    fun getLyricSpeed(): Float {
-        return config.optFloat("LSpeed", 1f)
+    fun getLyricSpeed(): Int {
+        return config.optInt("LSpeed", 100)
     }
 
-    fun setLyricSpeed(f: Float) {
-        config.put("LSpeed", f)
+    fun setLyricSpeed(i: Int) {
+        config.put("LSpeed", i)
     }
     fun getLyricFontWeight(): Float {
         return config.optFloat("LFontWeight", 0f)
@@ -164,6 +164,13 @@ class Config {
 
     fun setLyricFontWeight(f: Float) {
         config.put("LFontWeight", f)
+    }
+    fun getLyricSpacing(): Int {
+        return config.optInt("LSpacing", 0)
+    }
+
+    fun getLyricSpacing(i: Int) {
+        config.put("LSpacing", i)
     }
 
     fun getIconAutoColor(): Boolean {

@@ -36,7 +36,7 @@ class LyricTextSwitchView(context: Context?, private var hasMeizu: Boolean) : Vi
     private var lyricTextView2: LyricTextView = LyricTextView(context)
     private var autoMarqueeTextView: AutoMarqueeTextView = AutoMarqueeTextView(context)
     private var autoMarqueeTextView2: AutoMarqueeTextView = AutoMarqueeTextView(context)
-    var switchLyric = false
+    private var switchLyric = false
 
     init {
         if (hasMeizu) {
@@ -124,6 +124,16 @@ class LyricTextSwitchView(context: Context?, private var hasMeizu: Boolean) : Vi
         if (hasMeizu) {
             lyricTextView.setSpeed(f)
             lyricTextView2.setSpeed(f)
+        }
+    }
+
+    fun setLetterSpacings(letterSpacing: Float) {
+        if (hasMeizu) {
+            lyricTextView.letterSpacing = letterSpacing
+            lyricTextView2.letterSpacing = letterSpacing
+        }else{
+            autoMarqueeTextView.letterSpacing = letterSpacing
+            autoMarqueeTextView2.letterSpacing = letterSpacing
         }
     }
 

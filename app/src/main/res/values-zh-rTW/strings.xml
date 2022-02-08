@@ -147,4 +147,5 @@
     <string name="ChooseFont">選擇字體</string>
     <string name="Reset">恢復默認</string>
     <string name="FontWeight">字體粗細</string>
+    <string name="LyricSpacing">歌詞間距</string>
 </resources>
