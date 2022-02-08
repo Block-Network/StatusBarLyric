@@ -90,6 +90,10 @@ class SettingsActivity : MIUIActivity() {
         }
     }
 
+    override fun onDestroy(){
+        super.onDestroy()
+        unregisterReceiver(AppReceiver())
+    }
 
     inner class AppReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -676,7 +680,7 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }))
-                add(SeekBarWithTextV("IHigh", -100, 100, defaultProgress = 7, ActivityOwnSP.ownSPConfig.getIconSize()))
+                add(SeekBarWithTextV("IHigh", -100, 100, defaultProgress = 7, ActivityOwnSP.ownSPConfig.getIconHigh()))
                 add(TextWithSwitchV(TextV(resId = R.string.IconAutoColors), SwitchV("IAutoColor", true)))
                 add(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment(getString(R.string.IconSettings))
