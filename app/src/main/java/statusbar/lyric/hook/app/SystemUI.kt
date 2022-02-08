@@ -204,6 +204,12 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         lyricTextView.setSingleLine(true)
         lyricTextView.setMaxLines(1)
+        if (config.getLyricSpacing() != 0) {
+            lyricTextView.setLetterSpacings((config.getLyricSpacing().toFloat() / 100))
+        } else {
+            lyricTextView.setLetterSpacings(clock.letterSpacing)
+        }
+
         val file = File(application.filesDir.path + "/font")
         if (file.exists() || file.isFile || file.canRead()) {
             lyricTextView.setTypeface(
@@ -577,7 +583,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         updateLyricPos.sendEmptyMessage(0)
         iconReverseColor = config.getIconAutoColor()
         if (config.getLyricStyle()) {
-            lyricTextView.setSpeed(config.getLyricSpeed())
+            lyricTextView.setSpeed((config.getLyricSpeed().toFloat() / 100))
         }
         if (config.getAnim() != oldAnim) {
             oldAnim = config.getAnim()
