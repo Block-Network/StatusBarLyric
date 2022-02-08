@@ -24,6 +24,7 @@
 
 package statusbar.lyric.hook.app
 
+
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
@@ -34,6 +35,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -104,6 +106,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private var strIcon: String = ""
     private var oldAnim: String = "off"
     private var oldPos = 0
+    private var fontWeight = 0f
     var isLock = false
     var enable = false
     private var showLyric = true
@@ -342,6 +345,11 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         } else {
                             clock.layoutParams = LinearLayout.LayoutParams(-2, -2)
                         }
+                    }
+                    if (fontWeight != config.getLyricFontWeight() && config.getLyricFontWeight() != 0f) {
+                        val paint = lyricTextView.paint
+                        paint.style = Paint.Style.FILL_AND_STROKE
+                        paint.strokeWidth = config.getLyricFontWeight()
                     }
                     // 设置状态栏
                     config.let { Utils.setStatusBar(application, false, it) }

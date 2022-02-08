@@ -90,7 +90,7 @@ class SettingsActivity : MIUIActivity() {
         }
     }
 
-    override fun onDestroy(){
+    override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(AppReceiver())
     }
@@ -541,6 +541,22 @@ class SettingsActivity : MIUIActivity() {
                     }
                 }))
                 add(SeekBarWithTextV("LHigh", -100, 100))
+                add(TextSummaryV(textId = R.string.FontWeight, onClickListener = {
+                    MIUIDialog(activity).apply {
+                        setTitle(R.string.FontWeight)
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricFontWeight().toString(), "0.0")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isEmpty()) {
+                                ActivityOwnSP.ownSPConfig.setLyricFontWeight(0f)
+                            } else {
+                                ActivityOwnSP.ownSPConfig.setLyricFontWeight(getEditText().toFloat())
+                            }
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                        show()
+                    }
+                }))
                 val dict: HashMap<String, String> = hashMapOf()
                 dict["off"] = getString(R.string.Off)
                 dict["top"] = getString(R.string.top)

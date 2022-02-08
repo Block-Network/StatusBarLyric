@@ -158,6 +158,13 @@ class Config {
     fun setLyricSpeed(f: Float) {
         config.put("LSpeed", f)
     }
+    fun getLyricFontWeight(): Float {
+        return config.optFloat("LFontWeight", 0f)
+    }
+
+    fun setLyricFontWeight(f: Float) {
+        config.put("LFontWeight", f)
+    }
 
     fun getIconAutoColor(): Boolean {
         return config.optBoolean("IAutoColor", true)
