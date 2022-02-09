@@ -73,7 +73,7 @@ class Config {
     }
 
     fun getLyricHigh(): Int {
-        return config.optInt("LHigh", 3)
+        return config.optInt("LHigh", 0)
     }
 
     fun setLyricHigh(i: Int) {
@@ -96,7 +96,7 @@ class Config {
     }
 
     fun getIconHigh(): Int {
-        return config.optInt("IHigh", 0)
+        return config.optInt("IHigh", 3)
     }
 
     fun setIconHigh(i: Int) {
