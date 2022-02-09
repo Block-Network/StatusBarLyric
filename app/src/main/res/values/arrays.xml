@@ -12,5 +12,6 @@
         <item>miui.cn.fkj233.xposed.statusbarlyric.ext</item>
         <item>com.salt.music</item>
         <item>com.meizu.media.music</item>
+        <item>notification.statusbar</item>
     </array>
 </resources>
