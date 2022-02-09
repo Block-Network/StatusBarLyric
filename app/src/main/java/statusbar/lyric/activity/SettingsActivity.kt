@@ -687,7 +687,7 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }, dataBindingRecv = meiZuStyle.binding.getRecv(2)))
-                add(SeekBarWithTextV("LSpeed", 0, 200, defaultProgress = 100, ActivityOwnSP.ownSPConfig.getIconSize(),dataBindingRecv = meiZuStyle.binding.getRecv(2)))
+                add(SeekBarWithTextV("LSpeed", 0, 200, defaultProgress = 100, ActivityOwnSP.ownSPConfig.getLyricSpeed(),dataBindingRecv = meiZuStyle.binding.getRecv(2)))
                 add(TextSummaryV(textId = R.string.CustomFont, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.CustomFont)
