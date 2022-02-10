@@ -50,6 +50,7 @@ import kotlin.system.exitProcess
 
 class SettingsActivity : MIUIActivity() {
     private val activity = this
+    private var isRegister = false
 
     companion object {
         const val OPEN_FONT_FILE = 2114745
@@ -59,10 +60,13 @@ class SettingsActivity : MIUIActivity() {
         ActivityOwnSP.activity = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
-        registerReceiver(AppReceiver(), IntentFilter().apply {
-            addAction("App_Server")
-        })
-        ActivityUtils.getNotice(activity)
+        if (isLoad && !isRegister) {
+            registerReceiver(AppReceiver(), IntentFilter().apply {
+                addAction("App_Server")
+            })
+            isRegister = true
+            ActivityUtils.getNotice(activity)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -90,10 +94,14 @@ class SettingsActivity : MIUIActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(AppReceiver())
-    }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        if (isRegister) {
+//            unregisterReceiver(AppReceiver())
+//            isRegister = false
+//        }
+//
+//    }
 
     inner class AppReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -123,7 +131,7 @@ class SettingsActivity : MIUIActivity() {
                                 )
                                 notify(0, Notification.Builder(applicationContext).let {
                                     it.setChannelId(channelId)
-                                    it.setSmallIcon(R.mipmap.ic_launcher)
+                                    it.setSmallIcon(R.drawable.ic_notification)
                                     it.setContentTitle(getString(R.string.AppName))
                                     it.setContentText(message)
                                     it.build()
@@ -582,7 +590,7 @@ class SettingsActivity : MIUIActivity() {
                     }
                 }))
                 add(SeekBarWithTextV("LFontWeight", 0, 400))
-                add(TextV(resId= R.string.LyricSpacing, onClickListener = {
+                add(TextV(resId = R.string.LyricSpacing, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricSpacing)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSpacing().toString(), "0")
@@ -688,7 +696,16 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }, dataBindingRecv = meiZuStyle.binding.getRecv(2)))
-                add(SeekBarWithTextV("LSpeed", 0, 200, defaultProgress = 100, ActivityOwnSP.ownSPConfig.getLyricSpeed(),dataBindingRecv = meiZuStyle.binding.getRecv(2)))
+                add(
+                    SeekBarWithTextV(
+                        "LSpeed",
+                        0,
+                        200,
+                        defaultProgress = 100,
+                        ActivityOwnSP.ownSPConfig.getLyricSpeed(),
+                        dataBindingRecv = meiZuStyle.binding.getRecv(2)
+                    )
+                )
                 add(TextSummaryV(textId = R.string.CustomFont, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.CustomFont)
