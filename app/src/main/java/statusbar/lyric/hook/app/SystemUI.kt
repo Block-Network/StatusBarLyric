@@ -106,7 +106,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private var strIcon: String = ""
     private var oldAnim: String = "off"
     private var oldPos = 0
-    private var fontWeight = 0f
+    private var fontWeight = 0
     var isLock = false
     var enable = false
     private var showLyric = true
@@ -352,10 +352,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             clock.layoutParams = LinearLayout.LayoutParams(-2, -2)
                         }
                     }
-                    if (fontWeight != config.getLyricFontWeight() && config.getLyricFontWeight() != 0f) {
+                    if (fontWeight != config.getLyricFontWeight() && config.getLyricFontWeight() != 0) {
                         val paint = lyricTextView.paint
                         paint.style = Paint.Style.FILL_AND_STROKE
-                        paint.strokeWidth = config.getLyricFontWeight()
+                        paint.strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
                     }
                     // 设置状态栏
                     config.let { Utils.setStatusBar(application, false, it) }

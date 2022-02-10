@@ -565,15 +565,15 @@ class SettingsActivity : MIUIActivity() {
                     }
                 }))
                 add(SeekBarWithTextV("LHigh", -100, 100))
-                add(TextSummaryV(textId = R.string.FontWeight, onClickListener = {
+                add(TextV(resId = R.string.FontWeight, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.FontWeight)
-                        setEditText(ActivityOwnSP.ownSPConfig.getLyricFontWeight().toString(), "0.0")
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricFontWeight().toString(), "1")
                         setRButton(R.string.Ok) {
                             if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricFontWeight(0f)
+                                ActivityOwnSP.ownSPConfig.setLyricFontWeight(0)
                             } else {
-                                ActivityOwnSP.ownSPConfig.setLyricFontWeight(getEditText().toFloat())
+                                ActivityOwnSP.ownSPConfig.setLyricFontWeight(getEditText().toInt())
                             }
                             dismiss()
                         }
@@ -581,7 +581,8 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }))
-                add(TextSummaryV(textId= R.string.LyricSpacing, onClickListener = {
+                add(SeekBarWithTextV("LFontWeight", 0, 400))
+                add(TextV(resId= R.string.LyricSpacing, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricSpacing)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSpacing().toString(), "0")
@@ -671,7 +672,7 @@ class SettingsActivity : MIUIActivity() {
                         SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend)
                     )
                 )
-                add(TextSummaryV(textId = R.string.LyricSpeed, onClickListener = {
+                add(TextV(resId = R.string.LyricSpeed, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricSpeed)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSpeed().toString(), "100")
@@ -741,7 +742,7 @@ class SettingsActivity : MIUIActivity() {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.IconHigh)
                         setMessage(R.string.LyricSizeTips)
-                        setEditText(ActivityOwnSP.ownSPConfig.getIconHigh().toString(), "0")
+                        setEditText(ActivityOwnSP.ownSPConfig.getIconHigh().toString(), "3")
                         setRButton(R.string.Ok) {
                             if (getEditText().isEmpty()) {
                                 ActivityOwnSP.ownSPConfig.setIconHigh(-1)
@@ -762,7 +763,7 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }))
-                add(SeekBarWithTextV("IHigh", -100, 100, defaultProgress = 0, ActivityOwnSP.ownSPConfig.getIconHigh()))
+                add(SeekBarWithTextV("IHigh", -100, 100, defaultProgress = 3, ActivityOwnSP.ownSPConfig.getIconHigh()))
                 add(TextWithSwitchV(TextV(resId = R.string.IconAutoColors), SwitchV("IAutoColor", true)))
                 add(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment(getString(R.string.IconSettings))

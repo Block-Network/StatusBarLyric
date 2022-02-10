@@ -158,12 +158,12 @@ class Config {
     fun setLyricSpeed(i: Int) {
         config.put("LSpeed", i)
     }
-    fun getLyricFontWeight(): Float {
-        return config.optFloat("LFontWeight", 0f)
+    fun getLyricFontWeight(): Int {
+        return config.optInt("LFontWeight", 0)
     }
 
-    fun setLyricFontWeight(f: Float) {
-        config.put("LFontWeight", f)
+    fun setLyricFontWeight(i: Int) {
+        config.put("LFontWeight", i)
     }
     fun getLyricSpacing(): Int {
         return config.optInt("LSpacing", 0)
