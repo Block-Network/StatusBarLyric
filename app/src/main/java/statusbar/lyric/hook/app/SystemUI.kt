@@ -455,7 +455,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
                     }
                 }
-            }, 0, 1000
+            }, 0, config.getLyricAutoOffTime().toLong()
         )
 
         // 防烧屏
@@ -502,7 +502,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         updateMarginsIcon.sendMessage(message2)
                     }
                 }
-            }, 0, 60000
+            }, 0, config.getAntiBurnTime().toLong()
         )
 
         enable = true

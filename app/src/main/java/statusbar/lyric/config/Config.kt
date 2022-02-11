@@ -182,7 +182,7 @@ class Config {
     }
 
     fun getAntiBurn(): Boolean {
-        return config.optBoolean("AntiBurn", false)
+        return config.optBoolean("AntiBurn", true)
     }
 
     fun getAnim(): String {
@@ -231,6 +231,20 @@ class Config {
 
     fun setReverseColorTime(i: Int) {
         config.put("ReverseColorTime", i)
+    }
+    fun getLyricAutoOffTime(): Int {
+        return config.optInt("LyricAutoOffTime", 1000)
+    }
+
+    fun setLyricAutoOffTime(i: Int) {
+        config.put("LyricAutoOffTime", i)
+    }
+    fun getAntiBurnTime(): Int {
+        return config.optInt("AntiBurnTime", 60000)
+    }
+
+    fun setAntiBurnTime(i: Int) {
+        config.put("AntiBurnTime", i)
     }
 
     fun clear() {

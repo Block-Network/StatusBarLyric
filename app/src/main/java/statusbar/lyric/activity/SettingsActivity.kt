@@ -832,11 +832,56 @@ class SettingsActivity : MIUIActivity() {
             }
             getString(R.string.AdvancedSettings) -> {
                 arrayListOf<BaseView>().apply {
-                    add(TextWithSwitchV(TextV(resId = R.string.AbScreen), SwitchV("AntiBurn")))
+                    val antiBurnBinding =
+                        getDataBinding(ActivityOwnSP.ownSPConfig.getAntiBurn()) { view, flags, data ->
+                            when (flags) {
+                                2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+                            }
+                        }
+                    add(
+                        TextWithSwitchV(
+                            TextV(resId = R.string.AbScreen),
+                            SwitchV("AntiBurn", true, dataBindingSend = antiBurnBinding.bindingSend)
+                        )
+                    )
+                    add(TextV(resId = R.string.AntiBurnTime, onClickListener = {
+                        MIUIDialog(activity).apply {
+                            setTitle(R.string.AntiBurnTime)
+                            setMessage(R.string.AntiBurnTimeTips)
+                            setEditText(ActivityOwnSP.ownSPConfig.getAntiBurnTime().toString(), "60000")
+                            setRButton(R.string.Ok) {
+                                if (getEditText().isEmpty()) {
+                                    ActivityOwnSP.ownSPConfig.setAntiBurnTime(60000)
+                                } else {
+                                    try {
+                                        ActivityOwnSP.ownSPConfig.setAntiBurnTime(getEditText().toInt())
+                                    } catch (e: Throwable) {
+                                        ActivityUtils.showToastOnLooper(
+                                            activity,
+                                            getString(R.string.LyricColorError)
+                                        )
+                                        ActivityOwnSP.ownSPConfig.setAntiBurnTime(6000)
+                                    }
+                                }
+                                dismiss()
+                            }
+                            setLButton(R.string.Cancel) { dismiss() }
+                            show()
+                        }
+                    }, dataBindingRecv = antiBurnBinding.binding.getRecv(2)))
+                    add(
+                        SeekBarWithTextV(
+                            "AntiBurnTime",
+                            1,
+                            3600000,
+                            defaultProgress = 60000,
+                            dataBindingRecv = antiBurnBinding.binding.getRecv(2)
+                        )
+                    )
                     val dataBinding =
                         getDataBinding(ActivityOwnSP.ownSPConfig.getUseSystemReverseColor()) { view, flags, data ->
                             when (flags) {
-                                2 -> view.visibility = if ((data as Boolean)) View.VISIBLE else View.GONE
+                                2 -> view.visibility = if ((data as Boolean)) View.GONE else View.VISIBLE
                             }
                         }
                     add(
@@ -879,7 +924,52 @@ class SettingsActivity : MIUIActivity() {
                             dataBindingRecv = dataBinding.binding.getRecv(2)
                         )
                     )
-                    add(TextWithSwitchV(TextV(resId = R.string.SongPauseCloseLyrics), SwitchV("LAutoOff", true)))
+                    val autoOffBinding =
+                        getDataBinding(ActivityOwnSP.ownSPConfig.getLyricAutoOff()) { view, flags, data ->
+                            when (flags) {
+                                2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+                            }
+                        }
+                    add(
+                        TextWithSwitchV(
+                            TextV(resId = R.string.SongPauseCloseLyrics),
+                            SwitchV("LAutoOff", true, dataBindingSend = autoOffBinding.bindingSend)
+                        )
+                    )
+                    add(TextV(resId = R.string.SongPauseCloseLyricsTime, onClickListener = {
+                        MIUIDialog(activity).apply {
+                            setTitle(R.string.SongPauseCloseLyricsTime)
+                            setMessage(R.string.ReverseColorTimeTips)
+                            setEditText(ActivityOwnSP.ownSPConfig.getLyricAutoOffTime().toString(), "1")
+                            setRButton(R.string.Ok) {
+                                if (getEditText().isEmpty()) {
+                                    ActivityOwnSP.ownSPConfig.setLyricAutoOffTime(1000)
+                                } else {
+                                    try {
+                                        ActivityOwnSP.ownSPConfig.setLyricAutoOffTime(getEditText().toInt())
+                                    } catch (e: Throwable) {
+                                        ActivityUtils.showToastOnLooper(
+                                            activity,
+                                            getString(R.string.LyricColorError)
+                                        )
+                                        ActivityOwnSP.ownSPConfig.setLyricAutoOffTime(1000)
+                                    }
+                                }
+                                dismiss()
+                            }
+                            setLButton(R.string.Cancel) { dismiss() }
+                            show()
+                        }
+                    }, dataBindingRecv = autoOffBinding.binding.getRecv(2)))
+                    add(
+                        SeekBarWithTextV(
+                            "LyricAutoOffTime",
+                            1,
+                            3000,
+                            defaultProgress = 1000,
+                            dataBindingRecv = autoOffBinding.binding.getRecv(2)
+                        )
+                    )
                     add(TextWithSwitchV(TextV(resId = R.string.UnlockShow), SwitchV("LockScreenOff")))
                     add(TextWithSwitchV(TextV(resId = R.string.AutoHideNotiIcon), SwitchV("HNoticeIcon")))
                     add(TextWithSwitchV(TextV(resId = R.string.HideNetWork), SwitchV("HNetSpeed")))
