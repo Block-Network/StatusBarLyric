@@ -162,4 +162,6 @@
     <string name="Reset">Reset</string>
     <string name="FontWeight">Font weight</string>
     <string name="LyricSpacing">Lyric spacing</string>
+    <string name="ReverseColorTime">Reverse color time</string>
+    <string name="ReverseColorTimeTips">1-3000 (unit: milliseconds)</string>
 </resources>

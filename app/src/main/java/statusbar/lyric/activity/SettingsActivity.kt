@@ -40,7 +40,9 @@ import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.MIUIPopupData
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.dialog.MIUIDialog
+import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
@@ -66,6 +68,10 @@ class SettingsActivity : MIUIActivity() {
             })
             isRegister = true
             ActivityUtils.getNotice(activity)
+            AppCenter.start(
+                application, "6713f7e7-d1f5-4261-bb32-f5a94028a9f4",
+                Analytics::class.java, Crashes::class.java
+            )
         }
     }
 
@@ -827,10 +833,50 @@ class SettingsActivity : MIUIActivity() {
             getString(R.string.AdvancedSettings) -> {
                 arrayListOf<BaseView>().apply {
                     add(TextWithSwitchV(TextV(resId = R.string.AbScreen), SwitchV("AntiBurn")))
+                    val dataBinding =
+                        getDataBinding(ActivityOwnSP.ownSPConfig.getUseSystemReverseColor()) { view, flags, data ->
+                            when (flags) {
+                                2 -> view.visibility = if ((data as Boolean)) View.VISIBLE else View.GONE
+                            }
+                        }
                     add(
                         TextWithSwitchV(
                             TextV(resId = R.string.UseSystemReverseColor),
-                            SwitchV("UseSystemReverseColor", true)
+                            SwitchV("UseSystemReverseColor", true, dataBindingSend = dataBinding.bindingSend)
+                        )
+                    )
+                    add(TextV(resId = R.string.ReverseColorTime, onClickListener = {
+                        MIUIDialog(activity).apply {
+                            setTitle(R.string.ReverseColorTime)
+                            setMessage(R.string.ReverseColorTimeTips)
+                            setEditText(ActivityOwnSP.ownSPConfig.getReverseColorTime().toString(), "1")
+                            setRButton(R.string.Ok) {
+                                if (getEditText().isEmpty()) {
+                                    ActivityOwnSP.ownSPConfig.setReverseColorTime(1)
+                                } else {
+                                    try {
+                                        ActivityOwnSP.ownSPConfig.setReverseColorTime(getEditText().toInt())
+                                    } catch (e: Throwable) {
+                                        ActivityUtils.showToastOnLooper(
+                                            activity,
+                                            getString(R.string.LyricColorError)
+                                        )
+                                        ActivityOwnSP.ownSPConfig.setReverseColorTime(1)
+                                    }
+                                }
+                                dismiss()
+                            }
+                            setLButton(R.string.Cancel) { dismiss() }
+                            show()
+                        }
+                    }, dataBindingRecv = dataBinding.binding.getRecv(2)))
+                    add(
+                        SeekBarWithTextV(
+                            "ReverseColorTime",
+                            1,
+                            3000,
+                            defaultProgress = 1,
+                            dataBindingRecv = dataBinding.binding.getRecv(2)
                         )
                     )
                     add(TextWithSwitchV(TextV(resId = R.string.SongPauseCloseLyrics), SwitchV("LAutoOff", true)))

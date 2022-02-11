@@ -425,7 +425,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
                     }
                 }
-            }, 0, 25
+            }, 0, config.getReverseColorTime().toLong()
         )
 
 
