@@ -308,67 +308,16 @@ class SettingsActivity : MIUIActivity() {
                     textId = R.string.Custom,
                     onClickListener = { showFragment(getString(R.string.Custom)) })
             )
-            add(LineV())
-            add(TitleTextV(resId = R.string.AdvancedSettings))
-            add(TextWithSwitchV(TextV(resId = R.string.AbScreen), SwitchV("AntiBurn")))
-            add(TextWithSwitchV(TextV(resId = R.string.UseSystemReverseColor), SwitchV("UseSystemReverseColor", true)))
-            add(TextWithSwitchV(TextV(resId = R.string.SongPauseCloseLyrics), SwitchV("LAutoOff", true)))
-            add(TextWithSwitchV(TextV(resId = R.string.UnlockShow), SwitchV("LockScreenOff")))
-            add(TextWithSwitchV(TextV(resId = R.string.AutoHideNotiIcon), SwitchV("HNoticeIcon")))
-            add(TextWithSwitchV(TextV(resId = R.string.HideNetWork), SwitchV("HNetSpeed")))
-            add(TextWithSwitchV(TextV(resId = R.string.AutoHideCarrierName), SwitchV("HCuk")))
-            val dict: HashMap<String, String> = hashMapOf()
-            dict["first"] = getString(R.string.First)
-            dict["latest"] = getString(R.string.Latest)
-            add(TextWithSpinnerV(TextV(resId = R.string.ViewPosition), SpinnerV(arrayListOf(
-                MIUIPopupData(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setViewPosition("first") },
-                MIUIPopupData(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setViewPosition("latest") }
-            ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!)))
-            add(LineV())
-            add(TitleTextV(resId = R.string.Other))
-            add(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
-                MIUIDialog(activity).apply {
-                    setTitle(R.string.CustomHook)
-                    setEditText(
-                        ActivityOwnSP.ownSPConfig.getHook(),
-                        getString(R.string.InputCustomHook)
-                    )
-                    setRButton(R.string.Ok) {
-                        ActivityOwnSP.ownSPConfig.setHook(getEditText())
-                        ActivityUtils.showToastOnLooper(
-                            activity,
-                            String.format(
-                                "%s %s\n%s",
-                                getString(R.string.HookSetTips),
-                                ActivityOwnSP.ownSPConfig.getHook().ifEmpty { getString(R.string.Default) },
-                                getString(R.string.RestartSystemUI)
-                            )
-                        )
-                        dismiss()
-                    }
-                    setLButton(R.string.Cancel) { dismiss() }
-                    show()
-                }
-            }))
-            add(TextWithSwitchV(TextV(resId = R.string.DebugMode), SwitchV("Debug")))
-            add(TextSummaryV(textId = R.string.Test, onClickListener = {
-                MIUIDialog(activity).apply {
-                    setTitle(R.string.Test)
-                    setMessage(R.string.TestDialogTips)
-                    setRButton(R.string.Start) {
-                        ActivityUtils.showToastOnLooper(activity, "尝试唤醒界面")
-                        activity.sendBroadcast(
-                            Intent().apply {
-                                action = "Lyric_Server"
-                                putExtra("Lyric_Type", "test")
-                            }
-                        )
-                        dismiss()
-                    }
-                    setLButton(R.string.Back) { dismiss() }
-                    show()
-                }
-            }))
+            add(
+                TextSummaryV(
+                    textId = R.string.AdvancedSettings,
+                    onClickListener = { showFragment(getString(R.string.AdvancedSettings)) })
+            )
+            add(
+                TextSummaryV(
+                    textId = R.string.Other,
+                    onClickListener = { showFragment(getString(R.string.Other)) })
+            )
             add(LineV())
             add(TitleTextV(resId = R.string.About))
             add(TextSummaryV("${getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClickListener = {
@@ -871,6 +820,86 @@ class SettingsActivity : MIUIActivity() {
                             activity,
                             "https://fkj2005.gitee.io/merger/"
                         )
+                    }))
+                    add(TextV())
+                }
+            }
+            getString(R.string.AdvancedSettings) -> {
+                arrayListOf<BaseView>().apply {
+                    add(TextWithSwitchV(TextV(resId = R.string.AbScreen), SwitchV("AntiBurn")))
+                    add(
+                        TextWithSwitchV(
+                            TextV(resId = R.string.UseSystemReverseColor),
+                            SwitchV("UseSystemReverseColor", true)
+                        )
+                    )
+                    add(TextWithSwitchV(TextV(resId = R.string.SongPauseCloseLyrics), SwitchV("LAutoOff", true)))
+                    add(TextWithSwitchV(TextV(resId = R.string.UnlockShow), SwitchV("LockScreenOff")))
+                    add(TextWithSwitchV(TextV(resId = R.string.AutoHideNotiIcon), SwitchV("HNoticeIcon")))
+                    add(TextWithSwitchV(TextV(resId = R.string.HideNetWork), SwitchV("HNetSpeed")))
+                    add(TextWithSwitchV(TextV(resId = R.string.AutoHideCarrierName), SwitchV("HCuk")))
+                    val dict: HashMap<String, String> = hashMapOf()
+                    dict["first"] = getString(R.string.First)
+                    dict["latest"] = getString(R.string.Latest)
+                    add(TextWithSpinnerV(TextV(resId = R.string.ViewPosition), SpinnerV(arrayListOf(
+                        MIUIPopupData(getString(R.string.First)) {
+                            ActivityOwnSP.ownSPConfig.setViewPosition(
+                                "first"
+                            )
+                        },
+                        MIUIPopupData(getString(R.string.Latest)) {
+                            ActivityOwnSP.ownSPConfig.setViewPosition(
+                                "latest"
+                            )
+                        }
+                    ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!)))
+                    add(TextV())
+                }
+            }
+            getString(R.string.Other) -> {
+                arrayListOf<BaseView>().apply {
+                    add(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
+                        MIUIDialog(activity).apply {
+                            setTitle(R.string.CustomHook)
+                            setEditText(
+                                ActivityOwnSP.ownSPConfig.getHook(),
+                                getString(R.string.InputCustomHook)
+                            )
+                            setRButton(R.string.Ok) {
+                                ActivityOwnSP.ownSPConfig.setHook(getEditText())
+                                ActivityUtils.showToastOnLooper(
+                                    activity,
+                                    String.format(
+                                        "%s %s\n%s",
+                                        getString(R.string.HookSetTips),
+                                        ActivityOwnSP.ownSPConfig.getHook().ifEmpty { getString(R.string.Default) },
+                                        getString(R.string.RestartSystemUI)
+                                    )
+                                )
+                                dismiss()
+                            }
+                            setLButton(R.string.Cancel) { dismiss() }
+                            show()
+                        }
+                    }))
+                    add(TextWithSwitchV(TextV(resId = R.string.DebugMode), SwitchV("Debug")))
+                    add(TextSummaryV(textId = R.string.Test, onClickListener = {
+                        MIUIDialog(activity).apply {
+                            setTitle(R.string.Test)
+                            setMessage(R.string.TestDialogTips)
+                            setRButton(R.string.Start) {
+                                ActivityUtils.showToastOnLooper(activity, "尝试唤醒界面")
+                                activity.sendBroadcast(
+                                    Intent().apply {
+                                        action = "Lyric_Server"
+                                        putExtra("Lyric_Type", "test")
+                                    }
+                                )
+                                dismiss()
+                            }
+                            setLButton(R.string.Back) { dismiss() }
+                            show()
+                        }
                     }))
                     add(TextV())
                 }
