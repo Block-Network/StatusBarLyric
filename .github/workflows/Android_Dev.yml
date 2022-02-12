@@ -89,8 +89,6 @@ jobs:
             Github CI
             ```
             ${{ github.event.head_commit.message }}
-            
-            优化代码，增加模块稳定性
             ```
         run: |
           ESCAPED=`python3 -c 'import json,os,urllib.parse; print(urllib.parse.quote(json.dumps(os.environ["COMMIT_MESSAGE"])))'`

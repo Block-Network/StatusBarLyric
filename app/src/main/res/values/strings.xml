@@ -12,7 +12,7 @@
     <string name="LyricColor">* Lyric color</string>
     <string name="LyricIcon">Lyrcs icon</string>
     <string name="LyricSpeed">Lyrics scroll speed</string>
-    <string name="AdvancedSettings">Advanced settings (change options after stopping music)</string>
+    <string name="AdvancedSettings">Advanced settings</string>
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
     <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconHigh">Icon up and down position</string>

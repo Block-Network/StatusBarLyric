@@ -12,7 +12,7 @@
     <string name="LyricColor">* 歌詞顏色</string>
     <string name="LyricIcon">歌詞圖標</string>
     <string name="LyricSpeed">歌詞滾動速度</string>
-    <string name="AdvancedSettings">高級設置 (停止音樂後改動選項)</string>
+    <string name="AdvancedSettings">高級設置</string>
     <string name="ClickLyric">* 點擊歌詞切換時鐘和歌詞</string>
     <string name="AbScreen">防燒屏</string>
     <string name="IconHigh">* 圖標上下位置</string>
