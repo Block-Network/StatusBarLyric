@@ -153,4 +153,5 @@
     <string name="AntiBurnTime">防燒屏移動時間</string>
     <string name="AntiBurnTimeTips">1-3600000（單位：毫秒）</string>
     <string name="SongPauseCloseLyricsTime">歌曲暫停關閉歌詞時間</string>
+    <string name="scale">* 同字平移</string>
 </resources>

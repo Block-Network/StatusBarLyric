@@ -569,13 +569,15 @@ class SettingsActivity : MIUIActivity() {
                 dict["left"] = getString(R.string.left)
                 dict["right"] = getString(R.string.right)
                 dict["random"] = getString(R.string.random)
+                dict["scale"] = getString(R.string.scale)
                 add(TextWithSpinnerV(TextV(resId = R.string.LyricsAnimation), SpinnerV(arrayListOf(
                     MIUIPopupData(getString(R.string.Off)) { ActivityOwnSP.ownSPConfig.setAnim("off") },
                     MIUIPopupData(getString(R.string.top)) { ActivityOwnSP.ownSPConfig.setAnim("top") },
                     MIUIPopupData(getString(R.string.lower)) { ActivityOwnSP.ownSPConfig.setAnim("lower") },
                     MIUIPopupData(getString(R.string.left)) { ActivityOwnSP.ownSPConfig.setAnim("left") },
                     MIUIPopupData(getString(R.string.right)) { ActivityOwnSP.ownSPConfig.setAnim("right") },
-                    MIUIPopupData(getString(R.string.random)) { ActivityOwnSP.ownSPConfig.setAnim("random") }
+                    MIUIPopupData(getString(R.string.random)) { ActivityOwnSP.ownSPConfig.setAnim("random") },
+                    MIUIPopupData(getString(R.string.scale)) { ActivityOwnSP.ownSPConfig.setAnim("scale") }
                 ), dict[ActivityOwnSP.ownSPConfig.getAnim()]!!)))
                 val timeBinding = getDataBinding(ActivityOwnSP.ownSPConfig.getHideTime()) { view, flags, data ->
                     when (flags) {
