@@ -188,7 +188,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         clock = clockField.get(param.thisObject) as TextView
 
         // 创建TextView
-        lyricTextView = LyricTextSwitchView(application, config.getLyricStyle(), config.getAnim())
+        lyricTextView = LyricTextSwitchView(application, config.getLyricStyle())
         lyricTextView.width = (displayWidth * 35) / 100
         lyricTextView.height = clock.height
         if (config.getLyricSize() == 0) {
@@ -585,21 +585,21 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         if (config.getLyricStyle()) {
             lyricTextView.setSpeed((config.getLyricSpeed().toFloat() / 100))
         }
-        if (config.getAnim() != "scale") {
-            if (config.getAnim() != oldAnim) {
-                oldAnim = config.getAnim()
-                lyricTextView.inAnimation = Utils.inAnim(oldAnim)
-                lyricTextView.outAnimation = Utils.outAnim(oldAnim)
-            } else if (config.getAnim() == "random") {
-                oldAnim = config.getAnim()
-                val anim = arrayOf(
-                    "top", "lower",
-                    "left", "right"
-                )[(Math.random() * 4).toInt()]
-                lyricTextView.inAnimation = Utils.inAnim(anim)
-                lyricTextView.outAnimation = Utils.outAnim(anim)
-            }
+
+        if (config.getAnim() != oldAnim) {
+            oldAnim = config.getAnim()
+            lyricTextView.inAnimation = Utils.inAnim(oldAnim)
+            lyricTextView.outAnimation = Utils.outAnim(oldAnim)
+        } else if (config.getAnim() == "random") {
+            oldAnim = config.getAnim()
+            val anim = arrayOf(
+                "top", "lower",
+                "left", "right"
+            )[(Math.random() * 4).toInt()]
+            lyricTextView.inAnimation = Utils.inAnim(anim)
+            lyricTextView.outAnimation = Utils.outAnim(anim)
         }
+
         if (config.getAntiBurn()) {
             if (config.getIconHigh() != oldPos) {
                 oldPos = config.getIconHigh()

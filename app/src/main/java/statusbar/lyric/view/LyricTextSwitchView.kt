@@ -29,131 +29,98 @@ import android.text.TextPaint
 import android.text.TextUtils
 import android.widget.LinearLayout
 import android.widget.ViewFlipper
-import com.hanks.htextview.scale.ScaleTextView
 
 @SuppressLint("ViewConstructor")
-class LyricTextSwitchView(context: Context?, private var hasMeizu: Boolean, private val lyricStyle: String = "") : ViewFlipper(context) {
+class LyricTextSwitchView(context: Context?, private var hasMeizu: Boolean) : ViewFlipper(context) {
     private var lyricTextView: LyricTextView = LyricTextView(context)
     private var lyricTextView2: LyricTextView = LyricTextView(context)
     private var autoMarqueeTextView: AutoMarqueeTextView = AutoMarqueeTextView(context)
     private var autoMarqueeTextView2: AutoMarqueeTextView = AutoMarqueeTextView(context)
-
-    private var scaleTextView: ScaleTextView = ScaleTextView(context)
-
     private var switchLyric = false
 
     init {
-        if (lyricStyle == "scale") {
-            scaleTextView.layoutParams =
+        if (hasMeizu) {
+            lyricTextView.layoutParams =
                 LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
-            scaleTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
-            this.addView(scaleTextView)
+            lyricTextView2.layoutParams =
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            this.addView(lyricTextView)
+            this.addView(lyricTextView2)
         } else {
-            if (hasMeizu) {
-                lyricTextView.layoutParams =
-                    LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                lyricTextView2.layoutParams =
-                    LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                this.addView(lyricTextView)
-                this.addView(lyricTextView2)
-            } else {
-                autoMarqueeTextView.layoutParams =
-                    LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                autoMarqueeTextView2.layoutParams =
-                    LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                autoMarqueeTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
-                autoMarqueeTextView2.ellipsize = TextUtils.TruncateAt.MARQUEE
-                this.addView(autoMarqueeTextView)
-                this.addView(autoMarqueeTextView2)
-            }
+            autoMarqueeTextView.layoutParams =
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            autoMarqueeTextView2.layoutParams =
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            autoMarqueeTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
+            autoMarqueeTextView2.ellipsize = TextUtils.TruncateAt.MARQUEE
+            this.addView(autoMarqueeTextView)
+            this.addView(autoMarqueeTextView2)
         }
     }
 
     fun setText(str: String) {
         // 设置歌词文本
-        if (lyricStyle == "scale") {
-            scaleTextView.animateText(str)
-        } else {
-            if (switchLyric) {
-                if (hasMeizu) {
-                    lyricTextView.setTextT(str)
-                } else {
-                    autoMarqueeTextView.text = str
-                }
-                switchLyric = false
+        if (switchLyric) {
+            if (hasMeizu) {
+                lyricTextView.setTextT(str)
             } else {
-                if (hasMeizu) {
-                    lyricTextView2.setTextT(str)
-                } else {
-                    autoMarqueeTextView2.text = str
-                }
-                switchLyric = true
+                autoMarqueeTextView.text = str
             }
-            showNext()
+            switchLyric = false
+        } else {
+            if (hasMeizu) {
+                lyricTextView2.setTextT(str)
+            } else {
+                autoMarqueeTextView2.text = str
+            }
+            switchLyric = true
         }
+        showNext()
     }
 
     fun setWidth(i: Int) {
-        if (lyricStyle == "scale") {
-            scaleTextView.width = i
+        if (hasMeizu) {
+            lyricTextView.width = i
+            lyricTextView2.width = i
         } else {
-            if (hasMeizu) {
-                lyricTextView.width = i
-                lyricTextView2.width = i
-            } else {
-                autoMarqueeTextView.width = i
-                autoMarqueeTextView2.width = i
-            }
+            autoMarqueeTextView.width = i
+            autoMarqueeTextView2.width = i
         }
     }
 
     fun setTextColor(i: Int) {
-        if (lyricStyle == "scale") {
-            scaleTextView.setTextColor(i)
+        if (hasMeizu) {
+            lyricTextView.setTextColor(i)
+            lyricTextView2.setTextColor(i)
         } else {
-            if (hasMeizu) {
-                lyricTextView.setTextColor(i)
-                lyricTextView2.setTextColor(i)
-            } else {
-                autoMarqueeTextView.setTextColor(i)
-                autoMarqueeTextView2.setTextColor(i)
-            }
+            autoMarqueeTextView.setTextColor(i)
+            autoMarqueeTextView2.setTextColor(i)
         }
     }
 
     fun setSourceText(charSequence: CharSequence?) {
-        if (lyricStyle == "scale") {
-            scaleTextView.animateText(charSequence)
+        if (hasMeizu) {
+            lyricTextView.text = charSequence
+            lyricTextView2.text = charSequence
         } else {
-            if (hasMeizu) {
-                lyricTextView.text = charSequence
-                lyricTextView2.text = charSequence
-            } else {
-                autoMarqueeTextView.text = charSequence
-                autoMarqueeTextView2.text = charSequence
-            }
+            autoMarqueeTextView.text = charSequence
+            autoMarqueeTextView2.text = charSequence
         }
     }
 
     fun setSpeed(f: Float) {
-        if (lyricStyle != "scale") {
-            return
-        }
         if (hasMeizu) {
             lyricTextView.setSpeed(f)
             lyricTextView2.setSpeed(f)
@@ -161,158 +128,116 @@ class LyricTextSwitchView(context: Context?, private var hasMeizu: Boolean, priv
     }
 
     fun setLetterSpacings(letterSpacing: Float) {
-        if (lyricStyle == "scale") {
-            scaleTextView.letterSpacing = letterSpacing
-        } else {
-            if (hasMeizu) {
-                lyricTextView.letterSpacing = letterSpacing
-                lyricTextView2.letterSpacing = letterSpacing
-            } else {
-                autoMarqueeTextView.letterSpacing = letterSpacing
-                autoMarqueeTextView2.letterSpacing = letterSpacing
-            }
+        if (hasMeizu) {
+            lyricTextView.letterSpacing = letterSpacing
+            lyricTextView2.letterSpacing = letterSpacing
+        }else{
+            autoMarqueeTextView.letterSpacing = letterSpacing
+            autoMarqueeTextView2.letterSpacing = letterSpacing
         }
     }
 
     val text: CharSequence
-        get() = if (lyricStyle == "scale") {
-            scaleTextView.text
-        } else {
-            if (switchLyric) {
-                if (hasMeizu) {
-                    lyricTextView.text
-                } else {
-                    autoMarqueeTextView.text
-                }
+        get() = if (switchLyric) {
+            if (hasMeizu) {
+                lyricTextView.text
             } else {
-                if (hasMeizu) {
-                    lyricTextView2.text
-                } else {
-                    autoMarqueeTextView2.text
-                }
+                autoMarqueeTextView.text
+            }
+        } else {
+            if (hasMeizu) {
+                lyricTextView2.text
+            } else {
+                autoMarqueeTextView2.text
             }
         }
     val paint: TextPaint
-        get() = if (lyricStyle == "scale") {
-            scaleTextView.paint
-        } else {
-            if (switchLyric) {
-                if (hasMeizu) {
-                    lyricTextView.paint
-                } else {
-                    autoMarqueeTextView.paint
-                }
+        get() = if (switchLyric) {
+            if (hasMeizu) {
+                lyricTextView.paint
             } else {
-                if (hasMeizu) {
-                    lyricTextView2.paint
-                } else {
-                    autoMarqueeTextView2.paint
-                }
+                autoMarqueeTextView.paint
+            }
+        } else {
+            if (hasMeizu) {
+                lyricTextView2.paint
+            } else {
+                autoMarqueeTextView2.paint
             }
         }
 
     fun setHeight(i: Int) {
-        if (lyricStyle == "scale") {
-            scaleTextView.height = i
+        if (hasMeizu) {
+            lyricTextView.height = i
+            lyricTextView2.height = i
         } else {
-            if (hasMeizu) {
-                lyricTextView.height = i
-                lyricTextView2.height = i
-            } else {
-                autoMarqueeTextView.height = i
-                autoMarqueeTextView2.height = i
-            }
+            autoMarqueeTextView.height = i
+            autoMarqueeTextView2.height = i
         }
     }
 
     fun setTypeface(typeface: Typeface?) {
-        if (lyricStyle == "scale") {
-            scaleTextView.typeface = typeface
+        if (hasMeizu) {
+            lyricTextView.typeface = typeface
+            lyricTextView2.typeface = typeface
         } else {
-            if (hasMeizu) {
-                lyricTextView.typeface = typeface
-                lyricTextView2.typeface = typeface
-            } else {
-                autoMarqueeTextView.typeface = typeface
-                autoMarqueeTextView2.typeface = typeface
-            }
+            autoMarqueeTextView.typeface = typeface
+            autoMarqueeTextView2.typeface = typeface
         }
     }
 
     fun setTextSize(i: Int, f: Float) {
-        if (lyricStyle == "scale") {
-            scaleTextView.setTextSize(i, f)
+        if (hasMeizu) {
+            lyricTextView.setTextSize(i, f)
+            lyricTextView2.setTextSize(i, f)
         } else {
-            if (hasMeizu) {
-                lyricTextView.setTextSize(i, f)
-                lyricTextView2.setTextSize(i, f)
-            } else {
-                autoMarqueeTextView.setTextSize(i, f)
-                autoMarqueeTextView2.setTextSize(i, f)
-            }
+            autoMarqueeTextView.setTextSize(i, f)
+            autoMarqueeTextView2.setTextSize(i, f)
         }
     }
 
     fun setMargins(i: Int, i1: Int, i2: Int, i3: Int) {
-        if (lyricStyle == "scale") {
-            val lyricParams = scaleTextView.layoutParams as LayoutParams
+        if (hasMeizu) {
+            val lyricParams = lyricTextView.layoutParams as LayoutParams
             lyricParams.setMargins(i, i1, i2, i3)
-            scaleTextView.layoutParams = lyricParams
+            lyricTextView.layoutParams = lyricParams
+            val lyricParams2 = lyricTextView.layoutParams as LayoutParams
+            lyricParams2.setMargins(i, i1, i2, i3)
+            lyricTextView2.layoutParams = lyricParams2
         } else {
-            if (hasMeizu) {
-                val lyricParams = lyricTextView.layoutParams as LayoutParams
-                lyricParams.setMargins(i, i1, i2, i3)
-                lyricTextView.layoutParams = lyricParams
-                val lyricParams2 = lyricTextView.layoutParams as LayoutParams
-                lyricParams2.setMargins(i, i1, i2, i3)
-                lyricTextView2.layoutParams = lyricParams2
-            } else {
-                val lyricParams = autoMarqueeTextView.layoutParams as LayoutParams
-                lyricParams.setMargins(i, i1, i2, i3)
-                autoMarqueeTextView.layoutParams = lyricParams
-                val lyricParams2 = autoMarqueeTextView2.layoutParams as LayoutParams
-                lyricParams2.setMargins(i, i1, i2, i3)
-                autoMarqueeTextView2.layoutParams = lyricParams2
-            }
+            val lyricParams = autoMarqueeTextView.layoutParams as LayoutParams
+            lyricParams.setMargins(i, i1, i2, i3)
+            autoMarqueeTextView.layoutParams = lyricParams
+            val lyricParams2 = autoMarqueeTextView2.layoutParams as LayoutParams
+            lyricParams2.setMargins(i, i1, i2, i3)
+            autoMarqueeTextView2.layoutParams = lyricParams2
         }
     }
 
     fun setMarqueeRepeatLimit(i: Int) {
-        if (lyricStyle == "scale") {
-            scaleTextView.marqueeRepeatLimit = i
-        } else {
-            if (!hasMeizu) {
-                autoMarqueeTextView.marqueeRepeatLimit = i
-                autoMarqueeTextView2.marqueeRepeatLimit = i
-            }
+        if (!hasMeizu) {
+            autoMarqueeTextView.marqueeRepeatLimit = i
+            autoMarqueeTextView2.marqueeRepeatLimit = i
         }
     }
 
     fun setSingleLine(bool: Boolean) {
-        if (lyricStyle == "scale") {
-            scaleTextView.isSingleLine = bool
+        if (hasMeizu) {
+            lyricTextView.isSingleLine = bool
+            lyricTextView2.isSingleLine = bool
         } else {
-            if (hasMeizu) {
-                lyricTextView.isSingleLine = bool
-                lyricTextView2.isSingleLine = bool
-            } else {
-                autoMarqueeTextView.isSingleLine = bool
-                autoMarqueeTextView2.isSingleLine = bool
-            }
+            autoMarqueeTextView.isSingleLine = bool
+            autoMarqueeTextView2.isSingleLine = bool
         }
     }
 
     fun setMaxLines(i: Int) {
-        if (lyricStyle == "scale") {
-            scaleTextView.maxLines = i
+        if (hasMeizu) {
+            lyricTextView.maxLines = i
+            lyricTextView2.maxLines = i
         } else {
-            if (hasMeizu) {
-                lyricTextView.maxLines = i
-                lyricTextView2.maxLines = i
-            } else {
-                autoMarqueeTextView.maxLines = i
-                autoMarqueeTextView2.maxLines = i
-            }
+            autoMarqueeTextView.maxLines = i
+            autoMarqueeTextView2.maxLines = i
         }
     }
 }

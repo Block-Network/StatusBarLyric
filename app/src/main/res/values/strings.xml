@@ -163,9 +163,8 @@
     <string name="FontWeight">Font weight</string>
     <string name="LyricSpacing">Lyric spacing</string>
     <string name="ReverseColorTime">Normal inversion time</string>
-    <string name="ReverseColorTimeTips">1-3000 (unit: milliseconds)</string>
+    <string name="ReverseColorTimeTips">1–3000 (unit: milliseconds)</string>
     <string name="AntiBurnTime">Burn-in move time</string>
-    <string name="AntiBurnTimeTips">1-3600000 (unit: milliseconds)</string>
+    <string name="AntiBurnTimeTips">1–3600000 (unit: milliseconds)</string>
     <string name="SongPauseCloseLyricsTime">Song pause close Lyrics time</string>
-    <string name="scale">* Scale</string>
 </resources>

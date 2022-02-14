@@ -147,9 +147,8 @@
     <string name="FontWeight">字体粗细</string>
     <string name="LyricSpacing">歌词间距</string>
     <string name="ReverseColorTime">普通反色时间</string>
-    <string name="ReverseColorTimeTips">1-3000（单位：毫秒）</string>
+    <string name="ReverseColorTimeTips">1–3000（单位：毫秒）</string>
     <string name="AntiBurnTime">防烧屏移动时间</string>
-    <string name="AntiBurnTimeTips">1-3600000（单位：毫秒）</string>
+    <string name="AntiBurnTimeTips">1–3600000（单位：毫秒）</string>
     <string name="SongPauseCloseLyricsTime">歌曲暂停关闭歌词时间</string>
-    <string name="scale">* 同字平移</string>
 </resources>
