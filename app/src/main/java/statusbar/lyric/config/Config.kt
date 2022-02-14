@@ -192,6 +192,13 @@ class Config {
     fun setAnim(str: String) {
         config.put("Anim", str)
     }
+    fun getViewPosition(): String {
+        return config.optString("ViewPosition", "first")
+    }
+
+    fun setViewPosition(str: String) {
+        config.put("ViewPosition", str)
+    }
 
     fun getViewPosition(): String {
         return config.optString("ViewPosition", "first")
