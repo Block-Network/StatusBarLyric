@@ -43,7 +43,7 @@
     <string name="VerExp">Applicable situation：\n
         - APlayer Unknown ~ 1.5.7.9(Status bar lyrics version)\n
         - QQMusic Unknown ~ 11.0.1.6(Status bar lyrics version)\n
-        - MiguMusic Unknown ~7.9.0(Car Bluetooth Lyric Version)\n
+        - MiguMusic Unknown ~7.9.0(Status bar lyrics version)\n
         - Netease 8.2 10 ~ now(Status bar lyrics version)\n
         - Netease unknown ~ 8.0 40(Car Bluetooth Lyric Version)\n
         - KugouMusic Unknown ~ 11.0.8(Car Bluetooth Lyric Version)\n
@@ -86,7 +86,7 @@
     <string name="lShowOnce">* Lyrics only scroll once</string>
     <string name="WarnExplanation">Module Considerations</string>
     <string name="WarnExp">Module notes\n\n
-        The module is perfectly used in the official Rom, the official change may be unusable or problematic\n\n
+        sThe module is perfectly used in the official status bar layout, modifying the layout may cause problems\n\n
 
         If the lyrics cannot be displayed\n
         Please restart the system interface and make sure the module switch is turned on\n
