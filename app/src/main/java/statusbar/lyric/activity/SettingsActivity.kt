@@ -58,6 +58,10 @@ class SettingsActivity : MIUIActivity() {
         const val OPEN_FONT_FILE = 2114745
     }
 
+    companion object {
+        const val OPEN_FONT_FILE = 2114745
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         ActivityOwnSP.activity = this
         if (!checkLSPosed()) isLoad = false
@@ -663,6 +667,7 @@ class SettingsActivity : MIUIActivity() {
                         dataBindingRecv = meiZuStyle.binding.getRecv(2)
                     )
                 )
+                
                 add(TextSummaryV(textId = R.string.CustomFont, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.CustomFont)
@@ -776,7 +781,7 @@ class SettingsActivity : MIUIActivity() {
                             getDrawable(R.drawable.header_577fkj)!!,
                             "577fkj",
                             getString(R.string.AboutTips1),
-                            onClick = {
+                            onClick  = {
                                 ActivityUtils.openUrl(
                                     activity,
                                     "https://github.com/577fkj"
@@ -788,7 +793,7 @@ class SettingsActivity : MIUIActivity() {
                             getDrawable(R.drawable.header_xiaowine)!!,
                             "xiaowine",
                             getString(R.string.AboutTips2),
-                            onClick = {
+                            onClick  = {
                                 ActivityUtils.openUrl(
                                     activity,
                                     "https://github.com/xiaowine"

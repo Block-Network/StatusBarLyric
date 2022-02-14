@@ -136,7 +136,6 @@ class LyricTextSwitchView(context: Context?, private var hasMeizu: Boolean) : Vi
             autoMarqueeTextView2.letterSpacing = letterSpacing
         }
     }
-
     val text: CharSequence
         get() = if (switchLyric) {
             if (hasMeizu) {
