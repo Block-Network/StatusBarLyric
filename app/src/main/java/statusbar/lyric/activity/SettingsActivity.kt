@@ -300,12 +300,12 @@ class SettingsActivity : MIUIActivity() {
                     }
                     show()
                 }
-            }, textColor = android.R.color.holo_blue_dark))
+            }, colorId = android.R.color.holo_blue_dark))
             add(
                 TextSummaryV(
                     textId = R.string.Manual,
                     onClickListener = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") },
-                    textColor = android.R.color.holo_red_dark
+                    colorId = android.R.color.holo_red_dark
                 )
             )
             add(LineV())
