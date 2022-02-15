@@ -12,7 +12,7 @@
 
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2F577fkj%2FStatusBarLyric%2Fbadge%3Fref%3Dmain&style=flat)](https://actions-badge.atrox.dev/577fkj/StatusBarLyric/goto?ref=main)
 [![GitHub Star](https://img.shields.io/github/stars/577fkj/StatusBarLyric.svg?style=social)](https://github.com/577fkj/StatusBarLyric)
-[![Telegram](https://img.shields.io/badge/Telegram-MIUIStatusBatLyric-blue.svg?style=flat-square&color=12b7f5)](https://t.me/MIUIStatusBatLyric)
+[![Telegram](https://img.shields.io/badge/Telegram-StatusBatLyric-blue.svg?style=flat-square&color=12b7f5)](https://t.me/StatusBatLyric)
 [![QQ Group](https://img.shields.io/badge/QQ%20Group-884185860-blue.svg?style=flat-square&color=12b7f5)](https://qm.qq.com/cgi-bin/qm/qr?k=ea_MP7zFoZJEdpxDFQcadBdbZmwYXZHh&jump_from=webapi)
 
 </div>

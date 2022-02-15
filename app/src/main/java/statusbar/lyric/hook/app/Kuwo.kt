@@ -39,7 +39,7 @@ class Kuwo(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         "cn.kuwo.mod.playcontrol.RemoteControlLyricMgr".hookAfterMethod("updateLyricText", String::class.java, classLoader = lpparam.classLoader) {
             AppCenter.start(
-                AndroidAppHelper.currentApplication(), "31eda7c3-a1be-4f27-aa45-47d83c513615",
+                AndroidAppHelper.currentApplication(), "d99b2230-6449-4fb3-ba0e-7e47cc470d6d",
                 Analytics::class.java, Crashes::class.java
             )
             val str = it.args[0] as String

@@ -52,6 +52,7 @@ class Config {
     fun getLyricWidth(): Int {
         return config.optInt("LWidth", -1)
     }
+
     fun setLyricWidth(i: Int) {
         config.put("LWidth", i)
     }
@@ -83,6 +84,7 @@ class Config {
     fun getLyricSize(): Int {
         return config.optInt("LSize", 0)
     }
+
     fun setLyricSize(i: Int) {
         config.put("LSize", i)
     }
@@ -96,7 +98,7 @@ class Config {
     }
 
     fun getIconHigh(): Int {
-        return config.optInt("IHigh", 7)
+        return config.optInt("IHigh", 3)
     }
 
     fun setIconHigh(i: Int) {
@@ -151,12 +153,28 @@ class Config {
         return config.optBoolean("I", true)
     }
 
-    fun getLyricSpeed(): Float {
-        return config.optFloat("LSpeed", 1f)
+    fun getLyricSpeed(): Int {
+        return config.optInt("LSpeed", 100)
     }
 
-    fun setLyricSpeed(f: Float) {
-        config.put("LSpeed", f)
+    fun setLyricSpeed(i: Int) {
+        config.put("LSpeed", i)
+    }
+
+    fun getLyricFontWeight(): Int {
+        return config.optInt("LFontWeight", 0)
+    }
+
+    fun setLyricFontWeight(i: Int) {
+        config.put("LFontWeight", i)
+    }
+
+    fun getLyricSpacing(): Int {
+        return config.optInt("LSpacing", 0)
+    }
+
+    fun getLyricSpacing(i: Int) {
+        config.put("LSpacing", i)
     }
 
     fun getIconAutoColor(): Boolean {
@@ -164,7 +182,7 @@ class Config {
     }
 
     fun getAntiBurn(): Boolean {
-        return config.optBoolean("AntiBurn", false)
+        return config.optBoolean("AntiBurn", true)
     }
 
     fun getAnim(): String {
@@ -174,6 +192,7 @@ class Config {
     fun setAnim(str: String) {
         config.put("Anim", str)
     }
+
     fun getViewPosition(): String {
         return config.optString("ViewPosition", "first")
     }
@@ -204,6 +223,28 @@ class Config {
 
     fun getHideTime(): Boolean {
         return config.optBoolean("HideTime", true)
+    }
+
+    fun getReverseColorTime(): Int {
+        return config.optInt("ReverseColorTime", 25)
+    }
+
+    fun setReverseColorTime(i: Int) {
+        config.put("ReverseColorTime", i)
+    }
+    fun getLyricAutoOffTime(): Int {
+        return config.optInt("LyricAutoOffTime", 1000)
+    }
+
+    fun setLyricAutoOffTime(i: Int) {
+        config.put("LyricAutoOffTime", i)
+    }
+    fun getAntiBurnTime(): Int {
+        return config.optInt("AntiBurnTime", 60000)
+    }
+
+    fun setAntiBurnTime(i: Int) {
+        config.put("AntiBurnTime", i)
     }
 
     fun clear() {

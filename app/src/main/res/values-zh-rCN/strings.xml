@@ -12,7 +12,7 @@
     <string name="LyricColor">* 歌词颜色</string>
     <string name="LyricIcon">歌词图标</string>
     <string name="LyricSpeed">歌词滚动速度</string>
-    <string name="AdvancedSettings">高级设置 (停止音乐后改动选项)</string>
+    <string name="AdvancedSettings">高级设置</string>
     <string name="ClickLyric">* 点击歌词切换时钟和歌词</string>
     <string name="AbScreen">* 防烧屏</string>
     <string name="IconHigh">* 图标上下位置</string>
@@ -40,8 +40,8 @@
     <string name="CurrentVer">当前版本</string>
     <string name="VerExp">适用情况：\n
         - APlayer 未知 ~ 1.5.8.0（状态栏歌词版）\n
-        - QQ音乐 未知 ~ 11.0.1.6（状态栏歌词版）\n
-        - 咪咕音乐 未知 ~ 7.9.0(车载蓝牙歌词版)\n
+        - QQ音乐 未知 ~ 现今（状态栏歌词版）\n
+        - 咪咕音乐 未知 ~ 现今（状态栏歌词版）\n
         - 网易云音乐 8.2.10 ~ 现今（状态栏歌词版）\n
         - 网易云音乐 未知 ~ 8.0.40 (车载蓝牙歌词版)\n
         - 酷狗音乐 未知 ~ 11.0.8(车载蓝牙歌词版)\n
@@ -54,7 +54,7 @@
     <string name="XposedTips">如果无法显示歌词，请尝试停止音乐软件并重启系统界面\n或查看 使用说明 自己是否使用正确版本</string>
     <string name="NewVer">发现新版本</string>
     <string name="Update">更新</string>
-    <string name="GetNewVerError">"获取最新版下载地址失败: "</string>
+    <string name="GetNewVerError">获取最新版下载地址失败: </string>
     <string name="Cancel">取消</string>
     <string name="NoVerUpdate">无新版可更新</string>
     <string name="CheckUpdateError">检查失败，请稍后再试!</string>
@@ -66,8 +66,8 @@
     <string name="random">随机</string>
     <string name="LyricColorTips">请输入16进制颜色代码，例如: #C0C0C0</string>
     <string name="LyricColorError">颜色代码不正确!</string>
-    <string name="LyricPosTips">-900~900（单位：像素点），当前:</string>
-    <string name="LyricHighTips">-100~100（单位：像素），目前：</string>
+    <string name="LyricPosTips">-900~900（单位：像素点）</string>
+    <string name="LyricHighTips">-100~100（单位：像素）</string>
     <string name="Ok">确定</string>
     <string name="HookSetTips">已设置Hook为:\n</string>
     <string name="RestartSystemUI">请重启SystemUI</string>
@@ -80,15 +80,13 @@
     <string name="lShowOnce">* 歌词只滚动一次</string>
     <string name="WarnExplanation">模块注意事项</string>
     <string name="WarnExp">模块注意事项\n\n
-        模块在官方Rom完美使用，官改可能会无法使用或出问题\n\n
-
+        模块在官方状态栏布局下完美使用，修改布局可能会出问题\n\n
         若无法显示歌词\n
         请重启系统界面，并确保模块开关打开\n
         请确保音乐软件内设置 状态栏歌词 或 车载蓝牙歌词 打开\n\n
-
         带 * 的功能改动需要重启系统界面\n\n
 
-        模块不生效请打开debug并重启SystemUI并附上日志，前往 Github/电报 进行反馈
+        模块不生效请打开debug并重启SystemUI并附上日志\n前往 Github/电报 进行反馈
     </string>
     <string name="NotSupport">本模块未激活，请在Lsposed激活本模块\n本模块仅支持最新版Lsposed</string>
     <string name="PrivacyPolicy">隐私政策</string>
@@ -102,8 +100,8 @@
     <string name="LyricHigh">* 歌词上下位置</string>
     <string name="LyricSize">* 歌词大小</string>
     <string name="IconSize">图标大小</string>
-    <string name="LyricSizeTips">0~50，当前:</string>
-    <string name="LyricTips">0%~100%，当前:</string>
+    <string name="LyricSizeTips">0~50</string>
+    <string name="LyricTips">0%~100%</string>
     <string name="Test">测试</string>
     <string name="TestDialogTips">这个功能是内嵌在SystemUI里的，可能会导致SystemUI崩溃重启！</string>
     <string name="Start">启动</string>
@@ -120,8 +118,7 @@
         E：星期几\n
         a：上下午标识\n
         z：表示时区\n
-        若要显示自定义文字，在下面编辑框里填写即可\n
-        当前格式：
+        若要显示自定义文字，在下面编辑框里填写即可
     </string>
     <string name="Custom">自定义</string>
     <string name="InputCustomHook">自定义Hook点，空关闭</string>
@@ -147,4 +144,11 @@
     <string name="DeleteFoneFail">删除自定义字体失败</string>
     <string name="ChooseFont">选择字体</string>
     <string name="Reset">恢复默认</string>
+    <string name="FontWeight">字体粗细</string>
+    <string name="LyricSpacing">歌词间距</string>
+    <string name="ReverseColorTime">普通反色时间</string>
+    <string name="ReverseColorTimeTips">1–3000（单位：毫秒）</string>
+    <string name="AntiBurnTime">防烧屏移动时间</string>
+    <string name="AntiBurnTimeTips">1–3600000（单位：毫秒）</string>
+    <string name="SongPauseCloseLyricsTime">歌曲暂停关闭歌词时间</string>
 </resources>

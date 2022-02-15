@@ -30,10 +30,10 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.hook.MeiZuStatusBarLyric.guiseFlyme
 
 
-class QQMusic(private val lpparam: XC_LoadPackage.LoadPackageParam) {
+class Migu(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     fun hook(){
         AppCenter.start(
-            AndroidAppHelper.currentApplication(), "3b0a2096-452b-4564-8b78-ab98c7dea7fb",
+            AndroidAppHelper.currentApplication(), "c2b6176d-7875-4b8d-924a-f62465c8dfda",
             Analytics::class.java, Crashes::class.java
         )
         guiseFlyme(lpparam, true)

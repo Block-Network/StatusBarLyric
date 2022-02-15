@@ -40,7 +40,7 @@ class QuickTitleService: TileService() {
     }
 
     fun set(config: Config) {
-        tile.icon = Icon.createWithResource(this, R.drawable.title_icon)
+        tile.icon = Icon.createWithResource(this, R.drawable.ic_notification)
         tile.label = getString(R.string.QuickTitle)
         tile.contentDescription = getString(R.string.QuickTitle)
         tile.state = if (config.getLyricService()) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE

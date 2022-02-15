@@ -36,7 +36,7 @@ import statusbar.lyric.utils.ktx.hookAfterMethod
 import statusbar.lyric.utils.LogUtils
 
 
-class MainHook: IXposedHookLoadPackage {
+class MainHook : IXposedHookLoadPackage {
     var context: Context? = null
     var init: Boolean = false
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
@@ -90,7 +90,7 @@ class MainHook: IXposedHookLoadPackage {
             }
             "cmccwm.mobilemusic" -> {
                 LogUtils.e("正在Hook 咪咕音乐")
-                MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
+                Migu(lpparam).hook()
                 LogUtils.e("Hook 咪咕音乐结束")
             }
             "com.meizu.media.music" -> MeiZuStatusBarLyric.guiseFlyme(lpparam, true)

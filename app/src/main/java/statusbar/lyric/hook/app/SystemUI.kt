@@ -24,6 +24,7 @@
 
 package statusbar.lyric.hook.app
 
+
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
@@ -34,6 +35,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -104,6 +106,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private var strIcon: String = ""
     private var oldAnim: String = "off"
     private var oldPos = 0
+    private var fontWeight = 0
     var isLock = false
     var enable = false
     private var showLyric = true
@@ -201,6 +204,12 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
         lyricTextView.setSingleLine(true)
         lyricTextView.setMaxLines(1)
+        if (config.getLyricSpacing() != 0) {
+            lyricTextView.setLetterSpacings((config.getLyricSpacing().toFloat() / 100))
+        } else {
+            lyricTextView.setLetterSpacings(clock.letterSpacing)
+        }
+
         val file = File(application.filesDir.path + "/font")
         if (file.exists() || file.isFile || file.canRead()) {
             lyricTextView.setTypeface(
@@ -343,6 +352,11 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             clock.layoutParams = LinearLayout.LayoutParams(-2, -2)
                         }
                     }
+                    if (fontWeight != config.getLyricFontWeight() && config.getLyricFontWeight() != 0) {
+                        val paint = lyricTextView.paint
+                        paint.style = Paint.Style.FILL_AND_STROKE
+                        paint.strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
+                    }
                     // 设置状态栏
                     config.let { Utils.setStatusBar(application, false, it) }
                     if (config.getPseudoTime()) {
@@ -411,7 +425,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
                     }
                 }
-            }, 0, 25
+            }, 0, config.getReverseColorTime().toLong()
         )
 
 
@@ -441,7 +455,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
                     }
                 }
-            }, 0, 1000
+            }, 0, config.getLyricAutoOffTime().toLong()
         )
 
         // 防烧屏
@@ -488,7 +502,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         updateMarginsIcon.sendMessage(message2)
                     }
                 }
-            }, 0, 60000
+            }, 0, config.getAntiBurnTime().toLong()
         )
 
         enable = true
@@ -569,8 +583,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         updateLyricPos.sendEmptyMessage(0)
         iconReverseColor = config.getIconAutoColor()
         if (config.getLyricStyle()) {
-            lyricTextView.setSpeed(config.getLyricSpeed())
+            lyricTextView.setSpeed((config.getLyricSpeed().toFloat() / 100))
         }
+
         if (config.getAnim() != oldAnim) {
             oldAnim = config.getAnim()
             lyricTextView.inAnimation = Utils.inAnim(oldAnim)
@@ -584,6 +599,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             lyricTextView.inAnimation = Utils.inAnim(anim)
             lyricTextView.outAnimation = Utils.outAnim(anim)
         }
+
         if (config.getAntiBurn()) {
             if (config.getIconHigh() != oldPos) {
                 oldPos = config.getIconHigh()
