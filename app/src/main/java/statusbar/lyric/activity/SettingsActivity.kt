@@ -58,9 +58,6 @@ class SettingsActivity : MIUIActivity() {
         const val OPEN_FONT_FILE = 2114745
     }
 
-    companion object {
-        const val OPEN_FONT_FILE = 2114745
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ActivityOwnSP.activity = this
