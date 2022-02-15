@@ -686,7 +686,17 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 Bundle::class.java,
                 classLoader = lpparam.classLoader,
                 hooker = lyricAfterMethodHook
-            )
+            ).isNull {
+                "com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment".hookAfterMethod(
+                    "onViewCreated",
+                    View::class.java,
+                    Bundle::class.java,
+                    classLoader = lpparam.classLoader,
+                    hooker = lyricAfterMethodHook
+                ).isNull {
+                    LogUtils.e("不支持的rom请打包日志和系统界面发给作者!!")
+                }
+            }
         }
     }
 
