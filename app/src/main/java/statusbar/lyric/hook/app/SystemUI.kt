@@ -41,11 +41,13 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.os.*
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextPaint
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -56,6 +58,7 @@ import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import statusbar.lyric.utils.IPackageUtils
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.XposedOwnSP.config
@@ -64,7 +67,6 @@ import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricTextSwitchView
 import java.io.File
 import java.lang.reflect.Field
-import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.system.exitProcess
@@ -165,7 +167,21 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 LogUtils.e(config.getHook() + " 反射失败: " + e + "\n" + Utils.dumpNoSuchFieldError(e))
             }
         } else {
-            val array = arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+            val apkInfo = IPackageUtils.getPackageInfoFromAllUsers("com.yeren.ZPTools", 0)
+            LogUtils.e("apkList: $apkInfo")
+            val array = if (apkInfo.isNotEmpty()) {
+                LogUtils.e("检测到 MiPure 官改")
+                if (Settings.System.getInt(application.contentResolver, "clock_style", 0) == 0) {
+                    LogUtils.e("mClockView start")
+                    arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                } else {
+                    LogUtils.e("mStatusClock start")
+                    arrayOf("mStatusClock", "mClockView", "mCenterClock", "mLeftClock", "mRightClock")
+                }
+            } else {
+                LogUtils.e("正常模式")
+                arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+            }
             for (field in array) {
                 try {
                     clockField = XposedHelpers.findField(param.thisObject.javaClass, field)
@@ -634,28 +650,19 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 val darkIconDispatcher =
                     "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
                 if (darkIconDispatcher != null) {
-                    var exactMethod: Method? = null
-                    val methods: Array<Method> = darkIconDispatcher.declaredMethods
-                    for (method in methods) {
-                        if (method.name.equals("getTint")) {
-                            exactMethod = method
-                            break
-                        }
-                    }
-                    if (exactMethod != null) {
-                        exactMethod.hookMethod(object : XC_MethodHook() {
-                            override fun afterHookedMethod(param: MethodHookParam) {
-                                try {
-                                    super.afterHookedMethod(param)
-                                    val areaTint = param.args[2] as Int
+                    val find = darkIconDispatcher.hookAllMethods("getTint", object : XC_MethodHook() {
+                        override fun afterHookedMethod(param: MethodHookParam) {
+                            try {
+                                super.afterHookedMethod(param)
+                                val areaTint = param.args[2] as Int
 
-                                    val color = ColorStateList.valueOf(areaTint)
-                                    iconView.imageTintList = color
-                                    lyricTextView.setTextColor(areaTint)
-                                } catch (_: UninitializedPropertyAccessException) {
-                                }
-                            }
-                        })
+                                val color = ColorStateList.valueOf(areaTint)
+                                iconView.imageTintList = color
+                                lyricTextView.setTextColor(areaTint)
+                            } catch (_: Throwable) {}
+                        }
+                    })
+                    if (find.isNotEmpty()) {
                         LogUtils.e("查找反色方法成功!")
                     } else {
                         LogUtils.e("查找反色方法失败!")
@@ -663,10 +670,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 } else {
                     LogUtils.e("系统方法反色获取失败")
                 }
-            } catch (e: Exception) {
-                LogUtils.e("系统反色出现错误: " + Utils.dumpException(e))
-            } catch (e: Error) {
-                LogUtils.e("系统反色出现错误: " + e.message)
+            } catch (e: Throwable) {
+                LogUtils.e("系统反色出现错误: " + Log.getStackTraceString(e))
             }
         }
 

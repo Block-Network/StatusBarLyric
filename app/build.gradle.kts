@@ -90,6 +90,8 @@ dependencies {
     compileOnly("de.robv.android.xposed:api:82")
     //带源码Api
     compileOnly("de.robv.android.xposed:api:82:sources")
+    // Use Hide Api
+    compileOnly(project(":hidden-api"))
     //MIUI 通知栏
     implementation(files("libs/miui_sdk.jar"))
     // microsoft app center
