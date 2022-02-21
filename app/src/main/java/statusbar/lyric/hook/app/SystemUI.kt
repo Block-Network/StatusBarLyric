@@ -34,6 +34,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -151,7 +152,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         // 获取屏幕宽度
         val displayMetrics = DisplayMetrics()
         (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+        val display = (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val displayWidth: Int = displayMetrics.widthPixels
+        val displayHeight : Int = displayMetrics.heightPixels
 
         // 获取系统版本
         LogUtils.e("Android: " + Build.VERSION.SDK_INT)
@@ -341,10 +344,11 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         string
                     )
                     // 自适应/歌词宽度
+                    val thisDisplay = if (display.rotation == Configuration.ORIENTATION_LANDSCAPE) displayHeight else displayWidth
                     if (config.getLyricWidth() == -1) {
                         val paint1: TextPaint = lyricTextView.paint // 获取字体
                         if (config.getLyricMaxWidth() == -1 || paint1.measureText(string)
-                                .toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100
+                                .toInt() + 6 <= (thisDisplay * config.getLyricMaxWidth()) / 100
                         ) {
                             if (config.getPseudoTime()) {
                                 lyricTextView.width =
@@ -354,10 +358,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             }
 
                         } else {
-                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth()) / 100
+                            lyricTextView.width = (thisDisplay * config.getLyricMaxWidth()) / 100
                         }
                     } else {
-                        lyricTextView.width = (displayWidth * config.getLyricWidth()) / 100
+                        lyricTextView.width = (thisDisplay * config.getLyricWidth()) / 100
                     }
                     // 歌词显示
                     if (showLyric) {
