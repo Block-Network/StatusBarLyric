@@ -659,8 +659,7 @@ class SettingsActivity : MIUIActivity() {
                         "LSpeed",
                         0,
                         200,
-                        defaultProgress = 100,
-                        ActivityOwnSP.ownSPConfig.getLyricSpeed(),
+                        defaultProgress = ActivityOwnSP.ownSPConfig.getLyricSpeed(),
                         dataBindingRecv = meiZuStyle.binding.getRecv(2)
                     )
                 )
@@ -739,7 +738,7 @@ class SettingsActivity : MIUIActivity() {
                         show()
                     }
                 }))
-                add(SeekBarWithTextV("IHigh", -100, 100, defaultProgress = 3, ActivityOwnSP.ownSPConfig.getIconHigh()))
+                add(SeekBarWithTextV("IHigh", -100, 100, defaultProgress = ActivityOwnSP.ownSPConfig.getIconHigh()))
                 add(TextWithSwitchV(TextV(resId = R.string.IconAutoColors), SwitchV("IAutoColor", true)))
                 add(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment(getString(R.string.IconSettings))
