@@ -25,7 +25,6 @@ package statusbar.lyric.config
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import de.robv.android.xposed.XSharedPreferences
-import statusbar.lyric.hook.app.MIPlayer
 import statusbar.lyric.utils.ConfigUtils
 
 @SuppressLint("LongLogTag")

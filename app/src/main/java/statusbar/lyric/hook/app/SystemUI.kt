@@ -24,7 +24,6 @@
 
 package statusbar.lyric.hook.app
 
-
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
@@ -638,7 +637,6 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
     }
 
-    @SuppressLint("ResourceType")
     fun hook() {
         if (isHook) return else isHook = true
         // 使用系统方法反色
