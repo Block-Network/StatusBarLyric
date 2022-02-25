@@ -22,7 +22,7 @@ class AppCenterUtils(appCenterKey: String) {
 
     class CrashesFilter : AbstractCrashesListener() {
         override fun shouldProcess(report: ErrorReport): Boolean {
-            for (name in qnPackageName) {
+            for (name in PackageName) {
                 if (report.stackTrace.contains(name)) {
                     return true
                 }
@@ -30,7 +30,7 @@ class AppCenterUtils(appCenterKey: String) {
             return false
         }
 
-        private val qnPackageName = arrayOf(
+        private val PackageName = arrayOf(
             "statusbar.lyric",
             "cn.fkj233"
         )
