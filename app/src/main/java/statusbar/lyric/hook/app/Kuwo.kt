@@ -23,9 +23,6 @@
 package statusbar.lyric.hook.app
 
 import android.app.AndroidAppHelper
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
@@ -38,10 +35,6 @@ class Kuwo(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             it.result = true
         }
         "cn.kuwo.mod.playcontrol.RemoteControlLyricMgr".hookAfterMethod("updateLyricText", String::class.java, classLoader = lpparam.classLoader) {
-            AppCenter.start(
-                AndroidAppHelper.currentApplication(), "d99b2230-6449-4fb3-ba0e-7e47cc470d6d",
-                Analytics::class.java, Crashes::class.java
-            )
             val str = it.args[0] as String
             LogUtils.e("酷我音乐:$str")
             if (it.args[0] != null && str != "") {

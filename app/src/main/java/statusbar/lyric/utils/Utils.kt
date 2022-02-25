@@ -49,7 +49,6 @@ import java.util.*
 @SuppressLint("StaticFieldLeak")
 object Utils {
     private val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
-    var context: Context? = null
     private val packNameToIconName = HashMap<String, String>().apply {
         put("com.netease.cloudmusic", "Netease")
         put("com.kugou", "KuGou")

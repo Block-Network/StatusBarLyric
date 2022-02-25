@@ -53,9 +53,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -71,7 +68,6 @@ import java.lang.reflect.Field
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.system.exitProcess
-
 
 class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private val lyricKey = "lyric"
@@ -130,10 +126,6 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
         // 获取当前进程的Application
         application = AndroidAppHelper.currentApplication()
-        AppCenter.start(
-            application, "1ddba47c-cfe2-406e-86a2-0e7fa94785a4",
-            Analytics::class.java, Crashes::class.java
-        )
 
         // 锁屏广播
         application.registerReceiver(LockChangeReceiver(), IntentFilter().apply {
