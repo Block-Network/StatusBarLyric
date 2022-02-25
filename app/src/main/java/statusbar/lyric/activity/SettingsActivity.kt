@@ -739,9 +739,9 @@ class SettingsActivity : MIUIActivity() {
             }
             getString(R.string.IconSettings) -> {
                 arrayListOf<BaseView>().apply {
-                    val iconConfig = IconConfig(Utils.getSP(activity, "Icon_Config"))
-                    for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "Default")) {
-                        add(AuthorV(BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon))).also {
+                    val iconConfig = Utils.getSP(activity, "Icon_Config")?.let { IconConfig(it) }
+                    for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "MIPlayer", "Default")) {
+                        add(AuthorV(BitmapDrawable(Utils.stringToBitmap(iconConfig?.getIcon(icon))).also {
                             it.setTint(
                                 getColor(R.color.customIconColor)
                             )
@@ -749,9 +749,9 @@ class SettingsActivity : MIUIActivity() {
                             MIUIDialog(activity).apply {
                                 setTitle(icon)
                                 setMessage(R.string.MakeIconTitle)
-                                setEditText(iconConfig.getIcon(icon).toString(), "")
+                                setEditText(iconConfig?.getIcon(icon).toString(), "")
                                 setRButton(R.string.Ok) {
-                                    iconConfig.setIcon(icon, getEditText())
+                                    iconConfig?.setIcon(icon, getEditText())
                                     dismiss()
                                 }
                                 setLButton(R.string.Cancel) { dismiss() }

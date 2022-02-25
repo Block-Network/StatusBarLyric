@@ -82,6 +82,11 @@ class MainHook : IXposedHookLoadPackage {
                 AppCenterUtils("c2b6176d-7875-4b8d-924a-f62465c8dfda")
                 LogUtils.e("Hook 咪咕音乐结束")
             }
+            "com.miui.player" -> {
+                LogUtils.e("正在Hook 小米音乐")
+                MIPlayer(lpparam).hook()
+                LogUtils.e("Hook 小米音乐结束")
+            }
             "com.meizu.media.music" -> MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
             else -> {
                 Api(lpparam).hook()

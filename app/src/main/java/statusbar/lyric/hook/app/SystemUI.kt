@@ -79,7 +79,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         "remix.myplayer",
         "cmccwm.mobilemusic",
         "com.netease.cloudmusic.lite",
-        "com.meizu.media.music"
+        "com.meizu.media.music",
+        "com.miui.player.service.MusicStatService"
     )
 
     lateinit var application: Application
@@ -637,6 +638,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
     }
 
+    @SuppressLint("ResourceType")
     fun hook() {
         if (isHook) return else isHook = true
         // 使用系统方法反色
