@@ -222,6 +222,7 @@ class SettingsActivity : MIUIActivity() {
                     })
                 )
             )
+            add(TextWithSwitchV(TextV(resId = R.string.DebugMode), SwitchV("Debug")))
             add(TextSummaryArrowV(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
                 MIUIDialog(activity).apply {
                     setTitle(R.string.ResetModuleDialog)
@@ -254,6 +255,24 @@ class SettingsActivity : MIUIActivity() {
             })))
             add(TextSummaryArrowV(TextSummaryV(textId = R.string.Recovery, onClickListener = {
                 BackupUtils.recovery(activity, getSP())
+            })))
+            add(TextSummaryArrowV(TextSummaryV(textId = R.string.Test, onClickListener = {
+                MIUIDialog(activity).apply {
+                    setTitle(R.string.Test)
+                    setMessage(R.string.TestDialogTips)
+                    setRButton(R.string.Start) {
+                        ActivityUtils.showToastOnLooper(activity, "尝试唤醒界面")
+                        activity.sendBroadcast(
+                            Intent().apply {
+                                action = "Lyric_Server"
+                                putExtra("Lyric_Type", "test")
+                            }
+                        )
+                        dismiss()
+                    }
+                    setLButton(R.string.Back) { dismiss() }
+                    show()
+                }
             })))
             add(LineV())
             add(TitleTextV("Module Version"))
@@ -301,15 +320,18 @@ class SettingsActivity : MIUIActivity() {
                     show()
                 }
             }, colorId = android.R.color.holo_blue_dark)))
-            add(TextSummaryArrowV(TextSummaryV(
-                textId = R.string.Manual,
-                onClickListener = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") },
-                colorId = android.R.color.holo_red_dark
-            )))
+            add(
+                TextSummaryArrowV(
+                    TextSummaryV(
+                        textId = R.string.Manual,
+                        onClickListener = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") },
+                        colorId = android.R.color.holo_red_dark
+                    )
+                )
+            )
             add(LineV())
             add(TitleTextV(resId = R.string.BaseSetting))
             add(TextWithSwitchV(TextV(resId = R.string.AllSwitch), SwitchV("LService")))
-            add(TextWithSwitchV(TextV(resId = R.string.LyricIcon), SwitchV("I", true)))
             add(TextSummaryArrowV(TextSummaryV(
                 textId = R.string.Custom,
                 onClickListener = { showFragment(getString(R.string.Custom)) }
@@ -318,19 +340,21 @@ class SettingsActivity : MIUIActivity() {
                 textId = R.string.AdvancedSettings,
                 onClickListener = { showFragment(getString(R.string.AdvancedSettings)) }
             )))
-            add(TextSummaryArrowV(TextSummaryV(
-                textId = R.string.Other,
-                onClickListener = { showFragment(getString(R.string.Other)) }
-            )))
             add(LineV())
             add(TitleTextV(resId = R.string.About))
-            add(TextSummaryArrowV(TextSummaryV("${getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClickListener = {
-                ActivityUtils.showToastOnLooper(
-                    activity,
-                    getString(R.string.StartCheckUpdate)
+            add(
+                TextSummaryArrowV(
+                    TextSummaryV(
+                        "${getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})",
+                        onClickListener = {
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.StartCheckUpdate)
+                            )
+                            ActivityUtils.checkUpdate(activity)
+                        })
                 )
-                ActivityUtils.checkUpdate(activity)
-            })))
+            )
             add(TextSummaryArrowV(TextSummaryV(
                 textId = R.string.AboutModule,
                 onClickListener = { showFragment(getString(R.string.AboutModule)) }
@@ -626,10 +650,12 @@ class SettingsActivity : MIUIActivity() {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
-                add(TextWithSwitchV(
-                    TextV(resId = R.string.MeizuStyle, dataBindingRecv = meiZuStyle.binding.getRecv(1)),
-                    SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend)
-                ))
+                add(
+                    TextWithSwitchV(
+                        TextV(resId = R.string.MeizuStyle, dataBindingRecv = meiZuStyle.binding.getRecv(1)),
+                        SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend)
+                    )
+                )
                 add(TextV(resId = R.string.LyricSpeed, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.LyricSpeed)
@@ -655,7 +681,6 @@ class SettingsActivity : MIUIActivity() {
                         dataBindingRecv = meiZuStyle.binding.getRecv(2)
                     )
                 )
-                
                 add(TextSummaryArrowV(TextSummaryV(textId = R.string.CustomFont, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.CustomFont)
@@ -679,6 +704,7 @@ class SettingsActivity : MIUIActivity() {
                 })))
                 add(LineV())
                 add(TitleTextV(resId = R.string.IconSettings))
+                add(TextWithSwitchV(TextV(resId = R.string.LyricIcon), SwitchV("I", true)))
                 add(TextV(resId = R.string.IconSize, onClickListener = {
                     MIUIDialog(activity).apply {
                         setTitle(R.string.IconSize)
@@ -769,7 +795,7 @@ class SettingsActivity : MIUIActivity() {
                             getDrawable(R.drawable.header_577fkj)!!,
                             "577fkj",
                             getString(R.string.AboutTips1),
-                            onClick  = {
+                            onClick = {
                                 ActivityUtils.openUrl(
                                     activity,
                                     "https://github.com/577fkj"
@@ -781,7 +807,7 @@ class SettingsActivity : MIUIActivity() {
                             getDrawable(R.drawable.header_xiaowine)!!,
                             "xiaowine",
                             getString(R.string.AboutTips2),
-                            onClick  = {
+                            onClick = {
                                 ActivityUtils.openUrl(
                                     activity,
                                     "https://github.com/xiaowine"
@@ -827,6 +853,30 @@ class SettingsActivity : MIUIActivity() {
             }
             getString(R.string.AdvancedSettings) -> {
                 arrayListOf<BaseView>().apply {
+                    add(TextSummaryArrowV(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
+                        MIUIDialog(activity).apply {
+                            setTitle(R.string.CustomHook)
+                            setEditText(
+                                ActivityOwnSP.ownSPConfig.getHook(),
+                                getString(R.string.InputCustomHook)
+                            )
+                            setRButton(R.string.Ok) {
+                                ActivityOwnSP.ownSPConfig.setHook(getEditText())
+                                ActivityUtils.showToastOnLooper(
+                                    activity,
+                                    String.format(
+                                        "%s %s\n%s",
+                                        getString(R.string.HookSetTips),
+                                        ActivityOwnSP.ownSPConfig.getHook().ifEmpty { getString(R.string.Default) },
+                                        getString(R.string.RestartSystemUI)
+                                    )
+                                )
+                                dismiss()
+                            }
+                            setLButton(R.string.Cancel) { dismiss() }
+                            show()
+                        }
+                    })))
                     val antiBurnBinding =
                         getDataBinding(ActivityOwnSP.ownSPConfig.getAntiBurn()) { view, flags, data ->
                             when (flags) {
@@ -984,54 +1034,6 @@ class SettingsActivity : MIUIActivity() {
                             )
                         }
                     ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!)))
-                    add(TextV())
-                }
-            }
-            getString(R.string.Other) -> {
-                arrayListOf<BaseView>().apply {
-                    add(TextSummaryArrowV(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
-                        MIUIDialog(activity).apply {
-                            setTitle(R.string.CustomHook)
-                            setEditText(
-                                ActivityOwnSP.ownSPConfig.getHook(),
-                                getString(R.string.InputCustomHook)
-                            )
-                            setRButton(R.string.Ok) {
-                                ActivityOwnSP.ownSPConfig.setHook(getEditText())
-                                ActivityUtils.showToastOnLooper(
-                                    activity,
-                                    String.format(
-                                        "%s %s\n%s",
-                                        getString(R.string.HookSetTips),
-                                        ActivityOwnSP.ownSPConfig.getHook().ifEmpty { getString(R.string.Default) },
-                                        getString(R.string.RestartSystemUI)
-                                    )
-                                )
-                                dismiss()
-                            }
-                            setLButton(R.string.Cancel) { dismiss() }
-                            show()
-                        }
-                    })))
-                    add(TextWithSwitchV(TextV(resId = R.string.DebugMode), SwitchV("Debug")))
-                    add(TextSummaryArrowV(TextSummaryV(textId = R.string.Test, onClickListener = {
-                        MIUIDialog(activity).apply {
-                            setTitle(R.string.Test)
-                            setMessage(R.string.TestDialogTips)
-                            setRButton(R.string.Start) {
-                                ActivityUtils.showToastOnLooper(activity, "尝试唤醒界面")
-                                activity.sendBroadcast(
-                                    Intent().apply {
-                                        action = "Lyric_Server"
-                                        putExtra("Lyric_Type", "test")
-                                    }
-                                )
-                                dismiss()
-                            }
-                            setLButton(R.string.Back) { dismiss() }
-                            show()
-                        }
-                    })))
                     add(TextV())
                 }
             }
