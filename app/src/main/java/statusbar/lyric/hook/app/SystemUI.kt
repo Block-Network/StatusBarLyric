@@ -24,7 +24,6 @@
 
 package statusbar.lyric.hook.app
 
-
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
@@ -34,6 +33,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -52,9 +52,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -71,7 +68,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.system.exitProcess
 
-
 class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private val lyricKey = "lyric"
     var musicServer: Array<String?> = arrayOf(
@@ -82,7 +78,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         "remix.myplayer",
         "cmccwm.mobilemusic",
         "com.netease.cloudmusic.lite",
-        "com.meizu.media.music"
+        "com.meizu.media.music",
+        "com.miui.player.service.MusicStatService"
     )
 
     lateinit var application: Application
@@ -129,10 +126,6 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
         // 获取当前进程的Application
         application = AndroidAppHelper.currentApplication()
-        AppCenter.start(
-            application, "1ddba47c-cfe2-406e-86a2-0e7fa94785a4",
-            Analytics::class.java, Crashes::class.java
-        )
 
         // 锁屏广播
         application.registerReceiver(LockChangeReceiver(), IntentFilter().apply {
@@ -151,7 +144,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         // 获取屏幕宽度
         val displayMetrics = DisplayMetrics()
         (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+        val display = (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val displayWidth: Int = displayMetrics.widthPixels
+        val displayHeight : Int = displayMetrics.heightPixels
 
         // 获取系统版本
         LogUtils.e("Android: " + Build.VERSION.SDK_INT)
@@ -341,10 +336,11 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         string
                     )
                     // 自适应/歌词宽度
+                    val thisDisplay = if (display.rotation == Configuration.ORIENTATION_LANDSCAPE) displayHeight else displayWidth
                     if (config.getLyricWidth() == -1) {
                         val paint1: TextPaint = lyricTextView.paint // 获取字体
                         if (config.getLyricMaxWidth() == -1 || paint1.measureText(string)
-                                .toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100
+                                .toInt() + 6 <= (thisDisplay * config.getLyricMaxWidth()) / 100
                         ) {
                             if (config.getPseudoTime()) {
                                 lyricTextView.width =
@@ -354,10 +350,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             }
 
                         } else {
-                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth()) / 100
+                            lyricTextView.width = (thisDisplay * config.getLyricMaxWidth()) / 100
                         }
                     } else {
-                        lyricTextView.width = (displayWidth * config.getLyricWidth()) / 100
+                        lyricTextView.width = (thisDisplay * config.getLyricWidth()) / 100
                     }
                     // 歌词显示
                     if (showLyric) {

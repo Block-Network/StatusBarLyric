@@ -14,5 +14,6 @@
         <item>com.meizu.media.music</item>
         <item>notification.statusbar</item>
         <item>miui.statusbar.lyric.ext</item>
+        <item>com.miui.player</item>
     </array>
 </resources>

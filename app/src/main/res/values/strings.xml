@@ -49,7 +49,8 @@
         - KugouMusic Unknown ~ 11.0.8(Car Bluetooth Lyric Version)\n
         - KuwoMusic Unknown ~ 10.0.7.0(Car Bluetooth Lyric Version)\n
         - SaltPlayer 4.5 ~ now(API version)\n
-        - MeizuMusic Unknown ~ now(Status bar lyrics version)
+        - MeizuMusic Unknown ~ now(Status bar lyrics version)\n
+        - MIUIPlayer 4.6.0 ~ now(Car Bluetooth Lyric Version)
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
