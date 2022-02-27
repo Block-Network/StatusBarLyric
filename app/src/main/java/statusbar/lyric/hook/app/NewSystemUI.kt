@@ -24,6 +24,8 @@
 
 package statusbar.lyric.hook.app
 
+import statusbar.lyric.utils.XposedOwnSP.config
+import statusbar.lyric.utils.XposedOwnSP.iconConfig
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
@@ -40,8 +42,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.media.AudioManager
-import android.os.Build
-import android.os.Bundle
+import android.os.*
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextPaint
@@ -74,7 +75,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private var isHook: Boolean = false
     private var showLyric: Boolean = false
     private var useSystemMusicActive: Boolean = false
-    lateinit var clock: TextView
+    lateinit var clockView: TextView
     lateinit var lyricIconView: ImageView
     lateinit var lyricLayout: LinearLayout
     lateinit var lyricTextView: LyricTextSwitchView
@@ -85,6 +86,9 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     var mLyricOldIcon: String = ""
     var mLyricOldAnim: String = "off"
     var mLyricFontWeight = 0
+    var mLyricFontSize = 0
+    var mLyricSpacing = 0
+    var mLyricSpeed = 100
     private var audioManager: AudioManager? = null
     var musicServer: Array<String?> = arrayOf(
         "com.kugou",
@@ -100,9 +104,18 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     fun hook() {
         if (!isHook) {
             isHook = true
+
+            "com.android.systemui.statusbar.phone.StatusBarIconController.TintedIconManager".hookAfterMethod(
+                "setTint",
+                Int::class.java,
+                classLoader = lpparam.classLoader
+            ) {
+                LogUtils.e(it.args[0] as Int)
+            }
+
             // 使用系统方法反色
-            LogUtils.e("使用系统反色: " + XposedOwnSP.config.getUseSystemReverseColor().toString())
-            if (XposedOwnSP.config.getUseSystemReverseColor() && XposedOwnSP.config.getLyricColor().isEmpty()) {
+            LogUtils.e("使用系统反色: " + config.getUseSystemReverseColor().toString())
+            if (config.getUseSystemReverseColor() && config.getLyricColor().isEmpty()) {
                 try {
                     val darkIconDispatcher =
                         "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
@@ -183,13 +196,13 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         LogUtils.e("Android SDK: " + Build.VERSION.SDK_INT)
         // 反射获取时钟
         var hookOk = false
-        if (XposedOwnSP.config.getHook().isNotEmpty()) {
-            LogUtils.e("自定义Hook点: " + XposedOwnSP.config.getHook())
+        if (config.getHook().isNotEmpty()) {
+            LogUtils.e("自定义Hook点: " + config.getHook())
             try {
-                clockField = XposedHelpers.findField(param.thisObject.javaClass, XposedOwnSP.config.getHook())
+                clockField = XposedHelpers.findField(param.thisObject.javaClass, config.getHook())
                 hookOk = true
             } catch (e: NoSuchFieldError) {
-                LogUtils.e(XposedOwnSP.config.getHook() + " 反射失败: " + e + "\n" + Utils.dumpNoSuchFieldError(e))
+                LogUtils.e(config.getHook() + " 反射失败: " + e + "\n" + Utils.dumpNoSuchFieldError(e))
             }
         } else {
             val apkInfo = IPackageUtils.getPackageInfoFromAllUsers("com.yeren.ZPTools", 0)
@@ -228,11 +241,11 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         if (!hookOk || clockField == null) {
             return
         }
-        clock = clockField.get(param.thisObject) as TextView
+        clockView = clockField.get(param.thisObject) as TextView
 //        布局加入点初始化完成
 
         // 创建歌词布局
-        lyricTextView = LyricTextSwitchView(application, XposedOwnSP.config.getLyricStyle())
+        lyricTextView = LyricTextSwitchView(application, config.getLyricStyle())
         lyricTextView.setMargins(10, 0, 0, 0)
         lyricTextView.setSingleLine(true)
         val file = File(application.filesDir.path + "/font")
@@ -242,7 +255,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             )
             LogUtils.e("加载个性化字体")
         } else {
-            lyricTextView.setTypeface(clock.typeface)
+            lyricTextView.setTypeface(clockView.typeface)
         }
         // 创建图标布局
         lyricIconView = ImageView(application).apply {
@@ -261,32 +274,34 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         lyricLayout.layoutParams =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lyricParams = lyricLayout.layoutParams as LinearLayout.LayoutParams
-        lyricParams.setMargins(XposedOwnSP.config.getLyricPosition(), XposedOwnSP.config.getLyricHigh(), 0, 0)
+        if (config.getLyricPosition() != 0 || config.getLyricHigh() != 0) {
+            lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
+        }
         lyricLayout.layoutParams = lyricParams
         // 将歌词加入时钟布局
-        val clockLayout: LinearLayout = clock.parent as LinearLayout
+        val clockLayout: LinearLayout = clockView.parent as LinearLayout
         clockLayout.gravity = Gravity.CENTER
         clockLayout.orientation = LinearLayout.HORIZONTAL
-        if (XposedOwnSP.config.getViewPosition() == "first") {
+        if (config.getViewPosition() == "first") {
             clockLayout.addView(lyricLayout, 1)
         } else {
             clockLayout.addView(lyricLayout)
         }
         // 歌词点击事件
-        if (XposedOwnSP.config.getLyricSwitch()) {
+        if (config.getLyricSwitch()) {
             lyricLayout.setOnClickListener {
                 // 显示时钟
-                clock.layoutParams = LinearLayout.LayoutParams(-2, -2)
+                clockView.layoutParams = LinearLayout.LayoutParams(-2, -2)
                 // 歌词显示
                 lyricLayout.visibility = View.GONE
                 showLyric = false
-                clock.setOnClickListener {
+                clockView.setOnClickListener {
                     // 歌词显示
                     lyricLayout.visibility = View.VISIBLE
                     // 设置歌词文本
                     lyricTextView.setSourceText(lyricTextView.text)
                     // 隐藏时钟
-                    clock.layoutParams = LinearLayout.LayoutParams(0, 0)
+                    clockView.layoutParams = LinearLayout.LayoutParams(0, 0)
                     showLyric = true
                 }
             }
@@ -300,9 +315,9 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         if (showLyricTest || !showLyric) {
                             return
                         }
-                        if (XposedOwnSP.config.getLyricService()) {
+                        if (config.getLyricService()) {
                             if (Utils.isServiceRunningList(application, musicServer)) {
-                                if (XposedOwnSP.config.getLyricAutoOff() && useSystemMusicActive && !audioManager!!.isMusicActive) {
+                                if (config.getLyricAutoOff() && useSystemMusicActive && !audioManager!!.isMusicActive) {
                                     offLyric("暂停播放")
                                 }
                             } else {
@@ -315,17 +330,17 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
                     }
                 }
-            }, 0, XposedOwnSP.config.getLyricAutoOffTime().toLong()
+            }, 0, config.getLyricAutoOffTime().toLong()
         )
 
     }
 
-    fun updateLyric(lyric: String?, icon: String) {
+    private fun updateLyric(lyric: String?, icon: String) {
 //        更新配置文件
-        XposedOwnSP.config.update()
-        XposedOwnSP.iconConfig.update()
+        config.update()
+        iconConfig.update()
         var mLyric = ""
-        var mIcon = ""
+        var mIcon: String
 //        更新歌词
         if (lyric == "refresh") {
             mLyric = ""
@@ -338,11 +353,11 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             offLyric("收到歌词空")
             return
         }
-        if (isLockScreenOn()) {
+        if ((application.getSystemService(KEYGUARD_SERVICE) as KeyguardManager).inKeyguardRestrictedInputMode()) {
             offLyric("仅解锁显示")
             return
         }
-        if (!XposedOwnSP.config.getLyricService()) {
+        if (!config.getLyricService()) {
             offLyric("开关关闭")
             return
         }
@@ -351,40 +366,103 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             showLyric = true
             val addTimeStr = String.format(
                 "%s %s",
-                SimpleDateFormat(XposedOwnSP.config.getPseudoTimeStyle(), Locale.getDefault()).format(Date()),
+                SimpleDateFormat(config.getPseudoTimeStyle(), Locale.getDefault()).format(Date()),
                 mLyricText
             )
+            //歌词大小
+            if (mLyricFontSize != config.getLyricSize()) {
+                if (config.getLyricSize() == 0) {
+                    lyricTextView.setTextSize(0, clockView.textSize)
+                } else {
+                    lyricTextView.setTextSize(0, config.getLyricSize().toFloat())
+                }
+            }
             // 自适应/歌词宽度
             val thisDisplay =
                 if (application.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
                     displayHeight else displayWidth
-            if (XposedOwnSP.config.getLyricWidth() == -1) {
+            if (config.getLyricWidth() == -1) {
                 val paint1: TextPaint = lyricTextView.paint // 获取字体
-                if (XposedOwnSP.config.getLyricMaxWidth() == -1 || paint1.measureText(mLyricText)
-                        .toInt() <= (thisDisplay * XposedOwnSP.config.getLyricMaxWidth()) / 100
+                if (config.getLyricMaxWidth() == -1 || paint1.measureText(mLyricText)
+                        .toInt() <= (thisDisplay * config.getLyricMaxWidth()) / 100
                 ) {
-                    if (XposedOwnSP.config.getPseudoTime()) {
+                    if (config.getPseudoTime()) {
                         lyricTextView.width =
                             paint1.measureText(addTimeStr).toInt()
                     } else {
                         lyricTextView.width = paint1.measureText(mLyricText).toInt()
                     }
                 } else {
-                    lyricTextView.width = (thisDisplay * XposedOwnSP.config.getLyricMaxWidth()) / 100
+                    lyricTextView.width = (thisDisplay * config.getLyricMaxWidth()) / 100
                 }
             } else {
-                lyricTextView.width = (thisDisplay * XposedOwnSP.config.getLyricWidth()) / 100
+                lyricTextView.width = (thisDisplay * config.getLyricWidth()) / 100
             }
-//            隐藏时间
-            if (showLyric) {
-                lyricLayout.visibility = View.VISIBLE
-                if (XposedOwnSP.config.getHideTime()) {
-                    clock.layoutParams = LinearLayout.LayoutParams(0, 0)
+            //歌词位置
+            if (config.getLyricPosition() != 0 || config.getLyricHigh() != 0) {
+                lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
+            }
+            //歌词字体宽度
+            if (mLyricFontWeight != config.getLyricFontWeight()) {
+                if (config.getLyricFontWeight() == 0) {
+                    mLyricFontWeight = config.getLyricFontWeight()
+                    val paint = lyricTextView.paint
+                    paint.style = Paint.Style.FILL_AND_STROKE
+                    paint.strokeWidth = 0f
+                }
+            } else {
+                mLyricFontWeight = config.getLyricFontWeight()
+                val paint = lyricTextView.paint
+                paint.style = Paint.Style.FILL_AND_STROKE
+                paint.strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
+            }
+
+
+            //歌词字体间距
+            if (mLyricSpacing != config.getLyricSpacing()) {
+                if (config.getLyricSpacing() != 0) {
+                    lyricTextView.setLetterSpacings((config.getLyricSpacing().toFloat() / 100))
                 } else {
-                    clock.layoutParams = LinearLayout.LayoutParams(-2, -2)
+                    lyricTextView.setLetterSpacings(clockView.letterSpacing)
                 }
             }
-            if (XposedOwnSP.config.getPseudoTime()) {
+//            歌词动效
+            if (config.getAnim() != mLyricOldAnim) {
+                mLyricOldAnim = config.getAnim()
+                lyricTextView.inAnimation = Utils.inAnim(mLyricOldAnim)
+                lyricTextView.outAnimation = Utils.outAnim(mLyricOldAnim)
+            } else if (config.getAnim() == "random") {
+                mLyricOldAnim = config.getAnim()
+                val anim = arrayOf(
+                    "top", "lower",
+                    "left", "right"
+                )[(Math.random() * 4).toInt()]
+                lyricTextView.inAnimation = Utils.inAnim(anim)
+                lyricTextView.outAnimation = Utils.outAnim(anim)
+            }
+            //隐藏时间
+            if (showLyric) {
+                lyricLayout.visibility = View.VISIBLE
+                if (config.getHideTime()) {
+                    clockView.layoutParams = LinearLayout.LayoutParams(0, 0)
+                } else {
+                    clockView.layoutParams = LinearLayout.LayoutParams(-2, -2)
+                }
+            }
+            //歌词滚动样式
+            if (config.getLyricStyle()) {
+                //设置跑马灯为1次
+                lyricTextView.setMarqueeRepeatLimit(1)
+            } else {
+                //设置跑马灯重复次数，-1为无限重复
+                lyricTextView.setMarqueeRepeatLimit(-1)
+            }
+            //歌词速度
+            if (config.getLyricStyle() && mLyricSpeed != config.getLyricSpeed()) {
+                lyricTextView.setSpeed((config.getLyricSpeed().toFloat() / 100))
+            }
+            //设置歌词text
+            if (config.getPseudoTime()) {
                 lyricTextView.setText(addTimeStr)
             } else {
                 lyricTextView.setText(mLyricText)
@@ -392,13 +470,15 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
         }
 
-        if (icon.isEmpty()) {
-            mIcon = "refresh"
+
+
+        mIcon = if (icon.isEmpty()) {
+            "refresh"
         } else {
-            mIcon = icon
+            icon
         }
 //       更新图标
-        if (!XposedOwnSP.config.getIcon()) {
+        if (!config.getIcon()) {
             LogUtils.e("关闭图标")
             mLyricIcon = ""
             lyricIconView.visibility = View.GONE
@@ -406,84 +486,59 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         } else {
             if (mIcon != mLyricOldIcon) {
                 // 设置图标宽高
-                if (XposedOwnSP.config.getIconSize() == 0) {
-                    iconParams.width = clock.textSize.toInt()
-                    iconParams.height = clock.textSize.toInt()
+                if (config.getIconSize() == 0) {
+                    iconParams.width = clockView.textSize.toInt()
+                    iconParams.height = clockView.textSize.toInt()
                 } else {
-                    iconParams.width = XposedOwnSP.config.getIconSize()
-                    iconParams.height = XposedOwnSP.config.getIconSize()
+                    iconParams.width = config.getIconSize()
+                    iconParams.height = config.getIconSize()
                 }
+                //图标上下位置
+                iconParams.setMargins(0, config.getIconHigh(), 0, 0)
                 LogUtils.e("开启图标")
                 LogUtils.e(mIcon)
                 LogUtils.e(mLyricOldIcon)
 //                mLyricOldIcon = mIcon
-                LogUtils.e(mLyricIcon + "：" + XposedOwnSP.iconConfig.getIcon(mIcon))
+                LogUtils.e(mLyricIcon + "：" + iconConfig.getIcon(mIcon))
                 lyricIconView.visibility = View.VISIBLE
                 lyricTextView.setMargins(10, 0, 0, 0)
                 lyricIconView.setImageDrawable(
                     BitmapDrawable(
                         application.resources,
-                        Utils.stringToBitmap(XposedOwnSP.iconConfig.getIcon(mIcon))
+                        Utils.stringToBitmap(iconConfig.getIcon(mIcon))
                     )
                 )
 
             }
 
         }
-
-//        设置其它效果
-        if (XposedOwnSP.config.getLyricStyle()) {
-            lyricTextView.setSpeed((XposedOwnSP.config.getLyricSpeed().toFloat() / 100))
-        }
-        if (XposedOwnSP.config.getAnim() != mLyricOldAnim) {
-            mLyricOldAnim = XposedOwnSP.config.getAnim()
-            lyricTextView.inAnimation = Utils.inAnim(mLyricOldAnim)
-            lyricTextView.outAnimation = Utils.outAnim(mLyricOldAnim)
-        } else if (XposedOwnSP.config.getAnim() == "random") {
-            mLyricOldAnim = XposedOwnSP.config.getAnim()
-            val anim = arrayOf(
-                "top", "lower",
-                "left", "right"
-            )[(Math.random() * 4).toInt()]
-            lyricTextView.inAnimation = Utils.inAnim(anim)
-            lyricTextView.outAnimation = Utils.outAnim(anim)
-        }
-        if (mLyricFontWeight != XposedOwnSP.config.getLyricFontWeight() && XposedOwnSP.config.getLyricFontWeight() != 0) {
-            mLyricFontWeight = XposedOwnSP.config.getLyricFontWeight()
-            val paint = lyricTextView.paint
-            paint.style = Paint.Style.FILL_AND_STROKE
-            paint.strokeWidth = (XposedOwnSP.config.getLyricFontWeight().toFloat() / 100)
-        }
-        XposedOwnSP.config.let { Utils.setStatusBar(application, false, it) }
-        if (XposedOwnSP.config.getLyricStyle()) {
-            // 设置跑马灯为1次
-            lyricTextView.setMarqueeRepeatLimit(1)
-        } else {
-            // 设置跑马灯重复次数，-1为无限重复
-            lyricTextView.setMarqueeRepeatLimit(-1)
-        }
+//        设置状态栏
+        config.let{ Utils.setStatusBar(application, false, it) }
     }
 
     private fun offLyric(info: String) {
-        LogUtils.e(info)
-        if (showLyric || lyricLayout.visibility != View.GONE) {
-            showLyric = false
-            mLyricText = ""
-            lyricTextView.setText("")
-            lyricIconView.setImageDrawable(null)
+        val off = Handler(Looper.getMainLooper()) { _ ->
+            LogUtils.e(info)
+            if (showLyric || lyricLayout.visibility != View.GONE) {
+                showLyric = false
+                mLyricText = ""
+                lyricTextView.setText("")
 
-            // 显示时钟
-            clock.layoutParams = LinearLayout.LayoutParams(-2, -2)
-            lyricLayout.visibility = View.GONE
+                // 显示时钟
+                clockView.layoutParams = LinearLayout.LayoutParams(-2, -2)
+                lyricLayout.visibility = View.GONE
 
-            // 清除时钟点击事件
-            if (XposedOwnSP.config.getLyricSwitch()) {
-                clock.setOnClickListener(null)
+                // 清除时钟点击事件
+                if (config.getLyricSwitch()) {
+                    clockView.setOnClickListener(null)
+                }
+
+                // 恢复状态栏
+                config.let { Utils.setStatusBar(application, true, it) }
             }
-
-            // 恢复状态栏
-            XposedOwnSP.config.let { Utils.setStatusBar(application, true, it) }
+            true
         }
+        off.sendMessage(off.obtainMessage())
     }
 
     @SuppressLint("SetTextI18n")
@@ -550,11 +605,6 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         } catch (e: Throwable) {
             LogUtils.e("唤醒失败 可能系统不支持\n${e.message}")
         }
-    }
-
-    fun isLockScreenOn(): Boolean {
-        val mKeyguardManager = application.getSystemService(KEYGUARD_SERVICE) as KeyguardManager
-        return mKeyguardManager.inKeyguardRestrictedInputMode()
     }
 
     private inner class LyricReceiver : BroadcastReceiver() {
@@ -640,7 +690,6 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             }
         }
     }
-
 
 }
 
