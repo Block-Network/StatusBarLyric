@@ -73,6 +73,10 @@ class SettingsActivity : MIUIActivity() {
                 application, "6713f7e7-d1f5-4261-bb32-f5a94028a9f4",
                 Analytics::class.java, Crashes::class.java
             )
+            if (BuildConfig.DEBUG) {
+                ActivityOwnSP.ownSPConfig.setDebug(true)
+            }
+
         }
     }
 

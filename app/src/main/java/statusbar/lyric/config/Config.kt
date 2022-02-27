@@ -148,6 +148,9 @@ class Config {
     fun getDebug(): Boolean {
         return config.optBoolean("Debug", false)
     }
+    fun setDebug(b:Boolean) {
+        return config.put("Debug", b)
+    }
 
     fun getIcon(): Boolean {
         return config.optBoolean("I", true)
