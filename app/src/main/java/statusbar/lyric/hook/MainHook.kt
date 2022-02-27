@@ -33,7 +33,6 @@ import statusbar.lyric.utils.LogUtils
 
 class MainHook : IXposedHookLoadPackage {
     var context: Context? = null
-    var init: Boolean = false
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         LogUtils.e("Debug已开启")
         LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})")
@@ -42,7 +41,7 @@ class MainHook : IXposedHookLoadPackage {
         when (lpparam.packageName) {
             "com.android.systemui" -> {
                 LogUtils.e("正在hook系统界面")
-                SystemUI(lpparam).hook()
+                NewSystemUI(lpparam).hook()
                 AppCenterUtils("1ddba47c-cfe2-406e-86a2-0e7fa94785a4")
                 LogUtils.e("hook系统界面结束")
             }
