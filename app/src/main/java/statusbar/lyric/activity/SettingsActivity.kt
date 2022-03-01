@@ -70,7 +70,7 @@ class SettingsActivity : MIUIActivity() {
             isRegister = true
             ActivityUtils.getNotice(activity)
             AppCenter.start(
-                application, "6713f7e7-d1f5-4261-bb32-f5a94028a9f4",
+                application, "86bd22e1-b6f1-4fe6-af29-8132bbb4cb6d",
                 Analytics::class.java, Crashes::class.java
             )
             if (BuildConfig.DEBUG) {
