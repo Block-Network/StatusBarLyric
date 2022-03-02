@@ -209,6 +209,23 @@ class Netease(private val lpparam: LoadPackageParam) {
         }
     }
 
+    private fun hookStatusLyricContainer() {
+        val container = "com.netease.cloudmusic.module.lyric.statuslyric.StatusLyricContainer".findClassOrNull(lpparam.classLoader)
+        if (container == null) {
+            LogUtils.e("StatusLyricContainer not found")
+            return
+        }
+        val method = container.declaredMethods.filter { it.parameterCount == 1 && it.parameterTypes[0] == String::class.java }
+        LogUtils.e(method.size)
+        method.forEach {
+            LogUtils.e("found = ${it.name}")
+            it.hookAfterMethod { param ->
+                LogUtils.e(param.args[0])
+                Utils.sendLyric(context, param.args[0] as String, "Netease")
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     fun hook(){
         try {
@@ -233,10 +250,13 @@ class Netease(private val lpparam: LoadPackageParam) {
                         })
                     }
                     LogUtils.e("网易云Hook Process: ${lpparam.processName}")
-                    context?.let { it1 -> SettingHook(it1) }
+                    runCatching { context?.let { it1 -> SettingHook(it1) } }
                     val verCode: Int? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode
                     val verName: String? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionName
-                    if (verCode!! > 8000041) {
+                    if (verCode!! >= 8007001) {
+                        LogUtils.e("start hook Container")
+                        hookStatusLyricContainer()
+                    } else if (verCode!! > 8000041) {
                         isNewVer = true
                         MeiZuStatusBarLyric.guiseFlyme(lpparam, false)
                         filter.startFilterAndHook()
