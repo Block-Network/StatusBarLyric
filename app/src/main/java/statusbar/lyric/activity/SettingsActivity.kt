@@ -138,7 +138,7 @@ class SettingsActivity : MIUIActivity() {
                 }))
                 TextSummaryArrow(TextSummaryV(
                     textId = R.string.AboutModule,
-                    onClickListener = { showFragment(getString(R.string.AboutModule)) }
+                    onClickListener = { showFragment("about") }
                 ))
                 Text()
             }
