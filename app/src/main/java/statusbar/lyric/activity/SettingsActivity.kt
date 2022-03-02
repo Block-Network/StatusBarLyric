@@ -125,7 +125,7 @@ class SettingsActivity : MIUIActivity() {
                 ))
                 TextSummaryArrow(TextSummaryV(
                     textId = R.string.AdvancedSettings,
-                    onClickListener = { showFragment(getString(R.string.AdvancedSettings)) }
+                    onClickListener = { showFragment("advancedSettings") }
                 ))
                 Line()
                 TitleTextV(resId = R.string.About)
@@ -544,7 +544,7 @@ class SettingsActivity : MIUIActivity() {
                 SeekBarWithText("IHigh", -100, 100, defaultProgress = ActivityOwnSP.ownSPConfig.getIconHigh())
                 TextWithSwitch(TextV(resId = R.string.IconAutoColors), SwitchV("IAutoColor", true))
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
-                    showFragment(getString(R.string.IconSettings))
+                    showFragment("icon")
                 }))
                 Text()
             }
