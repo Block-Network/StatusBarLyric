@@ -9,4 +9,10 @@ public class PackageInfo {
     public String versionName;
 
     public ApplicationInfo applicationInfo;
+
+    public String packageName;
+
+    public long getLongVersionCode() {
+        throw new RuntimeException("Stub!");
+    }
 }
