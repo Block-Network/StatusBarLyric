@@ -37,7 +37,7 @@ class MainHook : IXposedHookLoadPackage {
         LogUtils.e("Debug已开启")
         LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})")
         LogUtils.e("当前包名: " + lpparam.packageName)
-        AppCenterUtils("3771f154-699b-4101-b527-25bb270e1f84", lpparam).onlineLog("Init")
+        AppCenterUtils("3771f154-699b-4101-b527-25bb270e1f84", lpparam)
 
         when (lpparam.packageName) {
             "com.android.systemui" -> {
