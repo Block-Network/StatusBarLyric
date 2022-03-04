@@ -14,9 +14,11 @@ import com.microsoft.appcenter.crashes.model.ErrorReport
 import com.microsoft.appcenter.ingestion.models.Device
 import com.microsoft.appcenter.ingestion.models.WrapperSdk
 import com.microsoft.appcenter.utils.DeviceInfoHelper
+import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.utils.ktx.hookAfterMethod
+import statusbar.lyric.utils.ktx.hookAllMethods
 import statusbar.lyric.utils.ktx.setReturnConstant
 
 class AppCenterUtils(appCenterKey: String, val lpparam: XC_LoadPackage.LoadPackageParam) {
@@ -26,14 +28,18 @@ class AppCenterUtils(appCenterKey: String, val lpparam: XC_LoadPackage.LoadPacka
     var thisVersion = ""
 
     init {
-        DeviceInfoHelper::class.java.hookAfterMethod("getDeviceInfo") { param ->
-            val device: Device? = param.result as Device?
-            device?.let {
-                it.appVersion = BuildConfig.VERSION_NAME
-                it.appBuild = BuildConfig.VERSION_CODE.toString()
-                it.appNamespace = BuildConfig.APPLICATION_ID
+        LogUtils.e("Hook App center")
+
+        DeviceInfoHelper::class.java.hookAllMethods("getDeviceInfo", hooker = object: XC_MethodHook() {
+            override fun afterHookedMethod(param: MethodHookParam) {
+                val device: Device? = param.result as Device?
+                device?.let {
+                    it.appVersion = BuildConfig.VERSION_NAME
+                    it.appBuild = BuildConfig.VERSION_CODE.toString()
+                    it.appNamespace = BuildConfig.APPLICATION_ID
+                }
             }
-        }
+        })
 
         Application::class.java.hookAfterMethod("attach", Context::class.java) { param ->
             application = param.thisObject as Application

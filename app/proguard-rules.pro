@@ -43,6 +43,8 @@
  long consumerIndex;
 }
 
+-keep com.microsoft.appcenter.utils.DeviceInfoHelper
+
 -repackageclasses "截图看NM日志"
 -obfuscationdictionary dict.txt
 -classobfuscationdictionary dict.txt

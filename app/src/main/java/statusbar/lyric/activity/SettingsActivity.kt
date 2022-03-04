@@ -35,19 +35,18 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup.LayoutParams
-import android.widget.LinearLayout
 import cn.fkj233.ui.activity.MIUIActivity
-import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.data.MIUIPopupData
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.dialog.MIUIDialog
 import com.google.android.gms.ads.AdSize
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.AbstractCrashesListener
 import com.microsoft.appcenter.crashes.Crashes
+import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog
+import com.microsoft.appcenter.crashes.model.ErrorReport
 import ice.library.ads.AdsManager
 import ice.library.ads.LoadAdResults
 import ice.library.ads.RewardAdResults
@@ -70,6 +69,27 @@ class SettingsActivity : MIUIActivity() {
         viewInit()
     }
 
+    inner class CrashesFilter : AbstractCrashesListener() {
+        override fun shouldProcess(report: ErrorReport): Boolean {
+            for (name in packageName) {
+                if (report.stackTrace.contains(name)) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        override fun getErrorAttachments(report: ErrorReport): MutableIterable<ErrorAttachmentLog> {
+            val textLog = ErrorAttachmentLog.attachmentWithText("StatusBarLyric: ${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}", "debug.txt")
+            return mutableListOf(textLog)
+        }
+
+        private val packageName = arrayOf(
+            "statusbar.lyric",
+            "cn.fkj233"
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         ActivityOwnSP.activity = this
         if (!checkLSPosed()) isLoad = false
@@ -87,8 +107,9 @@ class SettingsActivity : MIUIActivity() {
             })
             isRegister = true
             ActivityUtils.getNotice(activity)
+            Crashes.setListener(CrashesFilter())
             AppCenter.start(
-                application, "3771f154-699b-4101-b527-25bb270e1f84",
+                application, "fc2f4a63-2ea1-47ce-9155-ad0d38ed267f",
                 Analytics::class.java, Crashes::class.java
             )
             if (BuildConfig.DEBUG) {
