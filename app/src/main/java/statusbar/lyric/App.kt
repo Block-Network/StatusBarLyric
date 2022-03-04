@@ -15,7 +15,7 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         app = applicationContext
-        AdsManager.bannerId = "ca-app-pub-9730534578915916/4576531490"
+        AdsManager.rewardId = "ca-app-pub-9730534578915916/4576531490"
         AdsManager.bannerId = "ca-app-pub-9730534578915916/8650086997"
         AdsManager.instance.initAdmob(this)
     }
