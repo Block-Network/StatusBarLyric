@@ -159,8 +159,7 @@ class Netease(private val lpparam: LoadPackageParam) {
                             if (parameters.size == 2) {
                                 if (parameters[0].type.name == "android.app.Notification" && parameters[1].type.name == "boolean") {
                                     LogUtils.e("find = ${m.declaringClass.name} ${m.name}")
-                                    lateinit var unhook: Unhook
-                                    unhook = XposedHelpers.findAndHookMethod(
+                                    val unhook = XposedHelpers.findAndHookMethod(
                                         clazz, m.name,
                                         Notification::class.java,
                                         Boolean::class.javaPrimitiveType, object : XC_MethodHook() {
