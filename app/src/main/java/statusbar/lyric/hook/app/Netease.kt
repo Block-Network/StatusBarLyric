@@ -25,7 +25,6 @@
 package statusbar.lyric.hook.app
 
 import android.annotation.SuppressLint
-import android.app.AndroidAppHelper
 import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -36,7 +35,8 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.LinearLayout
+import android.widget.TextView
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
