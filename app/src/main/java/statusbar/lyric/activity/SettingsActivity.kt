@@ -109,7 +109,7 @@ class SettingsActivity : MIUIActivity() {
             ActivityUtils.getNotice(activity)
             Crashes.setListener(CrashesFilter())
             AppCenter.start(
-                application, "fc2f4a63-2ea1-47ce-9155-ad0d38ed267f",
+                application, Utils.appCenterKey,
                 Analytics::class.java, Crashes::class.java
             )
             if (BuildConfig.DEBUG) {

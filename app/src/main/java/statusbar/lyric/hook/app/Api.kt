@@ -29,10 +29,13 @@ import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import statusbar.lyric.hook.BaseHook
+import statusbar.lyric.utils.AppCenterUtils
 
 class Api(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     fun hook() {
         if ("StatusBarLyric.API.StatusBarLyric".findClassOrNull(lpparam.classLoader) == null) return
+        AppCenterUtils(Utils.appCenterKey, lpparam)
         "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("hasEnable", classLoader = lpparam.classLoader) {
             it.result = true
         }

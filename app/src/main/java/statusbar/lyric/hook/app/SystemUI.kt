@@ -55,6 +55,7 @@ import android.widget.*
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.IPackageUtils
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
@@ -68,7 +69,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.system.exitProcess
 
-class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
+class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(lpparam) {
     private val lyricKey = "lyric"
     var musicServer: Array<String?> = arrayOf(
         "com.kugou",
@@ -637,7 +638,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
     }
 
-    fun hook() {
+    override fun hook() {
         if (isHook) return else isHook = true
         // 使用系统方法反色
         LogUtils.e("使用系统反色: " + config.getUseSystemReverseColor().toString())

@@ -48,6 +48,8 @@ import java.util.*
 
 @SuppressLint("StaticFieldLeak")
 object Utils {
+    val appCenterKey = "ec91e89c-17d8-408b-a295-c6bf845b9f53"
+
     private val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
     private val packNameToIconName = HashMap<String, String>().apply {
         put("com.netease.cloudmusic", "Netease")

@@ -29,15 +29,15 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.hook.app.*
 import statusbar.lyric.utils.AppCenterUtils
 import statusbar.lyric.utils.LogUtils
-
+import statusbar.lyric.utils.Utils
 
 class MainHook : IXposedHookLoadPackage {
     var context: Context? = null
+
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         LogUtils.e("Debug已开启")
         LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})")
         LogUtils.e("当前包名: " + lpparam.packageName)
-        if (lpparam.packageName != BuildConfig.APPLICATION_ID) AppCenterUtils("fc2f4a63-2ea1-47ce-9155-ad0d38ed267f", lpparam)
 
         when (lpparam.packageName) {
             "com.android.systemui" -> {
@@ -63,6 +63,7 @@ class MainHook : IXposedHookLoadPackage {
             "com.tencent.qqmusic" -> {
                 LogUtils.e("正在hookQQ音乐")
                 MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
+                AppCenterUtils(Utils.appCenterKey, lpparam)
                 LogUtils.e("hookQQ音乐结束")
             }
             "remix.myplayer" -> {
@@ -73,6 +74,7 @@ class MainHook : IXposedHookLoadPackage {
             "cmccwm.mobilemusic" -> {
                 LogUtils.e("正在Hook 咪咕音乐")
                 MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
+                AppCenterUtils(Utils.appCenterKey, lpparam)
                 LogUtils.e("Hook 咪咕音乐结束")
             }
             "com.miui.player" -> {
@@ -80,11 +82,13 @@ class MainHook : IXposedHookLoadPackage {
                 MIPlayer(lpparam).hook()
                 LogUtils.e("Hook 小米音乐结束")
             }
-            "com.meizu.media.music" -> MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
+            "com.meizu.media.music" -> {
+                MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
+                AppCenterUtils(Utils.appCenterKey, lpparam)
+            }
             else -> {
                 Api(lpparam).hook()
             }
         }
     }
-
 }

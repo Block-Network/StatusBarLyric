@@ -40,6 +40,7 @@ import android.widget.TextView
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
+import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.hook.MeiZuStatusBarLyric
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
@@ -49,7 +50,7 @@ import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 
 
-class Netease(private val lpparam: LoadPackageParam) {
+class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
     var context: Context? = null
     var subView: TextView? = null
     lateinit var broadcastHandler: BroadcastHandler
@@ -196,7 +197,7 @@ class Netease(private val lpparam: LoadPackageParam) {
     }
 
     @SuppressLint("SetTextI18n")
-    fun hook(){
+    override fun hook(){
         try {
             disableTinker(lpparam)
             "com.netease.cloudmusic.NeteaseMusicApplication".hookAfterMethod("attachBaseContext", Context::class.java, classLoader = lpparam.classLoader) {

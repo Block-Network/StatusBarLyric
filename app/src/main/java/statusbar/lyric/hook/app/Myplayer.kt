@@ -24,13 +24,14 @@ package statusbar.lyric.hook.app
 
 import android.content.Context
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
 
-class Myplayer(private val lpparam: XC_LoadPackage.LoadPackageParam) {
-    fun hook(){
+class Myplayer(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(lpparam) {
+    override fun hook(){
         "remix.myplayer.util.p".hookAfterMethod("o", Context::class.java, classLoader = lpparam.classLoader) {
             it.result = true
         }

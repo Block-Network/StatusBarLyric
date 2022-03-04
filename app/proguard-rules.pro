@@ -43,7 +43,9 @@
  long consumerIndex;
 }
 
--keep class com.microsoft.appcenter.utils.DeviceInfoHelper
+-keep class com.microsoft.appcenter.utils.DeviceInfoHelper {
+    public static synchronized com.microsoft.appcenter.ingestion.models.Device getDeviceInfo(android.content.Context);
+}
 
 -repackageclasses "截图看NM日志"
 -obfuscationdictionary dict.txt
