@@ -35,14 +35,22 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup.LayoutParams
+import android.widget.LinearLayout
 import cn.fkj233.ui.activity.MIUIActivity
+import cn.fkj233.ui.activity.data.LayoutPair
 import cn.fkj233.ui.activity.data.MIUIPopupData
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.dialog.MIUIDialog
+import com.google.android.gms.ads.AdSize
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
+import ice.library.ads.AdsManager
+import ice.library.ads.LoadAdResults
+import ice.library.ads.RewardAdResults
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
@@ -58,13 +66,22 @@ class SettingsActivity : MIUIActivity() {
         const val OPEN_FONT_FILE = 2114745
     }
 
+    init {
+        viewInit()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         ActivityOwnSP.activity = this
         if (!checkLSPosed()) isLoad = false
-        viewInit()
         super.onCreate(savedInstanceState)
         if (isLoad && !isRegister) {
+            AdsManager.instance.requestLoadRewardAd { results: LoadAdResults, any: Any? ->
+                when (results) {
+                    LoadAdResults.AdLoaded -> Log.d("StatusbarLyric-Ad", "Reward ad loaded")
+                    LoadAdResults.AdFailedToLoad -> Log.d("StatusbarLyric-Ad", "Reward failed to load: $any")
+                }
+            }
+
             registerReceiver(AppReceiver(), IntentFilter().apply {
                 addAction("App_Server")
             })
@@ -137,9 +154,25 @@ class SettingsActivity : MIUIActivity() {
                     ActivityUtils.checkUpdate(activity)
                 }))
                 TextSummaryArrow(TextSummaryV(
+                    textId = R.string.showAd,
+                    onClickListener = {
+                        AdsManager.instance.showRewardAd(activity) { rewardAdResults: RewardAdResults, any ->
+                            when (rewardAdResults) {
+                                RewardAdResults.AdEarnedReward -> Log.d("StatusbarLyric-Ad", "Reward ad earned reward")
+                                RewardAdResults.AdNotLoad -> Log.d("StatusbarLyric-Ad", "Reward ad not load")
+                                RewardAdResults.AdClicked -> Log.d("StatusbarLyric-Ad", "Reward ad clicked")
+                                RewardAdResults.AdDismissed -> Log.d("StatusbarLyric-Ad", "Reward ad dismissed")
+                                RewardAdResults.AdFailedToShow -> Log.d("StatusbarLyric-Ad", "Reward ad failed to show: $any")
+                                RewardAdResults.AdShowed -> Log.d("StatusbarLyric-Ad", "Reward ad showed")
+                            }
+                        }
+                    }
+                ))
+                TextSummaryArrow(TextSummaryV(
                     textId = R.string.AboutModule,
                     onClickListener = { showFragment("about") }
                 ))
+                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
                 Text()
             }
             registerMenu(getString(R.string.Menu)) {
@@ -209,6 +242,7 @@ class SettingsActivity : MIUIActivity() {
                 Line()
                 TitleText("Module Version")
                 Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
+                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
             }
 
             register("custom", getString(R.string.Custom)) {
@@ -546,6 +580,7 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment("icon")
                 }))
+                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
                 Text()
             }
 
@@ -565,6 +600,7 @@ class SettingsActivity : MIUIActivity() {
                         }.show()
                     })
                 }
+                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
                 Text()
             }
 
@@ -707,6 +743,7 @@ class SettingsActivity : MIUIActivity() {
                         )
                     }
                 ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!))
+                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
                 Text()
             }
 
@@ -757,6 +794,7 @@ class SettingsActivity : MIUIActivity() {
                         "https://fkj2005.gitee.io/merger/"
                     )
                 }))
+                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
                 Text()
             }
         }

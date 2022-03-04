@@ -152,4 +152,5 @@
     <string name="AntiBurnTime">防烧屏移动时间</string>
     <string name="AntiBurnTimeTips">1–3600000（单位：毫秒）</string>
     <string name="SongPauseCloseLyricsTime">歌曲暂停关闭歌词时间</string>
+    <string name="showAd">观看广告来支持作者</string>
 </resources>

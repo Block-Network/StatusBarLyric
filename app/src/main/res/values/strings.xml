@@ -168,4 +168,5 @@
     <string name="AntiBurnTime">Burn-in move time</string>
     <string name="AntiBurnTimeTips">1–3600000 (unit: milliseconds)</string>
     <string name="SongPauseCloseLyricsTime">Song pause close Lyrics time</string>
+    <string name="showAd">Watch advertisements</string>
 </resources>
