@@ -80,7 +80,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(l
         "cmccwm.mobilemusic",
         "com.netease.cloudmusic.lite",
         "com.meizu.media.music",
-        "com.miui.player.service.MusicStatService"
+        "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew"
     )
 
     lateinit var application: Application
