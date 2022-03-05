@@ -31,7 +31,7 @@
     <string name="About">About</string>
     <string name="AboutModule">About the module</string>
     <string name="AboutTips1">Mainly responsible for Hook and UI</string>
-    <string name="AboutTips2">Mainly responsible for 摸鱼</string>
+    <string name="AboutTips2">Mainly responsible for fool around</string>
     <string name="ThkListTips">Thank you list (in no particular order)</string>
     <string name="Other">Other</string>
     <string name="Source">Project Address</string>
@@ -49,7 +49,8 @@
         - KugouMusic Unknown ~ 11.0.8(Car Bluetooth Lyric Version)\n
         - KuwoMusic Unknown ~ 10.0.7.0(Car Bluetooth Lyric Version)\n
         - SaltPlayer 4.5 ~ now(API version)\n
-        - MeizuMusic Unknown ~ now(Status bar lyrics version)
+        - MeizuMusic Unknown ~ now(Status bar lyrics version)\n
+        - MIUIPlayer 4.6.0 ~ now(Car Bluetooth Lyric Version)
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
@@ -167,4 +168,5 @@
     <string name="AntiBurnTime">Burn-in move time</string>
     <string name="AntiBurnTimeTips">1–3600000 (unit: milliseconds)</string>
     <string name="SongPauseCloseLyricsTime">Song pause close Lyrics time</string>
+    <string name="showAd">Watch advertisements</string>
 </resources>

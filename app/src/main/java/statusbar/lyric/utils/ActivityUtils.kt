@@ -70,7 +70,7 @@ object ActivityUtils {
             try {
                 val jsonObject = JSONObject(data)
                 if (jsonObject.getString("tag_name").split("v").toTypedArray()[1].toInt() > BuildConfig.VERSION_CODE) {
-                    MIUIDialog(activity).apply {
+                    MIUIDialog(activity) {
                         setTitle(
                             String.format(
                                 "%s [%s]",
@@ -95,8 +95,7 @@ object ActivityUtils {
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
-                        show()
-                    }
+                    }.show()
                 } else {
                     Toast.makeText(activity, activity.getString(R.string.NoVerUpdate), Toast.LENGTH_LONG).show()
                 }
@@ -132,7 +131,7 @@ object ActivityUtils {
                 val jsonObject = JSONObject(message.data.getString("value")!!)
                 if (jsonObject.getInt("versionCode") == BuildConfig.VERSION_CODE) {
                     if (jsonObject.getBoolean("forcibly")) {
-                        MIUIDialog(activity).apply {
+                        MIUIDialog(activity) {
                             setTitle(activity.getString(R.string.NewNotice))
                             setMessage(jsonObject.getString("data"))
                             setRButton(activity.getString(R.string.Done)) { dismiss() }
@@ -142,8 +141,7 @@ object ActivityUtils {
                                     dismiss()
                                 }
                             }
-                            show()
-                        }
+                        }.show()
                     }
                 }
                 return@Handler true

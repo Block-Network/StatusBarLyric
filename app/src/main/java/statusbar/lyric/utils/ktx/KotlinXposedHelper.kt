@@ -555,6 +555,8 @@ fun XResources.setTryReplacement(pkg: String, type: String, name: String, obj: A
     }
 }
 
+fun Any?.isNull(callback: () -> Unit) { if (this == null) callback() }
+
 fun getHookField(clazz: Class<*>, name: String): Any? {
     val field: Field = clazz.getDeclaredField(name)
     field.isAccessible = true

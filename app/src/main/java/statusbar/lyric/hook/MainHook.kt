@@ -22,37 +22,19 @@
 
 package statusbar.lyric.hook
 
-import android.app.Application
 import android.content.Context
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.hook.app.*
-import statusbar.lyric.utils.Utils
-import statusbar.lyric.utils.ktx.hookAfterMethod
+import statusbar.lyric.utils.AppCenterUtils
 import statusbar.lyric.utils.LogUtils
-
+import statusbar.lyric.utils.Utils
 
 class MainHook : IXposedHookLoadPackage {
     var context: Context? = null
-    var init: Boolean = false
+
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        Application::class.java.hookAfterMethod("attach", Context::class.java) {
-            context = it.args[0] as Context
-            Utils.context = context
-            if (!init) {
-                if (!lpparam.packageName.equals("com.android.systemui")) {
-                    AppCenter.start(
-                        it.thisObject as Application, "9b618dc1-602a-4af1-82ee-c60e4a243e1f",
-                        Analytics::class.java, Crashes::class.java
-                    )
-                }
-            }
-            init = true
-        }
         LogUtils.e("Debug已开启")
         LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})")
         LogUtils.e("当前包名: " + lpparam.packageName)
@@ -80,7 +62,8 @@ class MainHook : IXposedHookLoadPackage {
             }
             "com.tencent.qqmusic" -> {
                 LogUtils.e("正在hookQQ音乐")
-                QQMusic(lpparam).hook()
+                MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
+                AppCenterUtils(Utils.appCenterKey, lpparam)
                 LogUtils.e("hookQQ音乐结束")
             }
             "remix.myplayer" -> {
@@ -90,14 +73,22 @@ class MainHook : IXposedHookLoadPackage {
             }
             "cmccwm.mobilemusic" -> {
                 LogUtils.e("正在Hook 咪咕音乐")
-                Migu(lpparam).hook()
+                MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
+                AppCenterUtils(Utils.appCenterKey, lpparam)
                 LogUtils.e("Hook 咪咕音乐结束")
             }
-            "com.meizu.media.music" -> MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
+            "com.miui.player" -> {
+                LogUtils.e("正在Hook 小米音乐")
+                MIPlayer(lpparam).hook()
+                LogUtils.e("Hook 小米音乐结束")
+            }
+            "com.meizu.media.music" -> {
+                MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
+                AppCenterUtils(Utils.appCenterKey, lpparam)
+            }
             else -> {
                 Api(lpparam).hook()
             }
         }
     }
-
 }

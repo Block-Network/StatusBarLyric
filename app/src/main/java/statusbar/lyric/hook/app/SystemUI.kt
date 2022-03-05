@@ -24,7 +24,6 @@
 
 package statusbar.lyric.hook.app
 
-
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
@@ -34,6 +33,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -41,21 +41,22 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.os.*
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextPaint
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.Crashes
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import statusbar.lyric.hook.BaseHook
+import statusbar.lyric.utils.IPackageUtils
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.XposedOwnSP.config
@@ -64,13 +65,11 @@ import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricTextSwitchView
 import java.io.File
 import java.lang.reflect.Field
-import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.system.exitProcess
 
-
-class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
+class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(lpparam) {
     private val lyricKey = "lyric"
     var musicServer: Array<String?> = arrayOf(
         "com.kugou",
@@ -80,7 +79,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         "remix.myplayer",
         "cmccwm.mobilemusic",
         "com.netease.cloudmusic.lite",
-        "com.meizu.media.music"
+        "com.meizu.media.music",
+        "com.miui.player.service.MusicStatService"
     )
 
     lateinit var application: Application
@@ -127,10 +127,6 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
         // 获取当前进程的Application
         application = AndroidAppHelper.currentApplication()
-        AppCenter.start(
-            application, "1ddba47c-cfe2-406e-86a2-0e7fa94785a4",
-            Analytics::class.java, Crashes::class.java
-        )
 
         // 锁屏广播
         application.registerReceiver(LockChangeReceiver(), IntentFilter().apply {
@@ -149,7 +145,9 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         // 获取屏幕宽度
         val displayMetrics = DisplayMetrics()
         (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+        val display = (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val displayWidth: Int = displayMetrics.widthPixels
+        val displayHeight : Int = displayMetrics.heightPixels
 
         // 获取系统版本
         LogUtils.e("Android: " + Build.VERSION.SDK_INT)
@@ -165,7 +163,21 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 LogUtils.e(config.getHook() + " 反射失败: " + e + "\n" + Utils.dumpNoSuchFieldError(e))
             }
         } else {
-            val array = arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+            val apkInfo = IPackageUtils.getPackageInfoFromAllUsers("com.yeren.ZPTools", 0)
+            LogUtils.e("apkList: $apkInfo")
+            val array = if (apkInfo.isNotEmpty()) {
+                LogUtils.e("检测到 MiPure 官改")
+                if (Settings.System.getInt(application.contentResolver, "clock_style", 0) == 0) {
+                    LogUtils.e("mClockView start")
+                    arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                } else {
+                    LogUtils.e("mStatusClock start")
+                    arrayOf("mStatusClock", "mClockView", "mCenterClock", "mLeftClock", "mRightClock")
+                }
+            } else {
+                LogUtils.e("正常模式")
+                arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+            }
             for (field in array) {
                 try {
                     clockField = XposedHelpers.findField(param.thisObject.javaClass, field)
@@ -325,10 +337,11 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         string
                     )
                     // 自适应/歌词宽度
+                    val thisDisplay = if (display.rotation == Configuration.ORIENTATION_LANDSCAPE) displayHeight else displayWidth
                     if (config.getLyricWidth() == -1) {
                         val paint1: TextPaint = lyricTextView.paint // 获取字体
                         if (config.getLyricMaxWidth() == -1 || paint1.measureText(string)
-                                .toInt() + 6 <= (displayWidth * config.getLyricMaxWidth()) / 100
+                                .toInt() + 6 <= (thisDisplay * config.getLyricMaxWidth()) / 100
                         ) {
                             if (config.getPseudoTime()) {
                                 lyricTextView.width =
@@ -338,10 +351,10 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             }
 
                         } else {
-                            lyricTextView.width = (displayWidth * config.getLyricMaxWidth()) / 100
+                            lyricTextView.width = (thisDisplay * config.getLyricMaxWidth()) / 100
                         }
                     } else {
-                        lyricTextView.width = (displayWidth * config.getLyricWidth()) / 100
+                        lyricTextView.width = (thisDisplay * config.getLyricWidth()) / 100
                     }
                     // 歌词显示
                     if (showLyric) {
@@ -625,7 +638,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         }
     }
 
-    fun hook() {
+    override fun hook() {
         if (isHook) return else isHook = true
         // 使用系统方法反色
         LogUtils.e("使用系统反色: " + config.getUseSystemReverseColor().toString())
@@ -634,28 +647,19 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 val darkIconDispatcher =
                     "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
                 if (darkIconDispatcher != null) {
-                    var exactMethod: Method? = null
-                    val methods: Array<Method> = darkIconDispatcher.declaredMethods
-                    for (method in methods) {
-                        if (method.name.equals("getTint")) {
-                            exactMethod = method
-                            break
-                        }
-                    }
-                    if (exactMethod != null) {
-                        exactMethod.hookMethod(object : XC_MethodHook() {
-                            override fun afterHookedMethod(param: MethodHookParam) {
-                                try {
-                                    super.afterHookedMethod(param)
-                                    val areaTint = param.args[2] as Int
+                    val find = darkIconDispatcher.hookAllMethods("getTint", object : XC_MethodHook() {
+                        override fun afterHookedMethod(param: MethodHookParam) {
+                            try {
+                                super.afterHookedMethod(param)
+                                val areaTint = param.args[2] as Int
 
-                                    val color = ColorStateList.valueOf(areaTint)
-                                    iconView.imageTintList = color
-                                    lyricTextView.setTextColor(areaTint)
-                                } catch (_: UninitializedPropertyAccessException) {
-                                }
-                            }
-                        })
+                                val color = ColorStateList.valueOf(areaTint)
+                                iconView.imageTintList = color
+                                lyricTextView.setTextColor(areaTint)
+                            } catch (_: Throwable) {}
+                        }
+                    })
+                    if (find.isNotEmpty()) {
                         LogUtils.e("查找反色方法成功!")
                     } else {
                         LogUtils.e("查找反色方法失败!")
@@ -663,10 +667,8 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 } else {
                     LogUtils.e("系统方法反色获取失败")
                 }
-            } catch (e: Exception) {
-                LogUtils.e("系统反色出现错误: " + Utils.dumpException(e))
-            } catch (e: Error) {
-                LogUtils.e("系统反色出现错误: " + e.message)
+            } catch (e: Throwable) {
+                LogUtils.e("系统反色出现错误: " + Log.getStackTraceString(e))
             }
         }
 
@@ -686,7 +688,17 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 Bundle::class.java,
                 classLoader = lpparam.classLoader,
                 hooker = lyricAfterMethodHook
-            )
+            ).isNull {
+                "com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment".hookAfterMethod(
+                    "onViewCreated",
+                    View::class.java,
+                    Bundle::class.java,
+                    classLoader = lpparam.classLoader,
+                    hooker = lyricAfterMethodHook
+                ).isNull {
+                    LogUtils.e("不支持的rom请打包日志和系统界面发给作者!!")
+                }
+            }
         }
     }
 

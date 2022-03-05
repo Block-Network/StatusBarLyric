@@ -31,7 +31,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Clone UI
-        run: git clone https://github.com/577fkj/blockmiui.git
+        run: |
+          cd blockmiui
+          git submodule init
+          git submodule update
 
       - name: Build with Gradle
         run: |
