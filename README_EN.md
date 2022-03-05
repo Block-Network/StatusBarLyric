@@ -46,7 +46,7 @@
 ### contact us
 
 - [QQ Group](https://jq.qq.com/?_wv=1027&amp;k=KQeQjgsv)
-- [Telegram](https://t.me/MIUIStatusBatLyric)
+- [Telegram](https://t.me/StatusBatLyric)
 - [CoolAPK](https://www.coolapk.com/apk/cn.fkj233.xposed.statusbarlyric)
 - [BUG feedback (Github)](https://github.com/577fkj/StatusBarLyric/issues/new)
 
