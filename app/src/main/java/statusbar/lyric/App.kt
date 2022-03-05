@@ -26,8 +26,5 @@ class App: Application() {
             it.rewardedAdConfig = RewardedAdConfig("ca-app-pub-9730534578915916/4576531490")
         }
         admobManager = AdmobManager(this, adConfig)
-        admobManager.preloadRewardedAds(5) { callback ->
-            Log.d("StatusbarLyric-Ad", "${callback.result}: ${callback.any}")
-        }
     }
 }
