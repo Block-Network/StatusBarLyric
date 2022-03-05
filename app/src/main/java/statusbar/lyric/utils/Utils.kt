@@ -48,7 +48,7 @@ import java.util.*
 
 @SuppressLint("StaticFieldLeak")
 object Utils {
-    val appCenterKey = "ec91e89c-17d8-408b-a295-c6bf845b9f53"
+    val appCenterKey = "aa0a0b32-8d8d-43ca-8956-947e1ed8294d"
 
     private val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
     private val packNameToIconName = HashMap<String, String>().apply {
