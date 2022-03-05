@@ -40,16 +40,17 @@ import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.MIUIPopupData
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.dialog.MIUIDialog
-import com.google.android.gms.ads.AdSize
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.AbstractCrashesListener
 import com.microsoft.appcenter.crashes.Crashes
 import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog
 import com.microsoft.appcenter.crashes.model.ErrorReport
-import ice.library.ads.AdsManager
-import ice.library.ads.LoadAdResults
-import ice.library.ads.RewardAdResults
+import ice.lib.ads.admob.AdmobManager
+import ice.lib.ads.admob.BannerAdConfig
+import ice.lib.ads.admob.result.RewardedAdShowResult
+import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
+import statusbar.lyric.App
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
@@ -95,13 +96,6 @@ class SettingsActivity : MIUIActivity() {
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
         if (isLoad && !isRegister) {
-            AdsManager.instance.requestLoadRewardAd { results: LoadAdResults, any: Any? ->
-                when (results) {
-                    LoadAdResults.AdLoaded -> Log.d("StatusbarLyric-Ad", "Reward ad loaded")
-                    LoadAdResults.AdFailedToLoad -> Log.d("StatusbarLyric-Ad", "Reward failed to load: $any")
-                }
-            }
-
             registerReceiver(AppReceiver(), IntentFilter().apply {
                 addAction("App_Server")
             })
@@ -177,14 +171,17 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(
                     textId = R.string.showAd,
                     onClickListener = {
-                        AdsManager.instance.showRewardAd(activity) { rewardAdResults: RewardAdResults, any ->
-                            when (rewardAdResults) {
-                                RewardAdResults.AdEarnedReward -> Log.d("StatusbarLyric-Ad", "Reward ad earned reward")
-                                RewardAdResults.AdNotLoad -> Log.d("StatusbarLyric-Ad", "Reward ad not load")
-                                RewardAdResults.AdClicked -> Log.d("StatusbarLyric-Ad", "Reward ad clicked")
-                                RewardAdResults.AdDismissed -> Log.d("StatusbarLyric-Ad", "Reward ad dismissed")
-                                RewardAdResults.AdFailedToShow -> Log.d("StatusbarLyric-Ad", "Reward ad failed to show: $any")
-                                RewardAdResults.AdShowed -> Log.d("StatusbarLyric-Ad", "Reward ad showed")
+                        App.admobManager.showRewardAds(activity, true) { callback: RewardedAdShowResult ->
+                            when (callback.result) {
+                                RewardedShowEnum.Null -> {}
+                                RewardedShowEnum.OnClicked -> {}
+                                RewardedShowEnum.OnDismissed -> {}
+                                RewardedShowEnum.OnEarnedReward -> {}
+                                RewardedShowEnum.OnFailedToShow -> {}
+                                RewardedShowEnum.OnShowed -> {}
+                                RewardedShowEnum.ImmediatelyLoaded -> {}
+                                RewardedShowEnum.ImmediatelyLoadFailed -> {}
+                                else -> {}
                             }
                         }
                     }
@@ -193,7 +190,7 @@ class SettingsActivity : MIUIActivity() {
                     textId = R.string.AboutModule,
                     onClickListener = { showFragment("about") }
                 ))
-                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
+                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
                 Text()
             }
             registerMenu(getString(R.string.Menu)) {
@@ -263,7 +260,7 @@ class SettingsActivity : MIUIActivity() {
                 Line()
                 TitleText("Module Version")
                 Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
-                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
+                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
             }
 
             register("custom", getString(R.string.Custom)) {
@@ -601,7 +598,7 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment("icon")
                 }))
-                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
+                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
                 Text()
             }
 
@@ -621,7 +618,7 @@ class SettingsActivity : MIUIActivity() {
                         }.show()
                     })
                 }
-                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
+                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
                 Text()
             }
 
@@ -764,7 +761,7 @@ class SettingsActivity : MIUIActivity() {
                         )
                     }
                 ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!))
-                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
+                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
                 Text()
             }
 
@@ -815,7 +812,7 @@ class SettingsActivity : MIUIActivity() {
                         "https://fkj2005.gitee.io/merger/"
                     )
                 }))
-                CustomView(AdsManager.instance.getBannerAd(AdSize.BANNER))
+                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
                 Text()
             }
         }
