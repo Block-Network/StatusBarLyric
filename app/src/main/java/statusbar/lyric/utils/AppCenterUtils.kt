@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package statusbar.lyric.utils
 
 import android.app.Application
@@ -19,7 +21,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.utils.ktx.hookAfterMethod
 import statusbar.lyric.utils.ktx.hookAllMethods
-import statusbar.lyric.utils.ktx.setReturnConstant
 
 class AppCenterUtils(appCenterKey: String, val lpparam: XC_LoadPackage.LoadPackageParam) {
     lateinit var application: Application
@@ -30,7 +31,7 @@ class AppCenterUtils(appCenterKey: String, val lpparam: XC_LoadPackage.LoadPacka
     init {
         LogUtils.e("Hook App center")
 
-        DeviceInfoHelper::class.java.hookAllMethods("getDeviceInfo", hooker = object: XC_MethodHook() {
+        DeviceInfoHelper::class.java.hookAllMethods("getDeviceInfo", hooker = object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {
                 val device: Device? = param.result as Device?
                 device?.let {
@@ -50,7 +51,8 @@ class AppCenterUtils(appCenterKey: String, val lpparam: XC_LoadPackage.LoadPacka
                 val hostSdk = WrapperSdk()
                 hostSdk.wrapperSdkName = it.packageName
                 hostSdk.wrapperSdkVersion = it.versionName
-                hostSdk.wrapperRuntimeVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode.toString() else it.versionCode.toString()
+                hostSdk.wrapperRuntimeVersion =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode.toString() else it.versionCode.toString()
                 AppCenter.setWrapperSdk(hostSdk)
             }
             Crashes.setListener(CrashesFilter())
@@ -58,7 +60,12 @@ class AppCenterUtils(appCenterKey: String, val lpparam: XC_LoadPackage.LoadPacka
                 application, appCenterKey,
                 Analytics::class.java, Crashes::class.java
             )
-            Analytics.trackEvent(lpparam.packageName + " | " + application.packageManager.getPackageInfo(lpparam.packageName, 0).versionName)
+            Analytics.trackEvent(
+                lpparam.packageName + " | " + application.packageManager.getPackageInfo(
+                    lpparam.packageName,
+                    0
+                ).versionName
+            )
         }
     }
 
@@ -94,8 +101,12 @@ class AppCenterUtils(appCenterKey: String, val lpparam: XC_LoadPackage.LoadPacka
 
         override fun getErrorAttachments(report: ErrorReport): MutableIterable<ErrorAttachmentLog> {
             val targetPackageInfo = getTargetPackageInfo(application)
-            val info = if (targetPackageInfo == null) "null" else "StatusbarLyric: ${targetPackageInfo.packageName} - ${targetPackageInfo.versionName}"
-            val textLog = ErrorAttachmentLog.attachmentWithText("$info\nModule: ${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}", "debug.txt")
+            val info =
+                if (targetPackageInfo == null) "null" else "StatusbarLyric: ${targetPackageInfo.packageName} - ${targetPackageInfo.versionName}"
+            val textLog = ErrorAttachmentLog.attachmentWithText(
+                "$info\nModule: ${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}",
+                "debug.txt"
+            )
             return mutableListOf(textLog)
         }
 

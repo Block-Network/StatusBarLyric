@@ -52,11 +52,8 @@ object Utils {
     private val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
     private val packNameToIconName = HashMap<String, String>().apply {
         put("com.netease.cloudmusic", "Netease")
-        put("com.kugou", "KuGou")
         put("com.tencent.qqmusic", "QQMusic")
-        put("remix.myplayer", "Myplayer")
         put("cmccwm.mobilemusic", "MiGu")
-        put("cn.kuwo", "KuWo")
     }
 
     @JvmStatic
