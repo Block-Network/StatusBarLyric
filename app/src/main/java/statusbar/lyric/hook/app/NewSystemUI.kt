@@ -26,6 +26,7 @@ package statusbar.lyric.hook.app
 
 import statusbar.lyric.utils.XposedOwnSP.config
 import statusbar.lyric.utils.XposedOwnSP.iconConfig
+import statusbar.lyric.utils.FileUtils
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
@@ -57,7 +58,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.utils.IPackageUtils
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
-import statusbar.lyric.utils.XposedOwnSP
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricTextSwitchView
 import java.io.File
@@ -340,7 +340,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         config.update()
         iconConfig.update()
         var mLyric = ""
-        var mIcon: String
+        val mIcon: String
 //        更新歌词
         if (lyric == "refresh") {
             mLyric = ""
@@ -652,7 +652,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         if (file.exists()) {
                             file.delete()
                         }
-                        val error = Utils.copyFile(File(path), application.filesDir.path, "font")
+                        val error = FileUtils(application).copyFile(File(path), application.filesDir.path, "font")
                         if (error.isEmpty()) {
                             lyricTextView.setTypeface(
                                 Typeface.createFromFile(application.filesDir.path + "/font")

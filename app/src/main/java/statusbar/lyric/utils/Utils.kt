@@ -42,13 +42,12 @@ import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.Config
 import java.io.*
-import java.nio.channels.FileChannel
 import java.util.*
 
 
 @SuppressLint("StaticFieldLeak")
 object Utils {
-    val appCenterKey = "aa0a0b32-8d8d-43ca-8956-947e1ed8294d"
+    const val appCenterKey = "aa0a0b32-8d8d-43ca-8956-947e1ed8294d"
 
     private val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
     private val packNameToIconName = HashMap<String, String>().apply {
@@ -281,50 +280,29 @@ object Utils {
     }
 
     /**
-     * 根据文件路径拷贝文件
-     * @param src 源文件
-     * @param destPath 目标文件路径
-     * @return boolean 成功true、失败false
-     */
-    fun copyFile(src: File?, destPath: String?, destFileName: String): String {
-        if (src == null || destPath == null) {
-            return "Param error"
-        }
-        val dest = File(destPath, destFileName)
-        if (dest.exists()) {
-            if (!dest.delete()) {
-                return "Delete file fail"
-            }
-        }
-        try {
-            if (!dest.createNewFile()) {
-                return "Create file fail"
-            }
-        } catch (e: IOException) {
-            return dumpIOException(e)
-        }
-        try {
-            val srcChannel = FileInputStream(src).channel
-            val dstChannel = FileOutputStream(dest).channel
-            srcChannel.transferTo(0, srcChannel.size(), dstChannel)
-            try {
-                srcChannel.close()
-                dstChannel.close()
-            } catch (e: IOException) {
-                return dumpIOException(e)
-            }
-        } catch (e: IOException) {
-            return dumpIOException(e)
-        }
-        return ""
-    }
-
-    /**
      * dp2px
      */
     @JvmStatic
     fun dp2px(context: Context, dpValue: Float): Int {
         val scale = context.resources.displayMetrics.density
         return (dpValue * scale + 0.5f).toInt()
+    }
+
+    @JvmStatic
+    fun voidShell(command: String, isSu: Boolean) {
+        try {
+            if (isSu) {
+                val p = Runtime.getRuntime().exec("su")
+                val outputStream = p.outputStream
+                val dataOutputStream = DataOutputStream(outputStream)
+                dataOutputStream.writeBytes(command)
+                dataOutputStream.flush()
+                dataOutputStream.close()
+                outputStream.close()
+            } else {
+                Runtime.getRuntime().exec(command)
+            }
+        } catch (ignored: Throwable) {
+        }
     }
 }

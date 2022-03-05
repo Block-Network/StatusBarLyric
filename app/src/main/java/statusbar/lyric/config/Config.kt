@@ -98,7 +98,7 @@ class Config {
     }
 
     fun getIconHigh(): Int {
-        return config.optInt("IHigh", 3)
+        return config.optInt("IHigh", -1)
     }
 
     fun setIconHigh(i: Int) {

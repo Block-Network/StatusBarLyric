@@ -61,6 +61,7 @@ import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.XposedOwnSP.config
 import statusbar.lyric.utils.XposedOwnSP.iconConfig
+import statusbar.lyric.utils.FileUtils
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricTextSwitchView
 import java.io.File
@@ -830,7 +831,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(l
                         if (file.exists()) {
                             file.delete()
                         }
-                        val error = Utils.copyFile(File(path), application.filesDir.path, "font")
+                        val error = FileUtils(application).copyFile(File(path), application.filesDir.path, "font")
                         if (error.isEmpty()) {
                             lyricTextView.setTypeface(
                                 Typeface.createFromFile(application.filesDir.path + "/font")

@@ -33,10 +33,54 @@ import android.os.Environment
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 
 class FileUtils(private val context: Context) {
+    /**
+     * 根据文件路径拷贝文件
+     * @param src 源文件
+     * @param destPath 目标文件路径
+     * @return boolean 成功true、失败false
+     */
+    fun copyFile(src: File?, destPath: String?, destFileName: String): String {
+        if (src == null || destPath == null) {
+            return "Param error"
+        }
+        val dest = File(destPath, destFileName)
+        if (dest.exists()) {
+            if (!dest.delete()) {
+                return "Delete file fail"
+            }
+        }
+        try {
+            if (!dest.createNewFile()) {
+                return "Create file fail"
+            }
+        } catch (e: IOException) {
+            return Utils.dumpIOException(e)
+        }
+        try {
+            val srcChannel = FileInputStream(src).channel
+            val dstChannel = FileOutputStream(dest).channel
+            srcChannel.transferTo(0, srcChannel.size(), dstChannel)
+            try {
+                srcChannel.close()
+                dstChannel.close()
+            } catch (e: IOException) {
+                return Utils.dumpIOException(e)
+            }
+        } catch (e: IOException) {
+            return Utils.dumpIOException(e)
+        }
+        return ""
+    }
+
+
     fun getFilePathByUri(uri: Uri): String? {
         // 以 file:// 开头的
         if (ContentResolver.SCHEME_FILE == uri.scheme) {
