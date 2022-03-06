@@ -198,6 +198,7 @@ class SettingsActivity : MIUIActivity() {
                     })
                 )
                 TextWithSwitch(TextV(resId = R.string.DebugMode), SwitchV("Debug"))
+                TextWithSwitch(TextV(text = "App Center"), SwitchV("CloseAppCenter", true))
                 TextSummaryArrow(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.ResetModuleDialog)
@@ -567,6 +568,31 @@ class SettingsActivity : MIUIActivity() {
                 Line()
                 TitleText(resId = R.string.IconSettings)
                 TextWithSwitch(TextV(resId = R.string.LyricIcon), SwitchV("I", true))
+                TextSummaryArrow(TextSummaryV(textId = R.string.IconColor, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.IconColor)
+                        setMessage(R.string.LyricColorTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getIconColor(), "#FFFFFF")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isEmpty()) {
+                                ActivityOwnSP.ownSPConfig.setIconColor("")
+                            } else {
+                                try {
+                                    Color.parseColor(getEditText())
+                                    ActivityOwnSP.ownSPConfig.setIconColor(getEditText())
+                                } catch (e: Throwable) {
+                                    ActivityUtils.showToastOnLooper(
+                                        activity,
+                                        getString(R.string.LyricColorError)
+                                    )
+                                    ActivityOwnSP.ownSPConfig.setIconColor("")
+                                }
+                            }
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                }))
                 Text(resId = R.string.IconSize, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.IconSize)
@@ -920,7 +946,6 @@ class SettingsActivity : MIUIActivity() {
 
             register("close", getString(R.string.About)) {
                 TextWithSwitch(TextV(text = "AD"), SwitchV("CloseAd", true))
-                TextWithSwitch(TextV(text = "App Center"), SwitchV("CloseAppCenter", true))
             }
         }
     }

@@ -24,9 +24,6 @@
 
 package statusbar.lyric.hook.app
 
-import statusbar.lyric.utils.XposedOwnSP.config
-import statusbar.lyric.utils.XposedOwnSP.iconConfig
-import statusbar.lyric.utils.FileUtils
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
@@ -39,6 +36,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
@@ -55,9 +53,12 @@ import android.widget.*
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import statusbar.lyric.utils.FileUtils
 import statusbar.lyric.utils.IPackageUtils
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
+import statusbar.lyric.utils.XposedOwnSP.config
+import statusbar.lyric.utils.XposedOwnSP.iconConfig
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricTextSwitchView
 import java.io.File
@@ -77,18 +78,20 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
     private var useSystemMusicActive: Boolean = false
     lateinit var clockView: TextView
     lateinit var lyricIconView: ImageView
-    lateinit var lyricLayout: LinearLayout
+    private lateinit var lyricLayout: LinearLayout
     lateinit var lyricTextView: LyricTextSwitchView
-    lateinit var iconParams: LinearLayout.LayoutParams
-    lateinit var lyricParams: LinearLayout.LayoutParams
-    var mLyricText: String = ""
-    var mLyricIcon: String = ""
-    var mLyricOldIcon: String = ""
-    var mLyricOldAnim: String = "off"
-    var mLyricFontWeight = 0
-    var mLyricFontSize = 0
-    var mLyricSpacing = 0
-    var mLyricSpeed = 100
+    private lateinit var iconParams: LinearLayout.LayoutParams
+    private lateinit var lyricParams: LinearLayout.LayoutParams
+    private var mLyricText: String = ""
+    private var mLyricIcon: String = ""
+    private var mLyricOldIcon: String = ""
+    private var mLyricOldAnim: String = "off"
+    var lyricColor: Int = 0
+    var iconColor: Int = 0
+    private var mLyricFontWeight = 0
+    private var mLyricFontSize = 0
+    private var mLyricSpacing = 0
+    private var mLyricSpeed = 100
     private var audioManager: AudioManager? = null
     var musicServer: Array<String?> = arrayOf(
         "com.kugou",
@@ -115,7 +118,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
 
             // 使用系统方法反色
             LogUtils.e("使用系统反色: ${config.getUseSystemReverseColor()}")
-            if (config.getUseSystemReverseColor() && config.getLyricColor().isEmpty()) {
+            if (config.getUseSystemReverseColor()) {
                 try {
                     val darkIconDispatcher =
                         "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
@@ -125,12 +128,31 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                                 try {
                                     super.afterHookedMethod(param)
                                     val areaTint = param.args[2] as Int
-
-                                    val color = ColorStateList.valueOf(areaTint)
-                                    lyricIconView.imageTintList = color
-                                    lyricTextView.setTextColor(areaTint)
+                                    if (config.getLyricColor().isEmpty()) {
+                                        if (lyricColor != areaTint) {
+                                            lyricColor = areaTint
+                                            lyricTextView.setTextColor(areaTint)
+                                        }
+                                    } else {
+                                        if (lyricColor != Color.parseColor(config.getLyricColor())) {
+                                            lyricColor = Color.parseColor(config.getLyricColor())
+                                            lyricTextView.setTextColor(Color.parseColor(config.getLyricColor()))
+                                        }
+                                    }
+                                    if (config.getIconColor().isEmpty()) {
+                                        if (iconColor != areaTint) {
+                                            iconColor = areaTint
+                                            lyricIconView.imageTintList = ColorStateList.valueOf(areaTint)
+                                        }
+                                    } else {
+                                        if (iconColor != Color.parseColor(config.getIconColor())) {
+                                            iconColor = Color.parseColor(config.getIconColor())
+                                            val color = ColorStateList.valueOf(Color.parseColor(config.getIconColor()))
+                                            lyricIconView.imageTintList = color
+                                        }
+                                    }
                                 } catch (e: Throwable) {
-                                    LogUtils.e("系统反色出现错误: ${Log.getStackTraceString(e)}")
+                                    LogUtils.e("反色出现错误: ${Log.getStackTraceString(e)}")
                                 }
                             }
                         })
@@ -333,6 +355,45 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             }, 0, config.getLyricAutoOffTime().toLong()
         )
 
+        Timer().schedule(
+            object : TimerTask() {
+                var color = 0
+
+                override fun run() {
+                    try {
+                        if (showLyricTest || !showLyric) {
+                            return
+                        }
+
+                        // 设置颜色
+                        if (!config.getUseSystemReverseColor()) {
+                            if (config.getLyricColor().isEmpty()) {
+                                    lyricTextView.setTextColor(color)
+                            } else {
+                                if (lyricColor != Color.parseColor(config.getLyricColor())) {
+                                    lyricColor = Color.parseColor(config.getLyricColor())
+                                    lyricTextView.setTextColor(Color.parseColor(config.getLyricColor()))
+                                }
+                            }
+                            if (config.getIconColor().isEmpty()) {
+                                    lyricIconView.imageTintList = ColorStateList.valueOf(color)
+
+                            } else {
+                                if (iconColor != Color.parseColor(config.getIconColor())) {
+                                    iconColor = Color.parseColor(config.getIconColor())
+                                    val color = ColorStateList.valueOf(Color.parseColor(config.getIconColor()))
+                                    lyricIconView.imageTintList = color
+                                }
+
+                            }
+                        }
+
+                    } catch (e: Exception) {
+                        LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
+                    }
+                }
+            }, 0, config.getReverseColorTime().toLong()
+        )
     }
 
     private fun updateLyric(lyric: String?, icon: String) {
@@ -390,7 +451,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     val paint = lyricTextView.paint
                     paint.style = Paint.Style.FILL_AND_STROKE
                     paint.strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
-                }else {
+                } else {
                     mLyricFontWeight = 0
                     val paint = lyricTextView.paint
                     paint.style = Paint.Style.FILL_AND_STROKE

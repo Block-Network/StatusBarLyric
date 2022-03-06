@@ -10,6 +10,7 @@
     <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
     <string name="LyricsAnimation">Lyrics animation</string>
     <string name="LyricColor">* Lyric color</string>
+    <string name="IconColor">* Icon color</string>
     <string name="LyricIcon">Lyrcs icon</string>
     <string name="LyricSpeed">Lyrics scroll speed</string>
     <string name="AdvancedSettings">Advanced settings</string>

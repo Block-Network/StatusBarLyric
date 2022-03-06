@@ -121,6 +121,14 @@ class Config {
         config.put("LColor", str)
     }
 
+    fun getIconColor(): String {
+        return config.optString("IColor", "")
+    }
+
+    fun setIconColor(str: String) {
+        config.put("IColor", str)
+    }
+
     fun getPseudoTimeStyle(): String {
         return config.optString("PseudoTimeStyle", "HH:mm")
     }
@@ -148,7 +156,8 @@ class Config {
     fun getDebug(): Boolean {
         return config.optBoolean("Debug", false)
     }
-    fun setDebug(b:Boolean) {
+
+    fun setDebug(b: Boolean) {
         return config.put("Debug", b)
     }
 
@@ -235,6 +244,7 @@ class Config {
     fun setReverseColorTime(i: Int) {
         config.put("ReverseColorTime", i)
     }
+
     fun getLyricAutoOffTime(): Int {
         return config.optInt("LyricAutoOffTime", 1000)
     }
@@ -242,6 +252,7 @@ class Config {
     fun setLyricAutoOffTime(i: Int) {
         config.put("LyricAutoOffTime", i)
     }
+
     fun getAntiBurnTime(): Int {
         return config.optInt("AntiBurnTime", 60000)
     }
@@ -249,12 +260,13 @@ class Config {
     fun setAntiBurnTime(i: Int) {
         config.put("AntiBurnTime", i)
     }
-    fun getAd():Boolean{
-        return config.optBoolean("CloseAd",true)
+
+    fun getAd(): Boolean {
+        return config.optBoolean("CloseAd", true)
     }
 
-    fun getAppCenter():Boolean{
-        return config.optBoolean("CloseAppCenter",true)
+    fun getAppCenter(): Boolean {
+        return config.optBoolean("CloseAppCenter", true)
     }
 
     fun clear() {
