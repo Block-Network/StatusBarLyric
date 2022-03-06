@@ -155,4 +155,6 @@
     <string name="AntiBurnTimeTips">1–3600000（單位：毫秒）</string>
     <string name="SongPauseCloseLyricsTime">歌曲暫停關閉歌詞時間</string>
     <string name="showAd">觀看廣告來支持作者</string>
+    <string name="MakeIcon">製作圖標</string>
+    <string name="MakeIconError">無法跳轉，請檢查是否安裝\n爱玩机工具箱</string>
 </resources>

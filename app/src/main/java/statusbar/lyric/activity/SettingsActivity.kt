@@ -145,7 +145,7 @@ class SettingsActivity : MIUIActivity() {
                             ActivityUtils.checkUpdate(activity)
                         })
                 )
-                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                if (ActivityOwnSP.ownSPConfig.getAd()) {
                     TextSummaryArrow(TextSummaryV(
                         textId = R.string.showAd,
                         onClickListener = { // TODO 定位
@@ -169,7 +169,7 @@ class SettingsActivity : MIUIActivity() {
                     textId = R.string.AboutModule,
                     onClickListener = { showFragment("about") }
                 ))
-                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                if (ActivityOwnSP.ownSPConfig.getAd()) {
                     CustomView(
                         AdmobManager.getBannerAd(
                             activity,
@@ -247,7 +247,7 @@ class SettingsActivity : MIUIActivity() {
                 Line()
                 TitleText("Module Version")
                 Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
-                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                if (ActivityOwnSP.ownSPConfig.getAd()) {
                     CustomView(
                         AdmobManager.getBannerAd(
                             activity,
@@ -619,7 +619,7 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment("icon")
                 }))
-                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                if (ActivityOwnSP.ownSPConfig.getAd()) {
                     CustomView(
                         AdmobManager.getBannerAd(
                             activity,
@@ -650,7 +650,23 @@ class SettingsActivity : MIUIActivity() {
                             }.show()
                         })
                 }
-                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                TextSummaryArrow(TextSummaryV(textId = R.string.MakeIcon, onClickListener = {
+                    val componentName =
+                        ComponentName(
+                            "com.byyoung.setting",
+                            "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity"
+                        )
+                    val intent = Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity")
+                    intent.putExtra("PackageName", componentName.packageName)
+                    intent.putExtra("PackageClass", componentName.className)
+                    try {
+                        activity.startActivity(intent)
+                    } catch (_: Exception) {
+                        ActivityUtils.showToastOnLooper(activity,getString(R.string.MakeIconError))
+                    }
+                }))
+
+                if (ActivityOwnSP.ownSPConfig.getAd()) {
                     CustomView(
                         AdmobManager.getBannerAd(
                             activity,
@@ -827,7 +843,7 @@ class SettingsActivity : MIUIActivity() {
                         )
                     }
                 ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!))
-                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                if (ActivityOwnSP.ownSPConfig.getAd()) {
                     CustomView(
                         AdmobManager.getBannerAd(
                             activity,
@@ -889,7 +905,7 @@ class SettingsActivity : MIUIActivity() {
                         "https://fkj2005.gitee.io/merger/"
                     )
                 }))
-                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                if (ActivityOwnSP.ownSPConfig.getAd()) {
                     CustomView(
                         AdmobManager.getBannerAd(
                             activity,

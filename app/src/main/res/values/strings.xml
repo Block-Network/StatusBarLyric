@@ -169,4 +169,7 @@
     <string name="AntiBurnTimeTips">1–3600000 (unit: milliseconds)</string>
     <string name="SongPauseCloseLyricsTime">Song pause close Lyrics time</string>
     <string name="showAd">Watch advertisements</string>
+    <string name="MakeIcon">Make Icon</string>
+    <string name="MakeIconError">Can\'t jump，Please check if it is installed\n爱玩机工具箱</string>
+
 </resources>
