@@ -48,6 +48,7 @@ import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog
 import com.microsoft.appcenter.crashes.model.ErrorReport
 import ice.lib.ads.admob.AdmobManager
 import ice.lib.ads.admob.BannerAdConfig
+import ice.lib.ads.admob.result.RewardedAdLoadResult
 import ice.lib.ads.admob.result.RewardedAdShowResult
 import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
 import statusbar.lyric.App
@@ -61,12 +62,21 @@ import kotlin.system.exitProcess
 class SettingsActivity : MIUIActivity() {
     private val activity = this
     private var isRegister = false
+    private var adFlag = 0
 
     companion object {
         const val OPEN_FONT_FILE = 2114745
     }
 
     init {
+        val adBinding = getDataBinding("AdBinding") { view: View, i: Int, any: Any ->
+            if (i == 1 && any == -1) view.visibility = View.GONE
+        }
+        App.admobManager.preloadRewardedAds(5) { callback ->
+            Log.d("StatusbarLyric-Ad", "${callback.result}: ${callback.any}")
+            if (callback.result == RewardedAdLoadResult.Enum.Failure) { adFlag++ }
+            if (adFlag > 1) adBinding.bindingSend.send(-1)
+        }
 //        viewInit()
         initView {
             registerMain(getString(R.string.AppName)) {
@@ -135,7 +145,7 @@ class SettingsActivity : MIUIActivity() {
                 )
                 TextSummaryArrow(TextSummaryV(
                     textId = R.string.showAd,
-                    onClickListener = {
+                    onClickListener = { // TODO 定位
                         App.admobManager.showRewardAds(activity, true) { callback: RewardedAdShowResult ->
                             when (callback.result) {
                                 RewardedShowEnum.Null -> {}
@@ -150,7 +160,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                         }
                     }
-                ))
+                ), dataBindingRecv = adBinding.binding.Recv(1))
                 TextSummaryArrow(TextSummaryV(
                     textId = R.string.AboutModule,
                     onClickListener = { showFragment("about") }
