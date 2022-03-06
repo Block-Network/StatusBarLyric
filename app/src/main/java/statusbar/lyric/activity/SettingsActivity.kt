@@ -70,7 +70,9 @@ class SettingsActivity : MIUIActivity() {
 
     init {
         val adBinding = getDataBinding("AdBinding") { view: View, i: Int, any: Any ->
-            if (i == 1 && any == -1) view.visibility = View.GONE
+            if (i == 1 && any == -1) {
+                view.visibility = View.GONE
+            }
         }
         App.admobManager.preloadRewardedAds(5) { callback ->
             Log.d("StatusbarLyric-Ad", "${callback.result}: ${callback.any}")
@@ -427,7 +429,7 @@ class SettingsActivity : MIUIActivity() {
                 Text(resId = R.string.FontWeight, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.FontWeight)
-                        setEditText(ActivityOwnSP.ownSPConfig.getLyricFontWeight().toString(), "1")
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricFontWeight().toString(), "0")
                         setRButton(R.string.Ok) {
                             if (getEditText().isEmpty()) {
                                 ActivityOwnSP.ownSPConfig.setLyricFontWeight(0)
@@ -455,7 +457,7 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 })
-                SeekBarWithText("LSpacing", 0, 100)
+                SeekBarWithText("LSpacing", 0, 200)
                 val dict: HashMap<String, String> = hashMapOf()
                 dict["off"] = getString(R.string.Off)
                 dict["top"] = getString(R.string.top)

@@ -42,7 +42,7 @@ class MainHook : IXposedHookLoadPackage {
         when (lpparam.packageName) {
             "com.android.systemui" -> {
                 LogUtils.e("正在hook系统界面")
-                SystemUI(lpparam).hook()
+                NewSystemUI(lpparam).hook()
                 LogUtils.e("hook系统界面结束")
             }
             "com.netease.cloudmusic" -> {
@@ -83,11 +83,15 @@ class MainHook : IXposedHookLoadPackage {
                 LogUtils.e("Hook 小米音乐结束")
             }
             "com.meizu.media.music" -> {
+                LogUtils.e("正在Hook 魅族音乐")
                 MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
                 AppCenterUtils(Utils.appCenterKey, lpparam)
+                LogUtils.e("Hook 魅族音乐结束")
             }
             else -> {
+                LogUtils.e("正在Hook ${lpparam.processName}")
                 Api(lpparam).hook()
+                LogUtils.e("Hook ${lpparam.processName}结束")
             }
         }
     }

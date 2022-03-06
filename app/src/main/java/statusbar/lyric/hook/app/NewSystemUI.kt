@@ -114,7 +114,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             }
 
             // 使用系统方法反色
-            LogUtils.e("使用系统反色: " + config.getUseSystemReverseColor().toString())
+            LogUtils.e("使用系统反色: ${config.getUseSystemReverseColor()}")
             if (config.getUseSystemReverseColor() && config.getLyricColor().isEmpty()) {
                 try {
                     val darkIconDispatcher =
@@ -130,7 +130,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                                     lyricIconView.imageTintList = color
                                     lyricTextView.setTextColor(areaTint)
                                 } catch (e: Throwable) {
-                                    LogUtils.e("系统反色出现错误: " + Log.getStackTraceString(e))
+                                    LogUtils.e("系统反色出现错误: ${Log.getStackTraceString(e)}")
                                 }
                             }
                         })
@@ -143,7 +143,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         LogUtils.e("系统方法反色获取失败")
                     }
                 } catch (e: Throwable) {
-                    LogUtils.e("系统反色出现错误: " + Log.getStackTraceString(e))
+                    LogUtils.e("系统反色出现错误: ${Log.getStackTraceString(e)}")
                 }
             }
 
@@ -193,16 +193,16 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         displayWidth = application.resources.displayMetrics.widthPixels
         displayHeight = application.resources.displayMetrics.widthPixels
         // 获取系统版本
-        LogUtils.e("Android SDK: " + Build.VERSION.SDK_INT)
+        LogUtils.e("Android SDK: ${Build.VERSION.SDK_INT}")
         // 反射获取时钟
         var hookOk = false
         if (config.getHook().isNotEmpty()) {
-            LogUtils.e("自定义Hook点: " + config.getHook())
+            LogUtils.e("自定义Hook点: ${config.getHook()}")
             try {
                 clockField = XposedHelpers.findField(param.thisObject.javaClass, config.getHook())
                 hookOk = true
             } catch (e: NoSuchFieldError) {
-                LogUtils.e(config.getHook() + " 反射失败: " + e + "\n" + Utils.dumpNoSuchFieldError(e))
+                LogUtils.e("${config.getHook()} 反射失败: $e\n${Utils.dumpNoSuchFieldError(e)}")
             }
         } else {
             val apkInfo = IPackageUtils.getPackageInfoFromAllUsers("com.yeren.ZPTools", 0)
@@ -227,7 +227,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     hookOk = true
                     break
                 } catch (e: NoSuchFieldError) {
-                    LogUtils.e("尝试 $field 反射失败: $e\n" + Utils.dumpNoSuchFieldError(e))
+                    LogUtils.e("尝试 $field 反射失败: $e\n${Utils.dumpNoSuchFieldError(e)}")
                 }
             }
         }
@@ -248,10 +248,10 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         lyricTextView = LyricTextSwitchView(application, config.getLyricStyle())
         lyricTextView.setMargins(10, 0, 0, 0)
         lyricTextView.setSingleLine(true)
-        val file = File(application.filesDir.path + "/font")
+        val file = File("${application.filesDir.path}/font")
         if (file.exists() || file.isFile || file.canRead()) {
             lyricTextView.setTypeface(
-                Typeface.createFromFile(application.filesDir.path + "/font")
+                Typeface.createFromFile("${application.filesDir.path}/font")
             )
             LogUtils.e("加载个性化字体")
         } else {
@@ -327,7 +327,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             offLyric("开关关闭")
                         }
                     } catch (e: Exception) {
-                        LogUtils.e("出现错误! $e\n" + Utils.dumpException(e))
+                        LogUtils.e("出现错误! $e\n${Utils.dumpException(e)}")
                     }
                 }
             }, 0, config.getLyricAutoOffTime().toLong()
@@ -340,8 +340,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
         config.update()
         iconConfig.update()
         var mLyric = ""
-        val mIcon: String
-//        更新歌词
+        //        更新歌词
         if (lyric == "refresh") {
             mLyric = ""
         } else {
@@ -377,6 +376,80 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     lyricTextView.setTextSize(0, config.getLyricSize().toFloat())
                 }
             }
+            LogUtils.e("设置歌词大小${mLyricFontSize}")
+
+            //歌词位置
+            if (config.getLyricPosition() != 0 || config.getLyricHigh() != 0) {
+                lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
+            }
+            LogUtils.e("设置歌词位置${config.getLyricPosition()}，${config.getLyricHigh()}")
+            //歌词字体宽度
+            if (mLyricFontWeight != config.getLyricFontWeight()) {
+                if (config.getLyricFontWeight() != 0) {
+                    mLyricFontWeight = config.getLyricFontWeight()
+                    val paint = lyricTextView.paint
+                    paint.style = Paint.Style.FILL_AND_STROKE
+                    paint.strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
+                }else {
+                    mLyricFontWeight = 0
+                    val paint = lyricTextView.paint
+                    paint.style = Paint.Style.FILL_AND_STROKE
+                    paint.strokeWidth = 0f
+                }
+            }
+            LogUtils.e("设置歌词字体宽度${mLyricFontWeight}")
+
+            //歌词字体间距
+            if (mLyricSpacing != config.getLyricSpacing()) {
+                if (config.getLyricSpacing() != 0) {
+                    lyricTextView.setLetterSpacings((config.getLyricSpacing().toFloat() / 100))
+                    mLyricSpacing = config.getLyricSpacing()
+                } else {
+                    lyricTextView.setLetterSpacings(clockView.letterSpacing)
+                }
+            }
+            LogUtils.e("设置歌词字体间距${config.getLyricSpacing()}")
+
+//            歌词动效
+            if (config.getAnim() != mLyricOldAnim) {
+                mLyricOldAnim = config.getAnim()
+                lyricTextView.inAnimation = Utils.inAnim(mLyricOldAnim)
+                lyricTextView.outAnimation = Utils.outAnim(mLyricOldAnim)
+            } else if (config.getAnim() == "random") {
+                mLyricOldAnim = config.getAnim()
+                val anim = arrayOf(
+                    "top", "lower",
+                    "left", "right"
+                )[(Math.random() * 4).toInt()]
+                lyricTextView.inAnimation = Utils.inAnim(anim)
+                lyricTextView.outAnimation = Utils.outAnim(anim)
+            }
+            LogUtils.e("设置歌词动效$mLyricOldAnim")
+
+            //隐藏时间
+            if (showLyric) {
+                lyricLayout.visibility = View.VISIBLE
+                if (config.getHideTime()) {
+                    clockView.layoutParams = LinearLayout.LayoutParams(0, 0)
+                } else {
+                    clockView.layoutParams = LinearLayout.LayoutParams(-2, -2)
+                }
+            }
+            //歌词滚动样式
+            if (config.getLyricStyle()) {
+                //设置跑马灯为1次
+                lyricTextView.setMarqueeRepeatLimit(1)
+            } else {
+                //设置跑马灯重复次数，-1为无限重复
+                lyricTextView.setMarqueeRepeatLimit(-1)
+            }
+            //歌词速度
+            if (config.getLyricStyle() && mLyricSpeed != config.getLyricSpeed()) {
+                mLyricSpeed = config.getLyricSpeed()
+                lyricTextView.setSpeed((config.getLyricSpeed().toFloat() / 100))
+            }
+            LogUtils.e("设置歌词速度$mLyricSpeed")
+
             // 自适应/歌词宽度
             val thisDisplay =
                 if (application.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -398,84 +471,19 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
             } else {
                 lyricTextView.width = (thisDisplay * config.getLyricWidth()) / 100
             }
-            //歌词位置
-            if (config.getLyricPosition() != 0 || config.getLyricHigh() != 0) {
-                lyricParams.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
-            }
-            //歌词字体宽度
-            if (mLyricFontWeight != config.getLyricFontWeight()) {
-                if (config.getLyricFontWeight() == 0) {
-                    mLyricFontWeight = config.getLyricFontWeight()
-                    val paint = lyricTextView.paint
-                    paint.style = Paint.Style.FILL_AND_STROKE
-                    paint.strokeWidth = 0f
-                }
-            } else {
-                mLyricFontWeight = config.getLyricFontWeight()
-                val paint = lyricTextView.paint
-                paint.style = Paint.Style.FILL_AND_STROKE
-                paint.strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
-            }
+            LogUtils.e("设置自适应/歌词宽度${lyricTextView.width}")
 
-
-            //歌词字体间距
-            if (mLyricSpacing != config.getLyricSpacing()) {
-                if (config.getLyricSpacing() != 0) {
-                    lyricTextView.setLetterSpacings((config.getLyricSpacing().toFloat() / 100))
-                } else {
-                    lyricTextView.setLetterSpacings(clockView.letterSpacing)
-                }
-            }
-//            歌词动效
-            if (config.getAnim() != mLyricOldAnim) {
-                mLyricOldAnim = config.getAnim()
-                lyricTextView.inAnimation = Utils.inAnim(mLyricOldAnim)
-                lyricTextView.outAnimation = Utils.outAnim(mLyricOldAnim)
-            } else if (config.getAnim() == "random") {
-                mLyricOldAnim = config.getAnim()
-                val anim = arrayOf(
-                    "top", "lower",
-                    "left", "right"
-                )[(Math.random() * 4).toInt()]
-                lyricTextView.inAnimation = Utils.inAnim(anim)
-                lyricTextView.outAnimation = Utils.outAnim(anim)
-            }
-            //隐藏时间
-            if (showLyric) {
-                lyricLayout.visibility = View.VISIBLE
-                if (config.getHideTime()) {
-                    clockView.layoutParams = LinearLayout.LayoutParams(0, 0)
-                } else {
-                    clockView.layoutParams = LinearLayout.LayoutParams(-2, -2)
-                }
-            }
-            //歌词滚动样式
-            if (config.getLyricStyle()) {
-                //设置跑马灯为1次
-                lyricTextView.setMarqueeRepeatLimit(1)
-            } else {
-                //设置跑马灯重复次数，-1为无限重复
-                lyricTextView.setMarqueeRepeatLimit(-1)
-            }
-            //歌词速度
-            if (config.getLyricStyle() && mLyricSpeed != config.getLyricSpeed()) {
-                lyricTextView.setSpeed((config.getLyricSpeed().toFloat() / 100))
-            }
             //设置歌词text
             if (config.getPseudoTime()) {
                 lyricTextView.setText(addTimeStr)
             } else {
                 lyricTextView.setText(mLyricText)
             }
-
         }
 
 
-
-        mIcon = if (icon.isEmpty()) {
+        val mIcon: String = icon.ifEmpty {
             "refresh"
-        } else {
-            icon
         }
 //       更新图标
         if (!config.getIcon()) {
@@ -496,10 +504,9 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 //图标上下位置
                 iconParams.setMargins(0, config.getIconHigh(), 0, 0)
                 LogUtils.e("开启图标")
-                LogUtils.e(mIcon)
-                LogUtils.e(mLyricOldIcon)
 //                mLyricOldIcon = mIcon
-                LogUtils.e(mLyricIcon + "：" + iconConfig.getIcon(mIcon))
+                LogUtils.e("$mLyricIcon：${iconConfig.getIcon(mIcon)}")
+                mLyricOldIcon = mIcon
                 lyricIconView.visibility = View.VISIBLE
                 lyricTextView.setMargins(10, 0, 0, 0)
                 lyricIconView.setImageDrawable(
@@ -508,12 +515,10 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         Utils.stringToBitmap(iconConfig.getIcon(mIcon))
                     )
                 )
-
             }
-
         }
 //        设置状态栏
-        config.let{ Utils.setStatusBar(application, false, it) }
+        config.let { Utils.setStatusBar(application, false, it) }
     }
 
     private fun offLyric(info: String) {
@@ -555,8 +560,8 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                         it1.text = "Show test lyric"
                         it1.setOnClickListener {
                             updateLyric(
-                                (Math.random() * 4).toInt()
-                                    .toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", icon
+                                "${(Math.random() * 4)} This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+                                icon
                             )
                             showLyricTest = true
                         }
@@ -648,14 +653,14 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     "copy_font" -> {
                         val path = intent.getStringExtra("Font_Path")!!
                         LogUtils.e("自定义字体: $path")
-                        val file = File(application.filesDir.path + "/font")
+                        val file = File("${application.filesDir.path}/font")
                         if (file.exists()) {
                             file.delete()
                         }
                         val error = FileUtils(application).copyFile(File(path), application.filesDir.path, "font")
                         if (error.isEmpty()) {
                             lyricTextView.setTypeface(
-                                Typeface.createFromFile(application.filesDir.path + "/font")
+                                Typeface.createFromFile("${application.filesDir.path}/font")
                             )
                             LogUtils.e("加载个性化字体")
                             application.sendBroadcast(Intent().apply {
@@ -674,10 +679,11 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     }
                     "delete_font" -> {
                         var isOK = false
-                        val file = File(application.filesDir.path + "/font")
+                        val file = File("${application.filesDir.path}/font")
                         if (file.exists() && file.canWrite()) {
                             isOK = file.delete()
                         }
+                        lyricTextView.setTypeface(clockView.typeface)
                         application.sendBroadcast(Intent().apply {
                             action = "App_Server"
                             putExtra("app_Type", "DeleteFont")
@@ -686,7 +692,7 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                     }
                 }
             } catch (e: Exception) {
-                LogUtils.e("广播接收错误 " + e + "\n" + Utils.dumpException(e))
+                LogUtils.e("广播接收错误 $e\n${Utils.dumpException(e)}")
             }
         }
     }
