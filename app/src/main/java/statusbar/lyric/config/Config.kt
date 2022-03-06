@@ -189,10 +189,6 @@ class Config {
         config.put("LSpacing", i)
     }
 
-    fun getIconAutoColor(): Boolean {
-        return config.optBoolean("IAutoColor", true)
-    }
-
     fun getAntiBurn(): Boolean {
         return config.optBoolean("AntiBurn", true)
     }

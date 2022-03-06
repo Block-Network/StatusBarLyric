@@ -643,7 +643,6 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("IHigh", -100, 100, defaultProgress = ActivityOwnSP.ownSPConfig.getIconHigh())
-                TextWithSwitch(TextV(resId = R.string.IconAutoColors), SwitchV("IAutoColor", true))
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment("icon")
                 }))

@@ -377,7 +377,6 @@ class NewSystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                             }
                             if (config.getIconColor().isEmpty()) {
                                     lyricIconView.imageTintList = ColorStateList.valueOf(color)
-
                             } else {
                                 if (iconColor != Color.parseColor(config.getIconColor())) {
                                     iconColor = Color.parseColor(config.getIconColor())

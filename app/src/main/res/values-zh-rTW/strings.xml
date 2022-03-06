@@ -18,7 +18,6 @@
     <string name="AbScreen">防燒屏</string>
     <string name="IconHigh">* 圖標上下位置</string>
     <string name="Default">默认</string>
-    <string name="IconAutoColors">自動反色</string>
     <string name="UnlockShow">僅解鎖顯示</string>
     <string name="AutoHideNotiIcon">自動隱藏通知圖標</string>
     <string name="HideNetWork">隱藏實時網速</string>

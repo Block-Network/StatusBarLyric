@@ -595,7 +595,7 @@ class SystemUI(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(l
             }
         }
         updateLyricPos.sendEmptyMessage(0)
-        iconReverseColor = config.getIconAutoColor()
+        iconReverseColor = true
         if (config.getLyricStyle()) {
             lyricTextView.setSpeed((config.getLyricSpeed().toFloat() / 100))
         }
