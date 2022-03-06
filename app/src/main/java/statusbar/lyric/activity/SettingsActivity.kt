@@ -50,13 +50,13 @@ import ice.lib.ads.admob.AdmobManager
 import ice.lib.ads.admob.BannerAdConfig
 import ice.lib.ads.admob.result.RewardedAdLoadResult
 import ice.lib.ads.admob.result.RewardedAdShowResult
-import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
 import statusbar.lyric.App
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
 import kotlin.system.exitProcess
+import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
 
 
 class SettingsActivity : MIUIActivity() {
@@ -74,7 +74,9 @@ class SettingsActivity : MIUIActivity() {
         }
         App.admobManager.preloadRewardedAds(5) { callback ->
             Log.d("StatusbarLyric-Ad", "${callback.result}: ${callback.any}")
-            if (callback.result == RewardedAdLoadResult.Enum.Failure) { adFlag++ }
+            if (callback.result == RewardedAdLoadResult.Enum.Failure) {
+                adFlag++
+            }
             if (adFlag > 1) adBinding.bindingSend.send(-1)
         }
 //        viewInit()
@@ -143,29 +145,38 @@ class SettingsActivity : MIUIActivity() {
                             ActivityUtils.checkUpdate(activity)
                         })
                 )
-                TextSummaryArrow(TextSummaryV(
-                    textId = R.string.showAd,
-                    onClickListener = { // TODO 定位
-                        App.admobManager.showRewardAds(activity, true) { callback: RewardedAdShowResult ->
-                            when (callback.result) {
-                                RewardedShowEnum.Null -> {}
-                                RewardedShowEnum.OnClicked -> {}
-                                RewardedShowEnum.OnDismissed -> {}
-                                RewardedShowEnum.OnEarnedReward -> {}
-                                RewardedShowEnum.OnFailedToShow -> {}
-                                RewardedShowEnum.OnShowed -> {}
-                                RewardedShowEnum.ImmediatelyLoaded -> {}
-                                RewardedShowEnum.ImmediatelyLoadFailed -> {}
-                                else -> {}
+                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                    TextSummaryArrow(TextSummaryV(
+                        textId = R.string.showAd,
+                        onClickListener = { // TODO 定位
+                            App.admobManager.showRewardAds(activity, true) { callback: RewardedAdShowResult ->
+                                when (callback.result) {
+                                    RewardedShowEnum.Null -> {}
+                                    RewardedShowEnum.OnClicked -> {}
+                                    RewardedShowEnum.OnDismissed -> {}
+                                    RewardedShowEnum.OnEarnedReward -> {}
+                                    RewardedShowEnum.OnFailedToShow -> {}
+                                    RewardedShowEnum.OnShowed -> {}
+                                    RewardedShowEnum.ImmediatelyLoaded -> {}
+                                    RewardedShowEnum.ImmediatelyLoadFailed -> {}
+                                    else -> {}
+                                }
                             }
                         }
-                    }
-                ), dataBindingRecv = adBinding.binding.Recv(1))
+                    ), dataBindingRecv = adBinding.binding.Recv(1))
+                }
                 TextSummaryArrow(TextSummaryV(
                     textId = R.string.AboutModule,
                     onClickListener = { showFragment("about") }
                 ))
-                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
+                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                    CustomView(
+                        AdmobManager.getBannerAd(
+                            activity,
+                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
+                        )
+                    )
+                }
                 Text()
             }
 
@@ -236,7 +247,14 @@ class SettingsActivity : MIUIActivity() {
                 Line()
                 TitleText("Module Version")
                 Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
-                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
+                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                    CustomView(
+                        AdmobManager.getBannerAd(
+                            activity,
+                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
+                        )
+                    )
+                }
             }
 
             register("custom", getString(R.string.Custom)) {
@@ -601,7 +619,14 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment("icon")
                 }))
-                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
+                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                    CustomView(
+                        AdmobManager.getBannerAd(
+                            activity,
+                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
+                        )
+                    )
+                }
                 Text()
             }
 
@@ -625,7 +650,14 @@ class SettingsActivity : MIUIActivity() {
                             }.show()
                         })
                 }
-                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
+                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                    CustomView(
+                        AdmobManager.getBannerAd(
+                            activity,
+                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
+                        )
+                    )
+                }
                 Text()
             }
 
@@ -795,7 +827,14 @@ class SettingsActivity : MIUIActivity() {
                         )
                     }
                 ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!))
-                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
+                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                    CustomView(
+                        AdmobManager.getBannerAd(
+                            activity,
+                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
+                        )
+                    )
+                }
                 Text()
             }
 
@@ -850,8 +889,20 @@ class SettingsActivity : MIUIActivity() {
                         "https://fkj2005.gitee.io/merger/"
                     )
                 }))
-                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
+                if ( ActivityOwnSP.ownSPConfig.getAd()) {
+                    CustomView(
+                        AdmobManager.getBannerAd(
+                            activity,
+                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
+                        )
+                    )
+                }
                 Text()
+            }
+
+            register("close", getString(R.string.About)) {
+                TextWithSwitch(TextV(text = "AD"), SwitchV("CloseAd", true))
+                TextWithSwitch(TextV(text = "App Center"), SwitchV("CloseAppCenter", true))
             }
         }
     }
@@ -867,13 +918,20 @@ class SettingsActivity : MIUIActivity() {
             isRegister = true
             ActivityUtils.getNotice(activity)
             Crashes.setListener(CrashesFilter())
-            AppCenter.start(
-                application, Utils.appCenterKey,
-                Analytics::class.java, Crashes::class.java
-            )
+            if (ActivityOwnSP.ownSPConfig.getAppCenter()) {
+                AppCenter.start(
+                    application, Utils.appCenterKey,
+                    Analytics::class.java, Crashes::class.java
+                )
+            }
             if (BuildConfig.DEBUG) {
                 ActivityOwnSP.ownSPConfig.setDebug(true)
             }
+            val infoString = intent.getBooleanExtra("close", false)
+            if (infoString) {
+                showFragment("close")
+            }
+
         }
     }
 

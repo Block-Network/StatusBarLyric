@@ -249,6 +249,13 @@ class Config {
     fun setAntiBurnTime(i: Int) {
         config.put("AntiBurnTime", i)
     }
+    fun getAd():Boolean{
+        return config.optBoolean("CloseAd",true)
+    }
+
+    fun getAppCenter():Boolean{
+        return config.optBoolean("CloseAppCenter",true)
+    }
 
     fun clear() {
         config.clearConfig()

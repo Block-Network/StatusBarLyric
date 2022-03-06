@@ -25,8 +25,8 @@ import statusbar.lyric.utils.ktx.hookAllMethods
 class AppCenterUtils(appCenterKey: String, val lpparam: XC_LoadPackage.LoadPackageParam) {
     lateinit var application: Application
 
-    var thisName = ""
-    var thisVersion = ""
+    private var thisName = ""
+    private var thisVersion = ""
 
     init {
         LogUtils.e("Hook App center")
