@@ -13,7 +13,7 @@ android {
         minSdk = 26
         targetSdk = 32
         versionCode = 111
-        versionName = "4.4.3"
+        versionName = "4.4.3${getGitHeadRefsSuffix(project)}"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }
@@ -58,6 +58,24 @@ android {
                 "StatusBarLyric-$versionName($versionCode)-$name.apk"
         }
     }
+}
+
+fun getGitHeadRefsSuffix(project: Project): String {
+    // .git/HEAD描述当前目录所指向的分支信息，内容示例："ref: refs/heads/master\n"
+    val headFile = File(project.rootProject.projectDir, ".git${File.separator}HEAD")
+    if (headFile.exists() && headFile.canRead()) {
+        val string: String = headFile.readText(Charsets.UTF_8)
+        if (string.contains("Dev")) {
+            val heads = File(
+                project.rootProject.projectDir,
+                ".git${File.separator}refs${File.separator}heads${File.separator}Dev"
+            )
+            if (heads.exists() && heads.canRead())
+                println(heads.readText(Charsets.UTF_8).substring(0, 7))
+                return heads.readText(Charsets.UTF_8).substring(0, 7)
+        }
+    }
+    return ""
 }
 
 dependencies {

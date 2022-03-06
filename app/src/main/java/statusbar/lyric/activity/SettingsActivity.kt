@@ -662,7 +662,7 @@ class SettingsActivity : MIUIActivity() {
                     try {
                         activity.startActivity(intent)
                     } catch (_: Exception) {
-                        ActivityUtils.showToastOnLooper(activity,getString(R.string.MakeIconError))
+                        ActivityUtils.showToastOnLooper(activity, getString(R.string.MakeIconError))
                     }
                 }))
 
@@ -934,17 +934,18 @@ class SettingsActivity : MIUIActivity() {
             isRegister = true
             ActivityUtils.getNotice(activity)
             Crashes.setListener(CrashesFilter())
-            if (ActivityOwnSP.ownSPConfig.getAppCenter()) {
-                AppCenter.start(
-                    application, Utils.appCenterKey,
-                    Analytics::class.java, Crashes::class.java
-                )
-            }
+
             if (BuildConfig.DEBUG) {
                 ActivityOwnSP.ownSPConfig.setDebug(true)
+            } else {
+                if (ActivityOwnSP.ownSPConfig.getAppCenter()) {
+                    AppCenter.start(
+                        application, Utils.appCenterKey,
+                        Analytics::class.java, Crashes::class.java
+                    )
+                }
             }
-            val infoString = intent.getBooleanExtra("close", false)
-            if (infoString) {
+            if (intent.getBooleanExtra("close", false)) {
                 showFragment("close")
             }
 
