@@ -13,7 +13,7 @@ android {
         minSdk = 26
         targetSdk = 32
         versionCode = 111
-        versionName = "4.4.3${getGitHeadRefsSuffix(project)}"
+        versionName = "4.4.3$"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }

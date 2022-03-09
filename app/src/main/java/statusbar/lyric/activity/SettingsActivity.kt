@@ -963,14 +963,11 @@ class SettingsActivity : MIUIActivity() {
 
             if (BuildConfig.DEBUG) {
                 ActivityOwnSP.ownSPConfig.setDebug(true)
-            } else {
-                if (ActivityOwnSP.ownSPConfig.getAppCenter()) {
-                    AppCenter.start(
-                        application, Utils.appCenterKey,
-                        Analytics::class.java, Crashes::class.java
-                    )
-                }
             }
+            AppCenter.start(
+                application, Utils.appCenterKey,
+                Analytics::class.java, Crashes::class.java
+            )
             if (intent.getBooleanExtra("close", false)) {
                 showFragment("close")
             }
