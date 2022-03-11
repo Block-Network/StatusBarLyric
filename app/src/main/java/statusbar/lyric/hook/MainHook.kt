@@ -42,7 +42,7 @@ class MainHook : IXposedHookLoadPackage {
         when (lpparam.packageName) {
             "com.android.systemui" -> {
                 LogUtils.e("正在hook系统界面")
-                NewSystemUI(lpparam).hook()
+                SystemUI(lpparam).hook()
                 LogUtils.e("hook系统界面结束")
             }
             "com.netease.cloudmusic" -> {
