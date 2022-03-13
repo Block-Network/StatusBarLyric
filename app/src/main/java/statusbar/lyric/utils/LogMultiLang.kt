@@ -35,5 +35,6 @@ object LogMultiLang {
     val customFont = if (isChinese) "自定义字体" else "Custom font"
     val fontCopyError = if (isChinese) "个性化字体复制失败" else "Personalized font copy failed"
     val lyricServiceError = if (isChinese) "歌词服务出现错误" else "An error occurred in the lyrics service"
+    val sendLog = if (isChinese) "反馈日志请不要截图，Lsp右上角保存成文件反馈" else "Please do not take screenshots of the feedback log, save it as a file feedback in the upper right corner of the Lsp"
 //    val _ = if (isChinese) "" else ""
 }
