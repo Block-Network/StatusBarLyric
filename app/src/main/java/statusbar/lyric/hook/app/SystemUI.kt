@@ -464,7 +464,7 @@ class SystemUI: BaseHook() {
     }
 
     fun updateLyric(lyric: String, icon: String) {
-        LogUtils.e("反馈日志请不要截图，Lsp右上角保存成文件反馈")
+        LogUtils.e(LogMultiLang.sendLog)
         if (lyric.isEmpty()) {
             offLyric(LogMultiLang.emptyLyric)
             return
