@@ -31,12 +31,21 @@ import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge.*
 import de.robv.android.xposed.XposedHelpers.*
 import de.robv.android.xposed.callbacks.XC_LayoutInflated
+import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.utils.LogUtils
 import java.lang.reflect.Field
 import java.lang.reflect.Member
 import java.util.Collections.emptySet
 
 typealias MethodHookParam = MethodHookParam
+
+fun init(param: XC_LoadPackage.LoadPackageParam) {
+    lpparam = param
+    classLoader = param.classLoader
+}
+
+lateinit var classLoader: ClassLoader
+lateinit var lpparam: XC_LoadPackage.LoadPackageParam
 
 fun Class<*>.hookMethod(method: String?, vararg args: Any?) = try {
     LogUtils.e("Hook ${name}.$method Successful")
@@ -295,10 +304,9 @@ inline fun Class<*>.replaceAfterAllConstructors(crossinline hooker: (MethodHookP
 
 fun String.hookMethod(
     method: String?,
-    vararg args: Any?,
-    classLoader: ClassLoader?
+    vararg args: Any?
 ) = try {
-    findClass(classLoader).hookMethod(method, *args)
+    findClass().hookMethod(method, *args)
 } catch (e: ClassNotFoundError) {
     LogUtils.e(e)
     null
@@ -310,10 +318,9 @@ fun String.hookMethod(
 inline fun String.hookBeforeMethod(
     method: String?,
     vararg args: Any?,
-    classLoader: ClassLoader?,
     crossinline hooker: (MethodHookParam) -> Unit
 ) = try {
-    findClass(classLoader).hookBeforeMethod(method, *args, hooker = hooker)
+    findClass().hookBeforeMethod(method, *args, hooker = hooker)
 } catch (e: ClassNotFoundError) {
     LogUtils.e(e)
     null
@@ -325,10 +332,9 @@ inline fun String.hookBeforeMethod(
 inline fun String.hookAfterMethod(
     method: String?,
     vararg args: Any?,
-    classLoader: ClassLoader?,
     crossinline hooker: (MethodHookParam) -> Unit
 ) = try {
-    findClass(classLoader).hookAfterMethod(method, *args, hooker = hooker)
+    findClass().hookAfterMethod(method, *args, hooker = hooker)
 } catch (e: ClassNotFoundError) {
     LogUtils.e(e)
     null
@@ -341,9 +347,8 @@ fun String.setReturnConstant(
     method: String?,
     vararg args: Any?,
     result: Any?,
-    classLoader: ClassLoader?
 ) = try {
-    findClass(classLoader).setReturnConstant(method, *args, result = result)
+    findClass().setReturnConstant(method, *args, result = result)
 } catch (e: ClassNotFoundError) {
     LogUtils.e(e)
     null
@@ -355,7 +360,6 @@ fun String.setReturnConstant(
 inline fun String.replaceMethod(
     method: String?,
     vararg args: Any?,
-    classLoader: ClassLoader?,
     crossinline hooker: (MethodHookParam) -> Any?
 ) = try {
     findClass(this, classLoader).replaceMethod(method, *args, hooker = hooker)
@@ -369,10 +373,9 @@ inline fun String.replaceMethod(
 
 inline fun String.replaceAfterAllMethods(
     methodName: String?,
-    classLoader: ClassLoader?,
     crossinline hooker: (MethodHookParam) -> Any?
 ) = try {
-    findClass(classLoader).replaceAfterAllMethods(methodName, hooker)
+    findClass().replaceAfterAllMethods(methodName, hooker)
 } catch (e: ClassNotFoundError) {
     LogUtils.e(e)
     null
@@ -383,9 +386,8 @@ inline fun String.replaceAfterAllMethods(
 
 inline fun String.hookBeforeConstructor(
     vararg args: Any?,
-    classLoader: ClassLoader?,
     crossinline hooker: (MethodHookParam) -> Unit
-) = findClass(classLoader).hookConstructor(*args, object : XC_MethodHook() {
+) = findClass().hookConstructor(*args, object : XC_MethodHook() {
     override fun beforeHookedMethod(param: MethodHookParam) {
         try {
             hooker(param)
@@ -397,9 +399,8 @@ inline fun String.hookBeforeConstructor(
 
 inline fun String.hookAfterConstructor(
     vararg args: Any?,
-    classLoader: ClassLoader?,
     crossinline hooker: (MethodHookParam) -> Unit
-) = findClass(classLoader).hookConstructor(*args, object : XC_MethodHook() {
+) = findClass().hookConstructor(*args, object : XC_MethodHook() {
     override fun afterHookedMethod(param: MethodHookParam) {
         try {
             hooker(param)
@@ -411,9 +412,8 @@ inline fun String.hookAfterConstructor(
 
 inline fun String.replaceConstructor(
     vararg args: Any?,
-    classLoader: ClassLoader?,
     crossinline hooker: (MethodHookParam) -> Unit
-) = findClass(classLoader).hookConstructor(*args, object : XC_MethodReplacement() {
+) = findClass().hookConstructor(*args, object : XC_MethodReplacement() {
     override fun replaceHookedMethod(param: MethodHookParam) {
         try {
             hooker(param)
@@ -425,16 +425,14 @@ inline fun String.replaceConstructor(
 
 fun String.callStaticMethod(
     methodName: String?,
-    vararg args: Any?,
-    classLoader: ClassLoader?
-) = findClass(classLoader).callStaticMethod(methodName, *args)
+    vararg args: Any?
+) = findClass().callStaticMethod(methodName, *args)
 
 @Suppress("UNCHECKED_CAST")
 fun <T> String.callStaticMethodAs(
     methodName: String?,
-    vararg args: Any?,
-    classLoader: ClassLoader?
-) = findClass(classLoader).callStaticMethod(methodName, *args) as T
+    vararg args: Any?
+) = findClass().callStaticMethod(methodName, *args) as T
 
 fun MethodHookParam.invokeOriginalMethod(): Any? = invokeOriginalMethod(method, thisObject, args)
 
@@ -481,10 +479,13 @@ fun Class<*>.callStaticMethod(
     vararg args: Any?
 ): Any = callStaticMethod(this, methodName, parameterTypes, *args)
 
-fun String.findClass(classLoader: ClassLoader?): Class<*> =
+fun String.findClass(): Class<*> =
     findClass(this, classLoader)
 
-fun String.findClassOrNull(classLoader: ClassLoader?): Class<*>? =
+fun String.findClassOrNull(): Class<*>? =
+    findClassIfExists(this, classLoader)
+
+fun String.findClassOrNull(classLoader: ClassLoader): Class<*>? =
     findClassIfExists(this, classLoader)
 
 fun Class<*>.new(vararg args: Any?): Any = newInstance(this, *args)
@@ -556,6 +557,10 @@ fun XResources.setTryReplacement(pkg: String, type: String, name: String, obj: A
 }
 
 fun Any?.isNull(callback: () -> Unit) { if (this == null) callback() }
+
+fun Any?.isNull() = this == null
+
+fun Any?.isNotNull() = this != null
 
 fun getHookField(clazz: Class<*>, name: String): Any? {
     val field: Field = clazz.getDeclaredField(name)

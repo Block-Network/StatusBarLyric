@@ -29,9 +29,11 @@ import android.content.Context
 import android.os.Build
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
+import statusbar.lyric.utils.AppCenterUtils
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.hookAfterMethod
+import statusbar.lyric.utils.ktx.lpparam
 
 @SuppressLint("StaticFieldLeak")
 object MeiZuStatusBarLyric {
@@ -39,12 +41,13 @@ object MeiZuStatusBarLyric {
     var context: Context? = null
 
     //模拟flyme
-    fun guiseFlyme(lpparam: LoadPackageParam, hookNotification: Boolean) {
+    fun guiseFlyme(hookNotification: Boolean) {
+        AppCenterUtils(Utils.appCenterKey)
         // 获取Context
         Application::class.java.hookAfterMethod("attach", Context::class.java) {
             context = it.args[0] as Context
         }
-        "android.os.SystemProperties".hookAfterMethod("get", String::class.java, String::class.java, classLoader = lpparam.classLoader) {
+        "android.os.SystemProperties".hookAfterMethod("get", String::class.java, String::class.java) {
             XposedHelpers.setStaticObjectField(Build::class.java, "BRAND", "meizu")
             XposedHelpers.setStaticObjectField(Build::class.java, "MANUFACTURER", "Meizu")
             XposedHelpers.setStaticObjectField(Build::class.java, "DEVICE", "m1892")
@@ -52,13 +55,13 @@ object MeiZuStatusBarLyric {
             XposedHelpers.setStaticObjectField(Build::class.java, "PRODUCT", "meizu_16thPlus_CN")
             XposedHelpers.setStaticObjectField(Build::class.java, "MODEL", "meizu 16th Plus")
         }
-        "java.lang.Class".hookAfterMethod("getDeclaredField", String::class.java, classLoader = lpparam.classLoader) {
+        "java.lang.Class".hookAfterMethod("getDeclaredField", String::class.java) {
             when (it.args[0].toString()) {
                 "FLAG_ALWAYS_SHOW_TICKER" -> it.result = MeiZuNotification::class.java.getDeclaredField("FLAG_ALWAYS_SHOW_TICKER_HOOK")
                 "FLAG_ONLY_UPDATE_TICKER" -> it.result = MeiZuNotification::class.java.getDeclaredField("FLAG_ONLY_UPDATE_TICKER_HOOK")
             }
         }
-        "java.lang.Class".hookAfterMethod("getField", String::class.java, classLoader = lpparam.classLoader) {
+        "java.lang.Class".hookAfterMethod("getField", String::class.java) {
             when (it.args[0].toString()) {
                 "FLAG_ALWAYS_SHOW_TICKER" -> it.result = MeiZuNotification::class.java.getDeclaredField("FLAG_ALWAYS_SHOW_TICKER_HOOK")
                 "FLAG_ONLY_UPDATE_TICKER" -> it.result = MeiZuNotification::class.java.getDeclaredField("FLAG_ONLY_UPDATE_TICKER_HOOK")
@@ -67,7 +70,7 @@ object MeiZuStatusBarLyric {
         if (!hookNotification) {
             return
         }
-        "android.app.NotificationManager".hookAfterMethod("notify", Int::class.javaPrimitiveType, Notification::class.java, classLoader = lpparam.classLoader) {
+        "android.app.NotificationManager".hookAfterMethod("notify", Int::class.javaPrimitiveType, Notification::class.java) {
             val notification = it.args[1] as Notification
             val charSequence = notification.tickerText
             LogUtils.e(notification.toString())

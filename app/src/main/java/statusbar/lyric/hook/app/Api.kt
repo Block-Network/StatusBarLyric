@@ -32,18 +32,18 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.AppCenterUtils
 
-class Api(private val lpparam: XC_LoadPackage.LoadPackageParam) {
-    fun hook() {
-        if ("StatusBarLyric.API.StatusBarLyric".findClassOrNull(lpparam.classLoader) == null) return
-        AppCenterUtils(Utils.appCenterKey, lpparam)
-        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("hasEnable", classLoader = lpparam.classLoader) {
+class Api: BaseHook() {
+    override fun hook() {
+        if ("StatusBarLyric.API.StatusBarLyric".findClassOrNull() == null) return
+        super.hook()
+        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("hasEnable") {
             it.result = true
         }
         "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("sendLyric", Context::class.java,
             String::class.java,
             String::class.java,
             String::class.java,
-            Boolean::class.javaPrimitiveType, classLoader = lpparam.classLoader) {
+            Boolean::class.javaPrimitiveType) {
             LogUtils.e("API: " + it.args[1])
             Utils.sendLyric(
                 it.args[0] as Context,
@@ -53,7 +53,7 @@ class Api(private val lpparam: XC_LoadPackage.LoadPackageParam) {
                 it.args[3] as String
             )
         }
-        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("stopLyric", Context::class.java, classLoader = lpparam.classLoader) {
+        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("stopLyric", Context::class.java) {
             (it.args[0] as Context).sendBroadcast(
                 Intent().apply {
                     action = "Lyric_Server"

@@ -43,6 +43,7 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.Config
 import java.io.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @SuppressLint("StaticFieldLeak")
@@ -157,12 +158,10 @@ object Utils {
     }
 
     @JvmStatic
-    fun isServiceRunningList(context: Context, str: Array<String?>): Boolean {
+    fun isServiceRunningList(context: Context, str: ArrayList<String>): Boolean {
         for (mStr in str) {
-            if (mStr != null) {
-                if (isAppRunning(context, mStr)) {
-                    return true
-                }
+            if (isAppRunning(context, mStr)) {
+                return true
             }
         }
         return false

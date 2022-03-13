@@ -21,8 +21,9 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.utils.ktx.hookAfterMethod
 import statusbar.lyric.utils.ktx.hookAllMethods
+import statusbar.lyric.utils.ktx.lpparam
 
-class AppCenterUtils(appCenterKey: String, val lpparam: XC_LoadPackage.LoadPackageParam) {
+class AppCenterUtils(appCenterKey: String) {
     lateinit var application: Application
 
     private var thisName = ""

@@ -31,12 +31,13 @@ import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
 
-class Kugou(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(lpparam) {
+class Kugou: BaseHook() {
     override fun hook() {
-        "android.media.AudioManager".hookAfterMethod("isBluetoothA2dpOn", classLoader = lpparam.classLoader) {
+        super.hook()
+        "android.media.AudioManager".hookAfterMethod("isBluetoothA2dpOn") {
             it.result = true
         }
-        "com.kugou.framework.player.c".hookAfterMethod("a", HashMap::class.java, classLoader = lpparam.classLoader) {
+        "com.kugou.framework.player.c".hookAfterMethod("a", HashMap::class.java) {
             LogUtils.e("酷狗音乐:" + (it.args[0] as HashMap<*, *>).values.toList()[0])
             Utils.sendLyric(
                 AndroidAppHelper.currentApplication(),
@@ -44,8 +45,7 @@ class Kugou(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(lppa
                 "KuGou"
             )
         }
-        val tinkerApp = "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull(lpparam.classLoader)
-        tinkerApp?.hookAfterMethod("getTinkerFlags") {
+        "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull()?.hookAfterMethod("getTinkerFlags") {
             it.result = 0
         }
     }

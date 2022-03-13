@@ -46,19 +46,19 @@ import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
+import statusbar.lyric.utils.ktx.lpparam
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 
-
-class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
+class Netease: BaseHook() {
     var context: Context? = null
     var subView: TextView? = null
     lateinit var broadcastHandler: BroadcastHandler
     var appLog = ""
     var isNewVer = false
 
-    private fun disableTinker(lpparam: LoadPackageParam) {
-        val tinkerApp = "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull(lpparam.classLoader)
+    private fun disableTinker() {
+        val tinkerApp = "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull()
         tinkerApp?.hookAfterMethod("getTinkerFlags") {
             it.result = 0
         }
@@ -198,9 +198,10 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
 
     @SuppressLint("SetTextI18n")
     override fun hook(){
+        super.hook()
         try {
-            disableTinker(lpparam)
-            "com.netease.cloudmusic.NeteaseMusicApplication".hookAfterMethod("attachBaseContext", Context::class.java, classLoader = lpparam.classLoader) {
+            disableTinker()
+            "com.netease.cloudmusic.NeteaseMusicApplication".hookAfterMethod("attachBaseContext", Context::class.java) {
                 try {
                     context = it.thisObject as Context
                     if (lpparam.processName !in arrayOf("com.netease.cloudmusic", "com.netease.cloudmusic:play")) return@hookAfterMethod
@@ -220,26 +221,26 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
                         })
                     }
                     LogUtils.e("网易云Hook Process: ${lpparam.processName}")
-                    val verCode: Int? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode
-                    val verName: String? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionName
-                    if (verCode!! >= 8007001) {
+                    val verCode: Int = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode ?: throw Throwable("Get netease versionCode is null")
+                    val verName: String = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionName ?: throw Throwable("Get netease versionName is null")
+                    if (verCode >= 8007001) {
                         runCatching { context?.let { it1 -> SettingHook(it1, "com.netease.cloudmusic.music.biz.setting.activity.SettingActivity") } }
                         isNewVer = true
                         LogUtils.e("start hook Container")
-                        MeiZuStatusBarLyric.guiseFlyme(lpparam, false)
+                        MeiZuStatusBarLyric.guiseFlyme(false)
                         filter.startFilterAndHook()
                         appLog = " (网易云版本! $verName)"
-                    } else if (verCode!! > 8000041) {
+                    } else if (verCode > 8000041) {
                         runCatching { context?.let { it1 -> SettingHook(it1, "com.netease.cloudmusic.activity.SettingActivity") } }
                         isNewVer = true
-                        MeiZuStatusBarLyric.guiseFlyme(lpparam, false)
+                        MeiZuStatusBarLyric.guiseFlyme(false)
                         filter.startFilterAndHook()
                         appLog = " (网易云版本! $verName)"
                     } else {
                         LogUtils.e("正在尝试通用Hook")
                         runCatching { context?.let { it1 -> SettingHook(it1, "com.netease.cloudmusic.activity.SettingActivity") } }
                         appLog = try {
-                            "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java, classLoader = lpparam.classLoader){ it1 ->
+                            "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java){ it1 ->
                                 if (it1.args[0].toString() == "android.media.metadata.TITLE") {
                                     if (it1.args[1] != null) {
                                         Utils.sendLyric(context, it1.args[1].toString(), "Netease")

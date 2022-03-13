@@ -30,12 +30,13 @@ import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
 
-class Myplayer(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(lpparam) {
+class Myplayer: BaseHook() {
     override fun hook(){
-        "remix.myplayer.util.p".hookAfterMethod("o", Context::class.java, classLoader = lpparam.classLoader) {
+        super.hook()
+        "remix.myplayer.util.p".hookAfterMethod("o", Context::class.java) {
             it.result = true
         }
-        "remix.myplayer.service.MusicService".hookAfterMethod("n1", String::class.java, classLoader = lpparam.classLoader) {
+        "remix.myplayer.service.MusicService".hookAfterMethod("n1", String::class.java) {
             val context: Context = it.thisObject as Context
             LogUtils.e("myplayer: " + it.args[0].toString())
             Utils.sendLyric(context, it.args[0].toString(), "Myplayer")
