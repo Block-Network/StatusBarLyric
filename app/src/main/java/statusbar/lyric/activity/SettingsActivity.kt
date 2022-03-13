@@ -62,28 +62,25 @@ import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
 class SettingsActivity : MIUIActivity() {
     private val activity = this
     private var isRegister = false
-    private var adFlag = 0
 
     companion object {
         const val OPEN_FONT_FILE = 2114745
     }
 
     init {
-        val adBinding = getDataBinding("AdBinding") { view: View, i: Int, any: Any ->
-            if (i == 1 && any == -1) {
-                view.visibility = View.GONE
-            }
-        }
-        App.admobManager.preloadRewardedAds(5) { callback ->
-            Log.d("StatusbarLyric-Ad", "${callback.result}: ${callback.any}")
-            if (callback.result == RewardedAdLoadResult.Enum.Failure) {
-                adFlag++
-            }
-            if (adFlag > 1) adBinding.bindingSend.send(-1)
-        }
-//        viewInit()
         initView {
             registerMain(getString(R.string.AppName)) {
+                val adBinding = GetDataBinding(0) { view: View, i: Int, any: Any ->
+                    if (i == 1) {
+                        view.visibility = if (any == 0) View.GONE else View.VISIBLE
+                    }
+                }
+                App.admobManager.preloadRewardedAds(5) { callback ->
+                    Log.d("StatusbarLyric-Ad", "${callback.result}: ${callback.any}")
+                    if (callback.result == RewardedAdLoadResult.Enum.Success) {
+                        adBinding.bindingSend.send(-1)
+                    }
+                }
                 TextSummaryArrow(TextSummaryV(textId = R.string.ApplicableVersion, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.VerExplanation)
@@ -147,26 +144,24 @@ class SettingsActivity : MIUIActivity() {
                             ActivityUtils.checkUpdate(activity)
                         })
                 )
-                if (ActivityOwnSP.ownSPConfig.getAd()) {
-                    TextSummaryArrow(TextSummaryV(
-                        textId = R.string.showAd,
-                        onClickListener = { // TODO 定位
-                            App.admobManager.showRewardAds(activity, true) { callback: RewardedAdShowResult ->
-                                when (callback.result) {
-                                    RewardedShowEnum.Null -> {}
-                                    RewardedShowEnum.OnClicked -> {}
-                                    RewardedShowEnum.OnDismissed -> {}
-                                    RewardedShowEnum.OnEarnedReward -> {}
-                                    RewardedShowEnum.OnFailedToShow -> {}
-                                    RewardedShowEnum.OnShowed -> {}
-                                    RewardedShowEnum.ImmediatelyLoaded -> {}
-                                    RewardedShowEnum.ImmediatelyLoadFailed -> {}
-                                    else -> {}
-                                }
+                TextSummaryArrow(TextSummaryV(
+                    textId = R.string.showAd,
+                    onClickListener = {
+                        App.admobManager.showRewardAds(activity, true) { callback: RewardedAdShowResult ->
+                            when (callback.result) {
+                                RewardedShowEnum.Null -> {}
+                                RewardedShowEnum.OnClicked -> {}
+                                RewardedShowEnum.OnDismissed -> {}
+                                RewardedShowEnum.OnEarnedReward -> {}
+                                RewardedShowEnum.OnFailedToShow -> {}
+                                RewardedShowEnum.OnShowed -> {}
+                                RewardedShowEnum.ImmediatelyLoaded -> {}
+                                RewardedShowEnum.ImmediatelyLoadFailed -> {}
+                                else -> {}
                             }
                         }
-                    ), dataBindingRecv = adBinding.binding.Recv(1))
-                }
+                    }
+                ), dataBindingRecv = adBinding.binding.getRecv(1))
                 TextSummaryArrow(TextSummaryV(
                     textId = R.string.AboutModule,
                     onClickListener = { showFragment("about") }
@@ -311,7 +306,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LSize", 0, 50)
-                val dataBinding = getDataBinding(ActivityOwnSP.ownSPConfig.getLyricWidth()) { view, flags, data ->
+                val dataBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getLyricWidth()) { view, flags, data ->
                     when (flags) {
                         1 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
                         2 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
@@ -342,33 +337,30 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LWidth", -1, 100, defaultProgress = -1, dataBindingSend = dataBinding.bindingSend)
-                Text(
-                    resId = R.string.LyricAutoMaxWidth,
-                    dataBindingRecv = dataBinding.binding.getRecv(1),
-                    onClickListener = {
-                        MIUIDialog(activity) {
-                            setTitle(R.string.LyricAutoMaxWidth)
-                            setMessage(R.string.LyricTips)
-                            setEditText(ActivityOwnSP.ownSPConfig.getLyricMaxWidth().toString(), "-1")
-                            setRButton(R.string.Ok) {
-                                if (getEditText().isEmpty()) {
+                Text(resId = R.string.LyricAutoMaxWidth, dataBindingRecv = dataBinding.binding.getRecv(1), onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.LyricAutoMaxWidth)
+                        setMessage(R.string.LyricTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricMaxWidth().toString(), "-1")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isEmpty()) {
+                                ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
+                            } else {
+                                try {
+                                    ActivityOwnSP.ownSPConfig.setLyricMaxWidth(getEditText().toInt())
+                                } catch (e: Throwable) {
+                                    ActivityUtils.showToastOnLooper(
+                                        activity,
+                                        getString(R.string.LyricColorError)
+                                    )
                                     ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
-                                } else {
-                                    try {
-                                        ActivityOwnSP.ownSPConfig.setLyricMaxWidth(getEditText().toInt())
-                                    } catch (e: Throwable) {
-                                        ActivityUtils.showToastOnLooper(
-                                            activity,
-                                            getString(R.string.LyricColorError)
-                                        )
-                                        ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
-                                    }
                                 }
-                                dismiss()
                             }
-                            setLButton(R.string.Cancel) { dismiss() }
-                        }.show()
-                    })
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                })
                 SeekBarWithText(
                     "LMaxWidth",
                     -1,
@@ -474,7 +466,7 @@ class SettingsActivity : MIUIActivity() {
                     MIUIPopupData(getString(R.string.right)) { ActivityOwnSP.ownSPConfig.setAnim("right") },
                     MIUIPopupData(getString(R.string.random)) { ActivityOwnSP.ownSPConfig.setAnim("random") }
                 ), dict[ActivityOwnSP.ownSPConfig.getAnim()]!!))
-                val timeBinding = getDataBinding(ActivityOwnSP.ownSPConfig.getHideTime()) { view, flags, data ->
+                val timeBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getHideTime()) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
@@ -489,7 +481,7 @@ class SettingsActivity : MIUIActivity() {
                     SwitchV("LSwitch", false),
                     dataBindingRecv = timeBinding.binding.getRecv(2)
                 )
-                val pseudoTimeBinding = getDataBinding(ActivityOwnSP.ownSPConfig.getPseudoTime()) { view, flags, data ->
+                val pseudoTimeBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getPseudoTime()) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
@@ -514,7 +506,7 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 }), dataBindingRecv = pseudoTimeBinding.binding.getRecv(2))
-                val meiZuStyle = getDataBinding(ActivityOwnSP.ownSPConfig.getLyricStyle()) { view, flags, data ->
+                val meiZuStyle = GetDataBinding(ActivityOwnSP.ownSPConfig.getLyricStyle()) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
@@ -729,7 +721,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }))
                 val antiBurnBinding =
-                    getDataBinding(ActivityOwnSP.ownSPConfig.getAntiBurn()) { view, flags, data ->
+                    GetDataBinding(ActivityOwnSP.ownSPConfig.getAntiBurn()) { view, flags, data ->
                         when (flags) {
                             2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                         }
@@ -770,7 +762,7 @@ class SettingsActivity : MIUIActivity() {
                     dataBindingRecv = antiBurnBinding.binding.getRecv(2)
                 )
                 val dataBinding =
-                    getDataBinding(ActivityOwnSP.ownSPConfig.getUseSystemReverseColor()) { view, flags, data ->
+                    GetDataBinding(ActivityOwnSP.ownSPConfig.getUseSystemReverseColor()) { view, flags, data ->
                         when (flags) {
                             2 -> view.visibility = if ((data as Boolean)) View.GONE else View.VISIBLE
                         }
@@ -811,7 +803,7 @@ class SettingsActivity : MIUIActivity() {
                     dataBindingRecv = dataBinding.binding.getRecv(2)
                 )
                 val autoOffBinding =
-                    getDataBinding(ActivityOwnSP.ownSPConfig.getLyricAutoOff()) { view, flags, data ->
+                    GetDataBinding(ActivityOwnSP.ownSPConfig.getLyricAutoOff()) { view, flags, data ->
                         when (flags) {
                             2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                         }
