@@ -32,9 +32,7 @@ jobs:
 
       - name: Clone UI
         run: |
-          cd blockmiui
-          git submodule init
-          git submodule update
+          git clone https://github.com/Block-Network/blockmiui.git
 
       - name: Build with Gradle
         run: |
@@ -94,6 +92,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_DEV_TOKEN }}
           RELEASE: ${{ steps.sign_release.outputs.signedReleaseFile }}
           DEBUG: ${{ steps.sign_debug.outputs.signedReleaseFile }}
+          AAB: ./app/build/outputs/bundle/release/app-release.aab
           MAPPING: ./app/build/outputs/mapping/release/mapping.txt
           COMMIT_MESSAGE: |+
             Github CI
@@ -102,4 +101,4 @@ jobs:
             ```
         run: |
           ESCAPED=`python3 -c 'import json,os,urllib.parse; print(urllib.parse.quote(json.dumps(os.environ["COMMIT_MESSAGE"])))'`
-          curl -v "https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup?chat_id=${CHANNEL_ID}&media=%5B%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Frelease%22%7D%2C%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Fdebug%22%7D%2C%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Fmapping%22%2C%22parse_mode%22%3A%22MarkdownV2%22%2C%22caption%22%3A${ESCAPED}%7D%5D" -F release="@$RELEASE" -F debug="@$DEBUG" -F mapping="@$MAPPING"
+          curl -v "https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup?chat_id=${CHANNEL_ID}&media=%5B%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Frelease%22%7D%2C%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Fdebug%22%7D%2C%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Fmapping%22%2C%22parse_mode%22%3A%22MarkdownV2%22%2C%22caption%22%3A${ESCAPED}%7D%5D" -F release="@$RELEASE" -F debug="@$DEBUG" -F aab="@$AAB" -F mapping="@$MAPPING"
