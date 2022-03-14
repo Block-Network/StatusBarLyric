@@ -258,11 +258,11 @@ class Config {
     }
 
     fun getAd(): Boolean {
-        return config.optBoolean("CloseAd", true)
+        return config.optBoolean("Ad", true)
     }
 
     fun getAppCenter(): Boolean {
-        return config.optBoolean("CloseAppCenter", true)
+        return config.optBoolean("AppCenter", true)
     }
 
     fun clear() {
