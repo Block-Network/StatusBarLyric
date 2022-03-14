@@ -32,8 +32,9 @@ jobs:
 
       - name: Clone UI
         run: |
-          rm -rf blockmiui
-          git clone https://github.com/Block-Network/blockmiui.git
+          cd blockmiui
+          git submodule init
+          git submodule update
 
       - name: Build with Gradle
         run: |
