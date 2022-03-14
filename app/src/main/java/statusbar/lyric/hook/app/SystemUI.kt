@@ -448,7 +448,7 @@ class SystemUI: BaseHook() {
                 height = config.getIconSize()
             }
         }
-        lyricSwitchView.setStyle(config.getLyricStyle())
+//        lyricSwitchView.setStyle(config.getLyricStyle())
     }
 
     private fun offLyric(info: String) { // off Lyric
@@ -645,6 +645,7 @@ class SystemUI: BaseHook() {
                             putExtra("DeleteFont", isOK)
                         })
                     }
+                    "update_config" -> updateConfig()
                 }
             } catch (e: Exception) {
                 LogUtils.e("${LogMultiLang.lyricServiceError} $e \n" + Utils.dumpException(e))

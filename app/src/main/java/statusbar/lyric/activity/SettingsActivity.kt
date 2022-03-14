@@ -55,6 +55,8 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
+import java.util.Timer
+import java.util.TimerTask
 import kotlin.system.exitProcess
 import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
 
@@ -62,12 +64,28 @@ import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
 class SettingsActivity : MIUIActivity() {
     private val activity = this
     private var isRegister = false
+    private var updateConfig = false
 
     companion object {
         const val OPEN_FONT_FILE = 2114745
     }
 
+    inner class UpdateConfigTask: TimerTask() {
+        override fun run() {
+            if (updateConfig) {
+                application.sendBroadcast(Intent().apply {
+                    action = "Lyric_Server"
+                    putExtra("Lyric_Type", "update_config")
+                })
+                updateConfig = false
+            }
+        }
+    }
+
     init {
+        setAllCallBacks {
+            updateConfig = true
+        }
         initView {
             registerMain(getString(R.string.AppName)) {
                 val adBinding = GetDataBinding(0) { view: View, i: Int, any: Any ->
@@ -963,7 +981,7 @@ class SettingsActivity : MIUIActivity() {
             if (intent.getBooleanExtra("close", false)) {
                 showFragment("close")
             }
-
+            Timer().schedule(UpdateConfigTask(), 0, 1000)
         }
     }
 
