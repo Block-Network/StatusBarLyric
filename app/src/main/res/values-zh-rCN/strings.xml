@@ -155,4 +155,5 @@
     <string name="showAd">观看广告来支持作者</string>
     <string name="MakeIcon">制作图标</string>
     <string name="MakeIconError">无法跳转，请检查是否安装\n爱玩机工具箱</string>
+    <string name="DelayedLoading">延迟加载</string>
 </resources>

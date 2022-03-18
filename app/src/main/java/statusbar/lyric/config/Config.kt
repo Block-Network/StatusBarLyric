@@ -265,6 +265,10 @@ class Config {
         return config.optBoolean("AppCenter", true)
     }
 
+    fun getDelayedLoading(): Int {
+        return config.optInt("DelayedLoadingTime", 0)
+    }
+
     fun clear() {
         config.clearConfig()
     }

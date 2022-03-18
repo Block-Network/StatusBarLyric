@@ -171,5 +171,6 @@
     <string name="showAd">Watch advertisements</string>
     <string name="MakeIcon">Make Icon</string>
     <string name="MakeIconError">Can\'t jump，Please check if it is installed\n爱玩机工具箱</string>
+    <string name="DelayedLoading">Delayed loading</string>
 
 </resources>

@@ -880,6 +880,8 @@ class SettingsActivity : MIUIActivity() {
                         )
                     }
                 ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!))
+                Text(resId = R.string.DelayedLoading)
+                SeekBarWithText("DelayedLoadingTime", 0, 50)
                 if (ActivityOwnSP.ownSPConfig.getAd()) {
                     CustomView(
                         AdmobManager.getBannerAd(

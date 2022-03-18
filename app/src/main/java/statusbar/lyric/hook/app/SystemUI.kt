@@ -95,13 +95,13 @@ class SystemUI: BaseHook() {
     // Handler
     private lateinit var iconUpdate: Handler
     private lateinit var updateIconColor: Handler
-    lateinit var updateMarginsIcon: Handler
+    private lateinit var updateMarginsIcon: Handler
     private lateinit var updateTextColor: Handler
     private lateinit var updateLyricPos: Handler
     private lateinit var updateLyric: Handler
     private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
-    lateinit var updateMarginsLyric: Handler
+    private lateinit var updateMarginsLyric: Handler
 
     // Color data
     private var textColor: Int = 0
@@ -111,7 +111,7 @@ class SystemUI: BaseHook() {
     private var timer: Timer? = null
     private var timerQueue: ArrayList<TimerTask> = arrayListOf()
     private var autoOffLyricTimer: TimerTask? = null
-    fun getAutoOffLyricTimer(): TimerTask {
+    private fun getAutoOffLyricTimer(): TimerTask {
         if (autoOffLyricTimer == null) {
             autoOffLyricTimer = object: TimerTask() {
                 override fun run() {
@@ -137,7 +137,7 @@ class SystemUI: BaseHook() {
     }
 
     private var autoLyricColorTimer: TimerTask? = null
-    fun getAutoLyricColorTimer(): TimerTask {
+    private fun getAutoLyricColorTimer(): TimerTask {
         if (autoLyricColorTimer == null) {
             autoLyricColorTimer = object: TimerTask() {
                 override fun run() {
@@ -154,7 +154,7 @@ class SystemUI: BaseHook() {
     }
 
     private var lyricAntiBurnTimer: TimerTask? = null
-    fun getLyricAntiBurnTimer(): TimerTask {
+    private fun getLyricAntiBurnTimer(): TimerTask {
         if (lyricAntiBurnTimer == null) {
             lyricAntiBurnTimer = object: TimerTask() {
                 var i = 1
@@ -300,11 +300,6 @@ class SystemUI: BaseHook() {
             addView(lyricSwitchView)
         }
 
-        (clock.parent as LinearLayout).apply {
-            gravity = Gravity.CENTER
-            orientation = LinearLayout.HORIZONTAL
-            if (config.getViewPosition() == "first") addView(lyricLayout, 1) else addView(lyricLayout)
-        }
         clockClickable = clock.isClickable
         clockOnClickListener = clock.getObjectField("mListenerInfo")?.getObjectField("mOnClickListener")
 
@@ -405,10 +400,16 @@ class SystemUI: BaseHook() {
             true
         }
 
-        updateConfig()
-        offLyric(LogMultiLang.initOk)
+        Handler(Looper.getMainLooper()).postDelayed({
+            (clock.parent as LinearLayout).apply {
+                gravity = Gravity.CENTER
+                orientation = LinearLayout.HORIZONTAL
+                if (config.getViewPosition() == "first") addView(lyricLayout, 1) else addView(lyricLayout)
+            }
+            updateConfig()
+            offLyric(LogMultiLang.initOk)
+        }, config.getDelayedLoading().toLong())
     }
-
 
     private fun updateConfig() {
         config.update()
