@@ -416,7 +416,7 @@ class SystemUI: BaseHook() {
         if (config.getAnim() != "random") {
             val anim = config.getAnim()
             lyricSwitchView.inAnimation = Utils.inAnim(anim)
-            lyricSwitchView.outAnimation = Utils.outAnim(anim)
+            //lyricSwitchView.outAnimation = Utils.outAnim(anim)
         }
         updateMarginsIcon.sendMessage(updateMarginsIcon.obtainMessage().also {
             it.arg1 = 0

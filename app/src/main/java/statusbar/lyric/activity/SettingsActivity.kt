@@ -211,7 +211,7 @@ class SettingsActivity : MIUIActivity() {
                     })
                 )
                 TextWithSwitch(TextV(resId = R.string.DebugMode), SwitchV("Debug"))
-                TextWithSwitch(TextV(text = "App Center"), SwitchV("CloseAppCenter", true))
+                TextWithSwitch(TextV(text = "App Center"), SwitchV("AppCenter", true))
                 TextSummaryArrow(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.ResetModuleDialog)
@@ -954,7 +954,7 @@ class SettingsActivity : MIUIActivity() {
             }
 
             register("close", getString(R.string.About)) {
-                TextWithSwitch(TextV(text = "AD"), SwitchV("CloseAd", true))
+                TextWithSwitch(TextV(text = "AD"), SwitchV("Ad", true))
             }
         }
     }

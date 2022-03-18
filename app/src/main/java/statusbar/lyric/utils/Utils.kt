@@ -215,10 +215,10 @@ object Utils {
             else -> return null
         }
         // 设置动画300ms
-        translateAnimation.duration = 300
+        translateAnimation.duration = 550
         val alphaAnimation = AlphaAnimation(0F, 1F)
         // 设置动画300ms
-        alphaAnimation.duration = 300
+        alphaAnimation.duration = 550
         animationSet.addAnimation(translateAnimation)
         animationSet.addAnimation(alphaAnimation)
         return animationSet
