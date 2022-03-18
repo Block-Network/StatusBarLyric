@@ -98,7 +98,8 @@ class SystemUI: BaseHook() {
     lateinit var updateMarginsIcon: Handler
     private lateinit var updateTextColor: Handler
     private lateinit var updateLyricPos: Handler
-    private lateinit var lyricUpdate: Handler
+    private lateinit var updateLyric: Handler
+    private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
     lateinit var updateMarginsLyric: Handler
 
@@ -176,7 +177,7 @@ class SystemUI: BaseHook() {
 
     override fun hook() {
         super.hook()
-        if (config.getUseSystemReverseColor()) systemReverseColor() // 使用系统方法反色
+        if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
 
         // StatusBarLyric
         "com.android.systemui.statusbar.phone.ClockController".findClassOrNull()?.hookAfterAllConstructors(systemUIHook).isNull {
@@ -371,38 +372,39 @@ class SystemUI: BaseHook() {
             true
         }
 
-        lyricUpdate = Handler(Looper.getMainLooper()) { message ->
+        updateLyric = Handler(Looper.getMainLooper()) { message ->
             val lyric: String = message.data.getString(lyricKey) ?: ""
-            if (lyric.isNotEmpty()) {
-                LogUtils.e("${LogMultiLang.updateLyric}: $lyric")
-                val display = if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
-                lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(lyricSwitchView.paint, lyric, display) else (display * config.getLyricWidth()) / 100
-                if (showLyric) { // Show lyric
-                    lyricLayout.visibility = View.VISIBLE
-                    if (config.getHideTime()) clock.layoutParams = LinearLayout.LayoutParams(0, 0) else clock.layoutParams = clockParams
-                    if (config.getLyricFontWeight() != 0) {
-                        lyricSwitchView.paint.apply {
-                            style = Paint.Style.FILL_AND_STROKE
-                            strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
-                        }
+            LogUtils.e("${LogMultiLang.updateLyric}: $lyric")
+            val display = if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
+            lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(lyricSwitchView.paint, lyric, display) else (display * config.getLyricWidth()) / 100
+            if (showLyric) { // Show lyric
+                lyricLayout.visibility = View.VISIBLE
+                if (config.getHideTime()) clock.layoutParams = LinearLayout.LayoutParams(0, 0) else clock.layoutParams = clockParams
+                if (config.getLyricFontWeight() != 0) {
+                    lyricSwitchView.paint.apply {
+                        style = Paint.Style.FILL_AND_STROKE
+                        strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
                     }
                 }
-                Utils.setStatusBar(application, false, config)
-                lyricSwitchView.setText(lyric)
-            } else {
-                LogUtils.e(LogMultiLang.offLyric)
-                lyricSwitchView.setSourceText("")
-                iconView.setImageDrawable(null) // remove icon
-                lyricLayout.visibility = View.GONE // hide lyric
-                clock.layoutParams = clockParams // show clock
-                if (config.getLyricSwitch()) { // set clock click listener
-                    clock.isClickable = clockClickable
-                    clock.getObjectField("mListenerInfo")?.setObjectField("mOnClickListener", clockOnClickListener)
-                }
-                Utils.setStatusBar(application, true, config) // set miui statusbar
             }
+            Utils.setStatusBar(application, false, config)
+            lyricSwitchView.setText(lyric)
             true
         }
+
+        offLyric = Handler(Looper.getMainLooper()) {
+            lyricSwitchView.setSourceText("")
+            iconView.setImageDrawable(null) // remove icon
+            lyricLayout.visibility = View.GONE // hide lyric
+            clock.layoutParams = clockParams // show clock
+            if (config.getLyricSwitch()) { // set clock click listener
+                clock.isClickable = clockClickable
+                clock.getObjectField("mListenerInfo")?.setObjectField("mOnClickListener", clockOnClickListener)
+            }
+            Utils.setStatusBar(application, true, config) // set miui statusbar
+            true
+        }
+
         updateConfig()
         offLyric(LogMultiLang.initOk)
     }
@@ -454,13 +456,7 @@ class SystemUI: BaseHook() {
     private fun offLyric(info: String) { // off Lyric
         LogUtils.e(info)
         stopTimer()
-        if (lyricLayout.visibility != View.GONE) {
-            lyricUpdate.sendMessage(lyricUpdate.obtainMessage().also {
-                it.data = Bundle().apply {
-                    putString(lyricKey, "")
-                }
-            })
-        }
+        if (lyricLayout.visibility != View.GONE) offLyric.sendEmptyMessage(0)
     }
 
     fun updateLyric(lyric: String, icon: String) {
@@ -509,7 +505,7 @@ class SystemUI: BaseHook() {
             lyricSwitchView.outAnimation = Utils.outAnim(anim)
         }
 
-        lyricUpdate.sendMessage(lyricUpdate.obtainMessage().also { // update lyric
+        updateLyric.sendMessage(updateLyric.obtainMessage().also { // update lyric
             it.data = Bundle().apply {
                 putString(lyricKey, lyric)
             }
