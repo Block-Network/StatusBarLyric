@@ -29,24 +29,23 @@ import android.text.TextPaint
 import android.text.TextUtils
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextSwitcher
 import android.widget.TextView
-import android.widget.ViewFlipper
 import statusbar.lyric.utils.ktx.callMethod
 
 @SuppressLint("ViewConstructor")
-class LyricSwitchView(context: Context, private var hasMeizu: Boolean): ViewFlipper(context) {
+class LyricSwitchView(context: Context, private var hasMeizu: Boolean): TextSwitcher(context) {
     private val lyricTextView: LyricTextView = LyricTextView(context)
     private val lyricTextView2: LyricTextView = LyricTextView(context)
     private val autoMarqueeTextView: AutoMarqueeTextView = AutoMarqueeTextView(context)
     private val autoMarqueeTextView2: AutoMarqueeTextView = AutoMarqueeTextView(context)
-    private val viewArray = arrayListOf(lyricTextView, lyricTextView2, autoMarqueeTextView, autoMarqueeTextView2)
-    private var switchLyric = false
+    private val viewArray: ArrayList<TextView> = arrayListOf()
 
     val text: CharSequence
-        get() = getThisView().text
+        get() = (currentView as TextView).text
 
     val paint: TextPaint
-        get() = getThisView().paint
+        get() = (currentView as TextView).paint
 
     init {
         lyricTextView.layoutParams =
@@ -74,64 +73,14 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean): ViewFlip
         if (hasMeizu) {
             addView(lyricTextView)
             addView(lyricTextView2)
+            viewArray.add(lyricTextView)
+            viewArray.add(lyricTextView2)
         } else {
             addView(autoMarqueeTextView)
             addView(autoMarqueeTextView2)
+            viewArray.add(autoMarqueeTextView)
+            viewArray.add(autoMarqueeTextView2)
         }
-    }
-
-    fun setStyle(bool: Boolean) {
-        viewArray.forEach { view -> (view.parent as? ViewGroup)?.removeView(view) }
-        if (bool) {
-            addView(lyricTextView)
-            addView(lyricTextView2)
-        } else {
-            addView(autoMarqueeTextView)
-            addView(autoMarqueeTextView2)
-        }
-    }
-
-    private fun getNextView(): TextView {
-        return if (switchLyric) {
-            switchLyric = false
-            if (hasMeizu) {
-                lyricTextView
-            } else {
-                autoMarqueeTextView
-            }
-        } else {
-            switchLyric = true
-            if (hasMeizu) {
-                lyricTextView2
-            } else {
-                autoMarqueeTextView2
-            }
-        }
-    }
-
-    private fun getThisView(): TextView {
-        return if (!switchLyric) {
-            if (hasMeizu) {
-                lyricTextView
-            } else {
-                autoMarqueeTextView
-            }
-        } else {
-            if (hasMeizu) {
-                lyricTextView2
-            } else {
-                autoMarqueeTextView2
-            }
-        }
-    }
-
-    fun setText(str: String) {
-        // 设置歌词文本
-        when (val next = getNextView()) {
-            is LyricTextView -> next.setTextT(str)
-            else -> next.text = str
-        }
-        showNext()
     }
 
     fun setWidth(i: Int) {

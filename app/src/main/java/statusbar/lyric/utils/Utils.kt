@@ -41,9 +41,11 @@ import android.view.animation.TranslateAnimation
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.Config
+import statusbar.lyric.utils.ktx.callMethod
+import statusbar.lyric.utils.ktx.classLoader
+import statusbar.lyric.utils.ktx.getObjectField
 import java.io.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 @SuppressLint("StaticFieldLeak")
@@ -215,10 +217,10 @@ object Utils {
             else -> return null
         }
         // 设置动画300ms
-        translateAnimation.duration = 550
+        translateAnimation.duration = 300
         val alphaAnimation = AlphaAnimation(0F, 1F)
         // 设置动画300ms
-        alphaAnimation.duration = 550
+        alphaAnimation.duration = 300
         animationSet.addAnimation(translateAnimation)
         animationSet.addAnimation(alphaAnimation)
         return animationSet

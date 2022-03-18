@@ -22,18 +22,15 @@
 
 package statusbar.lyric.hook
 
-import android.content.Context
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.hook.app.*
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.ktx.init
-import java.util.Locale
+import java.util.*
 
 class MainHook : IXposedHookLoadPackage {
-    var context: Context? = null
-
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         LogUtils.e("Debug enable")
         LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")

@@ -200,6 +200,12 @@ class SystemUI: BaseHook() {
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) {
+        if (!Log.getStackTraceString(Throwable()).contains("com.android.systemui.")) {
+            LogUtils.e("SystemUi(${lpparam.processName}) Pid: ${android.os.Process.myPid()} HashCode: ${param.thisObject.hashCode()} identityHashCode: ${System.identityHashCode(param.thisObject)} Throwable: ${Log.getStackTraceString(Throwable())}")
+            LogUtils.e("Skip hook!")
+            return
+        }
+
         application = AndroidAppHelper.currentApplication() // Get Application
 
         // Lock Screen Receiver
@@ -400,6 +406,7 @@ class SystemUI: BaseHook() {
             true
         }
 
+        LogUtils.e("DelayedLoading: " + config.getDelayedLoading())
         Handler(Looper.getMainLooper()).postDelayed({
             (clock.parent as LinearLayout).apply {
                 gravity = Gravity.CENTER
@@ -408,7 +415,7 @@ class SystemUI: BaseHook() {
             }
             updateConfig()
             offLyric(LogMultiLang.initOk)
-        }, config.getDelayedLoading().toLong())
+        }, config.getDelayedLoading().toLong() * 1000)
     }
 
     private fun updateConfig() {
@@ -419,7 +426,7 @@ class SystemUI: BaseHook() {
         if (config.getAnim() != "random") {
             val anim = config.getAnim()
             lyricSwitchView.inAnimation = Utils.inAnim(anim)
-            //lyricSwitchView.outAnimation = Utils.outAnim(anim)
+            lyricSwitchView.outAnimation = Utils.outAnim(anim)
         }
         updateMarginsIcon.sendMessage(updateMarginsIcon.obtainMessage().also {
             it.arg1 = 0
