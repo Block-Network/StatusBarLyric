@@ -41,10 +41,10 @@ import android.view.animation.TranslateAnimation
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.Config
-import statusbar.lyric.utils.ktx.callMethod
-import statusbar.lyric.utils.ktx.classLoader
-import statusbar.lyric.utils.ktx.getObjectField
-import java.io.*
+import java.io.DataOutputStream
+import java.io.IOException
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.util.*
 
 
@@ -118,14 +118,6 @@ object Utils {
         val pw = PrintWriter(sw)
         e.printStackTrace(pw)
         return sw.toString()
-    }
-
-    @JvmStatic
-    fun stringsListAdd(strArr: Array<String?>, newStr: String): Array<String?> {
-        val newStrArr = arrayOfNulls<String>(strArr.size + 1)
-        System.arraycopy(strArr, 0, newStrArr, 0, strArr.size)
-        newStrArr[strArr.size] = newStr
-        return newStrArr
     }
 
     //状态栏图标设置
