@@ -37,6 +37,12 @@
 - @QQ little ice
 - @咕灵谷灵咕 （感谢提供flyme获取歌词的技术支持）
 
+## 帮助翻译
+
+[![Crowdin](https://badges.crowdin.net/statusbarlyric/localized.svg)](https://crowdin.com/project/statusbarlyric)
+
+[点击进入Crowdin](https://crowdin.com/project/statusbarlyric)
+
 ### 下载
 
 - [Releases](https://github.com/577fkj/StatusBarLyric/releases)
@@ -66,7 +72,8 @@
 [合作名单](doc/Cooperate.md)   
 [赞助列表](doc/SPONSOR.md)  
 
-<img height="400px" src="./images/3to1.jpg" />
+<img height="400px" src="./images/alipay.jpg" />
+<img height="400px" src="./images/wechat.jpg" />
 
 ## EULA & License
 

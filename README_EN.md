@@ -23,11 +23,11 @@
 
 ### Theoretical support __all__ official system version
 
-## Supported Music app versions
+### Supported Music app versions
 
 - __Please check the instructions in the module__
 
-## Thanks list（In no particular order）
+### Thanks list（In no particular order）
 
 - @潇风残月 (Thanks for the provided library and the extreme streamlining of the code)
 - @柒猫Sebun_Neko (Thanks for the provided icon)
@@ -35,6 +35,13 @@
 - @YuKongA
 - @QQ little ice
 - @咕灵谷灵咕 (Thanks for providing technical support for flyme to get lyrics)
+
+### Help translate
+
+[![Crowdin](https://badges.crowdin.net/statusbarlyric/localized.svg)](https://crowdin.com/project/statusbarlyric)
+
+[Crowdin](https://crowdin.com/project/statusbarlyric)
+
 
 ### Downloads
 
@@ -50,17 +57,18 @@
 - [CoolAPK](https://www.coolapk.com/apk/cn.fkj233.xposed.statusbarlyric)
 - [BUG feedback (Github)](https://github.com/577fkj/StatusBarLyric/issues/new)
 
-## App active adaptation
+### App active adaptation
 
 please check [Api](https://github.com/577fkj/StatusBarApiExample)
 
-## Contributing
+### Contributing
 
 [Want to contribute?](doc/CONTRIBUTING_EN.md)  
 [Cooperate Lists](doc/Cooperate.md)  
-[Sponsorship list](doc/SPONSOR.md)  
+[Sponsorship list (CN)](doc/SPONSOR.md)  
 
-<img height="400px" src="./images/3to1.jpg" />
+<img height="400px" src="./images/alipay.jpg" />
+<img height="400px" src="./images/wechat.jpg" />
 
 ## EULA & License
 
