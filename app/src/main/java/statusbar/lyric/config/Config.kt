@@ -266,7 +266,7 @@ class Config {
     }
 
     fun getDelayedLoading(): Int {
-        return config.optInt("DelayedLoadingTime", 0)
+        return config.optInt("DelayedLoadingTime", 1)
     }
 
     fun clear() {
