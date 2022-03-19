@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ApplicableVersion">Applicable version</string>
+    <string name="HideDeskIcon">Hide desktop icons</string>
+    <string name="BaseSetting">Basic Settings</string>
+    <string name="AllSwitch">Master switch</string>
+    <string name="SongPauseCloseLyrics">Song Pause Close Lyrics</string>
+    <string name="LyricWidth">Lyric width</string>
+    <string name="Off">Off</string>
+    <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
+    <string name="LyricsAnimation">Lyrics animation</string>
+    <string name="LyricColor">* Lyric color</string>
+    <string name="IconColor">* Icon color</string>
+    <string name="LyricIcon">Lyrcs icon</string>
+    <string name="LyricSpeed">Lyrics scroll speed</string>
+    <string name="AdvancedSettings">Advanced settings</string>
+    <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
+    <string name="AbScreen">* Anti-burn screen</string>
+    <string name="IconHigh">Icon up and down position</string>
+    <string name="LyricPos">* Lyrics left and right position
+    </string>
+    <string name="Default">Default</string>
+    <string name="UnlockShow">Unlock display only</string>
+    <string name="AutoHideNotiIcon">Auto hide notification icons</string>
+    <string name="HideNetWork">Hide network speed</string>
+    <string name="AutoHideCarrierName">Auto hide lock screen carrier name</string>
+    <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
+    <string name="DebugMode">Debug Mode</string>
+    <string name="ReStartSystemUI">Restart SystemUI</string>
+    <string name="ResetModule">Reset module</string>
+    <string name="About">About</string>
+    <string name="AboutModule">About the module</string>
+    <string name="AboutTips1">Mainly responsible for Hook and UI</string>
+    <string name="AboutTips2">Mainly responsible for fool around</string>
+    <string name="ThkListTips">Thank you list (in no particular order)</string>
+    <string name="Other">Other</string>
+    <string name="Source">Project Address</string>
+    <string name="Tips">Tips</string>
+    <string name="ReStart">Restart APP</string>
+    <string name="VerExplanation">Version explanation</string>
+    <string name="Done">Done</string>
+    <string name="CurrentVer">current version</string>
+    <string name="VerExp">Applicable situation：\n
+        - APlayer Unknown ~ now(Status bar lyrics version)\n
+        - QQMusic Unknown ~ now(Status bar lyrics version)\n
+        - MiguMusic Unknown ~ now(Status bar lyrics version)\n
+        - Netease 8.2 10 ~ now(Status bar lyrics version)\n
+        - Netease unknown ~ 8.0 40(Car Bluetooth Lyric Version)\n
+        - KugouMusic Unknown ~ 11.1.3(Car Bluetooth Lyric Version)\n
+        - KuwoMusic Unknown ~ 10.1.0.0(Car Bluetooth Lyric Version)\n
+        - SaltPlayer 4.5 ~ now(API version)\n
+        - MeizuMusic Unknown ~ now(Status bar lyrics version)\n
+        - MIUIPlayer 4.6.0 ~ now(Car Bluetooth Lyric Version)
+    </string>
+    <string name="AppName">StatusBar lyric</string>
+    <string name="QuickTitle">Status bar lyric</string>
+    <string name="XposedTips">If the lyrics cannot be displayed, please try to stop the music software and restart the
+        SystemUI\n or check the instructions for use. Are you using the correct version?
+    </string>
+    <string name="NewVer">New version found</string>
+    <string name="Update">Update</string>
+    <string name="GetNewVerError">Failed to get the latest version download address:</string>
+    <string name="Cancel">Cancel</string>
+    <string name="NoVerUpdate">No new version to update</string>
+    <string name="CheckUpdateError">Check failed, please try again later!</string>
+    <string name="CheckUpdateFailed">Check for update failed</string>
+    <string name="top">Slide up</string>
+    <string name="lower">Decline</string>
+    <string name="left">Swipe left</string>
+    <string name="right">Swipe right</string>
+    <string name="random">random</string>
+    <string name="LyricColorTips">Please enter the hexadecimal color code, for example: #C0C0C0</string>
+    <string name="LyricColorError">The color code is incorrect!</string>
+    <string name="LyricPosTips">-900~900(Unit:pixel)</string>
+    <string name="LyricHighTips">-100~100(Unit:pixel)</string>
+    <string name="Ok">Sure</string>
+    <string name="HookSetTips">Hook has been set to:\n</string>
+    <string name="RestartSystemUI">Please restart SystemUI</string>
+    <string name="RestartUI">Are you sure to restart the system interface?</string>
+    <string name="RestartUITips">If you suddenly find that you cannot use it during use, you can try to restart the
+        SystemUI.
+    </string>
+    <string name="ResetModuleDialog">Do you want to reset the module</string>
+    <string name="ResetModuleDialogTips">The module is OK, please don\'t reset it at will</string>
+    <string name="StartCheckUpdate">Start checking for updates</string>
+    <string name="MeizuStyle">* Meizu lyrics scroll style</string>
+    <string name="lShowOnce">* Lyrics only scroll once</string>
+    <string name="WarnExplanation">Module Considerations</string>
+    <string name="WarnExp">Module notes\n\n
+        sThe module is perfectly used in the official status bar layout, modifying the layout may cause problems\n\n
+
+        If the lyrics cannot be displayed\n
+        Please restart the system interface and make sure the module switch is turned on\n
+        Please make sure to set the lyrics in the StatusBar or Bluetooth lyrics in the car to turn on in the music
+        software\n\n
+
+        The function changes with * need to restart the system interface\n\n
+
+        If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to GitHub
+        Telegram for feedback
+    </string>
+    <string name="NotSupport">This module is not activated, please activate this module in Lsposed\nThis module only
+        supports the latest version of Lsposed
+    </string>
+    <string name="PrivacyPolicy">Privacy Policy</string>
+    <string name="UseSystemReverseColor">* Reverse color using system mode</string>
+    <string name="IconSettings">Icon settings</string>
+    <string name="NewNotice">NewNotice</string>
+    <string name="GetNewNoticeError">Get NewNotice Error</string>
+    <string name="ResetSuccess">Reset successfully</string>
+    <string name="MakeIconTitle">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
+    <string name="LyricHigh">* Lyrics up and down position</string>
+    <string name="LyricSize">* Lyrics Size</string>
+    <string name="IconSize">Icon Size</string>
+    <string name="LyricSizeTips">0~50, current:</string>
+    <string name="LyricTips">0%~100%, current:</string>
+    <string name="Test">Test</string>
+    <string name="TestDialogTips">This function is embedded in the system UI and may cause the system UI to crash and
+        restart!
+    </string>
+    <string name="Start">Start</string>
+    <string name="Back">Back</string>
+    <string name="pseudoTime">Pseudo Time</string>
+    <string name="pseudoTimeStyle">Pseudo time format/Custom text</string>
+    <string name="pseudoTimeStyleTips">yyyy: year\n
+        MM: month\n
+        dd: day\n
+        hh: 1~12 hour clock (1-12)\n
+        HH: 24-hour clock (0-23)\n
+        mm: minutes\n
+        ss: seconds\n
+        E: day of the week\n
+        a: morning and afternoon signs\n
+        z: indicates the time zone\n
+        To display custom text, fill in the edit box below\n
+        Current format:
+    </string>
+    <string name="Custom">Custom</string>
+    <string name="InputCustomHook">Input custom hook, Input empty of off</string>
+    <string name="HideTime">Hide Time</string>
+    <string name="SponsoredList">Sponsored List</string>
+    <string name="Donate">Support us</string>
+    <string name="HookSure">Hook SystemUI</string>
+    <string name="HookSureSuccess">Hook SystemUI Success</string>
+    <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged
+        SystemUI
+    </string>
+    <string name="First">View Header</string>
+    <string name="Latest">View Latest</string>
+    <string name="ViewPosition">* View add position</string>
+    <string name="Menu">Menu</string>
+    <string name="CheckUpdate">Check Update</string>
+    <string name="Backup">Backup Config</string>
+    <string name="Recovery">Recovery Config</string>
+    <string name="Manual">Help Manual</string>
+    <string name="CustomFont">Custom font</string>
+    <string name="DeleteFont">Delete font</string>
+    <string name="CustomFontSuccess">Set custom font success</string>
+    <string name="CustomFoneFail">Set custom font fail</string>
+    <string name="DeleteFontSuccess">Delete font success</string>
+    <string name="DeleteFoneFail">Delete font fail</string>
+    <string name="ChooseFont">Choose font</string>
+    <string name="Reset">Reset</string>
+    <string name="FontWeight">Font weight</string>
+    <string name="LyricSpacing">Lyric spacing</string>
+    <string name="ReverseColorTime">Normal inversion time</string>
+    <string name="ReverseColorTimeTips">1–3000 (unit: milliseconds)</string>
+    <string name="AntiBurnTime">Burn-in move time</string>
+    <string name="AntiBurnTimeTips">1–3600000 (unit: milliseconds)</string>
+    <string name="SongPauseCloseLyricsTime">Song pause close Lyrics time</string>
+    <string name="showAd">Watch advertisements</string>
+    <string name="MakeIcon">Make Icon</string>
+    <string name="MakeIconError">Can\'t jump，Please check if it is installed\n爱玩机工具箱</string>
+    <string name="DelayedLoading">Delayed loading</string>
+</resources>
