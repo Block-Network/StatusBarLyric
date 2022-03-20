@@ -17,6 +17,7 @@
     <string name="ClickLyric">* 点击歌词切换时钟和歌词</string>
     <string name="AbScreen">* 防烧屏</string>
     <string name="IconHigh">* 图标上下位置</string>
+    <string name="LyricPos">* 歌词左右位置</string>
     <string name="Default">默认</string>
     <string name="UnlockShow">仅解锁显示</string>
     <string name="AutoHideNotiIcon">自动隐藏通知图标</string>
@@ -93,7 +94,6 @@
     <string name="PrivacyPolicy">隐私政策</string>
     <string name="UseSystemReverseColor">* 使用系统方式反色</string>
     <string name="IconSettings">图标设置</string>
-    <string name="LyricPos">* 歌词左右位置</string>
     <string name="NewNotice">新通知</string>
     <string name="GetNewNoticeError">获取新通知错误</string>
     <string name="ResetSuccess">重置成功</string>
