@@ -17,6 +17,7 @@
     <string name="ClickLyric">* 點擊歌詞切換時鐘和歌詞</string>
     <string name="AbScreen">防燒屏</string>
     <string name="IconHigh">* 圖標上下位置</string>
+    <string name="LyricPos">* 歌詞左右位置</string>
     <string name="Default">默认</string>
     <string name="UnlockShow">僅解鎖顯示</string>
     <string name="AutoHideNotiIcon">自動隱藏通知圖標</string>
@@ -55,7 +56,7 @@
     <string name="XposedTips">如果無法顯示歌詞，請嘗試停止音樂軟件並重啟系統界面\n或查看 使用說明 自己是否使用正確版本</string>
     <string name="NewVer">發現新版本</string>
     <string name="Update">更新</string>
-    <string name="GetNewVerError">"獲取最新版下載地址失敗: "</string>
+    <string name="GetNewVerError">獲取最新版下載地址失敗: </string>
     <string name="Cancel">取消</string>
     <string name="NoVerUpdate">無新版可更新</string>
     <string name="CheckUpdateError">檢查失敗，請稍後再試!</string>
@@ -95,7 +96,6 @@
     <string name="PrivacyPolicy">隱私政策</string>
     <string name="UseSystemReverseColor">* 使用系統方式反色</string>
     <string name="IconSettings">圖標設置</string>
-    <string name="LyricPos">* 歌詞左右位置</string>
     <string name="NewNotice">新通知</string>
     <string name="GetNewNoticeError">獲取新通知錯誤</string>
     <string name="ResetSuccess">重置成功</string>
@@ -107,8 +107,8 @@
     <string name="LyricTips">0%~100%</string>
     <string name="Test">測試</string>
     <string name="TestDialogTips">這個功能是內嵌在SystemUI裏的，可能會導致SystemUI崩潰重啓！</string>
-    <string name="Back">返回</string>
     <string name="Start">啓動</string>
+    <string name="Back">返回</string>
     <string name="pseudoTime">偽時間</string>
     <string name="pseudoTimeStyle">偽時間格式/自定義文字</string>
     <string name="pseudoTimeStyleTips">yyyy：年\n
