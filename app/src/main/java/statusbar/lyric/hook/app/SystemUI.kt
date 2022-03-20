@@ -46,6 +46,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -411,6 +412,7 @@ class SystemUI: BaseHook() {
             (clock.parent as LinearLayout).apply {
                 gravity = Gravity.CENTER
                 orientation = LinearLayout.HORIZONTAL
+                (lyricLayout.parent as? ViewGroup)?.removeView(lyricLayout)
                 if (config.getViewPosition() == "first") addView(lyricLayout, 1) else addView(lyricLayout)
             }
             updateConfig()
