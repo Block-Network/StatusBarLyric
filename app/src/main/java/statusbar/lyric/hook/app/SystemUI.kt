@@ -177,6 +177,9 @@ class SystemUI: BaseHook() {
         return lyricAntiBurnTimer as TimerTask
     }
 
+    private val lockScreenReceiver by lazy { LockScreenReceiver() }
+    private val lyricReceiver by lazy { LyricReceiver() }
+
     override fun hook() {
         super.hook()
         if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
@@ -205,17 +208,18 @@ class SystemUI: BaseHook() {
         application = AndroidAppHelper.currentApplication() // Get Application
 
         // Lock Screen Receiver
-        if (!isHook) {
-            application.registerReceiver(LockScreenReceiver(), IntentFilter().apply {
-                addAction(Intent.ACTION_USER_PRESENT)
-                addAction(Intent.ACTION_SCREEN_OFF)
-            })
+        runCatching { application.unregisterReceiver(lockScreenReceiver) }
+        application.registerReceiver(lockScreenReceiver, IntentFilter().apply {
+            addAction(Intent.ACTION_USER_PRESENT)
+            addAction(Intent.ACTION_SCREEN_OFF)
+        })
 
-            // Lyric Receiver
-            application.registerReceiver(LyricReceiver(), IntentFilter().apply {
-                addAction("Lyric_Server")
-            })
-        }
+        // Lyric Receiver
+        runCatching { application.unregisterReceiver(lyricReceiver) }
+        application.registerReceiver(lyricReceiver, IntentFilter().apply {
+            addAction("Lyric_Server")
+        })
+
         audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
 
         // Get display info
@@ -261,15 +265,12 @@ class SystemUI: BaseHook() {
             }
             thisField
         }
-        if (!isHook) {
-            application.sendBroadcast(Intent().apply {
-                action = "App_Server"
-                putExtra("app_Type", "Hook")
-                putExtra("Hook", clockField.isNotNull())
-            })
-        }
+        application.sendBroadcast(Intent().apply {
+            action = "App_Server"
+            putExtra("app_Type", "Hook")
+            putExtra("Hook", clockField.isNotNull())
+        })
         if (clockField == null) return
-        isHook = true
         clock = clockField.get(param.thisObject) as TextView
         clockParams = clock.layoutParams as LinearLayout.LayoutParams
 
