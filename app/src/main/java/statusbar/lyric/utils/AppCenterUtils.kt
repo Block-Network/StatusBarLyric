@@ -26,9 +26,6 @@ import statusbar.lyric.utils.ktx.lpparam
 class AppCenterUtils(appCenterKey: String) {
     lateinit var application: Application
 
-    private var thisName = ""
-    private var thisVersion = ""
-
     init {
         LogUtils.e("Hook App center")
 
@@ -67,6 +64,7 @@ class AppCenterUtils(appCenterKey: String) {
                     0
                 ).versionName
             )
+            if (lpparam.packageName == "com.android.systemui") SystemUICatching()
         }
     }
 
@@ -79,15 +77,30 @@ class AppCenterUtils(appCenterKey: String) {
         }
     }
 
-    fun onlineLog(msg: String) {
-        val exception = Exception(msg)
-        val extraData = mapOf(
-            "$thisName version" to thisVersion,
-            "Module version" to BuildConfig.VERSION_CODE.toString(),
-            "Module version name" to BuildConfig.VERSION_NAME,
-            "Module build type" to BuildConfig.BUILD_TYPE
-        )
-        Crashes.trackError(exception, extraData, null)
+    companion object {
+        private var thisName = ""
+        private var thisVersion = ""
+
+        fun onlineLog(msg: String) {
+            val exception = Exception(msg)
+            val extraData = mapOf(
+                "$thisName version" to thisVersion,
+                "Module version" to BuildConfig.VERSION_CODE.toString(),
+                "Module version name" to BuildConfig.VERSION_NAME,
+                "Module build type" to BuildConfig.BUILD_TYPE
+            )
+            Crashes.trackError(exception, extraData, null)
+        }
+
+        fun onlineLog(throwable: Throwable) {
+            val extraData = mapOf(
+                "$thisName version" to thisVersion,
+                "Module version" to BuildConfig.VERSION_CODE.toString(),
+                "Module version name" to BuildConfig.VERSION_NAME,
+                "Module build type" to BuildConfig.BUILD_TYPE
+            )
+            Crashes.trackError(throwable, extraData, null)
+        }
     }
 
     inner class CrashesFilter : AbstractCrashesListener() {
