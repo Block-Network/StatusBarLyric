@@ -980,10 +980,6 @@ class SettingsActivity : MIUIActivity() {
                 }
                 Text()
             }
-
-            register("close", getString(R.string.About)) {
-                TextWithSwitch(TextV(text = "AD"), SwitchV("Ad", true))
-            }
         }
     }
 
@@ -1021,26 +1017,11 @@ class SettingsActivity : MIUIActivity() {
                     }
                     setCancelable(false)
                 }.show()
-                val intent = Intent(this, SettingsActivity::class.java)
-                intent.action = "statusbar.lyric.SettingsActivity"
-                intent.putExtra("close", true)
-                val shortcutInfo = ShortcutInfo.Builder(this, "setting")
-                    .setShortLabel(getString(R.string.AppName))
-                    .setLongLabel(getString(R.string.AppName))
-                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_launcher_round))
-                    .setIntent(intent)
-                    .build()
-                getSystemService(ShortcutManager::class.java).dynamicShortcuts = listOf(shortcutInfo)
             } else {
                 ActivityUtils.getNotice(activity)
                 Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
                 Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
-                if (intent.getBooleanExtra("close", false)) {
-                    showHideSwitch = true
-                    showFragment("close")
-                }
             }
-
         }
     }
 
