@@ -55,8 +55,7 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 import kotlin.system.exitProcess
 import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
 
@@ -685,7 +684,7 @@ class SettingsActivity : MIUIActivity() {
                                 setRButton(R.string.Ok) {
                                     if (getEditText().isEmpty()) {
                                         iconConfig?.setIcon(icon, iconConfig.getDefaultIcon(icon))
-                                    }else{
+                                    } else {
                                         iconConfig?.setIcon(icon, getEditText())
                                     }
                                     dismiss()
@@ -992,6 +991,23 @@ class SettingsActivity : MIUIActivity() {
                 showFragment("close")
             }
             Timer().schedule(UpdateConfigTask(), 0, 1000)
+            val tips = "Tips1"
+            val preferences = activity.getSharedPreferences(tips, MODE_PRIVATE)
+            if (!preferences.getBoolean(tips, false)) {
+                MIUIDialog(activity) {
+                    setTitle(R.string.Tips)
+                    setMessage(R.string.FirstTip)
+                    setRButton(R.string.Ok) {
+                        preferences.edit().putBoolean(tips, true).apply();
+                        dismiss()
+                    }
+                    setLButton(R.string.Cancel) {
+                        dismiss()
+                        exitProcess(0)
+                    }
+                }.show()
+            }
+
         }
     }
 

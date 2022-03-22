@@ -158,4 +158,5 @@
     <string name="MakeIcon">製作圖標</string>
     <string name="MakeIconError">無法跳轉，請檢查是否安裝\n爱玩机工具箱</string>
     <string name="DelayedLoading">延遲加載</string>
+    <string name="FirstTip">本模塊使用了 Microsoft AppCenter 來統計或收集月活量、崩潰數據和用戶信息等指標\\n本模塊內廣告由Google Ads提供，一切內容與模塊無關</string>
 </resources>
