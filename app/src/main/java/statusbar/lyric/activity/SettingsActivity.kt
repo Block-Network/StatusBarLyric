@@ -29,8 +29,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -56,7 +59,6 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
-import statusbar.lyric.utils.ktx.lpparam
 import java.util.*
 import kotlin.system.exitProcess
 import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
@@ -64,6 +66,7 @@ import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
 
 class SettingsActivity : MIUIActivity() {
     private val activity = this
+    private var showHideSwitch = false
     private var isRegister = false
     private var updateConfig = false
 
@@ -989,13 +992,11 @@ class SettingsActivity : MIUIActivity() {
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
         if (isLoad && !isRegister) {
+            isRegister = true
             registerReceiver(AppReceiver(), IntentFilter().apply {
                 addAction("App_Server")
             })
-            isRegister = true
-            ActivityUtils.getNotice(activity)
             Crashes.setListener(CrashesFilter())
-
             if (BuildConfig.DEBUG) {
                 ActivityOwnSP.ownSPConfig.setDebug(true)
             }
@@ -1003,11 +1004,6 @@ class SettingsActivity : MIUIActivity() {
                 application, Utils.appCenterKey,
                 Analytics::class.java, Crashes::class.java
             )
-            Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
-            Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
-            if (intent.getBooleanExtra("close", false)) {
-                showFragment("close")
-            }
             Timer().schedule(UpdateConfigTask(), 0, 1000)
             val tips = "Tips1"
             val preferences = activity.getSharedPreferences(tips, MODE_PRIVATE)
@@ -1016,14 +1012,33 @@ class SettingsActivity : MIUIActivity() {
                     setTitle(R.string.Tips)
                     setMessage(R.string.FirstTip)
                     setRButton(R.string.Ok) {
-                        preferences.edit().putBoolean(tips, true).apply();
+                        preferences.edit().putBoolean(tips, true).apply()
                         dismiss()
                     }
                     setLButton(R.string.Cancel) {
                         dismiss()
                         exitProcess(0)
                     }
+                    setCancelable(false)
                 }.show()
+                val intent = Intent(this, SettingsActivity::class.java)
+                intent.action = "statusbar.lyric.SettingsActivity"
+                intent.putExtra("close", true)
+                val shortcutInfo = ShortcutInfo.Builder(this, "setting")
+                    .setShortLabel(getString(R.string.AppName))
+                    .setLongLabel(getString(R.string.AppName))
+                    .setIcon(Icon.createWithResource(this, R.mipmap.ic_launcher_round))
+                    .setIntent(intent)
+                    .build()
+                getSystemService(ShortcutManager::class.java).dynamicShortcuts = listOf(shortcutInfo)
+            } else {
+                ActivityUtils.getNotice(activity)
+                Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
+                Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
+                if (intent.getBooleanExtra("close", false)) {
+                    showHideSwitch = true
+                    showFragment("close")
+                }
             }
 
         }
