@@ -160,7 +160,8 @@
         crash data, and user information\nThe advertisements in this module are provided by Google Ads, and all content
         has nothing to do with the module
     </string>
-    <string name="TitleTips1">Please do not take screenshots of the feedback log\nsave it as a file feedback in the upper right corner of the Lsp
+    <string name="TitleTips1">Please do not take screenshots of the feedback log\n
+        save it as a file feedback in the upper right corner of the Lsp
     </string>
     <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
 </resources>
