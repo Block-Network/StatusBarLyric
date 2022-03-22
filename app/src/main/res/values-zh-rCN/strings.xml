@@ -158,6 +158,6 @@
     <string name="DelayedLoading">延迟加载</string>
     <string name="FirstTip">本模块使用了 Microsoft AppCenter 来统计或收集月活量、崩溃数据和用户信息等指标\n本模块内广告由Google Ads提供，一切内容与模块无关
     </string>
-    <string name="TitleTips1">反馈日志请不要截图\\nLsp右上角保存成文件反馈</string>
+    <string name="TitleTips1">反馈日志请不要截图\nLsp右上角保存成文件反馈</string>
     <string name="TitleTips2">带 * 的功能改动需要重启系统界面</string>
 </resources>
