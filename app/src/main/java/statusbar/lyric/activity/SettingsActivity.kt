@@ -31,6 +31,7 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -55,6 +56,7 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
+import statusbar.lyric.utils.ktx.lpparam
 import java.util.*
 import kotlin.system.exitProcess
 import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
@@ -879,27 +881,28 @@ class SettingsActivity : MIUIActivity() {
                         )
                     }
                 ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!))
-                Text(resId = R.string.DelayedLoading, onClickListener = {  MIUIDialog(activity) {
-                    setTitle(R.string.DelayedLoading)
-                    setEditText(ActivityOwnSP.ownSPConfig.getDelayedLoading().toString(), "0")
-                    setRButton(R.string.Ok) {
-                        if (getEditText().isEmpty()) {
-                            ActivityOwnSP.ownSPConfig.setDelayedLoading(1)
-                        } else {
-                            try {
-                                ActivityOwnSP.ownSPConfig.setDelayedLoading(getEditText().toInt())
-                            } catch (e: Throwable) {
-                                ActivityUtils.showToastOnLooper(
-                                    activity,
-                                    getString(R.string.LyricColorError)
-                                )
+                Text(resId = R.string.DelayedLoading, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.DelayedLoading)
+                        setEditText(ActivityOwnSP.ownSPConfig.getDelayedLoading().toString(), "0")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isEmpty()) {
                                 ActivityOwnSP.ownSPConfig.setDelayedLoading(1)
+                            } else {
+                                try {
+                                    ActivityOwnSP.ownSPConfig.setDelayedLoading(getEditText().toInt())
+                                } catch (e: Throwable) {
+                                    ActivityUtils.showToastOnLooper(
+                                        activity,
+                                        getString(R.string.LyricColorError)
+                                    )
+                                    ActivityOwnSP.ownSPConfig.setDelayedLoading(1)
+                                }
                             }
+                            dismiss()
                         }
-                        dismiss()
-                    }
-                    setLButton(R.string.Cancel) { dismiss() }
-                }.show()
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
                 })
                 SeekBarWithText("DelayedLoadingTime", 1, 5)
                 if (ActivityOwnSP.ownSPConfig.getAd()) {
@@ -1000,6 +1003,8 @@ class SettingsActivity : MIUIActivity() {
                 application, Utils.appCenterKey,
                 Analytics::class.java, Crashes::class.java
             )
+            Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
+            Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
             if (intent.getBooleanExtra("close", false)) {
                 showFragment("close")
             }

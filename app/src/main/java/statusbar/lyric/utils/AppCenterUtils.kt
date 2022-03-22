@@ -58,11 +58,7 @@ class AppCenterUtils(appCenterKey: String) {
                 application, appCenterKey,
                 Analytics::class.java, Crashes::class.java
             )
-            Analytics.trackEvent(
-                lpparam.packageName + " | " + application.packageManager.getPackageInfo(
-                    lpparam.packageName,
-                    0
-                ).versionName
+            Analytics.trackEvent("${lpparam.packageName} | ${application.packageManager.getPackageInfo(lpparam.packageName, 0).versionName}"
             )
             if (lpparam.packageName == "com.android.systemui") SystemUICatching()
         }
