@@ -69,18 +69,6 @@ class SettingsActivity : MIUIActivity() {
         const val OPEN_FONT_FILE = 2114745
     }
 
-    inner class UpdateConfigTask : TimerTask() {
-        override fun run() {
-            if (updateConfig) {
-                application.sendBroadcast(Intent().apply {
-                    action = "Lyric_Server"
-                    putExtra("Lyric_Type", "update_config")
-                })
-                updateConfig = false
-            }
-        }
-    }
-
     init {
         setAllCallBacks {
             updateConfig = true
@@ -137,6 +125,10 @@ class SettingsActivity : MIUIActivity() {
                         colorId = android.R.color.holo_red_dark
                     )
                 )
+                val givenList =
+                    listOf(getString(R.string.TitleTips1), getString(R.string.TitleTips2), getString(R.string.FirstTip))
+                val randomElement = givenList[Random().nextInt(givenList.size)]
+                TitleText(text = randomElement)
                 Line()
                 TitleText(resId = R.string.BaseSetting)
                 TextWithSwitch(TextV(resId = R.string.AllSwitch), SwitchV("LService"))
@@ -887,7 +879,28 @@ class SettingsActivity : MIUIActivity() {
                         )
                     }
                 ), dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!))
-                Text(resId = R.string.DelayedLoading)
+                Text(resId = R.string.DelayedLoading, onClickListener = {  MIUIDialog(activity) {
+                    setTitle(R.string.DelayedLoading)
+                    setEditText(ActivityOwnSP.ownSPConfig.getDelayedLoading().toString(), "0")
+                    setRButton(R.string.Ok) {
+                        if (getEditText().isEmpty()) {
+                            ActivityOwnSP.ownSPConfig.setDelayedLoading(1)
+                        } else {
+                            try {
+                                ActivityOwnSP.ownSPConfig.setDelayedLoading(getEditText().toInt())
+                            } catch (e: Throwable) {
+                                ActivityUtils.showToastOnLooper(
+                                    activity,
+                                    getString(R.string.LyricColorError)
+                                )
+                                ActivityOwnSP.ownSPConfig.setDelayedLoading(1)
+                            }
+                        }
+                        dismiss()
+                    }
+                    setLButton(R.string.Cancel) { dismiss() }
+                }.show()
+                })
                 SeekBarWithText("DelayedLoadingTime", 1, 5)
                 if (ActivityOwnSP.ownSPConfig.getAd()) {
                     CustomView(
@@ -1032,6 +1045,18 @@ class SettingsActivity : MIUIActivity() {
                         )
                     }
                 }
+            }
+        }
+    }
+
+    inner class UpdateConfigTask : TimerTask() {
+        override fun run() {
+            if (updateConfig) {
+                application.sendBroadcast(Intent().apply {
+                    action = "Lyric_Server"
+                    putExtra("Lyric_Type", "update_config")
+                })
+                updateConfig = false
             }
         }
     }

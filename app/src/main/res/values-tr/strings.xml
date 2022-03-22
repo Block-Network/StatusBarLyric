@@ -176,4 +176,7 @@
         crash data, and user information\\nThe advertisements in this module are provided by Google Ads, and all content
         has nothing to do with the module
     </string>
+    <string name="TitleTips1">Please do not take screenshots of the feedback log\\nsave it as a file feedback in the
+        upper right corner of the Lsp
+    </string>
 </resources>
