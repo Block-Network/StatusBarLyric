@@ -70,7 +70,7 @@ class MainHook : IXposedHookLoadPackage {
             }
             "com.miui.player" -> {
                 LogUtils.e("start Hook xiaomi Player")
-                MIPlayer()
+                Miplayer()
             }
             "com.meizu.media.music" -> {
                 LogUtils.e("start Hook Meizu Music")

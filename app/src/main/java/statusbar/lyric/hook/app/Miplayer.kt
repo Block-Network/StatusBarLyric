@@ -1,7 +1,6 @@
 package statusbar.lyric.hook.app
 
 import android.content.Context
-import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
@@ -10,7 +9,7 @@ import statusbar.lyric.utils.ktx.hookAfterConstructor
 import statusbar.lyric.utils.ktx.hookBeforeMethod
 import statusbar.lyric.utils.ktx.setReturnConstant
 
-class MIPlayer: BaseHook() {
+class Miplayer: BaseHook() {
     private val songInfo = "com.tencent.qqmusic.core.song.SongInfo".findClass()
     lateinit var context: Context
 
@@ -24,7 +23,7 @@ class MIPlayer: BaseHook() {
             val lyric = if (it.args[1] == null) return@hookBeforeMethod else it.args[1].toString()
             it.args[1] = null // 去除妙播显示歌词
             LogUtils.e("小米音乐: $lyric")
-            Utils.sendLyric(context, lyric, "MIPlayer")
+            Utils.sendLyric(context, lyric, "MiPlayer")
         }
     }
 }

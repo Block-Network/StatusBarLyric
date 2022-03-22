@@ -70,7 +70,7 @@ class SettingsActivity : MIUIActivity() {
         const val OPEN_FONT_FILE = 2114745
     }
 
-    inner class UpdateConfigTask: TimerTask() {
+    inner class UpdateConfigTask : TimerTask() {
         override fun run() {
             if (updateConfig) {
                 application.sendBroadcast(Intent().apply {
@@ -355,30 +355,33 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LWidth", -1, 100, defaultProgress = -1, dataBindingSend = dataBinding.bindingSend)
-                Text(resId = R.string.LyricAutoMaxWidth, dataBindingRecv = dataBinding.binding.getRecv(1), onClickListener = {
-                    MIUIDialog(activity) {
-                        setTitle(R.string.LyricAutoMaxWidth)
-                        setMessage(R.string.LyricTips)
-                        setEditText(ActivityOwnSP.ownSPConfig.getLyricMaxWidth().toString(), "-1")
-                        setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
-                            } else {
-                                try {
-                                    ActivityOwnSP.ownSPConfig.setLyricMaxWidth(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
+                Text(
+                    resId = R.string.LyricAutoMaxWidth,
+                    dataBindingRecv = dataBinding.binding.getRecv(1),
+                    onClickListener = {
+                        MIUIDialog(activity) {
+                            setTitle(R.string.LyricAutoMaxWidth)
+                            setMessage(R.string.LyricTips)
+                            setEditText(ActivityOwnSP.ownSPConfig.getLyricMaxWidth().toString(), "-1")
+                            setRButton(R.string.Ok) {
+                                if (getEditText().isEmpty()) {
                                     ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
+                                } else {
+                                    try {
+                                        ActivityOwnSP.ownSPConfig.setLyricMaxWidth(getEditText().toInt())
+                                    } catch (e: Throwable) {
+                                        ActivityUtils.showToastOnLooper(
+                                            activity,
+                                            getString(R.string.LyricColorError)
+                                        )
+                                        ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
+                                    }
                                 }
+                                dismiss()
                             }
-                            dismiss()
-                        }
-                        setLButton(R.string.Cancel) { dismiss() }
-                    }.show()
-                })
+                            setLButton(R.string.Cancel) { dismiss() }
+                        }.show()
+                    })
                 SeekBarWithText(
                     "LMaxWidth",
                     -1,
@@ -669,7 +672,7 @@ class SettingsActivity : MIUIActivity() {
 
             register("icon", getString(R.string.IconSettings)) {
                 val iconConfig = Utils.getSP(activity, "Icon_Config")?.let { IconConfig(it) }
-                for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "MIPlayer", "Default")) {
+                for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")) {
                     Author(
                         BitmapDrawable(Utils.stringToBitmap(iconConfig?.getIcon(icon))).also { it.setTint(getColor(R.color.customIconColor)) },
                         icon,
@@ -680,8 +683,13 @@ class SettingsActivity : MIUIActivity() {
                                 setMessage(R.string.MakeIconTitle)
                                 setEditText(iconConfig?.getIcon(icon).toString(), "")
                                 setRButton(R.string.Ok) {
-                                    iconConfig?.setIcon(icon, getEditText())
+                                    if (getEditText().isEmpty()) {
+                                        iconConfig?.setIcon(icon, iconConfig.getDefaultIcon(icon))
+                                    }else{
+                                        iconConfig?.setIcon(icon, getEditText())
+                                    }
                                     dismiss()
+//                                    showFragment("icon")
                                 }
                                 setLButton(R.string.Cancel) { dismiss() }
                             }.show()
