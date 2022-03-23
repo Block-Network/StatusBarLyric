@@ -29,11 +29,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
-import android.content.pm.ShortcutInfo
-import android.content.pm.ShortcutManager
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -59,6 +56,7 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
+import java.io.File
 import java.util.*
 import kotlin.system.exitProcess
 import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
@@ -66,7 +64,6 @@ import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
 
 class SettingsActivity : MIUIActivity() {
     private val activity = this
-    private var showHideSwitch = false
     private var isRegister = false
     private var updateConfig = false
 
@@ -1001,14 +998,17 @@ class SettingsActivity : MIUIActivity() {
                 Analytics::class.java, Crashes::class.java
             )
             Timer().schedule(UpdateConfigTask(), 0, 1000)
-            val tips = "Tips1"
-            val preferences = activity.getSharedPreferences(tips, MODE_PRIVATE)
-            if (!preferences.getBoolean(tips, false)) {
+            val file = File("${application.filesDir.path}/first")
+            if ((file.exists() && file.isFile && file.canRead())) {
+                ActivityUtils.getNotice(activity)
+                Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
+                Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
+            } else {
                 MIUIDialog(activity) {
                     setTitle(R.string.Tips)
                     setMessage(R.string.FirstTip)
                     setRButton(R.string.Ok) {
-                        preferences.edit().putBoolean(tips, true).apply()
+                        file.writeText("")
                         dismiss()
                     }
                     setLButton(R.string.Cancel) {
@@ -1017,10 +1017,7 @@ class SettingsActivity : MIUIActivity() {
                     }
                     setCancelable(false)
                 }.show()
-            } else {
-                ActivityUtils.getNotice(activity)
-                Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
-                Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
+
             }
         }
     }
