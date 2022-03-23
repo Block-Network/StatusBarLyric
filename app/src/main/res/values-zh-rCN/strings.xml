@@ -164,4 +164,5 @@
         save it as a file feedback in the upper right corner of the Lsp
     </string>
     <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
+    <string name="TitleTips3">The title above the vertical scroll bar can be clicked to manually enter the range</string>
 </resources>
