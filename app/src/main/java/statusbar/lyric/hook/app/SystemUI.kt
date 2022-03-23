@@ -63,7 +63,7 @@ import java.io.File
 import java.lang.reflect.Field
 import java.util.*
 
-class SystemUI: BaseHook() {
+class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
     var musicServer: ArrayList<String> = arrayListOf(
         "com.kugou",
@@ -72,7 +72,6 @@ class SystemUI: BaseHook() {
         "cn.kuwo",
         "remix.myplayer",
         "cmccwm.mobilemusic",
-        "com.netease.cloudmusic.lite",
         "com.meizu.media.music",
         "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew"
     )
@@ -115,7 +114,7 @@ class SystemUI: BaseHook() {
     private var autoOffLyricTimer: TimerTask? = null
     private fun getAutoOffLyricTimer(): TimerTask {
         if (autoOffLyricTimer == null) {
-            autoOffLyricTimer = object: TimerTask() {
+            autoOffLyricTimer = object : TimerTask() {
                 override fun run() {
                     try {
                         if (config.getLyricService()) {
@@ -141,7 +140,7 @@ class SystemUI: BaseHook() {
     private var autoLyricColorTimer: TimerTask? = null
     private fun getAutoLyricColorTimer(): TimerTask {
         if (autoLyricColorTimer == null) {
-            autoLyricColorTimer = object: TimerTask() {
+            autoLyricColorTimer = object : TimerTask() {
                 override fun run() {
                     try {
                         // 设置颜色
@@ -158,7 +157,7 @@ class SystemUI: BaseHook() {
     private var lyricAntiBurnTimer: TimerTask? = null
     private fun getLyricAntiBurnTimer(): TimerTask {
         if (lyricAntiBurnTimer == null) {
-            lyricAntiBurnTimer = object: TimerTask() {
+            lyricAntiBurnTimer = object : TimerTask() {
                 var i = 1
                 var order = true
                 var iconPos = 0
@@ -185,23 +184,24 @@ class SystemUI: BaseHook() {
         if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
 
         // StatusBarLyric
-        "com.android.systemui.statusbar.phone.ClockController".findClassOrNull()?.hookAfterAllConstructors(systemUIHook).isNull {
-            "com.android.systemui.statusbar.phone.CollapsedStatusBarFragment".hookAfterMethod(
-                "onViewCreated",
-                View::class.java,
-                Bundle::class.java,
-                hooker = systemUIHook
-            ).isNull {
-                "com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment".hookAfterMethod(
+        "com.android.systemui.statusbar.phone.ClockController".findClassOrNull()?.hookAfterAllConstructors(systemUIHook)
+            .isNull {
+                "com.android.systemui.statusbar.phone.CollapsedStatusBarFragment".hookAfterMethod(
                     "onViewCreated",
                     View::class.java,
                     Bundle::class.java,
                     hooker = systemUIHook
                 ).isNull {
-                    LogUtils.e(LogMultiLang.noSupportSystem)
+                    "com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment".hookAfterMethod(
+                        "onViewCreated",
+                        View::class.java,
+                        Bundle::class.java,
+                        hooker = systemUIHook
+                    ).isNull {
+                        LogUtils.e(LogMultiLang.noSupportSystem)
+                    }
                 }
             }
-        }
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) {
@@ -226,7 +226,7 @@ class SystemUI: BaseHook() {
         val displayMetrics = DisplayMetrics()
         (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
         val displayWidth: Int = displayMetrics.widthPixels
-        val displayHeight : Int = displayMetrics.heightPixels
+        val displayHeight: Int = displayMetrics.heightPixels
 
         // Get system clock view
         val clockField = if (config.getHook().isNotEmpty()) {
@@ -260,7 +260,11 @@ class SystemUI: BaseHook() {
                     LogUtils.e("${LogMultiLang.tries} $field ${LogMultiLang.fieldSuccess}")
                     break
                 } catch (e: NoSuchFieldError) {
-                    LogUtils.e("${LogMultiLang.tries} $field ${LogMultiLang.fieldFail}: $e\n" + Log.getStackTraceString(e))
+                    LogUtils.e(
+                        "${LogMultiLang.tries} $field ${LogMultiLang.fieldFail}: $e\n" + Log.getStackTraceString(
+                            e
+                        )
+                    )
                 }
             }
             thisField
@@ -277,15 +281,20 @@ class SystemUI: BaseHook() {
         lyricSwitchView = LyricSwitchView(application, config.getLyricStyle()).apply {
             width = (displayWidth * 35) / 100
             height = clock.height
-            setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
+            setTextSize(
+                TypedValue.COMPLEX_UNIT_SHIFT,
+                if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat()
+            )
             setMargins(10, 0, 0, 0)
             setMarqueeRepeatLimit(if (config.getLyricStyle()) 1 else -1)
             setSingleLine(true)
             setMaxLines(1)
-            setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
+            setLetterSpacings(
+                if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
+            )
 
             val file = File(application.filesDir.path + "/font")
-            if (file.exists() || file.isFile || file.canRead()) {
+            if (file.exists() && file.isFile && file.canRead()) {
                 setTypeface(Typeface.createFromFile(application.filesDir.path + "/font"))
                 LogUtils.e(LogMultiLang.fontLoad)
             } else {
@@ -303,7 +312,10 @@ class SystemUI: BaseHook() {
 
         // 创建布局
         lyricLayout = LinearLayout(application).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0) }
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).also { it.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0) }
             addView(iconView)
             addView(lyricSwitchView)
         }
@@ -366,7 +378,12 @@ class SystemUI: BaseHook() {
         }
 
         updateLyricPos = Handler(Looper.getMainLooper()) {
-            (lyricSwitchView.layoutParams as LinearLayout.LayoutParams).setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
+            (lyricSwitchView.layoutParams as LinearLayout.LayoutParams).setMargins(
+                config.getLyricPosition(),
+                config.getLyricHigh(),
+                0,
+                0
+            )
             true
         }
 
@@ -378,11 +395,17 @@ class SystemUI: BaseHook() {
         updateLyric = Handler(Looper.getMainLooper()) { message ->
             val lyric: String = message.data.getString(lyricKey) ?: ""
             LogUtils.e("${LogMultiLang.updateLyric}: $lyric")
-            val display = if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
-            lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(lyricSwitchView.paint, lyric, display) else (display * config.getLyricWidth()) / 100
+            val display =
+                if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
+            lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(
+                lyricSwitchView.paint,
+                lyric,
+                display
+            ) else (display * config.getLyricWidth()) / 100
             if (showLyric) { // Show lyric
                 lyricLayout.visibility = View.VISIBLE
-                if (config.getHideTime()) clock.layoutParams = LinearLayout.LayoutParams(0, 0) else clock.layoutParams = clockParams
+                if (config.getHideTime()) clock.layoutParams = LinearLayout.LayoutParams(0, 0) else clock.layoutParams =
+                    clockParams
                 if (config.getLyricFontWeight() != 0) {
                     lyricSwitchView.paint.apply {
                         style = Paint.Style.FILL_AND_STROKE
@@ -503,9 +526,18 @@ class SystemUI: BaseHook() {
             })
         }
 
-        if (config.getLyricAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
-        if (config.getAntiBurn()) startTimer(config.getAntiBurnTime().toLong(), getLyricAntiBurnTimer()) // Anti burn screen
-        if (!config.getUseSystemReverseColor()) startTimer(config.getReverseColorTime().toLong(), getAutoLyricColorTimer()) // not use system reverse color
+        if (config.getLyricAutoOff()) startTimer(
+            config.getLyricAutoOffTime().toLong(),
+            getAutoOffLyricTimer()
+        ) // auto off lyric
+        if (config.getAntiBurn()) startTimer(
+            config.getAntiBurnTime().toLong(),
+            getLyricAntiBurnTimer()
+        ) // Anti burn screen
+        if (!config.getUseSystemReverseColor()) startTimer(
+            config.getReverseColorTime().toLong(),
+            getAutoLyricColorTimer()
+        ) // not use system reverse color
 
         if (config.getAnim() == "random") {
             val anim = arrayOf(
@@ -541,7 +573,9 @@ class SystemUI: BaseHook() {
     }
 
     private fun getLyricWidth(paint: Paint, text: String, display: Int): Int {
-        return if (config.getLyricMaxWidth() == -1 || paint.measureText(text).toInt() + 6 <= (display * config.getLyricMaxWidth()) / 100) {
+        return if (config.getLyricMaxWidth() == -1 || paint.measureText(text)
+                .toInt() + 6 <= (display * config.getLyricMaxWidth()) / 100
+        ) {
             paint.measureText(text).toInt() + 6
         } else {
             (display * config.getLyricMaxWidth()) / 100
@@ -549,18 +583,24 @@ class SystemUI: BaseHook() {
     }
 
     private fun setColor(int: Int) {
-        updateTextColor.sendMessage(updateTextColor.obtainMessage().also { it.arg1 = if (textColor == 0) int else textColor }) // update text color
-        updateIconColor.sendMessage(updateIconColor.obtainMessage().also { it.arg1 = if (iconColor == 0) int else iconColor }) // update icon color
+        updateTextColor.sendMessage(
+            updateTextColor.obtainMessage()
+                .also { it.arg1 = if (textColor == 0) int else textColor }) // update text color
+        updateIconColor.sendMessage(
+            updateIconColor.obtainMessage()
+                .also { it.arg1 = if (iconColor == 0) int else iconColor }) // update icon color
     }
 
     private fun systemReverseColor() {
         try {
-            val darkIconDispatcher = "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
+            val darkIconDispatcher =
+                "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
             if (darkIconDispatcher != null) {
                 val find = darkIconDispatcher.hookAfterAllMethods("getTint") {
                     try {
                         setColor(it.args[2] as Int)
-                    } catch (_: Throwable) {}
+                    } catch (_: Throwable) {
+                    }
                 }
                 if (find.isEmpty()) {
                     LogUtils.e(LogMultiLang.findAntiMethodFail)
