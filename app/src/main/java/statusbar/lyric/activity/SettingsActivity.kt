@@ -128,7 +128,12 @@ class SettingsActivity : MIUIActivity() {
                     )
                 )
                 val givenList =
-                    listOf(getString(R.string.TitleTips1), getString(R.string.TitleTips2), getString(R.string.FirstTip))
+                    listOf(
+                        getString(R.string.TitleTips1),
+                        getString(R.string.TitleTips2),
+                        getString(R.string.TitleTips3),
+                        getString(R.string.FirstTip)
+                    )
                 val randomElement = givenList[Random().nextInt(givenList.size)]
                 TitleText(text = randomElement)
                 Line()
