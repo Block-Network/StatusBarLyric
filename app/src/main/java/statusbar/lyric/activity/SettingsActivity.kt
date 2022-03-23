@@ -37,6 +37,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.MIUIPopupData
 import cn.fkj233.ui.activity.view.*
@@ -966,6 +967,32 @@ class SettingsActivity : MIUIActivity() {
                         "https://github.com/577fkj/StatusBarLyric"
                     )
                 }))
+
+                val dict: HashMap<String, String> = hashMapOf()
+                dict["Alipay"] = "Alipay"
+                dict["WeChat"] = "WeChat"
+                dict["Afdian"] = "Afdian"
+                TextWithSpinner(TextV(resId = R.string.Donate), SpinnerV(arrayListOf(
+                    MIUIPopupData("Alipay") {
+                        MIUIDialog(activity) {
+                            setTitle(R.string.Donate)
+                            setMessage("Alipay")
+                            addView(ImageView(activity).also{it.setImageDrawable(resources.getDrawable(R.drawable.alipay)) })
+                            setLButton(R.string.Ok) { dismiss() }
+                        }.show()
+                    },
+                    MIUIPopupData("WeChat") {
+                        MIUIDialog(activity) {
+                            setTitle(R.string.Donate)
+                            setMessage("WeChat")
+                            addView(ImageView(activity).also{it.setImageDrawable(resources.getDrawable(R.drawable.wechat)) })
+                            setLButton(R.string.Ok) { dismiss() }
+                        }.show()},
+                    MIUIPopupData("Afdian") {
+                        ActivityUtils.openUrl(activity,"https://afdian.net/@xiao_wine")
+                        }), ""
+                )
+                )
                 TextSummaryArrow(TextSummaryV(textId = R.string.Donate, onClickListener = {
                     ActivityUtils.openUrl(
                         activity,
