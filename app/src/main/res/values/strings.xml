@@ -4,7 +4,7 @@
     <string name="HideDeskIcon">Hide desktop icons</string>
     <string name="BaseSetting">Basic Settings</string>
     <string name="AllSwitch">Master switch</string>
-    <string name="SongPauseCloseLyrics">Song Pause Close Lyrics</string>
+    <string name="SongPauseCloseLyrics" >Song Pause Close Lyrics</string>
     <string name="LyricWidth">Lyric width</string>
     <string name="Off">Off</string>
     <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
@@ -180,5 +180,6 @@
         save it as a file feedback in the upper right corner of the Lsp
     </string>
     <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
+    <string name="TitleTips3">The title above the vertical scroll bar can be clicked to manually enter the range</string>
 
 </resources>
