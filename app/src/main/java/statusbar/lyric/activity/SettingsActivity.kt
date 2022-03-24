@@ -972,26 +972,29 @@ class SettingsActivity : MIUIActivity() {
                 dict["Alipay"] = "Alipay"
                 dict["WeChat"] = "WeChat"
                 dict["Afdian"] = "Afdian"
-                TextWithSpinner(TextV(resId = R.string.Donate), SpinnerV(arrayListOf(
-                    MIUIPopupData("Alipay") {
-                        MIUIDialog(activity) {
-                            setTitle(R.string.Donate)
-                            setMessage("Alipay")
-                            addView(ImageView(activity).also{it.setImageDrawable(resources.getDrawable(R.drawable.alipay)) })
-                            setLButton(R.string.Ok) { dismiss() }
-                        }.show()
-                    },
-                    MIUIPopupData("WeChat") {
-                        MIUIDialog(activity) {
-                            setTitle(R.string.Donate)
-                            setMessage("WeChat")
-                            addView(ImageView(activity).also{it.setImageDrawable(resources.getDrawable(R.drawable.wechat)) })
-                            setLButton(R.string.Ok) { dismiss() }
-                        }.show()},
-                    MIUIPopupData("Afdian") {
-                        ActivityUtils.openUrl(activity,"https://afdian.net/@xiao_wine")
-                        }), ""
-                )
+                TextWithSpinner(
+                    TextV(resId = R.string.Donate), SpinnerV(
+                        arrayListOf(
+                            MIUIPopupData("Alipay") {
+                                MIUIDialog(activity) {
+                                    setTitle(R.string.Donate)
+                                    setMessage("Alipay")
+                                    addView(ImageView(activity).also { it.setImageDrawable(resources.getDrawable(R.drawable.alipay)) })
+                                    setLButton(R.string.Ok) { dismiss() }
+                                }.show()
+                            },
+                            MIUIPopupData("WeChat") {
+                                MIUIDialog(activity) {
+                                    setTitle(R.string.Donate)
+                                    setMessage("WeChat")
+                                    addView(ImageView(activity).also { it.setImageDrawable(resources.getDrawable(R.drawable.wechat)) })
+                                    setLButton(R.string.Ok) { dismiss() }
+                                }.show()
+                            },
+                            MIUIPopupData("Afdian") {
+                                ActivityUtils.openUrl(activity, "https://afdian.net/@xiao_wine")
+                            }), ""
+                    )
                 )
                 TextSummaryArrow(TextSummaryV(textId = R.string.Donate, onClickListener = {
                     ActivityUtils.openUrl(
@@ -1030,8 +1033,8 @@ class SettingsActivity : MIUIActivity() {
                 Analytics::class.java, Crashes::class.java
             )
             Timer().schedule(UpdateConfigTask(), 0, 1000)
-            val file = File("${application.filesDir.path}/first")
-            if ((file.exists() && file.isFile && file.canRead())) {
+
+            if (ActivityOwnSP.ownSPConfig.getIsFirst()) {
                 ActivityUtils.getNotice(activity)
                 Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
                 Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
@@ -1040,7 +1043,7 @@ class SettingsActivity : MIUIActivity() {
                     setTitle(R.string.Tips)
                     setMessage(R.string.FirstTip)
                     setRButton(R.string.Ok) {
-                        file.writeText("")
+                        ActivityOwnSP.ownSPConfig.setIsFirst(false)
                         dismiss()
                     }
                     setLButton(R.string.Cancel) {

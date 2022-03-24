@@ -268,8 +268,15 @@ class Config {
     fun getDelayedLoading(): Int {
         return config.optInt("DelayedLoadingTime", 1)
     }
-    fun setDelayedLoading(i:Int) {
+
+    fun setDelayedLoading(i: Int) {
         config.put("DelayedLoadingTime", i)
+    }
+
+    fun getIsFirst(): Boolean = config.optBoolean("IsFirst", true)
+
+    fun setIsFirst(b: Boolean) {
+        config.put("IsFirst", b)
     }
 
     fun clear() {

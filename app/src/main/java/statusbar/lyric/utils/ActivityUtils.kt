@@ -37,7 +37,6 @@ import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.Config
-import java.net.HttpURLConnection
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
@@ -109,7 +108,7 @@ object ActivityUtils {
         }
         Thread {
             val value: String =
-                Get("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
+                getHttp("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
             if (value != "") {
                 handler.obtainMessage().let {
                     it.data = Bundle().apply {
@@ -153,7 +152,7 @@ object ActivityUtils {
             false
         }
         Thread {
-            val value = Get("https://app.xiaowine.cc/app/notice.json")
+            val value = getHttp("https://app.xiaowine.cc/app/notice.json")
             if (value != "") {
                 val message = handler.obtainMessage()
                 val bundle = Bundle()
@@ -164,7 +163,7 @@ object ActivityUtils {
         }.start()
     }
 
-    fun Get(Url: String): String {
+    private fun getHttp(Url: String): String {
         try {
             val connection = URL(Url).openConnection() as java.net.HttpURLConnection
             connection.requestMethod = "GET"
