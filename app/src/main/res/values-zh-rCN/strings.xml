@@ -68,6 +68,7 @@
     <string name="random">随机</string>
     <string name="LyricColorTips">请输入16进制颜色代码，例如: #C0C0C0</string>
     <string name="LyricColorError">颜色代码不正确!</string>
+    <string name="InputError">The input range is incorrect!</string>
     <string name="LyricPosTips">-900~900（单位：像素点）</string>
     <string name="LyricHighTips">-100~100（单位：像素）</string>
     <string name="Ok">确定</string>
