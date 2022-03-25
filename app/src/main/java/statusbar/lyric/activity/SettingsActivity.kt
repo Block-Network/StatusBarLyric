@@ -57,7 +57,6 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
-import java.io.File
 import java.util.*
 import kotlin.system.exitProcess
 import ice.lib.ads.admob.result.RewardedAdShowResult.Enum as RewardedShowEnum
@@ -183,14 +182,14 @@ class SettingsActivity : MIUIActivity() {
                     textId = R.string.AboutModule,
                     onClickListener = { showFragment("about") }
                 ))
-                if (ActivityOwnSP.ownSPConfig.getAd()) {
-                    CustomView(
-                        AdmobManager.getBannerAd(
-                            activity,
-                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
-                        )
+
+                CustomView(
+                    AdmobManager.getBannerAd(
+                        activity,
+                        BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
                     )
-                }
+                )
+
                 Text()
             }
 
@@ -262,14 +261,14 @@ class SettingsActivity : MIUIActivity() {
                 Line()
                 TitleText("Module Version")
                 Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
-                if (ActivityOwnSP.ownSPConfig.getAd()) {
-                    CustomView(
-                        AdmobManager.getBannerAd(
-                            activity,
-                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
-                        )
+
+                CustomView(
+                    AdmobManager.getBannerAd(
+                        activity,
+                        BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
                     )
-                }
+                )
+
             }
 
             register("custom", getString(R.string.Custom)) {
@@ -279,20 +278,20 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricColorTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricColor(), "#FFFFFF")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricColor("")
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
                                     Color.parseColor(getEditText())
                                     ActivityOwnSP.ownSPConfig.setLyricColor(getEditText())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setLyricColor("")
+                                    dismiss()
+                                    return@setRButton
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.LyricColorError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setLyricColor("")
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -304,19 +303,22 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricSizeTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSize().toString(), "0")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricSize(0)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setLyricSize(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setLyricSize(0)
+                                    val value = getEditText().toInt()
+                                    if (value in (0..50)) {
+                                        ActivityOwnSP.ownSPConfig.setLyricSize(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setLyricSize(0)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -335,19 +337,23 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricWidth().toString(), "-1")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricSize(-1)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setLyricWidth(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setLyricSize(-1)
+                                    val value = getEditText().toInt()
+                                    if (value in (-1..100)) {
+                                        ActivityOwnSP.ownSPConfig.setLyricWidth(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setLyricSize(-1)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -363,19 +369,22 @@ class SettingsActivity : MIUIActivity() {
                             setMessage(R.string.LyricTips)
                             setEditText(ActivityOwnSP.ownSPConfig.getLyricMaxWidth().toString(), "-1")
                             setRButton(R.string.Ok) {
-                                if (getEditText().isEmpty()) {
-                                    ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
-                                } else {
+                                if (getEditText().isNotEmpty()) {
                                     try {
-                                        ActivityOwnSP.ownSPConfig.setLyricMaxWidth(getEditText().toInt())
-                                    } catch (e: Throwable) {
-                                        ActivityUtils.showToastOnLooper(
-                                            activity,
-                                            getString(R.string.LyricColorError)
-                                        )
-                                        ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
+                                        val value = getEditText().toInt()
+                                        if (value in (-1..100)) {
+                                            ActivityOwnSP.ownSPConfig.setLyricMaxWidth(value)
+                                            dismiss()
+                                            return@setRButton
+                                        }
+                                    } catch (_: Throwable) {
                                     }
                                 }
+                                ActivityUtils.showToastOnLooper(
+                                    activity,
+                                    getString(R.string.InputError)
+                                )
+                                ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
@@ -394,19 +403,22 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricPosTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricPosition().toString(), "0")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricPosition(-1)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setLyricPosition(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setLyricPosition(-1)
+                                    val value = getEditText().toInt()
+                                    if (value in (-900..900)) {
+                                        ActivityOwnSP.ownSPConfig.setLyricPosition(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setLyricPosition(0)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -419,19 +431,22 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricHighTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricHigh().toString(), "0")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricHigh(-1)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setLyricHigh(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setLyricHigh(-1)
+                                    val value = getEditText().toInt()
+                                    if (value in (-100..100)) {
+                                        ActivityOwnSP.ownSPConfig.setLyricHigh(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setLyricHigh(0)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -444,11 +459,22 @@ class SettingsActivity : MIUIActivity() {
                         setTitle(R.string.FontWeight)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricFontWeight().toString(), "0")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricFontWeight(0)
-                            } else {
-                                ActivityOwnSP.ownSPConfig.setLyricFontWeight(getEditText().toInt())
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (0..400)) {
+                                        ActivityOwnSP.ownSPConfig.setLyricFontWeight(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setLyricFontWeight(0)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -460,11 +486,22 @@ class SettingsActivity : MIUIActivity() {
                         setTitle(R.string.LyricSpacing)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSpacing().toString(), "0")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.getLyricSpacing(0)
-                            } else {
-                                ActivityOwnSP.ownSPConfig.getLyricSpacing(getEditText().toInt())
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (0..200)) {
+                                        ActivityOwnSP.ownSPConfig.setLyricSpacing(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setLyricHigh(0)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -501,11 +538,12 @@ class SettingsActivity : MIUIActivity() {
                     SwitchV("LSwitch", false),
                     dataBindingRecv = timeBinding.binding.getRecv(2)
                 )
-                val pseudoTimeBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getPseudoTime()) { view, flags, data ->
-                    when (flags) {
-                        2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+                val pseudoTimeBinding =
+                    GetDataBinding(ActivityOwnSP.ownSPConfig.getPseudoTime()) { view, flags, data ->
+                        when (flags) {
+                            2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+                        }
                     }
-                }
                 TextWithSwitch(
                     TextV(resId = R.string.pseudoTime),
                     SwitchV("PseudoTime", false, dataBindingSend = pseudoTimeBinding.bindingSend),
@@ -540,11 +578,22 @@ class SettingsActivity : MIUIActivity() {
                         setTitle(R.string.LyricSpeed)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSpeed().toString(), "100")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricSpeed(100)
-                            } else {
-                                ActivityOwnSP.ownSPConfig.setLyricSpeed(getEditText().toInt())
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (0..200)) {
+                                        ActivityOwnSP.ownSPConfig.setLyricSpeed(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setLyricSpeed(100)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -586,20 +635,20 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricColorTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getIconColor(), "#FFFFFF")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setIconColor("")
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
                                     Color.parseColor(getEditText())
                                     ActivityOwnSP.ownSPConfig.setIconColor(getEditText())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setIconColor("")
+                                    dismiss()
+                                    return@setRButton
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.LyricColorError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setIconColor("")
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -611,19 +660,22 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.LyricHighTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getIconSize().toString(), "0")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setIconSize(-1)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setIconSize(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setIconSize(-1)
+                                    val value = getEditText().toInt()
+                                    if (value in (0..50)) {
+                                        ActivityOwnSP.ownSPConfig.setIconSize(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setIconSize(0)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -634,21 +686,24 @@ class SettingsActivity : MIUIActivity() {
                     MIUIDialog(activity) {
                         setTitle(R.string.IconHigh)
                         setMessage(R.string.LyricSizeTips)
-                        setEditText(ActivityOwnSP.ownSPConfig.getIconHigh().toString(), "-1")
+                        setEditText(ActivityOwnSP.ownSPConfig.getIconHigh().toString(), "0")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setIconHigh(-1)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setIconHigh(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setIconHigh(-1)
+                                    val value = getEditText().toInt()
+                                    if (value in (-100..100)) {
+                                        ActivityOwnSP.ownSPConfig.setIconHigh(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setIconHigh(0)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -658,18 +713,12 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment("icon")
                 }))
-                if (ActivityOwnSP.ownSPConfig.getAd()) {
-                    CustomView(
-                        AdmobManager.getBannerAd(
-                            activity,
-                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
-                        )
-                    )
-                }
+                CustomView(AdmobManager.getBannerAd(activity, BannerAdConfig("ca-app-pub-9730534578915916/8650086997")))
                 Text()
             }
 
-            register("icon", getString(R.string.IconSettings)) {
+            register("icon", getString(R.string.IconSettings))
+            {
                 val iconConfig = Utils.getSP(activity, "Icon_Config")?.let { IconConfig(it) }
                 for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")) {
                     Author(
@@ -682,13 +731,24 @@ class SettingsActivity : MIUIActivity() {
                                 setMessage(R.string.MakeIconTitle)
                                 setEditText(iconConfig?.getIcon(icon).toString(), "")
                                 setRButton(R.string.Ok) {
-                                    if (getEditText().isEmpty()) {
-                                        iconConfig?.setIcon(icon, iconConfig.getDefaultIcon(icon))
-                                    } else {
-                                        iconConfig?.setIcon(icon, getEditText())
+                                    if (getEditText().isNotEmpty()) {
+                                        try {
+                                            iconConfig?.setIcon(icon, getEditText())
+                                            dismiss()
+                                            return@setRButton
+                                        } catch (_: Throwable) {
+                                        }
                                     }
+                                    ActivityUtils.showToastOnLooper(
+                                        activity,
+                                        getString(R.string.InputError)
+                                    )
+                                    iconConfig?.setIcon(icon, iconConfig.getDefaultIcon(icon))
+                                    ActivityUtils.showToastOnLooper(
+                                        activity,
+                                        getString(R.string.InputError)
+                                    )
                                     dismiss()
-//                                    showFragment("icon")
                                 }
                                 setLButton(R.string.Cancel) { dismiss() }
                             }.show()
@@ -710,18 +770,18 @@ class SettingsActivity : MIUIActivity() {
                     }
                 }))
 
-                if (ActivityOwnSP.ownSPConfig.getAd()) {
-                    CustomView(
-                        AdmobManager.getBannerAd(
-                            activity,
-                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
-                        )
+                CustomView(
+                    AdmobManager.getBannerAd(
+                        activity,
+                        BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
                     )
-                }
+                )
+
                 Text()
             }
 
-            register("advancedSettings", getString(R.string.AdvancedSettings)) {
+            register("advancedSettings", getString(R.string.AdvancedSettings))
+            {
                 TextSummaryArrow(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.CustomHook)
@@ -730,17 +790,35 @@ class SettingsActivity : MIUIActivity() {
                             getString(R.string.InputCustomHook)
                         )
                         setRButton(R.string.Ok) {
-                            ActivityOwnSP.ownSPConfig.setHook(getEditText())
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    ActivityOwnSP.ownSPConfig.setHook(getEditText())
+                                    ActivityUtils.showToastOnLooper(
+                                        activity,
+                                        String.format(
+                                            "%s %s\n%s",
+                                            getString(R.string.HookSetTips),
+                                            ActivityOwnSP.ownSPConfig.getHook(),
+                                            getString(R.string.RestartSystemUI)
+                                        )
+                                    )
+                                    dismiss()
+                                    return@setRButton
+                                } catch (_: Throwable) {
+                                }
+                            }
+
                             ActivityUtils.showToastOnLooper(
                                 activity,
                                 String.format(
                                     "%s %s\n%s",
                                     getString(R.string.HookSetTips),
-                                    ActivityOwnSP.ownSPConfig.getHook().ifEmpty { getString(R.string.Default) },
+                                    getString(R.string.Default),
                                     getString(R.string.RestartSystemUI)
                                 )
                             )
                             dismiss()
+
                         }
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
@@ -761,19 +839,22 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.AntiBurnTimeTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getAntiBurnTime().toString(), "60000")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setAntiBurnTime(60000)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setAntiBurnTime(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setAntiBurnTime(6000)
+                                    val value = getEditText().toInt()
+                                    if (value in (1..60000)) {
+                                        ActivityOwnSP.ownSPConfig.setAntiBurnTime(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setAntiBurnTime(6000)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -802,19 +883,22 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.ReverseColorTimeTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getReverseColorTime().toString(), "1")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setReverseColorTime(1)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setReverseColorTime(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setReverseColorTime(1)
+                                    val value = getEditText().toInt()
+                                    if (value in (1..60000)) {
+                                        ActivityOwnSP.ownSPConfig.setReverseColorTime(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setReverseColorTime(3000)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -841,21 +925,24 @@ class SettingsActivity : MIUIActivity() {
                     MIUIDialog(activity) {
                         setTitle(R.string.SongPauseCloseLyricsTime)
                         setMessage(R.string.ReverseColorTimeTips)
-                        setEditText(ActivityOwnSP.ownSPConfig.getLyricAutoOffTime().toString(), "1")
+                        setEditText(ActivityOwnSP.ownSPConfig.getLyricAutoOffTime().toString(), "1000")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setLyricAutoOffTime(1000)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setLyricAutoOffTime(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setLyricAutoOffTime(1000)
+                                    val value = getEditText().toInt()
+                                    if (value in (1..1000)) {
+                                        ActivityOwnSP.ownSPConfig.setLyricAutoOffTime(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setLyricAutoOffTime(1000)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -892,43 +979,51 @@ class SettingsActivity : MIUIActivity() {
                         setTitle(R.string.DelayedLoading)
                         setEditText(ActivityOwnSP.ownSPConfig.getDelayedLoading().toString(), "0")
                         setRButton(R.string.Ok) {
-                            if (getEditText().isEmpty()) {
-                                ActivityOwnSP.ownSPConfig.setDelayedLoading(1)
-                            } else {
+                            if (getEditText().isNotEmpty()) {
                                 try {
-                                    ActivityOwnSP.ownSPConfig.setDelayedLoading(getEditText().toInt())
-                                } catch (e: Throwable) {
-                                    ActivityUtils.showToastOnLooper(
-                                        activity,
-                                        getString(R.string.LyricColorError)
-                                    )
-                                    ActivityOwnSP.ownSPConfig.setDelayedLoading(1)
+                                    val value = getEditText().toInt()
+                                    if (value in (1..5)) {
+                                        ActivityOwnSP.ownSPConfig.setDelayedLoading(value)
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
                                 }
                             }
+                            ActivityUtils.showToastOnLooper(
+                                activity,
+                                getString(R.string.InputError)
+                            )
+                            ActivityOwnSP.ownSPConfig.setDelayedLoading(1000)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 })
                 SeekBarWithText("DelayedLoadingTime", 1, 5)
-                if (ActivityOwnSP.ownSPConfig.getAd()) {
-                    CustomView(
-                        AdmobManager.getBannerAd(
-                            activity,
-                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
-                        )
+
+                CustomView(
+                    AdmobManager.getBannerAd(
+                        activity,
+                        BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
                     )
-                }
+                )
+
                 Text()
             }
 
-            register("about", getString(R.string.About)) {
-                Author(getDrawable(R.drawable.header_577fkj)!!, "577fkj", getString(R.string.AboutTips1), onClick = {
-                    ActivityUtils.openUrl(
-                        activity,
-                        "https://github.com/577fkj"
-                    )
-                })
+            register("about", getString(R.string.About))
+            {
+                Author(
+                    getDrawable(R.drawable.header_577fkj)!!,
+                    "577fkj",
+                    getString(R.string.AboutTips1),
+                    onClick = {
+                        ActivityUtils.openUrl(
+                            activity,
+                            "https://github.com/577fkj"
+                        )
+                    })
                 Author(
                     getDrawable(R.drawable.header_xiaowine)!!,
                     "xiaowine",
@@ -1002,14 +1097,14 @@ class SettingsActivity : MIUIActivity() {
                         "https://fkj2005.gitee.io/merger/"
                     )
                 }))
-                if (ActivityOwnSP.ownSPConfig.getAd()) {
-                    CustomView(
-                        AdmobManager.getBannerAd(
-                            activity,
-                            BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
-                        )
+
+                CustomView(
+                    AdmobManager.getBannerAd(
+                        activity,
+                        BannerAdConfig("ca-app-pub-9730534578915916/8650086997")
                     )
-                }
+                )
+
                 Text()
             }
         }

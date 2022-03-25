@@ -185,7 +185,7 @@ class Config {
         return config.optInt("LSpacing", 0)
     }
 
-    fun getLyricSpacing(i: Int) {
+    fun setLyricSpacing(i: Int) {
         config.put("LSpacing", i)
     }
 
@@ -255,10 +255,6 @@ class Config {
 
     fun setAntiBurnTime(i: Int) {
         config.put("AntiBurnTime", i)
-    }
-
-    fun getAd(): Boolean {
-        return config.optBoolean("Ad", true)
     }
 
     fun getAppCenter(): Boolean {

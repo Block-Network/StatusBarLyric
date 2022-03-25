@@ -71,6 +71,7 @@
     <string name="random">random</string>
     <string name="LyricColorTips">Please enter the hexadecimal color code, for example: #C0C0C0</string>
     <string name="LyricColorError">The color code is incorrect!</string>
+    <string name="InputError">The input range is incorrect!</string>
     <string name="LyricPosTips">-900~900(Unit:pixel)</string>
     <string name="LyricHighTips">-100~100(Unit:pixel)</string>
     <string name="Ok">Sure</string>
