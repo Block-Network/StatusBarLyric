@@ -88,7 +88,7 @@ dependencies {
     //MIUI 通知栏
     implementation(files("libs/miui_sdk.jar"))
     // microsoft app center
-    val appCenterSdkVersion = "4.4.2"
+    val appCenterSdkVersion = "4.3.1"
     implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
     implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
     implementation(project(":blockmiui"))
