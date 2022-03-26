@@ -68,7 +68,7 @@
     <string name="random">隨機</string>
     <string name="LyricColorTips">請輸入16進製顏色代碼，例如: #C0C0C0</string>
     <string name="LyricColorError">顏色代碼不正確!</string>
-    <string name="InputError">The input range is incorrect!</string>
+    <string name="InputError">輸入範圍不正確</string>
     <string name="LyricPosTips">-900~900（單位：像素點）</string>
     <string name="LyricHighTips">-100~100（單位：像素點）</string>
     <string name="Ok">確定</string>
@@ -159,13 +159,8 @@
     <string name="MakeIcon">製作圖標</string>
     <string name="MakeIconError">無法跳轉，請檢查是否安裝\n爱玩机工具箱</string>
     <string name="DelayedLoading">延遲加載</string>
-    <string name="FirstTip">This module uses Microsoft AppCenter to count or collect metrics such as monthly activity,
-        crash data, and user information\nThe advertisements in this module are provided by Google Ads, and all content
-        has nothing to do with the module
-    </string>
-    <string name="TitleTips1">Please do not take screenshots of the feedback log\n
-        save it as a file feedback in the upper right corner of the Lsp
-    </string>
-    <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
-    <string name="TitleTips3">The title above the vertical scroll bar can be clicked to manually enter the range</string>
+    <string name="FirstTip">本模塊使用了 Microsoft AppCenter 來統計或收集月活量、崩潰數據和用戶信息等指標\n本模塊內廣告由Google Ads提供，一切內容與模塊無關</string>
+    <string name="TitleTips1">反饋日誌請不要截圖\nLsp右上角保存成文件反饋</string>
+    <string name="TitleTips2">帶 * 的功能改動需要重啟系統界面</string>
+    <string name="TitleTips3">垂直滾動條上方的標題是可以點擊手動輸入範圍的喲</string>
 </resources>
