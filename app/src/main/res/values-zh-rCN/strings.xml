@@ -4,7 +4,7 @@
     <string name="HideDeskIcon">隐藏桌面图标</string>
     <string name="BaseSetting">基础设置</string>
     <string name="AllSwitch">总开关</string>
-    <string name="SongPauseCloseLyrics">歌曲暂停关闭歌词</string>
+    <string name="SongPauseCloseLyrics">歌曲暂停时隐藏歌词</string>
     <string name="LyricWidth">歌词宽度</string>
     <string name="Off">关闭</string>
     <string name="LyricAutoMaxWidth">歌词自适应最大宽度</string>
@@ -23,7 +23,7 @@
     <string name="AutoHideNotiIcon">自动隐藏通知图标</string>
     <string name="HideNetWork">隐藏实时网速</string>
     <string name="AutoHideCarrierName">自动隐藏锁屏运营商名称</string>
-    <string name="CustomHook">* 自定义Hook点 (不懂勿动)</string>
+    <string name="CustomHook">* 自定义 Hook 点 (不懂勿动)</string>
     <string name="DebugMode">Debug 模式</string>
     <string name="ReStartSystemUI">重启 SystemUI</string>
     <string name="ResetModule">重置模块</string>
@@ -35,7 +35,7 @@
     <string name="Other">其它</string>
     <string name="Source">项目地址</string>
     <string name="Tips">提示</string>
-    <string name="ReStart">重启APP</string>
+    <string name="ReStart">重启 App</string>
     <string name="VerExplanation">版本说明</string>
     <string name="Done">完成</string>
     <string name="CurrentVer">当前版本</string>
@@ -47,33 +47,33 @@
         - 网易云音乐 未知 ~ 8.0.40 (车载蓝牙歌词版)\n
         - 酷狗音乐 未知 ~ 11.1.3(车载蓝牙歌词版)\n
         - 酷我音乐 未知 ~ 10.1.0.0(车载蓝牙歌词版)\n
-        - 椒盐音乐 4.5 ~ 现今（API版）\n
+        - 椒盐音乐 4.5 ~ 现今（API 版）\n
         - 魅族音乐 未知 ~ 现今（状态栏歌词版）\n
         - 小米音乐 4.6.0 ~ 现今 (车载蓝牙歌词版)
     </string>
     <string name="AppName">墨•状态栏歌词</string>
     <string name="QuickTitle">状态栏歌词</string>
-    <string name="XposedTips">如果无法显示歌词，请尝试停止音乐软件并重启系统界面\n或查看 使用说明 自己是否使用正确版本</string>
+    <string name="XposedTips">如果无法显示歌词，请尝试结束运行音乐软件并重启系统界面\n或查看「适用版本」，检查自己是否使用正确版本</string>
     <string name="NewVer">发现新版本</string>
     <string name="Update">更新</string>
     <string name="GetNewVerError">获取最新版下载地址失败: </string>
     <string name="Cancel">取消</string>
     <string name="NoVerUpdate">无新版可更新</string>
-    <string name="CheckUpdateError">检查失败，请稍后再试!</string>
+    <string name="CheckUpdateError">检查失败，请稍后再试</string>
     <string name="CheckUpdateFailed">检查更新失败</string>
     <string name="top">上滑</string>
     <string name="lower">下滑</string>
     <string name="left">左滑</string>
     <string name="right">右滑</string>
     <string name="random">随机</string>
-    <string name="LyricColorTips">请输入16进制颜色代码，例如: #C0C0C0</string>
+    <string name="LyricColorTips">请输入 16 进制颜色代码，例如: #C0C0C0</string>
     <string name="LyricColorError">颜色代码不正确!</string>
-    <string name="InputError">The input range is incorrect!</string>
+    <string name="InputError">输入范围不正确！</string>
     <string name="LyricPosTips">-900~900（单位：像素点）</string>
     <string name="LyricHighTips">-100~100（单位：像素）</string>
     <string name="Ok">确定</string>
-    <string name="HookSetTips">已设置Hook为:\n</string>
-    <string name="RestartSystemUI">请重启SystemUI</string>
+    <string name="HookSetTips">已设置 Hook 为:\n</string>
+    <string name="RestartSystemUI">请重启 SystemUI</string>
     <string name="RestartUI">确定重启系统界面吗？</string>
     <string name="RestartUITips">若使用中突然发现不能使用，可尝试重启系统界面。</string>
     <string name="ResetModuleDialog">是否要重置模块</string>
@@ -86,50 +86,50 @@
         模块在官方状态栏布局下完美使用，修改布局可能会出问题\n\n
         若无法显示歌词\n
         请重启系统界面，并确保模块开关打开\n
-        请确保音乐软件内设置 状态栏歌词 或 车载蓝牙歌词 打开\n\n
-        带 * 的功能改动需要重启系统界面\n\n
+        请确保音乐软件设置内「状态栏歌词」或「车载蓝牙歌词」为开启状态\n\n
+        带 * 的功能改动后需要重启系统界面\n
 
-        模块不生效请打开debug并重启SystemUI并附上日志\n前往 Github/电报 进行反馈
+        模块不生效请打开 debug 并重启 SystemUI 并附上日志\n前往 GitHub / 电报 进行反馈
     </string>
-    <string name="NotSupport">本模块未激活，请在Lsposed激活本模块\n本模块仅支持最新版Lsposed</string>
+    <string name="NotSupport">本模块未激活，请在 LSPosed 内激活本模块\n本模块仅支持最新版 LSPosed</string>
     <string name="PrivacyPolicy">隐私政策</string>
     <string name="UseSystemReverseColor">* 使用系统方式反色</string>
     <string name="IconSettings">图标设置</string>
     <string name="NewNotice">新通知</string>
     <string name="GetNewNoticeError">获取新通知错误</string>
     <string name="ResetSuccess">重置成功</string>
-    <string name="MakeIconTitle">请输入没有前缀的Base64，推荐像素大小32*32</string>
+    <string name="MakeIconTitle">请输入没有前缀的 Base64，推荐像素大小 32*32</string>
     <string name="LyricHigh">* 歌词上下位置</string>
     <string name="LyricSize">* 歌词大小</string>
     <string name="IconSize">图标大小</string>
     <string name="LyricSizeTips">0~50</string>
     <string name="LyricTips">0%~100%</string>
     <string name="Test">测试</string>
-    <string name="TestDialogTips">这个功能是内嵌在SystemUI里的，可能会导致SystemUI崩溃重启！</string>
+    <string name="TestDialogTips">此功能内嵌于 SystemUI，可能会导致 SystemUI 崩溃重启。</string>
     <string name="Start">启动</string>
     <string name="Back">返回</string>
     <string name="pseudoTime">伪时间</string>
-    <string name="pseudoTimeStyle">伪时间格式/自定义文字</string>
+    <string name="pseudoTimeStyle">伪时间格式 / 自定义文字</string>
     <string name="pseudoTimeStyleTips">yyyy：年\n
         MM：月\n
         dd：日\n
-        hh：1~12小时制(1-12)\n
-        HH：24小时制(0-23)\n
+        hh：1~12 小时制(1-12)\n
+        HH：24 小时制(0-23)\n
         mm：分\n
         ss：秒\n
         E：星期几\n
         a：上下午标识\n
         z：表示时区\n
-        若要显示自定义文字，在下面编辑框里填写即可
+        若要显示自定义文字，请在下方编辑框里填写
     </string>
     <string name="Custom">自定义</string>
-    <string name="InputCustomHook">自定义Hook点，空关闭</string>
+    <string name="InputCustomHook">自定义 Hook 点，空为关闭</string>
     <string name="HideTime">隐藏时间</string>
     <string name="SponsoredList">赞助名单</string>
     <string name="Donate">支持我们</string>
     <string name="HookSure">Hook 系统界面</string>
     <string name="HookSureSuccess">Hook 系统界面成功</string>
-    <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者吧</string>
+    <string name="HookSureFail">Hook 系统界面失败\n此系统不支持模块工作，打包 SystemUI 发作者吧</string>
     <string name="First">控件首</string>
     <string name="Latest">控件尾</string>
     <string name="ViewPosition">* 控件添加位置</string>
@@ -157,13 +157,9 @@
     <string name="MakeIcon">制作图标</string>
     <string name="MakeIconError">无法跳转，请检查是否安装\n爱玩机工具箱</string>
     <string name="DelayedLoading">延迟加载</string>
-    <string name="FirstTip">This module uses Microsoft AppCenter to count or collect metrics such as monthly activity,
-        crash data, and user information\nThe advertisements in this module are provided by Google Ads, and all content
-        has nothing to do with the module
+    <string name="FirstTip">本模块使用了 Microsoft AppCenter 来统计或收集月活量、崩溃数据和用户信息等指标\n本模块内广告由 Google Ads 提供，一切内容与模块无关
     </string>
-    <string name="TitleTips1">Please do not take screenshots of the feedback log\n
-        save it as a file feedback in the upper right corner of the Lsp
-    </string>
-    <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
-    <string name="TitleTips3">The title above the vertical scroll bar can be clicked to manually enter the range</string>
+    <string name="TitleTips1">反馈日志请不要截图\n在 LSPosed 右上角保存为文件反馈</string>
+    <string name="TitleTips2">带 * 的功能改动后需要重启系统界面</string>
+    <string name="TitleTips3">垂直滚动条上方的标题是可以点击手动输入范围的哟</string>
 </resources>
