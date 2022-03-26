@@ -84,6 +84,8 @@ class SystemUI : BaseHook() {
     private lateinit var lyricLayout: LinearLayout
     private lateinit var clockParams: LinearLayout.LayoutParams
     lateinit var audioManager: AudioManager
+    var displayWidth: Int = 0
+    var displayHeight: Int = 0
     var useSystemMusicActive = true
     var isLock = false
     var isHook = false
@@ -198,36 +200,18 @@ class SystemUI : BaseHook() {
                         Bundle::class.java,
                         hooker = systemUIHook
                     ).isNull {
-                        LogUtils.e(LogMultiLang.noSupportSystem)
+                        "com.android.systemui.statusbar.phone.PhoneStatusBarView".hookAfterMethod("getClockView") {
+                            if (!isHook) lyricInit(it.result as TextView)
+                            isHook = true
+                        }.isNull {
+                            LogUtils.e(LogMultiLang.noSupportSystem)
+                        }
                     }
                 }
             }
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) {
-        application = AndroidAppHelper.currentApplication() // Get Application
-
-        // Lock Screen Receiver
-        runCatching { application.unregisterReceiver(lockScreenReceiver) }
-        application.registerReceiver(lockScreenReceiver, IntentFilter().apply {
-            addAction(Intent.ACTION_USER_PRESENT)
-            addAction(Intent.ACTION_SCREEN_OFF)
-        })
-
-        // Lyric Receiver
-        runCatching { application.unregisterReceiver(lyricReceiver) }
-        application.registerReceiver(lyricReceiver, IntentFilter().apply {
-            addAction("Lyric_Server")
-        })
-
-        audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
-
-        // Get display info
-        val displayMetrics = DisplayMetrics()
-        (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
-        val displayWidth: Int = displayMetrics.widthPixels
-        val displayHeight: Int = displayMetrics.heightPixels
-
         // Get system clock view
         val clockField = if (config.getHook().isNotEmpty()) {
             LogUtils.e("${LogMultiLang.customHook}: " + config.getHook())
@@ -269,13 +253,47 @@ class SystemUI : BaseHook() {
             }
             thisField
         }
+        if (clockField == null) {
+            lyricInit(null)
+            return
+        }
+        clock = clockField.get(param.thisObject) as TextView
+        lyricInit(clock)
+    }
+
+    private fun lyricInit(clock: TextView?) {
+        application = AndroidAppHelper.currentApplication() // Get Application
+
         application.sendBroadcast(Intent().apply {
             action = "App_Server"
             putExtra("app_Type", "Hook")
-            putExtra("Hook", clockField.isNotNull())
+            putExtra("Hook", clock.isNotNull())
         })
-        if (clockField == null) return
-        clock = clockField.get(param.thisObject) as TextView
+        if (clock == null) return
+
+        // Lock Screen Receiver
+        runCatching { application.unregisterReceiver(lockScreenReceiver) }
+        application.registerReceiver(lockScreenReceiver, IntentFilter().apply {
+            addAction(Intent.ACTION_USER_PRESENT)
+            addAction(Intent.ACTION_SCREEN_OFF)
+        })
+
+        // Lyric Receiver
+        runCatching { application.unregisterReceiver(lyricReceiver) }
+        application.registerReceiver(lyricReceiver, IntentFilter().apply {
+            addAction("Lyric_Server")
+        })
+
+        audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
+
+        // Get display info
+        val displayMetrics = DisplayMetrics()
+        (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+        displayWidth = displayMetrics.widthPixels
+        displayHeight = displayMetrics.heightPixels
+
+
+
         clockParams = clock.layoutParams as LinearLayout.LayoutParams
 
         lyricSwitchView = LyricSwitchView(application, config.getLyricStyle()).apply {

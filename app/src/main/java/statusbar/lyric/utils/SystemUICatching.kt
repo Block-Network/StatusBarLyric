@@ -1,6 +1,5 @@
 package statusbar.lyric.utils
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 
