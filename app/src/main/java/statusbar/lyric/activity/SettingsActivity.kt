@@ -994,7 +994,7 @@ class SettingsActivity : MIUIActivity() {
                                 activity,
                                 getString(R.string.InputError)
                             )
-                            ActivityOwnSP.ownSPConfig.setDelayedLoading(1000)
+                            ActivityOwnSP.ownSPConfig.setDelayedLoading(1)
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
