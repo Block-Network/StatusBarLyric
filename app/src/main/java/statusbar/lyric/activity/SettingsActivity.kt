@@ -977,7 +977,7 @@ class SettingsActivity : MIUIActivity() {
                 Text(resId = R.string.DelayedLoading, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.DelayedLoading)
-                        setEditText(ActivityOwnSP.ownSPConfig.getDelayedLoading().toString(), "0")
+                        setEditText(ActivityOwnSP.ownSPConfig.getDelayedLoading().toString(), "1")
                         setRButton(R.string.Ok) {
                             if (getEditText().isNotEmpty()) {
                                 try {
@@ -1000,7 +1000,7 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 })
-                SeekBarWithText("DelayedLoadingTime", 1, 5)
+                SeekBarWithText("DelayedLoadingTime", 1, 5, 1)
 
                 CustomView(
                     AdmobManager.getBannerAd(
