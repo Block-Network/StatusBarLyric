@@ -688,7 +688,7 @@ class SystemUI : BaseHook() {
                         if (path.isNullOrEmpty()) return
                         LogUtils.e("${LogMultiLang.customFont}: $path")
                         val file = File(application.filesDir.path + "/font")
-                        if (file.exists()) {
+                        if (file.exists() && file.canWrite()) {
                             file.delete()
                         }
                         val error = FileUtils(application).copyFile(File(path), application.filesDir.path, "font")
@@ -701,6 +701,12 @@ class SystemUI : BaseHook() {
                                 putExtra("CopyFont", true)
                             })
                         } else {
+                            runCatching {
+                                val file1 = File(application.filesDir.path + "/font")
+                                if (file1.exists() && file1.canWrite()) {
+                                    file1.delete()
+                                }
+                            }
                             LogUtils.e(LogMultiLang.fontCopyError)
                             application.sendBroadcast(Intent().apply {
                                 action = "App_Server"
