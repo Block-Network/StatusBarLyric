@@ -311,12 +311,23 @@ class SystemUI : BaseHook() {
                 if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
             )
 
-            val file = File(application.filesDir.path + "/font")
-            if (file.exists() && file.isFile && file.canRead()) {
-                setTypeface(Typeface.createFromFile(application.filesDir.path + "/font"))
-                LogUtils.e(LogMultiLang.fontLoad)
-            } else {
+            try {
+                val file = File(application.filesDir.path + "/font")
+                if (file.exists() && file.isFile && file.canRead()) {
+                    setTypeface(Typeface.createFromFile(application.filesDir.path + "/font"))
+                    LogUtils.e(LogMultiLang.fontLoad)
+                } else {
+                    setTypeface(clock.typeface)
+                }
+            } catch (e: Throwable) {
                 setTypeface(clock.typeface)
+                runCatching {
+                    val file = File(application.filesDir.path + "/font")
+                    if (file.exists() && file.canWrite()) {
+                        file.delete()
+                    }
+                }
+                LogUtils.e("${LogMultiLang.initFontFailed}(${e.message}): ${Log.getStackTraceString(e)}")
             }
         }
 
