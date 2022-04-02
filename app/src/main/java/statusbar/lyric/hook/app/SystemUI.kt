@@ -427,18 +427,11 @@ class SystemUI : BaseHook() {
         updateLyric = Handler(Looper.getMainLooper()) { message ->
             val lyric: String = message.data.getString(lyricKey) ?: ""
             LogUtils.e("${LogMultiLang.updateLyric}: $lyric")
-            val lyrics: String = if (isPseudoTime) {
-                String.format(
-                    "%s %s",
-                    SimpleDateFormat(pseudoTimeStyle, Locale.getDefault()).format(Date()),
-                    lyric
-                )
-            } else{ lyric }
             val display =
                 if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
             lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(
                 lyricSwitchView.paint,
-                lyrics,
+                lyric,
                 display
             ) else (display * config.getLyricWidth()) / 100
             if (showLyric) { // Show lyric
@@ -453,7 +446,7 @@ class SystemUI : BaseHook() {
                 }
             }
             Utils.setStatusBar(application, false, config)
-            lyricSwitchView.setText(lyrics)
+            lyricSwitchView.setText(lyric)
             true
         }
 
