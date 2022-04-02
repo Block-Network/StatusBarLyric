@@ -61,6 +61,7 @@ import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
 import java.lang.reflect.Field
+import java.text.SimpleDateFormat
 import java.util.*
 
 class SystemUI : BaseHook() {
@@ -84,11 +85,13 @@ class SystemUI : BaseHook() {
     private lateinit var lyricLayout: LinearLayout
     private lateinit var clockParams: LinearLayout.LayoutParams
     lateinit var audioManager: AudioManager
-    var displayWidth: Int = 0
-    var displayHeight: Int = 0
-    var useSystemMusicActive = true
+    private var displayWidth: Int = 0
+    private var displayHeight: Int = 0
+    private var pseudoTimeStyle=""
     var isLock = false
-    var isHook = false
+    private var isHook = false
+    private var isPseudoTime =false
+    var useSystemMusicActive = true
 
     // lyric click
     private var showLyric = true
@@ -424,11 +427,18 @@ class SystemUI : BaseHook() {
         updateLyric = Handler(Looper.getMainLooper()) { message ->
             val lyric: String = message.data.getString(lyricKey) ?: ""
             LogUtils.e("${LogMultiLang.updateLyric}: $lyric")
+            val lyrics: String = if (isPseudoTime) {
+                String.format(
+                    "%s %s",
+                    SimpleDateFormat(pseudoTimeStyle, Locale.getDefault()).format(Date()),
+                    lyric
+                )
+            } else{ lyric }
             val display =
                 if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
             lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(
                 lyricSwitchView.paint,
-                lyric,
+                lyrics,
                 display
             ) else (display * config.getLyricWidth()) / 100
             if (showLyric) { // Show lyric
@@ -443,7 +453,7 @@ class SystemUI : BaseHook() {
                 }
             }
             Utils.setStatusBar(application, false, config)
-            lyricSwitchView.setText(lyric)
+            lyricSwitchView.setText(lyrics)
             true
         }
 
@@ -513,6 +523,8 @@ class SystemUI : BaseHook() {
                 height = config.getIconSize()
             }
         }
+        isPseudoTime=config.getPseudoTime()
+        pseudoTimeStyle=config.getPseudoTimeStyle()
 //        lyricSwitchView.setStyle(config.getLyricStyle())
     }
 
