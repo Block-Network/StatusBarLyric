@@ -186,29 +186,25 @@ class SystemUI : BaseHook() {
         if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
 
         // StatusBarLyric
-        "com.android.systemui.statusbar.phone.ClockController".findClassOrNull()?.hookAfterAllConstructors(systemUIHook)
-            .isNull {
-                "com.android.systemui.statusbar.phone.CollapsedStatusBarFragment".hookAfterMethod(
-                    "onViewCreated",
-                    View::class.java,
-                    Bundle::class.java,
-                    hooker = systemUIHook
-                ).isNull {
-                    "com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment".hookAfterMethod(
-                        "onViewCreated",
-                        View::class.java,
-                        Bundle::class.java,
-                        hooker = systemUIHook
-                    ).isNull {
-                        "com.android.systemui.statusbar.phone.PhoneStatusBarView".hookAfterMethod("getClockView") {
-                            if (!isHook) lyricInit(it.result as TextView)
-                            isHook = true
-                        }.isNull {
-                            LogUtils.e(LogMultiLang.noSupportSystem)
-                        }
+        "com.android.systemui.statusbar.phone.PhoneStatusBarView".hookAfterMethod("getClockView") {
+            if (!isHook) {
+                clock = it.result as TextView
+                try {
+                    lyricInit(clock)
+                } catch (e: Throwable) {
+                    LogUtils.e("${LogMultiLang.initError}(${e.message}): ${Log.getStackTraceString(e)}")
+                }
+            }
+            isHook = true
+        }.isNull {
+            "com.android.systemui.statusbar.phone.ClockController".findClassOrNull()?.hookAfterAllConstructors(systemUIHook).isNull {
+                "com.android.systemui.statusbar.phone.CollapsedStatusBarFragment".hookAfterMethod("onViewCreated", View::class.java, Bundle::class.java, hooker = systemUIHook).isNull {
+                    "com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment".hookAfterMethod("onViewCreated", View::class.java, Bundle::class.java, hooker = systemUIHook).isNull {
+                        LogUtils.e(LogMultiLang.noSupportSystem)
                     }
                 }
             }
+        }
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) {
@@ -258,7 +254,11 @@ class SystemUI : BaseHook() {
             return
         }
         clock = clockField.get(param.thisObject) as TextView
-        lyricInit(clock)
+        try {
+            lyricInit(clock)
+        } catch (e: Throwable) {
+            LogUtils.e("${LogMultiLang.initError}(${e.message}): ${Log.getStackTraceString(e)}")
+        }
     }
 
     private fun lyricInit(clock: TextView?) {
