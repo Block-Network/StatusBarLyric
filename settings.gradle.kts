@@ -8,6 +8,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "状态栏歌词"
 include(":app")
-include(":ads")
 include(":blockmiui")
 include(":hidden-api")

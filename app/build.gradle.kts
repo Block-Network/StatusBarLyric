@@ -92,7 +92,4 @@ dependencies {
     implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
     implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
     implementation(project(":blockmiui"))
-    // Google Ad
-    implementation(project(":ads"))
-    implementation("com.google.android.gms:play-services-ads:20.6.0")
 }
