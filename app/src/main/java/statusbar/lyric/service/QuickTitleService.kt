@@ -22,6 +22,7 @@
 
 package statusbar.lyric.service
 
+import android.content.Intent
 import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
@@ -45,6 +46,10 @@ class QuickTitleService: TileService() {
         tile.contentDescription = getString(R.string.QuickTitle)
         tile.state = if (config.getLyricService()) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
         tile.updateTile()
+        application.sendBroadcast(Intent().apply {
+            action = "Lyric_Server"
+            putExtra("Lyric_Type", "update_config")
+        })
     }
 
     override fun onStartListening() {

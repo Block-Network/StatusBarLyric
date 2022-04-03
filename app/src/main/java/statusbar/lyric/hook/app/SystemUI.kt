@@ -24,6 +24,8 @@
 
 package statusbar.lyric.hook.app
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.AndroidAppHelper
 import android.app.Application
 import android.content.BroadcastReceiver
@@ -41,6 +43,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -48,9 +52,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.hook.BaseHook
@@ -63,6 +65,7 @@ import java.io.File
 import java.lang.reflect.Field
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.system.exitProcess
 
 class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
@@ -92,6 +95,7 @@ class SystemUI : BaseHook() {
     private var isHook = false
     private var isPseudoTime =false
     var useSystemMusicActive = true
+    var test = false
 
     // lyric click
     private var showLyric = true
@@ -123,6 +127,7 @@ class SystemUI : BaseHook() {
                 override fun run() {
                     try {
                         if (config.getLyricService()) {
+                            if (test) return
                             if (Utils.isServiceRunningList(application, musicServer)) {
                                 if (config.getLyricAutoOff() && useSystemMusicActive && !audioManager.isMusicActive) {
                                     offLyric(LogMultiLang.pausePlay)
@@ -560,18 +565,9 @@ class SystemUI : BaseHook() {
             })
         }
 
-        if (config.getLyricAutoOff()) startTimer(
-            config.getLyricAutoOffTime().toLong(),
-            getAutoOffLyricTimer()
-        ) // auto off lyric
-        if (config.getAntiBurn()) startTimer(
-            config.getAntiBurnTime().toLong(),
-            getLyricAntiBurnTimer()
-        ) // Anti burn screen
-        if (!config.getUseSystemReverseColor()) startTimer(
-            config.getReverseColorTime().toLong(),
-            getAutoLyricColorTimer()
-        ) // not use system reverse color
+        if (config.getLyricAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
+        if (config.getAntiBurn()) startTimer(config.getAntiBurnTime().toLong(), getLyricAntiBurnTimer()) // Anti burn screen
+        if (!config.getUseSystemReverseColor()) startTimer(config.getReverseColorTime().toLong(), getAutoLyricColorTimer()) // not use system reverse color
 
         if (config.getAnim() == "random") {
             val anim = arrayOf(
@@ -733,9 +729,75 @@ class SystemUI : BaseHook() {
                         })
                     }
                     "update_config" -> updateConfig()
+                    "test" -> ShowDialog().show()
                 }
             } catch (e: Exception) {
                 LogUtils.e("${LogMultiLang.lyricServiceError} $e \n" + Utils.dumpException(e))
+            }
+        }
+    }
+
+    inner class ShowDialog {
+        @SuppressLint("SetTextI18n")
+        fun show() {
+            try {
+                var icon = "Api"
+                val dialog = "com.android.systemui.statusbar.phone.SystemUIDialog".findClass()
+                (dialog.new(application) as AlertDialog).apply {
+                    setTitle("StatusBarLyric Test")
+                    setView(LinearLayout(application).let {
+                        it.orientation = LinearLayout.VERTICAL
+                        setCancelable(false)
+                        it.addView(Button(application).let { it1 ->
+                            it1.text = "Show test lyric"
+                            it1.setOnClickListener {
+                                updateLyric((Math.random() * 4).toInt().toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", icon)
+                                test = true
+                            }
+                            it1
+                        })
+                        it.addView(EditText(application).apply {
+                            setText(icon)
+                            addTextChangedListener(object : TextWatcher {
+                                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                                }
+
+                                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                                    icon = p0 as String
+                                }
+
+                                override fun afterTextChanged(p0: Editable?) {
+                                }
+                            })
+                        })
+                        it.addView(Button(application).let { it1 ->
+                            it1.text = "Stop lyric"
+                            it1.setOnClickListener {
+                                offLyric("Test Off lyric")
+                                test = false
+                            }
+                            it1
+                        })
+                        it.addView(Button(application).let { it1 ->
+                            it1.text = "Restart"
+                            it1.setOnClickListener {
+                                exitProcess(0)
+                            }
+                            it1
+                        })
+                        it.addView(Button(application).let { it1 ->
+                            it1.text = "Exit"
+                            it1.setOnClickListener {
+                                dismiss()
+                            }
+                            it1
+                        })
+                        it
+                    })
+                    show()
+                }
+            } catch (e: Throwable) {
+                LogUtils.e("唤醒失败 可能系统不支持\n${e.message}")
             }
         }
     }
