@@ -129,14 +129,6 @@ class Config {
         config.put("IColor", str)
     }
 
-    fun getPseudoTimeStyle(): String {
-        return config.optString("PseudoTimeStyle", "HH:mm")
-    }
-
-    fun setPseudoTimeStyle(str: String) {
-        config.put("PseudoTimeStyle", str)
-    }
-
     fun getLyricSwitch(): Boolean {
         return config.optBoolean("LSwitch", false)
     }
@@ -221,9 +213,6 @@ class Config {
         return config.optBoolean("LStyle", true)
     }
 
-    fun getPseudoTime(): Boolean {
-        return config.optBoolean("PseudoTime", false)
-    }
 
     fun getUseSystemReverseColor(): Boolean {
         return config.optBoolean("UseSystemReverseColor", true)

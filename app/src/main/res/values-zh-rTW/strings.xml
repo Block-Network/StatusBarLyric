@@ -110,20 +110,6 @@
     <string name="TestDialogTips">這個功能是內嵌在SystemUI裏的，可能會導致SystemUI崩潰重啓！</string>
     <string name="Start">啓動</string>
     <string name="Back">返回</string>
-    <string name="pseudoTime">偽時間</string>
-    <string name="pseudoTimeStyle">偽時間格式/自定義文字</string>
-    <string name="pseudoTimeStyleTips">yyyy：年\n
-        MM：月\n
-        dd：日\n
-        hh：1~12小時制(1-12)\n
-        HH：24小時制(0-23)\n
-        mm：分\n
-        ss：秒\n
-        E：星期幾\n
-        a：上下午標識\n
-        z：表示時區\n
-        若要顯示自定義文字，在下面編輯框裡填寫即可\n
-        當前格式：</string>
     <string name="Custom">自定義</string>
     <string name="InputCustomHook">自定義Hook點，空關閉</string>
     <string name="HideTime">隱藏時間</string>

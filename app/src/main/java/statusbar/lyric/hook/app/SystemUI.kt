@@ -63,7 +63,6 @@ import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
 import java.lang.reflect.Field
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.system.exitProcess
 
@@ -90,10 +89,8 @@ class SystemUI : BaseHook() {
     lateinit var audioManager: AudioManager
     private var displayWidth: Int = 0
     private var displayHeight: Int = 0
-    private var pseudoTimeStyle=""
     var isLock = false
     private var isHook = false
-    private var isPseudoTime =false
     var useSystemMusicActive = true
     var test = false
 
@@ -373,7 +370,7 @@ class SystemUI : BaseHook() {
                     // 歌词显示
                     lyricLayout.visibility = View.VISIBLE
                     // 设置歌词文本
-                    lyricSwitchView.setSourceText(lyricSwitchView.text)
+//                    lyricSwitchView.setSourceText(lyricSwitchView.text)
                     // 隐藏时钟
                     clock.layoutParams = LinearLayout.LayoutParams(0, 0)
                     showLyric = true
@@ -451,7 +448,7 @@ class SystemUI : BaseHook() {
                 }
             }
             Utils.setStatusBar(application, false, config)
-            lyricSwitchView.setText(lyric)
+            lyricSwitchView.setSourceText(lyric)
             true
         }
 
@@ -521,8 +518,6 @@ class SystemUI : BaseHook() {
                 height = config.getIconSize()
             }
         }
-        isPseudoTime=config.getPseudoTime()
-        pseudoTimeStyle=config.getPseudoTimeStyle()
 //        lyricSwitchView.setStyle(config.getLyricStyle())
     }
 

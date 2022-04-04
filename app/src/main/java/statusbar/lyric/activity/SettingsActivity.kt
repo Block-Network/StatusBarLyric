@@ -437,27 +437,6 @@ class SettingsActivity : MIUIActivity() {
                 }
                 TextWithSwitch(TextV(resId = R.string.HideTime), SwitchV("HideTime", true, dataBindingSend = timeBinding.bindingSend), dataBindingRecv = timeBinding.binding.getRecv(1))
                 TextWithSwitch(TextV(resId = R.string.ClickLyric), SwitchV("LSwitch", false), dataBindingRecv = timeBinding.binding.getRecv(2))
-                val pseudoTimeBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getPseudoTime()) { view, flags, data ->
-                    when (flags) {
-                        2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
-                    }
-                }
-                TextWithSwitch(TextV(resId = R.string.pseudoTime), SwitchV("PseudoTime", false, dataBindingSend = pseudoTimeBinding.bindingSend), dataBindingRecv = pseudoTimeBinding.binding.getRecv(1))
-                TextSummaryArrow(TextSummaryV(textId = R.string.pseudoTimeStyle, onClickListener = {
-                    MIUIDialog(activity) {
-                        setTitle(R.string.pseudoTime)
-                        setMessage(R.string.pseudoTimeStyleTips)
-                        setEditText(
-                            ActivityOwnSP.ownSPConfig.getPseudoTimeStyle(),
-                            ""
-                        )
-                        setRButton(R.string.Ok) {
-                            ActivityOwnSP.ownSPConfig.setPseudoTimeStyle(getEditText())
-                            dismiss()
-                        }
-                        setLButton(R.string.Cancel) { dismiss() }
-                    }.show()
-                }), dataBindingRecv = pseudoTimeBinding.binding.getRecv(2))
                 val meiZuStyle = GetDataBinding(ActivityOwnSP.ownSPConfig.getLyricStyle()) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
