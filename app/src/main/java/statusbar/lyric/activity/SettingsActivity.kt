@@ -533,6 +533,7 @@ class SettingsActivity : MIUIActivity() {
                                 if (getEditText().isNotEmpty()) {
                                     try {
                                         iconConfig?.setIcon(icon, getEditText())
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     } catch (_: Throwable) {
@@ -541,6 +542,7 @@ class SettingsActivity : MIUIActivity() {
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                                 iconConfig?.setIcon(icon, iconConfig.getDefaultIcon(icon))
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                                updateConfig = true
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
