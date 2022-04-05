@@ -9,7 +9,7 @@ import statusbar.lyric.utils.ktx.hookAfterConstructor
 import statusbar.lyric.utils.ktx.hookBeforeMethod
 import statusbar.lyric.utils.ktx.setReturnConstant
 
-class Miplayer: BaseHook() {
+class Miplayer : BaseHook() {
     private val songInfo = "com.tencent.qqmusic.core.song.SongInfo".findClass()
     lateinit var context: Context
 

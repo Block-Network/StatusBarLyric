@@ -30,8 +30,8 @@ import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
 
-class Myplayer: BaseHook() {
-    override fun hook(){
+class Myplayer : BaseHook() {
+    override fun hook() {
         super.hook()
         "remix.myplayer.util.p".hookAfterMethod("o", Context::class.java) {
             it.result = true

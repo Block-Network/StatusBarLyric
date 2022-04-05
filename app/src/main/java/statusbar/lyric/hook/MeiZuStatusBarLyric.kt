@@ -42,8 +42,7 @@ object MeiZuStatusBarLyric {
 
     //模拟flyme
     fun guiseFlyme(hookNotification: Boolean) {
-        AppCenterUtils(Utils.appCenterKey)
-        // 获取Context
+        AppCenterUtils(Utils.appCenterKey) // 获取Context
         Application::class.java.hookAfterMethod("attach", Context::class.java) {
             context = it.args[0] as Context
         }
@@ -78,8 +77,7 @@ object MeiZuStatusBarLyric {
                 context?.let { it1 -> Utils.sendLyric(it1, "", Utils.packNameGetIconName(lpparam.packageName)) }
                 return@hookAfterMethod
             }
-            val isLyric =
-                notification.flags and MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER != 0 || notification.flags and MeiZuNotification.FLAG_ONLY_UPDATE_TICKER != 0
+            val isLyric = notification.flags and MeiZuNotification.FLAG_ALWAYS_SHOW_TICKER != 0 || notification.flags and MeiZuNotification.FLAG_ONLY_UPDATE_TICKER != 0
             if (charSequence == null || !isLyric) {
                 return@hookAfterMethod
             }

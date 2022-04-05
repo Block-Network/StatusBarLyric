@@ -30,7 +30,7 @@ import statusbar.lyric.R
 import statusbar.lyric.config.Config
 import statusbar.lyric.utils.Utils
 
-class QuickTitleService: TileService() {
+class QuickTitleService : TileService() {
     private lateinit var tile: Tile
 
     override fun onClick() {

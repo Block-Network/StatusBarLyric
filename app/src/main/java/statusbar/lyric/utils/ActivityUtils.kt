@@ -72,23 +72,12 @@ object ActivityUtils {
                 val jsonObject = JSONObject(data)
                 if (jsonObject.getString("tag_name").split("v").toTypedArray()[1].toInt() > BuildConfig.VERSION_CODE) {
                     MIUIDialog(activity) {
-                        setTitle(
-                            String.format(
-                                "%s [%s]",
-                                activity.getString(R.string.NewVer),
-                                jsonObject.getString("name")
-                            )
-                        )
+                        setTitle(String.format("%s [%s]", activity.getString(R.string.NewVer), jsonObject.getString("name")))
                         setMessage(jsonObject.getString("body").replace("#", ""))
                         setRButton(R.string.Update) {
                             try {
-                                val uri: Uri = Uri.parse(
-                                    jsonObject.getJSONArray("assets").getJSONObject(0)
-                                        .getString("browser_download_url")
-                                )
-                                val intent = Intent(
-                                    Intent.ACTION_VIEW, uri
-                                )
+                                val uri: Uri = Uri.parse(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
+                                val intent = Intent(Intent.ACTION_VIEW, uri)
                                 activity.startActivity(intent)
                             } catch (e: JSONException) {
                                 showToastOnLooper(activity, activity.getString(R.string.GetNewVerError) + e)
@@ -107,8 +96,7 @@ object ActivityUtils {
             true
         }
         Thread {
-            val value: String =
-                getHttp("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
+            val value: String = getHttp("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
             if (value != "") {
                 handler.obtainMessage().let {
                     it.data = Bundle().apply {

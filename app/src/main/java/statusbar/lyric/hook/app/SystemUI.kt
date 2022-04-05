@@ -68,16 +68,7 @@ import kotlin.system.exitProcess
 
 class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
-    var musicServer: ArrayList<String> = arrayListOf(
-        "com.kugou",
-        "com.netease.cloudmusic",
-        "com.tencent.qqmusic.service",
-        "cn.kuwo",
-        "remix.myplayer",
-        "cmccwm.mobilemusic",
-        "com.meizu.media.music",
-        "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew"
-    )
+    var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
 
     // base data
     lateinit var application: Application
@@ -149,8 +140,7 @@ class SystemUI : BaseHook() {
         if (autoLyricColorTimer == null) {
             autoLyricColorTimer = object : TimerTask() {
                 override fun run() {
-                    try {
-                        // 设置颜色
+                    try { // 设置颜色
                         setColor(clock.textColors.defaultColor)
                     } catch (e: Exception) {
                         LogUtils.e("${LogMultiLang.lyricColor}: $e\n" + Utils.dumpException(e))
@@ -212,8 +202,7 @@ class SystemUI : BaseHook() {
         }
     }
 
-    private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) {
-        // Get system clock view
+    private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) { // Get system clock view
         val clockField = if (config.getHook().isNotEmpty()) {
             LogUtils.e("${LogMultiLang.customHook}: " + config.getHook())
             try {
@@ -245,11 +234,7 @@ class SystemUI : BaseHook() {
                     LogUtils.e("${LogMultiLang.tries} $field ${LogMultiLang.fieldSuccess}")
                     break
                 } catch (e: NoSuchFieldError) {
-                    LogUtils.e(
-                        "${LogMultiLang.tries} $field ${LogMultiLang.fieldFail}: $e\n" + Log.getStackTraceString(
-                            e
-                        )
-                    )
+                    LogUtils.e("${LogMultiLang.tries} $field ${LogMultiLang.fieldFail}: $e\n" + Log.getStackTraceString(e))
                 }
             }
             thisField
@@ -304,17 +289,12 @@ class SystemUI : BaseHook() {
         lyricSwitchView = LyricSwitchView(application, config.getLyricStyle()).apply {
             width = (displayWidth * 35) / 100
             height = clock.height
-            setTextSize(
-                TypedValue.COMPLEX_UNIT_SHIFT,
-                if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat()
-            )
+            setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
             setMargins(10, 0, 0, 0)
             setMarqueeRepeatLimit(if (config.getLyricStyle()) 1 else -1)
             setSingleLine(true)
             setMaxLines(1)
-            setLetterSpacings(
-                if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
-            )
+            setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
 
             try {
                 val file = File(application.filesDir.path + "/font")
@@ -338,18 +318,12 @@ class SystemUI : BaseHook() {
 
         // 创建图标
         iconView = ImageView(application).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).also { it.setMargins(0, 7, 0, 0) }
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(0, 7, 0, 0) }
         }
 
         // 创建布局
         lyricLayout = LinearLayout(application).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).also { it.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0) }
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0) }
             addView(iconView)
             addView(lyricSwitchView)
         }
@@ -359,18 +333,14 @@ class SystemUI : BaseHook() {
 
         // 歌词点击事件
         if (config.getLyricSwitch()) {
-            lyricLayout.setOnClickListener {
-                // 显示时钟
-                clock.layoutParams = clockParams
-                // 歌词显示
+            lyricLayout.setOnClickListener { // 显示时钟
+                clock.layoutParams = clockParams // 歌词显示
                 lyricLayout.visibility = View.GONE
                 clock.isClickable = clockClickable
                 showLyric = false
-                clock.setOnClickListener {
-                    // 歌词显示
-                    lyricLayout.visibility = View.VISIBLE
-                    // 设置歌词文本
-//                    lyricSwitchView.setSourceText(lyricSwitchView.text)
+                clock.setOnClickListener { // 歌词显示
+                    lyricLayout.visibility = View.VISIBLE // 设置歌词文本
+                    //                    lyricSwitchView.setSourceText(lyricSwitchView.text)
                     // 隐藏时钟
                     clock.layoutParams = LinearLayout.LayoutParams(0, 0)
                     showLyric = true
@@ -412,12 +382,7 @@ class SystemUI : BaseHook() {
         }
 
         updateLyricPos = Handler(Looper.getMainLooper()) {
-            (lyricSwitchView.layoutParams as LinearLayout.LayoutParams).setMargins(
-                config.getLyricPosition(),
-                config.getLyricHigh(),
-                0,
-                0
-            )
+            (lyricSwitchView.layoutParams as LinearLayout.LayoutParams).setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
             true
         }
 
@@ -429,17 +394,11 @@ class SystemUI : BaseHook() {
         updateLyric = Handler(Looper.getMainLooper()) { message ->
             val lyric: String = message.data.getString(lyricKey) ?: ""
             LogUtils.e("${LogMultiLang.updateLyric}: $lyric")
-            val display =
-                if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
-            lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(
-                lyricSwitchView.paint,
-                lyric,
-                display
-            ) else (display * config.getLyricWidth()) / 100
+            val display = if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
+            lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(lyricSwitchView.paint, lyric, display) else (display * config.getLyricWidth()) / 100
             if (showLyric) { // Show lyric
                 lyricLayout.visibility = View.VISIBLE
-                if (config.getHideTime()) clock.layoutParams = LinearLayout.LayoutParams(0, 0) else clock.layoutParams =
-                    clockParams
+                if (config.getHideTime()) clock.layoutParams = LinearLayout.LayoutParams(0, 0) else clock.layoutParams = clockParams
                 if (config.getLyricFontWeight() != 0) {
                     lyricSwitchView.paint.apply {
                         style = Paint.Style.FILL_AND_STROKE
@@ -517,8 +476,7 @@ class SystemUI : BaseHook() {
                 width = config.getIconSize()
                 height = config.getIconSize()
             }
-        }
-//        lyricSwitchView.setStyle(config.getLyricStyle())
+        } //        lyricSwitchView.setStyle(config.getLyricStyle())
     }
 
     private fun offLyric(info: String) { // off Lyric
@@ -565,10 +523,7 @@ class SystemUI : BaseHook() {
         if (!config.getUseSystemReverseColor()) startTimer(config.getReverseColorTime().toLong(), getAutoLyricColorTimer()) // not use system reverse color
 
         if (config.getAnim() == "random") {
-            val anim = arrayOf(
-                "top", "lower",
-                "left", "right"
-            )[(Math.random() * 4).toInt()]
+            val anim = arrayOf("top", "lower", "left", "right")[(Math.random() * 4).toInt()]
             lyricSwitchView.inAnimation = Utils.inAnim(anim)
             lyricSwitchView.outAnimation = Utils.outAnim(anim)
         }
@@ -598,9 +553,7 @@ class SystemUI : BaseHook() {
     }
 
     private fun getLyricWidth(paint: Paint, text: String, display: Int): Int {
-        return if (config.getLyricMaxWidth() == -1 || paint.measureText(text)
-                .toInt() + 6 <= (display * config.getLyricMaxWidth()) / 100
-        ) {
+        return if (config.getLyricMaxWidth() == -1 || paint.measureText(text).toInt() + 6 <= (display * config.getLyricMaxWidth()) / 100) {
             paint.measureText(text).toInt() + 6
         } else {
             (display * config.getLyricMaxWidth()) / 100
@@ -608,18 +561,13 @@ class SystemUI : BaseHook() {
     }
 
     private fun setColor(int: Int) {
-        updateTextColor.sendMessage(
-            updateTextColor.obtainMessage()
-                .also { it.arg1 = if (textColor == 0) int else textColor }) // update text color
-        updateIconColor.sendMessage(
-            updateIconColor.obtainMessage()
-                .also { it.arg1 = if (iconColor == 0) int else iconColor }) // update icon color
+        updateTextColor.sendMessage(updateTextColor.obtainMessage().also { it.arg1 = if (textColor == 0) int else textColor }) // update text color
+        updateIconColor.sendMessage(updateIconColor.obtainMessage().also { it.arg1 = if (iconColor == 0) int else iconColor }) // update icon color
     }
 
     private fun systemReverseColor() {
         try {
-            val darkIconDispatcher =
-                "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
+            val darkIconDispatcher = "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
             if (darkIconDispatcher != null) {
                 val find = darkIconDispatcher.hookAfterAllMethods("getTint") {
                     try {

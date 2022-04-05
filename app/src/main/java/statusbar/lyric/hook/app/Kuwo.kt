@@ -30,9 +30,9 @@ import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
 
-class Kuwo: BaseHook() {
-     override fun hook(){
-         super.hook()
+class Kuwo : BaseHook() {
+    override fun hook() {
+        super.hook()
         "android.bluetooth.BluetoothAdapter".hookAfterMethod("isEnabled") {
             it.result = true
         }
