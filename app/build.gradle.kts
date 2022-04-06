@@ -92,4 +92,5 @@ dependencies {
     implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
     implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
     implementation(project(":blockmiui"))
+    implementation(project(":xtoast"))
 }

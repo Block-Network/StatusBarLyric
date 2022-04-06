@@ -30,7 +30,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.widget.Toast
+import app.xiaowine.xtoast.XToast
 import cn.fkj233.ui.dialog.MIUIDialog
 import org.json.JSONException
 import org.json.JSONObject
@@ -45,10 +45,13 @@ object ActivityUtils {
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     // 弹出toast
+    @Suppress("DEPRECATION")
     @JvmStatic
-    fun showToastOnLooper(context: Context?, message: String?) {
+    fun showToastOnLooper(context: Context, message: String) {
         try {
-            handler.post { Toast.makeText(context, message, Toast.LENGTH_LONG).show() }
+            handler.post {
+                XToast.makeToast(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+            }
         } catch (e: RuntimeException) {
             e.printStackTrace()
         }
@@ -87,7 +90,7 @@ object ActivityUtils {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 } else {
-                    Toast.makeText(activity, activity.getString(R.string.NoVerUpdate), Toast.LENGTH_LONG).show()
+                    showToastOnLooper(activity, activity.getString(R.string.NoVerUpdate))
                 }
             } catch (ignored: JSONException) {
                 showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
