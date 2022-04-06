@@ -12,8 +12,8 @@ android {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 32
-        versionCode = 111
-        versionName = "4.4.3"
+        versionCode = 147
+        versionName = "5.0.0"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
     }

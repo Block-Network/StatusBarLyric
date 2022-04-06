@@ -19,7 +19,7 @@ import android.widget.Toast
     private const val LENGTH_LONG = 1
 
     @SuppressLint("ShowToast")
-    public fun makeToast(context: Context, message: CharSequence, duration: Int = LENGTH_LONG, currentTypeface: Typeface = Typeface.create("sans-serif-condensed", Typeface.NORMAL), textSize: Int = 16, textColor: Int = R.color.textColor, toastIcon: Drawable? = null, allowQueue: Boolean = true, toastGravity: Int = -1, xOffset: Int = -1, yOffset: Int = -1, isRTL: Boolean = false): Toast {
+    fun makeToast(context: Context, message: CharSequence, duration: Int = LENGTH_LONG, currentTypeface: Typeface = Typeface.create("sans-serif-condensed", Typeface.NORMAL), textSize: Int = 16, textColor: Int = R.color.textColor, toastIcon: Drawable? = null, allowQueue: Boolean = true, toastGravity: Int = -1, xOffset: Int = -1, yOffset: Int = -1, isRTL: Boolean = false): Toast {
         val currentToast = Toast.makeText(context, "", duration)
         val toastLayout = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.toast_layout, null)
         val toastRoot = toastLayout.findViewById<LinearLayout>(R.id.toast_root)
