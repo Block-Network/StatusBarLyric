@@ -1,0 +1,7 @@
+commit_message: '[ci skip] New translations from Crowdin'
+files:
+  - source: /app/src/main/res/values/strings.xml
+    translation: /app/src/main/res/values-%two_letters_code%/strings.xml
+    translate_content: 0
+    translate_attributes: 0
+    content_segmentation: 0

@@ -42,7 +42,7 @@ object BackupUtils {
 
     fun backup(activity: Activity, sp: SharedPreferences) {
         sharedPreferences = sp
-        saveFile(activity, String.format("StatusBarLyric_%s.json", LocalDateTime.now().toString()))
+        saveFile(activity, "StatusBarLyric_${LocalDateTime.now()}.json")
     }
 
     fun recovery(activity: Activity, sp: SharedPreferences) {
@@ -59,7 +59,7 @@ object BackupUtils {
     }
 
 
-    private fun saveFile(activity: Activity, fileName: String){
+    private fun saveFile(activity: Activity, fileName: String) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "application/json"
@@ -75,7 +75,7 @@ object BackupUtils {
                 BufferedReader(InputStreamReader(loadFile)).apply {
                     val sb = StringBuffer()
                     var line = readLine()
-                    while(line != null){
+                    while (line != null) {
                         sb.append(line)
                         line = readLine()
                     }
@@ -112,16 +112,14 @@ object BackupUtils {
         try {
             activity.contentResolver.openOutputStream(uri)?.let { saveFile ->
                 BufferedWriter(OutputStreamWriter(saveFile)).apply {
-                    write(
-                        JSONObject().also {
-                            for (entry: Map.Entry<String, *> in sharedPreferences.all) {
-                                when (entry.value) {
-                                    Float -> it.put(entry.key, "Float:" + (entry.value as Float * 1000).toInt().toString())
-                                    else -> it.put(entry.key, entry.value)
-                                }
+                    write(JSONObject().also {
+                        for (entry: Map.Entry<String, *> in sharedPreferences.all) {
+                            when (entry.value) {
+                                Float -> it.put(entry.key, "Float:" + (entry.value as Float * 1000).toInt().toString())
+                                else -> it.put(entry.key, entry.value)
                             }
-                        }.toString()
-                    )
+                        }
+                    }.toString())
                     close()
                 }
             }

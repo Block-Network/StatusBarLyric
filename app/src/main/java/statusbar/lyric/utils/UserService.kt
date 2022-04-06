@@ -64,14 +64,4 @@ object UserService {
             return users
         }
 
-    fun getProfileParent(userId: Int): Int {
-        val um = userManager ?: return -1
-        val userInfo = um.getProfileParent(userId)
-        return userInfo?.id ?: userId
-    }
-
-    fun isUserUnlocked(userId: Int): Boolean {
-        val um = userManager ?: return false
-        return um.isUserUnlocked(userId)
-    }
 }

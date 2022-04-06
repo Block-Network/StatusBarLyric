@@ -22,73 +22,67 @@
 
 package statusbar.lyric.hook
 
-import android.content.Context
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.hook.app.*
-import statusbar.lyric.utils.AppCenterUtils
 import statusbar.lyric.utils.LogUtils
-import statusbar.lyric.utils.Utils
+import statusbar.lyric.utils.ktx.init
+import java.util.*
 
 class MainHook : IXposedHookLoadPackage {
-    var context: Context? = null
-
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        LogUtils.e("Debug已开启")
-        LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE} *${BuildConfig.BUILD_TYPE})")
-        LogUtils.e("当前包名: " + lpparam.packageName)
+        LogUtils.e("Debug enable")
+        LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
+        LogUtils.e("This packName: " + lpparam.packageName)
+        init(lpparam)
 
-        when (lpparam.packageName) {
+        val hook = when (lpparam.packageName) {
             "com.android.systemui" -> {
-                LogUtils.e("正在hook系统界面")
-                SystemUI(lpparam).hook()
-                LogUtils.e("hook系统界面结束")
+                LogUtils.e("start hook systemui")
+                SystemUI()
             }
             "com.netease.cloudmusic" -> {
-                LogUtils.e("正在hook网易云音乐")
-                Netease(lpparam).hook()
-                LogUtils.e("hook网易云音乐结束")
+                LogUtils.e("start hook netease")
+                Netease()
             }
             "com.kugou.android" -> {
-                LogUtils.e("正在hook酷狗音乐")
-                Kugou(lpparam).hook()
-                LogUtils.e("hook酷狗音乐结束")
+                LogUtils.e("start hook kugou")
+                Kugou()
             }
             "cn.kuwo.player" -> {
-                LogUtils.e("正在hook酷我音乐")
-                Kuwo(lpparam).hook()
-                LogUtils.e("hook酷我音乐结束")
+                LogUtils.e("start hook kuwo")
+                Kuwo()
             }
             "com.tencent.qqmusic" -> {
-                LogUtils.e("正在hookQQ音乐")
-                MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
-                AppCenterUtils(Utils.appCenterKey, lpparam)
-                LogUtils.e("hookQQ音乐结束")
+                LogUtils.e("start hook qqmusic")
+                MeiZuStatusBarLyric.guiseFlyme(true)
+                null
             }
             "remix.myplayer" -> {
-                LogUtils.e("正在Hook myplayer")
-                Myplayer(lpparam).hook()
-                LogUtils.e("hook myplayer结束")
+                LogUtils.e("start Hook myplayer")
+                Myplayer()
             }
             "cmccwm.mobilemusic" -> {
-                LogUtils.e("正在Hook 咪咕音乐")
-                MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
-                AppCenterUtils(Utils.appCenterKey, lpparam)
-                LogUtils.e("Hook 咪咕音乐结束")
+                LogUtils.e("start Hook migu")
+                MeiZuStatusBarLyric.guiseFlyme(true)
+                null
             }
             "com.miui.player" -> {
-                LogUtils.e("正在Hook 小米音乐")
-                MIPlayer(lpparam).hook()
-                LogUtils.e("Hook 小米音乐结束")
+                LogUtils.e("start Hook xiaomi Player")
+                Miplayer()
             }
             "com.meizu.media.music" -> {
-                MeiZuStatusBarLyric.guiseFlyme(lpparam, true)
-                AppCenterUtils(Utils.appCenterKey, lpparam)
+                LogUtils.e("start Hook Meizu Music")
+                MeiZuStatusBarLyric.guiseFlyme(true)
+                null
             }
             else -> {
-                Api(lpparam).hook()
+                LogUtils.e("start Hook ${lpparam.processName}")
+                Api()
             }
         }
+        hook?.hook()
+        LogUtils.e("Hook ${lpparam.processName} end")
     }
 }

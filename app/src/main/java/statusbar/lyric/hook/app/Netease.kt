@@ -46,19 +46,19 @@ import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
+import statusbar.lyric.utils.ktx.lpparam
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 
-
-class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
+class Netease : BaseHook() {
     var context: Context? = null
     var subView: TextView? = null
     lateinit var broadcastHandler: BroadcastHandler
     var appLog = ""
     var isNewVer = false
 
-    private fun disableTinker(lpparam: LoadPackageParam) {
-        val tinkerApp = "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull(lpparam.classLoader)
+    private fun disableTinker() {
+        val tinkerApp = "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull()
         tinkerApp?.hookAfterMethod("getTinkerFlags") {
             it.result = 0
         }
@@ -70,7 +70,7 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
         fun onReceive(s: String)
     }
 
-    inner class BroadcastHandler(lpparam: LoadPackageParam): BroadcastReceiver() {
+    inner class BroadcastHandler(lpparam: LoadPackageParam) : BroadcastReceiver() {
 
         private val idMAIN = "com.netease.cloudmusic"
         private val idPLAY = "com.netease.cloudmusic:play"
@@ -87,7 +87,7 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
         fun sendBroadcast(s: String) {
             LogUtils.e("$client 尝试发送Broadcast $s")
             val intent = Intent()
-            when(client) {
+            when (client) {
                 idMAIN -> {
                     intent.action = action + "PLAY"
                     intent.putExtra("fromMAIN", s)
@@ -110,7 +110,7 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
         }
 
         fun init(context: Context, callback: OnBroadcastReceiveListener): BroadcastHandler {
-            when(client) {
+            when (client) {
                 idMAIN -> {
                     context.registerReceiver(this, IntentFilter(action + "MAIN"))
                     LogUtils.e("$client 尝试注册BroadcastReceiver ${action + "MAIN"}")
@@ -127,7 +127,7 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
 
         override fun onReceive(p0: Context, p1: Intent) {
             LogUtils.e("${client}接收到数据，${p1.getStringExtra("fromPLAY")}")
-            when(client) {
+            when (client) {
                 idMAIN -> {
                     p1.getStringExtra("fromPLAY")?.let {
                         callback?.onReceive(it)
@@ -160,19 +160,15 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
                             if (parameters.size == 2) {
                                 if (parameters[0].type.name == "android.app.Notification" && parameters[1].type.name == "boolean") {
                                     LogUtils.e("find = ${m.declaringClass.name} ${m.name}")
-                                    val unhook = XposedHelpers.findAndHookMethod(
-                                        clazz, m.name,
-                                        Notification::class.java,
-                                        Boolean::class.javaPrimitiveType, object : XC_MethodHook() {
-                                            override fun afterHookedMethod(param: MethodHookParam) {
-                                                val notification = param.args[0] as Notification
-                                                if (notification.tickerText == "网易云音乐正在播放") {
-                                                    return
-                                                }
-                                                hookMethod(param)
+                                    val unhook = XposedHelpers.findAndHookMethod(clazz, m.name, Notification::class.java, Boolean::class.javaPrimitiveType, object : XC_MethodHook() {
+                                        override fun afterHookedMethod(param: MethodHookParam) {
+                                            val notification = param.args[0] as Notification
+                                            if (notification.tickerText == "网易云音乐正在播放") {
+                                                return
                                             }
+                                            hookMethod(param)
                                         }
-                                    )
+                                    })
                                     unhookMap[m.name] = unhook
                                 }
                             }
@@ -197,10 +193,11 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun hook(){
+    override fun hook() {
+        super.hook()
         try {
-            disableTinker(lpparam)
-            "com.netease.cloudmusic.NeteaseMusicApplication".hookAfterMethod("attachBaseContext", Context::class.java, classLoader = lpparam.classLoader) {
+            disableTinker()
+            "com.netease.cloudmusic.NeteaseMusicApplication".hookAfterMethod("attachBaseContext", Context::class.java) {
                 try {
                     context = it.thisObject as Context
                     if (lpparam.processName !in arrayOf("com.netease.cloudmusic", "com.netease.cloudmusic:play")) return@hookAfterMethod
@@ -220,26 +217,26 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
                         })
                     }
                     LogUtils.e("网易云Hook Process: ${lpparam.processName}")
-                    val verCode: Int? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode
-                    val verName: String? = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionName
-                    if (verCode!! >= 8007001) {
+                    val verCode: Int = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionCode ?: throw Throwable("Get netease versionCode is null")
+                    val verName: String = context?.packageManager?.getPackageInfo(lpparam.packageName, 0)?.versionName ?: throw Throwable("Get netease versionName is null")
+                    if (verCode >= 8007001) {
                         runCatching { context?.let { it1 -> SettingHook(it1, "com.netease.cloudmusic.music.biz.setting.activity.SettingActivity") } }
                         isNewVer = true
                         LogUtils.e("start hook Container")
-                        MeiZuStatusBarLyric.guiseFlyme(lpparam, false)
+                        MeiZuStatusBarLyric.guiseFlyme(false)
                         filter.startFilterAndHook()
                         appLog = " (网易云版本! $verName)"
-                    } else if (verCode!! > 8000041) {
+                    } else if (verCode > 8000041) {
                         runCatching { context?.let { it1 -> SettingHook(it1, "com.netease.cloudmusic.activity.SettingActivity") } }
                         isNewVer = true
-                        MeiZuStatusBarLyric.guiseFlyme(lpparam, false)
+                        MeiZuStatusBarLyric.guiseFlyme(false)
                         filter.startFilterAndHook()
                         appLog = " (网易云版本! $verName)"
                     } else {
                         LogUtils.e("正在尝试通用Hook")
                         runCatching { context?.let { it1 -> SettingHook(it1, "com.netease.cloudmusic.activity.SettingActivity") } }
                         appLog = try {
-                            "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java, classLoader = lpparam.classLoader){ it1 ->
+                            "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java) { it1 ->
                                 if (it1.args[0].toString() == "android.media.metadata.TITLE") {
                                     if (it1.args[1] != null) {
                                         Utils.sendLyric(context, it1.args[1].toString(), "Netease")
@@ -287,12 +284,9 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
 
         @SuppressLint("SetTextI18n")
         fun initView(context: Context) {
-            var originalText: TextView? = null
-            //获取开关控件
-            val switchCompat: View = XposedHelpers.getObjectField(context, switchViewName) as View
-            //获取开关控件爸爸
-            val parent = switchCompat.parent as ViewGroup
-            //获取开关控件爷爷
+            var originalText: TextView? = null //获取开关控件
+            val switchCompat: View = XposedHelpers.getObjectField(context, switchViewName) as View //获取开关控件爸爸
+            val parent = switchCompat.parent as ViewGroup //获取开关控件爷爷
             val grandparent = parent.parent as ViewGroup
 
             val linearLayout = LinearLayout(context)
@@ -326,12 +320,7 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
             if (originalText != null) {
                 titleView.setTextColor(originalText.textColors)
                 titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, originalText.textSize)
-                titleView.setPadding(
-                    if (originalText.paddingLeft == 0) Utils.dp2px(
-                        context,
-                        10F
-                    ) else originalText.paddingLeft, 0, 0, 0
-                )
+                titleView.setPadding(if (originalText.paddingLeft == 0) Utils.dp2px(context, 10F) else originalText.paddingLeft, 0, 0, 0)
                 subView?.setTextColor(originalText.textColors)
                 subView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, (originalText.textSize / 3.0 * 2.0).toInt().toFloat())
             }
@@ -356,11 +345,7 @@ class Netease(private val lpparam: LoadPackageParam): BaseHook(lpparam) {
                 isLyric = try {
                     XposedHelpers.findField(param.thisObject.javaClass, "i")[param.thisObject] as Boolean
                 } catch (e: NoSuchFieldError) {
-                    LogUtils.e(
-                        param.thisObject.javaClass.canonicalName?.toString() + " | i 反射失败: " + Utils.dumpNoSuchFieldError(
-                            e
-                        )
-                    )
+                    LogUtils.e(param.thisObject.javaClass.canonicalName?.toString() + " | i 反射失败: " + Utils.dumpNoSuchFieldError(e))
                     true
                 }
                 lyric = param.args[0] as String

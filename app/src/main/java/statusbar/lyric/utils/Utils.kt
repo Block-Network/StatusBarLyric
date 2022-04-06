@@ -41,23 +41,22 @@ import android.view.animation.TranslateAnimation
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.Config
-import java.io.*
-import java.nio.channels.FileChannel
+import java.io.DataOutputStream
+import java.io.IOException
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.util.*
 
 
 @SuppressLint("StaticFieldLeak")
 object Utils {
-    val appCenterKey = "aa0a0b32-8d8d-43ca-8956-947e1ed8294d"
+    const val appCenterKey = "aa0a0b32-8d8d-43ca-8956-947e1ed8294d"
 
     private val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
     private val packNameToIconName = HashMap<String, String>().apply {
         put("com.netease.cloudmusic", "Netease")
-        put("com.kugou", "KuGou")
         put("com.tencent.qqmusic", "QQMusic")
-        put("remix.myplayer", "Myplayer")
         put("cmccwm.mobilemusic", "MiGu")
-        put("cn.kuwo", "KuWo")
     }
 
     @JvmStatic
@@ -121,14 +120,6 @@ object Utils {
         return sw.toString()
     }
 
-    @JvmStatic
-    fun stringsListAdd(strArr: Array<String?>, newStr: String): Array<String?> {
-        val newStrArr = arrayOfNulls<String>(strArr.size + 1)
-        System.arraycopy(strArr, 0, newStrArr, 0, strArr.size)
-        newStrArr[strArr.size] = newStr
-        return newStrArr
-    }
-
     //状态栏图标设置
     @JvmStatic
     fun setStatusBar(application: Context, isOpen: Boolean, config: Config) {
@@ -161,12 +152,10 @@ object Utils {
     }
 
     @JvmStatic
-    fun isServiceRunningList(context: Context, str: Array<String?>): Boolean {
+    fun isServiceRunningList(context: Context, str: ArrayList<String>): Boolean {
         for (mStr in str) {
-            if (mStr != null) {
-                if (isAppRunning(context, mStr)) {
-                    return true
-                }
+            if (isAppRunning(context, mStr)) {
+                return true
             }
         }
         return false
@@ -178,8 +167,7 @@ object Utils {
         if (isServiceRunning(context, str)) {
             return true
         }
-        val runningServices =
-            (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningTasks(200)
+        val runningServices = (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningTasks(200)
         if (runningServices.size <= 0) {
             return false
         }
@@ -195,8 +183,7 @@ object Utils {
     // 判断服务是否运行
     @JvmStatic
     fun isServiceRunning(context: Context, str: String): Boolean {
-        val runningServices =
-            (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningServices(200)
+        val runningServices = (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningServices(200)
         if (runningServices.size <= 0) {
             return false
         }
@@ -218,11 +205,9 @@ object Utils {
             "left" -> TranslateAnimation(100F, 0F, 0F, 0F)
             "right" -> TranslateAnimation(-100F, 0F, 0F, 0F)
             else -> return null
-        }
-        // 设置动画300ms
+        } // 设置动画300ms
         translateAnimation.duration = 300
-        val alphaAnimation = AlphaAnimation(0F, 1F)
-        // 设置动画300ms
+        val alphaAnimation = AlphaAnimation(0F, 1F) // 设置动画300ms
         alphaAnimation.duration = 300
         animationSet.addAnimation(translateAnimation)
         animationSet.addAnimation(alphaAnimation)
@@ -238,11 +223,9 @@ object Utils {
             "left" -> TranslateAnimation(0F, -100F, 0F, 0F)
             "right" -> TranslateAnimation(0F, 100F, 0F, 0F)
             else -> return null
-        }
-        // 设置动画300ms
+        } // 设置动画300ms
         translateAnimation.duration = 300
-        val alphaAnimation = AlphaAnimation(1F, 0F)
-        // 设置动画300ms
+        val alphaAnimation = AlphaAnimation(1F, 0F) // 设置动画300ms
         alphaAnimation.duration = 300
         animationSet.addAnimation(translateAnimation)
         animationSet.addAnimation(alphaAnimation)
@@ -251,14 +234,12 @@ object Utils {
 
     @JvmStatic
     fun sendLyric(context: Context?, lyric: String?, icon: String?) {
-        context?.sendBroadcast(
-            Intent().apply {
-                action = "Lyric_Server"
-                putExtra("Lyric_Data", lyric)
-                putExtra("Lyric_Icon", icon)
-                putExtra("Lyric_Type", "hook")
-            }
-        )
+        context?.sendBroadcast(Intent().apply {
+            action = "Lyric_Server"
+            putExtra("Lyric_Data", lyric)
+            putExtra("Lyric_Icon", icon)
+            putExtra("Lyric_Type", "hook")
+        })
     }
 
     @JvmStatic
@@ -268,55 +249,14 @@ object Utils {
 
     @JvmStatic
     fun sendLyric(context: Context, lyric: String?, icon: String?, useSystemMusicActive: Boolean, packName: String?) {
-        context.sendBroadcast(
-            Intent().apply {
-                action = "Lyric_Server"
-                putExtra("Lyric_Data", lyric)
-                putExtra("Lyric_Type", "app")
-                putExtra("Lyric_PackName", packName)
-                putExtra("Lyric_Icon", icon)
-                putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
-            }
-        )
-    }
-
-    /**
-     * 根据文件路径拷贝文件
-     * @param src 源文件
-     * @param destPath 目标文件路径
-     * @return boolean 成功true、失败false
-     */
-    fun copyFile(src: File?, destPath: String?, destFileName: String): String {
-        if (src == null || destPath == null) {
-            return "Param error"
-        }
-        val dest = File(destPath, destFileName)
-        if (dest.exists()) {
-            if (!dest.delete()) {
-                return "Delete file fail"
-            }
-        }
-        try {
-            if (!dest.createNewFile()) {
-                return "Create file fail"
-            }
-        } catch (e: IOException) {
-            return dumpIOException(e)
-        }
-        try {
-            val srcChannel = FileInputStream(src).channel
-            val dstChannel = FileOutputStream(dest).channel
-            srcChannel.transferTo(0, srcChannel.size(), dstChannel)
-            try {
-                srcChannel.close()
-                dstChannel.close()
-            } catch (e: IOException) {
-                return dumpIOException(e)
-            }
-        } catch (e: IOException) {
-            return dumpIOException(e)
-        }
-        return ""
+        context.sendBroadcast(Intent().apply {
+            action = "Lyric_Server"
+            putExtra("Lyric_Data", lyric)
+            putExtra("Lyric_Type", "app")
+            putExtra("Lyric_PackName", packName)
+            putExtra("Lyric_Icon", icon)
+            putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
+        })
     }
 
     /**
@@ -326,5 +266,23 @@ object Utils {
     fun dp2px(context: Context, dpValue: Float): Int {
         val scale = context.resources.displayMetrics.density
         return (dpValue * scale + 0.5f).toInt()
+    }
+
+    @JvmStatic
+    fun voidShell(command: String, isSu: Boolean) {
+        try {
+            if (isSu) {
+                val p = Runtime.getRuntime().exec("su")
+                val outputStream = p.outputStream
+                val dataOutputStream = DataOutputStream(outputStream)
+                dataOutputStream.writeBytes(command)
+                dataOutputStream.flush()
+                dataOutputStream.close()
+                outputStream.close()
+            } else {
+                Runtime.getRuntime().exec(command)
+            }
+        } catch (ignored: Throwable) {
+        }
     }
 }

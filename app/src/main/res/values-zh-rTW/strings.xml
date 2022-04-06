@@ -10,14 +10,15 @@
     <string name="LyricAutoMaxWidth">歌詞自適應最大寬度</string>
     <string name="LyricsAnimation">歌詞動效</string>
     <string name="LyricColor">* 歌詞顏色</string>
+    <string name="IconColor">* 圖標顏色</string>
     <string name="LyricIcon">歌詞圖標</string>
     <string name="LyricSpeed">歌詞滾動速度</string>
     <string name="AdvancedSettings">高級設置</string>
     <string name="ClickLyric">* 點擊歌詞切換時鐘和歌詞</string>
     <string name="AbScreen">防燒屏</string>
     <string name="IconHigh">* 圖標上下位置</string>
+    <string name="LyricPos">* 歌詞左右位置</string>
     <string name="Default">默认</string>
-    <string name="IconAutoColors">圖標自動反色</string>
     <string name="UnlockShow">僅解鎖顯示</string>
     <string name="AutoHideNotiIcon">自動隱藏通知圖標</string>
     <string name="HideNetWork">隱藏實時網速</string>
@@ -44,8 +45,8 @@
         - 咪咕音樂 未知 ~ 7.9.0（狀態欄歌詞版）\n
         - 網易云音樂 8.2.10 ~ 現今（狀態欄歌詞版）\n
         - 網易云音樂 未知 ~ 8.0.40 (車載藍牙歌詞版)\n
-        - 酷狗音樂 未知 ~ 11.0.8(車載藍牙歌詞版)\n
-        - 酷我音樂 未知 ~ 10.0.7.0(車載藍牙歌詞版)\n
+        - 酷狗音樂 未知 ~ 11.1.3(車載藍牙歌詞版)\n
+        - 酷我音樂 未知 ~ 10.1.0.0(車載藍牙歌詞版)\n
         - 椒鹽音樂 4.5 ~ 現今（API版）\n
         - 魅族音樂 未知 ~ 現今（狀態欄歌詞版）\n
         - 小米音樂 4.6.0 ~ 現今 (車載藍牙歌詞版)
@@ -55,7 +56,7 @@
     <string name="XposedTips">如果無法顯示歌詞，請嘗試停止音樂軟件並重啟系統界面\n或查看 使用說明 自己是否使用正確版本</string>
     <string name="NewVer">發現新版本</string>
     <string name="Update">更新</string>
-    <string name="GetNewVerError">"獲取最新版下載地址失敗: "</string>
+    <string name="GetNewVerError">獲取最新版下載地址失敗: </string>
     <string name="Cancel">取消</string>
     <string name="NoVerUpdate">無新版可更新</string>
     <string name="CheckUpdateError">檢查失敗，請稍後再試!</string>
@@ -67,6 +68,7 @@
     <string name="random">隨機</string>
     <string name="LyricColorTips">請輸入16進製顏色代碼，例如: #C0C0C0</string>
     <string name="LyricColorError">顏色代碼不正確!</string>
+    <string name="InputError">輸入範圍不正確</string>
     <string name="LyricPosTips">-900~900（單位：像素點）</string>
     <string name="LyricHighTips">-100~100（單位：像素點）</string>
     <string name="Ok">確定</string>
@@ -95,7 +97,6 @@
     <string name="PrivacyPolicy">隱私政策</string>
     <string name="UseSystemReverseColor">* 使用系統方式反色</string>
     <string name="IconSettings">圖標設置</string>
-    <string name="LyricPos">* 歌詞左右位置</string>
     <string name="NewNotice">新通知</string>
     <string name="GetNewNoticeError">獲取新通知錯誤</string>
     <string name="ResetSuccess">重置成功</string>
@@ -107,22 +108,8 @@
     <string name="LyricTips">0%~100%</string>
     <string name="Test">測試</string>
     <string name="TestDialogTips">這個功能是內嵌在SystemUI裏的，可能會導致SystemUI崩潰重啓！</string>
-    <string name="Back">返回</string>
     <string name="Start">啓動</string>
-    <string name="pseudoTime">偽時間</string>
-    <string name="pseudoTimeStyle">偽時間格式/自定義文字</string>
-    <string name="pseudoTimeStyleTips">yyyy：年\n
-        MM：月\n
-        dd：日\n
-        hh：1~12小時制(1-12)\n
-        HH：24小時制(0-23)\n
-        mm：分\n
-        ss：秒\n
-        E：星期幾\n
-        a：上下午標識\n
-        z：表示時區\n
-        若要顯示自定義文字，在下面編輯框裡填寫即可\n
-        當前格式：</string>
+    <string name="Back">返回</string>
     <string name="Custom">自定義</string>
     <string name="InputCustomHook">自定義Hook點，空關閉</string>
     <string name="HideTime">隱藏時間</string>
@@ -155,4 +142,11 @@
     <string name="AntiBurnTimeTips">1–3600000（單位：毫秒）</string>
     <string name="SongPauseCloseLyricsTime">歌曲暫停關閉歌詞時間</string>
     <string name="showAd">觀看廣告來支持作者</string>
+    <string name="MakeIcon">製作圖標</string>
+    <string name="MakeIconError">無法跳轉，請檢查是否安裝\n爱玩机工具箱</string>
+    <string name="DelayedLoading">延遲加載</string>
+    <string name="FirstTip">本模塊使用了 Microsoft AppCenter 來統計或收集月活量、崩潰數據和用戶信息等指標，一切內容與模塊無關</string>
+    <string name="TitleTips1">反饋日誌請不要截圖\nLsp右上角保存成文件反饋</string>
+    <string name="TitleTips2">帶 * 的功能改動需要重啟系統界面</string>
+    <string name="TitleTips3">垂直滾動條上方的標題是可以點擊手動輸入範圍的喲</string>
 </resources>

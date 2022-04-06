@@ -4,8 +4,6 @@ app/build
 app/debug
 !app/libs/classes.jar
 /.idea/
-/.idea/inspectionProfiles/
 local.properties
 build
-/.idea/misc.xml
 hs_err_*.log

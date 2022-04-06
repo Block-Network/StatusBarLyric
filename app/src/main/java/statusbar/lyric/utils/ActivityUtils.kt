@@ -30,24 +30,28 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.widget.Toast
+import app.xiaowine.xtoast.XToast
 import cn.fkj233.ui.dialog.MIUIDialog
 import org.json.JSONException
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.Config
-import statusbar.lyric.utils.HttpUtils.Get
-
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.URL
 
 object ActivityUtils {
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     // 弹出toast
+    @Suppress("DEPRECATION")
     @JvmStatic
-    fun showToastOnLooper(context: Context?, message: String?) {
+    fun showToastOnLooper(context: Context, message: String) {
         try {
-            handler.post { Toast.makeText(context, message, Toast.LENGTH_LONG).show() }
+            handler.post {
+                XToast.makeToast(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+            }
         } catch (e: RuntimeException) {
             e.printStackTrace()
         }
@@ -71,23 +75,12 @@ object ActivityUtils {
                 val jsonObject = JSONObject(data)
                 if (jsonObject.getString("tag_name").split("v").toTypedArray()[1].toInt() > BuildConfig.VERSION_CODE) {
                     MIUIDialog(activity) {
-                        setTitle(
-                            String.format(
-                                "%s [%s]",
-                                activity.getString(R.string.NewVer),
-                                jsonObject.getString("name")
-                            )
-                        )
+                        setTitle(String.format("%s [%s]", activity.getString(R.string.NewVer), jsonObject.getString("name")))
                         setMessage(jsonObject.getString("body").replace("#", ""))
                         setRButton(R.string.Update) {
                             try {
-                                val uri: Uri = Uri.parse(
-                                    jsonObject.getJSONArray("assets").getJSONObject(0)
-                                        .getString("browser_download_url")
-                                )
-                                val intent = Intent(
-                                    Intent.ACTION_VIEW, uri
-                                )
+                                val uri: Uri = Uri.parse(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
+                                val intent = Intent(Intent.ACTION_VIEW, uri)
                                 activity.startActivity(intent)
                             } catch (e: JSONException) {
                                 showToastOnLooper(activity, activity.getString(R.string.GetNewVerError) + e)
@@ -97,7 +90,7 @@ object ActivityUtils {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 } else {
-                    Toast.makeText(activity, activity.getString(R.string.NoVerUpdate), Toast.LENGTH_LONG).show()
+                    showToastOnLooper(activity, activity.getString(R.string.NoVerUpdate))
                 }
             } catch (ignored: JSONException) {
                 showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
@@ -106,8 +99,7 @@ object ActivityUtils {
             true
         }
         Thread {
-            val value: String =
-                Get("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
+            val value: String = getHttp("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
             if (value != "") {
                 handler.obtainMessage().let {
                     it.data = Bundle().apply {
@@ -151,7 +143,7 @@ object ActivityUtils {
             false
         }
         Thread {
-            val value = Get("https://app.xiaowine.cc/app/notice.json")
+            val value = getHttp("https://app.xiaowine.cc/app/notice.json")
             if (value != "") {
                 val message = handler.obtainMessage()
                 val bundle = Bundle()
@@ -160,5 +152,18 @@ object ActivityUtils {
                 handler.sendMessage(message)
             }
         }.start()
+    }
+
+    private fun getHttp(Url: String): String {
+        try {
+            val connection = URL(Url).openConnection() as java.net.HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.connectTimeout = 5000
+            val reader = BufferedReader(InputStreamReader(connection.inputStream))
+            return reader.readLine()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return ""
     }
 }

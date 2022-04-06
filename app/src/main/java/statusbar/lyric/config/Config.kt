@@ -98,7 +98,7 @@ class Config {
     }
 
     fun getIconHigh(): Int {
-        return config.optInt("IHigh", 3)
+        return config.optInt("IHigh", -1)
     }
 
     fun setIconHigh(i: Int) {
@@ -121,12 +121,12 @@ class Config {
         config.put("LColor", str)
     }
 
-    fun getPseudoTimeStyle(): String {
-        return config.optString("PseudoTimeStyle", "HH:mm")
+    fun getIconColor(): String {
+        return config.optString("IColor", "")
     }
 
-    fun setPseudoTimeStyle(str: String) {
-        config.put("PseudoTimeStyle", str)
+    fun setIconColor(str: String) {
+        config.put("IColor", str)
     }
 
     fun getLyricSwitch(): Boolean {
@@ -148,7 +148,8 @@ class Config {
     fun getDebug(): Boolean {
         return config.optBoolean("Debug", false)
     }
-    fun setDebug(b:Boolean) {
+
+    fun setDebug(b: Boolean) {
         return config.put("Debug", b)
     }
 
@@ -176,12 +177,8 @@ class Config {
         return config.optInt("LSpacing", 0)
     }
 
-    fun getLyricSpacing(i: Int) {
+    fun setLyricSpacing(i: Int) {
         config.put("LSpacing", i)
-    }
-
-    fun getIconAutoColor(): Boolean {
-        return config.optBoolean("IAutoColor", true)
     }
 
     fun getAntiBurn(): Boolean {
@@ -216,9 +213,6 @@ class Config {
         return config.optBoolean("LStyle", true)
     }
 
-    fun getPseudoTime(): Boolean {
-        return config.optBoolean("PseudoTime", false)
-    }
 
     fun getUseSystemReverseColor(): Boolean {
         return config.optBoolean("UseSystemReverseColor", true)
@@ -235,6 +229,7 @@ class Config {
     fun setReverseColorTime(i: Int) {
         config.put("ReverseColorTime", i)
     }
+
     fun getLyricAutoOffTime(): Int {
         return config.optInt("LyricAutoOffTime", 1000)
     }
@@ -242,12 +237,31 @@ class Config {
     fun setLyricAutoOffTime(i: Int) {
         config.put("LyricAutoOffTime", i)
     }
+
     fun getAntiBurnTime(): Int {
         return config.optInt("AntiBurnTime", 60000)
     }
 
     fun setAntiBurnTime(i: Int) {
         config.put("AntiBurnTime", i)
+    }
+
+    fun getAppCenter(): Boolean {
+        return config.optBoolean("AppCenter", true)
+    }
+
+    fun getDelayedLoading(): Int {
+        return config.optInt("DelayedLoadingTime", 1)
+    }
+
+    fun setDelayedLoading(i: Int) {
+        config.put("DelayedLoadingTime", i)
+    }
+
+    fun getIsFirst(): Boolean = config.optBoolean("IsFirst", true)
+
+    fun setIsFirst(b: Boolean) {
+        config.put("IsFirst", b)
     }
 
     fun clear() {
