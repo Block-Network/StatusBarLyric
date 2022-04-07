@@ -340,8 +340,7 @@ class SystemUI : BaseHook() {
                 showLyric = false
                 clock.setOnClickListener { // 歌词显示
                     lyricLayout.visibility = View.VISIBLE // 设置歌词文本
-                    //                    lyricSwitchView.setSourceText(lyricSwitchView.text)
-                    // 隐藏时钟
+                    lyricSwitchView.setSourceText(lyricSwitchView.text) // 隐藏时钟
                     clock.layoutParams = LinearLayout.LayoutParams(0, 0)
                     showLyric = true
                 }
