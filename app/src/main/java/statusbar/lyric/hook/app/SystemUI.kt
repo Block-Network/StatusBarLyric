@@ -417,7 +417,7 @@ class SystemUI : BaseHook() {
             clock.layoutParams = clockParams // show clock
             if (config.getLyricSwitch()) { // set clock click listener
                 clock.isClickable = clockClickable
-                clock.getObjectField("mListenerInfo")?.setObjectField("mOnClickListener", clockOnClickListener)
+                clock.getObjectField("mListenerInfo")?.setObjectField("mOnClickListener", clockOnClickListener).isNull { clock.setOnClickListener(null) }
             }
             Utils.setStatusBar(application, true, config) // set miui statusbar
             true
