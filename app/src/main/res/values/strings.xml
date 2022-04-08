@@ -133,7 +133,8 @@
     </string>
     <string name="First">View Header</string>
     <string name="Latest">View Latest</string>
-    <string name="ViewPosition">* View add position</string>
+    <string name="LyricViewPosition">* Lyrics view add position</string>
+    <string name="CustomizePosition">* CustomizeText view add position</string>
     <string name="Menu">Menu</string>
     <string name="CheckUpdate">Check Update</string>
     <string name="Backup">Backup Config</string>
@@ -167,5 +168,6 @@
     </string>
     <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
     <string name="TitleTips3">The title above the vertical scroll bar can be clicked to manually enter the range</string>
+    <string name="CustomizeText">* Customize Text</string>
 
 </resources>

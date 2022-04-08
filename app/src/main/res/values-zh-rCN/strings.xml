@@ -118,7 +118,8 @@
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持模块工作，打包 SystemUI 发作者吧</string>
     <string name="First">控件首</string>
     <string name="Latest">控件尾</string>
-    <string name="ViewPosition">* 控件添加位置</string>
+    <string name="LyricViewPosition">* 歌词控件添加位置</string>
+    <string name="CustomizePosition">* 自定义文字控件添加位置</string>
     <string name="Menu">菜单</string>
     <string name="CheckUpdate">检查更新</string>
     <string name="Backup">备份配置</string>
@@ -148,4 +149,5 @@
     <string name="TitleTips1">反馈日志请不要截图\n在 LSPosed 右上角保存为文件反馈</string>
     <string name="TitleTips2">带 * 的功能改动后需要重启系统界面</string>
     <string name="TitleTips3">垂直滚动条上方的标题是可以点击手动输入范围的哟</string>
+    <string name="CustomizeText">* 自定义文本</string>
 </resources>

@@ -73,6 +73,7 @@ class SystemUI : BaseHook() {
     // base data
     lateinit var application: Application
     lateinit var clock: TextView
+    private lateinit var customizeView: TextView
     lateinit var lyricSwitchView: LyricSwitchView
     private lateinit var iconView: ImageView
     private lateinit var lyricLayout: LinearLayout
@@ -286,6 +287,31 @@ class SystemUI : BaseHook() {
 
         clockParams = clock.layoutParams as LinearLayout.LayoutParams
 
+        customizeView = TextView(application).apply {
+            height = clock.height
+            visibility = View.VISIBLE
+            text = config.getCustomizeText()
+            setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
+            isSingleLine = true
+            try {
+                val file = File(application.filesDir.path + "/font")
+                if (file.exists() && file.isFile && file.canRead()) {
+                    typeface = Typeface.createFromFile(application.filesDir.path + "/font")
+                    LogUtils.e(LogMultiLang.fontLoad)
+                } else {
+                    typeface = clock.typeface
+                }
+            } catch (e: Throwable) {
+                typeface = clock.typeface
+                runCatching {
+                    val file = File(application.filesDir.path + "/font")
+                    if (file.exists() && file.canWrite()) {
+                        file.delete()
+                    }
+                }
+                LogUtils.e("${LogMultiLang.initFontFailed}(${e.message}): ${Log.getStackTraceString(e)}")
+            }
+        }
         lyricSwitchView = LyricSwitchView(application, config.getLyricStyle()).apply {
             width = (displayWidth * 35) / 100
             height = clock.height
@@ -325,7 +351,15 @@ class SystemUI : BaseHook() {
         lyricLayout = LinearLayout(application).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0) }
             addView(iconView)
-            addView(lyricSwitchView)
+            if (config.getCustomizeViewPosition() == "first") {
+                addView(customizeView)
+                addView(lyricSwitchView)
+            } else {
+                addView(lyricSwitchView)
+                addView(customizeView)
+            }
+
+
         }
 
         clockClickable = clock.isClickable
@@ -377,6 +411,7 @@ class SystemUI : BaseHook() {
 
         updateTextColor = Handler(Looper.getMainLooper()) { message ->
             lyricSwitchView.setTextColor(message.arg1)
+            customizeView.setTextColor(message.arg1)
             true
         }
 
@@ -400,6 +435,10 @@ class SystemUI : BaseHook() {
                 if (config.getHideTime()) clock.layoutParams = LinearLayout.LayoutParams(0, 0) else clock.layoutParams = clockParams
                 if (config.getLyricFontWeight() != 0) {
                     lyricSwitchView.paint.apply {
+                        style = Paint.Style.FILL_AND_STROKE
+                        strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
+                    }
+                    customizeView.paint.apply {
                         style = Paint.Style.FILL_AND_STROKE
                         strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
                     }
@@ -429,7 +468,7 @@ class SystemUI : BaseHook() {
                 gravity = Gravity.CENTER
                 orientation = LinearLayout.HORIZONTAL
                 (lyricLayout.parent as? ViewGroup)?.removeView(lyricLayout)
-                if (config.getViewPosition() == "first") addView(lyricLayout, 1) else addView(lyricLayout)
+                if (config.getLyricViewPosition() == "first") addView(lyricLayout, 1) else addView(lyricLayout)
             }
             updateConfig()
             offLyric(LogMultiLang.initOk)
@@ -637,6 +676,7 @@ class SystemUI : BaseHook() {
                         val error = FileUtils(application).copyFile(File(path), application.filesDir.path, "font")
                         if (error.isEmpty()) {
                             lyricSwitchView.setTypeface(Typeface.createFromFile(application.filesDir.path + "/font"))
+                            customizeView.typeface = Typeface.createFromFile(application.filesDir.path + "/font")
                             LogUtils.e(LogMultiLang.fontLoad)
                             application.sendBroadcast(Intent().apply {
                                 action = "App_Server"

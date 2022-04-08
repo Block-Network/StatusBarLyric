@@ -192,13 +192,27 @@ class Config {
     fun setAnim(str: String) {
         config.put("Anim", str)
     }
-
-    fun getViewPosition(): String {
-        return config.optString("ViewPosition", "first")
+    fun getCustomizeText(): String {
+        return config.optString("CustomizeText", "")
     }
 
-    fun setViewPosition(str: String) {
-        config.put("ViewPosition", str)
+    fun setCustomizeText(str: String) {
+        config.put("CustomizeText", str)
+    }
+
+    fun getLyricViewPosition(): String {
+        return config.optString("LyricViewPosition", "first")
+    }
+
+    fun setLyricViewPosition(str: String) {
+        config.put("LyricViewPosition", str)
+    }
+    fun getCustomizeViewPosition(): String {
+        return config.optString("CustomizeViewPositio", "first")
+    }
+
+    fun setCustomizeViewPosition(str: String) {
+        config.put("CustomizeViewPositio", str)
     }
 
     fun getHook(): String {

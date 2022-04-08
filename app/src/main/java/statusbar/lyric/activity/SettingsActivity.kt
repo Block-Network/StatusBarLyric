@@ -368,14 +368,14 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LSpacing", 0, 200)
-                val dict: HashMap<String, String> = hashMapOf()
-                dict["off"] = getString(R.string.Off)
-                dict["top"] = getString(R.string.top)
-                dict["lower"] = getString(R.string.lower)
-                dict["left"] = getString(R.string.left)
-                dict["right"] = getString(R.string.right)
-                dict["random"] = getString(R.string.random)
-                TextWithSpinner(TextV(resId = R.string.LyricsAnimation), SpinnerV(dict[ActivityOwnSP.ownSPConfig.getAnim()]!!) {
+                val aDicts: HashMap<String, String> = hashMapOf()
+                aDicts["off"] = getString(R.string.Off)
+                aDicts["top"] = getString(R.string.top)
+                aDicts["lower"] = getString(R.string.lower)
+                aDicts["left"] = getString(R.string.left)
+                aDicts["right"] = getString(R.string.right)
+                aDicts["random"] = getString(R.string.random)
+                TextWithSpinner(TextV(resId = R.string.LyricsAnimation), SpinnerV(aDicts[ActivityOwnSP.ownSPConfig.getAnim()]!!) {
                     add(getString(R.string.Off)) { ActivityOwnSP.ownSPConfig.setAnim("off") }
                     add(getString(R.string.top)) { ActivityOwnSP.ownSPConfig.setAnim("top") }
                     add(getString(R.string.lower)) { ActivityOwnSP.ownSPConfig.setAnim("lower") }
@@ -420,6 +420,37 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }, dataBindingRecv = meiZuStyle.binding.getRecv(2))
                 SeekBarWithText("LSpeed", 0, 200, defaultProgress = 100, dataBindingRecv = meiZuStyle.binding.getRecv(2))
+                val lDict: HashMap<String, String> = hashMapOf()
+                lDict["first"] = getString(R.string.First)
+                lDict["latest"] = getString(R.string.Latest)
+                TextWithSpinner(TextV(resId = R.string.LyricViewPosition), SpinnerV(lDict[ActivityOwnSP.ownSPConfig.getLyricViewPosition()]!!) {
+                    add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setLyricViewPosition("first") }
+                    add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setLyricViewPosition("latest") }
+                })
+                val cDict: HashMap<String, String> = hashMapOf()
+                cDict["first"] = getString(R.string.First)
+                cDict["latest"] = getString(R.string.Latest)
+                TextWithSpinner(TextV(resId = R.string.CustomizePosition), SpinnerV(cDict[ActivityOwnSP.ownSPConfig.getCustomizeViewPosition()]!!) {
+                    add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition("first") }
+                    add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition("latest") }
+                })
+                TextSummaryArrow(TextSummaryV(textId = R.string.CustomizeText, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.CustomizeText)
+                        setEditText(ActivityOwnSP.ownSPConfig.getCustomizeText(),"")
+                        setRButton(R.string.Ok) {
+                            try {
+                                val value = getEditText()
+                                ActivityOwnSP.ownSPConfig.setCustomizeText(value)
+                            } catch (_: Throwable) {
+                            }
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) {
+                            dismiss()
+                        }
+                    }.show()
+                }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.CustomFont, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.CustomFont)
@@ -681,13 +712,6 @@ class SettingsActivity : MIUIActivity() {
                 TextWithSwitch(TextV(resId = R.string.AutoHideNotiIcon), SwitchV("HNoticeIcon"))
                 TextWithSwitch(TextV(resId = R.string.HideNetWork), SwitchV("HNetSpeed"))
                 TextWithSwitch(TextV(resId = R.string.AutoHideCarrierName), SwitchV("HCuk"))
-                val dict: HashMap<String, String> = hashMapOf()
-                dict["first"] = getString(R.string.First)
-                dict["latest"] = getString(R.string.Latest)
-                TextWithSpinner(TextV(resId = R.string.ViewPosition), SpinnerV(dict[ActivityOwnSP.ownSPConfig.getViewPosition()]!!) {
-                    add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setViewPosition("first") }
-                    add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setViewPosition("latest") }
-                })
                 Text(resId = R.string.DelayedLoading, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.DelayedLoading)
