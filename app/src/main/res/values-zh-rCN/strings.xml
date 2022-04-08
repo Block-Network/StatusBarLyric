@@ -104,7 +104,7 @@
     <string name="IconSize">图标大小</string>
     <string name="LyricSizeTips">0~50</string>
     <string name="LyricTips">0%~100%</string>
-    <string name="Test">测试</string>
+    <string name="Test">模块测试</string>
     <string name="TestDialogTips">此功能内嵌于 SystemUI，可能会导致 SystemUI 崩溃重启。</string>
     <string name="Start">启动</string>
     <string name="Back">返回</string>

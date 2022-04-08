@@ -115,7 +115,7 @@
     <string name="IconSize">Icon Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
     <string name="LyricTips">0%~100%, current:</string>
-    <string name="Test">Test</string>
+    <string name="Test">Module Test</string>
     <string name="TestDialogTips">This function is embedded in the system UI and may cause the system UI to crash and
         restart!
     </string>
