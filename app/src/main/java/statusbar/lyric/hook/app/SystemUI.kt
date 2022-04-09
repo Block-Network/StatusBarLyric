@@ -514,7 +514,10 @@ class SystemUI : BaseHook() {
                 width = config.getIconSize()
                 height = config.getIconSize()
             }
-        } //        lyricSwitchView.setStyle(config.getLyricStyle())
+        }
+        if (config.getLyricSize() != 0) {
+            lyricSwitchView.setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, config.getLyricSize().toFloat())
+        }
     }
 
     private fun offLyric(info: String) { // off Lyric
