@@ -58,7 +58,6 @@ import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.*
 import statusbar.lyric.utils.XposedOwnSP.config
-import statusbar.lyric.utils.XposedOwnSP.iconConfig
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
@@ -477,7 +476,6 @@ class SystemUI : BaseHook() {
 
     private fun updateConfig() {
         config.update()
-        iconConfig.update()
         if (!config.getLyricService()) offLyric(LogMultiLang.switchOff)
         if (config.getLyricStyle()) lyricSwitchView.setSpeed((config.getLyricSpeed().toFloat() / 100))
         if (config.getAnim() != "random") {
@@ -555,7 +553,7 @@ class SystemUI : BaseHook() {
                 }
             }
             iconUpdate.sendMessage(iconUpdate.obtainMessage().also { // update icon
-                it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(iconConfig.getIcon(icon)))
+                it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(config.getIcon(icon)))
             })
         }
 

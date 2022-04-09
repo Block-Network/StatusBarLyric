@@ -36,7 +36,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
-import statusbar.lyric.config.Config
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
@@ -60,9 +59,7 @@ object ActivityUtils {
     //清除配置
     @JvmStatic
     fun cleanConfig(activity: Activity) {
-        for (name in arrayOf("Lyric_Config", "AppList_Config", "Icon_Config")) {
-            Utils.getSP(activity, name)?.let { Config(it) }?.clear()
-        }
+        ActivityOwnSP.ownSPConfig.clear()
         showToastOnLooper(activity, activity.getString(R.string.ResetSuccess))
         activity.finishActivity(0)
     }

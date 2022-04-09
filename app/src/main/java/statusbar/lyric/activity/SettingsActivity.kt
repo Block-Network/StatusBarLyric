@@ -49,7 +49,6 @@ import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog
 import com.microsoft.appcenter.crashes.model.ErrorReport
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
-import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
 import statusbar.lyric.utils.Utils.indexOfArr
 import java.util.*
@@ -553,25 +552,26 @@ class SettingsActivity : MIUIActivity() {
             }
 
             register("icon", getString(R.string.IconSettings), true) {
-                val iconConfig = Utils.getSP(activity, "Icon_Config")?.let { IconConfig(it) }
-                val iconList = arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")
+                val iconConfig = ActivityOwnSP.ownSPConfig
+                val iconList =iconConfig.gerIconList()
                 val iconDataBinding = GetDataBinding("") { view, i, any ->
                     if ((any as String).isNotEmpty()) {
                         val iconData = any.split("|%|")
-                        if (iconList[i] == iconData[0]) ((view as LinearLayout).getChildAt(0) as RoundCornerImageView).background = BitmapDrawable(Utils.stringToBitmap(if (iconData[1] == "") iconConfig?.getIcon(iconData[0]) else iconData[1])).also { it.setTint(getColor(R.color.customIconColor)) }
+                        if (iconList[i] == iconData[0]) ((view as LinearLayout).getChildAt(0) as RoundCornerImageView).background = BitmapDrawable(Utils.stringToBitmap(if (iconData[1] == "") iconConfig.getIcon(iconData[0]) else iconData[1])).also { it.setTint(getColor(R.color.customIconColor)) }
                     }
                 }
                 for (icon in iconList) {
-                    Author(BitmapDrawable(Utils.stringToBitmap(iconConfig?.getIcon(icon))).also { it.setTint(getColor(R.color.customIconColor)) }, icon, round = 0f, onClick = {
+                    Author(BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon))).also { it.setTint(getColor(R.color.customIconColor)) }, icon, round = 0f, onClick = {
                         MIUIDialog(activity) {
                             setTitle(icon)
                             setMessage(R.string.MakeIconTitle)
-                            setEditText(iconConfig?.getIcon(icon).toString(), "")
+                            setEditText(iconConfig.getIcon(icon), "")
                             setRButton(R.string.Ok) {
                                 if (getEditText().isNotEmpty()) {
                                     try {
-                                        iconConfig?.setIcon(icon, getEditText().replace(" ", "").replace("\n", ""))
-                                        iconDataBinding.bindingSend.send("$icon|%|${getEditText().replace(" ", "").replace("\n", "")}")
+                                        val value = getEditText().replace(" ", "").replace("\n", "")
+                                        iconConfig.setIcon(icon, value)
+                                        iconDataBinding.bindingSend.send("$icon|%|${value}")
                                         updateConfig = true
                                         dismiss()
                                         return@setRButton
@@ -579,7 +579,7 @@ class SettingsActivity : MIUIActivity() {
                                     }
                                 }
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
-                                iconConfig?.setIcon(icon, iconConfig.getDefaultIcon(icon))
+                                iconConfig.setIcon(icon, iconConfig.getDefaultIcon(icon))
                                 iconDataBinding.bindingSend.send("$icon|%|")
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                                 updateConfig = true
