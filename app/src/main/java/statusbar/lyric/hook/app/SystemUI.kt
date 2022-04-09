@@ -316,7 +316,7 @@ class SystemUI : BaseHook() {
             width = (displayWidth * 35) / 100
             height = clock.height
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
-            setMargins(10, 0, 0, 0)
+            setMargins(config.getLyricPosition() + 10, config.getLyricHigh(), 0, 0)
             setMarqueeRepeatLimit(if (config.getLyricStyle()) 1 else -1)
             setSingleLine(true)
             setMaxLines(1)
@@ -383,11 +383,11 @@ class SystemUI : BaseHook() {
 
         iconUpdate = Handler(Looper.getMainLooper()) { message ->
             if (message.obj == null) {
-                lyricSwitchView.setMargins(0, 0, 0, 0)
+                lyricSwitchView.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
                 iconView.visibility = View.GONE
                 iconView.setImageDrawable(null)
             } else {
-                lyricSwitchView.setMargins(10, 0, 0, 0)
+                lyricSwitchView.setMargins(config.getLyricPosition() + 10, config.getLyricHigh(), 0, 0)
                 iconView.visibility = View.VISIBLE
                 iconView.setImageDrawable(message.obj as Drawable)
             }
