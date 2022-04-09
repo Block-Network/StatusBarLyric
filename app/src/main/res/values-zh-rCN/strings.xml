@@ -104,7 +104,7 @@
     <string name="IconSize">图标大小</string>
     <string name="LyricSizeTips">0~50</string>
     <string name="LyricTips">0%~100%</string>
-    <string name="Test">测试</string>
+    <string name="Test">模块测试</string>
     <string name="TestDialogTips">此功能内嵌于 SystemUI，可能会导致 SystemUI 崩溃重启。</string>
     <string name="Start">启动</string>
     <string name="Back">返回</string>
@@ -118,7 +118,8 @@
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持模块工作，打包 SystemUI 发作者吧</string>
     <string name="First">控件首</string>
     <string name="Latest">控件尾</string>
-    <string name="ViewPosition">* 控件添加位置</string>
+    <string name="LyricViewPosition">* 歌词控件添加位置</string>
+    <string name="CustomizePosition">* 自定义文字控件添加位置</string>
     <string name="Menu">菜单</string>
     <string name="CheckUpdate">检查更新</string>
     <string name="Backup">备份配置</string>
@@ -143,9 +144,9 @@
     <string name="MakeIcon">制作图标</string>
     <string name="MakeIconError">无法跳转，请检查是否安装\n爱玩机工具箱</string>
     <string name="DelayedLoading">延迟加载</string>
-    <string name="FirstTip">本模块使用了 Microsoft AppCenter 来统计或收集月活量、崩溃数据和用户信息等指标，一切内容与模块无关
-    </string>
+    <string name="FirstTip">本模块使用 Microsoft AppCenter 统计或采集月活动、崩溃数据。收集的数据与本模块无关</string>
     <string name="TitleTips1">反馈日志请不要截图\n在 LSPosed 右上角保存为文件反馈</string>
     <string name="TitleTips2">带 * 的功能改动后需要重启系统界面</string>
     <string name="TitleTips3">垂直滚动条上方的标题是可以点击手动输入范围的哟</string>
+    <string name="CustomizeText">* 自定义文本</string>
 </resources>

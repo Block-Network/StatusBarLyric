@@ -106,7 +106,7 @@
     <string name="IconSize">圖標大小</string>
     <string name="LyricSizeTips">0~50</string>
     <string name="LyricTips">0%~100%</string>
-    <string name="Test">測試</string>
+    <string name="Test">模塊測試</string>
     <string name="TestDialogTips">這個功能是內嵌在SystemUI裏的，可能會導致SystemUI崩潰重啓！</string>
     <string name="Start">啓動</string>
     <string name="Back">返回</string>
@@ -120,7 +120,8 @@
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持，打包SystemUI发作者吧</string>
     <string name="First">控件首</string>
     <string name="Latest">控件尾</string>
-    <string name="ViewPosition">* 控件添加位置</string>
+    <string name="LyricViewPosition">* 歌词控件添加位置</string>
+    <string name="CustomizePosition">* 自定義文字控件添加位置</string>
     <string name="Menu">菜單</string>
     <string name="CheckUpdate">檢查更新</string>
     <string name="Backup">備份配置</string>
@@ -149,4 +150,5 @@
     <string name="TitleTips1">反饋日誌請不要截圖\nLsp右上角保存成文件反饋</string>
     <string name="TitleTips2">帶 * 的功能改動需要重啟系統界面</string>
     <string name="TitleTips3">垂直滾動條上方的標題是可以點擊手動輸入範圍的喲</string>
+    <string name="CustomizeText">* 自定義文本</string>
 </resources>

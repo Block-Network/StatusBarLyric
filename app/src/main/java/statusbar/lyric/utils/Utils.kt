@@ -46,6 +46,7 @@ import java.io.IOException
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @SuppressLint("StaticFieldLeak")
@@ -284,5 +285,12 @@ object Utils {
             }
         } catch (ignored: Throwable) {
         }
+    }
+
+    fun <E> Array<E>.indexOfArr(value: E): Int {
+        for (index in 0..this.size) {
+            if (this[index] == value) return index
+        }
+        return -1
     }
 }

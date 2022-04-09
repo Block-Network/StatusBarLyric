@@ -11,13 +11,13 @@
     <string name="LyricsAnimation">Lyrics animation</string>
     <string name="LyricColor">* Lyric color</string>
     <string name="IconColor">* Icon color</string>
-    <string name="LyricIcon">Lyrcs icon</string>
+    <string name="LyricIcon">Lyrics icon</string>
     <string name="LyricSpeed">Lyrics scroll speed</string>
     <string name="AdvancedSettings">Advanced settings</string>
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
     <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconHigh">Icon up and down position</string>
-    <string name="LyricPos">* Lyrics left and right position
+    <string name="LyricPos">* Left and right positions of lyrics
     </string>
     <string name="Default">Default</string>
     <string name="UnlockShow">Unlock display only</string>
@@ -25,7 +25,7 @@
     <string name="HideNetWork">Hide network speed</string>
     <string name="AutoHideCarrierName">Auto hide lock screen carrier name</string>
     <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
-    <string name="DebugMode">Debug Mode</string>
+    <string name="DebugMode">Debug mode</string>
     <string name="ReStartSystemUI">Restart SystemUI</string>
     <string name="ResetModule">Reset module</string>
     <string name="About">About</string>
@@ -115,7 +115,7 @@
     <string name="IconSize">Icon Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
     <string name="LyricTips">0%~100%, current:</string>
-    <string name="Test">Test</string>
+    <string name="Test">Module Test</string>
     <string name="TestDialogTips">This function is embedded in the system UI and may cause the system UI to crash and
         restart!
     </string>
@@ -133,7 +133,8 @@
     </string>
     <string name="First">View Header</string>
     <string name="Latest">View Latest</string>
-    <string name="ViewPosition">* View add position</string>
+    <string name="LyricViewPosition">* Lyrics view add position</string>
+    <string name="CustomizePosition">* CustomizeText view add position</string>
     <string name="Menu">Menu</string>
     <string name="CheckUpdate">Check Update</string>
     <string name="Backup">Backup Config</string>
@@ -167,5 +168,6 @@
     </string>
     <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
     <string name="TitleTips3">The title above the vertical scroll bar can be clicked to manually enter the range</string>
+    <string name="CustomizeText">* Customize Text</string>
 
 </resources>
