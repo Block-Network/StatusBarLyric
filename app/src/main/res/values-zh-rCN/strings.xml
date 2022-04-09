@@ -144,8 +144,7 @@
     <string name="MakeIcon">制作图标</string>
     <string name="MakeIconError">无法跳转，请检查是否安装\n爱玩机工具箱</string>
     <string name="DelayedLoading">延迟加载</string>
-    <string name="FirstTip">本模块使用了 Microsoft AppCenter 来统计或收集月活量、崩溃数据和用户信息等指标，一切内容与模块无关
-    </string>
+    <string name="FirstTip">本模块使用 Microsoft AppCenter 统计或采集月活动、崩溃数据。收集的数据与本模块无关</string>
     <string name="TitleTips1">反馈日志请不要截图\n在 LSPosed 右上角保存为文件反馈</string>
     <string name="TitleTips2">带 * 的功能改动后需要重启系统界面</string>
     <string name="TitleTips3">垂直滚动条上方的标题是可以点击手动输入范围的哟</string>
