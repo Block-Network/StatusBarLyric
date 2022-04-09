@@ -50,7 +50,7 @@ import statusbar.lyric.utils.ktx.lpparam
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
 
-class Netease: BaseHook() {
+class Netease : BaseHook() {
     var context: Context? = null
     var subView: TextView? = null
     lateinit var broadcastHandler: BroadcastHandler
@@ -70,7 +70,7 @@ class Netease: BaseHook() {
         fun onReceive(s: String)
     }
 
-    inner class BroadcastHandler(lpparam: LoadPackageParam): BroadcastReceiver() {
+    inner class BroadcastHandler(lpparam: LoadPackageParam) : BroadcastReceiver() {
 
         private val idMAIN = "com.netease.cloudmusic"
         private val idPLAY = "com.netease.cloudmusic:play"
@@ -87,7 +87,7 @@ class Netease: BaseHook() {
         fun sendBroadcast(s: String) {
             LogUtils.e("$client 尝试发送Broadcast $s")
             val intent = Intent()
-            when(client) {
+            when (client) {
                 idMAIN -> {
                     intent.action = action + "PLAY"
                     intent.putExtra("fromMAIN", s)
@@ -110,7 +110,7 @@ class Netease: BaseHook() {
         }
 
         fun init(context: Context, callback: OnBroadcastReceiveListener): BroadcastHandler {
-            when(client) {
+            when (client) {
                 idMAIN -> {
                     context.registerReceiver(this, IntentFilter(action + "MAIN"))
                     LogUtils.e("$client 尝试注册BroadcastReceiver ${action + "MAIN"}")
@@ -127,7 +127,7 @@ class Netease: BaseHook() {
 
         override fun onReceive(p0: Context, p1: Intent) {
             LogUtils.e("${client}接收到数据，${p1.getStringExtra("fromPLAY")}")
-            when(client) {
+            when (client) {
                 idMAIN -> {
                     p1.getStringExtra("fromPLAY")?.let {
                         callback?.onReceive(it)
@@ -160,19 +160,15 @@ class Netease: BaseHook() {
                             if (parameters.size == 2) {
                                 if (parameters[0].type.name == "android.app.Notification" && parameters[1].type.name == "boolean") {
                                     LogUtils.e("find = ${m.declaringClass.name} ${m.name}")
-                                    val unhook = XposedHelpers.findAndHookMethod(
-                                        clazz, m.name,
-                                        Notification::class.java,
-                                        Boolean::class.javaPrimitiveType, object : XC_MethodHook() {
-                                            override fun afterHookedMethod(param: MethodHookParam) {
-                                                val notification = param.args[0] as Notification
-                                                if (notification.tickerText == "网易云音乐正在播放") {
-                                                    return
-                                                }
-                                                hookMethod(param)
+                                    val unhook = XposedHelpers.findAndHookMethod(clazz, m.name, Notification::class.java, Boolean::class.javaPrimitiveType, object : XC_MethodHook() {
+                                        override fun afterHookedMethod(param: MethodHookParam) {
+                                            val notification = param.args[0] as Notification
+                                            if (notification.tickerText == "网易云音乐正在播放") {
+                                                return
                                             }
+                                            hookMethod(param)
                                         }
-                                    )
+                                    })
                                     unhookMap[m.name] = unhook
                                 }
                             }
@@ -197,7 +193,7 @@ class Netease: BaseHook() {
     }
 
     @SuppressLint("SetTextI18n")
-    override fun hook(){
+    override fun hook() {
         super.hook()
         try {
             disableTinker()
@@ -240,7 +236,7 @@ class Netease: BaseHook() {
                         LogUtils.e("正在尝试通用Hook")
                         runCatching { context?.let { it1 -> SettingHook(it1, "com.netease.cloudmusic.activity.SettingActivity") } }
                         appLog = try {
-                            "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java){ it1 ->
+                            "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java) { it1 ->
                                 if (it1.args[0].toString() == "android.media.metadata.TITLE") {
                                     if (it1.args[1] != null) {
                                         Utils.sendLyric(context, it1.args[1].toString(), "Netease")
@@ -288,12 +284,9 @@ class Netease: BaseHook() {
 
         @SuppressLint("SetTextI18n")
         fun initView(context: Context) {
-            var originalText: TextView? = null
-            //获取开关控件
-            val switchCompat: View = XposedHelpers.getObjectField(context, switchViewName) as View
-            //获取开关控件爸爸
-            val parent = switchCompat.parent as ViewGroup
-            //获取开关控件爷爷
+            var originalText: TextView? = null //获取开关控件
+            val switchCompat: View = XposedHelpers.getObjectField(context, switchViewName) as View //获取开关控件爸爸
+            val parent = switchCompat.parent as ViewGroup //获取开关控件爷爷
             val grandparent = parent.parent as ViewGroup
 
             val linearLayout = LinearLayout(context)
@@ -327,12 +320,7 @@ class Netease: BaseHook() {
             if (originalText != null) {
                 titleView.setTextColor(originalText.textColors)
                 titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, originalText.textSize)
-                titleView.setPadding(
-                    if (originalText.paddingLeft == 0) Utils.dp2px(
-                        context,
-                        10F
-                    ) else originalText.paddingLeft, 0, 0, 0
-                )
+                titleView.setPadding(if (originalText.paddingLeft == 0) Utils.dp2px(context, 10F) else originalText.paddingLeft, 0, 0, 0)
                 subView?.setTextColor(originalText.textColors)
                 subView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, (originalText.textSize / 3.0 * 2.0).toInt().toFloat())
             }
@@ -357,11 +345,7 @@ class Netease: BaseHook() {
                 isLyric = try {
                     XposedHelpers.findField(param.thisObject.javaClass, "i")[param.thisObject] as Boolean
                 } catch (e: NoSuchFieldError) {
-                    LogUtils.e(
-                        param.thisObject.javaClass.canonicalName?.toString() + " | i 反射失败: " + Utils.dumpNoSuchFieldError(
-                            e
-                        )
-                    )
+                    LogUtils.e(param.thisObject.javaClass.canonicalName?.toString() + " | i 反射失败: " + Utils.dumpNoSuchFieldError(e))
                     true
                 }
                 lyric = param.args[0] as String

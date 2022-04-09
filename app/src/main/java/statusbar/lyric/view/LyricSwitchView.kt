@@ -34,7 +34,7 @@ import android.widget.TextView
 import statusbar.lyric.utils.ktx.callMethod
 
 @SuppressLint("ViewConstructor")
-class LyricSwitchView(context: Context, private var hasMeizu: Boolean): TextSwitcher(context) {
+class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwitcher(context) {
     private val lyricTextView: LyricTextView = LyricTextView(context)
     private val lyricTextView2: LyricTextView = LyricTextView(context)
     private val autoMarqueeTextView: AutoMarqueeTextView = AutoMarqueeTextView(context)
@@ -48,26 +48,10 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean): TextSwit
         get() = (currentView as TextView).paint
 
     init {
-        lyricTextView.layoutParams =
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        lyricTextView2.layoutParams =
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        autoMarqueeTextView.layoutParams =
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        autoMarqueeTextView2.layoutParams =
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
+        lyricTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        lyricTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        autoMarqueeTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        autoMarqueeTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         autoMarqueeTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
         autoMarqueeTextView2.ellipsize = TextUtils.TruncateAt.MARQUEE
         if (hasMeizu) {

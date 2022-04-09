@@ -129,14 +129,6 @@ class Config {
         config.put("IColor", str)
     }
 
-    fun getPseudoTimeStyle(): String {
-        return config.optString("PseudoTimeStyle", "HH:mm")
-    }
-
-    fun setPseudoTimeStyle(str: String) {
-        config.put("PseudoTimeStyle", str)
-    }
-
     fun getLyricSwitch(): Boolean {
         return config.optBoolean("LSwitch", false)
     }
@@ -200,13 +192,27 @@ class Config {
     fun setAnim(str: String) {
         config.put("Anim", str)
     }
-
-    fun getViewPosition(): String {
-        return config.optString("ViewPosition", "first")
+    fun getCustomizeText(): String {
+        return config.optString("CustomizeText", "")
     }
 
-    fun setViewPosition(str: String) {
-        config.put("ViewPosition", str)
+    fun setCustomizeText(str: String) {
+        config.put("CustomizeText", str)
+    }
+
+    fun getLyricViewPosition(): String {
+        return config.optString("LyricViewPosition", "first")
+    }
+
+    fun setLyricViewPosition(str: String) {
+        config.put("LyricViewPosition", str)
+    }
+    fun getCustomizeViewPosition(): String {
+        return config.optString("CustomizeViewPositio", "first")
+    }
+
+    fun setCustomizeViewPosition(str: String) {
+        config.put("CustomizeViewPositio", str)
     }
 
     fun getHook(): String {
@@ -221,9 +227,6 @@ class Config {
         return config.optBoolean("LStyle", true)
     }
 
-    fun getPseudoTime(): Boolean {
-        return config.optBoolean("PseudoTime", false)
-    }
 
     fun getUseSystemReverseColor(): Boolean {
         return config.optBoolean("UseSystemReverseColor", true)

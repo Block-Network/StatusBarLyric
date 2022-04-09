@@ -46,6 +46,7 @@ import java.io.IOException
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @SuppressLint("StaticFieldLeak")
@@ -167,8 +168,7 @@ object Utils {
         if (isServiceRunning(context, str)) {
             return true
         }
-        val runningServices =
-            (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningTasks(200)
+        val runningServices = (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningTasks(200)
         if (runningServices.size <= 0) {
             return false
         }
@@ -184,8 +184,7 @@ object Utils {
     // 判断服务是否运行
     @JvmStatic
     fun isServiceRunning(context: Context, str: String): Boolean {
-        val runningServices =
-            (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningServices(200)
+        val runningServices = (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningServices(200)
         if (runningServices.size <= 0) {
             return false
         }
@@ -207,11 +206,9 @@ object Utils {
             "left" -> TranslateAnimation(100F, 0F, 0F, 0F)
             "right" -> TranslateAnimation(-100F, 0F, 0F, 0F)
             else -> return null
-        }
-        // 设置动画300ms
+        } // 设置动画300ms
         translateAnimation.duration = 300
-        val alphaAnimation = AlphaAnimation(0F, 1F)
-        // 设置动画300ms
+        val alphaAnimation = AlphaAnimation(0F, 1F) // 设置动画300ms
         alphaAnimation.duration = 300
         animationSet.addAnimation(translateAnimation)
         animationSet.addAnimation(alphaAnimation)
@@ -227,11 +224,9 @@ object Utils {
             "left" -> TranslateAnimation(0F, -100F, 0F, 0F)
             "right" -> TranslateAnimation(0F, 100F, 0F, 0F)
             else -> return null
-        }
-        // 设置动画300ms
+        } // 设置动画300ms
         translateAnimation.duration = 300
-        val alphaAnimation = AlphaAnimation(1F, 0F)
-        // 设置动画300ms
+        val alphaAnimation = AlphaAnimation(1F, 0F) // 设置动画300ms
         alphaAnimation.duration = 300
         animationSet.addAnimation(translateAnimation)
         animationSet.addAnimation(alphaAnimation)
@@ -240,14 +235,12 @@ object Utils {
 
     @JvmStatic
     fun sendLyric(context: Context?, lyric: String?, icon: String?) {
-        context?.sendBroadcast(
-            Intent().apply {
-                action = "Lyric_Server"
-                putExtra("Lyric_Data", lyric)
-                putExtra("Lyric_Icon", icon)
-                putExtra("Lyric_Type", "hook")
-            }
-        )
+        context?.sendBroadcast(Intent().apply {
+            action = "Lyric_Server"
+            putExtra("Lyric_Data", lyric)
+            putExtra("Lyric_Icon", icon)
+            putExtra("Lyric_Type", "hook")
+        })
     }
 
     @JvmStatic
@@ -257,16 +250,14 @@ object Utils {
 
     @JvmStatic
     fun sendLyric(context: Context, lyric: String?, icon: String?, useSystemMusicActive: Boolean, packName: String?) {
-        context.sendBroadcast(
-            Intent().apply {
-                action = "Lyric_Server"
-                putExtra("Lyric_Data", lyric)
-                putExtra("Lyric_Type", "app")
-                putExtra("Lyric_PackName", packName)
-                putExtra("Lyric_Icon", icon)
-                putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
-            }
-        )
+        context.sendBroadcast(Intent().apply {
+            action = "Lyric_Server"
+            putExtra("Lyric_Data", lyric)
+            putExtra("Lyric_Type", "app")
+            putExtra("Lyric_PackName", packName)
+            putExtra("Lyric_Icon", icon)
+            putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
+        })
     }
 
     /**
@@ -294,5 +285,12 @@ object Utils {
             }
         } catch (ignored: Throwable) {
         }
+    }
+
+    fun <E> Array<E>.indexOfArr(value: E): Int {
+        for (index in 0..this.size) {
+            if (this[index] == value) return index
+        }
+        return -1
     }
 }

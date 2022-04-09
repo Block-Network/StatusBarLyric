@@ -49,17 +49,12 @@ class AppCenterUtils(appCenterKey: String) {
                 val hostSdk = WrapperSdk()
                 hostSdk.wrapperSdkName = it.packageName
                 hostSdk.wrapperSdkVersion = it.versionName
-                hostSdk.wrapperRuntimeVersion =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode.toString() else it.versionCode.toString()
+                hostSdk.wrapperRuntimeVersion = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode.toString() else it.versionCode.toString()
                 AppCenter.setWrapperSdk(hostSdk)
             }
             Crashes.setListener(CrashesFilter())
-            AppCenter.start(
-                application, appCenterKey,
-                Analytics::class.java, Crashes::class.java
-            )
-            Analytics.trackEvent("${lpparam.packageName} | ${application.packageManager.getPackageInfo(lpparam.packageName, 0).versionName}"
-            )
+            AppCenter.start(application, appCenterKey, Analytics::class.java, Crashes::class.java)
+            Analytics.trackEvent("${lpparam.packageName} | ${application.packageManager.getPackageInfo(lpparam.packageName, 0).versionName}")
             if (lpparam.packageName == "com.android.systemui") SystemUICatching()
         }
     }
@@ -111,19 +106,12 @@ class AppCenterUtils(appCenterKey: String) {
 
         override fun getErrorAttachments(report: ErrorReport): MutableIterable<ErrorAttachmentLog> {
             val targetPackageInfo = getTargetPackageInfo(application)
-            val info =
-                if (targetPackageInfo == null) "null" else "StatusbarLyric: ${targetPackageInfo.packageName} - ${targetPackageInfo.versionName}"
-            val textLog = ErrorAttachmentLog.attachmentWithText(
-                "$info\nModule: ${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}",
-                "debug.txt"
-            )
+            val info = if (targetPackageInfo == null) "null" else "StatusbarLyric: ${targetPackageInfo.packageName} - ${targetPackageInfo.versionName}"
+            val textLog = ErrorAttachmentLog.attachmentWithText("$info\nModule: ${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}", "debug.txt")
             return mutableListOf(textLog)
         }
 
-        private val packageName = arrayOf(
-            "statusbar.lyric",
-            "cn.fkj233"
-        )
+        private val packageName = arrayOf("statusbar.lyric", "cn.fkj233")
     }
 
 }

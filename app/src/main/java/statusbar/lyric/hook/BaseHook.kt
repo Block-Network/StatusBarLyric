@@ -5,5 +5,7 @@ import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.XposedOwnSP
 
 abstract class BaseHook {
-    open fun hook() { if (XposedOwnSP.config.getAppCenter()) AppCenterUtils(Utils.appCenterKey) }
+    open fun hook() {
+        if (XposedOwnSP.config.getAppCenter()) AppCenterUtils(Utils.appCenterKey)
+    }
 }

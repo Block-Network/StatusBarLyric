@@ -112,19 +112,14 @@ object BackupUtils {
         try {
             activity.contentResolver.openOutputStream(uri)?.let { saveFile ->
                 BufferedWriter(OutputStreamWriter(saveFile)).apply {
-                    write(
-                        JSONObject().also {
-                            for (entry: Map.Entry<String, *> in sharedPreferences.all) {
-                                when (entry.value) {
-                                    Float -> it.put(
-                                        entry.key,
-                                        "Float:" + (entry.value as Float * 1000).toInt().toString()
-                                    )
-                                    else -> it.put(entry.key, entry.value)
-                                }
+                    write(JSONObject().also {
+                        for (entry: Map.Entry<String, *> in sharedPreferences.all) {
+                            when (entry.value) {
+                                Float -> it.put(entry.key, "Float:" + (entry.value as Float * 1000).toInt().toString())
+                                else -> it.put(entry.key, entry.value)
                             }
-                        }.toString()
-                    )
+                        }
+                    }.toString())
                     close()
                 }
             }

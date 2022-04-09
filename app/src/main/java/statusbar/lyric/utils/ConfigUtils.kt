@@ -31,13 +31,13 @@ class ConfigUtils {
     private var SP: SharedPreferences? = null
     private var SPEditor: SharedPreferences.Editor? = null
 
-    constructor(xSharedPreferences : XSharedPreferences?){
+    constructor(xSharedPreferences: XSharedPreferences?) {
         xSP = xSharedPreferences
         SP = xSharedPreferences
     }
 
     @SuppressLint("CommitPrefEdits")
-    constructor(sharedPreferences: SharedPreferences){
+    constructor(sharedPreferences: SharedPreferences) {
         SP = sharedPreferences
         SPEditor = sharedPreferences.edit()
     }
@@ -52,7 +52,7 @@ class ConfigUtils {
     }
 
     fun put(key: String?, any: Any) {
-        when (any){
+        when (any) {
             is Int -> SPEditor?.putInt(key, any)
             is String -> SPEditor?.putString(key, any)
             is Boolean -> SPEditor?.putBoolean(key, any)
