@@ -317,7 +317,6 @@ class SettingsActivity : MIUIActivity() {
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
-                        show()
                     }.show()
                 })
                 SeekBarWithText("LHigh", -100, 100)
