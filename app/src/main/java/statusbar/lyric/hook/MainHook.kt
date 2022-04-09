@@ -46,7 +46,7 @@ class MainHook : IXposedHookLoadPackage {
                 LogUtils.e("start hook netease")
                 Netease()
             }
-            "com.kugou.android" -> {
+            "com.kugou.android", "com.kugou.android.lite" -> {
                 LogUtils.e("start hook kugou")
                 Kugou()
             }
