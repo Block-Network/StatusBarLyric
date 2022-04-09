@@ -64,6 +64,17 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
 
+      - name: Sign Release AAB
+        if: success()
+        id: sign_release_aab
+        uses: r0adkll/sign-android-release@v1.0.4
+        with:
+          releaseDirectory: ./app/build/outputs/bundle/release/
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: xiao_wine
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
+
       - name: Upload Release APK
         uses: actions/upload-artifact@v2
         with:
@@ -74,7 +85,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: StatusBarLyric_aab
-          path: ./app/build/outputs/bundle/release/app-release.aab
+          path: ${{ steps.sign_release_aab.outputs.signedReleaseFile }}
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v2
