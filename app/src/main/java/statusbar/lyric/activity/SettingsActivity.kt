@@ -35,9 +35,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.dialog.MIUIDialog
@@ -51,6 +51,7 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.IconConfig
 import statusbar.lyric.utils.*
+import statusbar.lyric.utils.Utils.indexOfArr
 import java.util.*
 import kotlin.system.exitProcess
 
@@ -554,7 +555,14 @@ class SettingsActivity : MIUIActivity() {
 
             register("icon", getString(R.string.IconSettings), true) {
                 val iconConfig = Utils.getSP(activity, "Icon_Config")?.let { IconConfig(it) }
-                for (icon in arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")) {
+                val iconList = arrayOf("Netease", "KuGou", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")
+                val iconDataBinding = GetDataBinding("") { view, i, any ->
+                    if ((any as String).isNotEmpty()) {
+                        val iconData = any.split("|%|")
+                        if (iconList[i] == iconData[0]) ((view as LinearLayout).getChildAt(0) as RoundCornerImageView).background = BitmapDrawable(Utils.stringToBitmap(if (iconData[1] == "") iconConfig?.getIcon(iconData[0]) else iconData[1])).also { it.setTint(getColor(R.color.customIconColor)) }
+                    }
+                }
+                for (icon in iconList) {
                     Author(BitmapDrawable(Utils.stringToBitmap(iconConfig?.getIcon(icon))).also { it.setTint(getColor(R.color.customIconColor)) }, icon, round = 0f, onClick = {
                         MIUIDialog(activity) {
                             setTitle(icon)
@@ -563,7 +571,8 @@ class SettingsActivity : MIUIActivity() {
                             setRButton(R.string.Ok) {
                                 if (getEditText().isNotEmpty()) {
                                     try {
-                                        iconConfig?.setIcon(icon, getEditText())
+                                        iconConfig?.setIcon(icon, getEditText().replace(" ", "").replace("\n", ""))
+                                        iconDataBinding.bindingSend.send("$icon|%|${getEditText().replace(" ", "").replace("\n", "")}")
                                         updateConfig = true
                                         dismiss()
                                         return@setRButton
@@ -572,13 +581,14 @@ class SettingsActivity : MIUIActivity() {
                                 }
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                                 iconConfig?.setIcon(icon, iconConfig.getDefaultIcon(icon))
+                                iconDataBinding.bindingSend.send("$icon|%|")
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                                 updateConfig = true
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
                         }.show()
-                    })
+                    }, dataBindingRecv = iconDataBinding.binding.getRecv(iconList.indexOfArr(icon)))
                 }
                 TextSummaryArrow(TextSummaryV(textId = R.string.MakeIcon, onClickListener = {
                     val componentName = ComponentName("com.byyoung.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity")
@@ -836,7 +846,6 @@ class SettingsActivity : MIUIActivity() {
                 }
                 OPEN_FONT_FILE -> {
                     data.data?.let {
-                        Log.e("Lyric_Server", data.data?.toString().toString())
                         activity.sendBroadcast(Intent().apply {
                             action = "Lyric_Server"
                             putExtra("Lyric_Type", "copy_font")
