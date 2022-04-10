@@ -39,6 +39,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import cn.fkj233.ui.activity.MIUIActivity
+import cn.fkj233.ui.activity.data.DefValue
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.dialog.MIUIDialog
 import com.microsoft.appcenter.AppCenter
@@ -212,7 +213,11 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LSize", 0, 50)
-                val dataBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getLyricWidth()) { view, flags, data ->
+                val dataBinding = GetDataBinding(object : DefValue {
+                    override fun getValue(): Any {
+                        return ActivityOwnSP.ownSPConfig.getLyricWidth()
+                    }
+                }) { view, flags, data ->
                     when (flags) {
                         1 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
                         2 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
@@ -382,14 +387,22 @@ class SettingsActivity : MIUIActivity() {
                     add(getString(R.string.right)) { ActivityOwnSP.ownSPConfig.setAnim("right") }
                     add(getString(R.string.random)) { ActivityOwnSP.ownSPConfig.setAnim("random") }
                 })
-                val timeBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getHideTime()) { view, flags, data ->
+                val timeBinding = GetDataBinding(object : DefValue {
+                    override fun getValue(): Any {
+                        return ActivityOwnSP.ownSPConfig.getHideTime()
+                    }
+                }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
                 TextWithSwitch(TextV(resId = R.string.HideTime), SwitchV("HideTime", true, dataBindingSend = timeBinding.bindingSend), dataBindingRecv = timeBinding.binding.getRecv(1))
                 TextWithSwitch(TextV(resId = R.string.ClickLyric), SwitchV("LSwitch", false), dataBindingRecv = timeBinding.binding.getRecv(2))
-                val meiZuStyle = GetDataBinding(ActivityOwnSP.ownSPConfig.getLyricStyle()) { view, flags, data ->
+                val meiZuStyle = GetDataBinding(object : DefValue {
+                    override fun getValue(): Any {
+                        return ActivityOwnSP.ownSPConfig.getLyricStyle()
+                    }
+                }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
@@ -554,7 +567,11 @@ class SettingsActivity : MIUIActivity() {
             register("icon", getString(R.string.IconSettings), true) {
                 val iconConfig = ActivityOwnSP.ownSPConfig
                 val iconList =iconConfig.gerIconList()
-                val iconDataBinding = GetDataBinding("") { view, i, any ->
+                val iconDataBinding = GetDataBinding(object : DefValue {
+                    override fun getValue(): Any {
+                        return ""
+                    }
+                }) { view, i, any ->
                     if ((any as String).isNotEmpty()) {
                         val iconData = any.split("|%|")
                         if (iconList[i] == iconData[0]) ((view as LinearLayout).getChildAt(0) as RoundCornerImageView).background = BitmapDrawable(Utils.stringToBitmap(if (iconData[1] == "") iconConfig.getIcon(iconData[0]) else iconData[1])).also { it.setTint(getColor(R.color.customIconColor)) }
@@ -624,7 +641,11 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 }))
-                val antiBurnBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getAntiBurn()) { view, flags, data ->
+                val antiBurnBinding = GetDataBinding(object : DefValue {
+                    override fun getValue(): Any {
+                        return ActivityOwnSP.ownSPConfig.getAntiBurn()
+                    }
+                }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
@@ -655,7 +676,11 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }, dataBindingRecv = antiBurnBinding.binding.getRecv(2))
                 SeekBarWithText("AntiBurnTime", 1, 3600000, defaultProgress = 60000, dataBindingRecv = antiBurnBinding.binding.getRecv(2))
-                val dataBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getUseSystemReverseColor()) { view, flags, data ->
+                val dataBinding = GetDataBinding(object : DefValue {
+                    override fun getValue(): Any {
+                        return ActivityOwnSP.ownSPConfig.getUseSystemReverseColor()
+                    }
+                }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if ((data as Boolean)) View.GONE else View.VISIBLE
                     }
@@ -686,7 +711,11 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }, dataBindingRecv = dataBinding.binding.getRecv(2))
                 SeekBarWithText("ReverseColorTime", 1, 3000, defaultProgress = 1, dataBindingRecv = dataBinding.binding.getRecv(2))
-                val autoOffBinding = GetDataBinding(ActivityOwnSP.ownSPConfig.getLyricAutoOff()) { view, flags, data ->
+                val autoOffBinding = GetDataBinding(object : DefValue {
+                    override fun getValue(): Any {
+                        return ActivityOwnSP.ownSPConfig.getLyricAutoOff()
+                    }
+                }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
