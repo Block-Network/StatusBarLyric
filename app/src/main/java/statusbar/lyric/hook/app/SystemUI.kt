@@ -93,13 +93,11 @@ class SystemUI : BaseHook() {
     // Handler
     private lateinit var iconUpdate: Handler
     private lateinit var updateIconColor: Handler
-    private lateinit var updateMarginsIcon: Handler
     private lateinit var updateTextColor: Handler
-    private lateinit var updateLyricPos: Handler
     private lateinit var updateLyric: Handler
     private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
-    private lateinit var updateMarginsLyric: Handler
+//    private lateinit var updateMarginsLyric: Handler
 
     // Color data
     private var textColor: Int = 0
@@ -382,12 +380,10 @@ class SystemUI : BaseHook() {
 
         iconUpdate = Handler(Looper.getMainLooper()) { message ->
             if (message.obj == null) {
-                lyricSwitchView.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
                 iconView.visibility = View.GONE
                 iconView.setImageDrawable(null)
             } else {
-                lyricSwitchView.setMargins(config.getLyricPosition() + 10, config.getLyricHigh(), 0, 0)
-                iconView.visibility = View.VISIBLE
+                 iconView.visibility = View.VISIBLE
                 iconView.setImageDrawable(message.obj as Drawable)
             }
             true
@@ -398,24 +394,16 @@ class SystemUI : BaseHook() {
             true
         }
 
-        updateMarginsLyric = Handler(Looper.getMainLooper()) { message ->
-            lyricSwitchView.setMargins(message.arg1, message.arg2, 0, 0)
-            true
-        }
+//        updateMarginsLyric = Handler(Looper.getMainLooper()) { message ->
+////            lyricLayout.setMargins(message.arg1, message.arg2, 0, 0)
+//            lyricLayout.layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(message.arg1, message.arg2, 0, 0) }
+//            true
+//        }
 
-        updateMarginsIcon = Handler(Looper.getMainLooper()) { message ->
-            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
-            true
-        }
 
         updateTextColor = Handler(Looper.getMainLooper()) { message ->
             lyricSwitchView.setTextColor(message.arg1)
             customizeView.setTextColor(message.arg1)
-            true
-        }
-
-        updateLyricPos = Handler(Looper.getMainLooper()) {
-            (lyricSwitchView.layoutParams as LinearLayout.LayoutParams).setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
             true
         }
 
@@ -483,10 +471,6 @@ class SystemUI : BaseHook() {
             lyricSwitchView.inAnimation = Utils.inAnim(anim)
             lyricSwitchView.outAnimation = Utils.outAnim(anim)
         }
-        updateMarginsIcon.sendMessage(updateMarginsIcon.obtainMessage().also {
-            it.arg1 = 0
-            it.arg2 = config.getIconHigh()
-        })
         if (config.getLyricColor() != "") {
             textColor = Color.parseColor(config.getLyricColor())
             updateTextColor.sendMessage(updateTextColor.obtainMessage().also {
@@ -499,13 +483,9 @@ class SystemUI : BaseHook() {
                 it.arg1 = iconColor
             })
         } else iconColor = 0
-        updateMarginsLyric.sendMessage(updateMarginsLyric.obtainMessage().also {
+        updateMargins.sendMessage(updateMargins.obtainMessage().also {
             it.arg1 = config.getLyricPosition()
             it.arg2 = config.getLyricHigh()
-        })
-        updateMarginsIcon.sendMessage(updateMarginsIcon.obtainMessage().also {
-            it.arg1 = 0
-            it.arg2 = config.getIconHigh()
         })
         if (config.getIconSize() != 0) {
             (iconView.layoutParams as LinearLayout.LayoutParams).apply { // set icon size
