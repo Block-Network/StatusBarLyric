@@ -30,18 +30,26 @@ import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.DefValue
+import cn.fkj233.ui.activity.dp2px
+import cn.fkj233.ui.activity.isRtl
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.dialog.MIUIDialog
+import cn.fkj233.ui.switch.MIUISwitch
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.AbstractCrashesListener
@@ -774,6 +782,49 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("DelayedLoadingTime", 1, 5, 1)
+                TextSummaryArrow(TextSummaryV(textId = R.string.BlockLyric, tipsId = R.string.BlockLyricTips, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.BlockLyric)
+                        setMessage(R.string.BlockLyricTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getBlockLyric(), "")
+                        addView(LinearLayout(context).apply {
+                            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                            setPadding(dp2px(context, 25f), 0, dp2px(context, 25f), 0)
+                            addView(TextV(resId = R.string.BlockLyricMode).create(context, null))
+                            addView(MIUISwitch(context).apply {
+                                isChecked = ActivityOwnSP.ownSPConfig.getBlockLyricMode()
+                                setOnClickListener {
+                                    ActivityOwnSP.ownSPConfig.setBlockLyricMode(isChecked)
+                                }
+                            })
+                        })
+                        addView(LinearLayout(context).apply {
+                            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                            setPadding(dp2px(context, 25f), 0, dp2px(context, 25f), 0)
+                            addView(TextV(resId = R.string.BlockLyricOff).create(context, null))
+                            addView(MIUISwitch(context).apply {
+                                isChecked = ActivityOwnSP.ownSPConfig.getBlockLyricOff()
+                                setOnClickListener {
+                                    ActivityOwnSP.ownSPConfig.setBlockLyricOff(isChecked)
+                                }
+                            })
+                        })
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    ActivityOwnSP.ownSPConfig.setBlockLyric(getEditText())
+                                    dismiss()
+                                    return@setRButton
+                                } catch (_: Throwable) {
+                                }
+                            }
+                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                            ActivityOwnSP.ownSPConfig.setBlockLyric("")
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                }))
                 Text()
             }
 

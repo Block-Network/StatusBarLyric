@@ -63,6 +63,7 @@ import statusbar.lyric.view.LyricSwitchView
 import java.io.File
 import java.lang.reflect.Field
 import java.util.*
+import java.util.regex.Pattern
 import kotlin.system.exitProcess
 
 class SystemUI : BaseHook() {
@@ -84,6 +85,7 @@ class SystemUI : BaseHook() {
     private var isHook = false
     var useSystemMusicActive = true
     var test = false
+    var pattern: Pattern? = null
 
     // lyric click
     private var showLyric = true
@@ -394,13 +396,6 @@ class SystemUI : BaseHook() {
             true
         }
 
-//        updateMarginsLyric = Handler(Looper.getMainLooper()) { message ->
-////            lyricLayout.setMargins(message.arg1, message.arg2, 0, 0)
-//            lyricLayout.layoutParams=LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(message.arg1, message.arg2, 0, 0) }
-//            true
-//        }
-
-
         updateTextColor = Handler(Looper.getMainLooper()) { message ->
             lyricSwitchView.setTextColor(message.arg1)
             customizeView.setTextColor(message.arg1)
@@ -414,6 +409,32 @@ class SystemUI : BaseHook() {
 
         updateLyric = Handler(Looper.getMainLooper()) { message ->
             val lyric: String = message.data.getString(lyricKey) ?: ""
+            val block = config.getBlockLyric()
+            if (lyric == "") return@Handler true
+            if (block != "") {
+                if (pattern == null) {
+                    if (lyric.contains(block)) {
+                        if (config.getBlockLyricOff()) {
+                            offLyric("BlockLyric")
+                            return@Handler true
+                        } else {
+                            LogUtils.e("BlockLyric")
+                            return@Handler true
+                        }
+                    }
+                } else {
+                    if (pattern!!.matcher(lyric).matches()) {
+                        if (config.getBlockLyricOff()) {
+                            offLyric("BlockLyric")
+                            return@Handler true
+                        } else {
+                            LogUtils.e("BlockLyric")
+                            return@Handler true
+                        }
+                    }
+
+                }
+            }
             LogUtils.e("${LogMultiLang.updateLyric}: $lyric")
             val display = if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
             lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(lyricSwitchView.paint, lyric, display) else (display * config.getLyricWidth()) / 100
@@ -464,6 +485,7 @@ class SystemUI : BaseHook() {
 
     private fun updateConfig() {
         config.update()
+        pattern = if (config.getBlockLyric() != "" && config.getBlockLyricMode()) Pattern.compile(config.getBlockLyric()) else null
         if (!config.getLyricService()) offLyric(LogMultiLang.switchOff)
         if (config.getLyricStyle()) lyricSwitchView.setSpeed((config.getLyricSpeed().toFloat() / 100))
         if (config.getAnim() != "random") {

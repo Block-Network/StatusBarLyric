@@ -149,4 +149,8 @@
     <string name="TitleTips2">带 * 的功能改动后需要重启系统界面</string>
     <string name="TitleTips3">垂直滚动条上方的标题是可以点击手动输入范围的哟</string>
     <string name="CustomizeText">* 自定义文本</string>
+    <string name="BlockLyricTips">使用关键词或正则表达式屏蔽歌词</string>
+    <string name="BlockLyric">屏蔽歌词</string>
+    <string name="BlockLyricMode">是否为正则表达式</string>
+    <string name="BlockLyricOff">屏蔽歌词是否取消显示</string>
 </resources>

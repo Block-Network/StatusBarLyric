@@ -192,6 +192,7 @@ class Config {
     fun setAnim(str: String) {
         config.put("Anim", str)
     }
+
     fun getCustomizeText(): String {
         return config.optString("CustomizeText", "")
     }
@@ -277,7 +278,32 @@ class Config {
     fun setIsFirst(b: Boolean) {
         config.put("IsFirst", b)
     }
-    fun gerIconList():Array<String>{
+
+    fun setBlockLyric(str: String) {
+        config.put("BlockLyric", str)
+    }
+
+    fun getBlockLyric(): String {
+        return config.optString("BlockLyric", "")
+    }
+
+    fun setBlockLyricOff(bool: Boolean) {
+        config.put("BlockLyricOff", bool)
+    }
+
+    fun getBlockLyricOff(): Boolean {
+        return config.optBoolean("BlockLyricOff", false)
+    }
+
+    fun setBlockLyricMode(bool: Boolean) {
+        config.put("BlockLyricMode", bool)
+    }
+
+    fun getBlockLyricMode(): Boolean {
+        return config.optBoolean("BlockLyricMode", false)
+    }
+
+    fun gerIconList(): Array<String> {
         return arrayOf("Netease", "KuGou", "KuGouLite", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")
     }
 
@@ -298,15 +324,15 @@ class Config {
 
     fun getDefaultIcon(str: String): String {
         val icon = when (str) {
-            "KuGou" ->KuGou
-            "KuGouLite" ->KuGouLite
-            "KuWo" ->KuWo
-            "Netease" ->Netease
-            "QQMusic" ->QQMusic
-            "MiGu" ->MiGu
-            "Myplayer" ->Myplayer
-            "MIPlayer" ->MiPlayer
-            else ->Default
+            "KuGou" -> KuGou
+            "KuGouLite" -> KuGouLite
+            "KuWo" -> KuWo
+            "Netease" -> Netease
+            "QQMusic" -> QQMusic
+            "MiGu" -> MiGu
+            "Myplayer" -> Myplayer
+            "MIPlayer" -> MiPlayer
+            else -> Default
         }
         return icon
     }
@@ -326,50 +352,45 @@ class Config {
     }
 
     private var kuGou: String
-        get() = config.optString("KuGou",KuGou)
+        get() = config.optString("KuGou", KuGou)
         set(str) {
             config.put("KuGou", str)
         }
+
     private var kuGouLite: String
         get() = config.optString("KuGouLite", KuGouLite)
         set(str) {
             config.put("KuGouLite", str)
         }
+
     private var kuWo: String
-        get() = config.optString("KuWo",KuWo)
-        set(str) {
-            config.put("KuWo", str)
-        }
+        get() = config.optString("KuWo", KuWo)
+        set(str) = config.put("KuWo", str)
+
     private var netease: String
-        get() = config.optString("Netease",Netease)
-        set(str) {
-            config.put("Netease", str)
-        }
+        get() = config.optString("Netease", Netease)
+        set(str) = config.put("Netease", str)
+
     private var qQMusic: String
-        get() = config.optString("QQMusic",QQMusic)
-        set(str) {
-            config.put("QQMusic", str)
-        }
+        get() = config.optString("QQMusic", QQMusic)
+        set(str) = config.put("QQMusic", str)
+
     private var miGu: String
-        get() = config.optString("MiGu",MiGu)
-        set(str) {
-            config.put("MiGu", str)
-        }
+        get() = config.optString("MiGu", MiGu)
+        set(str) = config.put("MiGu", str)
+
     private var myplayer: String
-        get() = config.optString("Myplayer",Myplayer)
-        set(str) {
-            config.put("Myplayer", str)
-        }
+        get() = config.optString("Myplayer", Myplayer)
+        set(str) = config.put("Myplayer", str)
+
     private var miPlayer: String
-        get() = config.optString("MiPlayer",MiPlayer)
-        set(str) {
-            config.put("MiPlayer", str)
-        }
+        get() = config.optString("MiPlayer", MiPlayer)
+        set(str) = config.put("MiPlayer", str)
+
     private var default: String
-        get() = config.optString("Default",Default)
-        set(str) {
-            config.put("Default", str)
-        }
+        get() = config.optString("Default", Default)
+        set(str) = config.put("Default", str)
+
     companion object {
         private const val KuGou = "UklGRmwCAABXRUJQVlA4WAoAAAAQAAAAHwAAHwAAQUxQSCACAAABP+SgbSRJOqdmH/6U745DROTHN8wEJcz/Mk3ndE7u3Hvgkg1ZXq67WLkYxfL4baNwgsQAEmzbNu3oxLZtm1Wx7ZQrtm07q99X76cHEf1n4LZtnBjemaTG6uwR4kBC9ejc/vn5/txodaL4gJyhCxy4HszyuorovsMDd90RTmbMG2Jul2cmJ2eWbw0R8xkOFhxpIRttpWFaRVhpy7rWcVRgMfsMeOiIEwdiOx6As2zRiFoEdsrEAyXbwGKUltAF7OaI+AcFBphP/INEcneALhHJVgs9qevAbz9meiI0s8Zmf40Elj7BnXo0oFZpF5Gwv7AUKSKFqv6+VqRd9RuQ+HPYihaR6FWYDRapVF/polwL2YLz+BpV2iYKifsw7id1d3BaJBptKrdmFO4MGelX0C8Nr3CQY1CKlMTROVgJ0Sry36C55Bk2U0xKyArM7cOMaBQDjX9gO0lszMC+ypwUjQoVY4fQ66BMwLmKCdGoh+fhE/jt7xGOm+9wV6a+/Ue3I/SNSlk2UjrhMiXvGl6bLBopqtGtbuQ/BnupUvsJj1UGzUb2vgRPw1qMSCtwk6Np7ou9r+H/4L/2pVqG42QRa19tX0StvTOl1Qb85IWFWLF8YfvKPyElzbChhKYlp2QGSZnlK9uXnsjZBcOXvvq6TJnP8rU9F7Guqzj3XIg1V+st9ly1bWgdjrmSr8+lfH2uFbIGr11Xl33Z4gMSXf+VBJcaVlA4ICYAAADQAgCdASogACAAP/3+/3+/uzayKAgD8D+JaQAAPaOgAP7lagAAAA=="
         private const val KuGouLite = "UklGRmwCAABXRUJQVlA4WAoAAAAQAAAAHwAAHwAAQUxQSCACAAABP+SgbSRJOqdmH/6U745DROTHN8wEJcz/Mk3ndE7u3Hvgkg1ZXq67WLkYxfL4baNwgsQAEmzbNu3oxLZtm1Wx7ZQrtm07q99X76cHEf1n4LZtnBjemaTG6uwR4kBC9ejc/vn5/txodaL4gJyhCxy4HszyuorovsMDd90RTmbMG2Jul2cmJ2eWbw0R8xkOFhxpIRttpWFaRVhpy7rWcVRgMfsMeOiIEwdiOx6As2zRiFoEdsrEAyXbwGKUltAF7OaI+AcFBphP/INEcneALhHJVgs9qevAbz9meiI0s8Zmf40Elj7BnXo0oFZpF5Gwv7AUKSKFqv6+VqRd9RuQ+HPYihaR6FWYDRapVF/polwL2YLz+BpV2iYKifsw7id1d3BaJBptKrdmFO4MGelX0C8Nr3CQY1CKlMTROVgJ0Sry36C55Bk2U0xKyArM7cOMaBQDjX9gO0lszMC+ypwUjQoVY4fQ66BMwLmKCdGoh+fhE/jt7xGOm+9wV6a+/Ue3I/SNSlk2UjrhMiXvGl6bLBopqtGtbuQ/BnupUvsJj1UGzUb2vgRPw1qMSCtwk6Np7ou9r+H/4L/2pVqG42QRa19tX0StvTOl1Qb85IWFWLF8YfvKPyElzbChhKYlp2QGSZnlK9uXnsjZBcOXvvq6TJnP8rU9F7Guqzj3XIg1V+st9ly1bWgdjrmSr8+lfH2uFbIGr11Xl33Z4gMSXf+VBJcaVlA4ICYAAADQAgCdASogACAAP/3+/3+/uzayKAgD8D+JaQAAPaOgAP7lagAAAA=="
