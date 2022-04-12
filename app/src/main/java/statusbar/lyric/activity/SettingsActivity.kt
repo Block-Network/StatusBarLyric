@@ -795,6 +795,7 @@ class SettingsActivity : MIUIActivity() {
                                 isChecked = ActivityOwnSP.ownSPConfig.getBlockLyricMode()
                                 setOnClickListener {
                                     ActivityOwnSP.ownSPConfig.setBlockLyricMode(isChecked)
+                                    updateConfig = true
                                 }
                             })
                         })
@@ -806,6 +807,7 @@ class SettingsActivity : MIUIActivity() {
                                 isChecked = ActivityOwnSP.ownSPConfig.getBlockLyricOff()
                                 setOnClickListener {
                                     ActivityOwnSP.ownSPConfig.setBlockLyricOff(isChecked)
+                                    updateConfig = true
                                 }
                             })
                         })
@@ -814,12 +816,14 @@ class SettingsActivity : MIUIActivity() {
                                 try {
                                     ActivityOwnSP.ownSPConfig.setBlockLyric(getEditText())
                                     dismiss()
+                                    updateConfig = true
                                     return@setRButton
                                 } catch (_: Throwable) {
                                 }
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                             ActivityOwnSP.ownSPConfig.setBlockLyric("")
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
