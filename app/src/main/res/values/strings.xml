@@ -167,7 +167,7 @@
         save it as a file feedback in the upper right corner of the Lsp
     </string>
     <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
-    <string name="TitleTips3">The title above the vertical scroll bar can be clicked to manually enter the range</string>
+    <string name="TitleTips3">The title above the horizontal scroll bar can be clicked to manually enter the range</string>
     <string name="CustomizeText">* Customize Text</string>
     <string name="BlockLyricTips">Use keywords or regular expressions to mask lyrics</string>
     <string name="BlockLyric">Block lyrics</string>

@@ -99,7 +99,6 @@ class SystemUI : BaseHook() {
     private lateinit var updateLyric: Handler
     private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
-//    private lateinit var updateMarginsLyric: Handler
 
     // Color data
     private var textColor: Int = 0
@@ -252,6 +251,7 @@ class SystemUI : BaseHook() {
     }
 
     private fun lyricInit(clock: TextView?) {
+        LogUtils.e(LogMultiLang.sendLog)
         application = AndroidAppHelper.currentApplication() // Get Application
 
         application.sendBroadcast(Intent().apply {
@@ -481,6 +481,7 @@ class SystemUI : BaseHook() {
             updateConfig()
             offLyric(LogMultiLang.initOk)
         }, config.getDelayedLoading().toLong() * 1000)
+        LogUtils.e(LogMultiLang.sendLog)
     }
 
     private fun updateConfig() {

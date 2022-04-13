@@ -149,7 +149,7 @@
     <string name="FirstTip">本模塊使用了 Microsoft AppCenter 來統計或收集月活量、崩潰數據和用戶信息等指標，一切內容與模塊無關</string>
     <string name="TitleTips1">反饋日誌請不要截圖\nLsp右上角保存成文件反饋</string>
     <string name="TitleTips2">帶 * 的功能改動需要重啟系統界面</string>
-    <string name="TitleTips3">垂直滾動條上方的標題是可以點擊手動輸入範圍的喲</string>
+    <string name="TitleTips3">水平滾動條上方的標題是可以點擊手動輸入範圍的喲</string>
     <string name="CustomizeText">* 自定義文本</string>
     <string name="BlockLyricTips">使用關鍵字或規則運算式遮罩歌詞</string>
     <string name="BlockLyric">遮罩歌詞</string>
