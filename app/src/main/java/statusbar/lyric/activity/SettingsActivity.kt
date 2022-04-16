@@ -148,10 +148,10 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Backup, onClickListener = {
-                    BackupUtils.backup(activity, getSP())
+                    getSP()?.let { BackupUtils.backup(activity, it) }
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Recovery, onClickListener = {
-                    BackupUtils.recovery(activity, getSP())
+                    getSP()?.let { BackupUtils.recovery(activity, it) }
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Test, onClickListener = {
                     MIUIDialog(activity) {
