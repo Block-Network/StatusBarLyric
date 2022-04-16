@@ -9,7 +9,8 @@
     <string name="Off">關閉</string>
     <string name="LyricAutoMaxWidth">歌詞自適應最大寬度</string>
     <string name="LyricsAnimation">歌詞動效</string>
-    <string name="LyricColor">* 歌詞顏色</string>
+    <string name="LyricColor">歌詞顏色</string>
+    <string name="BackgroundColor">背景顏色</string>
     <string name="IconColor">* 圖標顏色</string>
     <string name="LyricIcon">歌詞圖標</string>
     <string name="LyricSpeed">歌詞滾動速度</string>
@@ -105,7 +106,7 @@
     <string name="LyricSize">* 歌詞大小</string>
     <string name="IconSize">圖標大小</string>
     <string name="LyricSizeTips">0~50</string>
-    <string name="LyricTips">0%~100%</string>
+    <string name="LyricTips">-1%~100%</string>
     <string name="Test">模塊測試</string>
     <string name="TestDialogTips">這個功能是內嵌在SystemUI裏的，可能會導致SystemUI崩潰重啓！</string>
     <string name="Start">啓動</string>
@@ -150,7 +151,7 @@
     <string name="TitleTips1">反饋日誌請不要截圖\nLsp右上角保存成文件反饋</string>
     <string name="TitleTips2">帶 * 的功能改動需要重啟系統界面</string>
     <string name="TitleTips3">水平滾動條上方的標題是可以點擊手動輸入範圍的喲</string>
-    <string name="CustomizeText">* 自定義文本</string>
+    <string name="CustomizeText">自定義文本</string>
     <string name="BlockLyricTips">使用關鍵字或規則運算式遮罩歌詞</string>
     <string name="BlockLyric">遮罩歌詞</string>
     <string name="BlockLyricMode">是否為規則運算式</string>

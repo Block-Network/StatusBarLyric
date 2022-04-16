@@ -9,7 +9,8 @@
     <string name="Off">Off</string>
     <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
     <string name="LyricsAnimation">Lyrics animation</string>
-    <string name="LyricColor">* Lyric color</string>
+    <string name="LyricColor">Lyric color</string>
+    <string name="BackgroundColor">Background color</string>
     <string name="IconColor">* Icon color</string>
     <string name="LyricIcon">Lyrics icon</string>
     <string name="LyricSpeed">Lyrics scroll speed</string>
@@ -114,7 +115,7 @@
     <string name="LyricSize">* Lyrics Size</string>
     <string name="IconSize">Icon Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
-    <string name="LyricTips">0%~100%, current:</string>
+    <string name="LyricTips">-1%~100%, current:</string>
     <string name="Test">Module Test</string>
     <string name="TestDialogTips">This function is embedded in the system UI and may cause the system UI to crash and
         restart!
@@ -168,7 +169,7 @@
     </string>
     <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
     <string name="TitleTips3">The title above the horizontal scroll bar can be clicked to manually enter the range</string>
-    <string name="CustomizeText">* Customize Text</string>
+    <string name="CustomizeText">Customize Text</string>
     <string name="BlockLyricTips">Use keywords or regular expressions to mask lyrics</string>
     <string name="BlockLyric">Block lyrics</string>
     <string name="BlockLyricMode">Regular expression</string>

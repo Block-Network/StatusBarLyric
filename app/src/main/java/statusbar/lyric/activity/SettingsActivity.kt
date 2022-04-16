@@ -30,23 +30,17 @@ import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.DefValue
 import cn.fkj233.ui.activity.dp2px
-import cn.fkj233.ui.activity.isRtl
 import cn.fkj233.ui.activity.view.*
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.fkj233.ui.switch.MIUISwitch
@@ -148,10 +142,10 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Backup, onClickListener = {
-                    BackupUtils.backup(activity, getSP())
+                    getSP()?.let { BackupUtils.backup(activity, it) }
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Recovery, onClickListener = {
-                    BackupUtils.recovery(activity, getSP())
+                    getSP()?.let { BackupUtils.recovery(activity, it) }
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Test, onClickListener = {
                     MIUIDialog(activity) {
@@ -191,6 +185,30 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
                             ActivityOwnSP.ownSPConfig.setLyricColor("")
+                            dismiss()
+                            updateConfig=true
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                }))
+                TextSummaryArrow(TextSummaryV(textId = R.string.BackgroundColor, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.BackgroundColor)
+                        setMessage(R.string.LyricColorTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getBackgroundColor(), "#FFFFFF")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    Color.parseColor(getEditText())
+                                    ActivityOwnSP.ownSPConfig.setBackgroundColor(getEditText())
+                                    dismiss()
+                                    updateConfig=true
+                                    return@setRButton
+                                } catch (_: Throwable) {
+                                }
+                            }
+                            ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
+                            ActivityOwnSP.ownSPConfig.setBackgroundColor("")
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -462,6 +480,7 @@ class SettingsActivity : MIUIActivity() {
                             try {
                                 val value = getEditText()
                                 ActivityOwnSP.ownSPConfig.setCustomizeText(value)
+                                updateConfig=true
                             } catch (_: Throwable) {
                             }
                             dismiss()

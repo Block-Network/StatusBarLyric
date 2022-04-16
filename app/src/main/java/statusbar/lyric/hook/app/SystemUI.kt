@@ -85,7 +85,7 @@ class SystemUI : BaseHook() {
     private var isHook = false
     var useSystemMusicActive = true
     var test = false
-    var pattern: Pattern? = null
+    private var pattern: Pattern? = null
 
     // lyric click
     private var showLyric = true
@@ -385,7 +385,7 @@ class SystemUI : BaseHook() {
                 iconView.visibility = View.GONE
                 iconView.setImageDrawable(null)
             } else {
-                 iconView.visibility = View.VISIBLE
+                iconView.visibility = View.VISIBLE
                 iconView.setImageDrawable(message.obj as Drawable)
             }
             true
@@ -519,6 +519,16 @@ class SystemUI : BaseHook() {
         if (config.getLyricSize() != 0) {
             lyricSwitchView.setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, config.getLyricSize().toFloat())
         }
+        if (config.getCustomizeText() != "") {
+            customizeView.text = config.getCustomizeText()
+        }
+
+        if (config.getBackgroundColor() != "") {
+            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
+        } else {
+            lyricLayout.setBackgroundColor(0)
+        }
+
     }
 
     private fun offLyric(info: String) { // off Lyric

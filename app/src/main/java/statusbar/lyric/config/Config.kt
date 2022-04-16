@@ -128,6 +128,13 @@ class Config {
     fun setIconColor(str: String) {
         config.put("IColor", str)
     }
+    fun getBackgroundColor(): String {
+        return config.optString("BackgroundColor", "")
+    }
+
+    fun setBackgroundColor(str: String) {
+        config.put("BackgroundColor", str)
+    }
 
     fun getLyricSwitch(): Boolean {
         return config.optBoolean("LSwitch", false)
