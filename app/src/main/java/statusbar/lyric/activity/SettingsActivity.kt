@@ -662,6 +662,7 @@ class SettingsActivity : MIUIActivity() {
                                 } catch (_: Throwable) {
                                 }
                             }
+                            ActivityOwnSP.ownSPConfig.setHook("")
                             ActivityUtils.showToastOnLooper(activity, String.format("%s %s\n%s", getString(R.string.HookSetTips), getString(R.string.Default), getString(R.string.RestartSystemUI)))
                             dismiss()
                         }
