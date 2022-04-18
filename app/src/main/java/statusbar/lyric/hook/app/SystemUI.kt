@@ -288,7 +288,6 @@ class SystemUI : BaseHook() {
 
         customizeView = TextView(application).apply {
             height = clock.height
-            visibility = View.VISIBLE
             text = config.getCustomizeText()
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
             isSingleLine = true
@@ -312,7 +311,6 @@ class SystemUI : BaseHook() {
             }
         }
         lyricSwitchView = LyricSwitchView(application, config.getLyricStyle()).apply {
-            width = (displayWidth * 35) / 100
             height = clock.height
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
             setMargins(config.getLyricPosition() + 10, config.getLyricHigh(), 0, 0)
@@ -320,7 +318,6 @@ class SystemUI : BaseHook() {
             setSingleLine(true)
             setMaxLines(1)
             setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
-
             try {
                 val file = File(application.filesDir.path + "/font")
                 if (file.exists() && file.isFile && file.canRead()) {
