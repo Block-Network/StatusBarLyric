@@ -458,19 +458,19 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }, dataBindingRecv = meiZuStyle.binding.getRecv(2))
                 SeekBarWithText("LSpeed", 0, 200, defaultProgress = 100, dataBindingRecv = meiZuStyle.binding.getRecv(2))
-                val lDict: HashMap<String, String> = hashMapOf()
-                lDict["first"] = getString(R.string.First)
-                lDict["latest"] = getString(R.string.Latest)
+                val lDict: HashMap<Boolean, String> = hashMapOf()
+                lDict[true] = getString(R.string.First)
+                lDict[false] = getString(R.string.Latest)
                 TextWithSpinner(TextV(resId = R.string.LyricViewPosition), SpinnerV(lDict[ActivityOwnSP.ownSPConfig.getLyricViewPosition()]!!) {
-                    add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setLyricViewPosition("first") }
-                    add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setLyricViewPosition("latest") }
+                    add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setLyricViewPosition(true) }
+                    add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setLyricViewPosition(false) }
                 })
-                val cDict: HashMap<String, String> = hashMapOf()
-                cDict["first"] = getString(R.string.First)
-                cDict["latest"] = getString(R.string.Latest)
+                val cDict: HashMap<Boolean, String> = hashMapOf()
+                cDict[true] = getString(R.string.First)
+                cDict[false] = getString(R.string.Latest)
                 TextWithSpinner(TextV(resId = R.string.CustomizePosition), SpinnerV(cDict[ActivityOwnSP.ownSPConfig.getCustomizeViewPosition()]!!) {
-                    add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition("first") }
-                    add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition("latest") }
+                    add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition(true) }
+                    add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition(false) }
                 })
                 TextSummaryArrow(TextSummaryV(textId = R.string.CustomizeText, onClickListener = {
                     MIUIDialog(activity) {

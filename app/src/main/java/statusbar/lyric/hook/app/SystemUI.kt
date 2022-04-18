@@ -350,7 +350,7 @@ class SystemUI : BaseHook() {
         lyricLayout = LinearLayout(application).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0) }
             addView(iconView)
-            if (config.getCustomizeViewPosition() == "first") {
+            if (config.getCustomizeViewPosition()) {
                 addView(customizeView)
                 addView(lyricSwitchView)
             } else {
@@ -476,7 +476,7 @@ class SystemUI : BaseHook() {
                 gravity = Gravity.CENTER
                 orientation = LinearLayout.HORIZONTAL
                 (lyricLayout.parent as? ViewGroup)?.removeView(lyricLayout)
-                if (config.getLyricViewPosition() == "first") addView(lyricLayout, 1) else addView(lyricLayout)
+                if (config.getLyricViewPosition()) addView(lyricLayout, 1) else addView(lyricLayout)
             }
             updateConfig()
             offLyric(LogMultiLang.initOk)

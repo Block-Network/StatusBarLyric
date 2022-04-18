@@ -201,27 +201,27 @@ class Config {
     }
 
     fun getCustomizeText(): String {
-        return config.optString("CustomizeText", "")
+        return config.optString("CustomizeText", "|")
     }
 
     fun setCustomizeText(str: String) {
         config.put("CustomizeText", str)
     }
 
-    fun getLyricViewPosition(): String {
-        return config.optString("LyricViewPosition", "first")
+    fun getLyricViewPosition(): Boolean {
+        return config.optBoolean("LyricViewPosition", true)
     }
 
-    fun setLyricViewPosition(str: String) {
-        config.put("LyricViewPosition", str)
+    fun setLyricViewPosition(bool: Boolean) {
+        config.put("LyricViewPosition", bool)
     }
 
-    fun getCustomizeViewPosition(): String {
-        return config.optString("CustomizeViewPosition", "first")
+    fun getCustomizeViewPosition(): Boolean {
+        return config.optBoolean("CustomizeViewPosition", false)
     }
 
-    fun setCustomizeViewPosition(str: String) {
-        config.put("CustomizeViewPosition", str)
+    fun setCustomizeViewPosition(bool: Boolean) {
+        config.put("CustomizeViewPosition", bool)
     }
 
     fun getHook(): String {
