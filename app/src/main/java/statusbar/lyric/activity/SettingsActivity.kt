@@ -186,7 +186,7 @@ class SettingsActivity : MIUIActivity() {
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
                             ActivityOwnSP.ownSPConfig.setLyricColor("")
                             dismiss()
-                            updateConfig=true
+                            updateConfig = true
                         }
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
@@ -202,7 +202,7 @@ class SettingsActivity : MIUIActivity() {
                                     Color.parseColor(getEditText())
                                     ActivityOwnSP.ownSPConfig.setBackgroundColor(getEditText())
                                     dismiss()
-                                    updateConfig=true
+                                    updateConfig = true
                                     return@setRButton
                                 } catch (_: Throwable) {
                                 }
@@ -475,12 +475,12 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.CustomizeText, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.CustomizeText)
-                        setEditText(ActivityOwnSP.ownSPConfig.getCustomizeText(),"")
+                        setEditText(ActivityOwnSP.ownSPConfig.getCustomizeText(), "")
                         setRButton(R.string.Ok) {
                             try {
                                 val value = getEditText()
                                 ActivityOwnSP.ownSPConfig.setCustomizeText(value)
-                                updateConfig=true
+                                updateConfig = true
                             } catch (_: Throwable) {
                             }
                             dismiss()
@@ -592,8 +592,9 @@ class SettingsActivity : MIUIActivity() {
             }
 
             register("icon", getString(R.string.IconSettings), true) {
+                TitleText(resId = R.string.MakeIconTitle)
                 val iconConfig = ActivityOwnSP.ownSPConfig
-                val iconList =iconConfig.gerIconList()
+                val iconList = iconConfig.gerIconList()
                 val iconDataBinding = GetDataBinding(object : DefValue {
                     override fun getValue(): Any {
                         return ""
@@ -608,7 +609,6 @@ class SettingsActivity : MIUIActivity() {
                     Author(BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon))).also { it.setTint(getColor(R.color.customIconColor)) }, icon, round = 0f, onClick = {
                         MIUIDialog(activity) {
                             setTitle(icon)
-                            setMessage(R.string.MakeIconTitle)
                             setEditText(iconConfig.getIcon(icon), "")
                             setRButton(R.string.Ok) {
                                 if (getEditText().isNotEmpty()) {
