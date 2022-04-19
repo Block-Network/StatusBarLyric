@@ -71,7 +71,7 @@ class SystemUI : BaseHook() {
     var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
 
     // base data
-    lateinit var application: Application
+    val application: Application by lazy { AndroidAppHelper.currentApplication() }
     lateinit var clock: TextView
     private lateinit var customizeView: TextView
     lateinit var lyricSwitchView: LyricSwitchView
@@ -253,8 +253,6 @@ class SystemUI : BaseHook() {
     }
 
     private fun lyricInit(clock: TextView?) {
-        application = AndroidAppHelper.currentApplication() // Get Application
-
         application.sendBroadcast(Intent().apply {
             action = "App_Server"
             putExtra("app_Type", "Hook")
