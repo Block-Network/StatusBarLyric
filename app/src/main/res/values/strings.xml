@@ -11,7 +11,7 @@
     <string name="LyricsAnimation">Lyrics animation</string>
     <string name="LyricColor">Lyric color</string>
     <string name="BackgroundColor">Background color</string>
-    <string name="IconColor">* Icon color</string>
+    <string name="IconColor">Icon color</string>
     <string name="LyricIcon">Lyrics icon</string>
     <string name="LyricSpeed">Lyrics scroll speed</string>
     <string name="AdvancedSettings">Advanced settings</string>
