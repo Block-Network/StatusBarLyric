@@ -58,12 +58,12 @@ import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.*
 import statusbar.lyric.utils.XposedOwnSP.config
-import statusbar.lyric.utils.XposedOwnSP.iconConfig
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
 import java.lang.reflect.Field
 import java.util.*
+import java.util.regex.Pattern
 import kotlin.system.exitProcess
 
 class SystemUI : BaseHook() {
@@ -71,7 +71,7 @@ class SystemUI : BaseHook() {
     var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
 
     // base data
-    lateinit var application: Application
+    val application: Application by lazy { AndroidAppHelper.currentApplication() }
     lateinit var clock: TextView
     private lateinit var customizeView: TextView
     lateinit var lyricSwitchView: LyricSwitchView
@@ -85,6 +85,7 @@ class SystemUI : BaseHook() {
     private var isHook = false
     var useSystemMusicActive = true
     var test = false
+    private var pattern: Pattern? = null
 
     // lyric click
     private var showLyric = true
@@ -94,13 +95,10 @@ class SystemUI : BaseHook() {
     // Handler
     private lateinit var iconUpdate: Handler
     private lateinit var updateIconColor: Handler
-    private lateinit var updateMarginsIcon: Handler
     private lateinit var updateTextColor: Handler
-    private lateinit var updateLyricPos: Handler
     private lateinit var updateLyric: Handler
     private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
-    private lateinit var updateMarginsLyric: Handler
 
     // Color data
     private var textColor: Int = 0
@@ -253,7 +251,7 @@ class SystemUI : BaseHook() {
     }
 
     private fun lyricInit(clock: TextView?) {
-        application = AndroidAppHelper.currentApplication() // Get Application
+        LogUtils.e(LogMultiLang.sendLog)
 
         application.sendBroadcast(Intent().apply {
             action = "App_Server"
@@ -289,7 +287,6 @@ class SystemUI : BaseHook() {
 
         customizeView = TextView(application).apply {
             height = clock.height
-            visibility = View.VISIBLE
             text = config.getCustomizeText()
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
             isSingleLine = true
@@ -313,7 +310,6 @@ class SystemUI : BaseHook() {
             }
         }
         lyricSwitchView = LyricSwitchView(application, config.getLyricStyle()).apply {
-            width = (displayWidth * 35) / 100
             height = clock.height
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
             setMargins(config.getLyricPosition() + 10, config.getLyricHigh(), 0, 0)
@@ -321,7 +317,6 @@ class SystemUI : BaseHook() {
             setSingleLine(true)
             setMaxLines(1)
             setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
-
             try {
                 val file = File(application.filesDir.path + "/font")
                 if (file.exists() && file.isFile && file.canRead()) {
@@ -351,7 +346,7 @@ class SystemUI : BaseHook() {
         lyricLayout = LinearLayout(application).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0) }
             addView(iconView)
-            if (config.getCustomizeViewPosition() == "first") {
+            if (config.getCustomizeViewPosition()) {
                 addView(customizeView)
                 addView(lyricSwitchView)
             } else {
@@ -383,11 +378,9 @@ class SystemUI : BaseHook() {
 
         iconUpdate = Handler(Looper.getMainLooper()) { message ->
             if (message.obj == null) {
-                lyricSwitchView.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
                 iconView.visibility = View.GONE
                 iconView.setImageDrawable(null)
             } else {
-                lyricSwitchView.setMargins(config.getLyricPosition() + 10, config.getLyricHigh(), 0, 0)
                 iconView.visibility = View.VISIBLE
                 iconView.setImageDrawable(message.obj as Drawable)
             }
@@ -399,24 +392,9 @@ class SystemUI : BaseHook() {
             true
         }
 
-        updateMarginsLyric = Handler(Looper.getMainLooper()) { message ->
-            lyricSwitchView.setMargins(message.arg1, message.arg2, 0, 0)
-            true
-        }
-
-        updateMarginsIcon = Handler(Looper.getMainLooper()) { message ->
-            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
-            true
-        }
-
         updateTextColor = Handler(Looper.getMainLooper()) { message ->
             lyricSwitchView.setTextColor(message.arg1)
             customizeView.setTextColor(message.arg1)
-            true
-        }
-
-        updateLyricPos = Handler(Looper.getMainLooper()) {
-            (lyricSwitchView.layoutParams as LinearLayout.LayoutParams).setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0)
             true
         }
 
@@ -427,6 +405,32 @@ class SystemUI : BaseHook() {
 
         updateLyric = Handler(Looper.getMainLooper()) { message ->
             val lyric: String = message.data.getString(lyricKey) ?: ""
+            val block = config.getBlockLyric()
+            if (lyric == "") return@Handler true
+            if (block != "") {
+                if (pattern == null) {
+                    if (lyric.contains(block)) {
+                        if (config.getBlockLyricOff()) {
+                            offLyric("BlockLyric")
+                            return@Handler true
+                        } else {
+                            LogUtils.e("BlockLyric")
+                            return@Handler true
+                        }
+                    }
+                } else {
+                    if (pattern!!.matcher(lyric).matches()) {
+                        if (config.getBlockLyricOff()) {
+                            offLyric("BlockLyric")
+                            return@Handler true
+                        } else {
+                            LogUtils.e("BlockLyric")
+                            return@Handler true
+                        }
+                    }
+
+                }
+            }
             LogUtils.e("${LogMultiLang.updateLyric}: $lyric")
             val display = if (application.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) displayWidth else displayHeight
             lyricSwitchView.width = if (config.getLyricWidth() == -1) getLyricWidth(lyricSwitchView.paint, lyric, display) else (display * config.getLyricWidth()) / 100
@@ -468,16 +472,17 @@ class SystemUI : BaseHook() {
                 gravity = Gravity.CENTER
                 orientation = LinearLayout.HORIZONTAL
                 (lyricLayout.parent as? ViewGroup)?.removeView(lyricLayout)
-                if (config.getLyricViewPosition() == "first") addView(lyricLayout, 1) else addView(lyricLayout)
+                if (config.getLyricViewPosition()) addView(lyricLayout, 1) else addView(lyricLayout)
             }
             updateConfig()
             offLyric(LogMultiLang.initOk)
         }, config.getDelayedLoading().toLong() * 1000)
+        LogUtils.e(LogMultiLang.sendLog)
     }
 
     private fun updateConfig() {
         config.update()
-        iconConfig.update()
+        pattern = if (config.getBlockLyric() != "" && config.getBlockLyricMode()) Pattern.compile(config.getBlockLyric()) else null
         if (!config.getLyricService()) offLyric(LogMultiLang.switchOff)
         if (config.getLyricStyle()) lyricSwitchView.setSpeed((config.getLyricSpeed().toFloat() / 100))
         if (config.getAnim() != "random") {
@@ -485,10 +490,6 @@ class SystemUI : BaseHook() {
             lyricSwitchView.inAnimation = Utils.inAnim(anim)
             lyricSwitchView.outAnimation = Utils.outAnim(anim)
         }
-        updateMarginsIcon.sendMessage(updateMarginsIcon.obtainMessage().also {
-            it.arg1 = 0
-            it.arg2 = config.getIconHigh()
-        })
         if (config.getLyricColor() != "") {
             textColor = Color.parseColor(config.getLyricColor())
             updateTextColor.sendMessage(updateTextColor.obtainMessage().also {
@@ -501,13 +502,9 @@ class SystemUI : BaseHook() {
                 it.arg1 = iconColor
             })
         } else iconColor = 0
-        updateMarginsLyric.sendMessage(updateMarginsLyric.obtainMessage().also {
+        updateMargins.sendMessage(updateMargins.obtainMessage().also {
             it.arg1 = config.getLyricPosition()
             it.arg2 = config.getLyricHigh()
-        })
-        updateMarginsIcon.sendMessage(updateMarginsIcon.obtainMessage().also {
-            it.arg1 = 0
-            it.arg2 = config.getIconHigh()
         })
         if (config.getIconSize() != 0) {
             (iconView.layoutParams as LinearLayout.LayoutParams).apply { // set icon size
@@ -518,6 +515,16 @@ class SystemUI : BaseHook() {
         if (config.getLyricSize() != 0) {
             lyricSwitchView.setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, config.getLyricSize().toFloat())
         }
+        if (config.getCustomizeText() != "") {
+            customizeView.text = config.getCustomizeText()
+        }
+
+        if (config.getBackgroundColor() != "") {
+            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
+        } else {
+            lyricLayout.setBackgroundColor(0)
+        }
+
     }
 
     private fun offLyric(info: String) { // off Lyric
@@ -555,7 +562,7 @@ class SystemUI : BaseHook() {
                 }
             }
             iconUpdate.sendMessage(iconUpdate.obtainMessage().also { // update icon
-                it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(iconConfig.getIcon(icon)))
+                it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(config.getIcon(icon)))
             })
         }
 

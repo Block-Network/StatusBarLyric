@@ -23,7 +23,6 @@
 package statusbar.lyric.hook.app
 
 import android.app.AndroidAppHelper
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
@@ -31,15 +30,19 @@ import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
 
-class Kugou : BaseHook() {
+class Kugou(private val packageName: String) : BaseHook() {
     override fun hook() {
         super.hook()
         "android.media.AudioManager".hookAfterMethod("isBluetoothA2dpOn") {
             it.result = true
         }
         "com.kugou.framework.player.c".hookAfterMethod("a", HashMap::class.java) {
+            var iconName="KuGou"
+            if (packageName!="com.kugou.android"){
+                iconName="KuGouLite"
+            }
             LogUtils.e("酷狗音乐:" + (it.args[0] as HashMap<*, *>).values.toList()[0])
-            Utils.sendLyric(AndroidAppHelper.currentApplication(), "" + (it.args[0] as HashMap<*, *>).values.toList()[0], "KuGou")
+            Utils.sendLyric(AndroidAppHelper.currentApplication(), "" + (it.args[0] as HashMap<*, *>).values.toList()[0], iconName)
         }
         "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull()?.hookAfterMethod("getTinkerFlags") {
             it.result = 0
