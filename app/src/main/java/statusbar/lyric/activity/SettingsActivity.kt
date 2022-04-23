@@ -564,7 +564,7 @@ class SettingsActivity : MIUIActivity() {
                 Text(resId = R.string.IconSize, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.IconSize)
-                        setMessage(R.string.LyricHighTips)
+                        setMessage(R.string.LyricSizeTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getIconSize().toString(), "0")
                         setRButton(R.string.Ok) {
                             if (getEditText().isNotEmpty()) {
@@ -585,11 +585,11 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 })
-                SeekBarWithText("ISize", 0, 100, -1)
+                SeekBarWithText("ISize", 0, 50, -1)
                 Text(resId = R.string.IconHigh, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.IconHigh)
-                        setMessage(R.string.LyricSizeTips)
+                        setMessage(R.string.LyricHighTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getIconHigh().toString(), "0")
                         setRButton(R.string.Ok) {
                             if (getEditText().isNotEmpty()) {
