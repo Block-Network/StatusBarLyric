@@ -20,7 +20,7 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "DuplicatedCode")
 
 package statusbar.lyric.hook.app
 
@@ -175,6 +175,10 @@ class SystemUI : BaseHook() {
     private val lockScreenReceiver by lazy { LockScreenReceiver() }
     private val lyricReceiver by lazy { LyricReceiver() }
 
+    // Hide icon
+    private var notificationIconContainer: FrameLayout? = null
+    private var notificationIconContainerLayoutParams: ViewGroup.LayoutParams? = null
+
     override fun hook() {
         super.hook()
         if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
@@ -199,6 +203,10 @@ class SystemUI : BaseHook() {
                 }
             }
         }
+        if (!Utils.hasMiuiSetting) return // Hide Icon
+        "com.android.systemui.statusbar.phone.NotificationIconContainer".findClassOrNull()?.hookAfterAllConstructors {
+            notificationIconContainer = it.thisObject as FrameLayout
+        }.isNull { LogUtils.e("Not find NotificationIconContainer") }
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) { // Get system clock view
@@ -452,6 +460,7 @@ class SystemUI : BaseHook() {
                 }
             }
             Utils.setStatusBar(application, false, config)
+            setNotificationIcon(false)
             lyricSwitchView.setText(lyric)
             true
         }
@@ -466,6 +475,7 @@ class SystemUI : BaseHook() {
                 clock.getObjectField("mListenerInfo")?.setObjectField("mOnClickListener", clockOnClickListener).isNull { clock.setOnClickListener(null) }
             }
             Utils.setStatusBar(application, true, config) // set miui statusbar
+            setNotificationIcon(true)
             true
         }
 
@@ -481,6 +491,20 @@ class SystemUI : BaseHook() {
             offLyric(LogMultiLang.initOk)
         }, config.getDelayedLoading().toLong() * 1000)
         LogUtils.e(LogMultiLang.sendLog)
+    }
+
+    private fun setNotificationIcon(isOpen: Boolean) {
+        if (Utils.hasMiuiSetting) return
+        if (!config.getHNoticeIcon()) return
+        if (!isOpen) {
+            notificationIconContainerLayoutParams = notificationIconContainer?.layoutParams
+            notificationIconContainer?.visibility = View.GONE
+            notificationIconContainer?.layoutParams = ViewGroup.LayoutParams(0, 0)
+        } else {
+            notificationIconContainer?.layoutParams = notificationIconContainerLayoutParams ?: FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+            notificationIconContainer?.visibility = View.VISIBLE
+            notificationIconContainerLayoutParams = null
+        }
     }
 
     private fun updateConfig() {

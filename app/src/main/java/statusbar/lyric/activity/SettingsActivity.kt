@@ -53,6 +53,7 @@ import com.microsoft.appcenter.crashes.model.ErrorReport
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.utils.*
+import statusbar.lyric.utils.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.utils.Utils.indexOfArr
 import java.util.*
 import kotlin.system.exitProcess
@@ -1103,6 +1104,7 @@ class SettingsActivity : MIUIActivity() {
     private fun checkLSPosed(): Boolean {
         return try {
             Utils.getSP(this, "Lyric_Config")?.let { setSP(it) }
+            updateConfigVer()
             true
         } catch (e: Throwable) {
             MIUIDialog(this) {

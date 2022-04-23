@@ -53,7 +53,7 @@ import kotlin.collections.ArrayList
 object Utils {
     const val appCenterKey = "aa0a0b32-8d8d-43ca-8956-947e1ed8294d"
 
-    private val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
+    val hasMiuiSetting: Boolean = isPresent("android.provider.MiuiSettings")
     private val packNameToIconName = HashMap<String, String>().apply {
         put("com.netease.cloudmusic", "Netease")
         put("com.tencent.qqmusic", "QQMusic")
