@@ -298,7 +298,6 @@ class SystemUI : BaseHook() {
             text = config.getCustomizeText()
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
             isSingleLine = true
-            elevation = config.getLyricShadow().toFloat()
             try {
                 val file = File(application.filesDir.path + "/font")
                 if (file.exists() && file.isFile && file.canRead()) {
@@ -326,7 +325,6 @@ class SystemUI : BaseHook() {
             setSingleLine(true)
             setMaxLines(1)
             setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
-            elevation = config.getLyricShadow().toFloat()
             try {
                 val file = File(application.filesDir.path + "/font")
                 if (file.exists() && file.isFile && file.canRead()) {
@@ -350,7 +348,6 @@ class SystemUI : BaseHook() {
         // 创建图标
         iconView = ImageView(application).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(0, 7, 0, 0) }
-            elevation = config.getIconShadow().toFloat()
         }
 
         // 创建布局

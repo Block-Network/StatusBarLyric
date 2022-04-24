@@ -224,21 +224,6 @@ class Config {
         config.put("CustomizeViewPosition", bool)
     }
 
-    fun getLyricShadow(): Int {
-        return config.optInt("LyricShadow", 15)
-    }
-
-    fun setLyricShadow(i: Int) {
-        config.put("LyricShadow", i)
-    }
-    fun getIconShadow(): Int {
-        return config.optInt("IconShadow", 15)
-    }
-
-    fun setIconShadow(i: Int) {
-        config.put("IconShadow", i)
-    }
-
     fun getHook(): String {
         return config.optString("Hook", "")
     }

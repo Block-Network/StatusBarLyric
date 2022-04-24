@@ -399,31 +399,6 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LSpacing", 0, 200)
-                Text(resId = R.string.LyricShadow, onClickListener = {
-                    MIUIDialog(activity) {
-                        setTitle(R.string.LyricShadow)
-                        setMessage(R.string.ShadowTips)
-                        setEditText(ActivityOwnSP.ownSPConfig.getLyricShadow().toString(), "15")
-                        setRButton(R.string.Ok) {
-                            if (getEditText().isNotEmpty()) {
-                                try {
-                                    val value = getEditText().toInt()
-                                    if (value in (0..50)) {
-                                        ActivityOwnSP.ownSPConfig.setLyricShadow(value)
-                                        dismiss()
-                                        return@setRButton
-                                    }
-                                } catch (_: Throwable) {
-                                }
-                            }
-                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
-                            ActivityOwnSP.ownSPConfig.setLyricShadow(15)
-                            dismiss()
-                        }
-                        setLButton(R.string.Cancel) { dismiss() }
-                    }.show()
-                })
-                SeekBarWithText("LyricShadow", 0, 50,15)
                 val aDicts: HashMap<String, String> = hashMapOf()
                 aDicts["off"] = getString(R.string.Off)
                 aDicts["top"] = getString(R.string.top)
@@ -614,31 +589,6 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment("icon")
                 }))
-                Text(resId = R.string.IconShadow, onClickListener = {
-                    MIUIDialog(activity) {
-                        setTitle(R.string.IconShadow)
-                        setMessage(R.string.ShadowTips)
-                        setEditText(ActivityOwnSP.ownSPConfig.getIconShadow().toString(), "15")
-                        setRButton(R.string.Ok) {
-                            if (getEditText().isNotEmpty()) {
-                                try {
-                                    val value = getEditText().toInt()
-                                    if (value in (0..50)) {
-                                        ActivityOwnSP.ownSPConfig.setIconShadow(value)
-                                        dismiss()
-                                        return@setRButton
-                                    }
-                                } catch (_: Throwable) {
-                                }
-                            }
-                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
-                            ActivityOwnSP.ownSPConfig.setIconShadow(15)
-                            dismiss()
-                        }
-                        setLButton(R.string.Cancel) { dismiss() }
-                    }.show()
-                })
-                SeekBarWithText("IconShadow", 0, 50,15)
                 Text()
             }
 

@@ -139,9 +139,6 @@
     <string name="Reset">恢復默認</string>
     <string name="FontWeight">字體粗細</string>
     <string name="LyricSpacing">歌詞間距</string>
-    <string name="LyricShadow">歌詞陰影</string>
-    <string name="IconShadow">圖標陰影</string>
-    <string name="ShadowTips">0-50</string>
     <string name="ReverseColorTime">普通反色時間</string>
     <string name="ReverseColorTimeTips">1–3000（單位：毫秒）</string>
     <string name="AntiBurnTime">防燒屏移動時間</string>

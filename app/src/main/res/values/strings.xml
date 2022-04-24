@@ -152,9 +152,6 @@
     <string name="Reset">Reset</string>
     <string name="FontWeight">Font weight</string>
     <string name="LyricSpacing">Lyrics spacing</string>
-    <string name="LyricShadow">Lyrics shadow</string>
-    <string name="IconShadow">Icon shadow</string>
-    <string name="ShadowTips">0-50</string>
     <string name="ReverseColorTime">Normal inversion time</string>
     <string name="ReverseColorTimeTips">1–3000 (unit: milliseconds)</string>
     <string name="AntiBurnTime">Burn-in move time</string>
