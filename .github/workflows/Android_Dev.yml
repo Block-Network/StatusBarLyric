@@ -35,6 +35,11 @@ jobs:
           cd blockmiui
           git submodule init
           git submodule update
+      - name: Clone TOAST
+        run: |
+          cd xtoast
+          git submodule init
+          git submodule update
 
       - name: Build with Gradle
         run: |
