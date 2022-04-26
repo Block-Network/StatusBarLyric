@@ -125,6 +125,7 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(R.string.ResetModuleDialogTips)
                         setRButton(R.string.Ok) {
                             ActivityUtils.cleanConfig(activity)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -179,6 +180,7 @@ class SettingsActivity : MIUIActivity() {
                                 try {
                                     Color.parseColor(getEditText())
                                     ActivityOwnSP.ownSPConfig.setLyricColor(getEditText())
+                                    updateConfig = true
                                     dismiss()
                                     return@setRButton
                                 } catch (_: Throwable) {
@@ -186,8 +188,8 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
                             ActivityOwnSP.ownSPConfig.setLyricColor("")
-                            dismiss()
                             updateConfig = true
+                            dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
@@ -202,14 +204,15 @@ class SettingsActivity : MIUIActivity() {
                                 try {
                                     Color.parseColor(getEditText())
                                     ActivityOwnSP.ownSPConfig.setBackgroundColor(getEditText())
-                                    dismiss()
                                     updateConfig = true
+                                    dismiss()
                                     return@setRButton
                                 } catch (_: Throwable) {
                                 }
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
                             ActivityOwnSP.ownSPConfig.setBackgroundColor("")
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -226,6 +229,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (0..50)) {
                                         ActivityOwnSP.ownSPConfig.setLyricSize(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -234,6 +238,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                             ActivityOwnSP.ownSPConfig.setLyricSize(0)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -261,6 +266,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (-1..100)) {
                                         ActivityOwnSP.ownSPConfig.setLyricWidth(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -269,7 +275,8 @@ class SettingsActivity : MIUIActivity() {
                                 }
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
-                            ActivityOwnSP.ownSPConfig.setLyricSize(-1)
+                            ActivityOwnSP.ownSPConfig.setLyricWidth(-1)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -287,6 +294,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (-1..100)) {
                                         ActivityOwnSP.ownSPConfig.setLyricMaxWidth(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -295,6 +303,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                             ActivityOwnSP.ownSPConfig.setLyricMaxWidth(-1)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -312,6 +321,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (-900..900)) {
                                         ActivityOwnSP.ownSPConfig.setLyricPosition(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -320,6 +330,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                             ActivityOwnSP.ownSPConfig.setLyricPosition(0)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -337,6 +348,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (-100..100)) {
                                         ActivityOwnSP.ownSPConfig.setLyricHigh(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -345,6 +357,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                             ActivityOwnSP.ownSPConfig.setLyricHigh(0)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -361,6 +374,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (0..400)) {
                                         ActivityOwnSP.ownSPConfig.setLyricFontWeight(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -369,6 +383,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                             ActivityOwnSP.ownSPConfig.setLyricFontWeight(0)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -385,6 +400,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (0..200)) {
                                         ActivityOwnSP.ownSPConfig.setLyricSpacing(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -392,7 +408,8 @@ class SettingsActivity : MIUIActivity() {
                                 }
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
-                            ActivityOwnSP.ownSPConfig.setLyricHigh(0)
+                            ActivityOwnSP.ownSPConfig.setLyricSpacing(0)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -445,6 +462,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (0..200)) {
                                         ActivityOwnSP.ownSPConfig.setLyricSpeed(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -453,6 +471,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                             ActivityOwnSP.ownSPConfig.setLyricSpeed(100)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -467,8 +486,8 @@ class SettingsActivity : MIUIActivity() {
                     add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setLyricViewPosition(false) }
                 })
                 val cDict: HashMap<Boolean, String> = hashMapOf()
-                cDict[true] = getString(R.string.First)
                 cDict[false] = getString(R.string.Latest)
+                cDict[true] = getString(R.string.First)
                 TextWithSpinner(TextV(resId = R.string.CustomizePosition), SpinnerV(cDict[ActivityOwnSP.ownSPConfig.getCustomizeViewPosition()]!!) {
                     add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition(true) }
                     add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition(false) }
@@ -481,9 +500,9 @@ class SettingsActivity : MIUIActivity() {
                             try {
                                 val value = getEditText()
                                 ActivityOwnSP.ownSPConfig.setCustomizeText(value)
-                                updateConfig = true
                             } catch (_: Throwable) {
                             }
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) {
@@ -524,6 +543,7 @@ class SettingsActivity : MIUIActivity() {
                                 try {
                                     Color.parseColor(getEditText())
                                     ActivityOwnSP.ownSPConfig.setIconColor(getEditText())
+                                    updateConfig = true
                                     dismiss()
                                     return@setRButton
                                 } catch (_: Throwable) {
@@ -531,6 +551,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
                             ActivityOwnSP.ownSPConfig.setIconColor("")
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -547,6 +568,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (0..50)) {
                                         ActivityOwnSP.ownSPConfig.setIconSize(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -555,6 +577,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                             ActivityOwnSP.ownSPConfig.setIconSize(0)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
@@ -572,6 +595,7 @@ class SettingsActivity : MIUIActivity() {
                                     val value = getEditText().toInt()
                                     if (value in (-100..100)) {
                                         ActivityOwnSP.ownSPConfig.setIconHigh(value)
+                                        updateConfig = true
                                         dismiss()
                                         return@setRButton
                                     }
@@ -580,6 +604,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                             ActivityOwnSP.ownSPConfig.setIconHigh(0)
+                            updateConfig = true
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }

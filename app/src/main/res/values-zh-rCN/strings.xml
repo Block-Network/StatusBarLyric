@@ -17,8 +17,8 @@
     <string name="AdvancedSettings">高级设置</string>
     <string name="ClickLyric">* 点击歌词切换时钟和歌词</string>
     <string name="AbScreen">* 防烧屏</string>
-    <string name="IconHigh">* 图标上下位置</string>
-    <string name="LyricPos">* 歌词左右位置</string>
+    <string name="IconHigh">图标上下位置</string>
+    <string name="LyricPos">歌词左右位置</string>
     <string name="Default">默认</string>
     <string name="UnlockShow">仅解锁显示</string>
     <string name="AutoHideNotiIcon">自动隐藏通知图标</string>
@@ -101,8 +101,8 @@
     <string name="GetNewNoticeError">获取新通知错误</string>
     <string name="ResetSuccess">重置成功</string>
     <string name="MakeIconTitle">请输入没有前缀的 Base64，推荐像素大小 32*32</string>
-    <string name="LyricHigh">* 歌词上下位置</string>
-    <string name="LyricSize">* 歌词大小</string>
+    <string name="LyricHigh">歌词上下位置</string>
+    <string name="LyricSize">歌词大小</string>
     <string name="IconSize">图标大小</string>
     <string name="LyricSizeTips">0~50</string>
     <string name="LyricTips">-1%~100%</string>
@@ -135,7 +135,7 @@
     <string name="DeleteFoneFail">删除自定义字体失败</string>
     <string name="ChooseFont">选择字体</string>
     <string name="Reset">恢复默认</string>
-    <string name="FontWeight">字体粗细</string>
+    <string name="FontWeight">* 字体粗细</string>
     <string name="LyricSpacing">歌词间距</string>
     <string name="ReverseColorTime">普通反色时间</string>
     <string name="ReverseColorTimeTips">1–3000（单位：毫秒）</string>

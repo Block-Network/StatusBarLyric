@@ -99,6 +99,7 @@ class SystemUI : BaseHook() {
     private lateinit var updateLyric: Handler
     private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
+    lateinit var updateIconMargins: Handler
 
     // Color data
     private var textColor: Int = 0
@@ -115,8 +116,8 @@ class SystemUI : BaseHook() {
                     try {
                         if (config.getLyricService()) {
                             if (test) return
-                            if (Utils.isServiceRunningList(application, musicServer)) {
-                                if (config.getLyricAutoOff() && useSystemMusicActive && !audioManager.isMusicActive) {
+                            if (Utils.isServiceRunningList(application, musicServer) && !audioManager.isMusicActive) {
+                                if (config.getLyricAutoOff() && useSystemMusicActive) {
                                     offLyric(LogMultiLang.pausePlay)
                                 }
                             } else {
@@ -159,7 +160,7 @@ class SystemUI : BaseHook() {
                 var iconPos = 0
 
                 override fun run() {
-                    iconPos = config.getIconHigh()
+                    iconPos = config.getLyricPosition()
                     if (order) i += 1 else i -= 1
                     updateMargins.sendMessage(updateMargins.obtainMessage().also {
                         it.arg1 = 10 + i
@@ -400,6 +401,11 @@ class SystemUI : BaseHook() {
             true
         }
 
+        updateIconMargins = Handler(Looper.getMainLooper()) { message ->
+            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(0, message.arg1, 0, 0)
+            true
+        }
+
         updateTextColor = Handler(Looper.getMainLooper()) { message ->
             lyricSwitchView.setTextColor(message.arg1)
             customizeView.setTextColor(message.arg1)
@@ -530,7 +536,10 @@ class SystemUI : BaseHook() {
             it.arg1 = config.getLyricPosition()
             it.arg2 = config.getLyricHigh()
         })
-        if (config.getIconSize() != 0) {
+        updateIconMargins.sendMessage(updateMargins.obtainMessage().also {
+            it.arg1 = config.getIconHigh()
+        })
+        if (config.getIconHigh() != 0) {
             (iconView.layoutParams as LinearLayout.LayoutParams).apply { // set icon size
                 width = config.getIconSize()
                 height = config.getIconSize()
@@ -539,16 +548,14 @@ class SystemUI : BaseHook() {
         if (config.getLyricSize() != 0) {
             lyricSwitchView.setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, config.getLyricSize().toFloat())
         }
-        if (config.getCustomizeText() != "") {
-            customizeView.text = config.getCustomizeText()
-        }
-
+        customizeView.text = config.getCustomizeText()
         if (config.getBackgroundColor() != "") {
             lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
         } else {
             lyricLayout.setBackgroundColor(0)
         }
-
+        lyricSwitchView.setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
+        customizeView.setLetterSpacing(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
     }
 
     private fun offLyric(info: String) { // off Lyric

@@ -18,7 +18,7 @@
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
     <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconHigh">Icon up and down position</string>
-    <string name="LyricPos">* Left and right positions of lyrics
+    <string name="LyricPos">Left and right positions of lyrics
     </string>
     <string name="Default">Default</string>
     <string name="UnlockShow">Unlock display only</string>
@@ -112,8 +112,8 @@
     <string name="GetNewNoticeError">Get NewNotice Error</string>
     <string name="ResetSuccess">Reset successfully</string>
     <string name="MakeIconTitle">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
-    <string name="LyricHigh">* Lyrics up and down position</string>
-    <string name="LyricSize">* Lyrics Size</string>
+    <string name="LyricHigh">Lyrics up and down position</string>
+    <string name="LyricSize">Lyrics Size</string>
     <string name="IconSize">Icon Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
     <string name="LyricTips">-1%~100%, current:</string>
@@ -150,7 +150,7 @@
     <string name="DeleteFoneFail">Delete font fail</string>
     <string name="ChooseFont">Choose font</string>
     <string name="Reset">Reset</string>
-    <string name="FontWeight">Font weight</string>
+    <string name="FontWeight">* Font weight</string>
     <string name="LyricSpacing">Lyrics spacing</string>
     <string name="ReverseColorTime">Normal inversion time</string>
     <string name="ReverseColorTimeTips">1–3000 (unit: milliseconds)</string>
