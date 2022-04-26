@@ -99,7 +99,7 @@ class SystemUI : BaseHook() {
     private lateinit var updateLyric: Handler
     private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
-    lateinit var updateIconMargins: Handler
+    private lateinit var updateIconMargins: Handler
 
     // Color data
     private var textColor: Int = 0
