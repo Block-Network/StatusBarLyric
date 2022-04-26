@@ -555,7 +555,7 @@ class SystemUI : BaseHook() {
             lyricLayout.setBackgroundColor(0)
         }
         lyricSwitchView.setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
-        customizeView.setLetterSpacing(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
+        customizeView.letterSpacing = if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
     }
 
     private fun offLyric(info: String) { // off Lyric
