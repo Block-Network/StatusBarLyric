@@ -19,15 +19,16 @@ import android.widget.Toast
     private const val LENGTH_LONG = 1
 
     @SuppressLint("ShowToast")
-    fun makeToast(context: Context, message: CharSequence, duration: Int = LENGTH_LONG, currentTypeface: Typeface = Typeface.create("sans-serif-condensed", Typeface.NORMAL), textSize: Int = 16, textColor: Int = R.color.textColor, toastIcon: Drawable? = null, allowQueue: Boolean = true, toastGravity: Int = -1, xOffset: Int = -1, yOffset: Int = -1, isRTL: Boolean = false): Toast {
+    fun makeText(context: Context, message: CharSequence, duration: Int = LENGTH_LONG, currentTypeface: Typeface = Typeface.create("sans-serif-condensed", Typeface.NORMAL), textSize: Int = 16, textColor: Int = R.color.textColor, toastIcon: Drawable? = null, allowQueue: Boolean = true, toastGravity: Int = -1, xOffset: Int = -1, yOffset: Int = -1, isRTL: Boolean = false): Toast {
         val currentToast = Toast.makeText(context, "", duration)
-        val toastLayout = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.toast_layout, null)
+        val toastLayout = LayoutInflater.from(context).inflate(R.layout.toast_layout, null)
         val toastRoot = toastLayout.findViewById<LinearLayout>(R.id.toast_root)
         val toastIcons = toastLayout.findViewById<ImageView>(R.id.toast_icon)
         val toastTextView = toastLayout.findViewById<TextView>(R.id.toast_text)
         val toastDrawable = context.resources.getDrawable(R.drawable.toast_frame)
         toastDrawable.setTint(context.resources.getColor(R.color.backgroundColor))
         toastLayout.background = toastDrawable
+//        toastLayout.setBackgroundColor(R.color.backgroundColor)
         toastIcons.background = toastIcon
         if (toastIcon == null) {
             toastIcons.visibility = View.GONE
@@ -40,6 +41,7 @@ import android.widget.Toast
         toastTextView.typeface = currentTypeface
         toastTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize.toFloat())
         currentToast.view = toastLayout
+        toastLayout.elevation = 15f
         if (!allowQueue) {
             if (lastToast != null) {
                 lastToast!!.cancel()
