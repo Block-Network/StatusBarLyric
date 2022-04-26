@@ -49,7 +49,8 @@ object ActivityUtils {
     fun showToastOnLooper(context: Context, message: String) {
         try {
             handler.post {
-                XToast.makeToast(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+//                XToast.makeToast(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+                XToast.makeText(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
             }
         } catch (e: RuntimeException) {
             e.printStackTrace()
