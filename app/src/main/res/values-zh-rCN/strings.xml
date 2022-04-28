@@ -17,8 +17,8 @@
     <string name="AdvancedSettings">高级设置</string>
     <string name="ClickLyric">* 点击歌词切换时钟和歌词</string>
     <string name="AbScreen">* 防烧屏</string>
-    <string name="IconHigh">图标上下位置</string>
-    <string name="LyricPos">歌词左右位置</string>
+    <string name="IconHigh">* 图标上下位置</string>
+    <string name="LyricPos">歌词左右位置    </string>
     <string name="Default">默认</string>
     <string name="UnlockShow">仅解锁显示</string>
     <string name="AutoHideNotiIcon">自动隐藏通知图标</string>
@@ -32,7 +32,7 @@
     <string name="AboutModule">关于模块</string>
     <string name="AboutTips1">主要负责 Hook 和 界面</string>
     <string name="AboutTips2">主要负责 摸鱼</string>
-    <string name="ThkListTips">感谢名单（不分先后）</string>
+    <string name="ThkListTips">感谢名单 (不分先后)</string>
     <string name="Other">其它</string>
     <string name="Source">项目地址</string>
     <string name="Tips">提示</string>
@@ -40,25 +40,25 @@
     <string name="VerExplanation">版本说明</string>
     <string name="Done">完成</string>
     <string name="CurrentVer">当前版本</string>
-    <string name="VerExp">适用情况：\n
-        - APlayer 未知 ~ 1.5.7.9（状态栏歌词版）\n
-        - QQ音乐 未知 ~ 现今（状态栏歌词版）\n
-        - 咪咕音乐 未知 ~ 现今（状态栏歌词版）\n
-        - 网易云音乐 8.2.10 ~ 现今（状态栏歌词版）\n
-        - 网易云音乐 未知 ~ 8.0.40 (车载蓝牙歌词版)\n
+    <string name="VerExp">适用情况\n
+        - APlayer 未知 ~ 1.5.7.9(状态栏歌词版)\n
+        - QQ 音乐 未知 ~ 当前(状态栏歌词版)\n
+        - 咪咕音乐 未知 ~ 当前(状态栏歌词版)\n
+        - 网易云音乐 8.2 10 ~ 当前(状态栏歌词版)\n
+        - 网易云音乐 未知 ~ 8.0 40(车载蓝牙歌词版)\n
         - 酷狗音乐 未知 ~ 11.1.5(车载蓝牙歌词版)\n
-        - 酷狗音乐概念版 未知 ~ 2.4.5(车载蓝牙歌词版)\n
+        - 酷狗音乐 (概念版) 未知 ~ 2.4.5 (车载蓝牙歌词版)\n
         - 酷我音乐 未知 ~ 10.1.1.0(车载蓝牙歌词版)\n
-        - 椒盐音乐 4.5 ~ 现今（API 版）\n
-        - 魅族音乐 未知 ~ 现今（状态栏歌词版）\n
-        - 小米音乐 4.6.0 ~ 现今 (车载蓝牙歌词版)
+        - 椒盐音乐 4.5 ~ 当前(API 版)\n
+        - 魅族音乐 未知 ~ 当前(状态栏歌词版)\n
+        - 小米音乐 4.6.0 ~ 当前(车载蓝牙歌词版)
     </string>
     <string name="AppName">墨•状态栏歌词</string>
     <string name="QuickTitle">状态栏歌词</string>
     <string name="XposedTips">如果无法显示歌词，请尝试结束运行音乐软件并重启系统界面\n或查看「适用版本」，检查自己是否使用正确版本</string>
     <string name="NewVer">发现新版本</string>
     <string name="Update">更新</string>
-    <string name="GetNewVerError">获取最新版下载地址失败: </string>
+    <string name="GetNewVerError">无法获取最新版本下载地址：</string>
     <string name="Cancel">取消</string>
     <string name="NoVerUpdate">无新版可更新</string>
     <string name="CheckUpdateError">检查失败，请稍后再试</string>
@@ -71,7 +71,7 @@
     <string name="LyricColorTips">请输入 16 进制颜色代码，例如: #C0C0C0</string>
     <string name="LyricColorError">颜色代码不正确!</string>
     <string name="InputError">输入范围不正确！</string>
-    <string name="LyricPosTips">-900~900（单位：像素点）</string>
+    <string name="LyricPosTips">-900~900（单位：像素）</string>
     <string name="LyricHighTips">-100~100（单位：像素）</string>
     <string name="Ok">确定</string>
     <string name="HookSetTips">已设置 Hook 为:\n</string>
@@ -105,7 +105,7 @@
     <string name="LyricSize">歌词大小</string>
     <string name="IconSize">图标大小</string>
     <string name="LyricSizeTips">0~50</string>
-    <string name="LyricTips">-1%~100%</string>
+    <string name="LyricTips">-1%~100%，当前:</string>
     <string name="Test">模块测试</string>
     <string name="TestDialogTips">此功能内嵌于 SystemUI，可能会导致 SystemUI 崩溃重启。</string>
     <string name="Start">启动</string>
@@ -120,8 +120,8 @@
     <string name="HookSureFail">Hook 系统界面失败\n此系统不支持模块工作，打包 SystemUI 发作者吧</string>
     <string name="First">控件首</string>
     <string name="Latest">控件尾</string>
-    <string name="LyricViewPosition">* 歌词控件添加位置</string>
-    <string name="CustomizePosition">* 自定义文字控件添加位置</string>
+    <string name="LyricViewPosition">* 歌词控件位置</string>
+    <string name="CustomizePosition">* 自定义文本控件位置</string>
     <string name="Menu">菜单</string>
     <string name="CheckUpdate">检查更新</string>
     <string name="Backup">备份配置</string>
@@ -135,7 +135,7 @@
     <string name="DeleteFoneFail">删除自定义字体失败</string>
     <string name="ChooseFont">选择字体</string>
     <string name="Reset">恢复默认</string>
-    <string name="FontWeight">* 字体粗细</string>
+    <string name="FontWeight">* 字重</string>
     <string name="LyricSpacing">歌词间距</string>
     <string name="ReverseColorTime">普通反色时间</string>
     <string name="ReverseColorTimeTips">1–3000（单位：毫秒）</string>
@@ -146,13 +146,13 @@
     <string name="MakeIcon">制作图标</string>
     <string name="MakeIconError">无法跳转，请检查是否安装\n爱玩机工具箱</string>
     <string name="DelayedLoading">延迟加载</string>
-    <string name="FirstTip">本模块使用 Microsoft AppCenter 统计或采集月活动、崩溃数据。收集的数据与本模块无关</string>
+    <string name="FirstTip">本模块使用 Microsoft AppCenter 统计或采集月活动、崩溃数据。收集的数据与本模块无关    </string>
     <string name="TitleTips1">反馈日志请不要截图\n在 LSPosed 右上角保存为文件反馈</string>
     <string name="TitleTips2">带 * 的功能改动后需要重启系统界面</string>
     <string name="TitleTips3">水平滚动条上方的标题是可以点击手动输入范围的哟</string>
     <string name="CustomizeText">自定义文本</string>
-    <string name="BlockLyricTips">使用关键词或正则表达式屏蔽歌词</string>
+    <string name="BlockLyricTips">使用关键字或正则表达式来掩盖歌词</string>
     <string name="BlockLyric">屏蔽歌词</string>
-    <string name="BlockLyricMode">是否为正则表达式</string>
-    <string name="BlockLyricOff">屏蔽歌词是否取消显示</string>
+    <string name="BlockLyricMode">正则表达式</string>
+    <string name="BlockLyricOff">是否取消显示被屏蔽的歌词</string>
 </resources>
