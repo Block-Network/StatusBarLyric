@@ -48,9 +48,8 @@ object ActivityUtils {
     @JvmStatic
     fun showToastOnLooper(context: Context, message: String) {
         try {
-            handler.post {
-//                XToast.makeToast(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
-                XToast.makeText(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+            handler.post { //                XToast.makeToast(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+                XToast.makeText(context, message, toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
             }
         } catch (e: RuntimeException) {
             e.printStackTrace()
@@ -119,7 +118,9 @@ object ActivityUtils {
         val handler = Handler(Looper.getMainLooper()) { message: Message ->
             try {
                 val jsonObject = JSONObject(message.data.getString("value")!!)
-                if (jsonObject.getInt("versionCode") == BuildConfig.VERSION_CODE) {
+                val minVersionCode = jsonObject.getInt("minVersionCode")
+                val maxVersionCode = jsonObject.getInt("maxVersionCode")
+                if (BuildConfig.VERSION_CODE in minVersionCode..maxVersionCode) {
                     if (jsonObject.getBoolean("forcibly")) {
                         MIUIDialog(activity) {
                             setTitle(activity.getString(R.string.NewNotice))
