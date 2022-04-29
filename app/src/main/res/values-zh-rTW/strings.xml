@@ -152,6 +152,7 @@
     <string name="TitleTips1">反饋日誌請不要截圖\nLsp右上角保存成文件反饋</string>
     <string name="TitleTips2">帶 * 的功能改動需要重啟系統界面</string>
     <string name="TitleTips3">水平滾動條上方的標題是可以點擊手動輸入範圍的喲</string>
+    <string name="TitleTips4">如果你覺得本模塊好用，不妨支持一下</string>
     <string name="CustomizeText">自定義文本</string>
     <string name="BlockLyricTips">使用關鍵字或規則運算式遮罩歌詞</string>
     <string name="BlockLyric">遮罩歌詞</string>

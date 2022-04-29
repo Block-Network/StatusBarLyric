@@ -170,6 +170,7 @@
     </string>
     <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
     <string name="TitleTips3">The title above the horizontal scroll bar can be clicked to manually enter the range</string>
+    <string name="TitleTips4">If you think this module is easy to use, please support it</string>
     <string name="CustomizeText">Customize Text</string>
     <string name="BlockLyricTips">Use keywords or regular expressions to mask lyrics</string>
     <string name="BlockLyric">Block lyrics</string>

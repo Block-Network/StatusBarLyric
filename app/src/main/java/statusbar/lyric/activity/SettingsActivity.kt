@@ -92,7 +92,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }, colorId = android.R.color.holo_blue_dark))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Manual, onClickListener = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") }, colorId = android.R.color.holo_red_dark))
-                val givenList = listOf(getString(R.string.TitleTips1), getString(R.string.TitleTips2), getString(R.string.TitleTips3), getString(R.string.FirstTip))
+                val givenList = listOf(getString(R.string.TitleTips1), getString(R.string.TitleTips2), getString(R.string.TitleTips3), getString(R.string.TitleTips4), getString(R.string.FirstTip))
                 TitleText(text = givenList[Random().nextInt(givenList.size)])
                 Line()
                 TitleText(resId = R.string.BaseSetting)
@@ -920,7 +920,6 @@ class SettingsActivity : MIUIActivity() {
                     }
                     add("Afdian") { ActivityUtils.openUrl(activity, "https://afdian.net/@xiao_wine") }
                 })
-                TextSummaryArrow(TextSummaryV(textId = R.string.Donate, onClickListener = { ActivityUtils.openUrl(activity, "https://fkj2005.gitee.io/merger/") }))
                 Text()
             }
         }
