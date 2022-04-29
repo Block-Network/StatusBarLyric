@@ -939,7 +939,7 @@ class SettingsActivity : MIUIActivity() {
             if (BuildConfig.DEBUG) {
                 ActivityOwnSP.ownSPConfig.setDebug(true)
             }
-            AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
+
             Timer().schedule(UpdateConfigTask(), 0, 1000)
 
             if (ActivityOwnSP.ownSPConfig.getIsFirst()) {
@@ -948,6 +948,10 @@ class SettingsActivity : MIUIActivity() {
                     setMessage(R.string.FirstTip)
                     setRButton(R.string.Ok) {
                         ActivityOwnSP.ownSPConfig.setIsFirst(false)
+                        ActivityUtils.getNotice(activity)
+                        AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
+                        Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
+                        Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
                         dismiss()
                     }
                     setLButton(R.string.Cancel) {
@@ -957,7 +961,7 @@ class SettingsActivity : MIUIActivity() {
                     setCancelable(false)
                 }.show()
             } else {
-                ActivityUtils.getNotice(activity)
+                AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
                 Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
                 Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
             }
