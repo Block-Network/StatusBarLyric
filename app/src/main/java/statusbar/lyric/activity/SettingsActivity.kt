@@ -947,10 +947,7 @@ class SettingsActivity : MIUIActivity() {
                     setMessage(R.string.FirstTip)
                     setRButton(R.string.Ok) {
                         ActivityOwnSP.ownSPConfig.setIsFirst(false)
-                        ActivityUtils.getNotice(activity)
-                        AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
-                        Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
-                        Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
+                        init()
                         dismiss()
                     }
                     setLButton(R.string.Cancel) {
@@ -960,9 +957,7 @@ class SettingsActivity : MIUIActivity() {
                     setCancelable(false)
                 }.show()
             } else {
-                AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
-                Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
-                Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
+                init()
             }
         }
     }
@@ -1098,5 +1093,13 @@ class SettingsActivity : MIUIActivity() {
             }.show()
             false
         }
+    }
+
+    private fun init() {
+        ActivityUtils.getNotice(activity)
+        AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
+        Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
+        Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
+
     }
 }
