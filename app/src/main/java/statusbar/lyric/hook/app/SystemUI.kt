@@ -99,6 +99,7 @@ class SystemUI : BaseHook() {
     private lateinit var updateLyric: Handler
     private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
+    lateinit var updateIconMargins: Handler
 
     // Color data
     private var textColor: Int = 0
@@ -401,6 +402,11 @@ class SystemUI : BaseHook() {
             true
         }
 
+        updateIconMargins = Handler(Looper.getMainLooper()) { message ->
+            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(0, message.arg1, 0, 0)
+            true
+        }
+
         updateTextColor = Handler(Looper.getMainLooper()) { message ->
             lyricSwitchView.setTextColor(message.arg1)
             customizeView.setTextColor(message.arg1)
@@ -531,6 +537,9 @@ class SystemUI : BaseHook() {
             it.arg1 = config.getLyricPosition()
             it.arg2 = config.getLyricHigh()
         })
+        updateIconMargins.sendMessage(updateMargins.obtainMessage().also {
+            it.arg1 = config.getIconHigh()
+        })
         if (config.getIconSize() != 0) {
             (iconView.layoutParams as LinearLayout.LayoutParams).apply { // set icon size
                 width = config.getIconSize()
@@ -540,15 +549,14 @@ class SystemUI : BaseHook() {
         if (config.getLyricSize() != 0) {
             lyricSwitchView.setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, config.getLyricSize().toFloat())
         }
-        if (config.getCustomizeText() != "") {
-            customizeView.text = config.getCustomizeText()
-        }
-
+        customizeView.text = config.getCustomizeText()
         if (config.getBackgroundColor() != "") {
             lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
         } else {
             lyricLayout.setBackgroundColor(0)
         }
+        lyricSwitchView.setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
+        customizeView.letterSpacing = if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
 
     }
 
