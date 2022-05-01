@@ -54,7 +54,7 @@
         - 小米音乐 4.6.0 ~ 现今 (车载蓝牙歌词版)
     </string>
     <string name="AppName">墨•状态栏歌词</string>
-    <string name="QuickTitle">状态栏歌词</string>
+    <string name="QuickTitle">墨•状态栏歌词</string>
     <string name="XposedTips">如果无法显示歌词，请尝试结束运行音乐软件并重启系统界面\n或查看「适用版本」，检查自己是否使用正确版本</string>
     <string name="NewVer">发现新版本</string>
     <string name="Update">更新</string>
