@@ -170,7 +170,7 @@ class SettingsActivity : MIUIActivity() {
                 Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
                 TitleText(resId = R.string.BuildTime)
                 val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault())
-                val buildTime = simpleDateFormat.format(Date(BuildConfig.BUILD_TIME))
+                val buildTime = simpleDateFormat.format(BuildConfig.BUILD_TIME.toLong())
                 Text(buildTime)
 
             }

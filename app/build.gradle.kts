@@ -7,7 +7,7 @@ plugins {
 
 android {
     compileSdk = 32
-
+    val buildTime=System.currentTimeMillis()
     defaultConfig {
         applicationId = "statusbar.lyric"
         minSdk = 26
@@ -16,7 +16,7 @@ android {
         versionName = "5.2.5"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
-        buildConfigField("String", "BUILD_TIME", "\"${System.currentTimeMillis()}\"")
+        buildConfigField("String", "BUILD_TIME", "\"$buildTime\"")
     }
 
     buildTypes {
@@ -49,7 +49,7 @@ android {
     }
     applicationVariants.all {
         outputs.all {
-            (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName($versionCode)-$name.apk"
+            (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName($versionCode)-$name-$buildTime.apk"
         }
     }
 }
