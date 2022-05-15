@@ -156,4 +156,6 @@
     <string name="BlockLyric">屏蔽歌词</string>
     <string name="BlockLyricMode">是否为正则表达式</string>
     <string name="BlockLyricOff">屏蔽歌词是否取消显示</string>
+    <string name="ModuleVersion">模块版本</string>
+    <string name="BuildTime">编译时间</string>
 </resources>

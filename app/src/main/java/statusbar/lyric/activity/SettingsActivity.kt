@@ -55,6 +55,7 @@ import statusbar.lyric.R
 import statusbar.lyric.utils.*
 import statusbar.lyric.utils.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.utils.Utils.indexOfArr
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.system.exitProcess
 
@@ -165,8 +166,11 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }))
                 Line()
-                TitleText("Module Version")
+                TitleText(resId=R.string.ModuleVersion)
                 Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
+                TitleText(resId=R.string.BuildTime)
+                Text(SimpleDateFormat("yyyy-MM-dd HH:mm:ss ", Locale.getDefault()).format(BuildConfig.BUILD_TIME))
+
             }
 
             register("custom", getString(R.string.Custom), true) {

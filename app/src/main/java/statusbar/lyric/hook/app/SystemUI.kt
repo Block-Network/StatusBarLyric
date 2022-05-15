@@ -120,7 +120,7 @@ class SystemUI : BaseHook() {
                                 if (useSystemMusicActive && !audioManager.isMusicActive) {
                                     offLyric(LogMultiLang.pausePlay)
                                 }
-                            } 
+                            }
                             else {
                                 offLyric(LogMultiLang.playerOff)
                             }

@@ -158,4 +158,6 @@
     <string name="BlockLyric">遮罩歌詞</string>
     <string name="BlockLyricMode">是否為規則運算式</string>
     <string name="BlockLyricOff">遮罩歌詞是否取消顯示</string>
+    <string name="ModuleVersion">模塊版本</string>
+    <string name="BuildTime">編譯時間</string>
 </resources>
