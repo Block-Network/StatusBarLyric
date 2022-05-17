@@ -120,6 +120,7 @@ class SettingsActivity : MIUIActivity() {
                 }))
                 TextWithSwitch(TextV(resId = R.string.DebugMode), SwitchV("Debug"))
                 TextWithSwitch(TextV(text = "App Center"), SwitchV("AppCenter", true))
+                TextWithSwitch(TextV(resId = R.string.CheckUpdate), SwitchV("CheckUpdate", true))
                 TextSummaryArrow(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.ResetModuleDialog)
@@ -1109,6 +1110,7 @@ class SettingsActivity : MIUIActivity() {
 
     private fun init() {
         ActivityUtils.getNotice(activity)
+        if (ActivityOwnSP.ownSPConfig.getCheckUpdate()) ActivityUtils.checkUpdate(activity)
         AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
         Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
         Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")

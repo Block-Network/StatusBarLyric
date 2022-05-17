@@ -87,16 +87,16 @@ object ActivityUtils {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 } else {
-                    showToastOnLooper(activity, activity.getString(R.string.NoVerUpdate))
+                    if (BuildConfig.DEBUG) showToastOnLooper(activity, activity.getString(R.string.NoVerUpdate))
                 }
             } catch (ignored: JSONException) {
-                showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
+                if (BuildConfig.DEBUG) showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
             }
 
             true
         }
         Thread {
-            val value: String = getHttp("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
+            val value: String = getHttp("https://api.github.com/repos/Block-Network/StatusBarLyric/releases/latest")
             if (value != "") {
                 handler.obtainMessage().let {
                     it.data = Bundle().apply {
