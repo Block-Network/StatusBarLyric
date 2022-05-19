@@ -150,9 +150,12 @@
     <string name="TitleTips1">反馈日志请不要截图\n在 LSPosed 右上角保存为文件反馈</string>
     <string name="TitleTips2">带 * 的功能改动后需要重启系统界面</string>
     <string name="TitleTips3">水平滚动条上方的标题是可以点击手动输入范围的哟</string>
+    <string name="TitleTips4">如果您认为此模块更便于使用，请支持它一下</string>
     <string name="CustomizeText">自定义文本</string>
     <string name="BlockLyricTips">使用关键字或正则表达式来掩盖歌词</string>
     <string name="BlockLyric">屏蔽歌词</string>
     <string name="BlockLyricMode">正则表达式</string>
     <string name="BlockLyricOff">是否取消显示被屏蔽的歌词</string>
+    <string name="ModuleVersion">模块版本</string>
+    <string name="BuildTime">构建时间</string>
 </resources>
