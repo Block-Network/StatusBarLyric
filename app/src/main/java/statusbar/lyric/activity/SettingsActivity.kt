@@ -104,7 +104,7 @@ class SettingsActivity : MIUIActivity() {
                 TitleTextV(resId = R.string.About)
                 TextSummaryArrow(TextSummaryV("${getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClickListener = {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.StartCheckUpdate))
-                    ActivityUtils.checkUpdate(activity)
+                    ActivityUtils.getUpdate(activity)
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.AboutModule, onClickListener = { showFragment("about") }))
                 Text()
@@ -1110,7 +1110,7 @@ class SettingsActivity : MIUIActivity() {
 
     private fun init() {
         ActivityUtils.getNotice(activity)
-        if (ActivityOwnSP.ownSPConfig.getCheckUpdate()) ActivityUtils.checkUpdate(activity)
+        if (ActivityOwnSP.ownSPConfig.getCheckUpdate()) ActivityUtils.getUpdate(activity)
         AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
         Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
         Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")

@@ -36,6 +36,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
+import statusbar.lyric.utils.Utils.isNotNull
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
@@ -45,7 +46,6 @@ object ActivityUtils {
 
     // 弹出toast
     @Suppress("DEPRECATION")
-    @JvmStatic
     fun showToastOnLooper(context: Context, message: String) {
         try {
             handler.post { //                XToast.makeToast(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
@@ -57,15 +57,18 @@ object ActivityUtils {
     }
 
     //清除配置
-    @JvmStatic
     fun cleanConfig(activity: Activity) {
         ActivityOwnSP.ownSPConfig.clear()
         showToastOnLooper(activity, activity.getString(R.string.ResetSuccess))
         activity.finishActivity(0)
     }
 
+    fun openUrl(context: Context, url: String) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    }
+
     //检查更新
-    fun checkUpdate(activity: Activity) {
+    fun getUpdate(activity: Activity) {
         val handler = Handler(Looper.getMainLooper()) { message: Message ->
             val data: String = message.data.getString("value") as String
             try {
@@ -87,17 +90,17 @@ object ActivityUtils {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 } else {
-                    if (BuildConfig.DEBUG) showToastOnLooper(activity, activity.getString(R.string.NoVerUpdate))
+                    if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.NoVerUpdate))
                 }
             } catch (ignored: JSONException) {
-                if (BuildConfig.DEBUG) showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
+                if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
             }
 
             true
         }
         Thread {
-            val value: String = getHttp("https://api.github.com/repos/Block-Network/StatusBarLyric/releases/latest")
-            if (value != "") {
+            val value: String? = getHttp("https://api.github.com/repos/Block-Network/StatusBarLyric/releases/latest")
+            if (value.isNotNull()) {
                 handler.obtainMessage().let {
                     it.data = Bundle().apply {
                         putString("value", value)
@@ -105,13 +108,9 @@ object ActivityUtils {
                     handler.sendMessage(it)
                 }
             } else {
-                showToastOnLooper(activity, activity.getString(R.string.CheckUpdateFailed))
+                if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
             }
         }.start()
-    }
-
-    fun openUrl(context: Context, url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
     fun getNotice(activity: Activity) {
@@ -142,18 +141,20 @@ object ActivityUtils {
             false
         }
         Thread {
-            val value = getHttp("https://app.xiaowine.cc/app/notice.json")
-            if (value != "") {
+            val value: String? = getHttp("https://app.xiaowine.cc/app/notice.json")
+            if (value.isNotNull()) {
                 val message = handler.obtainMessage()
                 val bundle = Bundle()
                 bundle.putString("value", value)
                 message.data = bundle
                 handler.sendMessage(message)
+            }else {
+                if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.GetNewNoticeError))
             }
         }.start()
     }
 
-    private fun getHttp(Url: String): String {
+    private fun getHttp(Url: String): String? {
         try {
             val connection = URL(Url).openConnection() as java.net.HttpURLConnection
             connection.requestMethod = "GET"
@@ -163,6 +164,6 @@ object ActivityUtils {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return ""
+        return null
     }
 }

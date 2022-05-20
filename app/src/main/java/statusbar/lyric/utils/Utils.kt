@@ -293,4 +293,16 @@ object Utils {
         }
         return -1
     }
+
+    fun Any?.isNull(callback: () -> Unit) {
+        if (this == null) callback()
+    }
+    fun Any?.isNotNull(callback: () -> Unit) {
+        if (this != null) callback()
+    }
+
+    fun Any?.isNull() = this == null
+
+    fun Any?.isNotNull() = this != null
+
 }
