@@ -136,7 +136,7 @@ class SettingsActivity : MIUIActivity() {
                 }))
                 TextWithSwitch(TextV(resId = R.string.DebugMode), SwitchV("Debug"))
                 TextWithSwitch(TextV(text = "App Center"), SwitchV("AppCenter", true))
-                TextWithSwitch(TextV(resId = R.string.CheckUpdate), SwitchV("CheckUpdate", true)
+                TextWithSwitch(TextV(resId = R.string.CheckUpdate), SwitchV("CheckUpdate", true))
                 TextSummaryArrow(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.ResetModuleDialog)
