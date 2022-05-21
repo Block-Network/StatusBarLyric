@@ -689,7 +689,7 @@ class SettingsActivity : MIUIActivity() {
                     }, dataBindingRecv = iconDataBinding.binding.getRecv(iconList.indexOfArr(icon)))
                 }
                 TextSummaryArrow(TextSummaryV(textId = R.string.MakeIcon, onClickListener = {
-                    val componentName = ComponentName("com.by-young.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity")
+                    val componentName = ComponentName("com.byyoung.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity")
                     try {
                         activity.startActivity(Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity").apply {
                             putExtra("PackageName", componentName.packageName)
