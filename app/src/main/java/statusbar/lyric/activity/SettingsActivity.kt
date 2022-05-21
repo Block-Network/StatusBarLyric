@@ -27,7 +27,11 @@ package statusbar.lyric.activity
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -41,7 +45,12 @@ import android.widget.LinearLayout
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.DefValue
 import cn.fkj233.ui.activity.dp2px
-import cn.fkj233.ui.activity.view.*
+import cn.fkj233.ui.activity.view.RoundCornerImageView
+import cn.fkj233.ui.activity.view.SpinnerV
+import cn.fkj233.ui.activity.view.SwitchV
+import cn.fkj233.ui.activity.view.TextSummaryV
+import cn.fkj233.ui.activity.view.TextV
+import cn.fkj233.ui.activity.view.TitleTextV
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.fkj233.ui.switch.MIUISwitch
 import com.microsoft.appcenter.AppCenter
@@ -52,11 +61,18 @@ import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog
 import com.microsoft.appcenter.crashes.model.ErrorReport
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
-import statusbar.lyric.utils.*
+import statusbar.lyric.utils.ActivityOwnSP
 import statusbar.lyric.utils.ActivityOwnSP.updateConfigVer
+import statusbar.lyric.utils.ActivityUtils
+import statusbar.lyric.utils.BackupUtils
+import statusbar.lyric.utils.FileUtils
+import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.Utils.indexOfArr
+import statusbar.lyric.utils.Utils.isNotNull
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
+import kotlin.random.Random
 import kotlin.system.exitProcess
 
 class SettingsActivity : MIUIActivity() {
@@ -94,7 +110,7 @@ class SettingsActivity : MIUIActivity() {
                 }, colorId = android.R.color.holo_blue_dark))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Manual, onClickListener = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") }, colorId = android.R.color.holo_red_dark))
                 val givenList = listOf(getString(R.string.TitleTips1), getString(R.string.TitleTips2), getString(R.string.TitleTips3), getString(R.string.TitleTips4), getString(R.string.FirstTip))
-                TitleText(text = givenList[Random().nextInt(givenList.size)])
+                TitleText(text = givenList[Random.nextInt(givenList.size)])
                 Line()
                 TitleText(resId = R.string.BaseSetting)
                 TextWithSwitch(TextV(resId = R.string.AllSwitch), SwitchV("LService"))
@@ -121,6 +137,7 @@ class SettingsActivity : MIUIActivity() {
                 TextWithSwitch(TextV(resId = R.string.DebugMode), SwitchV("Debug"))
                 TextWithSwitch(TextV(text = "App Center"), SwitchV("AppCenter", true))
                 TextWithSwitch(TextV(resId = R.string.CheckUpdate), SwitchV("CheckUpdate", true))
+                TextWithSwitch(TextV(resId = R.string.lyricCount), SwitchV("lyricCount", true))
                 TextSummaryArrow(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.ResetModuleDialog)
@@ -673,7 +690,7 @@ class SettingsActivity : MIUIActivity() {
                     }, dataBindingRecv = iconDataBinding.binding.getRecv(iconList.indexOfArr(icon)))
                 }
                 TextSummaryArrow(TextSummaryV(textId = R.string.MakeIcon, onClickListener = {
-                    val componentName = ComponentName("com.byyoung.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity")
+                    val componentName = ComponentName("com.by-young.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity")
                     try {
                         activity.startActivity(Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity").apply {
                             putExtra("PackageName", componentName.packageName)
@@ -976,16 +993,16 @@ class SettingsActivity : MIUIActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (data != null && resultCode == RESULT_OK) {
+        if (data.isNotNull() && resultCode == RESULT_OK) {
             when (requestCode) {
                 BackupUtils.CREATE_DOCUMENT_CODE -> {
-                    BackupUtils.handleCreateDocument(activity, data.data)
+                    BackupUtils.handleCreateDocument(activity, data!!.data)
                 }
                 BackupUtils.OPEN_DOCUMENT_CODE -> {
-                    BackupUtils.handleReadDocument(activity, data.data)
+                    BackupUtils.handleReadDocument(activity, data!!.data)
                 }
                 OPEN_FONT_FILE -> {
-                    data.data?.let {
+                    data!!.data?.let {
                         activity.sendBroadcast(Intent().apply {
                             action = "Lyric_Server"
                             putExtra("Lyric_Type", "copy_font")

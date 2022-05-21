@@ -99,7 +99,7 @@ class SystemUI : BaseHook() {
     private lateinit var updateLyric: Handler
     private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
-    lateinit var updateIconMargins: Handler
+    private lateinit var updateIconMargins: Handler
 
     // Color data
     private var textColor: Int = 0
@@ -120,8 +120,7 @@ class SystemUI : BaseHook() {
                                 if (useSystemMusicActive && !audioManager.isMusicActive) {
                                     offLyric(LogMultiLang.pausePlay)
                                 }
-                            }
-                            else {
+                            } else {
                                 offLyric(LogMultiLang.playerOff)
                             }
                         } else {
@@ -196,6 +195,7 @@ class SystemUI : BaseHook() {
                 }
             }
             isHook = true
+            return@hookAfterMethod
         }.isNull {
             "com.android.systemui.statusbar.phone.ClockController".findClassOrNull()?.hookAfterAllConstructors(systemUIHook).isNull {
                 "com.android.systemui.statusbar.phone.CollapsedStatusBarFragment".hookAfterMethod("onViewCreated", View::class.java, Bundle::class.java, hooker = systemUIHook).isNull {
@@ -268,7 +268,7 @@ class SystemUI : BaseHook() {
             putExtra("app_Type", "Hook")
             putExtra("Hook", clock.isNotNull())
         })
-        if (clock == null) return
+        if (clock.isNull()) return
 
         // Lock Screen Receiver
         runCatching { application.unregisterReceiver(lockScreenReceiver) }
@@ -293,7 +293,7 @@ class SystemUI : BaseHook() {
 
 
 
-        clockParams = clock.layoutParams as LinearLayout.LayoutParams
+        clockParams = clock!!.layoutParams as LinearLayout.LayoutParams
 
         customizeView = TextView(application).apply {
             height = clock.height
@@ -387,7 +387,7 @@ class SystemUI : BaseHook() {
         }
 
         iconUpdate = Handler(Looper.getMainLooper()) { message ->
-            if (message.obj == null) {
+            if (message.obj.isNull()) {
                 iconView.visibility = View.GONE
                 iconView.setImageDrawable(null)
             } else {
@@ -423,7 +423,7 @@ class SystemUI : BaseHook() {
             val block = config.getBlockLyric()
             if (lyric == "") return@Handler true
             if (block != "") {
-                if (pattern == null) {
+                if (pattern.isNull()) {
                     if (lyric.contains(block)) {
                         if (config.getBlockLyricOff()) {
                             offLyric("BlockLyric")
@@ -557,13 +557,13 @@ class SystemUI : BaseHook() {
         }
         lyricSwitchView.setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
         customizeView.letterSpacing = if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
-
     }
 
-    private fun offLyric(info: String) { // off Lyric
+    private fun offLyric(info: String) {
+        // off Lyric
         LogUtils.e(info)
         stopTimer()
-        if (lyricLayout.visibility != View.GONE &&config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
+        if (lyricLayout.visibility != View.GONE && config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
     }
 
     fun updateLyric(lyric: String, icon: String) {
@@ -619,7 +619,7 @@ class SystemUI : BaseHook() {
     private fun startTimer(period: Long, timerTask: TimerTask) {
         timerQueue.forEach { task -> if (task == timerTask) return }
         timerQueue.add(timerTask)
-        if (timer == null) timer = Timer()
+        if (timer.isNull()) timer = Timer()
         timer?.schedule(timerTask, 0, period)
     }
 
@@ -649,8 +649,8 @@ class SystemUI : BaseHook() {
     private fun systemReverseColor() {
         try {
             val darkIconDispatcher = "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
-            if (darkIconDispatcher != null) {
-                val find = darkIconDispatcher.hookAfterAllMethods("getTint") {
+            if (darkIconDispatcher.isNotNull()) {
+                val find = darkIconDispatcher!!.hookAfterAllMethods("getTint") {
                     try {
                         setColor(it.args[2] as Int)
                     } catch (_: Throwable) {

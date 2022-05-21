@@ -28,13 +28,12 @@ import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.hook.BaseHook
-import statusbar.lyric.utils.AppCenterUtils
+import statusbar.lyric.utils.ktx.isNull
 
 class Api : BaseHook() {
     override fun hook() {
-        if ("StatusBarLyric.API.StatusBarLyric".findClassOrNull() == null) return
+        if ("StatusBarLyric.API.StatusBarLyric".findClassOrNull().isNull()) return
         super.hook()
         "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("hasEnable") {
             it.result = true

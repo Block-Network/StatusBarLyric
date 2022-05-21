@@ -34,7 +34,7 @@ class MainHook : IXposedHookLoadPackage {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         LogUtils.e("Debug enable")
         LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
-        LogUtils.e("This packName: " + lpparam.packageName)
+        LogUtils.e("This packName: ${lpparam.packageName}")
         init(lpparam)
 
         val hook = when (lpparam.packageName) {

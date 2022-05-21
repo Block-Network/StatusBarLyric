@@ -46,6 +46,7 @@ import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
+import statusbar.lyric.utils.ktx.isNotNull
 import statusbar.lyric.utils.ktx.lpparam
 import java.lang.reflect.Method
 import java.lang.reflect.Parameter
@@ -91,7 +92,7 @@ class Netease : BaseHook() {
                 idMAIN -> {
                     intent.action = action + "PLAY"
                     intent.putExtra("fromMAIN", s)
-                    if (context != null) {
+                    if (context.isNotNull()) {
                         context?.sendBroadcast(intent)
                     } else {
                         LogUtils.e("${client}尝试发送Broadcast，但context为null")
@@ -100,7 +101,7 @@ class Netease : BaseHook() {
                 idPLAY -> {
                     intent.action = action + "MAIN"
                     intent.putExtra("fromPLAY", s)
-                    if (context != null) {
+                    if (context.isNotNull()) {
                         context?.sendBroadcast(intent)
                     } else {
                         LogUtils.e("${client}尝试发送Broadcast，但context为null")
@@ -238,7 +239,7 @@ class Netease : BaseHook() {
                         appLog = try {
                             "android.support.v4.media.MediaMetadataCompat\$Builder".hookAfterMethod("putString", String::class.java, String::class.java) { it1 ->
                                 if (it1.args[0].toString() == "android.media.metadata.TITLE") {
-                                    if (it1.args[1] != null) {
+                                    if (it1.args[1].isNotNull()) {
                                         Utils.sendLyric(context, it1.args[1].toString(), "Netease")
                                         LogUtils.e("网易云通用： " + it1.args[1].toString())
                                     }
@@ -317,8 +318,8 @@ class Netease : BaseHook() {
                 }
             }
 
-            if (originalText != null) {
-                titleView.setTextColor(originalText.textColors)
+            if (originalText.isNotNull()) {
+                titleView.setTextColor(originalText!!.textColors)
                 titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, originalText.textSize)
                 titleView.setPadding(if (originalText.paddingLeft == 0) Utils.dp2px(context, 10F) else originalText.paddingLeft, 0, 0, 0)
                 subView?.setTextColor(originalText.textColors)

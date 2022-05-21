@@ -17,10 +17,10 @@ import com.microsoft.appcenter.ingestion.models.Device
 import com.microsoft.appcenter.ingestion.models.WrapperSdk
 import com.microsoft.appcenter.utils.DeviceInfoHelper
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.utils.ktx.hookAfterMethod
 import statusbar.lyric.utils.ktx.hookAllMethods
+import statusbar.lyric.utils.ktx.isNull
 import statusbar.lyric.utils.ktx.lpparam
 
 class AppCenterUtils(appCenterKey: String) {
@@ -106,7 +106,7 @@ class AppCenterUtils(appCenterKey: String) {
 
         override fun getErrorAttachments(report: ErrorReport): MutableIterable<ErrorAttachmentLog> {
             val targetPackageInfo = getTargetPackageInfo(application)
-            val info = if (targetPackageInfo == null) "null" else "StatusbarLyric: ${targetPackageInfo.packageName} - ${targetPackageInfo.versionName}"
+            val info = if (targetPackageInfo.isNull()) "null" else "StatusbarLyric: ${targetPackageInfo!!.packageName} - ${targetPackageInfo.versionName}"
             val textLog = ErrorAttachmentLog.attachmentWithText("$info\nModule: ${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}", "debug.txt")
             return mutableListOf(textLog)
         }

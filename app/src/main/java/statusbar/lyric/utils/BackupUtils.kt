@@ -27,6 +27,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import org.json.JSONObject
+import statusbar.lyric.utils.Utils.isNotNull
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.InputStreamReader
@@ -75,7 +76,7 @@ object BackupUtils {
                 BufferedReader(InputStreamReader(loadFile)).apply {
                     val sb = StringBuffer()
                     var line = readLine()
-                    while (line != null) {
+                    while (line.isNotNull()) {
                         sb.append(line)
                         line = readLine()
                     }

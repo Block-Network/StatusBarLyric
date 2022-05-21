@@ -23,6 +23,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.widget.TextView
+import statusbar.lyric.utils.Utils.isNotNull
 import kotlin.math.abs
 
 @SuppressLint("ViewConstructor")
@@ -57,13 +58,13 @@ class LyricTextView constructor(context: Context, attrs: AttributeSet? = null, d
     }
 
     override fun setTextColor(color: Int) {
-        if (mPaint != null) mPaint.color = color
+        if (mPaint.isNotNull()) mPaint!!.color = color
         postInvalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
         var mSpeed = speed
-        if (text != null) {
+        if (text.isNotNull()) {
             if (getText().length <= 20 && System.currentTimeMillis() - time <= 1500) {
                 val y = height / 2 + abs(mPaint!!.ascent() + mPaint.descent()) / 2
                 canvas.drawText(text!!, xx, y, mPaint)
@@ -73,7 +74,7 @@ class LyricTextView constructor(context: Context, attrs: AttributeSet? = null, d
                 mSpeed += mSpeed
             }
         }
-        if (text != null) {
+        if (text.isNotNull()) {
             val y = height / 2 + abs(mPaint!!.ascent() + mPaint.descent()) / 2
             canvas.drawText(text!!, xx, y, mPaint)
         }

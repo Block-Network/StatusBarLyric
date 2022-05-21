@@ -33,6 +33,8 @@ import android.os.Environment
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
+import statusbar.lyric.utils.Utils.isNotNull
+import statusbar.lyric.utils.Utils.isNull
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -48,7 +50,7 @@ class FileUtils(private val context: Context) {
      * @return boolean 成功true、失败false
      */
     fun copyFile(src: File?, destPath: String?, destFileName: String): String {
-        if (src == null || destPath == null) {
+        if (src.isNull() || destPath.isNull()) {
             return "Param error"
         }
         val dest = File(destPath, destFileName)
@@ -89,11 +91,11 @@ class FileUtils(private val context: Context) {
             return uri.path
         } // 版本兼容的获取！
         var path = getFilePathByUriBELOWAPI11(uri)
-        if (path != null) {
+        if (path.isNotNull()) {
             return path
         }
         path = getFilePathByUriAPI11to18(uri)
-        if (path != null) {
+        if (path.isNotNull()) {
             return path
         }
         path = getFilePathByUriAPI19(uri)
@@ -105,8 +107,8 @@ class FileUtils(private val context: Context) {
             var path: String? = null
             val projection = arrayOf(MediaStore.Images.Media.DATA)
             val cursor = context.contentResolver.query(uri, projection, null, null, null)
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
+            if (cursor.isNotNull()) {
+                if (cursor!!.moveToFirst()) {
                     val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
                     if (columnIndex > -1) {
                         path = cursor.getString(columnIndex)
@@ -124,7 +126,7 @@ class FileUtils(private val context: Context) {
         var result: String? = null
         val cursorLoader = CursorLoader(context, contentUri, projection, null, null, null)
         val cursor = cursorLoader.loadInBackground()
-        if (cursor != null) {
+        if (cursor.isNotNull()) {
             val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             cursor.moveToFirst()
             result = cursor.getString(columnIndex)
@@ -169,9 +171,9 @@ class FileUtils(private val context: Context) {
                         e.printStackTrace()
                     }
                     var path = getDataColumn(contentUri, null, null)
-                    if (path != null) return path // 兼容某些特殊情况下的文件管理器!
+                    if (path.isNotNull()) return path // 兼容某些特殊情况下的文件管理器!
                     val fileName = getFileNameByUri(uri)
-                    if (fileName != null) {
+                    if (fileName.isNotNull()) {
                         path = Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName
                         return path
                     }
@@ -202,10 +204,10 @@ class FileUtils(private val context: Context) {
 
     private fun getFileNameByUri(uri: Uri): String? {
         var relativePath = getFileRelativePathByUriAPI18(uri)
-        if (relativePath == null) relativePath = ""
+        if (relativePath .isNull()) relativePath = ""
         val projection = arrayOf(MediaStore.MediaColumns.DISPLAY_NAME)
         context.contentResolver.query(uri, projection, null, null, null).use { cursor ->
-            if (cursor != null && cursor.moveToFirst()) {
+            if (cursor.isNotNull() && cursor!!.moveToFirst()) {
                 val index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME)
                 return relativePath + cursor.getString(index)
             }
@@ -218,7 +220,7 @@ class FileUtils(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             projection = arrayOf(MediaStore.MediaColumns.RELATIVE_PATH)
             context.contentResolver.query(uri, projection, null, null, null).use { cursor ->
-                if (cursor != null && cursor.moveToFirst()) {
+                if (cursor.isNotNull() && cursor!!.moveToFirst()) {
                     val index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.RELATIVE_PATH)
                     return cursor.getString(index)
                 }
@@ -232,7 +234,7 @@ class FileUtils(private val context: Context) {
         val projection = arrayOf(column)
         try {
             context.contentResolver.query(uri!!, projection, selection, selectionArgs, null).use { cursor ->
-                if (cursor != null && cursor.moveToFirst()) {
+                if (cursor.isNotNull() && cursor!!.moveToFirst()) {
                     val columnIndex = cursor.getColumnIndexOrThrow(column)
                     return cursor.getString(columnIndex)
                 }
@@ -248,7 +250,7 @@ class FileUtils(private val context: Context) {
     }
 
     private fun isOtherDocument(uri: Uri?): Boolean { // 以/storage开头的也直接返回
-        if (uri != null && uri.path != null) {
+        if (uri.isNotNull() && uri!!.path.isNotNull()) {
             val path = uri.path
             if (path!!.startsWith("/storage")) {
                 return true
