@@ -42,6 +42,7 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.DefValue
 import cn.fkj233.ui.activity.dp2px
@@ -71,7 +72,6 @@ import statusbar.lyric.utils.Utils.indexOfArr
 import statusbar.lyric.utils.Utils.isNotNull
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
@@ -108,7 +108,17 @@ class SettingsActivity : MIUIActivity() {
                         }
                     }.show()
                 }, colorId = android.R.color.holo_blue_dark))
-                TextSummaryArrow(TextSummaryV(textId = R.string.Manual, onClickListener = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") }, colorId = android.R.color.holo_red_dark))
+
+                val tipsBinding = GetDataBinding(object : DefValue {
+                    override fun getValue(): Any {
+                        return ""
+                    }
+                }) { view, flags, data ->
+                    ActivityUtils.showToastOnLooper(activity, ((view as LinearLayout).getChildAt(1) as TextView).text.toString())
+                }
+
+                TextSummaryArrow(TextSummaryV(textId = R.string.Manual, tips = ActivityUtils.getHttp("https://app.xiaowine.cc/app/updateTime.txt") ?: "123", onClickListener = { ActivityUtils.openUrl(activity, "https://app.xiaowine.cc") }, colorId = android.R.color.holo_red_dark, dataBindingRecv = tipsBinding.binding.getRecv(2)))
+//                TextSummaryArrow(TextSummaryV(textId = R.string.Manual, tips = "ActivityUtils.getHttp(", colorId = android.R.color.holo_red_dark, dataBindingRecv = dataBinding.binding.getRecv(2)))
                 val givenList = listOf(getString(R.string.TitleTips1), getString(R.string.TitleTips2), getString(R.string.TitleTips3), getString(R.string.TitleTips4), getString(R.string.FirstTip))
                 TitleText(text = givenList[Random.nextInt(givenList.size)])
                 Line()
@@ -186,7 +196,7 @@ class SettingsActivity : MIUIActivity() {
                 TitleText(resId = R.string.ModuleVersion)
                 Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
                 TitleText(resId = R.string.BuildTime)
-                val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault())
+                val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 val buildTime = simpleDateFormat.format(BuildConfig.BUILD_TIME.toLong())
                 Text(buildTime)
 

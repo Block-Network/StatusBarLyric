@@ -154,7 +154,24 @@ object ActivityUtils {
         }.start()
     }
 
-    private fun getHttp(Url: String): String? {
+    fun getTips(activity: Activity) {
+        val handler = Handler(Looper.getMainLooper()) { message: Message ->
+
+            false
+        }
+        Thread {
+            val value: String? = getHttp("https://app.xiaowine.cc/app/updateTime.txt")
+            if (value.isNotNull()) {
+                val message = handler.obtainMessage()
+                val bundle = Bundle()
+                bundle.putString("value", value)
+                message.data = bundle
+                handler.sendMessage(message)
+            }
+        }.start()
+    }
+
+    fun getHttp(Url: String): String? {
         try {
             val connection = URL(Url).openConnection() as java.net.HttpURLConnection
             connection.requestMethod = "GET"
