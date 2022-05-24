@@ -42,7 +42,6 @@ import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.data.DefValue
 import cn.fkj233.ui.activity.dp2px
