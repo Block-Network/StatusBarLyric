@@ -140,6 +140,10 @@ class Config {
         return config.optBoolean("LSwitch", false)
     }
 
+    fun getCheckUpdate(): Boolean {
+        return config.optBoolean("CheckUpdate", false)
+    }
+
     fun getHNoticeIcon(): Boolean {
         return config.optBoolean("HNoticeIcon", false)
     }

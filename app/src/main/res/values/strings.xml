@@ -5,11 +5,11 @@
     <string name="BaseSetting">Basic Settings</string>
     <string name="AllSwitch">Master switch</string>
     <string name="SongPauseCloseLyrics" >Song Pause Close Lyrics</string>
-    <string name="LyricWidth">Lyric width</string>
+    <string name="LyricWidth">Lyrics width</string>
     <string name="Off">Off</string>
     <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
     <string name="LyricsAnimation">Lyrics animation</string>
-    <string name="LyricColor">Lyric color</string>
+    <string name="LyricColor">Lyrics color</string>
     <string name="BackgroundColor">Background color</string>
     <string name="IconColor">Icon color</string>
     <string name="LyricIcon">Lyrics icon</string>
@@ -18,7 +18,7 @@
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
     <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconHigh">Icon up and down position</string>
-    <string name="LyricPos">* Left and right positions of lyrics
+    <string name="LyricPos">Left and right positions of lyrics
     </string>
     <string name="Default">Default</string>
     <string name="UnlockShow">Unlock display only</string>
@@ -46,13 +46,13 @@
         - QQMusic Unknown ~ now(Status bar lyrics version)\n
         - MiguMusic Unknown ~ now(Status bar lyrics version)\n
         - Netease 8.2 10 ~ now(Status bar lyrics version)\n
-        - Netease unknown ~ 8.0 40(Car Bluetooth Lyric Version)\n
-        - KugouMusic Unknown ~ 11.1.5(Car Bluetooth Lyric Version)\n
+        - Netease unknown ~ 8.0 40(Car Bluetooth Lyrics Version)\n
+        - KugouMusic Unknown ~ 11.1.5(Car Bluetooth Lyrics Version)\n
         - Kugou Music (Concept Version) Unknown ~ 2.4.5 (Car Bluetooth Lyrics Version)\n
-        - KuwoMusic Unknown ~ 10.1.1.0(Car Bluetooth Lyric Version)\n
+        - KuwoMusic Unknown ~ 10.1.1.0(Car Bluetooth Lyrics Version)\n
         - SaltPlayer 4.5 ~ now(API version)\n
         - MeizuMusic Unknown ~ now(Status bar lyrics version)\n
-        - MIUIPlayer 4.6.0 ~ now(Car Bluetooth Lyric Version)
+        - MIUIPlayer 4.6.0 ~ now(Car Bluetooth Lyrics Version)
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
@@ -112,8 +112,8 @@
     <string name="GetNewNoticeError">Get NewNotice Error</string>
     <string name="ResetSuccess">Reset successfully</string>
     <string name="MakeIconTitle">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
-    <string name="LyricHigh">* Lyrics up and down position</string>
-    <string name="LyricSize">* Lyrics Size</string>
+    <string name="LyricHigh">Lyrics up and down position</string>
+    <string name="LyricSize">Lyrics Size</string>
     <string name="IconSize">Icon Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
     <string name="LyricTips">-1%~100%, current:</string>
@@ -150,8 +150,8 @@
     <string name="DeleteFoneFail">Delete font fail</string>
     <string name="ChooseFont">Choose font</string>
     <string name="Reset">Reset</string>
-    <string name="FontWeight">Font weight</string>
-    <string name="LyricSpacing">Lyric spacing</string>
+    <string name="FontWeight">* Font weight</string>
+    <string name="LyricSpacing">Lyrics spacing</string>
     <string name="ReverseColorTime">Normal inversion time</string>
     <string name="ReverseColorTimeTips">1–3000 (unit: milliseconds)</string>
     <string name="AntiBurnTime">Burn-in move time</string>
@@ -170,10 +170,12 @@
     </string>
     <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
     <string name="TitleTips3">The title above the horizontal scroll bar can be clicked to manually enter the range</string>
+    <string name="TitleTips4">If you think this module is easy to use, please support it</string>
     <string name="CustomizeText">Customize Text</string>
     <string name="BlockLyricTips">Use keywords or regular expressions to mask lyrics</string>
     <string name="BlockLyric">Block lyrics</string>
     <string name="BlockLyricMode">Regular expression</string>
     <string name="BlockLyricOff">Whether to cancel the display of shielded lyrics</string>
-
+    <string name="ModuleVersion">Module Version</string>
+    <string name="BuildTime">Build Time</string>
 </resources>

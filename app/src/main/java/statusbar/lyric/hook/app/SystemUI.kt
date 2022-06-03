@@ -20,7 +20,7 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "DuplicatedCode")
 
 package statusbar.lyric.hook.app
 
@@ -99,6 +99,7 @@ class SystemUI : BaseHook() {
     private lateinit var updateLyric: Handler
     private lateinit var offLyric: Handler
     lateinit var updateMargins: Handler
+    private lateinit var updateIconMargins: Handler
 
     // Color data
     private var textColor: Int = 0
@@ -116,7 +117,7 @@ class SystemUI : BaseHook() {
                         if (config.getLyricService()) {
                             if (test) return
                             if (Utils.isServiceRunningList(application, musicServer)) {
-                                if (config.getLyricAutoOff() && useSystemMusicActive && !audioManager.isMusicActive) {
+                                if (useSystemMusicActive && !audioManager.isMusicActive) {
                                     offLyric(LogMultiLang.pausePlay)
                                 }
                             } else {
@@ -175,6 +176,10 @@ class SystemUI : BaseHook() {
     private val lockScreenReceiver by lazy { LockScreenReceiver() }
     private val lyricReceiver by lazy { LyricReceiver() }
 
+    // Hide icon
+    private var notificationIconContainer: FrameLayout? = null
+    private var notificationIconContainerLayoutParams: ViewGroup.LayoutParams? = null
+
     override fun hook() {
         super.hook()
         if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
@@ -190,6 +195,7 @@ class SystemUI : BaseHook() {
                 }
             }
             isHook = true
+            return@hookAfterMethod
         }.isNull {
             "com.android.systemui.statusbar.phone.ClockController".findClassOrNull()?.hookAfterAllConstructors(systemUIHook).isNull {
                 "com.android.systemui.statusbar.phone.CollapsedStatusBarFragment".hookAfterMethod("onViewCreated", View::class.java, Bundle::class.java, hooker = systemUIHook).isNull {
@@ -199,6 +205,10 @@ class SystemUI : BaseHook() {
                 }
             }
         }
+        if (!Utils.hasMiuiSetting) return // Hide Icon
+        "com.android.systemui.statusbar.phone.NotificationIconContainer".findClassOrNull()?.hookAfterAllConstructors {
+            notificationIconContainer = it.thisObject as FrameLayout
+        }.isNull { LogUtils.e("Not find NotificationIconContainer") }
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) { // Get system clock view
@@ -258,7 +268,7 @@ class SystemUI : BaseHook() {
             putExtra("app_Type", "Hook")
             putExtra("Hook", clock.isNotNull())
         })
-        if (clock == null) return
+        if (clock.isNull()) return
 
         // Lock Screen Receiver
         runCatching { application.unregisterReceiver(lockScreenReceiver) }
@@ -283,7 +293,7 @@ class SystemUI : BaseHook() {
 
 
 
-        clockParams = clock.layoutParams as LinearLayout.LayoutParams
+        clockParams = clock!!.layoutParams as LinearLayout.LayoutParams
 
         customizeView = TextView(application).apply {
             height = clock.height
@@ -377,7 +387,7 @@ class SystemUI : BaseHook() {
         }
 
         iconUpdate = Handler(Looper.getMainLooper()) { message ->
-            if (message.obj == null) {
+            if (message.obj.isNull()) {
                 iconView.visibility = View.GONE
                 iconView.setImageDrawable(null)
             } else {
@@ -389,6 +399,11 @@ class SystemUI : BaseHook() {
 
         updateMargins = Handler(Looper.getMainLooper()) { message ->
             (lyricLayout.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
+            true
+        }
+
+        updateIconMargins = Handler(Looper.getMainLooper()) { message ->
+            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(0, message.arg1, 0, 0)
             true
         }
 
@@ -408,7 +423,7 @@ class SystemUI : BaseHook() {
             val block = config.getBlockLyric()
             if (lyric == "") return@Handler true
             if (block != "") {
-                if (pattern == null) {
+                if (pattern.isNull()) {
                     if (lyric.contains(block)) {
                         if (config.getBlockLyricOff()) {
                             offLyric("BlockLyric")
@@ -449,6 +464,7 @@ class SystemUI : BaseHook() {
                 }
             }
             Utils.setStatusBar(application, false, config)
+            setNotificationIcon(false)
             lyricSwitchView.setText(lyric)
             true
         }
@@ -463,6 +479,7 @@ class SystemUI : BaseHook() {
                 clock.getObjectField("mListenerInfo")?.setObjectField("mOnClickListener", clockOnClickListener).isNull { clock.setOnClickListener(null) }
             }
             Utils.setStatusBar(application, true, config) // set miui statusbar
+            setNotificationIcon(true)
             true
         }
 
@@ -478,6 +495,20 @@ class SystemUI : BaseHook() {
             offLyric(LogMultiLang.initOk)
         }, config.getDelayedLoading().toLong() * 1000)
         LogUtils.e(LogMultiLang.sendLog)
+    }
+
+    private fun setNotificationIcon(isOpen: Boolean) {
+        if (Utils.hasMiuiSetting) return
+        if (!config.getHNoticeIcon()) return
+        if (!isOpen) {
+            notificationIconContainerLayoutParams = notificationIconContainer?.layoutParams
+            notificationIconContainer?.visibility = View.GONE
+            notificationIconContainer?.layoutParams = ViewGroup.LayoutParams(0, 0)
+        } else {
+            notificationIconContainer?.layoutParams = notificationIconContainerLayoutParams ?: FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+            notificationIconContainer?.visibility = View.VISIBLE
+            notificationIconContainerLayoutParams = null
+        }
     }
 
     private fun updateConfig() {
@@ -506,6 +537,9 @@ class SystemUI : BaseHook() {
             it.arg1 = config.getLyricPosition()
             it.arg2 = config.getLyricHigh()
         })
+        updateIconMargins.sendMessage(updateMargins.obtainMessage().also {
+            it.arg1 = config.getIconHigh()
+        })
         if (config.getIconSize() != 0) {
             (iconView.layoutParams as LinearLayout.LayoutParams).apply { // set icon size
                 width = config.getIconSize()
@@ -515,22 +549,21 @@ class SystemUI : BaseHook() {
         if (config.getLyricSize() != 0) {
             lyricSwitchView.setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, config.getLyricSize().toFloat())
         }
-        if (config.getCustomizeText() != "") {
-            customizeView.text = config.getCustomizeText()
-        }
-
+        customizeView.text = config.getCustomizeText()
         if (config.getBackgroundColor() != "") {
             lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
         } else {
             lyricLayout.setBackgroundColor(0)
         }
-
+        lyricSwitchView.setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
+        customizeView.letterSpacing = if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
     }
 
-    private fun offLyric(info: String) { // off Lyric
+    private fun offLyric(info: String) {
+        // off Lyric
         LogUtils.e(info)
         stopTimer()
-        if (lyricLayout.visibility != View.GONE) offLyric.sendEmptyMessage(0)
+        if (lyricLayout.visibility != View.GONE && config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
     }
 
     fun updateLyric(lyric: String, icon: String) {
@@ -586,7 +619,7 @@ class SystemUI : BaseHook() {
     private fun startTimer(period: Long, timerTask: TimerTask) {
         timerQueue.forEach { task -> if (task == timerTask) return }
         timerQueue.add(timerTask)
-        if (timer == null) timer = Timer()
+        if (timer.isNull()) timer = Timer()
         timer?.schedule(timerTask, 0, period)
     }
 
@@ -616,8 +649,8 @@ class SystemUI : BaseHook() {
     private fun systemReverseColor() {
         try {
             val darkIconDispatcher = "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
-            if (darkIconDispatcher != null) {
-                val find = darkIconDispatcher.hookAfterAllMethods("getTint") {
+            if (darkIconDispatcher.isNotNull()) {
+                val find = darkIconDispatcher!!.hookAfterAllMethods("getTint") {
                     try {
                         setColor(it.args[2] as Int)
                     } catch (_: Throwable) {

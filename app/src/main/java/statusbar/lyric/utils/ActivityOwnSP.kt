@@ -33,6 +33,8 @@ object ActivityOwnSP {
     val ownSPConfig by lazy { Config(ownSP) }
     private val ownEditor by lazy { ownSP.edit() }
 
+    const val version = 1
+
     fun set(key: String, any: Any) {
         when (any) {
             is Int -> ownEditor.putInt(key, any)
@@ -44,4 +46,11 @@ object ActivityOwnSP {
         ownEditor.apply()
     }
 
+    fun updateConfigVer() {
+        if (ownSP.getInt("ver", 0) < version) {
+            set("ver", version)
+            runCatching { set("LyricViewPosition", ownSP.getString("LyricViewPosition", "first") == "first") }
+            runCatching { set("CustomizeViewPosition", ownSP.getString("CustomizeViewPosition", "first") == "first") }
+        }
+    }
 }

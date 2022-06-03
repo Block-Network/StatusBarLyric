@@ -7,6 +7,8 @@ import android.os.IBinder
 import android.os.RemoteException
 import android.os.ServiceManager
 import android.util.Log
+import statusbar.lyric.utils.Utils.isNotNull
+import statusbar.lyric.utils.Utils.isNull
 
 object IPackageUtils {
     private var pm: IPackageManager? = null
@@ -31,18 +33,18 @@ object IPackageUtils {
     fun getPackageInfoFromAllUsers(packageName: String?, flags: Int): Map<Int?, PackageInfo?> {
         val pm = getPackageManager()
         val res: MutableMap<Int?, PackageInfo?> = HashMap()
-        if (pm == null) return res
+        if (pm.isNull()) return res
         for (user in UserService.users) {
             val info: PackageInfo? = getPackageInfo(packageName, flags, user.id)
-            if (info?.applicationInfo != null) res[user.id] = info
+            if (info?.applicationInfo.isNotNull()) res[user.id] = info
         }
         return res
     }
 
     private fun getPackageManager(): IPackageManager? {
-        if (binder == null && pm == null) {
+        if (binder.isNull() && pm .isNull()) {
             binder = ServiceManager.getService("package")
-            if (binder == null) return null
+            if (binder.isNull()) return null
             try {
                 binder?.linkToDeath(recipient, 0)
             } catch (e: RemoteException) {

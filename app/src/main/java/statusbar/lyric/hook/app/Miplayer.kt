@@ -8,6 +8,7 @@ import statusbar.lyric.utils.ktx.findClass
 import statusbar.lyric.utils.ktx.hookAfterConstructor
 import statusbar.lyric.utils.ktx.hookBeforeMethod
 import statusbar.lyric.utils.ktx.setReturnConstant
+import statusbar.lyric.utils.ktx.isNull
 
 class Miplayer : BaseHook() {
     private val songInfo = "com.tencent.qqmusic.core.song.SongInfo".findClass()
@@ -20,7 +21,7 @@ class Miplayer : BaseHook() {
             context = it.args[0] as Context
         }
         "com.tencent.qqmusiccommon.util.music.RemoteControlManager".hookBeforeMethod("updataMetaData", songInfo, String::class.java) {
-            val lyric = if (it.args[1] == null) return@hookBeforeMethod else it.args[1].toString()
+            val lyric = if (it.args[1].isNull()) return@hookBeforeMethod else it.args[1].toString()
             it.args[1] = null // 去除妙播显示歌词
             LogUtils.e("小米音乐: $lyric")
             Utils.sendLyric(context, lyric, "MiPlayer")
