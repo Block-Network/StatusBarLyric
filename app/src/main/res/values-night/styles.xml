@@ -11,7 +11,7 @@
         <item name="android:colorBackground">@color/black</item>
         <item name="android:statusBarColor">@color/black</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-        <item name="android:forceDarkAllowed" tools:targetApi="Q">true</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
     </style>
 
 

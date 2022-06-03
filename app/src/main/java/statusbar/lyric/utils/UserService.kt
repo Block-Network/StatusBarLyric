@@ -4,6 +4,8 @@ import android.content.pm.UserInfo
 import android.os.*
 import android.text.TextUtils
 import android.util.Log
+import statusbar.lyric.utils.Utils.isNotNull
+import statusbar.lyric.utils.Utils.isNull
 import java.util.*
 
 
@@ -20,9 +22,9 @@ object UserService {
     }
     private val userManager: IUserManager?
         get() {
-            if (binder == null && um == null) {
+            if (binder.isNull() && um.isNull()) {
                 binder = ServiceManager.getService("user")
-                if (binder == null) return null
+                if (binder.isNull()) return null
                 try {
                     binder?.linkToDeath(recipient, 0)
                 } catch (e: RemoteException) {
@@ -38,14 +40,14 @@ object UserService {
         get() {
             val um = userManager
             var users: MutableList<UserInfo> = LinkedList()
-            if (um == null) return users
+            if (um.isNotNull()) return users
             users = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                um.getUsers(true, true, true)
+                um!!.getUsers(true, true, true)
             } else {
                 try {
-                    um.getUsers(true)
+                    um!!.getUsers(true)
                 } catch (e: NoSuchMethodError) {
-                    um.getUsers(true, true, true)
+                    um!!.getUsers(true, true, true)
                 }
             }
             if (!TextUtils.isEmpty(SystemProperties.get("ro.lenovo.region"))) { // lenovo hides user [900, 910) for app cloning
@@ -55,8 +57,8 @@ object UserService {
                     if (residual in 0..9) gotUsers[residual] = true
                 }
                 for (i in 900..909) {
-                    val user = um.getUserInfo(i)
-                    if (user != null && !gotUsers[i - 900]) {
+                    val user = um!!.getUserInfo(i)
+                    if (user.isNotNull() && !gotUsers[i - 900]) {
                         users.add(user)
                     }
                 }
@@ -64,14 +66,4 @@ object UserService {
             return users
         }
 
-    fun getProfileParent(userId: Int): Int {
-        val um = userManager ?: return -1
-        val userInfo = um.getProfileParent(userId)
-        return userInfo?.id ?: userId
-    }
-
-    fun isUserUnlocked(userId: Int): Boolean {
-        val um = userManager ?: return false
-        return um.isUserUnlocked(userId)
-    }
 }

@@ -32,7 +32,7 @@ import statusbar.lyric.utils.XposedOwnSP.config
 
 object LogUtils {
     private const val maxLength = 4000
-    private val handler by lazy{ Handler(Looper.getMainLooper()) }
+    private val handler by lazy { Handler(Looper.getMainLooper()) }
     private const val TAG = "StatusBarLyric"
 
     @JvmStatic

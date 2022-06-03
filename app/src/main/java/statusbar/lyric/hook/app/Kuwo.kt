@@ -23,22 +23,23 @@
 package statusbar.lyric.hook.app
 
 import android.app.AndroidAppHelper
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
+import statusbar.lyric.utils.ktx.isNotNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
 
-class Kuwo(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(lpparam) {
-     override fun hook(){
-        "android.bluetooth.BluetoothAdapter".hookAfterMethod("isEnabled", classLoader = lpparam.classLoader) {
+class Kuwo : BaseHook() {
+    override fun hook() {
+        super.hook()
+        "android.bluetooth.BluetoothAdapter".hookAfterMethod("isEnabled") {
             it.result = true
         }
-        "cn.kuwo.mod.playcontrol.RemoteControlLyricMgr".hookAfterMethod("updateLyricText", String::class.java, classLoader = lpparam.classLoader) {
+        "cn.kuwo.mod.playcontrol.RemoteControlLyricMgr".hookAfterMethod("updateLyricText", String::class.java) {
             val str = it.args[0] as String
             LogUtils.e("酷我音乐:$str")
-            if (it.args[0] != null && str != "") {
+            if (it.args[0].isNotNull() && str != "") {
                 Utils.sendLyric(AndroidAppHelper.currentApplication(), "" + str, "KuWo")
             }
             it.result = null

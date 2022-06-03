@@ -30,64 +30,57 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.widget.Toast
+import app.xiaowine.xtoast.XToast
 import cn.fkj233.ui.dialog.MIUIDialog
 import org.json.JSONException
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
-import statusbar.lyric.config.Config
-import statusbar.lyric.utils.HttpUtils.Get
-
+import statusbar.lyric.utils.Utils.isNotNull
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.URL
 
 object ActivityUtils {
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     // 弹出toast
-    @JvmStatic
-    fun showToastOnLooper(context: Context?, message: String?) {
+    @Suppress("DEPRECATION")
+    fun showToastOnLooper(context: Context, message: String) {
         try {
-            handler.post { Toast.makeText(context, message, Toast.LENGTH_LONG).show() }
+            handler.post { //                XToast.makeToast(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+                XToast.makeText(context, message, toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+            }
         } catch (e: RuntimeException) {
             e.printStackTrace()
         }
     }
 
     //清除配置
-    @JvmStatic
     fun cleanConfig(activity: Activity) {
-        for (name in arrayOf("Lyric_Config", "AppList_Config", "Icon_Config")) {
-            Utils.getSP(activity, name)?.let { Config(it) }?.clear()
-        }
+        ActivityOwnSP.ownSPConfig.clear()
         showToastOnLooper(activity, activity.getString(R.string.ResetSuccess))
         activity.finishActivity(0)
     }
 
+    fun openUrl(context: Context, url: String) {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    }
+
     //检查更新
-    fun checkUpdate(activity: Activity) {
+    fun getUpdate(activity: Activity) {
         val handler = Handler(Looper.getMainLooper()) { message: Message ->
             val data: String = message.data.getString("value") as String
             try {
                 val jsonObject = JSONObject(data)
                 if (jsonObject.getString("tag_name").split("v").toTypedArray()[1].toInt() > BuildConfig.VERSION_CODE) {
                     MIUIDialog(activity) {
-                        setTitle(
-                            String.format(
-                                "%s [%s]",
-                                activity.getString(R.string.NewVer),
-                                jsonObject.getString("name")
-                            )
-                        )
+                        setTitle(String.format("%s [%s]", activity.getString(R.string.NewVer), jsonObject.getString("name")))
                         setMessage(jsonObject.getString("body").replace("#", ""))
                         setRButton(R.string.Update) {
                             try {
-                                val uri: Uri = Uri.parse(
-                                    jsonObject.getJSONArray("assets").getJSONObject(0)
-                                        .getString("browser_download_url")
-                                )
-                                val intent = Intent(
-                                    Intent.ACTION_VIEW, uri
-                                )
+                                val uri: Uri = Uri.parse(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
+                                val intent = Intent(Intent.ACTION_VIEW, uri)
                                 activity.startActivity(intent)
                             } catch (e: JSONException) {
                                 showToastOnLooper(activity, activity.getString(R.string.GetNewVerError) + e)
@@ -97,18 +90,17 @@ object ActivityUtils {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 } else {
-                    Toast.makeText(activity, activity.getString(R.string.NoVerUpdate), Toast.LENGTH_LONG).show()
+                    if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.NoVerUpdate))
                 }
             } catch (ignored: JSONException) {
-                showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
+                if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
             }
 
             true
         }
         Thread {
-            val value: String =
-                Get("https://api.github.com/repos/577fkj/StatusBarLyric/releases/latest")
-            if (value != "") {
+            val value: String? = getHttp("https://api.github.com/repos/Block-Network/StatusBarLyric/releases/latest")
+            if (value.isNotNull()) {
                 handler.obtainMessage().let {
                     it.data = Bundle().apply {
                         putString("value", value)
@@ -116,20 +108,18 @@ object ActivityUtils {
                     handler.sendMessage(it)
                 }
             } else {
-                showToastOnLooper(activity, activity.getString(R.string.CheckUpdateFailed))
+                if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
             }
         }.start()
-    }
-
-    fun openUrl(context: Context, url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
     fun getNotice(activity: Activity) {
         val handler = Handler(Looper.getMainLooper()) { message: Message ->
             try {
                 val jsonObject = JSONObject(message.data.getString("value")!!)
-                if (jsonObject.getInt("versionCode") == BuildConfig.VERSION_CODE) {
+                val minVersionCode = jsonObject.getInt("minVersionCode")
+                val maxVersionCode = jsonObject.getInt("maxVersionCode")
+                if (BuildConfig.VERSION_CODE in minVersionCode..maxVersionCode) {
                     if (jsonObject.getBoolean("forcibly")) {
                         MIUIDialog(activity) {
                             setTitle(activity.getString(R.string.NewNotice))
@@ -151,8 +141,27 @@ object ActivityUtils {
             false
         }
         Thread {
-            val value = Get("https://app.xiaowine.cc/app/notice.json")
-            if (value != "") {
+            val value: String? = getHttp("https://app.xiaowine.cc/app/notice.json")
+            if (value.isNotNull()) {
+                val message = handler.obtainMessage()
+                val bundle = Bundle()
+                bundle.putString("value", value)
+                message.data = bundle
+                handler.sendMessage(message)
+            }else {
+                if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.GetNewNoticeError))
+            }
+        }.start()
+    }
+
+    fun getTips(activity: Activity) {
+        val handler = Handler(Looper.getMainLooper()) { message: Message ->
+
+            false
+        }
+        Thread {
+            val value: String? = getHttp("https://app.xiaowine.cc/app/updateTime.txt")
+            if (value.isNotNull()) {
                 val message = handler.obtainMessage()
                 val bundle = Bundle()
                 bundle.putString("value", value)
@@ -160,5 +169,18 @@ object ActivityUtils {
                 handler.sendMessage(message)
             }
         }.start()
+    }
+
+    fun getHttp(Url: String): String? {
+        try {
+            val connection = URL(Url).openConnection() as java.net.HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.connectTimeout = 5000
+            val reader = BufferedReader(InputStreamReader(connection.inputStream))
+            return reader.readLine()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
     }
 }

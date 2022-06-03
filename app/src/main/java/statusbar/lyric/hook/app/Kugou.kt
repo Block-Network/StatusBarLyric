@@ -23,7 +23,6 @@
 package statusbar.lyric.hook.app
 
 import android.app.AndroidAppHelper
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
@@ -31,21 +30,21 @@ import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
 
-class Kugou(private val lpparam: XC_LoadPackage.LoadPackageParam): BaseHook(lpparam) {
+class Kugou(private val packageName: String) : BaseHook() {
     override fun hook() {
-        "android.media.AudioManager".hookAfterMethod("isBluetoothA2dpOn", classLoader = lpparam.classLoader) {
+        super.hook()
+        "android.media.AudioManager".hookAfterMethod("isBluetoothA2dpOn") {
             it.result = true
         }
-        "com.kugou.framework.player.c".hookAfterMethod("a", HashMap::class.java, classLoader = lpparam.classLoader) {
+        "com.kugou.framework.player.c".hookAfterMethod("a", HashMap::class.java) {
+            var iconName="KuGou"
+            if (packageName!="com.kugou.android"){
+                iconName="KuGouLite"
+            }
             LogUtils.e("酷狗音乐:" + (it.args[0] as HashMap<*, *>).values.toList()[0])
-            Utils.sendLyric(
-                AndroidAppHelper.currentApplication(),
-                "" + (it.args[0] as HashMap<*, *>).values.toList()[0],
-                "KuGou"
-            )
+            Utils.sendLyric(AndroidAppHelper.currentApplication(), "" + (it.args[0] as HashMap<*, *>).values.toList()[0], iconName)
         }
-        val tinkerApp = "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull(lpparam.classLoader)
-        tinkerApp?.hookAfterMethod("getTinkerFlags") {
+        "com.tencent.tinker.loader.app.TinkerApplication".findClassOrNull()?.hookAfterMethod("getTinkerFlags") {
             it.result = 0
         }
     }

@@ -28,38 +28,25 @@ import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.hook.BaseHook
-import statusbar.lyric.utils.AppCenterUtils
+import statusbar.lyric.utils.ktx.isNull
 
-class Api(private val lpparam: XC_LoadPackage.LoadPackageParam) {
-    fun hook() {
-        if ("StatusBarLyric.API.StatusBarLyric".findClassOrNull(lpparam.classLoader) == null) return
-        AppCenterUtils(Utils.appCenterKey, lpparam)
-        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("hasEnable", classLoader = lpparam.classLoader) {
+class Api : BaseHook() {
+    override fun hook() {
+        if ("StatusBarLyric.API.StatusBarLyric".findClassOrNull().isNull()) return
+        super.hook()
+        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("hasEnable") {
             it.result = true
         }
-        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("sendLyric", Context::class.java,
-            String::class.java,
-            String::class.java,
-            String::class.java,
-            Boolean::class.javaPrimitiveType, classLoader = lpparam.classLoader) {
+        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("sendLyric", Context::class.java, String::class.java, String::class.java, String::class.java, Boolean::class.javaPrimitiveType) {
             LogUtils.e("API: " + it.args[1])
-            Utils.sendLyric(
-                it.args[0] as Context,
-                it.args[1] as String,
-                it.args[2] as String,
-                it.args[4] as Boolean,
-                it.args[3] as String
-            )
+            Utils.sendLyric(it.args[0] as Context, it.args[1] as String, it.args[2] as String, it.args[4] as Boolean, it.args[3] as String)
         }
-        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("stopLyric", Context::class.java, classLoader = lpparam.classLoader) {
-            (it.args[0] as Context).sendBroadcast(
-                Intent().apply {
-                    action = "Lyric_Server"
-                    putExtra("Lyric_Type", "app_stop")
-                }
-            )
+        "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("stopLyric", Context::class.java) {
+            (it.args[0] as Context).sendBroadcast(Intent().apply {
+                action = "Lyric_Server"
+                putExtra("Lyric_Type", "app_stop")
+            })
         }
     }
 }
