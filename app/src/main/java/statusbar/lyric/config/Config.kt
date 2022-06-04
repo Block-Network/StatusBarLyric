@@ -205,7 +205,7 @@ class Config {
     }
 
     fun getCustomizeText(): String {
-        return config.optString("CustomizeText", "|")
+        return config.optString("CustomizeText", "")
     }
 
     fun setCustomizeText(str: String) {
