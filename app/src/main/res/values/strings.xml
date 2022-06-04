@@ -47,12 +47,12 @@
         - MiguMusic Unknown ~ now(Status bar lyrics version)\n
         - Netease 8.2 10 ~ now(Status bar lyrics version)\n
         - Netease unknown ~ 8.0 40(Car Bluetooth Lyrics Version)\n
-        - KugouMusic Unknown ~ 11.1.5(Car Bluetooth Lyrics Version)\n
-        - Kugou Music (Concept Version) Unknown ~ 2.4.5 (Car Bluetooth Lyrics Version)\n
-        - KuwoMusic Unknown ~ 10.1.1.0(Car Bluetooth Lyrics Version)\n
+        - Kugou Music Unknown ~ 11.1.9(Car Bluetooth Lyrics Version)\n
+        - Kugou Music (Concept Version) Unknown ~ 2.5.1(Car Bluetooth Lyrics Version)\n
+        - Kuwo Music Unknown ~ 10.1.3.0(Car Bluetooth Lyrics Version)\n
         - SaltPlayer 4.5 ~ now(API version)\n
         - MeizuMusic Unknown ~ now(Status bar lyrics version)\n
-        - MIUIPlayer 4.6.0 ~ now(Car Bluetooth Lyrics Version)
+        - MIUIPlayer 4.6.0 ~ 4.7.2.2(Car Bluetooth Lyrics Version)
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
@@ -94,8 +94,8 @@
 
         If the lyrics cannot be displayed\n
         Please restart the system interface and make sure the module switch is turned on\n
-        Please make sure to set the lyrics in the StatusBar or Bluetooth lyrics in the car to turn on in the music
-        software\n\n
+        "Car Bluetooth Lyrics Version" Please make sure that "Car Bluetooth Lyrics" is turned on in the music software settings\n
+        "Status Bar Lyrics Version" Please make sure "Status Bar Lyrics" is enabled in the music software settings\n\n
 
         The function changes with * need to restart the system interface\n\n
 

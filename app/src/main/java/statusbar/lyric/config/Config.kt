@@ -221,7 +221,7 @@ class Config {
     }
 
     fun getCustomizeViewPosition(): Boolean {
-        return config.optBoolean("CustomizeViewPosition", false)
+        return config.optBoolean("CustomizeViewPosition", true)
     }
 
     fun setCustomizeViewPosition(bool: Boolean) {
