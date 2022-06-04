@@ -205,7 +205,7 @@ class Config {
     }
 
     fun getCustomizeText(): String {
-        return config.optString("CustomizeText", "|")
+        return config.optString("CustomizeText", "")
     }
 
     fun setCustomizeText(str: String) {
@@ -221,7 +221,7 @@ class Config {
     }
 
     fun getCustomizeViewPosition(): Boolean {
-        return config.optBoolean("CustomizeViewPosition", false)
+        return config.optBoolean("CustomizeViewPosition", true)
     }
 
     fun setCustomizeViewPosition(bool: Boolean) {
