@@ -160,7 +160,7 @@ class SystemUI : BaseHook() {
                 var iconPos = 0
 
                 override fun run() {
-                    iconPos = config.getIconHigh()
+                    iconPos = config.getLyricPosition()
                     if (order) i += 1 else i -= 1
                     updateMargins.sendMessage(updateMargins.obtainMessage().also {
                         it.arg1 = 10 + i
