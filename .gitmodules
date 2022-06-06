@@ -1,6 +1,3 @@
 [submodule "blockmiui"]
 	path = blockmiui
 	url = https://github.com/577fkj/blockmiui.git
-[submodule "xtoast"]
-	path = xtoast
-	url = https://github.com/xiaowine/xToast
