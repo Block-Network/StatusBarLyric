@@ -116,11 +116,11 @@ class SystemUI : BaseHook() {
                     try {
                         if (config.getLyricService()) {
                             if (test) return
-                            if (Utils.isServiceRunningList(application, musicServer)) {
-                                if (useSystemMusicActive && !audioManager.isMusicActive) {
-                                    offLyric(LogMultiLang.pausePlay)
-                                }
-                            } else {
+                            if (useSystemMusicActive && !audioManager.isMusicActive) {
+                                offLyric(LogMultiLang.pausePlay)
+                                return
+                            }
+                            if (!Utils.isServiceRunningList(application, musicServer)) {
                                 offLyric(LogMultiLang.playerOff)
                             }
                         } else {
@@ -158,7 +158,6 @@ class SystemUI : BaseHook() {
                 var i = 1
                 var order = true
                 var iconPos = 0
-
                 override fun run() {
                     iconPos = config.getLyricPosition()
                     if (order) i += 1 else i -= 1
@@ -322,7 +321,7 @@ class SystemUI : BaseHook() {
         lyricSwitchView = LyricSwitchView(application, config.getLyricStyle()).apply {
             height = clock.height
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
-            setMargins(config.getLyricPosition() + 10, config.getLyricHigh(), 0, 0)
+            setMargins(0, config.getLyricHigh(), 0, 0)
             setMarqueeRepeatLimit(if (config.getLyricStyle()) 1 else -1)
             setSingleLine(true)
             setMaxLines(1)
