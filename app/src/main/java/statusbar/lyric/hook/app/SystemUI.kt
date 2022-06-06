@@ -163,7 +163,7 @@ class SystemUI : BaseHook() {
                     if (order) i += 1 else i -= 1
                     updateMargins.sendMessage(updateMargins.obtainMessage().also {
                         it.arg1 = 10 + i
-                        it.arg2 = 0
+                        it.arg2 = config.getLyricHigh()
                     })
                     if (i == 0) order = true else if (i == 20) order = false
                 }
@@ -397,7 +397,7 @@ class SystemUI : BaseHook() {
         }
 
         updateMargins = Handler(Looper.getMainLooper()) { message ->
-            (lyricLayout.layoutParams as LinearLayout.LayoutParams).setMargins(0, message.arg1, 0, 0)
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
             true
         }
 
