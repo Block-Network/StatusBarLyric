@@ -563,6 +563,10 @@ class SystemUI : BaseHook() {
         LogUtils.e(info)
         stopTimer()
         if (lyricLayout.visibility != View.GONE && config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
+        application.sendBroadcast(Intent().apply {
+            action = "Lyric_Server"
+            putExtra("Lyric_Type", "stop")
+        })
     }
 
     fun updateLyric(lyric: String, icon: String) {
@@ -694,6 +698,7 @@ class SystemUI : BaseHook() {
                         updateLyric(lyric, icon ?: "Api")
                         useSystemMusicActive = true
                     }
+
                     "app" -> {
                         if (icon.isNullOrEmpty()) icon = "Api"
                         val packName = intent.getStringExtra("Lyric_PackName")
@@ -706,6 +711,7 @@ class SystemUI : BaseHook() {
                         updateLyric(lyric ?: "", icon)
                         LogUtils.e("${LogMultiLang.recvData}app: lyric:$lyric icon:$icon packName:$packName")
                     }
+
                     "app_stop" -> offLyric("${LogMultiLang.recvData}app_stop")
                     "copy_font" -> {
                         val path = intent.getStringExtra("Font_Path")
@@ -740,6 +746,7 @@ class SystemUI : BaseHook() {
                             })
                         }
                     }
+
                     "delete_font" -> {
                         var isOK = false
                         val file = File(application.filesDir.path + "/font")
@@ -752,6 +759,7 @@ class SystemUI : BaseHook() {
                             putExtra("DeleteFont", isOK)
                         })
                     }
+
                     "update_config" -> updateConfig()
                     "test" -> ShowDialog().show()
                 }
