@@ -315,7 +315,7 @@ class Config {
     }
 
     fun gerIconList(): Array<String> {
-        return arrayOf("Netease", "KuGou", "KuGouLite", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")
+        return arrayOf("Netease", "KuGou", "KuGouLite", "KuWo", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")
     }
 
     fun getIcon(str: String): String {
