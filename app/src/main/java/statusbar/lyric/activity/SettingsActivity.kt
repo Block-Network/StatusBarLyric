@@ -183,16 +183,10 @@ class SettingsActivity : MIUIActivity() {
                 }))
                 Line()
                 TitleText(resId = R.string.ModuleVersion)
-                Text("${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
-                TitleText(resId = R.string.BuildTime)
+                TextSummaryArrow(TextSummaryV(textId = R.string.ModuleVersion, tips = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}"))
                 val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 val buildTime = simpleDateFormat.format(BuildConfig.BUILD_TIME.toLong())
-                Text(buildTime)
-
-//                TextSummaryArrow(TextSummaryV(textId = R.string.ModuleVersion, tips = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}"))
-//                val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-//                val buildTime = simpleDateFormat.format(BuildConfig.BUILD_TIME.toLong())
-//                TextSummaryArrow(TextSummaryV(textId = R.string.BuildTime, tips = buildTime))
+                TextSummaryArrow(TextSummaryV(textId = R.string.BuildTime, tips = buildTime))
                 Text()
 
             }
@@ -996,9 +990,11 @@ class SettingsActivity : MIUIActivity() {
                 BackupUtils.CREATE_DOCUMENT_CODE -> {
                     BackupUtils.handleCreateDocument(activity, data!!.data)
                 }
+
                 BackupUtils.OPEN_DOCUMENT_CODE -> {
                     BackupUtils.handleReadDocument(activity, data!!.data)
                 }
+
                 OPEN_FONT_FILE -> {
                     data!!.data?.let {
                         activity.sendBroadcast(Intent().apply {
@@ -1070,6 +1066,7 @@ class SettingsActivity : MIUIActivity() {
                                 })
                             }
                         }
+
                         "CopyFont" -> {
                             val message: String = if (intent.getBooleanExtra("CopyFont", false)) {
                                 getString(R.string.CustomFontSuccess)
@@ -1082,6 +1079,7 @@ class SettingsActivity : MIUIActivity() {
                                 setRButton(getString(R.string.Ok)) { dismiss() }
                             }.show()
                         }
+
                         "DeleteFont" -> {
                             val message: String = if (intent.getBooleanExtra("DeleteFont", false)) {
                                 getString(R.string.DeleteFontSuccess)
