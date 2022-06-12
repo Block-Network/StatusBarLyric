@@ -183,10 +183,9 @@ class SettingsActivity : MIUIActivity() {
                 }))
                 Line()
                 TitleText(resId = R.string.ModuleVersion)
-                TextSummaryArrow(TextSummaryV(textId = R.string.ModuleVersion, tips = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}"))
-                val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                val buildTime = simpleDateFormat.format(BuildConfig.BUILD_TIME.toLong())
-                TextSummaryArrow(TextSummaryV(textId = R.string.BuildTime, tips = buildTime))
+                TextSummary(textId = R.string.ModuleVersion, tips = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
+                val buildTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(BuildConfig.BUILD_TIME.toLong())
+                TextSummary(textId = R.string.BuildTime, tips = buildTime)
                 Text()
 
             }
