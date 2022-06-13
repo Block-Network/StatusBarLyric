@@ -26,6 +26,7 @@
     <string name="AutoHideCarrierName">自動隱藏鎖屏運營商名稱</string>
     <string name="CustomHook">* 自定義Hook點 (不懂勿動)</string>
     <string name="DebugMode">Debug 模式</string>
+    <string name="OnlyGetLyric">僅獲取歌詞</string>
     <string name="ReStartSystemUI">重啟 SystemUI</string>
     <string name="ResetModule">重置模塊</string>
     <string name="About">關於</string>

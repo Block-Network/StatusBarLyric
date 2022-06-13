@@ -181,6 +181,11 @@ class SystemUI : BaseHook() {
 
     override fun hook() {
         super.hook()
+        // Only get lyric
+        if (config.getOnlyGetLyric()) {
+            LogUtils.e(LogMultiLang.OnlyGetLyric)
+            return
+        }
         if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
 
         // StatusBarLyric
@@ -260,6 +265,7 @@ class SystemUI : BaseHook() {
     }
 
     private fun lyricInit(clock: TextView?) {
+
         LogUtils.e(LogMultiLang.sendLog)
 
         application.sendBroadcast(Intent().apply {

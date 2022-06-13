@@ -128,6 +128,7 @@ class Config {
     fun setIconColor(str: String) {
         config.put("IColor", str)
     }
+
     fun getBackgroundColor(): String {
         return config.optString("BackgroundColor", "")
     }
@@ -266,6 +267,14 @@ class Config {
 
     fun getAntiBurnTime(): Int {
         return config.optInt("AntiBurnTime", 60000)
+    }
+
+    fun setOnlyGetLyric(b: Boolean) {
+        config.put("OnlyGetLyric", b)
+    }
+
+    fun getOnlyGetLyric(): Boolean {
+        return config.optBoolean("OnlyGetLyric", false)
     }
 
     fun setAntiBurnTime(i: Int) {

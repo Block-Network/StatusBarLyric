@@ -695,6 +695,7 @@ class SettingsActivity : MIUIActivity() {
             }
 
             register("advancedSettings", getString(R.string.AdvancedSettings), true) {
+                TextWithSwitch(TextV(resId = R.string.OnlyGetLyric), SwitchV("OnlyGetLyric"))
                 TextSummaryArrow(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.CustomHook)
