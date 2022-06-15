@@ -225,19 +225,24 @@ class SystemUI : BaseHook() {
                 null
             }
         } else {
-            val apkInfo = IPackageUtils.getPackageInfoFromAllUsers("com.yeren.ZPTools", 0)
-            LogUtils.e("apkList: $apkInfo")
-            val array = if (apkInfo.isNotEmpty()) {
-                LogUtils.e(LogMultiLang.checkSystem)
-                if (Settings.System.getInt(application.contentResolver, "clock_style", 0) == 0) {
-                    LogUtils.e("mClockView start")
-                    arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+            val array = try {
+                val apkInfo = IPackageUtils.getPackageInfoFromAllUsers("com.yeren.ZPTools", 0)
+                LogUtils.e("apkList: $apkInfo")
+                if (apkInfo.isNotEmpty()) {
+                    LogUtils.e(LogMultiLang.checkSystem)
+                    if (Settings.System.getInt(application.contentResolver, "clock_style", 0) == 0) {
+                        LogUtils.e("mClockView start")
+                        arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                    } else {
+                        LogUtils.e("mStatusClock start")
+                        arrayOf("mStatusClock", "mClockView", "mCenterClock", "mLeftClock", "mRightClock")
+                    }
                 } else {
-                    LogUtils.e("mStatusClock start")
-                    arrayOf("mStatusClock", "mClockView", "mCenterClock", "mLeftClock", "mRightClock")
+                    LogUtils.e(LogMultiLang.normalMode)
+                    arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
                 }
-            } else {
-                LogUtils.e(LogMultiLang.normalMode)
+            } catch (e: Throwable) {
+                LogUtils.e("getPackageInfoError: $e \n" + Log.getStackTraceString(e))
                 arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
             }
             var thisField: Field? = null
