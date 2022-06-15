@@ -27,6 +27,7 @@
     <string name="AutoHideCarrierName">Auto hide lock screen carrier name</string>
     <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
     <string name="DebugMode">Debug mode</string>
+    <string name="OnlyGetLyric">Get lyrics only</string>
     <string name="ReStartSystemUI">Restart SystemUI</string>
     <string name="ResetModule">Reset module</string>
     <string name="About">About</string>
