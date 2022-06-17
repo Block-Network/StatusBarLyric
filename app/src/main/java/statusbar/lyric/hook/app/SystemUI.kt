@@ -182,10 +182,7 @@ class SystemUI : BaseHook() {
     override fun hook() {
         super.hook()
         // Only get lyric
-        if (config.getOnlyGetLyric()) {
-            LogUtils.e(LogMultiLang.OnlyGetLyric)
-            return
-        }
+
         if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
 
         // StatusBarLyric
@@ -289,6 +286,11 @@ class SystemUI : BaseHook() {
         })
 
         audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
+
+        if (config.getOnlyGetLyric()) {
+            LogUtils.e(LogMultiLang.OnlyGetLyric)
+            return
+        }
 
         // Get display info
         val displayMetrics = DisplayMetrics()
@@ -540,7 +542,7 @@ class SystemUI : BaseHook() {
             })
         } else iconColor = 0
         updateMargins.sendMessage(updateMargins.obtainMessage().also {
-            it.arg1 = config.getLyricHigh()
+            it.obj = config.getLyricHigh()
         })
         updateIconMargins.sendMessage(updateIconMargins.obtainMessage().also {
             it.arg1 = config.getLyricPosition()
