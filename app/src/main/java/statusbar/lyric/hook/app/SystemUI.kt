@@ -680,7 +680,7 @@ class SystemUI : BaseHook() {
         })
     }
 
-    private fun getNowTime() = SimpleDateFormat("yyyy MM dd E HH:mm ", Locale.getDefault()).format(Date())
+    private fun getNowTime() = SimpleDateFormat("yyyy年MM月dd日 E HH:mm ", Locale.getDefault()).format(Date())
     private fun startTimer(period: Long, timerTask: TimerTask) {
         timerQueue.forEach { task -> if (task == timerTask) return }
         timerQueue.add(timerTask)
