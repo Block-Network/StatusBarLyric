@@ -62,9 +62,11 @@ import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
 import java.lang.reflect.Field
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.system.exitProcess
+
 
 class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
@@ -73,6 +75,7 @@ class SystemUI : BaseHook() {
     // base data
     val application: Application by lazy { AndroidAppHelper.currentApplication() }
     lateinit var clock: TextView
+    lateinit var newClock: TextView
     private lateinit var customizeView: TextView
     lateinit var lyricSwitchView: LyricSwitchView
     private lateinit var iconView: ImageView
@@ -174,6 +177,7 @@ class SystemUI : BaseHook() {
 
     private val lockScreenReceiver by lazy { LockScreenReceiver() }
     private val lyricReceiver by lazy { LyricReceiver() }
+    private val clockReceiver by lazy { ClockReceiver() }
 
     // Hide icon
     private var notificationIconContainer: FrameLayout? = null
@@ -289,6 +293,12 @@ class SystemUI : BaseHook() {
         application.registerReceiver(lyricReceiver, IntentFilter().apply {
             addAction("Lyric_Server")
         })
+        runCatching { application.unregisterReceiver(clockReceiver) }
+        application.registerReceiver(clockReceiver, IntentFilter().apply {
+            addAction(Intent.ACTION_TIME_TICK)
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
+            addAction(Intent.ACTION_TIME_CHANGED)
+        })
 
         audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
 
@@ -308,7 +318,7 @@ class SystemUI : BaseHook() {
         clockParams = clock!!.layoutParams as LinearLayout.LayoutParams
 
         customizeView = TextView(application).apply {
-            height = clock.height
+            height = clock.height / 2
             text = config.getCustomizeText()
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
             isSingleLine = true
@@ -332,9 +342,9 @@ class SystemUI : BaseHook() {
             }
         }
         lyricSwitchView = LyricSwitchView(application, config.getLyricStyle()).apply {
-            height = clock.height
+            height = clock.height / 2
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
-            setMargins(0, config.getLyricHigh(), 0, 0)
+            setMargins(5, config.getLyricHigh(), 0, 0)
             setMarqueeRepeatLimit(if (config.getLyricStyle()) 1 else -1)
             setSingleLine(true)
             setMaxLines(1)
@@ -359,13 +369,38 @@ class SystemUI : BaseHook() {
             }
         }
 
+        newClock = TextView(application).apply {
+            height = clock.height / 2
+            text = getNowTime()
+            setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
+            isSingleLine = true
+            try {
+                val file = File(application.filesDir.path + "/font")
+                if (file.exists() && file.isFile && file.canRead()) {
+                    typeface = Typeface.createFromFile(application.filesDir.path + "/font")
+                    LogUtils.e(LogMultiLang.fontLoad)
+                } else {
+                    typeface = clock.typeface
+                }
+            } catch (e: Throwable) {
+                typeface = clock.typeface
+                runCatching {
+                    val file = File(application.filesDir.path + "/font")
+                    if (file.exists() && file.canWrite()) {
+                        file.delete()
+                    }
+                }
+                LogUtils.e("${LogMultiLang.initFontFailed}(${e.message}): ${Log.getStackTraceString(e)}")
+            }
+        }
+
         // 创建图标
         iconView = ImageView(application).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(0, 7, 0, 0) }
         }
 
         // 创建布局
-        lyricLayout = LinearLayout(application).apply {
+        val lyricLayout2 = LinearLayout(application).apply {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(config.getLyricPosition(), config.getLyricHigh(), 0, 0) }
             addView(iconView)
             if (config.getCustomizeViewPosition()) {
@@ -377,6 +412,12 @@ class SystemUI : BaseHook() {
             }
 
 
+        }
+        lyricLayout = LinearLayout(application).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            orientation = LinearLayout.VERTICAL
+            addView(newClock)
+            addView(lyricLayout2)
         }
 
         clockClickable = clock.isClickable
@@ -423,6 +464,7 @@ class SystemUI : BaseHook() {
         updateTextColor = Handler(Looper.getMainLooper()) { message ->
             lyricSwitchView.setTextColor(message.arg1)
             customizeView.setTextColor(message.arg1)
+            newClock.setTextColor(message.arg1)
             true
         }
 
@@ -471,6 +513,10 @@ class SystemUI : BaseHook() {
                         strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
                     }
                     customizeView.paint.apply {
+                        style = Paint.Style.FILL_AND_STROKE
+                        strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
+                    }
+                    newClock.paint.apply {
                         style = Paint.Style.FILL_AND_STROKE
                         strokeWidth = (config.getLyricFontWeight().toFloat() / 100)
                     }
@@ -570,6 +616,7 @@ class SystemUI : BaseHook() {
         }
         lyricSwitchView.setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
         customizeView.letterSpacing = if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
+        newClock.letterSpacing = if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
     }
 
     private fun offLyric(info: String) {
@@ -633,6 +680,7 @@ class SystemUI : BaseHook() {
         })
     }
 
+    private fun getNowTime() = "${SimpleDateFormat("yyyy/MM/dd HH:mm ", Locale.getDefault()).format(Date())} ${SimpleDateFormat("E", Locale.getDefault()).format(Date())}"
     private fun startTimer(period: Long, timerTask: TimerTask) {
         timerQueue.forEach { task -> if (task == timerTask) return }
         timerQueue.add(timerTask)
@@ -739,6 +787,7 @@ class SystemUI : BaseHook() {
                         if (error.isEmpty()) {
                             lyricSwitchView.setTypeface(Typeface.createFromFile(application.filesDir.path + "/font"))
                             customizeView.typeface = Typeface.createFromFile(application.filesDir.path + "/font")
+                            newClock.typeface = Typeface.createFromFile(application.filesDir.path + "/font")
                             LogUtils.e(LogMultiLang.fontLoad)
                             application.sendBroadcast(Intent().apply {
                                 action = "App_Server"
@@ -780,6 +829,12 @@ class SystemUI : BaseHook() {
             } catch (e: Exception) {
                 LogUtils.e("${LogMultiLang.lyricServiceError} $e \n" + Utils.dumpException(e))
             }
+        }
+    }
+
+    inner class ClockReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            newClock.text = getNowTime()
         }
     }
 

@@ -962,7 +962,9 @@ class SettingsActivity : MIUIActivity() {
             }
 
             Timer().schedule(UpdateConfigTask(), 0, 1000)
-
+            ActivityOwnSP.ownSPConfig.setLyricService(true)
+            ActivityOwnSP.ownSPConfig.setIsFirst(false)
+//            ActivityOwnSP.ownSPConfig.setHideTime(false)
             if (ActivityOwnSP.ownSPConfig.getIsFirst()) {
                 MIUIDialog(activity) {
                     setTitle(R.string.Tips)

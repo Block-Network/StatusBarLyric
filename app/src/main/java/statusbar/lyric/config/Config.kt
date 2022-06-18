@@ -249,6 +249,10 @@ class Config {
         return config.optBoolean("HideTime", true)
     }
 
+    fun setHideTime(b: Boolean) {
+        config.put("HideTime", b)
+    }
+
     fun getReverseColorTime(): Int {
         return config.optInt("ReverseColorTime", 25)
     }
