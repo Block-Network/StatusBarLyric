@@ -28,7 +28,6 @@ import android.app.Notification
 import android.content.Context
 import android.os.Build
 import de.robv.android.xposed.XposedHelpers
-import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import statusbar.lyric.utils.AppCenterUtils
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils

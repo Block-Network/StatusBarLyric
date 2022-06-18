@@ -1,4 +1,4 @@
-/*
+package statusbar.lyric.view/*
  * StatusBarLyric
  * Copyright (C) 2021-2022 fkj@fkj233.cn
  * https://github.com/577fkj/StatusBarLyric
@@ -20,14 +20,14 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-package statusbar.lyric.view
+
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.text.TextPaint
 import android.text.TextUtils
-import android.view.ViewGroup
+import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
@@ -35,10 +35,6 @@ import statusbar.lyric.utils.ktx.callMethod
 
 @SuppressLint("ViewConstructor")
 class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwitcher(context) {
-    private val lyricTextView: LyricTextView = LyricTextView(context)
-    private val lyricTextView2: LyricTextView = LyricTextView(context)
-    private val autoMarqueeTextView: AutoMarqueeTextView = AutoMarqueeTextView(context)
-    private val autoMarqueeTextView2: AutoMarqueeTextView = AutoMarqueeTextView(context)
     private val viewArray: ArrayList<TextView> = arrayListOf()
 
     val text: CharSequence
@@ -48,23 +44,35 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwi
         get() = (currentView as TextView).paint
 
     init {
-        lyricTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        lyricTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        autoMarqueeTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        autoMarqueeTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        autoMarqueeTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
-        autoMarqueeTextView2.ellipsize = TextUtils.TruncateAt.MARQUEE
         if (hasMeizu) {
+            val lyricTextView = LyricTextView(context)
+            val lyricTextView2 = LyricTextView(context)
+            lyricTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            lyricTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             addView(lyricTextView)
             addView(lyricTextView2)
             viewArray.add(lyricTextView)
             viewArray.add(lyricTextView2)
         } else {
+            val autoMarqueeTextView = AutoMarqueeTextView(context)
+            val autoMarqueeTextView2 = AutoMarqueeTextView(context)
+            autoMarqueeTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            autoMarqueeTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            autoMarqueeTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
+            autoMarqueeTextView2.ellipsize = TextUtils.TruncateAt.MARQUEE
+            autoMarqueeTextView.gravity = Gravity.CENTER_HORIZONTAL
+            autoMarqueeTextView2.gravity = Gravity.CENTER_HORIZONTAL
             addView(autoMarqueeTextView)
             addView(autoMarqueeTextView2)
             viewArray.add(autoMarqueeTextView)
             viewArray.add(autoMarqueeTextView2)
         }
+    }
+
+    override fun setText(text: CharSequence) {
+        val t = nextView as TextView
+        t.text = text
+        showNext()
     }
 
     fun setWidth(i: Int) {
@@ -79,10 +87,14 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwi
         viewArray.forEach { view -> view.text = str }
     }
 
+
     fun setSpeed(f: Float) {
         if (hasMeizu) {
-            lyricTextView.setSpeed(f)
-            lyricTextView2.setSpeed(f)
+            viewArray.forEach { view ->
+                (view as LyricTextView).setSpeed(f)
+            }
+//            lyricTextView.setSpeed(f)
+//            lyricTextView2.setSpeed(f)
         }
     }
 
@@ -108,8 +120,11 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwi
 
     fun setMarqueeRepeatLimit(i: Int) {
         if (!hasMeizu) {
-            autoMarqueeTextView.marqueeRepeatLimit = i
-            autoMarqueeTextView2.marqueeRepeatLimit = i
+            viewArray.forEach { view ->
+                (view as AutoMarqueeTextView).marqueeRepeatLimit = i
+            }
+//            autoMarqueeTextView.marqueeRepeatLimit = i
+//            autoMarqueeTextView2.marqueeRepeatLimit = i
         }
     }
 
