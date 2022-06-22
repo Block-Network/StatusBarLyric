@@ -18,6 +18,7 @@
     <string name="ClickLyric">* 點擊歌詞切換時鐘和歌詞</string>
     <string name="AbScreen">防燒屏</string>
     <string name="IconHigh">圖標上下位置</string>
+    <string name="IconSpacing">图标歌词间隔</string>
     <string name="LyricPos">歌詞左右位置</string>
     <string name="Default">默认</string>
     <string name="UnlockShow">僅解鎖顯示</string>
@@ -74,6 +75,7 @@
     <string name="InputError">輸入範圍不正確</string>
     <string name="LyricPosTips">-900~900（單位：像素點）</string>
     <string name="LyricHighTips">-100~100（單位：像素點）</string>
+    <string name="IconSpacingTips">0~20（單位：像素點）</string>
     <string name="Ok">確定</string>
     <string name="HookSetTips">已設置Hook為:\n</string>
     <string name="RestartSystemUI">請重啟SystemUI</string>

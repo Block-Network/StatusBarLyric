@@ -632,6 +632,33 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("IHigh", -100, 100, defaultProgress = ActivityOwnSP.ownSPConfig.getIconHigh())
+                Text(resId = R.string.IconSpacing, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.IconSpacing)
+                        setMessage(R.string.IconSpacingTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getIconspacing().toString(), "5")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (0..20)) {
+                                        ActivityOwnSP.ownSPConfig.setIconspacing(value)
+                                        updateConfig = true
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
+                            }
+                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                            ActivityOwnSP.ownSPConfig.setIconspacing(5)
+                            updateConfig = true
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                })
+                SeekBarWithText("ISpacing", 0, 20, defaultProgress = ActivityOwnSP.ownSPConfig.getIconspacing())
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconSettings, onClickListener = {
                     showFragment("icon")
                 }))

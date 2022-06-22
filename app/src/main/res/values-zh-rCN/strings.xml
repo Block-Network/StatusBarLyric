@@ -18,6 +18,7 @@
     <string name="ClickLyric">* 点击歌词切换时钟和歌词</string>
     <string name="AbScreen">* 防烧屏</string>
     <string name="IconHigh">图标上下位置</string>
+    <string name="IconSpacing">图标歌词间隔</string>
     <string name="LyricPos">歌词左右位置</string>
     <string name="Default">默认</string>
     <string name="UnlockShow">仅解锁显示</string>
@@ -74,6 +75,7 @@
     <string name="InputError">输入范围不正确！</string>
     <string name="LyricPosTips">-900~900（单位：像素点）</string>
     <string name="LyricHighTips">-100~100（单位：像素）</string>
+    <string name="IconSpacingTips">0~20（单位：像素）</string>
     <string name="Ok">确定</string>
     <string name="HookSetTips">已设置 Hook 为:\n</string>
     <string name="RestartSystemUI">请重启 SystemUI</string>

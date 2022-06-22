@@ -18,6 +18,7 @@
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
     <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconHigh">Icon up and down position</string>
+    <string name="IconSpacing">Icon Lyrics Spacing</string>
     <string name="LyricPos">Left and right positions of lyrics
     </string>
     <string name="Default">Default</string>
@@ -77,6 +78,7 @@
     <string name="InputError">The input range is incorrect!</string>
     <string name="LyricPosTips">-900~900(Unit:pixel)</string>
     <string name="LyricHighTips">-100~100(Unit:pixel)</string>
+    <string name="IconSpacingTips">0~20(Unit:pixel)</string>
     <string name="Ok">Sure</string>
     <string name="HookSetTips">Hook has been set to:\n</string>
     <string name="RestartSystemUI">Please restart SystemUI</string>

@@ -361,7 +361,7 @@ class SystemUI : BaseHook() {
 
         // 创建图标
         iconView = ImageView(application).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(0, 7, 0, 0) }
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(0, 7, config.getIconspacing(), 0) }
         }
 
         // 创建布局
@@ -416,7 +416,7 @@ class SystemUI : BaseHook() {
         }
 
         updateIconMargins = Handler(Looper.getMainLooper()) { message ->
-            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
+            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, config.getIconspacing(), 0)
             true
         }
 

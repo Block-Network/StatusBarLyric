@@ -104,6 +104,13 @@ class Config {
     fun setIconHigh(i: Int) {
         config.put("IHigh", i)
     }
+    fun getIconspacing(): Int {
+        return config.optInt("ISpacing", 5)
+    }
+
+    fun setIconspacing(i: Int) {
+        config.put("ISpacing", i)
+    }
 
     fun getLyricAutoOff(): Boolean {
         return config.optBoolean("LAutoOff", true)
