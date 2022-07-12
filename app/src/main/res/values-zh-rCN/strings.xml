@@ -9,9 +9,9 @@
     <string name="Off">关闭</string>
     <string name="LyricAutoMaxWidth">歌词自适应最大宽度</string>
     <string name="LyricsAnimation">歌词动效</string>
-    <string name="LyricColor">歌词颜色</string>
+    <string name="LyricColor">歌词颜色和透明度</string>
     <string name="BackgroundColor">背景颜色</string>
-    <string name="IconColor">图标颜色</string>
+    <string name="IconColor">图标颜色和透明度</string>
     <string name="LyricIcon">歌词图标</string>
     <string name="LyricSpeed">歌词滚动速度</string>
     <string name="AdvancedSettings">高级设置</string>
