@@ -706,6 +706,33 @@ class SettingsActivity : MIUIActivity() {
 
             register("advancedSettings", getString(R.string.AdvancedSettings), true) {
                 TextWithSwitch(TextV(textId = R.string.OnlyGetLyric), SwitchV("OnlyGetLyric"))
+                TextWithSwitch(TextV(textId = R.string.TimeOff), SwitchV("TimeOff"))
+                TextSummaryArrow(TextSummaryV(textId = R.string.TimeOffTime, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.TimeOffTime)
+                        setMessage(R.string.AntiBurnTimeTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getTimeOffTime().toString(), "10000")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (0..3600000)) {
+                                        ActivityOwnSP.ownSPConfig.setTimeOffTime(value)
+                                        updateConfig = true
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
+                            }
+                            ActivityOwnSP.ownSPConfig.setTimeOffTime(10000)
+                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                }))
+                SeekBarWithText("TimeOffTime", 0, 3600000, defaultProgress = 10000)
                 TextSummaryArrow(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.CustomHook)
@@ -742,7 +769,7 @@ class SettingsActivity : MIUIActivity() {
                             if (getEditText().isNotEmpty()) {
                                 try {
                                     val value = getEditText().toInt()
-                                    if (value in (1..60000)) {
+                                    if (value in (1..3600000)) {
                                         ActivityOwnSP.ownSPConfig.setAntiBurnTime(value)
                                         dismiss()
                                         return@setRButton

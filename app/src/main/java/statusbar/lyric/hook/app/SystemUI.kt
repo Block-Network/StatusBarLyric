@@ -68,6 +68,8 @@ import kotlin.system.exitProcess
 
 class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
+    private var lyrics = "lyric"
+    var texts = ""
     var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
 
     // base data
@@ -117,6 +119,10 @@ class SystemUI : BaseHook() {
                         if (config.getLyricService()) {
                             if (test) return
                             if (useSystemMusicActive && !audioManager.isMusicActive) {
+                                offLyric(LogMultiLang.pausePlay)
+                                return
+                            }
+                            if (!audioManager.isMusicActive) {
                                 offLyric(LogMultiLang.pausePlay)
                                 return
                             }
@@ -170,6 +176,23 @@ class SystemUI : BaseHook() {
             }
         }
         return lyricAntiBurnTimer as TimerTask
+    }
+
+    private var timeOffTimer: TimerTask? = null
+    private fun getTimeOffTimer(): TimerTask {
+        if (timeOffTimer == null) {
+            timeOffTimer = object : TimerTask() {
+                override fun run() {
+                    if (texts == lyrics) {
+                        offLyric(LogMultiLang.TimeOff)
+                    }
+                    texts = lyrics
+//                    text = lyrics
+                }
+            }
+
+        }
+        return timeOffTimer as TimerTask
     }
 
     private val lockScreenReceiver by lazy { LockScreenReceiver() }
@@ -584,6 +607,7 @@ class SystemUI : BaseHook() {
     }
 
     fun updateLyric(lyric: String, icon: String) {
+        lyrics = lyric
         LogUtils.e(LogMultiLang.sendLog)
         if (lyric.isEmpty()) {
             offLyric(LogMultiLang.emptyLyric)
@@ -619,7 +643,7 @@ class SystemUI : BaseHook() {
         if (config.getLyricAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
         if (config.getAntiBurn()) startTimer(config.getAntiBurnTime().toLong(), getLyricAntiBurnTimer()) // Anti burn screen
         if (!config.getUseSystemReverseColor()) startTimer(config.getReverseColorTime().toLong(), getAutoLyricColorTimer()) // not use system reverse color
-
+        if (config.getTimeOff()) startTimer(config.getTimeOffTime().toLong(), getTimeOffTimer()) // not use system reverse color
         if (config.getAnim() == "random") {
             val anim = arrayOf("top", "lower", "left", "right")[(Math.random() * 4).toInt()]
             lyricSwitchView.inAnimation = Utils.inAnim(anim)
@@ -645,6 +669,7 @@ class SystemUI : BaseHook() {
         autoOffLyricTimer = null
         autoLyricColorTimer = null
         lyricAntiBurnTimer = null
+        timeOffTimer = null
         timerQueue = arrayListOf()
         timer?.cancel()
         timer = null
@@ -707,7 +732,7 @@ class SystemUI : BaseHook() {
                 var icon = intent.getStringExtra("Lyric_Icon")
                 when (intent.getStringExtra("Lyric_Type")) {
                     "hook" -> {
-                        val lyric: String = intent.getStringExtra("Lyric_Data")!!
+                        val lyric = intent.getStringExtra("Lyric_Data") ?: ""
                         LogUtils.e("${LogMultiLang.recvData}hook: lyric:$lyric icon:$icon")
                         updateLyric(lyric, icon ?: "Api")
                         useSystemMusicActive = true

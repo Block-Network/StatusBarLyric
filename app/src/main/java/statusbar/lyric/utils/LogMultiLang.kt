@@ -39,5 +39,6 @@ object LogMultiLang {
     val initError = if (isChinese) "初始化失败" else "Init failed"
     val initFontFailed = if (isChinese) "初始化自定义字体失败" else "Init custom font failed"
     val OnlyGetLyric = if (isChinese) "仅获取歌词" else "Get lyrics only"
+    val TimeOff = if (isChinese) "歌词定时关闭" else "Lyrics timer off"
 //    val _ = if (isChinese) "" else ""
 }

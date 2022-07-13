@@ -104,6 +104,7 @@ class Config {
     fun setIconHigh(i: Int) {
         config.put("IHigh", i)
     }
+
     fun getIconspacing(): Int {
         return config.optInt("ISpacing", 5)
     }
@@ -270,6 +271,23 @@ class Config {
 
     fun setLyricAutoOffTime(i: Int) {
         config.put("LyricAutoOffTime", i)
+    }
+
+    fun getTimeOff(): Boolean {
+        return config.optBoolean("TimeOff", false)
+    }
+
+    fun setTimeOff(bool: Boolean) {
+        config.put("TimeOff", bool)
+    }
+
+
+    fun getTimeOffTime(): Int {
+        return config.optInt("TimeOffTime", 10000)
+    }
+
+    fun setTimeOffTime(i: Int) {
+        config.put("TimeOffTime", i)
     }
 
     fun getAntiBurnTime(): Int {
