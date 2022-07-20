@@ -9,15 +9,16 @@
     <string name="Off">Off</string>
     <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
     <string name="LyricsAnimation">Lyrics animation</string>
-    <string name="LyricColor">Lyrics color</string>
+    <string name="LyricColor">Lyrics color and transparency</string>
     <string name="BackgroundColor">Background color</string>
-    <string name="IconColor">Icon color</string>
+    <string name="IconColor">Icon color and transparency</string>
     <string name="LyricIcon">Lyrics icon</string>
     <string name="LyricSpeed">Lyrics scroll speed</string>
     <string name="AdvancedSettings">Advanced settings</string>
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
     <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconHigh">Icon up and down position</string>
+    <string name="IconSpacing">Icon Lyrics Spacing</string>
     <string name="LyricPos">Left and right positions of lyrics
     </string>
     <string name="Default">Default</string>
@@ -27,6 +28,9 @@
     <string name="AutoHideCarrierName">Auto hide lock screen carrier name</string>
     <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
     <string name="DebugMode">Debug mode</string>
+    <string name="OnlyGetLyric">Get lyrics only</string>
+    <string name="TimeOff">* Time off</string>
+    <string name="TimeOffTime">Timed off time</string>
     <string name="ReStartSystemUI">Restart SystemUI</string>
     <string name="ResetModule">Reset module</string>
     <string name="About">About</string>
@@ -76,6 +80,7 @@
     <string name="InputError">The input range is incorrect!</string>
     <string name="LyricPosTips">-900~900(Unit:pixel)</string>
     <string name="LyricHighTips">-100~100(Unit:pixel)</string>
+    <string name="IconSpacingTips">0~20(Unit:pixel)</string>
     <string name="Ok">Sure</string>
     <string name="HookSetTips">Hook has been set to:\n</string>
     <string name="RestartSystemUI">Please restart SystemUI</string>

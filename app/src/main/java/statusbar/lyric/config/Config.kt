@@ -105,6 +105,14 @@ class Config {
         config.put("IHigh", i)
     }
 
+    fun getIconspacing(): Int {
+        return config.optInt("ISpacing", 5)
+    }
+
+    fun setIconspacing(i: Int) {
+        config.put("ISpacing", i)
+    }
+
     fun getLyricAutoOff(): Boolean {
         return config.optBoolean("LAutoOff", true)
     }
@@ -128,6 +136,7 @@ class Config {
     fun setIconColor(str: String) {
         config.put("IColor", str)
     }
+
     fun getBackgroundColor(): String {
         return config.optString("BackgroundColor", "")
     }
@@ -264,8 +273,33 @@ class Config {
         config.put("LyricAutoOffTime", i)
     }
 
+    fun getTimeOff(): Boolean {
+        return config.optBoolean("TimeOff", false)
+    }
+
+    fun setTimeOff(bool: Boolean) {
+        config.put("TimeOff", bool)
+    }
+
+
+    fun getTimeOffTime(): Int {
+        return config.optInt("TimeOffTime", 10000)
+    }
+
+    fun setTimeOffTime(i: Int) {
+        config.put("TimeOffTime", i)
+    }
+
     fun getAntiBurnTime(): Int {
         return config.optInt("AntiBurnTime", 60000)
+    }
+
+    fun setOnlyGetLyric(b: Boolean) {
+        config.put("OnlyGetLyric", b)
+    }
+
+    fun getOnlyGetLyric(): Boolean {
+        return config.optBoolean("OnlyGetLyric", false)
     }
 
     fun setAntiBurnTime(i: Int) {
@@ -315,7 +349,7 @@ class Config {
     }
 
     fun gerIconList(): Array<String> {
-        return arrayOf("Netease", "KuGou", "KuGouLite", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")
+        return arrayOf("Netease", "KuGou", "KuGouLite", "KuWo", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Default")
     }
 
     fun getIcon(str: String): String {

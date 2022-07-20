@@ -9,15 +9,16 @@
     <string name="Off">关闭</string>
     <string name="LyricAutoMaxWidth">歌词自适应最大宽度</string>
     <string name="LyricsAnimation">歌词动效</string>
-    <string name="LyricColor">歌词颜色</string>
+    <string name="LyricColor">歌词颜色和透明度</string>
     <string name="BackgroundColor">背景颜色</string>
-    <string name="IconColor">图标颜色</string>
+    <string name="IconColor">图标颜色和透明度</string>
     <string name="LyricIcon">歌词图标</string>
     <string name="LyricSpeed">歌词滚动速度</string>
     <string name="AdvancedSettings">高级设置</string>
     <string name="ClickLyric">* 点击歌词切换时钟和歌词</string>
     <string name="AbScreen">* 防烧屏</string>
     <string name="IconHigh">图标上下位置</string>
+    <string name="IconSpacing">图标歌词间隔</string>
     <string name="LyricPos">歌词左右位置</string>
     <string name="Default">默认</string>
     <string name="UnlockShow">仅解锁显示</string>
@@ -26,6 +27,9 @@
     <string name="AutoHideCarrierName">自动隐藏锁屏运营商名称</string>
     <string name="CustomHook">* 自定义 Hook 点 (不懂勿动)</string>
     <string name="DebugMode">Debug 模式</string>
+    <string name="OnlyGetLyric">仅获取歌词</string>
+    <string name="TimeOff">* 定时关闭</string>
+    <string name="TimeOffTime">定时关闭时长</string>
     <string name="ReStartSystemUI">重启 SystemUI</string>
     <string name="ResetModule">重置模块</string>
     <string name="About">关于</string>
@@ -73,6 +77,7 @@
     <string name="InputError">输入范围不正确！</string>
     <string name="LyricPosTips">-900~900（单位：像素点）</string>
     <string name="LyricHighTips">-100~100（单位：像素）</string>
+    <string name="IconSpacingTips">0~20（单位：像素）</string>
     <string name="Ok">确定</string>
     <string name="HookSetTips">已设置 Hook 为:\n</string>
     <string name="RestartSystemUI">请重启 SystemUI</string>
