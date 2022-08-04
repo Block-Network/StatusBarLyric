@@ -184,7 +184,7 @@ class SystemUI : BaseHook() {
             timeOffTimer = object : TimerTask() {
                 override fun run() {
                     if (texts == lyrics) {
-                        offLyric(LogMultiLang.TimeOff)
+                        offLyric(LogMultiLang.timeOff)
                     }
                     texts = lyrics
 //                    text = lyrics
@@ -316,7 +316,7 @@ class SystemUI : BaseHook() {
         audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
 
         if (config.getOnlyGetLyric()) {
-            LogUtils.e(LogMultiLang.OnlyGetLyric)
+            LogUtils.e(LogMultiLang.onlyGetLyric)
             return
         }
 
@@ -549,6 +549,10 @@ class SystemUI : BaseHook() {
 
     private fun updateConfig() {
         config.update()
+        if (config.getOnlyGetLyric()) {
+            LogUtils.e(LogMultiLang.onlyGetLyric)
+            return
+        }
         pattern = if (config.getBlockLyric() != "" && config.getBlockLyricMode()) Pattern.compile(config.getBlockLyric()) else null
         if (!config.getLyricService()) offLyric(LogMultiLang.switchOff)
         if (config.getLyricStyle()) lyricSwitchView.setSpeed((config.getLyricSpeed().toFloat() / 100))
@@ -619,6 +623,10 @@ class SystemUI : BaseHook() {
         }
         if (isLock) {
             offLyric(LogMultiLang.unlockDisplayOnly)
+            return
+        }
+        if (config.getOnlyGetLyric()) {
+            LogUtils.e(LogMultiLang.onlyGetLyric)
             return
         }
 
