@@ -151,12 +151,12 @@ class SettingsActivity : MIUIActivity() {
                     MIUIDialog(activity) {
                         setTitle(R.string.RestartUI)
                         setMessage(R.string.RestartUITips)
-                        setRButton(R.string.Ok) {
+                        setLButton(R.string.Ok) {
                             Utils.voidShell("pkill -f com.android.systemui", true)
                             Analytics.trackEvent("重启SystemUI")
                             dismiss()
                         }
-                        setLButton(R.string.Cancel) { dismiss() }
+                        setRButton(R.string.Cancel) { dismiss() }
                     }.show()
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Backup, onClickListener = {
