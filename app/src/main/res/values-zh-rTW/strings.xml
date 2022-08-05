@@ -26,6 +26,7 @@
     <string name="HideNetWork">隱藏實時網速</string>
     <string name="AutoHideCarrierName">自動隱藏鎖屏運營商名稱</string>
     <string name="CustomHook">* 自定義Hook點 (不懂勿動)</string>
+    <string name="CustomHookTips">部分Hook點\nmStatusClock mClockView mLeftClock mCenterClock mRightClock</string>
     <string name="DebugMode">Debug 模式</string>
     <string name="OnlyGetLyric">僅獲取歌詞</string>
     <string name="TimeOff">* 定時關閉</string>

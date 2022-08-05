@@ -736,6 +736,7 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.CustomHook)
+                        setMessage(R.string.CustomHookTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getHook(), getString(R.string.InputCustomHook))
                         setRButton(R.string.Ok) {
                             if (getEditText().isNotEmpty()) {
@@ -992,12 +993,12 @@ class SettingsActivity : MIUIActivity() {
                 MIUIDialog(activity) {
                     setTitle(R.string.Tips)
                     setMessage(R.string.FirstTip)
-                    setRButton(R.string.Ok) {
+                    setLButton(R.string.Ok) {
                         ActivityOwnSP.ownSPConfig.setIsFirst(false)
                         init()
                         dismiss()
                     }
-                    setLButton(R.string.Cancel) {
+                    setRButton(R.string.Cancel) {
                         dismiss()
                         exitProcess(0)
                     }
