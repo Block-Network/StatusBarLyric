@@ -979,16 +979,6 @@ class SettingsActivity : MIUIActivity() {
         super.onCreate(savedInstanceState)
         if (isLoad && !isRegister) {
             isRegister = true
-            registerReceiver(AppReceiver(), IntentFilter().apply {
-                addAction("App_Server")
-            })
-            Crashes.setListener(CrashesFilter())
-            if (BuildConfig.DEBUG) {
-                ActivityOwnSP.ownSPConfig.setDebug(true)
-            }
-
-            Timer().schedule(UpdateConfigTask(), 0, 1000)
-
             if (ActivityOwnSP.ownSPConfig.getIsFirst()) {
                 MIUIDialog(activity) {
                     setTitle(R.string.Tips)
@@ -1148,11 +1138,18 @@ class SettingsActivity : MIUIActivity() {
     }
 
     private fun init() {
+        registerReceiver(AppReceiver(), IntentFilter().apply {
+            addAction("App_Server")
+        })
+        Crashes.setListener(CrashesFilter())
+        if (BuildConfig.DEBUG) {
+            ActivityOwnSP.ownSPConfig.setDebug(true)
+        }
+        Timer().schedule(UpdateConfigTask(), 0, 1000)
         ActivityUtils.getNotice(activity)
         if (ActivityOwnSP.ownSPConfig.getCheckUpdate()) ActivityUtils.getUpdate(activity)
         AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
         Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
         Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
-
     }
 }
