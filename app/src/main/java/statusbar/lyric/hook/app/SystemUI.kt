@@ -252,18 +252,18 @@ class SystemUI : BaseHook() {
                     LogUtils.e(LogMultiLang.checkSystem)
                     if (Settings.System.getInt(application.contentResolver, "clock_style", 0) == 0) {
                         LogUtils.e("mClockView start")
-                        arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                        arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
                     } else {
                         LogUtils.e("mStatusClock start")
-                        arrayOf("mStatusClock", "mClockView", "mCenterClock", "mLeftClock", "mRightClock")
+                        arrayOf("mStatusClock", "mClockView", "mLeftClock", "mCenterClock", "mRightClock")
                     }
                 } else {
                     LogUtils.e(LogMultiLang.normalMode)
-                    arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                    arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
                 }
             } catch (e: Throwable) {
                 LogUtils.e("getPackageInfoError: $e \n" + Log.getStackTraceString(e))
-                arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
             }
             var thisField: Field? = null
             for (field in array) {
