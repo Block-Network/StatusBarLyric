@@ -246,6 +246,7 @@ object Utils {
 
     @JvmStatic
     fun packNameGetIconName(packName: String?): String? {
+        LogUtils.e(packName)
         return packNameToIconName[packName]
     }
 
@@ -298,6 +299,7 @@ object Utils {
     fun Any?.isNull(callback: () -> Unit) {
         if (this == null) callback()
     }
+
     fun Any?.isNotNull(callback: () -> Unit) {
         if (this != null) callback()
     }

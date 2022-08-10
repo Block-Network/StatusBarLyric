@@ -70,7 +70,7 @@ class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
     private var lyrics = "lyric"
     var texts = ""
-    var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
+    var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.r.rplayer.MusicService", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
 
     // base data
     val application: Application by lazy { AndroidAppHelper.currentApplication() }
