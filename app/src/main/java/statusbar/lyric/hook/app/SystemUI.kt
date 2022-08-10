@@ -602,12 +602,13 @@ class SystemUI : BaseHook() {
     private fun offLyric(info: String) {
         // off Lyric
         LogUtils.e(info)
-        stopTimer()
-        if (lyricLayout.visibility != View.GONE && config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
         application.sendBroadcast(Intent().apply {
             action = "Lyric_Server"
             putExtra("Lyric_Type", "stop")
         })
+        stopTimer()
+        if (config.getOnlyGetLyric()) return
+        if (lyricLayout.visibility != View.GONE && config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
     }
 
     fun updateLyric(lyric: String, icon: String) {
@@ -627,6 +628,7 @@ class SystemUI : BaseHook() {
         }
         if (config.getOnlyGetLyric()) {
             LogUtils.e(LogMultiLang.onlyGetLyric)
+            if (config.getLyricAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
             return
         }
 
