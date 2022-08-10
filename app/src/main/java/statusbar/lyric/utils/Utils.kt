@@ -58,6 +58,7 @@ object Utils {
         put("com.netease.cloudmusic", "Netease")
         put("com.tencent.qqmusic", "QQMusic")
         put("cmccwm.mobilemusic", "MiGu")
+        put("com.r.rplayer", "RPlayer")
     }
 
     @JvmStatic
