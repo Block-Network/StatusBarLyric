@@ -79,6 +79,7 @@ class MainHook : IXposedHookLoadPackage {
             }
             "com.r.rplayer" -> {
                 LogUtils.e("start Hook RPlayer")
+                MeiZuStatusBarLyric.guiseFlyme(true)
                 RPlayer()
             }
             else -> {
