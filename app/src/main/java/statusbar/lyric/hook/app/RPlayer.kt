@@ -8,9 +8,10 @@ import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
 
-class RPlayer: BaseHook() {
+class RPlayer : BaseHook() {
 
     override fun hook() {
+        var oldLyric = ""
         if ("com.stub.StubApp".findClassOrNull() == null) {
             LogUtils.e("Can't find 360 Entry!")
             return
@@ -27,8 +28,13 @@ class RPlayer: BaseHook() {
                 it.result = true
             }
             apiClass.hookAfterMethod("sendLyric", Context::class.java, String::class.java, String::class.java, String::class.java, Boolean::class.javaPrimitiveType) {
+                val lyric = it.args[1] as String
+                if (lyric == oldLyric) {
+                    oldLyric = lyric
+                    return@hookAfterMethod
+                }
                 LogUtils.e("API: " + it.args[1])
-                Utils.sendLyric(it.args[0] as Context, it.args[1] as String, it.args[2] as String, it.args[4] as Boolean, it.args[3] as String)
+                Utils.sendLyric(it.args[0] as Context, lyric, it.args[2] as String, it.args[4] as Boolean, it.args[3] as String)
             }
             apiClass.hookAfterMethod("stopLyric", Context::class.java) {
                 (it.args[0] as Context).sendBroadcast(Intent().apply {
