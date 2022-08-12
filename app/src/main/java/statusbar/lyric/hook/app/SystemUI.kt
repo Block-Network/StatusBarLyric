@@ -168,8 +168,8 @@ class SystemUI : BaseHook() {
                     iconPos = config.getLyricPosition()
                     if (order) i += 1 else i -= 1
                     updateMargins.sendMessage(updateMargins.obtainMessage().also {
-                        it.obj = 10 + i
-//                        it.arg2 = config.getLyricHigh()
+                        it.obj = 10 + i + iconPos
+                        it.arg2 = config.getLyricHigh()
                     })
                     if (i == 0) order = true else if (i == 20) order = false
                 }
@@ -434,12 +434,13 @@ class SystemUI : BaseHook() {
 
         updateMargins = Handler(Looper.getMainLooper()) { message ->
 //            (lyricLayout.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
-            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.obj as Int
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.arg1 as Int
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).topMargin = message.arg2 as Int
             true
         }
 
         updateIconMargins = Handler(Looper.getMainLooper()) { message ->
-            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, config.getIconspacing(), 0)
+            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(0, message.arg1, message.arg2, 0)
             true
         }
 
@@ -574,11 +575,12 @@ class SystemUI : BaseHook() {
             })
         } else iconColor = 0
         updateMargins.sendMessage(updateMargins.obtainMessage().also {
-            it.obj = config.getLyricHigh()
+            it.arg1 = config.getLyricPosition()
+            it.arg2 = config.getLyricHigh()
         })
         updateIconMargins.sendMessage(updateIconMargins.obtainMessage().also {
-            it.arg1 = config.getLyricPosition()
-            it.arg2 = config.getIconHigh()
+            it.arg1 = config.getIconHigh()
+            it.arg2 = config.getIconspacing()
         })
         if (config.getIconSize() != 0) {
             (iconView.layoutParams as LinearLayout.LayoutParams).apply { // set icon size

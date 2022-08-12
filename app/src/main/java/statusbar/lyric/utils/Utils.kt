@@ -246,7 +246,6 @@ object Utils {
 
     @JvmStatic
     fun packNameGetIconName(packName: String?): String? {
-        LogUtils.e(packName)
         return packNameToIconName[packName]
     }
 
