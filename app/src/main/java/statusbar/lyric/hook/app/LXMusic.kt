@@ -22,6 +22,7 @@ class LXMusic: BaseHook() {
 
     override fun hook() {
         if ("StatusBarLyric.API.StatusBarLyric".findClassOrNull().isNull()) {
+            LogUtils.e("找不到Api Class，进行模糊hook")
             val lyricModuleClass = "cn.toside.music.mobile.lyric.LyricModule".findClassOrNull() ?: run {
                 LogUtils.e("Can't find class LyricModule!")
                 return
@@ -47,6 +48,7 @@ class LXMusic: BaseHook() {
             "android.view.WindowManagerImpl".hookBeforeMethod("addView", View::class.java, ViewGroup.LayoutParams::class.java) {
                 (it.args[0] as View).visibility = View.GONE
             }
+            LogUtils.e("模糊hook完成")
             return
         }
         "StatusBarLyric.API.StatusBarLyric".hookAfterMethod("hasEnable") {
