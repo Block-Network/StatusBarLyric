@@ -59,10 +59,6 @@ class MainHook : IXposedHookLoadPackage {
                 MeiZuStatusBarLyric.guiseFlyme(true)
                 null
             }
-            "remix.myplayer" -> {
-                LogUtils.e("start Hook myplayer")
-                Myplayer()
-            }
             "cmccwm.mobilemusic" -> {
                 LogUtils.e("start Hook migu")
                 MeiZuStatusBarLyric.guiseFlyme(true)
@@ -72,7 +68,7 @@ class MainHook : IXposedHookLoadPackage {
                 LogUtils.e("start Hook xiaomi Player")
                 Miplayer()
             }
-            "com.meizu.media.music" -> {
+            "com.meizu.media.music", "remix.myplayer" -> {
                 LogUtils.e("start Hook Meizu Music")
                 MeiZuStatusBarLyric.guiseFlyme(true)
                 null
