@@ -187,4 +187,5 @@
     <string name="BlockLyricOff">Whether to cancel the display of shielded lyrics</string>
     <string name="ModuleVersion">Module Version</string>
     <string name="BuildTime">Build Time</string>
+    <string name="BgCorners">Background rounded corners</string>
 </resources>
