@@ -60,7 +60,7 @@ dependencies { //API
     compileOnly("de.robv.android.xposed:api:82:sources") // Use Hide Api
     compileOnly(project(":hidden-api")) //MIUI 通知栏
     implementation(files("libs/miui_sdk.jar")) // microsoft app center
-    val appCenterSdkVersion = "4.4.5"
+    val appCenterSdkVersion = "4.4.3"
     implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
     implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
     implementation(project(":blockmiui"))
