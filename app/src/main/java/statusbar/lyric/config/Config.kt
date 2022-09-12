@@ -112,6 +112,13 @@ class Config {
     fun setIconspacing(i: Int) {
         config.put("ISpacing", i)
     }
+    fun getBgCorners(): Int {
+        return config.optInt("BgCorners", 30)
+    }
+
+    fun setBgCorners(i: Int) {
+        config.put("BgCorners", i)
+    }
 
     fun getLyricAutoOff(): Boolean {
         return config.optBoolean("LAutoOff", true)

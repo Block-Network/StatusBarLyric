@@ -168,4 +168,5 @@
     <string name="BlockLyricOff">屏蔽歌词是否取消显示</string>
     <string name="ModuleVersion">模块版本</string>
     <string name="BuildTime">编译时间</string>
+    <string name="BgCorners">背景圆角</string>
 </resources>

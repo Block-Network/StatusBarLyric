@@ -238,6 +238,32 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 }))
+                TextSummaryArrow(TextSummaryV(textId = R.string.BgCorners, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.BgCorners)
+                        setMessage(R.string.LyricHighTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getBgCorners().toString(), "30")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (0..100)) {
+                                        ActivityOwnSP.ownSPConfig.setBgCorners(value)
+                                        updateConfig = true
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
+                            }
+                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                            ActivityOwnSP.ownSPConfig.setBgCorners(0)
+                            updateConfig = true
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                }))
                 Text(textId = R.string.LyricSize, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.LyricSize)

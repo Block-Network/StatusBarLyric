@@ -171,4 +171,5 @@
     <string name="BlockLyricOff">遮罩歌詞是否取消顯示</string>
     <string name="ModuleVersion">模塊版本</string>
     <string name="BuildTime">編譯時間</string>
+    <string name="BgCorners">背景圓角</string>
 </resources>

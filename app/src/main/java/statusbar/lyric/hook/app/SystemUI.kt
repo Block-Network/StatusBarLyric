@@ -38,6 +38,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
@@ -399,7 +400,17 @@ class SystemUI : BaseHook() {
                 addView(customizeView)
             }
 
-
+            if (config.getBackgroundColor() != "") {
+                val gd = GradientDrawable()
+                gd.setColor(Color.parseColor(config.getBackgroundColor()))
+                gd.cornerRadius = config.getBgCorners().toFloat()
+                gd.setStroke(width, Color.TRANSPARENT)
+                background = gd
+//            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
+            } else {
+                background = null
+//            lyricLayout.setBackgroundColor(0)
+            }
         }
 
         clockClickable = clock.isClickable
@@ -592,11 +603,11 @@ class SystemUI : BaseHook() {
             lyricSwitchView.setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, config.getLyricSize().toFloat())
         }
         customizeView.text = config.getCustomizeText()
-        if (config.getBackgroundColor() != "") {
-            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
-        } else {
-            lyricLayout.setBackgroundColor(0)
-        }
+//        if (config.getBackgroundColor() != "") {
+//            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
+//        } else {
+//            lyricLayout.setBackgroundColor(0)
+//        }
         lyricSwitchView.setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
         customizeView.letterSpacing = if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
     }
