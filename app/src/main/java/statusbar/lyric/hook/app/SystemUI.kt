@@ -38,6 +38,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
@@ -70,7 +71,7 @@ class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
     private var lyrics = "lyric"
     var texts = ""
-    var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
+    var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.r.rplayer.MusicService", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
 
     // base data
     val application: Application by lazy { AndroidAppHelper.currentApplication() }
@@ -168,8 +169,8 @@ class SystemUI : BaseHook() {
                     iconPos = config.getLyricPosition()
                     if (order) i += 1 else i -= 1
                     updateMargins.sendMessage(updateMargins.obtainMessage().also {
-                        it.obj = 10 + i
-//                        it.arg2 = config.getLyricHigh()
+                        it.obj = 10 + i + iconPos
+                        it.arg2 = config.getLyricHigh()
                     })
                     if (i == 0) order = true else if (i == 20) order = false
                 }
@@ -184,7 +185,7 @@ class SystemUI : BaseHook() {
             timeOffTimer = object : TimerTask() {
                 override fun run() {
                     if (texts == lyrics) {
-                        offLyric(LogMultiLang.TimeOff)
+                        offLyric(LogMultiLang.timeOff)
                     }
                     texts = lyrics
 //                    text = lyrics
@@ -252,18 +253,18 @@ class SystemUI : BaseHook() {
                     LogUtils.e(LogMultiLang.checkSystem)
                     if (Settings.System.getInt(application.contentResolver, "clock_style", 0) == 0) {
                         LogUtils.e("mClockView start")
-                        arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                        arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
                     } else {
                         LogUtils.e("mStatusClock start")
-                        arrayOf("mStatusClock", "mClockView", "mCenterClock", "mLeftClock", "mRightClock")
+                        arrayOf("mStatusClock", "mClockView", "mLeftClock", "mCenterClock", "mRightClock")
                     }
                 } else {
                     LogUtils.e(LogMultiLang.normalMode)
-                    arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                    arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
                 }
             } catch (e: Throwable) {
                 LogUtils.e("getPackageInfoError: $e \n" + Log.getStackTraceString(e))
-                arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
             }
             var thisField: Field? = null
             for (field in array) {
@@ -316,7 +317,7 @@ class SystemUI : BaseHook() {
         audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
 
         if (config.getOnlyGetLyric()) {
-            LogUtils.e(LogMultiLang.OnlyGetLyric)
+            LogUtils.e(LogMultiLang.onlyGetLyric)
             return
         }
 
@@ -399,7 +400,17 @@ class SystemUI : BaseHook() {
                 addView(customizeView)
             }
 
-
+            if (config.getBackgroundColor() != "") {
+                val gd = GradientDrawable()
+                gd.setColor(Color.parseColor(config.getBackgroundColor()))
+                gd.cornerRadius = config.getBgCorners().toFloat()
+                gd.setStroke(width, Color.TRANSPARENT)
+                background = gd
+//            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
+            } else {
+                background = null
+//            lyricLayout.setBackgroundColor(0)
+            }
         }
 
         clockClickable = clock.isClickable
@@ -434,12 +445,13 @@ class SystemUI : BaseHook() {
 
         updateMargins = Handler(Looper.getMainLooper()) { message ->
 //            (lyricLayout.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
-            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.obj as Int
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.arg1 as Int
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).topMargin = message.arg2 as Int
             true
         }
 
         updateIconMargins = Handler(Looper.getMainLooper()) { message ->
-            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, config.getIconspacing(), 0)
+            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(0, message.arg1, message.arg2, 0)
             true
         }
 
@@ -549,6 +561,10 @@ class SystemUI : BaseHook() {
 
     private fun updateConfig() {
         config.update()
+        if (config.getOnlyGetLyric()) {
+            LogUtils.e(LogMultiLang.onlyGetLyric)
+            return
+        }
         pattern = if (config.getBlockLyric() != "" && config.getBlockLyricMode()) Pattern.compile(config.getBlockLyric()) else null
         if (!config.getLyricService()) offLyric(LogMultiLang.switchOff)
         if (config.getLyricStyle()) lyricSwitchView.setSpeed((config.getLyricSpeed().toFloat() / 100))
@@ -570,11 +586,12 @@ class SystemUI : BaseHook() {
             })
         } else iconColor = 0
         updateMargins.sendMessage(updateMargins.obtainMessage().also {
-            it.obj = config.getLyricHigh()
+            it.arg1 = config.getLyricPosition()
+            it.arg2 = config.getLyricHigh()
         })
         updateIconMargins.sendMessage(updateIconMargins.obtainMessage().also {
-            it.arg1 = config.getLyricPosition()
-            it.arg2 = config.getIconHigh()
+            it.arg1 = config.getIconHigh()
+            it.arg2 = config.getIconspacing()
         })
         if (config.getIconSize() != 0) {
             (iconView.layoutParams as LinearLayout.LayoutParams).apply { // set icon size
@@ -586,11 +603,11 @@ class SystemUI : BaseHook() {
             lyricSwitchView.setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, config.getLyricSize().toFloat())
         }
         customizeView.text = config.getCustomizeText()
-        if (config.getBackgroundColor() != "") {
-            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
-        } else {
-            lyricLayout.setBackgroundColor(0)
-        }
+//        if (config.getBackgroundColor() != "") {
+//            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
+//        } else {
+//            lyricLayout.setBackgroundColor(0)
+//        }
         lyricSwitchView.setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
         customizeView.letterSpacing = if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
     }
@@ -598,12 +615,13 @@ class SystemUI : BaseHook() {
     private fun offLyric(info: String) {
         // off Lyric
         LogUtils.e(info)
-        stopTimer()
-        if (lyricLayout.visibility != View.GONE && config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
         application.sendBroadcast(Intent().apply {
             action = "Lyric_Server"
             putExtra("Lyric_Type", "stop")
         })
+        stopTimer()
+        if (config.getOnlyGetLyric()) return
+        if (lyricLayout.visibility != View.GONE && config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
     }
 
     fun updateLyric(lyric: String, icon: String) {
@@ -619,6 +637,11 @@ class SystemUI : BaseHook() {
         }
         if (isLock) {
             offLyric(LogMultiLang.unlockDisplayOnly)
+            return
+        }
+        if (config.getOnlyGetLyric()) {
+            LogUtils.e(LogMultiLang.onlyGetLyric)
+            if (config.getLyricAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
             return
         }
 

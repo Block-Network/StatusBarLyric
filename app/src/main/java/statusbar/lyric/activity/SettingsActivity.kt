@@ -151,12 +151,12 @@ class SettingsActivity : MIUIActivity() {
                     MIUIDialog(activity) {
                         setTitle(R.string.RestartUI)
                         setMessage(R.string.RestartUITips)
-                        setRButton(R.string.Ok) {
+                        setLButton(R.string.Ok) {
                             Utils.voidShell("pkill -f com.android.systemui", true)
                             Analytics.trackEvent("重启SystemUI")
                             dismiss()
                         }
-                        setLButton(R.string.Cancel) { dismiss() }
+                        setRButton(R.string.Cancel) { dismiss() }
                     }.show()
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Backup, onClickListener = {
@@ -232,6 +232,32 @@ class SettingsActivity : MIUIActivity() {
                             }
                             ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
                             ActivityOwnSP.ownSPConfig.setBackgroundColor("")
+                            updateConfig = true
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                }))
+                TextSummaryArrow(TextSummaryV(textId = R.string.BgCorners, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.BgCorners)
+                        setMessage(R.string.LyricHighTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getBgCorners().toString(), "30")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (0..100)) {
+                                        ActivityOwnSP.ownSPConfig.setBgCorners(value)
+                                        updateConfig = true
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
+                            }
+                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                            ActivityOwnSP.ownSPConfig.setBgCorners(0)
                             updateConfig = true
                             dismiss()
                         }
@@ -736,6 +762,7 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.CustomHook)
+                        setMessage(R.string.CustomHookTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getHook(), getString(R.string.InputCustomHook))
                         setRButton(R.string.Ok) {
                             if (getEditText().isNotEmpty()) {
@@ -978,26 +1005,16 @@ class SettingsActivity : MIUIActivity() {
         super.onCreate(savedInstanceState)
         if (isLoad && !isRegister) {
             isRegister = true
-            registerReceiver(AppReceiver(), IntentFilter().apply {
-                addAction("App_Server")
-            })
-            Crashes.setListener(CrashesFilter())
-            if (BuildConfig.DEBUG) {
-                ActivityOwnSP.ownSPConfig.setDebug(true)
-            }
-
-            Timer().schedule(UpdateConfigTask(), 0, 1000)
-
             if (ActivityOwnSP.ownSPConfig.getIsFirst()) {
                 MIUIDialog(activity) {
                     setTitle(R.string.Tips)
                     setMessage(R.string.FirstTip)
-                    setRButton(R.string.Ok) {
+                    setLButton(R.string.Ok) {
                         ActivityOwnSP.ownSPConfig.setIsFirst(false)
                         init()
                         dismiss()
                     }
-                    setLButton(R.string.Cancel) {
+                    setRButton(R.string.Cancel) {
                         dismiss()
                         exitProcess(0)
                     }
@@ -1147,11 +1164,18 @@ class SettingsActivity : MIUIActivity() {
     }
 
     private fun init() {
+        registerReceiver(AppReceiver(), IntentFilter().apply {
+            addAction("App_Server")
+        })
+        Crashes.setListener(CrashesFilter())
+        if (BuildConfig.DEBUG) {
+            ActivityOwnSP.ownSPConfig.setDebug(true)
+        }
+        Timer().schedule(UpdateConfigTask(), 0, 1000)
         ActivityUtils.getNotice(activity)
         if (ActivityOwnSP.ownSPConfig.getCheckUpdate()) ActivityUtils.getUpdate(activity)
         AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
         Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
         Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
-
     }
 }

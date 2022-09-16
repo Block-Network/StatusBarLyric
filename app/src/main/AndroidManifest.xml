@@ -17,9 +17,7 @@
 
         <activity
                 android:name=".activity.SettingsActivity"
-                android:exported="true"
-                android:screenOrientation="portrait"
-                tools:ignore="LockedOrientationActivity">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="miui.cn.fkj233.xposed.statusbarlyric.SettingsFragment"/>

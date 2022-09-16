@@ -105,6 +105,7 @@ jobs:
           path: ./app/build/outputs/mapping/release/mapping.txt
 
       - name: Post to channel
+        if: contains(github.event.head_commit.message, '[skip post]') == false
         env:
           CHANNEL_ID: ${{ secrets.CHANNEL_DEV_ID }}
           BOT_TOKEN: ${{ secrets.BOT_DEV_TOKEN }}

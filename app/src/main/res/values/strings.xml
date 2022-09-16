@@ -27,6 +27,7 @@
     <string name="HideNetWork">Hide network speed</string>
     <string name="AutoHideCarrierName">Auto hide lock screen carrier name</string>
     <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
+    <string name="CustomHookTips">Some Hook Points\nmStatusClock mClockView mLeftClock mCenterClock mRightClock</string>
     <string name="DebugMode">Debug mode</string>
     <string name="OnlyGetLyric">Get lyrics only</string>
     <string name="TimeOff">* Time off</string>
@@ -56,7 +57,10 @@
         - Kuwo Music Unknown ~ 10.1.3.0(Car Bluetooth Lyrics Version)\n
         - SaltPlayer 4.5 ~ now(API version)\n
         - MeizuMusic Unknown ~ now(Status bar lyrics version)\n
-        - MIUIPlayer 4.6.0 ~ 4.7.2.2(Car Bluetooth Lyrics Version)
+        - MIUIPlayer 4.6.0 ~ 4.7.2.2(Car Bluetooth Lyrics Version)\n
+        - RPlayer 未知 ~ 1.4.9（Status bar lyrics version）\n\n
+
+        Versions not in this range may not be available, but versions in this range will definitely work
     </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
@@ -183,4 +187,5 @@
     <string name="BlockLyricOff">Whether to cancel the display of shielded lyrics</string>
     <string name="ModuleVersion">Module Version</string>
     <string name="BuildTime">Build Time</string>
+    <string name="BgCorners">Background rounded corners</string>
 </resources>

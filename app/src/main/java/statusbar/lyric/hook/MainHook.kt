@@ -77,6 +77,15 @@ class MainHook : IXposedHookLoadPackage {
                 MeiZuStatusBarLyric.guiseFlyme(true)
                 null
             }
+            "com.r.rplayer" -> {
+                LogUtils.e("start Hook RPlayer")
+                MeiZuStatusBarLyric.guiseFlyme(true)
+                RPlayer()
+            }
+            "cn.toside.music.mobile" -> {
+                LogUtils.e("start Hook LX Music")
+                LXMusic()
+            }
             else -> {
                 LogUtils.e("start Hook ${lpparam.processName}")
                 Api()
