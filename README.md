@@ -70,10 +70,7 @@
 
 [想做贡献？](doc/CONTRIBUTING.md)  
 [合作名单](doc/Cooperate.md)   
-[赞助列表](doc/SPONSOR.md)  
-
-<img height="400px" src="./images/alipay.jpg" />
-<img height="400px" src="./images/wechat.jpg" />
+[赞助列表](doc/SPONSOR.md)
 
 ## EULA & License
 

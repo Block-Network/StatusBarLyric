@@ -65,10 +65,7 @@ please check [Api](https://github.com/577fkj/StatusBarApiExample)
 
 [Want to contribute?](doc/CONTRIBUTING_EN.md)  
 [Cooperate Lists](doc/Cooperate.md)  
-[Sponsorship list (CN)](doc/SPONSOR.md)  
-
-<img height="400px" src="./images/alipay.jpg" />
-<img height="400px" src="./images/wechat.jpg" />
+[Sponsorship list (CN)](doc/SPONSOR.md)
 
 ## EULA & License
 
