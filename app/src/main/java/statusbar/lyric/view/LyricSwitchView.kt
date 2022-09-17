@@ -27,7 +27,6 @@ import android.content.Context
 import android.graphics.Typeface
 import android.text.TextPaint
 import android.text.TextUtils
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
@@ -48,18 +47,18 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwi
         get() = (currentView as TextView).paint
 
     init {
-        lyricTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        lyricTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        autoMarqueeTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        autoMarqueeTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        autoMarqueeTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
-        autoMarqueeTextView2.ellipsize = TextUtils.TruncateAt.MARQUEE
         if (hasMeizu) {
+            lyricTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            lyricTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             addView(lyricTextView)
             addView(lyricTextView2)
             viewArray.add(lyricTextView)
             viewArray.add(lyricTextView2)
         } else {
+            autoMarqueeTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            autoMarqueeTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            autoMarqueeTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
+            autoMarqueeTextView2.ellipsize = TextUtils.TruncateAt.MARQUEE
             addView(autoMarqueeTextView)
             addView(autoMarqueeTextView2)
             viewArray.add(autoMarqueeTextView)
@@ -84,6 +83,11 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwi
             lyricTextView.setSpeed(f)
             lyricTextView2.setSpeed(f)
         }
+    }
+
+    fun horizontalFadingEdge() {
+        viewArray.forEach { view -> view.isHorizontalFadingEdgeEnabled = true }
+
     }
 
     fun setLetterSpacings(letterSpacing: Float) {

@@ -123,6 +123,7 @@
     <string name="Custom">自定义</string>
     <string name="InputCustomHook">自定义 Hook 点，空为关闭</string>
     <string name="HideTime">隐藏时间</string>
+    <string name="FadingEdge">* 边缘虚化</string>
     <string name="SponsoredList">赞助名单</string>
     <string name="Donate">支持我们</string>
     <string name="HookSure">Hook 系统界面</string>
