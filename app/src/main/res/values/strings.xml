@@ -135,6 +135,7 @@
     <string name="Custom">Custom</string>
     <string name="InputCustomHook">Input custom hook, Input empty of off</string>
     <string name="HideTime">Hide Time</string>
+    <string name="FadingEdge">* Edge blur</string>
     <string name="SponsoredList">Sponsored List</string>
     <string name="Donate">Support us</string>
     <string name="HookSure">Hook SystemUI</string>
