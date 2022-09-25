@@ -180,6 +180,14 @@ class Config {
         return config.put("Debug", b)
     }
 
+    fun getFadingEdge(): Boolean {
+        return config.optBoolean("FadingEdge", false)
+    }
+
+    fun setFadingEdge(b: Boolean) {
+        return config.put("FadingEdge", b)
+    }
+
     fun getIcon(): Boolean {
         return config.optBoolean("I", true)
     }

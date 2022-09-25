@@ -486,6 +486,7 @@ class SettingsActivity : MIUIActivity() {
                     }
                 }
                 TextWithSwitch(TextV(textId = R.string.MeizuStyle, dataBindingRecv = meiZuStyle.binding.getRecv(1)), SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend))
+                TextWithSwitch(TextV(textId = R.string.FadingEdge), SwitchV("FadingEdge", false))
                 Text(textId = R.string.LyricSpeed, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.LyricSpeed)

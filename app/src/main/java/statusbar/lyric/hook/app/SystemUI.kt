@@ -363,6 +363,7 @@ class SystemUI : BaseHook() {
             setSingleLine(true)
             setMaxLines(1)
             setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
+           if(config.getFadingEdge()) horizontalFadingEdge()
             try {
                 val file = File(application.filesDir.path + "/font")
                 if (file.exists() && file.isFile && file.canRead()) {
