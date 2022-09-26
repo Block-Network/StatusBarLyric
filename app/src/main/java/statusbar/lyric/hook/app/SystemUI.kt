@@ -40,6 +40,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
+import android.media.MediaMetadata
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -58,6 +59,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.*
+import statusbar.lyric.utils.Utils.isNotNull
 import statusbar.lyric.utils.XposedOwnSP.config
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricSwitchView
@@ -72,6 +74,8 @@ class SystemUI : BaseHook() {
     private var lyrics = "lyric"
     var texts = ""
     var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.r.rplayer.MusicService", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
+    private var lsatName = ""
+    var isFirstEntry = false
 
     // base data
     val application: Application by lazy { AndroidAppHelper.currentApplication() }
@@ -234,6 +238,19 @@ class SystemUI : BaseHook() {
         "com.android.systemui.statusbar.phone.NotificationIconContainer".findClassOrNull()?.hookAfterAllConstructors {
             notificationIconContainer = it.thisObject as FrameLayout
         }.isNull { LogUtils.e("Not find NotificationIconContainer") }
+
+        "com.android.systemui.statusbar.NotificationMediaManager".hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
+            val mContext = it.thisObject.getObjectField("mContext") as Context
+            val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata
+            mMediaMetadata.isNotNull {
+                val value = mMediaMetadata.getString(MediaMetadata.METADATA_KEY_TITLE)
+                if (lsatName != value) {
+                    lsatName = value
+                    isFirstEntry = true
+                    Utils.sendLyric(mContext, lsatName, "Default")
+                }
+            }
+        }
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) { // Get system clock view
@@ -363,7 +380,7 @@ class SystemUI : BaseHook() {
             setSingleLine(true)
             setMaxLines(1)
             setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
-           if(config.getFadingEdge()) horizontalFadingEdge()
+            if (config.getFadingEdge()) horizontalFadingEdge()
             try {
                 val file = File(application.filesDir.path + "/font")
                 if (file.exists() && file.isFile && file.canRead()) {
@@ -628,8 +645,10 @@ class SystemUI : BaseHook() {
     fun updateLyric(lyric: String, icon: String) {
         lyrics = lyric
         LogUtils.e(LogMultiLang.sendLog)
-        if (lyric.isEmpty()) {
+        LogUtils.e(isFirstEntry)
+        if (lyric.isEmpty() && !isFirstEntry) {
             offLyric(LogMultiLang.emptyLyric)
+            isFirstEntry = false
             return
         }
         if (!config.getLyricService()) {

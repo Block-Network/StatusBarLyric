@@ -1170,6 +1170,7 @@ class SettingsActivity : MIUIActivity() {
         })
         Crashes.setListener(CrashesFilter())
         if (BuildConfig.DEBUG) {
+            ActivityOwnSP.ownSPConfig.setLyricService(true)
             ActivityOwnSP.ownSPConfig.setDebug(true)
         }
         Timer().schedule(UpdateConfigTask(), 0, 1000)
