@@ -239,11 +239,11 @@ class SystemUI : BaseHook() {
             notificationIconContainer = it.thisObject as FrameLayout
         }.isNull { LogUtils.e("Not find NotificationIconContainer") }
 
-        "com.android.systemui.statusbar.NotificationMediaManager".hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
+        "com.android.systemui.statusbar.NotificationMediaManager".findClassOrNull()?.hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
             val mContext = it.thisObject.getObjectField("mContext") as Context
-            val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata
+            val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata?
             mMediaMetadata.isNotNull {
-                val value = mMediaMetadata.getString(MediaMetadata.METADATA_KEY_TITLE)
+                val value = mMediaMetadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
                 if (lsatName != value) {
                     lsatName = value
                     isFirstEntry = true
@@ -645,7 +645,6 @@ class SystemUI : BaseHook() {
     fun updateLyric(lyric: String, icon: String) {
         lyrics = lyric
         LogUtils.e(LogMultiLang.sendLog)
-        LogUtils.e(isFirstEntry)
         if (lyric.isEmpty() && !isFirstEntry) {
             offLyric(LogMultiLang.emptyLyric)
             isFirstEntry = false
