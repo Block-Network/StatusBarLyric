@@ -72,6 +72,7 @@ import kotlin.system.exitProcess
 class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
     private var lyrics = "lyric"
+    private var icon: String = ""
     var texts = ""
     var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.r.rplayer.MusicService", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
     private var lsatName = ""
@@ -247,7 +248,7 @@ class SystemUI : BaseHook() {
                 if (lsatName != value) {
                     lsatName = value
                     isFirstEntry = true
-                    Utils.sendLyric(mContext, lsatName, "Default")
+                    Utils.sendLyric(mContext, lsatName, icon)
                 }
             }
         }
@@ -771,17 +772,16 @@ class SystemUI : BaseHook() {
     inner class LyricReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
-                var icon = intent.getStringExtra("Lyric_Icon")
+                icon = intent.getStringExtra("Lyric_Icon") ?: "Api"
                 when (intent.getStringExtra("Lyric_Type")) {
                     "hook" -> {
                         val lyric = intent.getStringExtra("Lyric_Data") ?: ""
                         LogUtils.e("${LogMultiLang.recvData}hook: lyric:$lyric icon:$icon")
-                        updateLyric(lyric, icon ?: "Api")
+                        updateLyric(lyric, icon)
                         useSystemMusicActive = true
                     }
 
                     "app" -> {
-                        if (icon.isNullOrEmpty()) icon = "Api"
                         val packName = intent.getStringExtra("Lyric_PackName")
                         if (!packName.isNullOrEmpty() && !musicServer.contains(packName)) {
                             musicServer.add(packName)
