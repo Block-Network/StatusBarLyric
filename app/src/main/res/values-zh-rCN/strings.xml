@@ -29,7 +29,7 @@
     <string name="CustomHookTips">部分Hook点\nmStatusClock mClockView mLeftClock mCenterClock mRightClock</string>
     <string name="DebugMode">Debug 模式</string>
     <string name="OnlyGetLyric">仅获取歌词</string>
-    <string name="OnlyGetLyricTips">DEBUG ONLY: 仅获取歌词而不显示在状态栏</string>
+    <string name="OnlyGetLyricTips">仅获取歌词而不显示在状态栏</string>
     <string name="TimeOff">* 定时关闭</string>
     <string name="TimeOffTime">定时关闭时长</string>
     <string name="ReStartSystemUI">重启 SystemUI</string>

@@ -30,7 +30,7 @@
     <string name="CustomHookTips">Some Hook Points\nmStatusClock mClockView mLeftClock mCenterClock mRightClock</string>
     <string name="DebugMode">Debug mode</string>
     <string name="OnlyGetLyric">Get lyrics only</string>
-    <string name="OnlyGetLyricTips">DEBUG ONLY: Get lyrics only without displaying them in the status bar</string>
+    <string name="OnlyGetLyricTips">Get lyrics only without displaying them in the status bar</string>
     <string name="TimeOff">* Time off</string>
     <string name="TimeOffTime">Timed off time</string>
     <string name="ReStartSystemUI">Restart SystemUI</string>
