@@ -174,7 +174,8 @@ class SystemUI : BaseHook() {
                     iconPos = config.getLyricPosition()
                     if (order) i += 1 else i -= 1
                     updateMargins.sendMessage(updateMargins.obtainMessage().also {
-                        it.obj = 10 + i + iconPos
+                        it.obj = null
+                        it.arg1 = 10 + i + iconPos
                         it.arg2 = config.getLyricHigh()
                     })
                     if (i == 0) order = true else if (i == 20) order = false
