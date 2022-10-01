@@ -1,19 +1,18 @@
 package statusbar.lyric.hook.app
 
 import android.app.Activity
+import android.app.AndroidAppHelper
 import android.content.Context
+import android.content.Intent
+import android.view.View
+import android.view.ViewGroup
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
-import android.app.AndroidAppHelper
-import android.content.Intent
-import android.view.View
-import android.view.ViewGroup
 import statusbar.lyric.utils.ktx.hookBeforeMethod
 import statusbar.lyric.utils.ktx.isNull
-import java.util.ArrayList
 
 class LXMusic: BaseHook() {
 
@@ -46,7 +45,9 @@ class LXMusic: BaseHook() {
                 runCatching { Utils.sendLyric(context, lyric, null, true, "cn.toside.music.mobile") }
             }
             "android.view.WindowManagerImpl".hookBeforeMethod("addView", View::class.java, ViewGroup.LayoutParams::class.java) {
-                (it.args[0] as View).visibility = View.GONE
+                if (it.args[0]::class.java.name.contains("cn.toside.music.mobile.lyric")) {
+                    (it.args[0] as View).visibility = View.GONE
+                }
             }
             LogUtils.e("模糊hook完成")
             return
