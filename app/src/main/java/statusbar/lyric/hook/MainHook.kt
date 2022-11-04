@@ -56,8 +56,7 @@ class MainHook : IXposedHookLoadPackage {
             }
             "com.tencent.qqmusic" -> {
                 LogUtils.e("start hook qqmusic")
-                MeiZuStatusBarLyric.guiseFlyme(true)
-                null
+                QQMusic()
             }
             "remix.myplayer" -> {
                 LogUtils.e("start Hook myplayer")
