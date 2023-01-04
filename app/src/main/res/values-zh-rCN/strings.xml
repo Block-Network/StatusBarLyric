@@ -32,6 +32,7 @@
     <string name="OnlyGetLyricTips">仅获取歌词而不显示在状态栏</string>
     <string name="TimeOff">* 定时关闭</string>
     <string name="TimeOffTime">定时关闭时长</string>
+    <string name="GetTitle">* 强制显示歌词标题</string>
     <string name="ReStartSystemUI">重启 SystemUI</string>
     <string name="ResetModule">重置模块</string>
     <string name="About">关于</string>

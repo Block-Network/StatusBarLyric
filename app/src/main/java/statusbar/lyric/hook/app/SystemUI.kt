@@ -76,7 +76,7 @@ class SystemUI : BaseHook() {
     var texts = ""
     var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.r.rplayer.MusicService", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
     private var lsatName = ""
-    var isFirstEntry = false
+    private var isFirstEntry = false
 
     // base data
     val application: Application by lazy { AndroidAppHelper.currentApplication() }
@@ -240,16 +240,17 @@ class SystemUI : BaseHook() {
         "com.android.systemui.statusbar.phone.NotificationIconContainer".findClassOrNull()?.hookAfterAllConstructors {
             notificationIconContainer = it.thisObject as FrameLayout
         }.isNull { LogUtils.e("Not find NotificationIconContainer") }
-
-        "com.android.systemui.statusbar.NotificationMediaManager".findClassOrNull()?.hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
-            val mContext = it.thisObject.getObjectField("mContext") as Context
-            val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata?
-            mMediaMetadata.isNotNull {
-                val value = mMediaMetadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
-                if (lsatName != value) {
-                    lsatName = value
-                    isFirstEntry = true
-                    Utils.sendLyric(mContext, lsatName, icon)
+        if (config.getGetTitle()) {
+            "com.android.systemui.statusbar.NotificationMediaManager".findClassOrNull()?.hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
+                val mContext = it.thisObject.getObjectField("mContext") as Context
+                val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata?
+                mMediaMetadata.isNotNull {
+                    val value = mMediaMetadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
+                    if (lsatName != value) {
+                        lsatName = value
+                        isFirstEntry = true
+                        Utils.sendLyric(mContext, lsatName, icon)
+                    }
                 }
             }
         }
@@ -465,8 +466,8 @@ class SystemUI : BaseHook() {
 
         updateMargins = Handler(Looper.getMainLooper()) { message ->
 //            (lyricLayout.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
-            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.arg1 as Int
-            (lyricLayout.layoutParams as LinearLayout.LayoutParams).topMargin = message.arg2 as Int
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.arg1
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).topMargin = message.arg2
             true
         }
 

@@ -732,6 +732,7 @@ class SettingsActivity : MIUIActivity() {
             }
 
             register("advancedSettings", getString(R.string.AdvancedSettings), true) {
+                TextSummaryWithSwitch(TextSummaryV(textId = R.string.GetTitle), SwitchV("GetTitle"))
                 TextSummaryWithSwitch(TextSummaryV(textId = R.string.OnlyGetLyric, tipsId = R.string.OnlyGetLyricTips), SwitchV("OnlyGetLyric"))
                 TextWithSwitch(TextV(textId = R.string.TimeOff), SwitchV("TimeOff"))
                 TextSummaryArrow(TextSummaryV(textId = R.string.TimeOffTime, onClickListener = {

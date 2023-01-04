@@ -33,6 +33,7 @@
     <string name="OnlyGetLyricTips">Get lyrics only without displaying them in the status bar</string>
     <string name="TimeOff">* Time off</string>
     <string name="TimeOffTime">Timed off time</string>
+    <string name="GetTitle">* Force the lyric title to appear</string>
     <string name="ReStartSystemUI">Restart SystemUI</string>
     <string name="ResetModule">Reset module</string>
     <string name="About">About</string>
