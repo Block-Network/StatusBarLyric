@@ -12,7 +12,7 @@ import android.os.Message
 import android.os.SystemClock
 import android.util.Log
 import dalvik.system.DexFile
-import de.robv.android.xposed.callbacks.XC_LoadPackage
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.amutils.Lyric
 import statusbar.lyric.utils.amutils.LyricInfo
@@ -25,7 +25,7 @@ import statusbar.lyric.utils.ktx.hookBeforeMethod
 import java.lang.reflect.Constructor
 
 
-class AppleMusicHook(private val lpparam: XC_LoadPackage.LoadPackageParam) : BaseHook() {
+class AppleMusic(private val lpparam: LoadPackageParam) : BaseHook() {
     private var curLyricObj: Any? = null
     private var curSongInfo: Any? = null
     private var playbackStateCompat: Any? = null
@@ -64,7 +64,7 @@ class AppleMusicHook(private val lpparam: XC_LoadPackage.LoadPackageParam) : Bas
             runCatching {
                 val onLoadCallbackClass =
                     classLoader.loadClass("com.apple.android.music.ttml.javanative.LyricsController\$LyricsControllerNative\$OnLoadCallback")
-                val dexFile = DexFile(lpparam.appInfo.sourceDir)
+                val dexFile = DexFile(AppleMusicUtil.getSourceDir(lpparam))
                 val classNames = dexFile.entries()
                 while (classNames.hasMoreElements()) {
                     val classname = classNames.nextElement()
