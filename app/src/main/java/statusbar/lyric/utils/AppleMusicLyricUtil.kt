@@ -1,5 +1,7 @@
-package statusbar.lyric.utils.amutils
+package statusbar.lyric.utils
 
+
+class LyricInfo internal constructor(var begin: Int, var end: Int, var lyricStr: String)
 class Lyric {
     private var lyricInfoMap: MutableMap<Int, LyricInfo> = HashMap()
     private var points: MutableList<Int> = ArrayList()

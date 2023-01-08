@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package statusbar.lyric.hook.app
 
 import android.app.Application
@@ -13,25 +15,25 @@ import android.os.SystemClock
 import android.util.Log
 import dalvik.system.DexFile
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
-import statusbar.lyric.hook.BaseHook
-import statusbar.lyric.utils.amutils.Lyric
-import statusbar.lyric.utils.amutils.LyricInfo
+import statusbar.lyric.utils.AppleMusicUtil
+import statusbar.lyric.utils.Lyric
+import statusbar.lyric.utils.LyricInfo
+import statusbar.lyric.utils.Utils.sendLyric
 import statusbar.lyric.utils.ktx.callMethod
 import statusbar.lyric.utils.ktx.callStaticMethod
-import statusbar.lyric.utils.ktx.classLoader
 import statusbar.lyric.utils.ktx.getObjectField
 import statusbar.lyric.utils.ktx.hookAfterMethod
 import statusbar.lyric.utils.ktx.hookBeforeMethod
 import java.lang.reflect.Constructor
 
 
-class AppleMusic(private val lpparam: LoadPackageParam) : BaseHook() {
+class AppleMusic internal constructor(lpparam: LoadPackageParam) {
     private var curLyricObj: Any? = null
     private var curSongInfo: Any? = null
     private var playbackStateCompat: Any? = null
     private var context: Context? = null
     private var timeStarted = false
-    lateinit var handler: Handler
+    private val handler: Handler
     private var mediaMetadataCompatClass: Class<*>? = null
     private var localeUtilClass: Class<*>? = null
     private var lyricConvertConstructor: Constructor<*>? = null
@@ -45,38 +47,31 @@ class AppleMusic(private val lpparam: LoadPackageParam) : BaseHook() {
     private var lastLyrics = ""
     private var clazz: Class<*>? = null
 
-    override fun hook() {
-        super.hook()
-        Log.i("LSPosed-Bridge","aaaaaaaaaaaaaaaaaa")
+    init {
+        val classLoader = lpparam.classLoader
         val handlerThread = HandlerThread("lyric_thread")
         handlerThread.start()
         handler = Handler(handlerThread.looper)
-        mediaMetadataCompatClass =
-            classLoader.loadClass("android.support.v4.media.MediaMetadataCompat")
-        val lyricsSectionVectorClass =
-            classLoader.loadClass("com.apple.android.music.ttml.javanative.model.LyricsSectionVector")
-        localeUtilClass =
-            classLoader.loadClass("com.apple.android.music.playback.util.LocaleUtil")
-        clazz =
-            classLoader.loadClass("com.apple.android.mediaservices.javanative.common.StringVector\$StringVectorNative")
+        mediaMetadataCompatClass = classLoader.loadClass("android.support.v4.media.MediaMetadataCompat")
+        val lyricsSectionVectorClass = classLoader.loadClass("com.apple.android.music.ttml.javanative.model.LyricsSectionVector")
+        localeUtilClass = classLoader.loadClass("com.apple.android.music.playback.util.LocaleUtil")
+        clazz = classLoader.loadClass("com.apple.android.mediaservices.javanative.common.StringVector\$StringVectorNative")
         val musicCls = classLoader.loadClass("com.apple.android.music.model.Song")
         Thread {
-            runCatching {
-                val onLoadCallbackClass =
-                    classLoader.loadClass("com.apple.android.music.ttml.javanative.LyricsController\$LyricsControllerNative\$OnLoadCallback")
-                val dexFile = DexFile(AppleMusicUtil.getSourceDir(lpparam))
-                val classNames = dexFile.entries()
-                while (classNames.hasMoreElements()) {
-                    val classname = classNames.nextElement()
-                    runCatching {
-                        val cls = lpparam.classLoader.loadClass(classname)
-                        if (cls.superclass == onLoadCallbackClass) {
-                            handleLyricReqHook(cls, classLoader)
-                        } else {
-                            for (constructor in cls.constructors) {
-                                if (constructor.parameterTypes.size == 1 && constructor.parameterTypes[0] == lyricsSectionVectorClass && cls.fields.size == 1) {
-                                    lyricConvertConstructor = constructor
-                                }
+
+            val onLoadCallbackClass = classLoader.loadClass("com.apple.android.music.ttml.javanative.LyricsController\$LyricsControllerNative\$OnLoadCallback")
+            val dexFile = DexFile(AppleMusicUtil.getSourceDir(lpparam))
+            val classNames = dexFile.entries()
+            while (classNames.hasMoreElements()) {
+                val classname = classNames.nextElement()
+                runCatching {
+                    val cls = lpparam.classLoader.loadClass(classname)
+                    if (cls.superclass == onLoadCallbackClass) {
+                        handleLyricReqHook(cls, classLoader)
+                    } else {
+                        for (constructor in cls.constructors) {
+                            if (constructor.parameterTypes.size == 1 && constructor.parameterTypes[0] == lyricsSectionVectorClass && cls.fields.size == 1) {
+                                lyricConvertConstructor = constructor
                             }
                         }
                     }
@@ -94,10 +89,8 @@ class AppleMusic(private val lpparam: LoadPackageParam) : BaseHook() {
 
         //            hook metaDATA change
         "android.support.v4.media.session.MediaControllerCompat\$a\$a".hookBeforeMethod("onMetadataChanged", MediaMetadata::class.java) {
-            val metadataCompat =
-                mediaMetadataCompatClass!!.callStaticMethod("a", it.args[0])
-            val metadata =
-                metadataCompat!!.getObjectField("t") as MediaMetadata
+            val metadataCompat = mediaMetadataCompatClass!!.callStaticMethod("a", it.args[0])
+            val metadata = metadataCompat!!.getObjectField("t") as MediaMetadata
             val newTitle = metadata.getString(MediaMetadata.METADATA_KEY_TITLE)
             if (last != newTitle) {
                 last = newTitle
@@ -129,8 +122,7 @@ class AppleMusic(private val lpparam: LoadPackageParam) : BaseHook() {
 
     private fun handleLyricReqHook(callBack: Class<*>, classLoader: ClassLoader) {
         val lyricReqCls = callBack.enclosingClass
-        lyricReqConstructor =
-            lyricReqCls.getConstructor(Context::class.java, Long::class.javaPrimitiveType, Long::class.javaPrimitiveType, Long::class.javaPrimitiveType, clazz, Boolean::class.javaPrimitiveType)
+        lyricReqConstructor = lyricReqCls.getConstructor(Context::class.java, Long::class.javaPrimitiveType, Long::class.javaPrimitiveType, Long::class.javaPrimitiveType, clazz, Boolean::class.javaPrimitiveType)
         callBack.hookBeforeMethod("call", classLoader.loadClass("com.apple.android.music.ttml.javanative.model.SongInfo\$SongInfoPtr"), Int::class.javaPrimitiveType, Long::class.javaPrimitiveType) {
             if (lyricConvertConstructor == null) {
                 return@hookBeforeMethod
@@ -166,8 +158,7 @@ class AppleMusic(private val lpparam: LoadPackageParam) : BaseHook() {
         }
         requested = true
         val localeVector = clazz!!.newInstance()
-        val lyricClient =
-            lyricReqConstructor!!.newInstance(context, songId, songId, 0, localeVector, false)
+        val lyricClient = lyricReqConstructor!!.newInstance(context, songId, songId, 0, localeVector, false)
         lyricClient.callMethod("subscribe", null as Any?)
         Handler(Looper.getMainLooper()).postDelayed({ requested = false }, 1000)
 
@@ -212,8 +203,7 @@ class AppleMusic(private val lpparam: LoadPackageParam) : BaseHook() {
             curInfo = null
             return false
         }
-        val currentPosition =
-            ((SystemClock.elapsedRealtime() - playbackState.lastPositionUpdateTime) * playbackState.playbackSpeed + playbackState.position).toLong()
+        val currentPosition = ((SystemClock.elapsedRealtime() - playbackState.lastPositionUpdateTime) * playbackState.playbackSpeed + playbackState.position).toLong()
         curInfo = curLyrics.getLyricByPosition(currentPosition)
         if (curInfo != null) {
             nextUpdateTime = curInfo!!.end
@@ -221,14 +211,7 @@ class AppleMusic(private val lpparam: LoadPackageParam) : BaseHook() {
                 curInfo = curLyrics.getLyricByPosition(currentPosition)
             }
             if (lastLyrics != curInfo!!.lyricStr) {
-                context?.sendBroadcast(Intent().apply {
-                    action = "Lyric_Server"
-                    putExtra("Lyric_Data", curInfo!!.lyricStr)
-                    putExtra("Lyric_Icon", "icon")
-                    putExtra("Lyric_Type", "app")
-                    putExtra("Lyric_PackName", "com.apple.android.music")
-                    putExtra("Lyric_UseSystemMusicActive", true)
-                })
+                sendLyric(context, curInfo!!.lyricStr, "APM")
                 lastLyrics = curInfo!!.lyricStr
             }
         }
