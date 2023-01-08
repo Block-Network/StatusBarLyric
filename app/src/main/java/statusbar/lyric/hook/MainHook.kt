@@ -85,6 +85,10 @@ class MainHook : IXposedHookLoadPackage {
                 LogUtils.e("start Hook LX Music")
                 LXMusic()
             }
+            "com.apple.android.music" -> {
+                LogUtils.e("start Hook Apple Music")
+                AppleMusicHook(lpparam)
+            }
             else -> {
                 LogUtils.e("start Hook ${lpparam.processName}")
                 Api()
