@@ -6,14 +6,14 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
     val buildTime=System.currentTimeMillis()
     defaultConfig {
         applicationId = "statusbar.lyric"
         minSdk = 26
-        targetSdk = 32
-        versionCode = 161
-        versionName = "5.3.1"
+        targetSdk = 33
+        versionCode = 163
+        versionName = "5.4.0"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("String", "BUILD_TIME", "\"$buildTime\"")
@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.majorVersion
+        jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
     packagingOptions {
         resources {
@@ -57,10 +57,10 @@ android {
 
 dependencies { //API
     compileOnly("de.robv.android.xposed:api:82") //带源码Api
-    compileOnly("de.robv.android.xposed:api:82:sources") // Use Hide Api
+//    compileOnly("de.robv.android.xposed:api:82:sources") // Use Hide Api
     compileOnly(project(":hidden-api")) //MIUI 通知栏
     implementation(files("libs/miui_sdk.jar")) // microsoft app center
-    val appCenterSdkVersion = "4.4.3"
+    val appCenterSdkVersion = "5.0.0"
     implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
     implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
     implementation(project(":blockmiui"))

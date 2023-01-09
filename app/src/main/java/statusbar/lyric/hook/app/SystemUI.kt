@@ -38,7 +38,9 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
+import android.media.MediaMetadata
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -57,6 +59,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.*
+import statusbar.lyric.utils.Utils.isNotNull
 import statusbar.lyric.utils.XposedOwnSP.config
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricSwitchView
@@ -68,7 +71,12 @@ import kotlin.system.exitProcess
 
 class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
-    var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
+    private var lyrics = "lyric"
+    private var icon: String = ""
+    var texts = ""
+    var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.r.rplayer.MusicService", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
+    private var lsatName = ""
+    private var isFirstEntry = false
 
     // base data
     val application: Application by lazy { AndroidAppHelper.currentApplication() }
@@ -120,6 +128,10 @@ class SystemUI : BaseHook() {
                                 offLyric(LogMultiLang.pausePlay)
                                 return
                             }
+                            if (!audioManager.isMusicActive) {
+                                offLyric(LogMultiLang.pausePlay)
+                                return
+                            }
                             if (!Utils.isServiceRunningList(application, musicServer)) {
                                 offLyric(LogMultiLang.playerOff)
                             }
@@ -162,14 +174,32 @@ class SystemUI : BaseHook() {
                     iconPos = config.getLyricPosition()
                     if (order) i += 1 else i -= 1
                     updateMargins.sendMessage(updateMargins.obtainMessage().also {
-                        it.obj = 10 + i
-//                        it.arg2 = config.getLyricHigh()
+                        it.obj = null
+                        it.arg1 = 10 + i + iconPos
+                        it.arg2 = config.getLyricHigh()
                     })
                     if (i == 0) order = true else if (i == 20) order = false
                 }
             }
         }
         return lyricAntiBurnTimer as TimerTask
+    }
+
+    private var timeOffTimer: TimerTask? = null
+    private fun getTimeOffTimer(): TimerTask {
+        if (timeOffTimer == null) {
+            timeOffTimer = object : TimerTask() {
+                override fun run() {
+                    if (texts == lyrics) {
+                        offLyric(LogMultiLang.timeOff)
+                    }
+                    texts = lyrics
+//                    text = lyrics
+                }
+            }
+
+        }
+        return timeOffTimer as TimerTask
     }
 
     private val lockScreenReceiver by lazy { LockScreenReceiver() }
@@ -210,6 +240,20 @@ class SystemUI : BaseHook() {
         "com.android.systemui.statusbar.phone.NotificationIconContainer".findClassOrNull()?.hookAfterAllConstructors {
             notificationIconContainer = it.thisObject as FrameLayout
         }.isNull { LogUtils.e("Not find NotificationIconContainer") }
+        if (config.getGetTitle()) {
+            "com.android.systemui.statusbar.NotificationMediaManager".findClassOrNull()?.hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
+                val mContext = it.thisObject.getObjectField("mContext") as Context
+                val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata?
+                mMediaMetadata.isNotNull {
+                    val value = mMediaMetadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
+                    if (lsatName != value) {
+                        lsatName = value
+                        isFirstEntry = true
+                        Utils.sendLyric(mContext, lsatName, icon)
+                    }
+                }
+            }
+        }
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) { // Get system clock view
@@ -229,18 +273,18 @@ class SystemUI : BaseHook() {
                     LogUtils.e(LogMultiLang.checkSystem)
                     if (Settings.System.getInt(application.contentResolver, "clock_style", 0) == 0) {
                         LogUtils.e("mClockView start")
-                        arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                        arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
                     } else {
                         LogUtils.e("mStatusClock start")
-                        arrayOf("mStatusClock", "mClockView", "mCenterClock", "mLeftClock", "mRightClock")
+                        arrayOf("mStatusClock", "mClockView", "mLeftClock", "mCenterClock", "mRightClock")
                     }
                 } else {
                     LogUtils.e(LogMultiLang.normalMode)
-                    arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                    arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
                 }
             } catch (e: Throwable) {
                 LogUtils.e("getPackageInfoError: $e \n" + Log.getStackTraceString(e))
-                arrayOf("mClockView", "mStatusClock", "mCenterClock", "mLeftClock", "mRightClock")
+                arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
             }
             var thisField: Field? = null
             for (field in array) {
@@ -293,7 +337,7 @@ class SystemUI : BaseHook() {
         audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
 
         if (config.getOnlyGetLyric()) {
-            LogUtils.e(LogMultiLang.OnlyGetLyric)
+            LogUtils.e(LogMultiLang.onlyGetLyric)
             return
         }
 
@@ -339,6 +383,7 @@ class SystemUI : BaseHook() {
             setSingleLine(true)
             setMaxLines(1)
             setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
+            if (config.getFadingEdge()) horizontalFadingEdge()
             try {
                 val file = File(application.filesDir.path + "/font")
                 if (file.exists() && file.isFile && file.canRead()) {
@@ -376,7 +421,17 @@ class SystemUI : BaseHook() {
                 addView(customizeView)
             }
 
-
+            if (config.getBackgroundColor() != "") {
+                val gd = GradientDrawable()
+                gd.setColor(Color.parseColor(config.getBackgroundColor()))
+                gd.cornerRadius = config.getBgCorners().toFloat()
+                gd.setStroke(width, Color.TRANSPARENT)
+                background = gd
+//            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
+            } else {
+                background = null
+//            lyricLayout.setBackgroundColor(0)
+            }
         }
 
         clockClickable = clock.isClickable
@@ -411,12 +466,13 @@ class SystemUI : BaseHook() {
 
         updateMargins = Handler(Looper.getMainLooper()) { message ->
 //            (lyricLayout.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
-            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.obj as Int
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.arg1
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).topMargin = message.arg2
             true
         }
 
         updateIconMargins = Handler(Looper.getMainLooper()) { message ->
-            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, config.getIconspacing(), 0)
+            (iconView.layoutParams as LinearLayout.LayoutParams).setMargins(0, message.arg1, message.arg2, 0)
             true
         }
 
@@ -526,6 +582,10 @@ class SystemUI : BaseHook() {
 
     private fun updateConfig() {
         config.update()
+        if (config.getOnlyGetLyric()) {
+            LogUtils.e(LogMultiLang.onlyGetLyric)
+            return
+        }
         pattern = if (config.getBlockLyric() != "" && config.getBlockLyricMode()) Pattern.compile(config.getBlockLyric()) else null
         if (!config.getLyricService()) offLyric(LogMultiLang.switchOff)
         if (config.getLyricStyle()) lyricSwitchView.setSpeed((config.getLyricSpeed().toFloat() / 100))
@@ -547,11 +607,12 @@ class SystemUI : BaseHook() {
             })
         } else iconColor = 0
         updateMargins.sendMessage(updateMargins.obtainMessage().also {
-            it.obj = config.getLyricHigh()
+            it.arg1 = config.getLyricPosition()
+            it.arg2 = config.getLyricHigh()
         })
         updateIconMargins.sendMessage(updateIconMargins.obtainMessage().also {
-            it.arg1 = config.getLyricPosition()
-            it.arg2 = config.getIconHigh()
+            it.arg1 = config.getIconHigh()
+            it.arg2 = config.getIconspacing()
         })
         if (config.getIconSize() != 0) {
             (iconView.layoutParams as LinearLayout.LayoutParams).apply { // set icon size
@@ -563,11 +624,11 @@ class SystemUI : BaseHook() {
             lyricSwitchView.setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, config.getLyricSize().toFloat())
         }
         customizeView.text = config.getCustomizeText()
-        if (config.getBackgroundColor() != "") {
-            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
-        } else {
-            lyricLayout.setBackgroundColor(0)
-        }
+//        if (config.getBackgroundColor() != "") {
+//            lyricLayout.setBackgroundColor(Color.parseColor(config.getBackgroundColor()))
+//        } else {
+//            lyricLayout.setBackgroundColor(0)
+//        }
         lyricSwitchView.setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
         customizeView.letterSpacing = if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing
     }
@@ -575,18 +636,21 @@ class SystemUI : BaseHook() {
     private fun offLyric(info: String) {
         // off Lyric
         LogUtils.e(info)
-        stopTimer()
-        if (lyricLayout.visibility != View.GONE && config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
         application.sendBroadcast(Intent().apply {
             action = "Lyric_Server"
             putExtra("Lyric_Type", "stop")
         })
+        stopTimer()
+        if (config.getOnlyGetLyric()) return
+        if (lyricLayout.visibility != View.GONE && config.getLyricAutoOff()) offLyric.sendEmptyMessage(0)
     }
 
     fun updateLyric(lyric: String, icon: String) {
+        lyrics = lyric
         LogUtils.e(LogMultiLang.sendLog)
-        if (lyric.isEmpty()) {
+        if (lyric.isEmpty() && !isFirstEntry) {
             offLyric(LogMultiLang.emptyLyric)
+            isFirstEntry = false
             return
         }
         if (!config.getLyricService()) {
@@ -595,6 +659,11 @@ class SystemUI : BaseHook() {
         }
         if (isLock) {
             offLyric(LogMultiLang.unlockDisplayOnly)
+            return
+        }
+        if (config.getOnlyGetLyric()) {
+            LogUtils.e(LogMultiLang.onlyGetLyric)
+            if (config.getLyricAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
             return
         }
 
@@ -619,7 +688,7 @@ class SystemUI : BaseHook() {
         if (config.getLyricAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
         if (config.getAntiBurn()) startTimer(config.getAntiBurnTime().toLong(), getLyricAntiBurnTimer()) // Anti burn screen
         if (!config.getUseSystemReverseColor()) startTimer(config.getReverseColorTime().toLong(), getAutoLyricColorTimer()) // not use system reverse color
-
+        if (config.getTimeOff()) startTimer(config.getTimeOffTime().toLong(), getTimeOffTimer()) // not use system reverse color
         if (config.getAnim() == "random") {
             val anim = arrayOf("top", "lower", "left", "right")[(Math.random() * 4).toInt()]
             lyricSwitchView.inAnimation = Utils.inAnim(anim)
@@ -645,6 +714,7 @@ class SystemUI : BaseHook() {
         autoOffLyricTimer = null
         autoLyricColorTimer = null
         lyricAntiBurnTimer = null
+        timeOffTimer = null
         timerQueue = arrayListOf()
         timer?.cancel()
         timer = null
@@ -704,17 +774,16 @@ class SystemUI : BaseHook() {
     inner class LyricReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
-                var icon = intent.getStringExtra("Lyric_Icon")
+                icon = intent.getStringExtra("Lyric_Icon") ?: "Api"
                 when (intent.getStringExtra("Lyric_Type")) {
                     "hook" -> {
-                        val lyric: String = intent.getStringExtra("Lyric_Data")!!
+                        val lyric = intent.getStringExtra("Lyric_Data") ?: ""
                         LogUtils.e("${LogMultiLang.recvData}hook: lyric:$lyric icon:$icon")
-                        updateLyric(lyric, icon ?: "Api")
+                        updateLyric(lyric, icon)
                         useSystemMusicActive = true
                     }
 
                     "app" -> {
-                        if (icon.isNullOrEmpty()) icon = "Api"
                         val packName = intent.getStringExtra("Lyric_PackName")
                         if (!packName.isNullOrEmpty() && !musicServer.contains(packName)) {
                             musicServer.add(packName)

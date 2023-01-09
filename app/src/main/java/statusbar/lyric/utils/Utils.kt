@@ -58,6 +58,7 @@ object Utils {
         put("com.netease.cloudmusic", "Netease")
         put("com.tencent.qqmusic", "QQMusic")
         put("cmccwm.mobilemusic", "MiGu")
+        put("com.r.rplayer", "RPlayer")
     }
 
     @JvmStatic
@@ -297,6 +298,7 @@ object Utils {
     fun Any?.isNull(callback: () -> Unit) {
         if (this == null) callback()
     }
+
     fun Any?.isNotNull(callback: () -> Unit) {
         if (this != null) callback()
     }

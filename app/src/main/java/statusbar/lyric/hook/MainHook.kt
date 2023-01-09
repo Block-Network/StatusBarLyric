@@ -42,41 +42,67 @@ class MainHook : IXposedHookLoadPackage {
                 LogUtils.e("start hook systemui")
                 SystemUI()
             }
+
             "com.netease.cloudmusic" -> {
                 LogUtils.e("start hook netease")
                 Netease()
             }
+
             "com.kugou.android", "com.kugou.android.lite" -> {
                 LogUtils.e("start hook kugou")
                 Kugou(lpparam.packageName)
             }
+
             "cn.kuwo.player" -> {
                 LogUtils.e("start hook kuwo")
                 Kuwo()
             }
+
             "com.tencent.qqmusic" -> {
                 LogUtils.e("start hook qqmusic")
+                QQMusic()
+            }
+
+            "remix.myplayer" -> {
+                LogUtils.e("start Hook myplayer")
                 MeiZuStatusBarLyric.guiseFlyme(true)
                 null
             }
-            "remix.myplayer" -> {
-                LogUtils.e("start Hook myplayer")
-                Myplayer()
-            }
+
             "cmccwm.mobilemusic" -> {
                 LogUtils.e("start Hook migu")
                 MeiZuStatusBarLyric.guiseFlyme(true)
                 null
             }
+
             "com.miui.player" -> {
                 LogUtils.e("start Hook xiaomi Player")
                 Miplayer()
             }
+
             "com.meizu.media.music" -> {
                 LogUtils.e("start Hook Meizu Music")
                 MeiZuStatusBarLyric.guiseFlyme(true)
                 null
             }
+
+            "com.r.rplayer" -> {
+                LogUtils.e("start Hook RPlayer")
+                MeiZuStatusBarLyric.guiseFlyme(true)
+                RPlayer()
+            }
+
+            "cn.toside.music.mobile" -> {
+                LogUtils.e("start Hook LX Music")
+                LXMusic()
+            }
+
+            "com.apple.android.music" -> {
+                LogUtils.e("start Hook Apple Music")
+                AppleMusic(lpparam)
+                null
+            }
+
             else -> {
                 LogUtils.e("start Hook ${lpparam.processName}")
                 Api()

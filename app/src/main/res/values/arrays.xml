@@ -16,5 +16,8 @@
         <item>notification.statusbar</item>
         <item>miui.statusbar.lyric.ext</item>
         <item>com.miui.player</item>
+        <item>com.r.rplayer</item>
+        <item>cn.toside.music.mobile</item>
+        <item>com.apple.android.music</item>
     </array>
 </resources>

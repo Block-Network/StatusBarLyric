@@ -43,7 +43,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import cn.fkj233.ui.activity.MIUIActivity
-import cn.fkj233.ui.activity.data.DefValue
 import cn.fkj233.ui.activity.dp2px
 import cn.fkj233.ui.activity.view.RoundCornerImageView
 import cn.fkj233.ui.activity.view.SpinnerV
@@ -112,11 +111,11 @@ class SettingsActivity : MIUIActivity() {
                 TitleText(text = givenList[Random.nextInt(givenList.size)])
                 Line()
                 TitleText(textId = R.string.BaseSetting)
-                TextWithSwitch(TextV(resId = R.string.AllSwitch), SwitchV("LService"))
+                TextWithSwitch(TextV(textId = R.string.AllSwitch), SwitchV("LService"))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Custom, onClickListener = { showFragment("custom") }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.AdvancedSettings, onClickListener = { showFragment("advancedSettings") }))
                 Line()
-                TitleTextV(resId = R.string.About)
+                TitleTextV(textId = R.string.About)
                 TextSummaryArrow(TextSummaryV("${getString(R.string.CheckUpdate)} (${BuildConfig.VERSION_NAME})", onClickListener = {
                     ActivityUtils.showToastOnLooper(activity, getString(R.string.StartCheckUpdate))
                     ActivityUtils.getUpdate(activity)
@@ -126,16 +125,16 @@ class SettingsActivity : MIUIActivity() {
             }
 
             registerMenu(getString(R.string.Menu)) {
-                TextWithSwitch(TextV(resId = R.string.HideDeskIcon), SwitchV("hLauncherIcon", customOnCheckedChangeListener = {
+                TextWithSwitch(TextV(textId = R.string.HideDeskIcon), SwitchV("hLauncherIcon", onClickListener = {
                     packageManager.setComponentEnabledSetting(ComponentName(activity, "${BuildConfig.APPLICATION_ID}.launcher"), if (it) {
                         PackageManager.COMPONENT_ENABLED_STATE_DISABLED
                     } else {
                         PackageManager.COMPONENT_ENABLED_STATE_ENABLED
                     }, PackageManager.DONT_KILL_APP)
                 }))
-                TextWithSwitch(TextV(resId = R.string.DebugMode), SwitchV("Debug"))
+                TextWithSwitch(TextV(textId = R.string.DebugMode), SwitchV("Debug"))
                 TextWithSwitch(TextV(text = "App Center"), SwitchV("AppCenter", true))
-                TextWithSwitch(TextV(resId = R.string.CheckUpdate), SwitchV("CheckUpdate", true))
+                TextWithSwitch(TextV(textId = R.string.CheckUpdate), SwitchV("CheckUpdate", true))
                 TextSummaryArrow(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.ResetModuleDialog)
@@ -152,12 +151,12 @@ class SettingsActivity : MIUIActivity() {
                     MIUIDialog(activity) {
                         setTitle(R.string.RestartUI)
                         setMessage(R.string.RestartUITips)
-                        setRButton(R.string.Ok) {
+                        setLButton(R.string.Ok) {
                             Utils.voidShell("pkill -f com.android.systemui", true)
                             Analytics.trackEvent("重启SystemUI")
                             dismiss()
                         }
-                        setLButton(R.string.Cancel) { dismiss() }
+                        setRButton(R.string.Cancel) { dismiss() }
                     }.show()
                 }))
                 TextSummaryArrow(TextSummaryV(textId = R.string.Backup, onClickListener = {
@@ -239,7 +238,33 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 }))
-               Text(textId= R.string.LyricSize, onClickListener = {
+                TextSummaryArrow(TextSummaryV(textId = R.string.BgCorners, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.BgCorners)
+                        setMessage(R.string.LyricHighTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getBgCorners().toString(), "30")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (0..100)) {
+                                        ActivityOwnSP.ownSPConfig.setBgCorners(value)
+                                        updateConfig = true
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
+                            }
+                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                            ActivityOwnSP.ownSPConfig.setBgCorners(0)
+                            updateConfig = true
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                }))
+                Text(textId = R.string.LyricSize, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.LyricSize)
                         setMessage(R.string.LyricSizeTips)
@@ -266,17 +291,13 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LSize", 0, 50)
-                val dataBinding = GetDataBinding(object : DefValue {
-                    override fun getValue(): Any {
-                        return ActivityOwnSP.ownSPConfig.getLyricWidth()
-                    }
-                }) { view, flags, data ->
+                val dataBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getLyricWidth() }) { view, flags, data ->
                     when (flags) {
                         1 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
                         2 -> view.visibility = if ((data as Int) == -1) View.VISIBLE else View.GONE
                     }
                 }
-               Text(textId= R.string.LyricWidth, onClickListener = {
+                Text(textId = R.string.LyricWidth, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.LyricWidth)
                         setMessage(R.string.LyricTips)
@@ -304,7 +325,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LWidth", -1, 100, defaultProgress = -1, dataBindingSend = dataBinding.bindingSend)
-               Text(textId= R.string.LyricAutoMaxWidth, dataBindingRecv = dataBinding.binding.getRecv(1), onClickListener = {
+                Text(textId = R.string.LyricAutoMaxWidth, dataBindingRecv = dataBinding.binding.getRecv(1), onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.LyricAutoMaxWidth)
                         setMessage(R.string.LyricTips)
@@ -331,7 +352,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LMaxWidth", -1, 100, defaultProgress = -1, dataBindingRecv = dataBinding.binding.getRecv(2))
-               Text(textId= R.string.LyricPos, onClickListener = {
+                Text(textId = R.string.LyricPos, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.LyricPos)
                         setMessage(R.string.LyricPosTips)
@@ -358,7 +379,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LPosition", -900, 900)
-               Text(textId= R.string.LyricHigh, onClickListener = {
+                Text(textId = R.string.LyricHigh, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.LyricHigh)
                         setMessage(R.string.LyricHighTips)
@@ -385,7 +406,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LHigh", -100, 100)
-               Text(textId= R.string.FontWeight, onClickListener = {
+                Text(textId = R.string.FontWeight, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.FontWeight)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricFontWeight().toString(), "0")
@@ -411,7 +432,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("LFontWeight", 0, 400)
-               Text(textId= R.string.LyricSpacing, onClickListener = {
+                Text(textId = R.string.LyricSpacing, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.LyricSpacing)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSpacing().toString(), "0")
@@ -444,7 +465,7 @@ class SettingsActivity : MIUIActivity() {
                 aDicts["left"] = getString(R.string.left)
                 aDicts["right"] = getString(R.string.right)
                 aDicts["random"] = getString(R.string.random)
-                TextWithSpinner(TextV(resId = R.string.LyricsAnimation), SpinnerV(aDicts[ActivityOwnSP.ownSPConfig.getAnim()]!!) {
+                TextWithSpinner(TextV(textId = R.string.LyricsAnimation), SpinnerV(aDicts[ActivityOwnSP.ownSPConfig.getAnim()]!!) {
                     add(getString(R.string.Off)) { ActivityOwnSP.ownSPConfig.setAnim("off") }
                     add(getString(R.string.top)) { ActivityOwnSP.ownSPConfig.setAnim("top") }
                     add(getString(R.string.lower)) { ActivityOwnSP.ownSPConfig.setAnim("lower") }
@@ -452,28 +473,21 @@ class SettingsActivity : MIUIActivity() {
                     add(getString(R.string.right)) { ActivityOwnSP.ownSPConfig.setAnim("right") }
                     add(getString(R.string.random)) { ActivityOwnSP.ownSPConfig.setAnim("random") }
                 })
-                val timeBinding = GetDataBinding(object : DefValue {
-                    override fun getValue(): Any {
-                        return ActivityOwnSP.ownSPConfig.getHideTime()
-                    }
-                }) { view, flags, data ->
+                val timeBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getHideTime() }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
-                TextWithSwitch(TextV(resId = R.string.HideTime), SwitchV("HideTime", true, dataBindingSend = timeBinding.bindingSend), dataBindingRecv = timeBinding.binding.getRecv(1))
-                TextWithSwitch(TextV(resId = R.string.ClickLyric), SwitchV("LSwitch", false), dataBindingRecv = timeBinding.binding.getRecv(2))
-                val meiZuStyle = GetDataBinding(object : DefValue {
-                    override fun getValue(): Any {
-                        return ActivityOwnSP.ownSPConfig.getLyricStyle()
-                    }
-                }) { view, flags, data ->
+                TextWithSwitch(TextV(textId = R.string.HideTime), SwitchV("HideTime", true, dataBindingSend = timeBinding.bindingSend), dataBindingRecv = timeBinding.binding.getRecv(1))
+                TextWithSwitch(TextV(textId = R.string.ClickLyric), SwitchV("LSwitch", false), dataBindingRecv = timeBinding.binding.getRecv(2))
+                val meiZuStyle = GetDataBinding({ ActivityOwnSP.ownSPConfig.getLyricStyle() }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
-                TextWithSwitch(TextV(resId = R.string.MeizuStyle, dataBindingRecv = meiZuStyle.binding.getRecv(1)), SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend))
-               Text(textId= R.string.LyricSpeed, onClickListener = {
+                TextWithSwitch(TextV(textId = R.string.MeizuStyle, dataBindingRecv = meiZuStyle.binding.getRecv(1)), SwitchV("LStyle", true, dataBindingSend = meiZuStyle.bindingSend))
+                TextWithSwitch(TextV(textId = R.string.FadingEdge), SwitchV("FadingEdge", false))
+                Text(textId = R.string.LyricSpeed, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.LyricSpeed)
                         setEditText(ActivityOwnSP.ownSPConfig.getLyricSpeed().toString(), "100")
@@ -502,14 +516,14 @@ class SettingsActivity : MIUIActivity() {
                 val lDict: HashMap<Boolean, String> = hashMapOf()
                 lDict[true] = getString(R.string.First)
                 lDict[false] = getString(R.string.Latest)
-                TextWithSpinner(TextV(resId = R.string.LyricViewPosition), SpinnerV(lDict[ActivityOwnSP.ownSPConfig.getLyricViewPosition()]!!) {
+                TextWithSpinner(TextV(textId = R.string.LyricViewPosition), SpinnerV(lDict[ActivityOwnSP.ownSPConfig.getLyricViewPosition()]!!) {
                     add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setLyricViewPosition(true) }
                     add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setLyricViewPosition(false) }
                 })
                 val cDict: HashMap<Boolean, String> = hashMapOf()
                 cDict[false] = getString(R.string.Latest)
                 cDict[true] = getString(R.string.First)
-                TextWithSpinner(TextV(resId = R.string.CustomizePosition), SpinnerV(cDict[ActivityOwnSP.ownSPConfig.getCustomizeViewPosition()]!!) {
+                TextWithSpinner(TextV(textId = R.string.CustomizePosition), SpinnerV(cDict[ActivityOwnSP.ownSPConfig.getCustomizeViewPosition()]!!) {
                     add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition(true) }
                     add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition(false) }
                 })
@@ -553,7 +567,7 @@ class SettingsActivity : MIUIActivity() {
                 }))
                 Line()
                 TitleText(textId = R.string.IconSettings)
-                TextWithSwitch(TextV(resId = R.string.LyricIcon), SwitchV("I", true))
+                TextWithSwitch(TextV(textId = R.string.LyricIcon), SwitchV("I", true))
                 TextSummaryArrow(TextSummaryV(textId = R.string.IconColor, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.IconColor)
@@ -578,7 +592,7 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 }))
-               Text(textId= R.string.IconSize, onClickListener = {
+                Text(textId = R.string.IconSize, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.IconSize)
                         setMessage(R.string.LyricSizeTips)
@@ -605,7 +619,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("ISize", 0, 50, -1)
-               Text(textId= R.string.IconHigh, onClickListener = {
+                Text(textId = R.string.IconHigh, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.IconHigh)
                         setMessage(R.string.LyricHighTips)
@@ -632,7 +646,7 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("IHigh", -100, 100, defaultProgress = ActivityOwnSP.ownSPConfig.getIconHigh())
-               Text(textId= R.string.IconSpacing, onClickListener = {
+                Text(textId = R.string.IconSpacing, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.IconSpacing)
                         setMessage(R.string.IconSpacingTips)
@@ -669,11 +683,7 @@ class SettingsActivity : MIUIActivity() {
                 TitleText(textId = R.string.MakeIconTitle)
                 val iconConfig = ActivityOwnSP.ownSPConfig
                 val iconList = iconConfig.gerIconList()
-                val iconDataBinding = GetDataBinding(object : DefValue {
-                    override fun getValue(): Any {
-                        return ""
-                    }
-                }) { view, i, any ->
+                val iconDataBinding = GetDataBinding({ "" }) { view, i, any ->
                     if ((any as String).isNotEmpty()) {
                         val iconData = any.split("|%|")
                         if (iconList[i] == iconData[0]) ((view as LinearLayout).getChildAt(0) as RoundCornerImageView).background = BitmapDrawable(Utils.stringToBitmap(if (iconData[1] == "") iconConfig.getIcon(iconData[0]) else iconData[1])).also { it.setTint(getColor(R.color.customIconColor)) }
@@ -722,10 +732,39 @@ class SettingsActivity : MIUIActivity() {
             }
 
             register("advancedSettings", getString(R.string.AdvancedSettings), true) {
-                TextWithSwitch(TextV(resId = R.string.OnlyGetLyric), SwitchV("OnlyGetLyric"))
+                TextSummaryWithSwitch(TextSummaryV(textId = R.string.GetTitle), SwitchV("GetTitle"))
+                TextSummaryWithSwitch(TextSummaryV(textId = R.string.OnlyGetLyric, tipsId = R.string.OnlyGetLyricTips), SwitchV("OnlyGetLyric"))
+                TextWithSwitch(TextV(textId = R.string.TimeOff), SwitchV("TimeOff"))
+                TextSummaryArrow(TextSummaryV(textId = R.string.TimeOffTime, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.TimeOffTime)
+                        setMessage(R.string.AntiBurnTimeTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getTimeOffTime().toString(), "10000")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (0..3600000)) {
+                                        ActivityOwnSP.ownSPConfig.setTimeOffTime(value)
+                                        updateConfig = true
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
+                            }
+                            ActivityOwnSP.ownSPConfig.setTimeOffTime(10000)
+                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                }))
+                SeekBarWithText("TimeOffTime", 0, 3600000, defaultProgress = 10000)
                 TextSummaryArrow(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.CustomHook)
+                        setMessage(R.string.CustomHookTips)
                         setEditText(ActivityOwnSP.ownSPConfig.getHook(), getString(R.string.InputCustomHook))
                         setRButton(R.string.Ok) {
                             if (getEditText().isNotEmpty()) {
@@ -744,17 +783,13 @@ class SettingsActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 }))
-                val antiBurnBinding = GetDataBinding(object : DefValue {
-                    override fun getValue(): Any {
-                        return ActivityOwnSP.ownSPConfig.getAntiBurn()
-                    }
-                }) { view, flags, data ->
+                val antiBurnBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getAntiBurn() }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
-                TextWithSwitch(TextV(resId = R.string.AbScreen), SwitchV("AntiBurn", true, dataBindingSend = antiBurnBinding.bindingSend))
-               Text(textId= R.string.AntiBurnTime, onClickListener = {
+                TextWithSwitch(TextV(textId = R.string.AbScreen), SwitchV("AntiBurn", true, dataBindingSend = antiBurnBinding.bindingSend))
+                Text(textId = R.string.AntiBurnTime, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.AntiBurnTime)
                         setMessage(R.string.AntiBurnTimeTips)
@@ -763,7 +798,7 @@ class SettingsActivity : MIUIActivity() {
                             if (getEditText().isNotEmpty()) {
                                 try {
                                     val value = getEditText().toInt()
-                                    if (value in (1..60000)) {
+                                    if (value in (1..3600000)) {
                                         ActivityOwnSP.ownSPConfig.setAntiBurnTime(value)
                                         dismiss()
                                         return@setRButton
@@ -779,17 +814,13 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }, dataBindingRecv = antiBurnBinding.binding.getRecv(2))
                 SeekBarWithText("AntiBurnTime", 1, 3600000, defaultProgress = 60000, dataBindingRecv = antiBurnBinding.binding.getRecv(2))
-                val dataBinding = GetDataBinding(object : DefValue {
-                    override fun getValue(): Any {
-                        return ActivityOwnSP.ownSPConfig.getUseSystemReverseColor()
-                    }
-                }) { view, flags, data ->
+                val dataBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getUseSystemReverseColor() }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if ((data as Boolean)) View.GONE else View.VISIBLE
                     }
                 }
-                TextWithSwitch(TextV(resId = R.string.UseSystemReverseColor), SwitchV("UseSystemReverseColor", true, dataBindingSend = dataBinding.bindingSend))
-               Text(textId= R.string.ReverseColorTime, onClickListener = {
+                TextWithSwitch(TextV(textId = R.string.UseSystemReverseColor), SwitchV("UseSystemReverseColor", true, dataBindingSend = dataBinding.bindingSend))
+                Text(textId = R.string.ReverseColorTime, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.ReverseColorTime)
                         setMessage(R.string.ReverseColorTimeTips)
@@ -814,17 +845,13 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }, dataBindingRecv = dataBinding.binding.getRecv(2))
                 SeekBarWithText("ReverseColorTime", 1, 3000, defaultProgress = 1, dataBindingRecv = dataBinding.binding.getRecv(2))
-                val autoOffBinding = GetDataBinding(object : DefValue {
-                    override fun getValue(): Any {
-                        return ActivityOwnSP.ownSPConfig.getLyricAutoOff()
-                    }
-                }) { view, flags, data ->
+                val autoOffBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getLyricAutoOff() }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
-                TextWithSwitch(TextV(resId = R.string.SongPauseCloseLyrics), SwitchV("LAutoOff", true, dataBindingSend = autoOffBinding.bindingSend))
-               Text(textId= R.string.SongPauseCloseLyricsTime, onClickListener = {
+                TextWithSwitch(TextV(textId = R.string.SongPauseCloseLyrics), SwitchV("LAutoOff", true, dataBindingSend = autoOffBinding.bindingSend))
+                Text(textId = R.string.SongPauseCloseLyricsTime, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.SongPauseCloseLyricsTime)
                         setMessage(R.string.ReverseColorTimeTips)
@@ -849,11 +876,11 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }, dataBindingRecv = autoOffBinding.binding.getRecv(2))
                 SeekBarWithText("LyricAutoOffTime", 1, 3000, defaultProgress = 1000, dataBindingRecv = autoOffBinding.binding.getRecv(2))
-                TextWithSwitch(TextV(resId = R.string.UnlockShow), SwitchV("LockScreenOff"))
-                TextWithSwitch(TextV(resId = R.string.AutoHideNotiIcon), SwitchV("HNoticeIcon"))
-                TextWithSwitch(TextV(resId = R.string.HideNetWork), SwitchV("HNetSpeed"))
-                TextWithSwitch(TextV(resId = R.string.AutoHideCarrierName), SwitchV("HCuk"))
-               Text(textId= R.string.DelayedLoading, onClickListener = {
+                TextWithSwitch(TextV(textId = R.string.UnlockShow), SwitchV("LockScreenOff"))
+                TextWithSwitch(TextV(textId = R.string.AutoHideNotiIcon), SwitchV("HNoticeIcon"))
+                TextWithSwitch(TextV(textId = R.string.HideNetWork), SwitchV("HNetSpeed"))
+                TextWithSwitch(TextV(textId = R.string.AutoHideCarrierName), SwitchV("HCuk"))
+                Text(textId = R.string.DelayedLoading, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.DelayedLoading)
                         setEditText(ActivityOwnSP.ownSPConfig.getDelayedLoading().toString(), "1")
@@ -885,7 +912,7 @@ class SettingsActivity : MIUIActivity() {
                         addView(LinearLayout(context).apply {
                             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                             setPadding(dp2px(context, 25f), 0, dp2px(context, 25f), 0)
-                            addView(TextV(resId = R.string.BlockLyricMode).create(context, null))
+                            addView(TextV(textId = R.string.BlockLyricMode).create(context, null))
                             addView(MIUISwitch(context).apply {
                                 isChecked = ActivityOwnSP.ownSPConfig.getBlockLyricMode()
                                 setOnClickListener {
@@ -897,7 +924,7 @@ class SettingsActivity : MIUIActivity() {
                         addView(LinearLayout(context).apply {
                             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                             setPadding(dp2px(context, 25f), 0, dp2px(context, 25f), 0)
-                            addView(TextV(resId = R.string.BlockLyricOff).create(context, null))
+                            addView(TextV(textId = R.string.BlockLyricOff).create(context, null))
                             addView(MIUISwitch(context).apply {
                                 isChecked = ActivityOwnSP.ownSPConfig.getBlockLyricOff()
                                 setOnClickListener {
@@ -950,7 +977,7 @@ class SettingsActivity : MIUIActivity() {
                 dict["Alipay"] = "Alipay"
                 dict["WeChat"] = "WeChat"
                 dict["Afdian"] = "Afdian"
-                TextWithSpinner(TextV(resId = R.string.Donate), SpinnerV("") {
+                TextWithSpinner(TextV(textId = R.string.Donate), SpinnerV("") {
                     add("Alipay") {
                         MIUIDialog(activity) {
                             setTitle(R.string.Donate)
@@ -980,26 +1007,16 @@ class SettingsActivity : MIUIActivity() {
         super.onCreate(savedInstanceState)
         if (isLoad && !isRegister) {
             isRegister = true
-            registerReceiver(AppReceiver(), IntentFilter().apply {
-                addAction("App_Server")
-            })
-            Crashes.setListener(CrashesFilter())
-            if (BuildConfig.DEBUG) {
-                ActivityOwnSP.ownSPConfig.setDebug(true)
-            }
-
-            Timer().schedule(UpdateConfigTask(), 0, 1000)
-
             if (ActivityOwnSP.ownSPConfig.getIsFirst()) {
                 MIUIDialog(activity) {
                     setTitle(R.string.Tips)
                     setMessage(R.string.FirstTip)
-                    setRButton(R.string.Ok) {
+                    setLButton(R.string.Ok) {
                         ActivityOwnSP.ownSPConfig.setIsFirst(false)
                         init()
                         dismiss()
                     }
-                    setLButton(R.string.Cancel) {
+                    setRButton(R.string.Cancel) {
                         dismiss()
                         exitProcess(0)
                     }
@@ -1149,11 +1166,19 @@ class SettingsActivity : MIUIActivity() {
     }
 
     private fun init() {
+        registerReceiver(AppReceiver(), IntentFilter().apply {
+            addAction("App_Server")
+        })
+        Crashes.setListener(CrashesFilter())
+        if (BuildConfig.DEBUG) {
+            ActivityOwnSP.ownSPConfig.setLyricService(true)
+            ActivityOwnSP.ownSPConfig.setDebug(true)
+        }
+        Timer().schedule(UpdateConfigTask(), 0, 1000)
         ActivityUtils.getNotice(activity)
         if (ActivityOwnSP.ownSPConfig.getCheckUpdate()) ActivityUtils.getUpdate(activity)
         AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
         Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
         Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
-
     }
 }

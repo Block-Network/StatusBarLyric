@@ -9,9 +9,9 @@
     <string name="Off">關閉</string>
     <string name="LyricAutoMaxWidth">歌詞自適應最大寬度</string>
     <string name="LyricsAnimation">歌詞動效</string>
-    <string name="LyricColor">歌詞顏色</string>
+    <string name="LyricColor">歌詞顏色和透明度</string>
     <string name="BackgroundColor">背景顏色</string>
-    <string name="IconColor">圖標顏色</string>
+    <string name="IconColor">圖標顏色和透明度</string>
     <string name="LyricIcon">歌詞圖標</string>
     <string name="LyricSpeed">歌詞滾動速度</string>
     <string name="AdvancedSettings">高級設置</string>
@@ -26,8 +26,13 @@
     <string name="HideNetWork">隱藏實時網速</string>
     <string name="AutoHideCarrierName">自動隱藏鎖屏運營商名稱</string>
     <string name="CustomHook">* 自定義Hook點 (不懂勿動)</string>
+    <string name="CustomHookTips">部分Hook點\nmStatusClock mClockView mLeftClock mCenterClock mRightClock</string>
     <string name="DebugMode">Debug 模式</string>
     <string name="OnlyGetLyric">僅獲取歌詞</string>
+    <string name="OnlyGetLyricTips">僅獲取歌詞而不顯示在狀態欄</string>
+    <string name="TimeOff">* 定時關閉</string>
+    <string name="TimeOffTime">定時關閉時長</string>
+    <string name="GetTitle">* 強制顯示歌詞標題</string>
     <string name="ReStartSystemUI">重啟 SystemUI</string>
     <string name="ResetModule">重置模塊</string>
     <string name="About">關於</string>
@@ -43,17 +48,22 @@
     <string name="Done">完成</string>
     <string name="CurrentVer">當前版本</string>
     <string name="VerExp">適用情況：\n
-        - APlayer 未知 ~ 1.5.7.9（狀態欄歌詞版）\n
-        - QQ音樂 未知 ~ 現今（狀態欄歌詞版）\n
-        - 咪咕音樂 未知 ~ 現今（狀態欄歌詞版）\n
-        - 網易云音樂 8.2.10 ~ 現今（狀態欄歌詞版）\n
-        - 網易云音樂 未知 ~ 8.0.40 (車載藍牙歌詞版)\n
-        - 酷狗音樂 未知 ~ 11.1.9(車載藍牙歌詞版)\n
-        - 酷狗音樂概念版 未知 ~ 2.5.1(車載藍牙歌詞版)\n
-        - 酷我音樂 未知 ~ 10.1.3.0(車載藍牙歌詞版)\n
-        - 椒鹽音樂 4.5 ~ 現今（API版）\n
-        - 魅族音樂 未知 ~ 現今（狀態欄歌詞版）\n
-        - 小米音樂 4.6.0 ~ 4.7.2.2（車載藍牙歌詞版）
+      - APlayer 1.5.9.0 ~ 現今（狀態欄歌詞模式）\n
+        - QQ音樂 未知 ~ 現今（狀態欄歌詞模式）\n
+        - 咪咕音樂 未知 ~ 現今（狀態欄歌詞模式）\n
+        - 網易云音樂 8.2.10 ~ 現今（狀態欄歌詞模式）\n
+        - 網易云音樂 未知 ~ 8.0.40 (車載藍牙歌詞模式)\n
+        - 酷狗音樂 未知 ~ 11.3.0(車載藍牙歌詞模式)\n
+        - 酷狗音樂概念版 未知 ~ 2.6.1(車載藍牙歌詞模式)\n
+        - 酷我音樂 未知 ~ 10.2.0.5(車載藍牙歌詞模式)\n
+        - 椒鹽音樂 4.5 ~ 現今（API 模式）\n
+        - 魅族音樂 未知 ~ 現今（狀態欄歌詞模式）\n
+        - 小米音樂 4.6.0 ~ 4.9.0.1（車載藍牙歌詞模式）\n
+        - RPlayer 未知 ~ 現今（狀態欄歌詞模式）\n\n
+        - 洛雪音樂  未知 ~ 現今（API模式或桌面歌詞模式）\n
+        - Apple Music  僅3.10.2\n\n
+
+        沒在次範圍的版本不一定能使用，但在次範圍的版本一定能使用
     </string>
     <string name="AppName">墨•狀態欄歌詞</string>
     <string name="QuickTitle">狀態欄歌詞</string>
@@ -92,11 +102,11 @@
 
         若無法顯示歌詞\n
         請重啟系統界面，並確保模塊開關打開\n
-        "車載藍牙歌詞版" 請確保音樂軟件設置內「車載藍牙歌詞」為開啟狀態\n
-        "狀態欄歌詞版" 請確保音樂軟件設置內「狀態欄歌詞」為開啟狀態\n\n
+        "車載藍牙歌詞模式" 請確保音樂軟件設置內「車載藍牙歌詞」為開啟狀態\n
+        "狀態欄歌詞模式" 請確保音樂軟件設置內「狀態欄歌詞」為開啟狀態\n\n
+        "API模式" 請確保音樂軟件設置內 對應開關 為開啟狀態\n\n
 
-
-        帶 * 的功能改動需要重啟系統界面\n\n
+        帶 * 的功能改動後需要重啟系統界面\n
 
         模塊不生效請打開debug並重啟SystemUI並附上日誌，前往 Github電報 進行反饋
     </string>
@@ -120,6 +130,7 @@
     <string name="Custom">自定義</string>
     <string name="InputCustomHook">自定義Hook點，空關閉</string>
     <string name="HideTime">隱藏時間</string>
+    <string name="FadingEdge">* 邊緣虛化</string>
     <string name="SponsoredList">赞助名单</string>
     <string name="Donate">支持我們</string>
     <string name="HookSure">Hook 系统界面</string>
@@ -165,4 +176,5 @@
     <string name="BlockLyricOff">遮罩歌詞是否取消顯示</string>
     <string name="ModuleVersion">模塊版本</string>
     <string name="BuildTime">編譯時間</string>
+    <string name="BgCorners">背景圓角</string>
 </resources>
