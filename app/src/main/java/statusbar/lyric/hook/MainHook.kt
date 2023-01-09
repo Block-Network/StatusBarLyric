@@ -65,7 +65,8 @@ class MainHook : IXposedHookLoadPackage {
 
             "remix.myplayer" -> {
                 LogUtils.e("start Hook myplayer")
-                Myplayer()
+                MeiZuStatusBarLyric.guiseFlyme(true)
+                null
             }
 
             "cmccwm.mobilemusic" -> {
