@@ -124,8 +124,8 @@ class SystemUI : BaseHook() {
                     try {
                         if (config.getLyricService()) {
                             if (test) return
-                            if (useSystemMusicActive && !audioManager.isMusicActive) {
-                                offLyric(LogMultiLang.pausePlay)
+                            if (useSystemMusicActive) {
+//                                offLyric(LogMultiLang.pausePlay)
                                 return
                             }
                             if (!audioManager.isMusicActive) {
