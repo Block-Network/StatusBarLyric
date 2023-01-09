@@ -732,7 +732,8 @@ class SettingsActivity : MIUIActivity() {
             }
 
             register("advancedSettings", getString(R.string.AdvancedSettings), true) {
-                TextWithSwitch(TextV(textId = R.string.OnlyGetLyric), SwitchV("OnlyGetLyric"))
+                TextSummaryWithSwitch(TextSummaryV(textId = R.string.GetTitle), SwitchV("GetTitle"))
+                TextSummaryWithSwitch(TextSummaryV(textId = R.string.OnlyGetLyric, tipsId = R.string.OnlyGetLyricTips), SwitchV("OnlyGetLyric"))
                 TextWithSwitch(TextV(textId = R.string.TimeOff), SwitchV("TimeOff"))
                 TextSummaryArrow(TextSummaryV(textId = R.string.TimeOffTime, onClickListener = {
                     MIUIDialog(activity) {
@@ -1170,6 +1171,7 @@ class SettingsActivity : MIUIActivity() {
         })
         Crashes.setListener(CrashesFilter())
         if (BuildConfig.DEBUG) {
+            ActivityOwnSP.ownSPConfig.setLyricService(true)
             ActivityOwnSP.ownSPConfig.setDebug(true)
         }
         Timer().schedule(UpdateConfigTask(), 0, 1000)

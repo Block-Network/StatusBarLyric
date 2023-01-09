@@ -98,6 +98,7 @@ class Netease : BaseHook() {
                         LogUtils.e("${client}尝试发送Broadcast，但context为null")
                     }
                 }
+
                 idPLAY -> {
                     intent.action = action + "MAIN"
                     intent.putExtra("fromPLAY", s)
@@ -116,6 +117,7 @@ class Netease : BaseHook() {
                     context.registerReceiver(this, IntentFilter(action + "MAIN"))
                     LogUtils.e("$client 尝试注册BroadcastReceiver ${action + "MAIN"}")
                 }
+
                 idPLAY -> {
                     context.registerReceiver(this, IntentFilter(action + "PLAY"))
                     LogUtils.e("$client 尝试注册BroadcastReceiver ${action + "PLAY"}")
@@ -134,6 +136,7 @@ class Netease : BaseHook() {
                         callback?.onReceive(it)
                     }
                 }
+
                 idPLAY -> {
                     p1.getStringExtra("fromMAIN")?.let {
                         callback?.onReceive(it)

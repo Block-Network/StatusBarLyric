@@ -40,6 +40,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.media.AudioManager
+import android.media.MediaMetadata
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -58,6 +59,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.*
+import statusbar.lyric.utils.Utils.isNotNull
 import statusbar.lyric.utils.XposedOwnSP.config
 import statusbar.lyric.utils.ktx.*
 import statusbar.lyric.view.LyricSwitchView
@@ -70,8 +72,11 @@ import kotlin.system.exitProcess
 class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
     private var lyrics = "lyric"
+    private var icon: String = ""
     var texts = ""
     var musicServer: ArrayList<String> = arrayListOf("com.kugou", "com.r.rplayer.MusicService", "com.netease.cloudmusic", "com.tencent.qqmusic.service", "cn.kuwo", "remix.myplayer", "cmccwm.mobilemusic", "com.meizu.media.music", "com.tencent.qqmusicplayerprocess.service.QQPlayerServiceNew")
+    private var lsatName = ""
+    private var isFirstEntry = false
 
     // base data
     val application: Application by lazy { AndroidAppHelper.currentApplication() }
@@ -169,7 +174,8 @@ class SystemUI : BaseHook() {
                     iconPos = config.getLyricPosition()
                     if (order) i += 1 else i -= 1
                     updateMargins.sendMessage(updateMargins.obtainMessage().also {
-                        it.obj = 10 + i + iconPos
+                        it.obj = null
+                        it.arg1 = 10 + i + iconPos
                         it.arg2 = config.getLyricHigh()
                     })
                     if (i == 0) order = true else if (i == 20) order = false
@@ -234,6 +240,20 @@ class SystemUI : BaseHook() {
         "com.android.systemui.statusbar.phone.NotificationIconContainer".findClassOrNull()?.hookAfterAllConstructors {
             notificationIconContainer = it.thisObject as FrameLayout
         }.isNull { LogUtils.e("Not find NotificationIconContainer") }
+        if (config.getGetTitle()) {
+            "com.android.systemui.statusbar.NotificationMediaManager".findClassOrNull()?.hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
+                val mContext = it.thisObject.getObjectField("mContext") as Context
+                val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata?
+                mMediaMetadata.isNotNull {
+                    val value = mMediaMetadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
+                    if (lsatName != value) {
+                        lsatName = value
+                        isFirstEntry = true
+                        Utils.sendLyric(mContext, lsatName, icon)
+                    }
+                }
+            }
+        }
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) { // Get system clock view
@@ -363,7 +383,7 @@ class SystemUI : BaseHook() {
             setSingleLine(true)
             setMaxLines(1)
             setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
-           if(config.getFadingEdge()) horizontalFadingEdge()
+            if (config.getFadingEdge()) horizontalFadingEdge()
             try {
                 val file = File(application.filesDir.path + "/font")
                 if (file.exists() && file.isFile && file.canRead()) {
@@ -446,8 +466,8 @@ class SystemUI : BaseHook() {
 
         updateMargins = Handler(Looper.getMainLooper()) { message ->
 //            (lyricLayout.layoutParams as LinearLayout.LayoutParams).setMargins(message.arg1, message.arg2, 0, 0)
-            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.arg1 as Int
-            (lyricLayout.layoutParams as LinearLayout.LayoutParams).topMargin = message.arg2 as Int
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).leftMargin = message.arg1
+            (lyricLayout.layoutParams as LinearLayout.LayoutParams).topMargin = message.arg2
             true
         }
 
@@ -628,8 +648,9 @@ class SystemUI : BaseHook() {
     fun updateLyric(lyric: String, icon: String) {
         lyrics = lyric
         LogUtils.e(LogMultiLang.sendLog)
-        if (lyric.isEmpty()) {
+        if (lyric.isEmpty() && !isFirstEntry) {
             offLyric(LogMultiLang.emptyLyric)
+            isFirstEntry = false
             return
         }
         if (!config.getLyricService()) {
@@ -753,17 +774,16 @@ class SystemUI : BaseHook() {
     inner class LyricReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
-                var icon = intent.getStringExtra("Lyric_Icon")
+                icon = intent.getStringExtra("Lyric_Icon") ?: "Api"
                 when (intent.getStringExtra("Lyric_Type")) {
                     "hook" -> {
                         val lyric = intent.getStringExtra("Lyric_Data") ?: ""
                         LogUtils.e("${LogMultiLang.recvData}hook: lyric:$lyric icon:$icon")
-                        updateLyric(lyric, icon ?: "Api")
+                        updateLyric(lyric, icon)
                         useSystemMusicActive = true
                     }
 
                     "app" -> {
-                        if (icon.isNullOrEmpty()) icon = "Api"
                         val packName = intent.getStringExtra("Lyric_PackName")
                         if (!packName.isNullOrEmpty() && !musicServer.contains(packName)) {
                             musicServer.add(packName)
