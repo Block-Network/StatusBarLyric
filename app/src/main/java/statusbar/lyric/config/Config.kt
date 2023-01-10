@@ -48,6 +48,9 @@ class Config {
     fun getGetTitle(): Boolean {
         return config.optBoolean("GetTitle", false)
     }
+    fun getJudgementTitle(): Boolean {
+        return config.optBoolean("JudgementTitle", true)
+    }
 
     fun setLyricService(bool: Boolean) {
         config.put("LService", bool)

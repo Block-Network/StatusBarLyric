@@ -240,15 +240,19 @@ class SystemUI : BaseHook() {
         "com.android.systemui.statusbar.phone.NotificationIconContainer".findClassOrNull()?.hookAfterAllConstructors {
             notificationIconContainer = it.thisObject as FrameLayout
         }.isNull { LogUtils.e("Not find NotificationIconContainer") }
-        if (config.getGetTitle()) {
-            "com.android.systemui.statusbar.NotificationMediaManager".findClassOrNull()?.hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
-                val mContext = it.thisObject.getObjectField("mContext") as Context
-                if (config.getMusicList().split("|").contains(mContext.packageName)) {
-                    val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata?
-                    mMediaMetadata.isNotNull {
-                        val value = mMediaMetadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
-                        if (lsatName != value) {
-                            lsatName = value
+
+        "com.android.systemui.statusbar.NotificationMediaManager".findClassOrNull()?.hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
+            val mContext = it.thisObject.getObjectField("mContext") as Context
+            if (config.getMusicList().split("|").contains(mContext.packageName)) {
+                val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata?
+                mMediaMetadata.isNotNull {
+                    val value = mMediaMetadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
+                    if (lsatName != value) {
+                        lsatName = value
+                        if (config.getJudgementTitle()) {
+                            offLyric("test")
+                        }
+                        if (config.getGetTitle()) {
                             isFirstEntry = true
                             Utils.sendLyric(mContext, lsatName, icon)
                         }
@@ -264,7 +268,7 @@ class SystemUI : BaseHook() {
             try {
                 param.thisObject.javaClass.getField(config.getHook())
             } catch (e: NoSuchFieldError) {
-                LogUtils.e(config.getHook() + " ${LogMultiLang.fieldFail}: " + e + "\n" + Utils.dumpNoSuchFieldError(e))
+                LogUtils.e(config.getHook() + " ${LogMultiLang.fieldFail}: $e\n${Utils.dumpNoSuchFieldError(e)}")
                 null
             }
         } else {
@@ -285,7 +289,7 @@ class SystemUI : BaseHook() {
                     arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
                 }
             } catch (e: Throwable) {
-                LogUtils.e("getPackageInfoError: $e \n" + Log.getStackTraceString(e))
+                LogUtils.e("getPackageInfoError: $e \n${Log.getStackTraceString(e)}")
                 arrayOf("mClockView", "mStatusClock", "mLeftClock", "mCenterClock", "mRightClock")
             }
             var thisField: Field? = null
@@ -295,7 +299,7 @@ class SystemUI : BaseHook() {
                     LogUtils.e("${LogMultiLang.tries} $field ${LogMultiLang.fieldSuccess}")
                     break
                 } catch (e: NoSuchFieldError) {
-                    LogUtils.e("${LogMultiLang.tries} $field ${LogMultiLang.fieldFail}: $e\n" + Log.getStackTraceString(e))
+                    LogUtils.e("${LogMultiLang.tries} $field ${LogMultiLang.fieldFail}: $e\n${Log.getStackTraceString(e)}")
                 }
             }
             thisField
