@@ -33,7 +33,7 @@
     <string name="OnlyGetLyricTips">Get lyrics only without displaying them in the status bar</string>
     <string name="TimeOff">* Time off</string>
     <string name="TimeOffTime">Timed off time</string>
-    <string name="GetTitle">* Force the lyric title to appear</string>
+    <string name="GetTitle">* Force the music title to appear</string>
     <string name="ReStartSystemUI">Restart SystemUI</string>
     <string name="ResetModule">Reset module</string>
     <string name="About">About</string>
@@ -62,7 +62,7 @@
         - Mi Music 4.6.0 ~ 4.11.1.0 (car Bluetooth lyrics mode)\n
         - RPlayer unknown ~ now (status bar lyrics mode)\n
         -  LX Music  unknown ~ now(API mode or Desktop lyrics mode)\n
-        - Apple Music  only 3.10.2\n\n
+        - Apple Music  3.10 ~ 4.0.0\n\n
 
         Versions not in this range may not be available, but versions in this range will definitely work
     </string>

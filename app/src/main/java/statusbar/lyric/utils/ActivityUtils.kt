@@ -22,9 +22,11 @@
 
 package statusbar.lyric.utils
 
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.TypedArray
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -36,10 +38,12 @@ import org.json.JSONException
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
+import statusbar.lyric.config.Config
 import statusbar.lyric.utils.Utils.isNotNull
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
+
 
 object ActivityUtils {
     private val handler by lazy { Handler(Looper.getMainLooper()) }
@@ -148,30 +152,24 @@ object ActivityUtils {
                 bundle.putString("value", value)
                 message.data = bundle
                 handler.sendMessage(message)
-            }else {
+            } else {
                 if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.GetNewNoticeError))
             }
         }.start()
     }
 
-    fun getTips(activity: Activity) {
-        val handler = Handler(Looper.getMainLooper()) { message: Message ->
-
-            false
-        }
+    fun setMusicList(activity: Activity, config: Config) {
         Thread {
-            val value: String? = getHttp("https://app.xiaowine.cc/app/updateTime.txt")
-            if (value.isNotNull()) {
-                val message = handler.obtainMessage()
-                val bundle = Bundle()
-                bundle.putString("value", value)
-                message.data = bundle
-                handler.sendMessage(message)
+            var str = ""
+            val mArray = activity.resources.getStringArray(R.array.need_module)
+            mArray.forEach {
+                str = "${it}|${str}"
             }
+            config.setMusicList(str)
         }.start()
     }
 
-    fun getHttp(Url: String): String? {
+    private fun getHttp(Url: String): String? {
         try {
             val connection = URL(Url).openConnection() as java.net.HttpURLConnection
             connection.requestMethod = "GET"

@@ -351,6 +351,13 @@ class Config {
     fun getBlockLyric(): String {
         return config.optString("BlockLyric", "")
     }
+     fun setMusicList(str: String) {
+        config.put("MusicList", str)
+    }
+
+    fun getMusicList(): String {
+        return config.optString("MusicList", "")
+    }
 
     fun setBlockLyricOff(bool: Boolean) {
         config.put("BlockLyricOff", bool)

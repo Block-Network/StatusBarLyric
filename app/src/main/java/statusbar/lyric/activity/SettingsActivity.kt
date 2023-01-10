@@ -1176,6 +1176,7 @@ class SettingsActivity : MIUIActivity() {
         }
         Timer().schedule(UpdateConfigTask(), 0, 1000)
         ActivityUtils.getNotice(activity)
+        ActivityUtils.setMusicList(activity, ActivityOwnSP.ownSPConfig)
         if (ActivityOwnSP.ownSPConfig.getCheckUpdate()) ActivityUtils.getUpdate(activity)
         AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
         Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")

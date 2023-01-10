@@ -243,13 +243,15 @@ class SystemUI : BaseHook() {
         if (config.getGetTitle()) {
             "com.android.systemui.statusbar.NotificationMediaManager".findClassOrNull()?.hookAfterMethod("updateMediaMetaData", Boolean::class.java, Boolean::class.java) {
                 val mContext = it.thisObject.getObjectField("mContext") as Context
-                val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata?
-                mMediaMetadata.isNotNull {
-                    val value = mMediaMetadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
-                    if (lsatName != value) {
-                        lsatName = value
-                        isFirstEntry = true
-                        Utils.sendLyric(mContext, lsatName, icon)
+                if (config.getMusicList().split("|").contains(mContext.packageName)) {
+                    val mMediaMetadata = it.thisObject.getObjectField("mMediaMetadata") as MediaMetadata?
+                    mMediaMetadata.isNotNull {
+                        val value = mMediaMetadata!!.getString(MediaMetadata.METADATA_KEY_TITLE)
+                        if (lsatName != value) {
+                            lsatName = value
+                            isFirstEntry = true
+                            Utils.sendLyric(mContext, lsatName, icon)
+                        }
                     }
                 }
             }
