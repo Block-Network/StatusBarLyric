@@ -28,11 +28,12 @@
     <string name="CustomHook">* 自定義Hook點 (不懂勿動)</string>
     <string name="CustomHookTips">部分Hook點\nmStatusClock mClockView mLeftClock mCenterClock mRightClock</string>
     <string name="DebugMode">Debug 模式</string>
-    <string name="OnlyGetLyric">僅獲取歌詞</string>
+    <string name="OnlyGetLyric">* 僅獲取歌詞</string>
     <string name="OnlyGetLyricTips">僅獲取歌詞而不顯示在狀態欄</string>
-    <string name="TimeOff">* 定時關閉</string>
-    <string name="TimeOffTime">定時關閉時長</string>
-    <string name="GetTitle">* 強制顯示歌詞標題</string>
+    <string name="TimeHide">* 定時隱藏歌詞</string>
+    <string name="TimeHideTime">定時隱藏歌詞時長</string>
+    <string name="GetTitle">* 強制顯示音樂標題</string>
+    <string name="JudgementTitle">* 增強停止隱藏歌詞</string>
     <string name="ReStartSystemUI">重啟 SystemUI</string>
     <string name="ResetModule">重置模塊</string>
     <string name="About">關於</string>
@@ -61,7 +62,7 @@
         - 小米音樂 4.6.0 ~ 4.11.1.0（車載藍牙歌詞模式）\n
         - RPlayer 未知 ~ 現今（狀態欄歌詞模式）\n\n
         - 洛雪音樂  未知 ~ 現今（API模式或桌面歌詞模式）\n
-        - Apple Music  僅3.10.2\n\n
+        - Apple Music  3.10 ~ 4.0.0\n\n
 
         沒在次範圍的版本不一定能使用，但在次範圍的版本一定能使用
     </string>

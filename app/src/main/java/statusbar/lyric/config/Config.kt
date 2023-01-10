@@ -48,6 +48,9 @@ class Config {
     fun getGetTitle(): Boolean {
         return config.optBoolean("GetTitle", false)
     }
+    fun getJudgementTitle(): Boolean {
+        return config.optBoolean("JudgementTitle", true)
+    }
 
     fun setLyricService(bool: Boolean) {
         config.put("LService", bool)
@@ -350,6 +353,13 @@ class Config {
 
     fun getBlockLyric(): String {
         return config.optString("BlockLyric", "")
+    }
+     fun setMusicList(str: String) {
+        config.put("MusicList", str)
+    }
+
+    fun getMusicList(): String {
+        return config.optString("MusicList", "")
     }
 
     fun setBlockLyricOff(bool: Boolean) {
