@@ -69,6 +69,7 @@ import java.util.*
 import java.util.regex.Pattern
 import kotlin.system.exitProcess
 
+
 class SystemUI : BaseHook() {
     private val lyricKey = "lyric"
     private var lyrics = "lyric"
@@ -86,7 +87,7 @@ class SystemUI : BaseHook() {
     private lateinit var iconView: ImageView
     private lateinit var lyricLayout: LinearLayout
     private lateinit var clockParams: LinearLayout.LayoutParams
-    lateinit var audioManager: AudioManager
+    private lateinit var audioManager: AudioManager
     private var displayWidth: Int = 0
     private var displayHeight: Int = 0
     var isLock = false
@@ -121,26 +122,7 @@ class SystemUI : BaseHook() {
         if (autoOffLyricTimer == null) {
             autoOffLyricTimer = object : TimerTask() {
                 override fun run() {
-                    try {
-                        if (config.getLyricService()) {
-                            if (test) return
-                            if (!useSystemMusicActive) {
-//                                offLyric(LogMultiLang.pausePlay)
-                                return
-                            }
-                            if (!audioManager.isMusicActive) {
-                                offLyric(LogMultiLang.pausePlay)
-                                return
-                            }
-                            if (!Utils.isServiceRunningList(application, musicServer)) {
-                                offLyric(LogMultiLang.playerOff)
-                            }
-                        } else {
-                            offLyric(LogMultiLang.switchOff)
-                        }
-                    } catch (e: Throwable) {
-                        LogUtils.e("${LogMultiLang.stateCheck}: $e \n" + Log.getStackTraceString(e))
-                    }
+                    autoOffLyric()
                 }
             }
         }
@@ -211,9 +193,14 @@ class SystemUI : BaseHook() {
 
     override fun hook() {
         super.hook()
-        // Only get lyric
 
-        if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
+
+        // use system reverse color
+        if (config.getUseSystemReverseColor()) {
+            "com.android.systemui.statusbar.phone.NotificationIconAreaController".hookAfterMethod("onDarkChanged", ArrayList::class.java, Float::class.java, Int::class.java) {
+                setColor(it.args[2] as Int)
+            }
+        }
 
         // StatusBarLyric
         "com.android.systemui.statusbar.phone.PhoneStatusBarView".hookAfterMethod("getClockView") {
@@ -250,7 +237,7 @@ class SystemUI : BaseHook() {
                     if (lsatName != value) {
                         lsatName = value
                         if (config.getJudgementTitle()) {
-                            offLyric("test")
+                            autoOffLyric()
                         }
                         if (config.getGetTitle()) {
                             isFirstEntry = true
@@ -260,6 +247,8 @@ class SystemUI : BaseHook() {
                 }
             }
         }
+
+
     }
 
     private val systemUIHook = fun(param: XC_MethodHook.MethodHookParam) { // Get system clock view
@@ -342,6 +331,7 @@ class SystemUI : BaseHook() {
 
         audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
 
+        // Only get lyric
         if (config.getOnlyGetLyric()) {
             LogUtils.e(LogMultiLang.onlyGetLyric)
             return
@@ -739,26 +729,27 @@ class SystemUI : BaseHook() {
         updateIconColor.sendMessage(updateIconColor.obtainMessage().also { it.arg1 = if (iconColor == 0) int else iconColor }) // update icon color
     }
 
-    private fun systemReverseColor() {
+
+    fun autoOffLyric() {
         try {
-            val darkIconDispatcher = "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
-            if (darkIconDispatcher.isNotNull()) {
-                val find = darkIconDispatcher!!.hookAfterAllMethods("getTint") {
-                    try {
-                        setColor(it.args[2] as Int)
-                    } catch (_: Throwable) {
-                    }
+            if (config.getLyricService()) {
+                if (test) return
+                if (!useSystemMusicActive) {
+//                                offLyric(LogMultiLang.pausePlay)
+                    return
                 }
-                if (find.isEmpty()) {
-                    LogUtils.e(LogMultiLang.findAntiMethodFail)
-                } else {
-                    LogUtils.e(LogMultiLang.findAntiMethodSuccess)
+                if (!audioManager.isMusicActive) {
+                    offLyric(LogMultiLang.pausePlay)
+                    return
+                }
+                if (!Utils.isServiceRunningList(application, musicServer)) {
+                    offLyric(LogMultiLang.playerOff)
                 }
             } else {
-                LogUtils.e(LogMultiLang.findSystemAntiClassFail)
+                offLyric(LogMultiLang.switchOff)
             }
         } catch (e: Throwable) {
-            LogUtils.e("${LogMultiLang.systemAntiError}: " + Log.getStackTraceString(e))
+            LogUtils.e("${LogMultiLang.stateCheck}: $e \n" + Log.getStackTraceString(e))
         }
     }
 
