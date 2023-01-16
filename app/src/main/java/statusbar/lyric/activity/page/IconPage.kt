@@ -198,9 +198,6 @@ class IconPage : BasePage() {
                 }
             }.show()
         }))
-        TextSummaryArrow(TextSummaryV("reload", onClickListener = {
-            reload()
-        }))
         Text()
     }
 
