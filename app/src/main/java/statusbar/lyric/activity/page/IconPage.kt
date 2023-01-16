@@ -55,9 +55,7 @@ class IconPage : BasePage() {
                                         SettingsActivity.updateConfig = true
                                         dismiss()
                                         return@setRButton
-                                    } catch (e: Throwable) {
-                                        e.printStackTrace()
-                                    }
+                                    } catch (_: Throwable) {}
                                 }
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                                 iconConfig.setIcon(icon, iconConfig.getDefaultIcon(icon, true))
@@ -128,9 +126,7 @@ class IconPage : BasePage() {
                                                 iconConfig.setIcon(packageName, icon)
                                                 SettingsActivity.updateConfig = true
                                                 reload()
-                                            } catch (e: Throwable) {
-                                                e.printStackTrace()
-                                            }
+                                            } catch (_: Throwable) {}
                                         } else {
                                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                                         }
@@ -160,13 +156,15 @@ class IconPage : BasePage() {
                                         JSONObject(value.substring(10).b64Decode()).also {
                                             for (key in it.keys()) {
                                                 iconConfig.setIcon(key, it.getString(key))
-                                                reload()
                                             }
                                         }
+                                        SettingsActivity.updateConfig = true
+                                        reload()
+                                    } else {
+                                        ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                                     }
-                                    SettingsActivity.updateConfig = true
                                 } catch (e: Throwable) {
-                                    e.printStackTrace()
+                                    ActivityUtils.showToastOnLooper(activity, "Import error: $e")
                                 }
                             } else {
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
