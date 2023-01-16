@@ -4,7 +4,7 @@
     <string name="HideDeskIcon">隐藏桌面图标</string>
     <string name="BaseSetting">基础设置</string>
     <string name="AllSwitch">总开关</string>
-    <string name="SongPauseCloseLyrics">歌曲暂停时隐藏歌词</string>
+    <string name="SongPauseCloseLyrics">* 旧版歌曲暂停时隐藏歌词</string>
     <string name="LyricWidth">歌词宽度</string>
     <string name="Off">关闭</string>
     <string name="LyricAutoMaxWidth">歌词自适应最大宽度</string>
@@ -100,8 +100,7 @@
     <string name="WarnExplanation">模块注意事项</string>
     <string name="WarnExp">模块注意事项\n\n
         模块在官方状态栏布局下完美使用，修改布局可能会出问题\n\n
-        若无法显示歌词\n
-        请重启系统界面，并确保模块开关打开\n
+        若无法显示歌词，请重启系统界面，并确保模块开关打开\n
         "车载蓝牙歌词模式" 请确保音乐软件设置内「车载蓝牙歌词」为开启状态\n
         "状态栏歌词模式" 请确保音乐软件设置内「状态栏歌词」为开启状态\n\n
         "API模式" 请确保音乐软件设置内 对应开关 为开启状态\n\n
@@ -158,7 +157,7 @@
     <string name="ReverseColorTimeTips">1–3000（单位：毫秒）</string>
     <string name="AntiBurnTime">防烧屏移动时间</string>
     <string name="AntiBurnTimeTips">1–3600000（单位：毫秒）</string>
-    <string name="SongPauseCloseLyricsTime">歌曲暂停关闭歌词时间</string>
+    <string name="SongPauseCloseLyricsTime">* 旧版歌曲暂停关闭歌词时间</string>
     <string name="showAd">观看广告来支持作者</string>
     <string name="MakeIcon">制作图标</string>
     <string name="MakeIconError">无法跳转，请检查是否安装\n爱玩机工具箱</string>

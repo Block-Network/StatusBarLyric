@@ -4,7 +4,7 @@
     <string name="HideDeskIcon">隱藏桌面圖標</string>
     <string name="BaseSetting">基礎設置</string>
     <string name="AllSwitch">總開關</string>
-    <string name="SongPauseCloseLyrics">歌曲暫停關閉歌詞</string>
+    <string name="SongPauseCloseLyrics">* 舊版歌曲暫停關閉歌詞</string>
     <string name="LyricWidth">歌詞寬度</string>
     <string name="Off">關閉</string>
     <string name="LyricAutoMaxWidth">歌詞自適應最大寬度</string>
@@ -101,8 +101,7 @@
     <string name="WarnExp">模塊注意事項\n\n
         模塊在官方狀態欄佈局下完美使用，修改佈局可能會出問題\n\n
 
-        若無法顯示歌詞\n
-        請重啟系統界面，並確保模塊開關打開\n
+        若無法顯示歌詞，請重啟系統界面，並確保模塊開關打開\n
         "車載藍牙歌詞模式" 請確保音樂軟件設置內「車載藍牙歌詞」為開啟狀態\n
         "狀態欄歌詞模式" 請確保音樂軟件設置內「狀態欄歌詞」為開啟狀態\n\n
         "API模式" 請確保音樂軟件設置內 對應開關 為開啟狀態\n\n
@@ -160,7 +159,7 @@
     <string name="ReverseColorTimeTips">1–3000（單位：毫秒）</string>
     <string name="AntiBurnTime">防燒屏移動時間</string>
     <string name="AntiBurnTimeTips">1–3600000（單位：毫秒）</string>
-    <string name="SongPauseCloseLyricsTime">歌曲暫停關閉歌詞時間</string>
+    <string name="SongPauseCloseLyricsTime">* 旧版歌曲暫停關閉歌詞時間</string>
     <string name="showAd">觀看廣告來支持作者</string>
     <string name="MakeIcon">製作圖標</string>
     <string name="MakeIconError">無法跳轉，請檢查是否安裝\n爱玩机工具箱</string>

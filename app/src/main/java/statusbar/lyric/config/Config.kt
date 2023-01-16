@@ -128,8 +128,8 @@ class Config {
         config.put("BgCorners", i)
     }
 
-    fun getLyricAutoOff(): Boolean {
-        return config.optBoolean("LAutoOff", true)
+    fun getLyricOldAutoOff(): Boolean {
+        return config.optBoolean("LOldAutoOff", false)
     }
 
     fun getLockScreenOff(): Boolean {

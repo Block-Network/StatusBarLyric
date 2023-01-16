@@ -847,12 +847,12 @@ class SettingsActivity : MIUIActivity() {
                     }.show()
                 }, dataBindingRecv = dataBinding.binding.getRecv(2))
                 SeekBarWithText("ReverseColorTime", 1, 3000, defaultProgress = 1, dataBindingRecv = dataBinding.binding.getRecv(2))
-                val autoOffBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getLyricAutoOff() }) { view, flags, data ->
+                val autoOffBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getLyricOldAutoOff() }) { view, flags, data ->
                     when (flags) {
                         2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
                     }
                 }
-                TextWithSwitch(TextV(textId = R.string.SongPauseCloseLyrics), SwitchV("LAutoOff", true, dataBindingSend = autoOffBinding.bindingSend))
+                TextWithSwitch(TextV(textId = R.string.SongPauseCloseLyrics), SwitchV("LOldAutoOff", false, dataBindingSend = autoOffBinding.bindingSend))
                 Text(textId = R.string.SongPauseCloseLyricsTime, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.SongPauseCloseLyricsTime)

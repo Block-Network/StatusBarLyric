@@ -25,10 +25,6 @@ object LogMultiLang {
     val unlockDisplayOnly = if (isChinese) "仅解锁显示" else "Unlock display only"
     val hideIcon = if (isChinese) "隐藏图标" else "Hide icon"
     val showIcon = if (isChinese) "显示图标" else "Show icon"
-    val findAntiMethodFail = if (isChinese) "查找反色方法失败" else "Failed to find anti color method"
-    val findAntiMethodSuccess = if (isChinese) "查找反色方法成功" else "The reverse color method is found successfully"
-    val findSystemAntiClassFail = if (isChinese) "系统方法反色获取失败" else "System method reverse color acquisition failed"
-    val systemAntiError = if (isChinese) "系统反色出现错误" else "System color reversal error"
     val lockScreen = if (isChinese) "锁屏" else "Lock screen"
     val lockScreenError = if (isChinese) "锁屏不显示出现错误" else "The lock screen does not display an error"
     val recvData = if (isChinese) "收到广播" else "receive a broadcast"
@@ -40,5 +36,7 @@ object LogMultiLang {
     val initFontFailed = if (isChinese) "初始化自定义字体失败" else "Init custom font failed"
     val onlyGetLyric = if (isChinese) "仅获取歌词" else "Get lyrics only"
     val timeOff = if (isChinese) "歌词定时关闭" else "Lyrics timer off"
+    val oldAutoOff = if (isChinese) "旧版隐藏歌词方案" else "Legacy hidden lyrics scheme"
+    val newAutoOff = if (isChinese) "新版隐藏歌词方案" else "new hidden lyrics scheme"
 //    val _ = if (isChinese) "" else ""
 }
