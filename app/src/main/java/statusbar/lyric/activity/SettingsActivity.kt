@@ -91,7 +91,7 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.ApplicableVersion, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.VerExplanation)
-                        setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), BuildConfig.VERSION_NAME, getString(R.string.VerExp)))
+                        setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), BuildConfig.VERSION_NAME, getString(R.string.VerExp)), false)
                         setRButton(R.string.Done) {
                             dismiss()
                         }
@@ -100,7 +100,7 @@ class SettingsActivity : MIUIActivity() {
                 TextSummaryArrow(TextSummaryV(textId = R.string.WarnExplanation, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.WarnExplanation)
-                        setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), BuildConfig.VERSION_NAME, getString(R.string.WarnExp)))
+                        setMessage(String.format(" %s [%s] %s", getString(R.string.CurrentVer), BuildConfig.VERSION_NAME, getString(R.string.WarnExp)), false)
                         setRButton(R.string.Done) {
                             dismiss()
                         }
