@@ -15,6 +15,7 @@ import statusbar.lyric.R
 import statusbar.lyric.activity.SettingsActivity
 import statusbar.lyric.utils.ActivityOwnSP
 import statusbar.lyric.utils.ActivityUtils
+import statusbar.lyric.utils.ktx.lpparam
 import java.util.HashMap
 
 @SuppressLint("NonConstantResourceId")
@@ -391,6 +392,7 @@ class CustomPage : BasePage() {
                     activity.sendBroadcast(Intent().apply {
                         action = "Lyric_Server"
                         putExtra("Lyric_Type", "delete_font")
+                        putExtra("Lyric_PackageName", activity.packageName)
                     })
                     dismiss()
                 }

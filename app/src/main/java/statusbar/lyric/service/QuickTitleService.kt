@@ -29,6 +29,7 @@ import android.service.quicksettings.TileService
 import statusbar.lyric.R
 import statusbar.lyric.config.Config
 import statusbar.lyric.utils.Utils
+import statusbar.lyric.utils.ktx.lpparam
 
 class QuickTitleService : TileService() {
     private lateinit var tile: Tile
@@ -49,6 +50,7 @@ class QuickTitleService : TileService() {
         application.sendBroadcast(Intent().apply {
             action = "Lyric_Server"
             putExtra("Lyric_Type", "update_config")
+            putExtra("Lyric_PackageName", application.packageName)
         })
     }
 

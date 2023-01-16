@@ -19,11 +19,7 @@ import statusbar.lyric.utils.AppleMusicUtil
 import statusbar.lyric.utils.Lyric
 import statusbar.lyric.utils.LyricInfo
 import statusbar.lyric.utils.Utils.sendLyric
-import statusbar.lyric.utils.ktx.callMethod
-import statusbar.lyric.utils.ktx.callStaticMethod
-import statusbar.lyric.utils.ktx.getObjectField
-import statusbar.lyric.utils.ktx.hookAfterMethod
-import statusbar.lyric.utils.ktx.hookBeforeMethod
+import statusbar.lyric.utils.ktx.*
 import java.lang.reflect.Constructor
 
 
@@ -99,6 +95,7 @@ class AppleMusic internal constructor(lpparam: LoadPackageParam) {
                 context?.sendBroadcast(Intent().apply {
                     action = "Lyric_Server"
                     putExtra("Lyric_Type", "app_stop")
+                    putExtra("Lyric_PackageName", statusbar.lyric.utils.ktx.lpparam.packageName)
                 })
 
             }
@@ -143,6 +140,7 @@ class AppleMusic internal constructor(lpparam: LoadPackageParam) {
             context?.sendBroadcast(Intent().apply {
                 action = "Lyric_Server"
                 putExtra("Lyric_Type", "app_stop")
+                putExtra("Lyric_PackageName", lpparam.packageName)
             })
 
             if (appleCb == null) {

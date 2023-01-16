@@ -17,6 +17,7 @@ import statusbar.lyric.activity.SettingsActivity
 import statusbar.lyric.utils.ActivityUtils
 import statusbar.lyric.utils.BackupUtils
 import statusbar.lyric.utils.Utils
+import statusbar.lyric.utils.ktx.lpparam
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -73,6 +74,7 @@ class MenuPage : BasePage() {
                     activity.sendBroadcast(Intent().apply {
                         action = "Lyric_Server"
                         putExtra("Lyric_Type", "test")
+                        putExtra("Lyric_PackageName", activity.packageName)
                     })
                     dismiss()
                 }

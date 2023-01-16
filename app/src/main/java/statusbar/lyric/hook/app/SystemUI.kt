@@ -644,14 +644,15 @@ class SystemUI : BaseHook() {
         application.sendBroadcast(Intent().apply {
             action = "Lyric_Server"
             putExtra("Lyric_Type", "stop")
+            putExtra("Lyric_PackageName", lpparam.packageName)
         })
         stopTimer()
         if (config.getOnlyGetLyric()) return
         if (lyricLayout.visibility != View.GONE) offLyric.sendEmptyMessage(0)
     }
 
-    fun updateLyric(lyric: String, icon: String) {
-        var icons=icon
+    fun updateLyric(lyric: String, packageName: String, icon: String) {
+        var icons = icon
         lyrics = lyric
         LogUtils.e(LogMultiLang.sendLog)
         if (lyric.isEmpty() && !isFirstEntry) {
@@ -672,10 +673,7 @@ class SystemUI : BaseHook() {
             if (config.getLyricOldAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
             return
         }
-        if (config.getShowEmptyIcon()) {
-            icons = "Default"
-        }
-        if (!config.getIcon() || icons.isEmpty()) { // set icon
+        if (!config.getIcon() || (icons.isEmpty() && config.getShowEmptyIcon())) { // set icon
             LogUtils.e(LogMultiLang.hideIcon)
             iconUpdate.sendMessage(iconUpdate.obtainMessage().also {
                 it.obj = null
@@ -689,7 +687,7 @@ class SystemUI : BaseHook() {
                 }
             }
             iconUpdate.sendMessage(iconUpdate.obtainMessage().also { // update icon
-                it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(config.getIcon(icons)))
+                it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(if (config.isSetIcon(packageName)) config.getIcon(packageName) else config.getIcon(icons)))
             })
         }
 
@@ -786,12 +784,13 @@ class SystemUI : BaseHook() {
     inner class LyricReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
-                icon = intent.getStringExtra("Lyric_Icon") ?: "Api"
+                icon = intent.getStringExtra("Lyric_Icon") ?: ""
+                val packageName = intent.getStringExtra("Lyric_PackageName") ?: throw Exception("Lyric_PackageName is null")
                 when (intent.getStringExtra("Lyric_Type")) {
                     "hook" -> {
                         val lyric = intent.getStringExtra("Lyric_Data") ?: ""
                         LogUtils.e("${LogMultiLang.recvData}hook: lyric:$lyric icon:$icon")
-                        updateLyric(lyric, icon)
+                        updateLyric(lyric, packageName, icon)
                         useSystemMusicActive = true
                     }
 
@@ -803,8 +802,8 @@ class SystemUI : BaseHook() {
                         useSystemMusicActive = intent.getBooleanExtra("Lyric_UseSystemMusicActive", false)
 
                         val lyric = intent.getStringExtra("Lyric_Data")
-                        updateLyric(lyric ?: "", icon)
-                        LogUtils.e("${LogMultiLang.recvData}app: lyric:$lyric icon:$icon packName:$packName")
+                        updateLyric(lyric ?: "", packageName, icon)
+                        LogUtils.e("${LogMultiLang.recvData}app: lyric:$lyric icon:${icon} packName:$packName")
                     }
 
                     "app_stop" -> offLyric("${LogMultiLang.recvData}app_stop")
@@ -878,7 +877,7 @@ class SystemUI : BaseHook() {
                         it.addView(Button(application).let { it1 ->
                             it1.text = "Show test lyric"
                             it1.setOnClickListener {
-                                updateLyric((Math.random() * 4).toInt().toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", icon)
+                                updateLyric((Math.random() * 4).toInt().toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "com.android.systemui", icon)
                                 test = true
                             }
                             it1

@@ -9,10 +9,7 @@ import android.view.ViewGroup
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
-import statusbar.lyric.utils.ktx.findClassOrNull
-import statusbar.lyric.utils.ktx.hookAfterMethod
-import statusbar.lyric.utils.ktx.hookBeforeMethod
-import statusbar.lyric.utils.ktx.isNull
+import statusbar.lyric.utils.ktx.*
 
 class LXMusic: BaseHook() {
 
@@ -63,6 +60,7 @@ class LXMusic: BaseHook() {
             (it.args[0] as Context).sendBroadcast(Intent().apply {
                 action = "Lyric_Server"
                 putExtra("Lyric_Type", "app_stop")
+                putExtra("Lyric_PackageName", lpparam.packageName)
             })
         }
     }

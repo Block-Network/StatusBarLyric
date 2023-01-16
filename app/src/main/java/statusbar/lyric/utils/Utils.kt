@@ -27,9 +27,7 @@ package statusbar.lyric.utils
 import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.MiuiStatusBarManager
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.provider.Settings
@@ -41,6 +39,7 @@ import android.view.animation.TranslateAnimation
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.Config
+import statusbar.lyric.utils.ktx.lpparam
 import java.io.DataOutputStream
 import java.io.IOException
 import java.io.PrintWriter
@@ -241,6 +240,7 @@ object Utils {
             putExtra("Lyric_Data", lyric)
             putExtra("Lyric_Icon", icon)
             putExtra("Lyric_Type", "hook")
+            putExtra("Lyric_PackageName", lpparam.packageName)
         })
     }
 
@@ -256,6 +256,7 @@ object Utils {
             putExtra("Lyric_Data", lyric)
             putExtra("Lyric_Type", "app")
             putExtra("Lyric_PackName", packName)
+            putExtra("Lyric_PackageName", lpparam.packageName)
             putExtra("Lyric_Icon", icon)
             putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)
         })
@@ -307,4 +308,16 @@ object Utils {
 
     fun Any?.isNotNull() = this != null
 
+    fun String.b64Decode(): String {
+        return Base64.decode(this, Base64.DEFAULT).toString(Charsets.UTF_8)
+    }
+
+    fun String.b64Encode(): String {
+        return Base64.encodeToString(this.toByteArray(), Base64.DEFAULT)
+    }
+
+    fun String.copyToClipboard(context: Context) {
+        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboardManager.setPrimaryClip(ClipData.newPlainText(null, this))
+    }
 }

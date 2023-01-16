@@ -22,7 +22,9 @@
 
 package statusbar.lyric.hook
 
+import android.content.res.XResources
 import de.robv.android.xposed.IXposedHookLoadPackage
+import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.hook.app.*
@@ -30,7 +32,7 @@ import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.ktx.init
 import java.util.*
 
-class MainHook : IXposedHookLoadPackage {
+class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         LogUtils.e("Debug enable")
         LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
@@ -110,5 +112,9 @@ class MainHook : IXposedHookLoadPackage {
         }
         hook?.hook()
         LogUtils.e("Hook ${lpparam.processName} end")
+    }
+
+    override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
+        init(startupParam)
     }
 }

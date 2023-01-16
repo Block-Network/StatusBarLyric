@@ -24,7 +24,9 @@
 
 package statusbar.lyric.utils.ktx
 
+import android.content.res.XModuleResources
 import android.content.res.XResources
+import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodHook.MethodHookParam
 import de.robv.android.xposed.XC_MethodReplacement
@@ -44,6 +46,11 @@ fun init(param: XC_LoadPackage.LoadPackageParam) {
     classLoader = param.classLoader
 }
 
+fun init(startupParam: IXposedHookZygoteInit.StartupParam) {
+    moduleRes = XModuleResources.createInstance(startupParam.modulePath, null)
+}
+
+lateinit var moduleRes: XModuleResources
 lateinit var classLoader: ClassLoader
 lateinit var lpparam: XC_LoadPackage.LoadPackageParam
 

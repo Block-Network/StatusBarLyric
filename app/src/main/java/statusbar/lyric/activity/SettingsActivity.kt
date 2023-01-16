@@ -70,6 +70,7 @@ import statusbar.lyric.utils.FileUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.Utils.indexOfArr
 import statusbar.lyric.utils.Utils.isNotNull
+import statusbar.lyric.utils.ktx.lpparam
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.random.Random
@@ -139,6 +140,7 @@ class SettingsActivity : MIUIActivity() {
                         activity.sendBroadcast(Intent().apply {
                             action = "Lyric_Server"
                             putExtra("Lyric_Type", "copy_font")
+                            putExtra("Lyric_PackageName", activity.packageName)
                             putExtra("Font_Path", FileUtils(activity).getFilePathByUri(it))
                         })
                     }
@@ -152,6 +154,7 @@ class SettingsActivity : MIUIActivity() {
             if (updateConfig) {
                 application.sendBroadcast(Intent().apply {
                     action = "Lyric_Server"
+                    putExtra("Lyric_PackageName", activity.packageName)
                     putExtra("Lyric_Type", "update_config")
                 })
                 updateConfig = false

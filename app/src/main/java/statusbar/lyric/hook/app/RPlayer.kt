@@ -7,6 +7,7 @@ import statusbar.lyric.utils.LogUtils
 import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
+import statusbar.lyric.utils.ktx.lpparam
 
 class RPlayer : BaseHook() {
 
@@ -40,6 +41,7 @@ class RPlayer : BaseHook() {
                 (it.args[0] as Context).sendBroadcast(Intent().apply {
                     action = "Lyric_Server"
                     putExtra("Lyric_Type", "app_stop")
+                    putExtra("Lyric_PackageName", lpparam.packageName)
                 })
             }
         }

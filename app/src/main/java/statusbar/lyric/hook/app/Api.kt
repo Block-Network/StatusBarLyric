@@ -30,6 +30,7 @@ import statusbar.lyric.utils.ktx.findClassOrNull
 import statusbar.lyric.utils.ktx.hookAfterMethod
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.utils.ktx.isNull
+import statusbar.lyric.utils.ktx.lpparam
 
 class Api : BaseHook() {
     override fun hook() {
@@ -46,6 +47,7 @@ class Api : BaseHook() {
             (it.args[0] as Context).sendBroadcast(Intent().apply {
                 action = "Lyric_Server"
                 putExtra("Lyric_Type", "app_stop")
+                putExtra("Lyric_PackageName", lpparam.packageName)
             })
         }
     }
