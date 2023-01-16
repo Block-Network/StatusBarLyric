@@ -4,7 +4,7 @@
     <string name="HideDeskIcon">Hide desktop icons</string>
     <string name="BaseSetting">Basic Settings</string>
     <string name="AllSwitch">Master switch</string>
-    <string name="SongPauseCloseLyrics">Song Pause Close Lyrics</string>
+    <string name="SongPauseCloseLyrics">* Old Song Pause Close Lyrics</string>
     <string name="LyricWidth">Lyrics width</string>
     <string name="Off">Off</string>
     <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
@@ -106,8 +106,7 @@
     <string name="WarnExp">Module notes\n\n
         The module is perfectly used in the official status bar layout, modifying the layout may cause problems\n\n
 
-        If the lyrics cannot be displayed\n
-        Please restart the system interface and make sure the module switch is turned on\n
+        If the lyrics cannot be displayed,Please restart the system interface and make sure the module switch is turned on\n
         "Car Bluetooth Lyrics Mode" Please make sure "Car Bluetooth Lyrics" is enabled in the music software settings\n
         "Status Bar Lyrics Mode" Please make sure "Status Bar Lyrics" is enabled in the music software settings\n\n
         "API Mode" Please make sure the corresponding switch in the music software settings is turned on\n\n
@@ -172,7 +171,7 @@
     <string name="ReverseColorTimeTips">1–3000 (unit: milliseconds)</string>
     <string name="AntiBurnTime">Burn-in move time</string>
     <string name="AntiBurnTimeTips">1–3600000 (unit: milliseconds)</string>
-    <string name="SongPauseCloseLyricsTime">Song pause close Lyrics time</string>
+    <string name="SongPauseCloseLyricsTime">* old Song pause close Lyrics time</string>
     <string name="showAd">Watch advertisements</string>
     <string name="MakeIcon">Make Icon</string>
     <string name="MakeIconError">Can\'t jump，Please check if it is installed\n爱玩机工具箱</string>
