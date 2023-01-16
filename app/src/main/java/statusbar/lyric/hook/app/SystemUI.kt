@@ -196,12 +196,7 @@ class SystemUI : BaseHook() {
         super.hook()
 
 
-        // use system reverse color
-        if (config.getUseSystemReverseColor()) {
-            "com.android.systemui.statusbar.phone.NotificationIconAreaController".hookAfterMethod("onDarkChanged", ArrayList::class.java, Float::class.java, Int::class.java) {
-                setColor(it.args[2] as Int)
-            }
-        }
+        if (config.getUseSystemReverseColor()) systemReverseColor() // use system reverse color
 
         // StatusBarLyric
         "com.android.systemui.statusbar.phone.PhoneStatusBarView".hookAfterMethod("getClockView") {
@@ -740,6 +735,28 @@ class SystemUI : BaseHook() {
         updateIconColor.sendMessage(updateIconColor.obtainMessage().also { it.arg1 = if (iconColor == 0) int else iconColor }) // update icon color
     }
 
+    private fun systemReverseColor() {
+        try {
+            val darkIconDispatcher = "com.android.systemui.plugins.DarkIconDispatcher".findClassOrNull(lpparam.classLoader)
+            if (darkIconDispatcher.isNotNull()) {
+                val find = darkIconDispatcher!!.hookAfterAllMethods("getTint") {
+                    try {
+                        setColor(it.args[2] as Int)
+                    } catch (_: Throwable) {
+                    }
+                }
+                if (find.isEmpty()) {
+                    LogUtils.e(LogMultiLang.findAntiMethodFail)
+                } else {
+                    LogUtils.e(LogMultiLang.findAntiMethodSuccess)
+                }
+            } else {
+                LogUtils.e(LogMultiLang.findSystemAntiClassFail)
+            }
+        } catch (e: Throwable) {
+            LogUtils.e("${LogMultiLang.systemAntiError}: " + Log.getStackTraceString(e))
+        }
+    }
 
     fun autoOffLyric() {
         try {
