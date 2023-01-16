@@ -378,6 +378,10 @@ class Config {
         return config.optBoolean("BlockLyricMode", false)
     }
 
+    fun getUseMediaDataHide(): Boolean {
+        return config.optBoolean("UseMediaDataHide", false)
+    }
+
     fun gerIconList(): Array<String> {
         return arrayOf("Netease", "KuGou", "KuGouLite", "KuWo", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "APM", "Default")
     }

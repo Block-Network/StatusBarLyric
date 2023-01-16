@@ -191,6 +191,8 @@ class SystemUI : BaseHook() {
     private var notificationIconContainer: FrameLayout? = null
     private var notificationIconContainerLayoutParams: ViewGroup.LayoutParams? = null
 
+    var lastStats = false
+
     override fun hook() {
         super.hook()
 
@@ -199,6 +201,20 @@ class SystemUI : BaseHook() {
         if (config.getUseSystemReverseColor()) {
             "com.android.systemui.statusbar.phone.NotificationIconAreaController".hookAfterMethod("onDarkChanged", ArrayList::class.java, Float::class.java, Int::class.java) {
                 setColor(it.args[2] as Int)
+            }
+        }
+
+        if (config.getUseMediaDataHide()) "com.android.systemui.media.MediaData".findClass().hookAfterAllConstructors {
+            val stats = it.thisObject.callMethodAs<Boolean>("isPlaying")
+            if (it.thisObject.getIntField("userId") != -1) {
+                if (lastStats != stats) {
+                    lastStats = stats
+                    if (!stats) {
+                        offLyric("MediaData pause")
+                    } else {
+                        LogUtils.e("MediaData start playing")
+                    }
+                }
             }
         }
 
@@ -339,13 +355,12 @@ class SystemUI : BaseHook() {
 
         // Get display info
         val displayMetrics = DisplayMetrics()
-        (application.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getMetrics(displayMetrics)
+        val windowManager = clock!!.context.getSystemService(WindowManager::class.java)
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
         displayWidth = displayMetrics.widthPixels
         displayHeight = displayMetrics.heightPixels
 
-
-
-        clockParams = clock!!.layoutParams as LinearLayout.LayoutParams
+        clockParams = clock.layoutParams as LinearLayout.LayoutParams
 
         customizeView = TextView(application).apply {
             height = clock.height
@@ -644,6 +659,9 @@ class SystemUI : BaseHook() {
     fun updateLyric(lyric: String, icon: String) {
         lyrics = lyric
         LogUtils.e(LogMultiLang.sendLog)
+        if (config.getUseMediaDataHide() && !lastStats) {
+            return
+        }
         if (lyric.isEmpty() && !isFirstEntry) {
             offLyric(LogMultiLang.emptyLyric)
             isFirstEntry = false
@@ -734,16 +752,18 @@ class SystemUI : BaseHook() {
         try {
             if (config.getLyricService()) {
                 if (test) return
+                if (!Utils.isServiceRunningList(application, musicServer)) {
+                    offLyric(LogMultiLang.playerOff)
+                }
                 if (!useSystemMusicActive) {
-//                                offLyric(LogMultiLang.pausePlay)
+                    return
+                }
+                if (config.getUseMediaDataHide()) {
                     return
                 }
                 if (!audioManager.isMusicActive) {
                     offLyric(LogMultiLang.pausePlay)
                     return
-                }
-                if (!Utils.isServiceRunningList(application, musicServer)) {
-                    offLyric(LogMultiLang.playerOff)
                 }
             } else {
                 offLyric(LogMultiLang.switchOff)

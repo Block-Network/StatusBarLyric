@@ -733,6 +733,7 @@ class SettingsActivity : MIUIActivity() {
 
             register("advancedSettings", getString(R.string.AdvancedSettings), true) {
                 TextSummaryWithSwitch(TextSummaryV(textId = R.string.JudgementTitle), SwitchV("JudgementTitle"))
+                TextSummaryWithSwitch(TextSummaryV("* Use MediaData hide"), SwitchV("UseMediaDataHide"))
                 TextSummaryWithSwitch(TextSummaryV(textId = R.string.GetTitle), SwitchV("GetTitle"))
                 TextSummaryWithSwitch(TextSummaryV(textId = R.string.OnlyGetLyric, tipsId = R.string.OnlyGetLyricTips), SwitchV("OnlyGetLyric"))
                 TextWithSwitch(TextV(textId = R.string.TimeHide), SwitchV("TimeOff"))
