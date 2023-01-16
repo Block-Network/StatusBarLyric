@@ -113,7 +113,7 @@ class SettingsActivity : MIUIActivity() {
                     }
                     setRButton(R.string.Cancel) {
                         dismiss()
-                        exitProcess(0)
+                        finishAndRemoveTask()
                     }
                     setCancelable(false)
                 }.show()
