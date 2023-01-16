@@ -13,6 +13,7 @@
     <string name="BackgroundColor">Background color</string>
     <string name="IconColor">Icon color and transparency</string>
     <string name="LyricIcon">Lyrics icon</string>
+    <string name="ShowEmptyIcon">Force the icon to be displayed</string>
     <string name="LyricSpeed">Lyrics scroll speed</string>
     <string name="AdvancedSettings">Advanced settings</string>
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>

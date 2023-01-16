@@ -651,6 +651,7 @@ class SystemUI : BaseHook() {
     }
 
     fun updateLyric(lyric: String, icon: String) {
+        var icons=icon
         lyrics = lyric
         LogUtils.e(LogMultiLang.sendLog)
         if (lyric.isEmpty() && !isFirstEntry) {
@@ -671,8 +672,10 @@ class SystemUI : BaseHook() {
             if (config.getLyricOldAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
             return
         }
-
-        if (!config.getIcon() || icon.isEmpty()) { // set icon
+        if (config.getShowEmptyIcon()) {
+            icons = "Default"
+        }
+        if (!config.getIcon() || icons.isEmpty()) { // set icon
             LogUtils.e(LogMultiLang.hideIcon)
             iconUpdate.sendMessage(iconUpdate.obtainMessage().also {
                 it.obj = null
@@ -686,7 +689,7 @@ class SystemUI : BaseHook() {
                 }
             }
             iconUpdate.sendMessage(iconUpdate.obtainMessage().also { // update icon
-                it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(config.getIcon(icon)))
+                it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(config.getIcon(icons)))
             })
         }
 

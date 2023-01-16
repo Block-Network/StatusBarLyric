@@ -13,6 +13,7 @@
     <string name="BackgroundColor">背景顏色</string>
     <string name="IconColor">圖標顏色和透明度</string>
     <string name="LyricIcon">歌詞圖標</string>
+    <string name="ShowEmptyIcon">強制顯示圖示</string>
     <string name="LyricSpeed">歌詞滾動速度</string>
     <string name="AdvancedSettings">高級設置</string>
     <string name="ClickLyric">* 點擊歌詞切換時鐘和歌詞</string>

@@ -199,6 +199,9 @@ class Config {
     fun getIcon(): Boolean {
         return config.optBoolean("I", true)
     }
+    fun getShowEmptyIcon(): Boolean {
+        return config.optBoolean("ShowEmptyIcon", false)
+    }
 
     fun getLyricSpeed(): Int {
         return config.optInt("LSpeed", 100)
