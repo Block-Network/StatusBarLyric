@@ -101,7 +101,6 @@ class SettingsActivity : MIUIActivity() {
             } else {
                 init()
             }
-            showFragment("icon")
         }
     }
 
