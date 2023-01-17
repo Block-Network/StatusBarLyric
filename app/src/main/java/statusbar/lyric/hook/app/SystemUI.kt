@@ -673,7 +673,10 @@ class SystemUI : BaseHook() {
             if (config.getLyricOldAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
             return
         }
-        if (!config.getIcon() || (icons.isEmpty() && config.getShowEmptyIcon())) { // set icon
+        if (config.getShowEmptyIcon()) {
+            icons = "Default"
+        }
+        if (!config.getIcon() || icons.isEmpty()) { // set icon
             LogUtils.e(LogMultiLang.hideIcon)
             iconUpdate.sendMessage(iconUpdate.obtainMessage().also {
                 it.obj = null
