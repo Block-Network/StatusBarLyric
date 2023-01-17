@@ -87,7 +87,7 @@ class SystemUI : BaseHook() {
     lateinit var lyricSwitchView: LyricSwitchView
     private lateinit var iconView: ImageView
     private lateinit var lyricLayout: LinearLayout
-    private lateinit var clockParams: LinearLayout.LayoutParams
+    private lateinit var clockParams: ViewGroup.MarginLayoutParams
     private lateinit var audioManager: AudioManager
     private var displayWidth: Int = 0
     private var displayHeight: Int = 0
@@ -362,7 +362,7 @@ class SystemUI : BaseHook() {
         displayHeight = displayMetrics.heightPixels
 
 
-        clockParams = clock.layoutParams as LinearLayout.LayoutParams
+        clockParams = clock.layoutParams as ViewGroup.MarginLayoutParams
 
         customizeView = TextView(application).apply {
             height = clock.height
