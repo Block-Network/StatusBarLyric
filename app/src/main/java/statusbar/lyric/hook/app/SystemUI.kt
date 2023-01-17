@@ -591,6 +591,7 @@ class SystemUI : BaseHook() {
     }
 
     private fun updateConfig() {
+        LogUtils.e(LogMultiLang.updateConfig)
         config.update()
         if (config.getOnlyGetLyric()) {
             LogUtils.e(LogMultiLang.onlyGetLyric)
@@ -693,7 +694,6 @@ class SystemUI : BaseHook() {
                 it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(if (config.isSetIcon(packageName)) config.getIcon(packageName) else config.getIcon(icons)))
             })
         }
-
         if (config.getLyricOldAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
         if (config.getAntiBurn()) startTimer(config.getAntiBurnTime().toLong(), getLyricAntiBurnTimer()) // Anti burn screen
         if (!config.getUseSystemReverseColor()) startTimer(config.getReverseColorTime().toLong(), getAutoLyricColorTimer()) // not use system reverse color

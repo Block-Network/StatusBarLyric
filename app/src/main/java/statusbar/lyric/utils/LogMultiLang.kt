@@ -38,10 +38,7 @@ object LogMultiLang {
     val timeOff = if (isChinese) "歌词定时关闭" else "Lyrics timer off"
     val oldAutoOff = if (isChinese) "旧版隐藏歌词方案" else "Legacy hidden lyrics scheme"
     val newAutoOff = if (isChinese) "新版隐藏歌词方案" else "new hidden lyrics scheme"
-    val findAntiMethodFail = if (isChinese) "查找反色方法失败" else "Failed to find anti color method"
-    val findAntiMethodSuccess = if (isChinese) "查找反色方法成功" else "The reverse color method is found successfully"
-    val findSystemAntiClassFail = if (isChinese) "系统方法反色获取失败" else "System method reverse color acquisition failed"
-    val systemAntiError = if (isChinese) "系统反色出现错误" else "System color reversal error"
+    val updateConfig = if (isChinese) "更新配置" else "update Config"
 
 //    val _ = if (isChinese) "" else ""
 }

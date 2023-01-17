@@ -116,8 +116,16 @@
     <string name="NewNotice">新通知</string>
     <string name="GetNewNoticeError">获取新通知错误</string>
     <string name="ResetSuccess">重置成功</string>
-    <string name="MakeIconTitle">请输入没有前缀的 Base64，推荐像素大小 32*32</string>
+    <string name="MakeIconTitle1">请输入没有前缀的 Base64，推荐像素大小 32*32</string>
+    <string name="MakeIconTitle2">图标修改重启生效</string>
     <string name="LyricHigh">歌词上下位置</string>
+    <string name="PlaceSelect">请选择模式</string>
+    <string name="Edit">编辑</string>
+    <string name="Copy">复制</string>
+    <string name="Export">导出</string>
+    <string name="Add">添加</string>
+    <string name="Import">导入</string>
+    <string name="SetPackageName">软件包名</string>
     <string name="LyricSize">歌词大小</string>
     <string name="IconSize">图标大小</string>
     <string name="LyricSizeTips">0~50</string>

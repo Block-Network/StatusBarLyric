@@ -126,8 +126,16 @@
     <string name="NewNotice">NewNotice</string>
     <string name="GetNewNoticeError">Get NewNotice Error</string>
     <string name="ResetSuccess">Reset successfully</string>
-    <string name="MakeIconTitle">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
+    <string name="MakeIconTitle1">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
+    <string name="MakeIconTitle2">Icon modification restarts to take effect</string>
     <string name="LyricHigh">Lyrics up and down position</string>
+    <string name="PlaceSelect">Place select</string>
+    <string name="Edit">Edit</string>
+    <string name="Copy">Copy</string>
+    <string name="Export">Export</string>
+    <string name="Add">Add</string>
+    <string name="Import">Import</string>
+    <string name="SetPackageName">Set package name</string>
     <string name="LyricSize">Lyrics Size</string>
     <string name="IconSize">Icon Size</string>
     <string name="LyricSizeTips">0~50, current:</string>

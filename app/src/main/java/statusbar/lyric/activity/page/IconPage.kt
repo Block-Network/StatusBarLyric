@@ -1,8 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 package statusbar.lyric.activity.page
 
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.widget.LinearLayout
 import cn.fkj233.ui.activity.annotation.BMPage
@@ -12,8 +15,8 @@ import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.fkj233.ui.dialog.NewDialog
 import org.json.JSONObject
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
-import statusbar.lyric.activity.SettingsActivity
 import statusbar.lyric.utils.ActivityOwnSP
 import statusbar.lyric.utils.ActivityUtils
 import statusbar.lyric.utils.Utils
@@ -25,6 +28,7 @@ import statusbar.lyric.utils.Utils.copyToClipboard
 @BMPage("icon", titleId = R.string.IconSettings)
 class IconPage : BasePage() {
     class Data(val key: String = "", val value: String = "")
+
     private val iconConfig = ActivityOwnSP.ownSPConfig
     private var iconList = iconConfig.gerIconList().toList()
     private val iconDataBinding by lazy {
@@ -37,12 +41,13 @@ class IconPage : BasePage() {
     }
 
     override fun onCreate() {
-        TitleText(textId = R.string.MakeIconTitle)
+        TitleText(textId = R.string.MakeIconTitle1)
+        TitleText(textId = R.string.MakeIconTitle2, colorInt = Color.RED)
         for (icon in iconList) {
             Author(BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon, true))).also { it.setTint(getColor(R.color.customIconColor)) }, icon, round = 0f, onClickListener = {
                 NewDialog(activity) {
-                    setTitle("Place select")
-                    Button("Edit") {
+                    setTitle(R.string.PlaceSelect)
+                    Button(getString(R.string.Edit)) {
                         MIUIDialog(activity) {
                             setTitle(icon)
                             setEditText(iconConfig.getIcon(icon, true), "")
@@ -52,27 +57,26 @@ class IconPage : BasePage() {
                                         val value = getEditText().replace(" ", "").replace("\n", "")
                                         iconConfig.setIcon(icon, value)
                                         iconDataBinding.send(Data(icon, value))
-                                        SettingsActivity.updateConfig = true
                                         dismiss()
                                         return@setRButton
-                                    } catch (_: Throwable) {}
+                                    } catch (_: Throwable) {
+                                    }
                                 }
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                                 iconConfig.setIcon(icon, iconConfig.getDefaultIcon(icon, true))
                                 iconDataBinding.send(Data(icon))
                                 ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
-                                SettingsActivity.updateConfig = true
                                 dismiss()
                             }
                             setLButton(R.string.Cancel) { dismiss() }
                         }.show()
                         dismiss()
                     }
-                    Button("Copy") {
+                    Button(getString(R.string.Copy)) {
                         MIUIDialog(activity) {
-                            setTitle("Export")
+                            setTitle(getString(R.string.Copy))
                             setEditText("sblicon://" + iconConfig.getIconJson(icon).b64Encode(), "")
-                            setRButton("Copy") {
+                            setRButton(getString(R.string.Ok)) {
                                 getEditText().copyToClipboard(activity)
                                 dismiss()
                             }
@@ -89,7 +93,7 @@ class IconPage : BasePage() {
                             dismiss()
                         }
                     }
-                    Button(getString(R.string.Cancel), cancelStyle=true) {
+                    Button(getString(R.string.Cancel), cancelStyle = true) {
                         dismiss()
                     }
                 }.show()
@@ -106,13 +110,13 @@ class IconPage : BasePage() {
                 ActivityUtils.showToastOnLooper(activity, getString(R.string.MakeIconError))
             }
         }))
-        TextSummaryArrow(TextSummaryV("Add / Import / Export", onClickListener = {
+        TextSummaryArrow(TextSummaryV("${getString(R.string.Add)} / ${getString(R.string.Import)} / ${getString(R.string.Export)}", onClickListener = {
             NewDialog(activity) {
-                setTitle("Add / Import / Export all")
-                Button("Add") {
+                setTitle("${getString(R.string.Add)} / ${getString(R.string.Import)} / ${getString(R.string.Export)}")
+                Button(getString(R.string.Add)) {
                     MIUIDialog(activity) {
-                        setTitle("Set package name")
-                        setEditText("", "com.abc.test")
+                        setTitle(getString(R.string.SetPackageName))
+                        setEditText("", BuildConfig.APPLICATION_ID)
                         setRButton(R.string.Ok) {
                             val packageName = getEditText()
                             if (packageName.isNotEmpty()) {
@@ -124,9 +128,9 @@ class IconPage : BasePage() {
                                         if (icon.isNotEmpty()) {
                                             try {
                                                 iconConfig.setIcon(packageName, icon)
-                                                SettingsActivity.updateConfig = true
                                                 reload()
-                                            } catch (_: Throwable) {}
+                                            } catch (_: Throwable) {
+                                            }
                                         } else {
                                             ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
                                         }
@@ -144,11 +148,11 @@ class IconPage : BasePage() {
                     }.show()
                     dismiss()
                 }
-                Button("Import") {
+                Button(getString(R.string.Import)) {
                     MIUIDialog(activity) {
-                        setTitle("Import")
+                        setTitle(getString(R.string.Import))
                         setEditText("", "")
-                        setRButton("Import") {
+                        setRButton(getString(R.string.Ok)) {
                             if (getEditText().isNotEmpty()) {
                                 try {
                                     val value = getEditText().replace(" ", "").replace("\n", "")
@@ -158,7 +162,6 @@ class IconPage : BasePage() {
                                                 iconConfig.setIcon(key, it.getString(key))
                                             }
                                         }
-                                        SettingsActivity.updateConfig = true
                                         reload()
                                     } else {
                                         ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
@@ -177,11 +180,11 @@ class IconPage : BasePage() {
                     }.show()
                     dismiss()
                 }
-                Button("Export") {
+                Button(getString(R.string.Export)) {
                     MIUIDialog(activity) {
-                        setTitle("Export")
+                        setTitle(getString(R.string.Export))
                         setEditText("sblicon://${iconConfig.getIconJson().b64Encode()}", "")
-                        setRButton("Copy") {
+                        setRButton(getString(R.string.Ok)) {
                             getEditText().copyToClipboard(activity)
                             dismiss()
                         }
@@ -191,7 +194,7 @@ class IconPage : BasePage() {
                     }.show()
                     dismiss()
                 }
-                Button(getString(R.string.Cancel), cancelStyle=true) {
+                Button(getString(R.string.Cancel), cancelStyle = true) {
                     dismiss()
                 }
             }.show()

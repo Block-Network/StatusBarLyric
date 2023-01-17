@@ -28,31 +28,15 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
 import cn.fkj233.ui.activity.MIUIActivity
-import cn.fkj233.ui.activity.dp2px
-import cn.fkj233.ui.activity.view.RoundCornerImageView
-import cn.fkj233.ui.activity.view.SpinnerV
-import cn.fkj233.ui.activity.view.SwitchV
-import cn.fkj233.ui.activity.view.TextSummaryV
-import cn.fkj233.ui.activity.view.TextV
-import cn.fkj233.ui.activity.view.TitleTextV
 import cn.fkj233.ui.dialog.MIUIDialog
-import cn.fkj233.ui.switch.MIUISwitch
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.AbstractCrashesListener
@@ -68,12 +52,8 @@ import statusbar.lyric.utils.ActivityUtils
 import statusbar.lyric.utils.BackupUtils
 import statusbar.lyric.utils.FileUtils
 import statusbar.lyric.utils.Utils
-import statusbar.lyric.utils.Utils.indexOfArr
 import statusbar.lyric.utils.Utils.isNotNull
-import statusbar.lyric.utils.ktx.lpparam
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.random.Random
 import kotlin.system.exitProcess
 
 class SettingsActivity : MIUIActivity() {
@@ -121,6 +101,7 @@ class SettingsActivity : MIUIActivity() {
             } else {
                 init()
             }
+            showFragment("icon")
         }
     }
 
