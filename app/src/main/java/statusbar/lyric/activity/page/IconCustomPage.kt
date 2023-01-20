@@ -11,12 +11,15 @@ import android.widget.LinearLayout
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.activity.view.RoundCornerImageView
+import cn.fkj233.ui.activity.view.SwitchV
 import cn.fkj233.ui.activity.view.TextSummaryV
+import cn.fkj233.ui.activity.view.TextV
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.fkj233.ui.dialog.NewDialog
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
+import statusbar.lyric.activity.SettingsActivity
 import statusbar.lyric.utils.ActivityOwnSP
 import statusbar.lyric.utils.ActivityUtils
 import statusbar.lyric.utils.Utils
@@ -25,8 +28,8 @@ import statusbar.lyric.utils.Utils.b64Encode
 import statusbar.lyric.utils.Utils.copyToClipboard
 
 @SuppressLint("NonConstantResourceId")
-@BMPage("icon", titleId = R.string.IconSettings)
-class IconPage : BasePage() {
+@BMPage("IconCustom", titleId = R.string.CustomIcon)
+class IconCustomPage : BasePage() {
     class Data(val key: String = "", val value: String = "")
 
     private val iconConfig = ActivityOwnSP.ownSPConfig
@@ -41,6 +44,115 @@ class IconPage : BasePage() {
     }
 
     override fun onCreate() {
+        TitleText(textId = R.string.IconSettings)
+        TextWithSwitch(TextV(textId = R.string.LyricIcon), SwitchV("I", true))
+        TextWithSwitch(TextV(textId = R.string.ShowEmptyIcon), SwitchV("ShowEmptyIcon", false))
+        TextSummaryArrow(TextSummaryV(textId = R.string.IconColor, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(R.string.IconColor)
+                setMessage(R.string.LyricColorTips)
+                setEditText(ActivityOwnSP.ownSPConfig.getIconColor(), "#FFFFFF")
+                setRButton(R.string.Ok) {
+                    if (getEditText().isNotEmpty()) {
+                        try {
+                            Color.parseColor(getEditText())
+                            ActivityOwnSP.ownSPConfig.setIconColor(getEditText())
+                            SettingsActivity.updateConfig = true
+                            dismiss()
+                            return@setRButton
+                        } catch (_: Throwable) {
+                        }
+                    }
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.LyricColorError))
+                    ActivityOwnSP.ownSPConfig.setIconColor("")
+                    SettingsActivity.updateConfig = true
+                    dismiss()
+                }
+                setLButton(R.string.Cancel) { dismiss() }
+            }.show()
+        }))
+        Text(textId = R.string.IconSize, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(R.string.IconSize)
+                setMessage(R.string.IconSizeTips)
+                setEditText(ActivityOwnSP.ownSPConfig.getIconSize().toString(), "0")
+                setRButton(R.string.Ok) {
+                    if (getEditText().isNotEmpty()) {
+                        try {
+                            val value = getEditText().toInt()
+                            if (value in (0..100)) {
+                                ActivityOwnSP.ownSPConfig.setIconSize(value)
+                                SettingsActivity.updateConfig = true
+                                dismiss()
+                                return@setRButton
+                            }
+                        } catch (_: Throwable) {
+                        }
+                    }
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                    ActivityOwnSP.ownSPConfig.setIconSize(0)
+                    SettingsActivity.updateConfig = true
+                    dismiss()
+                }
+                setLButton(R.string.Cancel) { dismiss() }
+            }.show()
+        })
+        SeekBarWithText("ISize", 0, 100, -1)
+        Text(textId = R.string.IconHigh, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(R.string.IconHigh)
+                setMessage(R.string.LyricHighTips)
+                setEditText(ActivityOwnSP.ownSPConfig.getIconHigh().toString(), "0")
+                setRButton(R.string.Ok) {
+                    if (getEditText().isNotEmpty()) {
+                        try {
+                            val value = getEditText().toInt()
+                            if (value in (-100..100)) {
+                                ActivityOwnSP.ownSPConfig.setIconHigh(value)
+                                SettingsActivity.updateConfig = true
+                                dismiss()
+                                return@setRButton
+                            }
+                        } catch (_: Throwable) {
+                        }
+                    }
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                    ActivityOwnSP.ownSPConfig.setIconHigh(0)
+                    SettingsActivity.updateConfig = true
+                    dismiss()
+                }
+                setLButton(R.string.Cancel) { dismiss() }
+            }.show()
+        })
+        SeekBarWithText("IHigh", -100, 100, defaultProgress = ActivityOwnSP.ownSPConfig.getIconHigh())
+        Text(textId = R.string.IconSpacing, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(R.string.IconSpacing)
+                setMessage(R.string.IconSpacingTips)
+                setEditText(ActivityOwnSP.ownSPConfig.getIconspacing().toString(), "5")
+                setRButton(R.string.Ok) {
+                    if (getEditText().isNotEmpty()) {
+                        try {
+                            val value = getEditText().toInt()
+                            if (value in (0..20)) {
+                                ActivityOwnSP.ownSPConfig.setIconspacing(value)
+                                SettingsActivity.updateConfig = true
+                                dismiss()
+                                return@setRButton
+                            }
+                        } catch (_: Throwable) {
+                        }
+                    }
+                    ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                    ActivityOwnSP.ownSPConfig.setIconspacing(5)
+                    SettingsActivity.updateConfig = true
+                    dismiss()
+                }
+                setLButton(R.string.Cancel) { dismiss() }
+            }.show()
+        })
+        SeekBarWithText("ISpacing", 0, 20, defaultProgress = ActivityOwnSP.ownSPConfig.getIconspacing())
+        Line()
         TitleText(textId = R.string.MakeIconTitle1)
         TitleText(textId = R.string.MakeIconTitle2, colorInt = Color.RED)
         for (icon in iconList) {
@@ -119,30 +231,36 @@ class IconPage : BasePage() {
                         setEditText("", BuildConfig.APPLICATION_ID)
                         setRButton(R.string.Ok) {
                             val packageName = getEditText()
-                            if (packageName.isNotEmpty()) {
-                                MIUIDialog(activity) {
-                                    setTitle("Set icon base64")
-                                    setEditText("", "")
-                                    setRButton(R.string.Ok) {
-                                        val icon = getEditText()
-                                        if (icon.isNotEmpty()) {
-                                            try {
-                                                iconConfig.setIcon(packageName, icon)
-                                                reload()
-                                            } catch (_: Throwable) {
-                                            }
-                                        } else {
-                                            ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
-                                        }
-                                        dismiss()
-                                    }
-                                    setLButton(R.string.Cancel) { dismiss() }
-                                }.show()
-                                dismiss()
-                            } else {
-                                ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
-                            }
                             dismiss()
+                            try {
+                                context.packageManager.getPackageInfo(packageName, 0)
+                            } catch (_: Exception) {
+                                ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                                return@setRButton
+                            }
+
+                            MIUIDialog(activity) {
+                                setTitle(getString(R.string.SetIconBase64))
+                                setEditText("", "")
+                                setRButton(R.string.Ok) {
+                                    val icon = getEditText()
+                                    if (icon.isNotEmpty()) {
+                                        try {
+                                            Utils.stringToBitmap(icon)
+                                            iconConfig.setIcon(packageName, icon)
+                                            reload()
+                                            return@setRButton
+                                        } catch (_: Throwable) {
+                                        }
+                                        ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                                    } else {
+                                        ActivityUtils.showToastOnLooper(activity, getString(R.string.InputError))
+                                    }
+                                    dismiss()
+                                }
+                                setLButton(R.string.Cancel) { dismiss() }
+                            }.show()
+
                         }
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
@@ -206,6 +324,6 @@ class IconPage : BasePage() {
         itemList.clear()
         iconList = iconConfig.gerIconList().toList()
         activity.onBackPressed()
-        showFragment("icon")
+        showFragment("IconCustom")
     }
 }

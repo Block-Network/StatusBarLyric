@@ -321,6 +321,7 @@ class SystemUI : BaseHook() {
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun lyricInit(clock: TextView?) {
 
         LogUtils.e(LogMultiLang.sendLog)
@@ -464,6 +465,7 @@ class SystemUI : BaseHook() {
             }
         }
 
+        // update icon
         iconUpdate = Handler(Looper.getMainLooper()) { message ->
             if (message.obj.isNull()) {
                 iconView.visibility = View.GONE
@@ -562,7 +564,7 @@ class SystemUI : BaseHook() {
             true
         }
 
-        LogUtils.e("DelayedLoading: " + config.getDelayedLoading())
+        LogUtils.e("DelayedLoading: ${config.getDelayedLoading()}")
         Handler(Looper.getMainLooper()).postDelayed({
             (clock.parent as LinearLayout).apply {
                 gravity = Gravity.CENTER
@@ -653,7 +655,6 @@ class SystemUI : BaseHook() {
     }
 
     fun updateLyric(lyric: String, packageName: String, icon: String) {
-        var icons = icon
         lyrics = lyric
         LogUtils.e(LogMultiLang.sendLog)
         if (lyric.isEmpty() && !isFirstEntry) {
@@ -674,25 +675,19 @@ class SystemUI : BaseHook() {
             if (config.getLyricOldAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
             return
         }
-        if (config.getShowEmptyIcon()) {
-            icons = "Default"
-        }
-        if (!config.getIcon() || icons.isEmpty()) { // set icon
-            LogUtils.e(LogMultiLang.hideIcon)
-            iconUpdate.sendMessage(iconUpdate.obtainMessage().also {
-                it.obj = null
-            })
-        } else {
-            LogUtils.e(LogMultiLang.showIcon)
-            (iconView.layoutParams as LinearLayout.LayoutParams).apply { // set icon size
-                if (config.getIconSize() == 0) {
-                    width = clock.textSize.toInt()
-                    height = clock.textSize.toInt()
-                }
+        val iconBase64: String = if (config.isSetIcon(packageName)) config.getIcon(packageName) else config.getIcon(icon, config.getShowEmptyIcon())
+        if (iconBase64 != this.icon) {
+            val icons: BitmapDrawable? = if (!config.getIconSwitch() || iconBase64.isEmpty()) { // set icon
+                LogUtils.e(LogMultiLang.hideIcon)
+                null
+            } else {
+                LogUtils.e(LogMultiLang.showIcon)
+                BitmapDrawable(application.resources, Utils.stringToBitmap(iconBase64))
             }
-            iconUpdate.sendMessage(iconUpdate.obtainMessage().also { // update icon
-                it.obj = BitmapDrawable(application.resources, Utils.stringToBitmap(if (config.isSetIcon(packageName)) config.getIcon(packageName) else config.getIcon(icons)))
+            iconUpdate.sendMessage(iconUpdate.obtainMessage().also {
+                it.obj = icons
             })
+            this.icon = iconBase64
         }
         if (config.getLyricOldAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
         if (config.getAntiBurn()) startTimer(config.getAntiBurnTime().toLong(), getLyricAntiBurnTimer()) // Anti burn screen
@@ -787,7 +782,7 @@ class SystemUI : BaseHook() {
     inner class LyricReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             try {
-                icon = intent.getStringExtra("Lyric_Icon") ?: ""
+                val icon = intent.getStringExtra("Lyric_Icon") ?: ""
                 val packageName = intent.getStringExtra("Lyric_PackageName") ?: throw Exception("Lyric_PackageName is null")
                 when (intent.getStringExtra("Lyric_Type")) {
                     "hook" -> {
@@ -861,7 +856,7 @@ class SystemUI : BaseHook() {
                     "test" -> ShowDialog().show()
                 }
             } catch (e: Exception) {
-                LogUtils.e("${LogMultiLang.lyricServiceError} $e \n" + Utils.dumpException(e))
+                LogUtils.e("${LogMultiLang.lyricServiceError} $e \n${Utils.dumpException(e)}")
             }
         }
     }

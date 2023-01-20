@@ -10,10 +10,10 @@
     <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
     <string name="LyricsAnimation">Lyrics animation</string>
     <string name="LyricColor">Lyrics color and transparency</string>
-    <string name="BackgroundColor">Background color</string>
+    <string name="BackgroundColor">Background color and transparency</string>
     <string name="IconColor">Icon color and transparency</string>
-    <string name="LyricIcon">Lyrics icon</string>
-    <string name="ShowEmptyIcon">Force the icon to be displayed</string>
+    <string name="LyricIcon">* Lyrics icon</string>
+    <string name="ShowEmptyIcon">* Force the icon to be displayed</string>
     <string name="LyricSpeed">Lyrics scroll speed</string>
     <string name="AdvancedSettings">Advanced settings</string>
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
@@ -136,17 +136,20 @@
     <string name="Add">Add</string>
     <string name="Import">Import</string>
     <string name="SetPackageName">Set package name</string>
+    <string name="SetIconBase64">Set Icon Base64</string>
     <string name="LyricSize">Lyrics Size</string>
     <string name="IconSize">Icon Size</string>
     <string name="LyricSizeTips">0~50, current:</string>
     <string name="LyricTips">-1%~100%, current:</string>
+    <string name="IconSizeTips">0~100, current:</string>
     <string name="Test">Module Test</string>
     <string name="TestDialogTips">This function is embedded in the system UI and may cause the system UI to crash and
         restart!
     </string>
     <string name="Start">Start</string>
     <string name="Back">Back</string>
-    <string name="Custom">Custom</string>
+    <string name="CustomLyric">Lyric Custom</string>
+    <string name="CustomIcon">Icon Custom</string>
     <string name="InputCustomHook">Input custom hook, Input empty of off</string>
     <string name="HideTime">Hide Time</string>
     <string name="FadingEdge">* Edge blur</string>

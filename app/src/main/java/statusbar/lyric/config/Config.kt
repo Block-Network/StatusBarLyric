@@ -196,11 +196,7 @@ class Config {
         return config.optBoolean("FadingEdge", false)
     }
 
-    fun setFadingEdge(b: Boolean) {
-        return config.put("FadingEdge", b)
-    }
-
-    fun getIcon(): Boolean {
+    fun getIconSwitch(): Boolean {
         return config.optBoolean("I", true)
     }
 
@@ -308,10 +304,6 @@ class Config {
         return config.optBoolean("TimeOff", false)
     }
 
-    fun setTimeOff(bool: Boolean) {
-        config.put("TimeOff", bool)
-    }
-
 
     fun getTimeOffTime(): Int {
         return config.optInt("TimeOffTime", 10000)
@@ -323,10 +315,6 @@ class Config {
 
     fun getAntiBurnTime(): Int {
         return config.optInt("AntiBurnTime", 60000)
-    }
-
-    fun setOnlyGetLyric(b: Boolean) {
-        config.put("OnlyGetLyric", b)
     }
 
     fun getOnlyGetLyric(): Boolean {
@@ -387,9 +375,6 @@ class Config {
         return config.optBoolean("BlockLyricMode", false)
     }
 
-    fun getUseMediaDataHide(): Boolean {
-        return config.optBoolean("UseMediaDataHide", false)
-    }
 
     fun getDefaultIconList(): List<String> = listOf("Netease", "KuGou", "KuGouLite", "KuWo", "QQMusic", "Myplayer", "MiGu", "MiPlayer", "Apple Music", "Default")
 
@@ -400,21 +385,6 @@ class Config {
             data.add(key)
         }
         return data
-    }
-
-    fun getIcon(str: String, forceShow: Boolean = false): String {
-        val json = JSONObject(config.optString("IconData", "{}"))
-        return json.optString(str, getDefaultIcon(str, forceShow))
-    }
-
-    fun isSetIcon(packageName: String): Boolean {
-        return JSONObject(config.optString("IconData", "{}")).has(packageName) || !moduleRes.getStringArray(R.array.need_module).contains(packageName)
-    }
-
-    fun removeIcon(icon: String) {
-        val json = JSONObject(config.optString("IconData", "{}"))
-        json.remove(icon)
-        config.put("IconData", json.toString())
     }
 
     fun getDefaultIcon(str: String, forceShow: Boolean = false): String {
@@ -428,9 +398,33 @@ class Config {
             "Myplayer" -> Myplayer
             "MiPlayer" -> MiPlayer
             "Apple Music" -> AppleMusic
-            else -> if (forceShow || getShowEmptyIcon()) Default else ""
+            else -> if (forceShow) Default else ""
         }
     }
+
+    fun getIcon(str: String, forceShow: Boolean = false): String {
+        val iconName = if (str.isEmpty() && forceShow) "Default" else str
+        return JSONObject(config.optString("IconData", "{}")).optString(iconName, getDefaultIcon(str, forceShow))
+
+    }
+
+    fun isSetIcon(packageName: String): Boolean {
+        if (moduleRes.getStringArray(R.array.need_module).contains(packageName)) {
+            return false
+        }
+        var exist = false
+        JSONObject(config.optString("IconData", "{}")).keys().forEach {
+            exist = (it == packageName)
+        }
+        return exist
+    }
+
+    fun removeIcon(icon: String) {
+        val json = JSONObject(config.optString("IconData", "{}"))
+        json.remove(icon)
+        config.put("IconData", json.toString())
+    }
+
 
     fun setIcon(app: String, str: String) {
         val json = JSONObject(config.optString("IconData", "{}"))
@@ -438,15 +432,15 @@ class Config {
         config.put("IconData", json.toString())
     }
 
-    fun getIconJson(key: String): String {
-        val json = JSONObject(config.optString("IconData", "{}"))
-        val result = JSONObject()
-        result.put(key, json.optString(key, getDefaultIcon(key)))
-        return result.toString()
-    }
-
-    fun getIconJson(): String {
-        return config.optString("IconData", "{}")
+    fun getIconJson(key: String = ""): String {
+        return if (key.isEmpty()) {
+            config.optString("IconData", "{}")
+        } else {
+            val json = JSONObject(config.optString("IconData", "{}"))
+            val result = JSONObject()
+            result.put(key, json.optString(key, getDefaultIcon(key)))
+            result.toString()
+        }
     }
 
     companion object {

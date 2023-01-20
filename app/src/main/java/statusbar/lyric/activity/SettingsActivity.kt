@@ -24,6 +24,7 @@
 
 package statusbar.lyric.activity
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -71,9 +72,9 @@ class SettingsActivity : MIUIActivity() {
         }
         registerPage(MainPage::class.java)
         registerPage(MenuPage::class.java)
-        registerPage(CustomPage::class.java)
+        registerPage(LyricCustomPage::class.java)
+        registerPage(IconCustomPage::class.java)
         registerPage(AdvancedSettingsPage::class.java)
-        registerPage(IconPage::class.java)
         registerPage(AboutPage::class.java)
     }
 
@@ -243,6 +244,7 @@ class SettingsActivity : MIUIActivity() {
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun init() {
         registerReceiver(AppReceiver(), IntentFilter().apply {
             addAction("App_Server")
