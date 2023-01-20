@@ -228,8 +228,8 @@ class Config {
         config.put("LSpacing", i)
     }
 
-    fun getAntiBurn(): Boolean {
-        return config.optBoolean("AntiBurn", true)
+    fun getOldAntiBurn(): Boolean {
+        return config.optBoolean("OldAntiBurn", false)
     }
 
     fun getAnim(): String {

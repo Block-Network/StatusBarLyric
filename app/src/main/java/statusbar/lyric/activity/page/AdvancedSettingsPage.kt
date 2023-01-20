@@ -50,6 +50,7 @@ class AdvancedSettingsPage : BasePage() {
             }.show()
         }))
         SeekBarWithText("TimeOffTime", 0, 3600000, defaultProgress = 10000)
+
         TextSummaryArrow(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.CustomHook)
@@ -72,12 +73,14 @@ class AdvancedSettingsPage : BasePage() {
                 setLButton(R.string.Cancel) { dismiss() }
             }.show()
         }))
-        val antiBurnBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getAntiBurn() }) { view, flags, data ->
+
+
+        val antiBurnBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getOldAntiBurn() }) { view, flags, data ->
             when (flags) {
                 2 -> view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
             }
         }
-        TextWithSwitch(TextV(textId = R.string.AbScreen), SwitchV("AntiBurn", true, dataBindingSend = antiBurnBinding.bindingSend))
+        TextWithSwitch(TextV(textId = R.string.OldAbScreen), SwitchV("OldAntiBurn", true, dataBindingSend = antiBurnBinding.bindingSend))
         Text(textId = R.string.AntiBurnTime, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.AntiBurnTime)
@@ -103,6 +106,7 @@ class AdvancedSettingsPage : BasePage() {
             }.show()
         }, dataBindingRecv = antiBurnBinding.binding.getRecv(2))
         SeekBarWithText("AntiBurnTime", 1, 3600000, defaultProgress = 60000, dataBindingRecv = antiBurnBinding.binding.getRecv(2))
+
         val dataBinding = GetDataBinding({ ActivityOwnSP.ownSPConfig.getUseSystemReverseColor() }) { view, flags, data ->
             when (flags) {
                 2 -> view.visibility = if ((data as Boolean)) View.GONE else View.VISIBLE

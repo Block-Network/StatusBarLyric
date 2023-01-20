@@ -17,7 +17,7 @@
     <string name="LyricSpeed">歌词滚动速度</string>
     <string name="AdvancedSettings">高级设置</string>
     <string name="ClickLyric">* 点击歌词切换时钟和歌词</string>
-    <string name="AbScreen">* 防烧屏</string>
+    <string name="OldAbScreen">* 旧防烧屏方式</string>
     <string name="IconHigh">图标上下位置</string>
     <string name="IconSpacing">图标歌词间隔</string>
     <string name="LyricPos">歌词左右位置</string>

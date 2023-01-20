@@ -97,6 +97,9 @@ class SystemUI : BaseHook() {
     var test = false
     private var pattern: Pattern? = null
 
+    private var i = 1
+    private var order = true
+
     // lyric click
     private var showLyric = true
     private var clockOnClickListener: Any? = null
@@ -187,6 +190,7 @@ class SystemUI : BaseHook() {
 
     private val lockScreenReceiver by lazy { LockScreenReceiver() }
     private val lyricReceiver by lazy { LyricReceiver() }
+    private val updateReceiver by lazy { UpdateReceiver() }
 
     // Hide icon
     private var notificationIconContainer: FrameLayout? = null
@@ -344,6 +348,12 @@ class SystemUI : BaseHook() {
         runCatching { application.unregisterReceiver(lyricReceiver) }
         application.registerReceiver(lyricReceiver, IntentFilter().apply {
             addAction("Lyric_Server")
+        })
+
+        // update Receiver
+        runCatching { application.unregisterReceiver(updateReceiver) }
+        application.registerReceiver(updateReceiver, IntentFilter().apply {
+            addAction(Intent.ACTION_TIME_TICK)
         })
 
         audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager // audioManager
@@ -690,7 +700,7 @@ class SystemUI : BaseHook() {
             this.icon = iconBase64
         }
         if (config.getLyricOldAutoOff()) startTimer(config.getLyricAutoOffTime().toLong(), getAutoOffLyricTimer()) // auto off lyric
-        if (config.getAntiBurn()) startTimer(config.getAntiBurnTime().toLong(), getLyricAntiBurnTimer()) // Anti burn screen
+        if (!config.getOldAntiBurn()) startTimer(config.getAntiBurnTime().toLong(), getLyricAntiBurnTimer()) // Anti burn screen
         if (!config.getUseSystemReverseColor()) startTimer(config.getReverseColorTime().toLong(), getAutoLyricColorTimer()) // not use system reverse color
         if (config.getTimeOff()) startTimer(config.getTimeOffTime().toLong(), getTimeOffTimer()) // not use system reverse color
         if (config.getAnim() == "random") {
@@ -762,6 +772,17 @@ class SystemUI : BaseHook() {
         } catch (e: Throwable) {
             LogUtils.e("${LogMultiLang.stateCheck}: $e \n" + Log.getStackTraceString(e))
         }
+    }
+
+    fun lyricAntiBurnTimer() {
+        if (order) i += 1 else i -= 1
+        updateMargins.sendMessage(updateMargins.obtainMessage().also {
+            it.obj = null
+            it.arg1 = 10 + i + config.getLyricPosition()
+            it.arg2 = config.getLyricHigh()
+        })
+        if (i == 0) order = true else if (i == 20) order = false
+        LogUtils.e(i)
     }
 
     inner class LockScreenReceiver : BroadcastReceiver() {
@@ -858,6 +879,12 @@ class SystemUI : BaseHook() {
             } catch (e: Exception) {
                 LogUtils.e("${LogMultiLang.lyricServiceError} $e \n${Utils.dumpException(e)}")
             }
+        }
+    }
+
+    inner class UpdateReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            lyricAntiBurnTimer()
         }
     }
 
