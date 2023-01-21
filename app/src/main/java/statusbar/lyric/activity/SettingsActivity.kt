@@ -24,6 +24,8 @@
 
 package statusbar.lyric.activity
 
+
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
@@ -56,6 +58,7 @@ import statusbar.lyric.utils.Utils
 import statusbar.lyric.utils.Utils.isNotNull
 import java.util.*
 import kotlin.system.exitProcess
+
 
 class SettingsActivity : MIUIActivity() {
     private val activity = this
@@ -261,5 +264,14 @@ class SettingsActivity : MIUIActivity() {
         AppCenter.start(application, Utils.appCenterKey, Analytics::class.java, Crashes::class.java)
         Analytics.trackEvent("Module Version：${BuildConfig.VERSION_NAME} | Android：${Build.VERSION.SDK_INT}")
         Analytics.trackEvent("品牌 ：${Build.BRAND} | 型号 ：${Build.MODEL}")
+        requestPermission()
+    }
+
+    private fun requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!(applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled()) {
+                activity.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
+            }
+        }
     }
 }
