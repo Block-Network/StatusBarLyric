@@ -209,7 +209,7 @@ class AppleMusic internal constructor(lpparam: LoadPackageParam) {
                 curInfo = curLyrics.getLyricByPosition(currentPosition)
             }
             if (lastLyrics != curInfo!!.lyricStr) {
-                sendLyric(context, curInfo!!.lyricStr, "APM", true, "com.apple.android.music")
+                sendLyric(context, curInfo!!.lyricStr, "Apple Music", true, "com.apple.android.music")
                 lastLyrics = curInfo!!.lyricStr
             }
         }
