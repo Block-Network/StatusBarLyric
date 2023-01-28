@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ApplicableVersion">対応アプリバージョン</string>
+    <string name="HideDeskIcon">ランチャーから非表示</string>
+    <string name="BaseSetting">基本設定</string>
+    <string name="AllSwitch">機能有効化</string>
+    <string name="SongPauseCloseLyrics">曲の一時停止時に歌詞を非表示</string>
+    <string name="LyricWidth">歌詞の表示領域幅</string>
+    <string name="Off">オフ</string>
+    <string name="LyricAutoMaxWidth">歌詞を自動的に最大幅で表示</string>
+    <string name="LyricsAnimation">歌詞アニメーション</string>
+    <string name="LyricColor">歌詞の色と透過度</string>
+    <string name="BackgroundColor">背景色</string>
+    <string name="IconColor">アイコンの色と透過度</string>
+    <string name="LyricIcon">歌詞アイコン</string>
+    <string name="LyricSpeed">歌詞のスクロール速度</string>
+    <string name="AdvancedSettings">詳細設定</string>
+    <string name="ClickLyric">* 歌詞クリックで歌詞と時計を切り替え</string>
+    <string name="AbScreen">* 画面の焼付き防止</string>
+    <string name="IconHigh">アイコンの上下位置</string>
+    <string name="IconSpacing">歌詞とアイコン間のスペース</string>
+    <string name="LyricPos">歌詞の左右位置</string>
+    <string name="Default">デフォルト</string>
+    <string name="UnlockShow">ロック解除中のみ表示</string>
+    <string name="AutoHideNotiIcon">通知アイコンを自動的に非表示</string>
+    <string name="HideNetWork">ネットワーク速度を非表示</string>
+    <string name="AutoHideCarrierName">自動的にロック画面のキャリア名を非表示</string>
+    <string name="CustomHook">* カスタムHook (理解できない場合変更しないでください)</string>
+    <string name="CustomHookTips">以下のようなHookポイント\nmStatusClock mClockView mLeftClock mCenterClock mRightClock</string>
+    <string name="DebugMode">デバッグモード</string>
+    <string name="OnlyGetLyric">* 歌詞の取得のみ</string>
+    <string name="OnlyGetLyricTips">歌詞は取得しますが、ステータスバーには表示しません</string>
+    <string name="TimeHide">* 一定時間で歌詞を非表示</string>
+    <string name="TimeHideTime">歌詞を非表示にするまでの時間</string>
+    <string name="GetTitle">* 曲名を強制的に表示</string>
+    <string name="JudgementTitle">* 歌詞を非表示にしない機能を強化</string>
+    <string name="ReStartSystemUI">システムUIの再起動</string>
+    <string name="ResetModule">モジュールをリセット</string>
+    <string name="About">このモジュールについて</string>
+    <string name="AboutModule">このモジュールについて</string>
+    <string name="AboutTips1">主にHookとUIの開発担当</string>
+    <string name="AboutTips2">主にサボり担当</string>
+    <string name="ThkListTips">謝辞リスト (順不同)</string>
+    <string name="Other">その他</string>
+    <string name="Source">プロジェクトのアドレス</string>
+    <string name="Tips">Tips</string>
+    <string name="ReStart">アプリ再起動</string>
+    <string name="VerExplanation">バージョン説明</string>
+    <string name="Done">完了</string>
+    <string name="CurrentVer">現在のバージョン</string>
+    <string name="VerExp">対応アプリとバージョン:\n
+        - APlayer 1.5.9.1 ～ 最新 (ステータスバー歌詞モード)\n
+        - QQ Music(QQ音乐) 不明 ～ 最新 (ステータスバー歌詞モード)\n
+        - Migu Music(咪咕音乐) 不明 ～ 最新 (ステータスバー歌詞モード)\n
+        - NetEase Cloud Music(网易云音乐) 8.2.10 ～ 最新 (ステータスバー歌詞モード)\n
+        - NetEase Cloud Music(网易云音乐) 不明 ～ 8.0.40 (車載Bluetoothモード)\n
+        - Kugou Music(酷狗音乐) 不明 ～ 11.4.4 (車載Bluetoothモード)\n
+        - Kugou Music Concept Version(酷狗音乐概念版) 不明 ～ 3.2.0(車載Bluetoothモード)\n
+        - Kuwo Music(酷我音乐) 不明 ～ 10.3.4.0(車載Bluetoothモード)\n
+        - Salt &amp; Pepper Music(椒盐音乐) 4.5 ～ 最新 (APIモード)\n
+        - Meizu Music(魅族音乐) 不明 ～ 最新 (ステータスバー歌詞モード)\n
+        - Mi Music(小米音乐) 4.6.0 ～ 4.11.1.0 (車載Bluetoothモード)\n
+        - RPlayer 不明 ～ 最新 (ステータスバー歌詞モード)\n
+        -  LX Music(洛雪音乐)  不明 ～ 最新 (APIモード / デスクトップ歌詞モード)\n
+        - Apple Music  3.10 ～ 4.0.0\n\n
+
+        上記以外のバージョンでも動く可能性がありますが、これらのバージョンは確実に動くはずです
+    </string>
+    <string name="AppName">StatusBar lyric</string>
+    <string name="QuickTitle">ステータスバー歌詞</string>
+    <string name="XposedTips">歌詞が表示されない場合、音楽プレーヤーアプリを停止させてシステムUIを再起動してみてください\nまた、記載されている対応プレイヤーアプリ、バージョンを利用しているかも確認してください</string>
+    <string name="NewVer">新バージョンが見つかりました</string>
+    <string name="Update">アップデート</string>
+    <string name="GetNewVerError">最新バージョンのダウンロードアドレスが見つかりません:</string>
+    <string name="Cancel">キャンセル</string>
+    <string name="NoVerUpdate">新バージョンは見つかりませんでした</string>
+    <string name="CheckUpdateError">アップデートを確認できませんでした。後ほどもう一度お試しください</string>
+    <string name="CheckUpdateFailed">アップデート確認に失敗</string>
+    <string name="top">上へスライド</string>
+    <string name="lower">下へスライド</string>
+    <string name="left">左へスライド</string>
+    <string name="right">右にスライド</string>
+    <string name="random">ランダム</string>
+    <string name="LyricColorTips">16進カラーコードを入力してください。 例: #C0C0C0</string>
+    <string name="LyricColorError">カラーコードが正しくありません!</string>
+    <string name="InputError">入力値が正しくありません!</string>
+    <string name="LyricPosTips">-900~900(単位: ピクセル)</string>
+    <string name="LyricHighTips">-100~100(単位: ピクセル)</string>
+    <string name="IconSpacingTips">0~20(単位: ピクセル)</string>
+    <string name="Ok">OK</string>
+    <string name="HookSetTips">Hookが設定されています:\n</string>
+    <string name="RestartSystemUI">システムUIを再起動してください</string>
+    <string name="RestartUI">システムインターフェイスを再起動してよろしいですか?</string>
+    <string name="RestartUITips">使用中に突然動作しなくなった場合は、システムUIを再起動してみてください。</string>
+    <string name="ResetModuleDialog">モジュールをリセットしてよろしいですか?</string>
+    <string name="ResetModuleDialogTips">特に問題がない場合、リセットする必要はありません</string>
+    <string name="StartCheckUpdate">アップデートを確認します</string>
+    <string name="MeizuStyle">* Meizuスタイルの歌詞スクロール</string>
+    <string name="lShowOnce">* 歌詞を1度だけスクロールさせる</string>
+    <string name="WarnExplanation">モジュールの注意事項</string>
+    <string name="WarnExp">モジュールの注意事項\n\n
+        このモジュールは標準のステータスバーレイアウトで完全に動作します。レイアウトがカスタムされていると問題が生じることがあります。\n\n
+
+        歌詞が表示されない場合\n
+        システムUIを再起動し、モジュールのスイッチがオンになっていることを確認してください。\n
+        "車載Bluetoothモード": "車載Bluetooth歌詞" 機能を音楽プレーヤーアプリで有効化していることを確認してください\n
+        "ステータスバーモード": "ステータスバー歌詞" 機能を音楽プレーヤーアプリで有効化していることを確認してください\n\n
+        "APIモード": 関連機能を音楽プレーヤーアプリで有効化していることを確認してください\n\n
+
+        * がついた機能を切り替えるときは、システムUIの再起動が必要です\n\n
+
+        モジュールが動作しない場合、デバッグモードを開きシステムUIを再起動してログを取得してください。\n
+        フィードバックのためログをGitHubかTelegramへ送信してください。
+    </string>
+    <string name="NotSupport">このモジュールが有効化されていません。LSPosedで有効化してください\nこのモジュールは最新バージョンのLSPosedのみをサポートしています</string>
+    <string name="PrivacyPolicy">プライバシーポリシー</string>
+    <string name="UseSystemReverseColor">* システムモードを利用して色を反転</string>
+    <string name="IconSettings">アイコン設定</string>
+    <string name="NewNotice">新着通知</string>
+    <string name="GetNewNoticeError">新着通知の取得エラー</string>
+    <string name="ResetSuccess">リセット完了</string>
+    <string name="MakeIconTitle">プレフィックスを除いてBase64データを入力してください。推奨ピクセルサイズは 32*32 です</string>
+    <string name="LyricHigh">歌詞の上下位置</string>
+    <string name="LyricSize">歌詞サイズ</string>
+    <string name="IconSize">アイコンサイズ</string>
+    <string name="LyricSizeTips">0~50, 現在:</string>
+    <string name="LyricTips">-1%~100%, 現在:</string>
+    <string name="Test">モジュールをテスト</string>
+    <string name="TestDialogTips">この機能はシステムUIに組み込まれており、システムUIのクラッシュや再起動を引き起こすことがあります</string>
+    <string name="Start">開始</string>
+    <string name="Back">戻る</string>
+    <string name="Custom">カスタム</string>
+    <string name="InputCustomHook">カスタムHookポイントを入力してください。空白にするとオフになります</string>
+    <string name="HideTime">時計の非表示</string>
+    <string name="FadingEdge">* エッジのぼかし</string>
+    <string name="SponsoredList">スポンサーリスト</string>
+    <string name="Donate">開発をサポート</string>
+    <string name="HookSure">システムUIをHook</string>
+    <string name="HookSureSuccess">システムUIをHookしました</string>
+    <string name="HookSureFail">システムUIのHookに失敗しました\nこのシステムUIはサポートされていないため,システムUIをパッケージ化して開発者に送信してください</string>
+    <string name="First">先頭に表示</string>
+    <string name="Latest">末尾に表示</string>
+    <string name="LyricViewPosition">* 歌詞の追加位置</string>
+    <string name="CustomizePosition">* カスタムテキストの追加位置</string>
+    <string name="Menu">メニュー</string>
+    <string name="CheckUpdate">アップデートを確認</string>
+    <string name="Backup">設定をバックアップ</string>
+    <string name="Recovery">設定を復元</string>
+    <string name="Manual">ヘルプマニュアル</string>
+    <string name="CustomFont">カスタムフォント</string>
+    <string name="DeleteFont">フォントを削除</string>
+    <string name="CustomFontSuccess">カスタムフォントを設定しました</string>
+    <string name="CustomFoneFail">カスタムフォントを設定できませんでした</string>
+    <string name="DeleteFontSuccess">フォントを削除しました</string>
+    <string name="DeleteFoneFail">フォントを削除できませんでした</string>
+    <string name="ChooseFont">フォントを選択</string>
+    <string name="Reset">リセット</string>
+    <string name="FontWeight">* フォント幅</string>
+    <string name="LyricSpacing">歌詞の間隔</string>
+    <string name="ReverseColorTime">一般の反対色時間</string>
+    <string name="ReverseColorTimeTips">1–3000 (単位: ミリ秒)</string>
+    <string name="AntiBurnTime">焼き付き防止画面へ切り替える時間</string>
+    <string name="AntiBurnTimeTips">1–3600000 (単位: ミリ秒)</string>
+    <string name="SongPauseCloseLyricsTime">曲の一時停止から歌詞を非表示にするまでの時間</string>
+    <string name="showAd">広告を見て開発者を応援</string>
+    <string name="MakeIcon">アイコンを作成</string>
+    <string name="MakeIconError">アプリを開けません\n爱玩机工具箱 がインストールされていることを確認してください</string>
+    <string name="DelayedLoading">読込の遅延</string>
+    <string name="FirstTip">このモジュールはMicrosoft AppCenterを利用して、毎月のアクティビティ、クラッシュデータなどを測定、収集します。収集されたデータはこのモジュールには関連付けられません。</string>
+    <string name="TitleTips1">フィードバックログのスクリーンショットはしないでください\nLSPosedの右上の保存メニューからファイルとして保存してください</string>
+    <string name="TitleTips2">* がついた機能を切り替えるときは、システムUIの再起動が必要です</string>
+    <string name="TitleTips3">水平スクロールバーの上の項目をタップすると、値を手動入力できます</string>
+    <string name="TitleTips4">このモジュールが有用だと感じたら、ぜひサポートをお願いいたします</string>
+    <string name="CustomizeText">カスタムテキスト</string>
+    <string name="BlockLyricTips">キーワードか正規表現を使ってブロックする歌詞を設定します</string>
+    <string name="BlockLyric">ブロック歌詞</string>
+    <string name="BlockLyricMode">正規表現を利用</string>
+    <string name="BlockLyricOff">歌詞の表示をブロックする</string>
+    <string name="ModuleVersion">モジュール バージョン</string>
+    <string name="BuildTime">ビルド日時</string>
+    <string name="BgCorners">背景の角丸</string>
+</resources>
