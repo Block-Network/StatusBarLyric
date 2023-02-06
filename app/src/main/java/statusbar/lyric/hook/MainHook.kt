@@ -38,7 +38,6 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
         LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
         LogUtils.e("This packName: ${lpparam.packageName}")
         init(lpparam)
-
         val hook = when (lpparam.packageName) {
             "com.android.systemui" -> {
                 LogUtils.e("start hook systemui")
@@ -84,8 +83,9 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
             "com.meizu.media.music" -> {
                 LogUtils.e("start Hook Meizu Music")
-                MeiZuStatusBarLyric.guiseFlyme(true)
-                null
+//                MeiZuStatusBarLyric.guiseFlyme(true)
+//                null
+                Meizu()
             }
 
             "com.r.rplayer" -> {
