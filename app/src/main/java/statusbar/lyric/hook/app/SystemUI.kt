@@ -259,8 +259,7 @@ class SystemUI : BaseHook() {
         } else {
             LogUtils.e(LogMultiLang.newAutoOff)
             "com.android.systemui.media.MediaCarouselController".hookAfterMethod("removePlayer", String::class.java, Boolean::class.java, Boolean::class.java) { 
-                offLyric(LogMultiLang.playerOff) 
-                this.icon = ""
+                offLyric(LogMultiLang.playerOff)
             }
             "com.android.systemui.media.MediaData".findClass().hookAfterAllConstructors {
                 val stats = it.thisObject.callMethodAs<Boolean>("isPlaying")
@@ -268,7 +267,6 @@ class SystemUI : BaseHook() {
                     lastStats = stats
                     if (!stats) {
                         offLyric(LogMultiLang.pausePlay)
-                        this.icon = ""
                     }
                 }
             }
@@ -656,6 +654,7 @@ class SystemUI : BaseHook() {
     }
 
     private fun offLyric(info: String) {
+        this.icon = ""
         // off Lyric
         LogUtils.e(info)
         application.sendBroadcast(Intent().apply {
