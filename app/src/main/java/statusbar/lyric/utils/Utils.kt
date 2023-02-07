@@ -250,12 +250,12 @@ object Utils {
     }
 
     @JvmStatic
-    fun sendLyric(context: Context?, lyric: String?, icon: String?, useSystemMusicActive: Boolean, packName: String?) {
+    fun sendLyric(context: Context?, lyric: String?, icon: String?, useSystemMusicActive: Boolean, serviceName: String?) {
         context?.sendBroadcast(Intent().apply {
             action = "Lyric_Server"
             putExtra("Lyric_Data", lyric)
             putExtra("Lyric_Type", "app")
-            putExtra("Lyric_PackName", packName)
+            putExtra("Lyric_ServiceName", serviceName)
             putExtra("Lyric_PackageName", lpparam.packageName)
             putExtra("Lyric_Icon", icon)
             putExtra("Lyric_UseSystemMusicActive", useSystemMusicActive)

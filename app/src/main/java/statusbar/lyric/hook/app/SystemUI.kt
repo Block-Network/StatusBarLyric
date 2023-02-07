@@ -141,7 +141,7 @@ class SystemUI : BaseHook() {
                     try { // 设置颜色
                         setColor(clock.textColors.defaultColor)
                     } catch (e: Exception) {
-                        LogUtils.e("${LogMultiLang.lyricColor}: $e\n" + Utils.dumpException(e))
+                        LogUtils.e("${LogMultiLang.lyricColor}: $e\n${Utils.dumpException(e)}")
                     }
                 }
             }
@@ -258,7 +258,7 @@ class SystemUI : BaseHook() {
             LogUtils.e(LogMultiLang.oldAutoOff)
         } else {
             LogUtils.e(LogMultiLang.newAutoOff)
-            "com.android.systemui.media.MediaCarouselController".hookAfterMethod("removePlayer", String::class.java, Boolean::class.java, Boolean::class.java) { 
+            "com.android.systemui.media.MediaCarouselController".hookAfterMethod("removePlayer", String::class.java, Boolean::class.java, Boolean::class.java) {
                 offLyric(LogMultiLang.playerOff)
             }
             "com.android.systemui.media.MediaData".findClass().hookAfterAllConstructors {
@@ -383,9 +383,9 @@ class SystemUI : BaseHook() {
             setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.getLyricSize() == 0) clock.textSize else config.getLyricSize().toFloat())
             isSingleLine = true
             try {
-                val file = File(application.filesDir.path + "/font")
+                val file = File("${application.filesDir.path}/font")
                 if (file.exists() && file.isFile && file.canRead()) {
-                    typeface = Typeface.createFromFile(application.filesDir.path + "/font")
+                    typeface = Typeface.createFromFile("${application.filesDir.path}/font")
                     LogUtils.e(LogMultiLang.fontLoad)
                 } else {
                     typeface = clock.typeface
@@ -393,7 +393,7 @@ class SystemUI : BaseHook() {
             } catch (e: Throwable) {
                 typeface = clock.typeface
                 runCatching {
-                    val file = File(application.filesDir.path + "/font")
+                    val file = File("${application.filesDir.path}/font")
                     if (file.exists() && file.canWrite()) {
                         file.delete()
                     }
@@ -411,9 +411,9 @@ class SystemUI : BaseHook() {
             setLetterSpacings(if (config.getLyricSpacing() != 0) config.getLyricSpacing().toFloat() / 100 else clock.letterSpacing)
             if (config.getFadingEdge()) horizontalFadingEdge()
             try {
-                val file = File(application.filesDir.path + "/font")
+                val file = File("${application.filesDir.path}/font")
                 if (file.exists() && file.isFile && file.canRead()) {
-                    setTypeface(Typeface.createFromFile(application.filesDir.path + "/font"))
+                    setTypeface(Typeface.createFromFile("${application.filesDir.path}/font"))
                     LogUtils.e(LogMultiLang.fontLoad)
                 } else {
                     setTypeface(clock.typeface)
@@ -421,7 +421,7 @@ class SystemUI : BaseHook() {
             } catch (e: Throwable) {
                 setTypeface(clock.typeface)
                 runCatching {
-                    val file = File(application.filesDir.path + "/font")
+                    val file = File("${application.filesDir.path}/font")
                     if (file.exists() && file.canWrite()) {
                         file.delete()
                     }
@@ -773,7 +773,7 @@ class SystemUI : BaseHook() {
                 offLyric(LogMultiLang.switchOff)
             }
         } catch (e: Throwable) {
-            LogUtils.e("${LogMultiLang.stateCheck}: $e \n" + Log.getStackTraceString(e))
+            LogUtils.e("${LogMultiLang.stateCheck}: $e \n${Log.getStackTraceString(e)}")
         }
     }
 
@@ -798,7 +798,7 @@ class SystemUI : BaseHook() {
                     false
                 }
             } catch (e: Exception) {
-                LogUtils.e("${LogMultiLang.lockScreenError} " + e + "\n" + Utils.dumpException(e))
+                LogUtils.e("${LogMultiLang.lockScreenError} $e\n${Utils.dumpException(e)}")
             }
         }
     }
@@ -817,15 +817,15 @@ class SystemUI : BaseHook() {
                     }
 
                     "app" -> {
-                        val packName = intent.getStringExtra("Lyric_PackName")
-                        if (!packName.isNullOrEmpty() && !musicServer.contains(packName)) {
-                            musicServer.add(packName)
+                        val serviceName = intent.getStringExtra("Lyric_ServiceName")
+                        if (!serviceName.isNullOrEmpty() && !musicServer.contains(serviceName)) {
+                            musicServer.add(serviceName)
                         }
                         useSystemMusicActive = intent.getBooleanExtra("Lyric_UseSystemMusicActive", false)
 
                         val lyric = intent.getStringExtra("Lyric_Data")
                         updateLyric(lyric ?: "", packageName, icon)
-                        LogUtils.e("${LogMultiLang.recvData}app: lyric:$lyric icon:${icon} packName:$packName")
+                        LogUtils.e("${LogMultiLang.recvData}app: lyric:$lyric icon:${icon} serviceName:$serviceName")
                     }
 
                     "app_stop" -> offLyric("${LogMultiLang.recvData}app_stop")
@@ -833,14 +833,14 @@ class SystemUI : BaseHook() {
                         val path = intent.getStringExtra("Font_Path")
                         if (path.isNullOrEmpty()) return
                         LogUtils.e("${LogMultiLang.customFont}: $path")
-                        val file = File(application.filesDir.path + "/font")
+                        val file = File("${application.filesDir.path}/font")
                         if (file.exists() && file.canWrite()) {
                             file.delete()
                         }
                         val error = FileUtils(application).copyFile(File(path), application.filesDir.path, "font")
                         if (error.isEmpty()) {
-                            lyricSwitchView.setTypeface(Typeface.createFromFile(application.filesDir.path + "/font"))
-                            customizeView.typeface = Typeface.createFromFile(application.filesDir.path + "/font")
+                            lyricSwitchView.setTypeface(Typeface.createFromFile("${application.filesDir.path}/font"))
+                            customizeView.typeface = Typeface.createFromFile("${application.filesDir.path}/font")
                             LogUtils.e(LogMultiLang.fontLoad)
                             application.sendBroadcast(Intent().apply {
                                 action = "App_Server"
@@ -849,7 +849,7 @@ class SystemUI : BaseHook() {
                             })
                         } else {
                             runCatching {
-                                val file1 = File(application.filesDir.path + "/font")
+                                val file1 = File("${application.filesDir.path}/font")
                                 if (file1.exists() && file1.canWrite()) {
                                     file1.delete()
                                 }
@@ -865,7 +865,7 @@ class SystemUI : BaseHook() {
 
                     "delete_font" -> {
                         var isOK = false
-                        val file = File(application.filesDir.path + "/font")
+                        val file = File("${application.filesDir.path}/font")
                         if (file.exists() && file.canWrite()) {
                             isOK = file.delete()
                         }
@@ -905,7 +905,7 @@ class SystemUI : BaseHook() {
                         it.addView(Button(application).let { it1 ->
                             it1.text = "Show test lyric"
                             it1.setOnClickListener {
-                                updateLyric((Math.random() * 4).toInt().toString() + " This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "com.android.systemui", icon)
+                                updateLyric("${(Math.random() * 4).toInt()} This test string~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", "com.android.systemui", icon)
                                 test = true
                             }
                             it1
