@@ -11,7 +11,8 @@ import statusbar.lyric.utils.ktx.setReturnConstant
 
 class QQLite {
     private val songInfo = "com.tencent.qqmusic.core.song.SongInfo".findClass()
-    fun hook(name:String) {
+    fun hook(name: String) {
+        if (songInfo.isNull()) return
         var context: Context? = null
         "com.tencent.qqmusiccommon.util.music.RemoteLyricController".setReturnConstant("BluetoothA2DPConnected", result = true)
         "com.tencent.qqmusiccommon.util.music.RemoteControlManager".hookAfterConstructor(Context::class.java) {
