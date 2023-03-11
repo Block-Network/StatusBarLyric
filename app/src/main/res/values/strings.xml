@@ -17,7 +17,7 @@
     <string name="LyricSpeed">Lyrics scroll speed</string>
     <string name="AdvancedSettings">Advanced settings</string>
     <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
-    <string name="OldAbScreen">* Old Anti-burn screen</string>
+    <string name="AbScreen">* Anti-burn screen</string>
     <string name="IconHigh">Icon up and down position</string>
     <string name="IconSpacing">Icon Lyrics Spacing</string>
     <string name="LyricPos">Left and right positions of lyrics
@@ -206,4 +206,5 @@
     <string name="ModuleVersion">Module Version</string>
     <string name="BuildTime">Build Time</string>
     <string name="BgCorners">Background rounded corners</string>
+    <string name="OldAbScreen">* Anti-burn screen(Old Version)</string>
 </resources>
