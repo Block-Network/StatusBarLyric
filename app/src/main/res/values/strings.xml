@@ -206,4 +206,5 @@
     <string name="ModuleVersion">Module Version</string>
     <string name="BuildTime">Build Time</string>
     <string name="BgCorners">Background rounded corners</string>
+    <string name="OldAbScreen">* Anti-burn screen(Old Version)</string>
 </resources>
