@@ -54,10 +54,7 @@
 [HELP](doc/HELP.md)
 
 ### 联系我们
-
-- [QQ交流群](https://jq.qq.com/?_wv=1027&amp;k=KQeQjgsv)
 - [电报](https://t.me/StatusBatLyric)
-- [酷安](https://www.coolapk.com/apk/cn.fkj233.xposed.statusbarlyric)
 - [BUG反馈(Github)](https://github.com/577fkj/StatusBarLyric/issues/new)
 
 ## 音乐主动适配
