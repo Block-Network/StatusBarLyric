@@ -73,3 +73,7 @@
 [EULA](doc/EULA.md)
 
 [GNU General Public License v3.0](LICENSE)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Block-Network/StatusBarLyric&type=Date)](https://star-history.com/#Block-Network/StatusBarLyric&Date)
