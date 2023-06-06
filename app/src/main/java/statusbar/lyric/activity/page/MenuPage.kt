@@ -35,7 +35,7 @@ class MenuPage : BasePage() {
         TextWithSwitch(TextV(textId = R.string.DebugMode), SwitchV("Debug"))
         TextWithSwitch(TextV(text = "App Center"), SwitchV("AppCenter", true))
         TextWithSwitch(TextV(textId = R.string.CheckUpdate), SwitchV("CheckUpdate", true))
-        TextSummaryArrow(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.ResetModuleDialog)
                 setMessage(R.string.ResetModuleDialogTips)
@@ -47,7 +47,7 @@ class MenuPage : BasePage() {
                 setLButton(R.string.Cancel) { dismiss() }
             }.show()
         }))
-        TextSummaryArrow(TextSummaryV(textId = R.string.ReStartSystemUI, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.ReStartSystemUI, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.RestartUI)
                 setMessage(R.string.RestartUITips)
@@ -59,13 +59,13 @@ class MenuPage : BasePage() {
                 setRButton(R.string.Cancel) { dismiss() }
             }.show()
         }))
-        TextSummaryArrow(TextSummaryV(textId = R.string.Backup, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.Backup, onClickListener = {
             activity.getSP()?.let { BackupUtils.backup(activity, it) }
         }))
-        TextSummaryArrow(TextSummaryV(textId = R.string.Recovery, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.Recovery, onClickListener = {
             activity.getSP()?.let { BackupUtils.recovery(activity, it) }
         }))
-        TextSummaryArrow(TextSummaryV(textId = R.string.Test, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.Test, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.Test)
                 setMessage(R.string.TestDialogTips)

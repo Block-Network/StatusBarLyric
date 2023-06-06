@@ -21,7 +21,7 @@ import java.util.HashMap
 @BMPage("custom", titleId = R.string.CustomLyric)
 class LyricCustomPage : BasePage() {
     override fun onCreate() {
-        TextSummaryArrow(TextSummaryV(textId = R.string.LyricColor, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.LyricColor, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.LyricColor)
                 setMessage(R.string.LyricColorTips)
@@ -45,7 +45,7 @@ class LyricCustomPage : BasePage() {
                 setLButton(R.string.Cancel) { dismiss() }
             }.show()
         }))
-        TextSummaryArrow(TextSummaryV(textId = R.string.BackgroundColor, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.BackgroundColor, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.BackgroundColor)
                 setMessage(R.string.LyricColorTips)
@@ -69,7 +69,7 @@ class LyricCustomPage : BasePage() {
                 setLButton(R.string.Cancel) { dismiss() }
             }.show()
         }))
-        TextSummaryArrow(TextSummaryV(textId = R.string.BgCorners, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.BgCorners, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.BgCorners)
                 setMessage(R.string.LyricHighTips)
@@ -358,7 +358,7 @@ class LyricCustomPage : BasePage() {
             add(getString(R.string.First)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition(true) }
             add(getString(R.string.Latest)) { ActivityOwnSP.ownSPConfig.setCustomizeViewPosition(false) }
         })
-        TextSummaryArrow(TextSummaryV(textId = R.string.CustomizeText, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.CustomizeText, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.CustomizeText)
                 setEditText(ActivityOwnSP.ownSPConfig.getCustomizeText(), "")
@@ -376,7 +376,7 @@ class LyricCustomPage : BasePage() {
                 }
             }.show()
         }))
-        TextSummaryArrow(TextSummaryV(textId = R.string.CustomFont, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.CustomFont, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.CustomFont)
                 setRButton(R.string.ChooseFont) {

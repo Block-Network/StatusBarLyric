@@ -24,7 +24,7 @@ class AdvancedSettingsPage : BasePage() {
         TextSummaryWithSwitch(TextSummaryV(textId = R.string.GetTitle), SwitchV("GetTitle"))
         TextSummaryWithSwitch(TextSummaryV(textId = R.string.OnlyGetLyric, tipsId = R.string.OnlyGetLyricTips), SwitchV("OnlyGetLyric"))
         TextWithSwitch(TextV(textId = R.string.TimeHide), SwitchV("TimeOff"))
-        TextSummaryArrow(TextSummaryV(textId = R.string.TimeHideTime, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.TimeHideTime, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.TimeHideTime)
                 setMessage(R.string.AntiBurnTimeTips)
@@ -51,7 +51,7 @@ class AdvancedSettingsPage : BasePage() {
         }))
         SeekBarWithText("TimeOffTime", 0, 3600000, defaultProgress = 10000)
 
-        TextSummaryArrow(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.CustomHook, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.CustomHook)
                 setMessage(R.string.CustomHookTips)
@@ -197,7 +197,7 @@ class AdvancedSettingsPage : BasePage() {
             }.show()
         })
         SeekBarWithText("DelayedLoadingTime", 1, 5, 1)
-        TextSummaryArrow(TextSummaryV(textId = R.string.BlockLyric, tipsId = R.string.BlockLyricTips, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.BlockLyric, tipsId = R.string.BlockLyricTips, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.BlockLyric)
                 setMessage(R.string.BlockLyricTips)

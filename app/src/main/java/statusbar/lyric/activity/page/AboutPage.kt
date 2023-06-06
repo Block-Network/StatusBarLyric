@@ -16,22 +16,22 @@ import java.util.HashMap
 @BMPage("about", titleId = R.string.About)
 class AboutPage : BasePage() {
     override fun onCreate() {
-        Author(getDrawable(R.drawable.header_577fkj), "577fkj", getString(R.string.AboutTips1), onClickListener = { ActivityUtils.openUrl(activity, "https://github.com/577fkj") })
-        Author(getDrawable(R.drawable.header_xiaowine), "xiaowine", getString(R.string.AboutTips2), onClickListener = { ActivityUtils.openUrl(activity, "https://github.com/xiaowine") })
+        ImageWithText(getDrawable(R.drawable.header_577fkj), "577fkj", getString(R.string.AboutTips1), onClickListener = { ActivityUtils.openUrl(activity, "https://github.com/577fkj") })
+        ImageWithText(getDrawable(R.drawable.header_xiaowine), "xiaowine", getString(R.string.AboutTips2), onClickListener = { ActivityUtils.openUrl(activity, "https://github.com/xiaowine") })
         Line()
         TitleText(textId = R.string.ThkListTips)
-        TextSummaryArrow(TextSummaryV(textId = R.string.ThkListTips, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.ThkListTips, onClickListener = {
             ActivityUtils.openUrl(activity, "https://github.com/577fkj/StatusBarLyric#%E6%84%9F%E8%B0%A2%E5%90%8D%E5%8D%95%E4%B8%8D%E5%88%86%E5%85%88%E5%90%8E")
         }))
-        TextSummaryArrow(TextSummaryV(textId = R.string.SponsoredList, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.SponsoredList, onClickListener = {
             ActivityUtils.openUrl(activity, "https://github.com/577fkj/StatusBarLyric/blob/Dev/doc/SPONSOR.md")
         }))
         Line()
         TitleText(textId = R.string.Other)
-        TextSummaryArrow(TextSummaryV(textId = R.string.PrivacyPolicy, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.PrivacyPolicy, onClickListener = {
             ActivityUtils.openUrl(activity, "https://github.com/577fkj/StatusBarLyric/blob/main/EUAL.md")
         }))
-        TextSummaryArrow(TextSummaryV(textId = R.string.Source, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.Source, onClickListener = {
             ActivityUtils.openUrl(activity, "https://github.com/577fkj/StatusBarLyric")
         }))
         val dict: HashMap<String, String> = hashMapOf()

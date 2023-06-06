@@ -47,7 +47,7 @@ class IconCustomPage : BasePage() {
         TitleText(textId = R.string.IconSettings)
         TextWithSwitch(TextV(textId = R.string.LyricIcon), SwitchV("I", true))
         TextWithSwitch(TextV(textId = R.string.ShowEmptyIcon), SwitchV("ShowEmptyIcon", false))
-        TextSummaryArrow(TextSummaryV(textId = R.string.IconColor, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.IconColor, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.IconColor)
                 setMessage(R.string.LyricColorTips)
@@ -156,7 +156,7 @@ class IconCustomPage : BasePage() {
         TitleText(textId = R.string.MakeIconTitle1)
         TitleText(textId = R.string.MakeIconTitle2, colorInt = Color.RED)
         for (icon in iconList) {
-            Author(BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon, true))).also { it.setTint(getColor(R.color.customIconColor)) }, icon, round = 0f, onClickListener = {
+            ImageWithText(BitmapDrawable(Utils.stringToBitmap(iconConfig.getIcon(icon, true))).also { it.setTint(getColor(R.color.customIconColor)) }, icon, round = 0f, onClickListener = {
                 NewDialog(activity) {
                     setTitle(R.string.PlaceSelect)
                     Button(getString(R.string.Edit)) {
@@ -211,7 +211,7 @@ class IconCustomPage : BasePage() {
                 }.show()
             }, dataBindingRecv = iconDataBinding.getRecv(iconList.indexOf(icon)))
         }
-        TextSummaryArrow(TextSummaryV(textId = R.string.MakeIcon, onClickListener = {
+        TextSummaryWithArrow(TextSummaryV(textId = R.string.MakeIcon, onClickListener = {
             val componentName = ComponentName("com.byyoung.setting", "com.byyoung.setting.MediaFile.activitys.ImageBase64Activity")
             try {
                 activity.startActivity(Intent().setClassName("com.byyoung.setting", "utils.ShortcutsActivity").apply {
@@ -222,7 +222,7 @@ class IconCustomPage : BasePage() {
                 ActivityUtils.showToastOnLooper(activity, getString(R.string.MakeIconError))
             }
         }))
-        TextSummaryArrow(TextSummaryV("${getString(R.string.Add)} / ${getString(R.string.Import)} / ${getString(R.string.Export)}", onClickListener = {
+        TextSummaryWithArrow(TextSummaryV("${getString(R.string.Add)} / ${getString(R.string.Import)} / ${getString(R.string.Export)}", onClickListener = {
             NewDialog(activity) {
                 setTitle("${getString(R.string.Add)} / ${getString(R.string.Import)} / ${getString(R.string.Export)}")
                 Button(getString(R.string.Add)) {
