@@ -30,7 +30,6 @@ import android.text.TextUtils
 import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
-import statusbar.lyric.utils.ktx.callMethod
 
 @SuppressLint("ViewConstructor")
 class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwitcher(context) {
@@ -107,7 +106,11 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwi
     }
 
     fun setMargins(i: Int, i1: Int, i2: Int, i3: Int) {
-        viewArray.forEach { view -> view.layoutParams.callMethod("setMargins", i, i1, i2, i3) }
+        viewArray.forEach { view: TextView ->
+            view.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                setMargins(i, i1, i2, i3)
+            }
+        }
     }
 
     fun setMarqueeRepeatLimit(i: Int) {

@@ -20,20 +20,19 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-package statusbar.lyric.utils
+package statusbar.lyric.config
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import statusbar.lyric.config.Config
+import statusbar.lyric.tools.ActivityTools.context
+import statusbar.lyric.tools.Tools
 
 @SuppressLint("StaticFieldLeak")
 object ActivityOwnSP {
-    lateinit var activity: Activity
-    private val ownSP by lazy { Utils.getSP(activity, "Lyric_Config")!! }
+    val ownSP by lazy { Tools.getSP(context, "Config")!! }
     val ownSPConfig by lazy { Config(ownSP) }
     private val ownEditor by lazy { ownSP.edit() }
 
-    const val version = 1
+    const val version = 2
 
     fun set(key: String, any: Any) {
         when (any) {

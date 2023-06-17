@@ -22,7 +22,7 @@
 
 @file:Suppress("DEPRECATION")
 
-package statusbar.lyric.utils
+package statusbar.lyric.tools
 
 import android.content.ContentResolver
 import android.provider.MediaStore
@@ -33,8 +33,8 @@ import android.os.Environment
 import android.content.ContentUris
 import android.content.Context
 import android.net.Uri
-import statusbar.lyric.utils.Utils.isNotNull
-import statusbar.lyric.utils.Utils.isNull
+import statusbar.lyric.tools.Tools.isNotNull
+import statusbar.lyric.tools.Tools.isNull
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -42,7 +42,7 @@ import java.io.IOException
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 
-class FileUtils(private val context: Context) {
+class FileTools(private val context: Context) {
     /**
      * 根据文件路径拷贝文件
      * @param src 源文件
@@ -64,7 +64,7 @@ class FileUtils(private val context: Context) {
                 return "Create file fail"
             }
         } catch (e: IOException) {
-            return Utils.dumpIOException(e)
+            return e.printStackTrace().toString()
         }
         try {
             val srcChannel = FileInputStream(src).channel
@@ -74,10 +74,10 @@ class FileUtils(private val context: Context) {
                 srcChannel.close()
                 dstChannel.close()
             } catch (e: IOException) {
-                return Utils.dumpIOException(e)
+                return e.printStackTrace().toString()
             }
         } catch (e: IOException) {
-            return Utils.dumpIOException(e)
+            return e.printStackTrace().toString()
         }
         return ""
     }
@@ -136,7 +136,7 @@ class FileUtils(private val context: Context) {
     }
 
     private fun getFilePathByUriAPI19(uri: Uri): String? {
-        if (ContentResolver.SCHEME_CONTENT == uri.scheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (ContentResolver.SCHEME_CONTENT == uri.scheme) {
             if (DocumentsContract.isDocumentUri(context, uri)) {
                 if (isExternalStorageDocument(uri)) { // ExternalStorageProvider
                     val docId = DocumentsContract.getDocumentId(uri)

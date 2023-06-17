@@ -2,21 +2,23 @@ import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
+    namespace = "statusbar.lyric"
     compileSdk = 33
-    val buildTime=System.currentTimeMillis()
+    val buildTime = System.currentTimeMillis()
     defaultConfig {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 33
         versionCode = 165
-        versionName = "5.4.2"
+        versionName = "5.4.2$buildTime"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
-        buildConfigField("String", "BUILD_TIME", "\"$buildTime\"")
+        buildConfigField("long", "BUILD_TIME", "$buildTime")
+        buildConfigField("int", "apiVersion", "1")
     }
 
     buildTypes {
@@ -56,13 +58,9 @@ android {
 
 
 dependencies { //API
-    compileOnly("de.robv.android.xposed:api:82") //带源码Api
-//    compileOnly("de.robv.android.xposed:api:82:sources") // Use Hide Api
-    compileOnly(project(":hidden-api")) //MIUI 通知栏
-    implementation(files("libs/miui_sdk.jar")) // microsoft app center
-    val appCenterSdkVersion = "4.4.3"
-    implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
-    implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
+    compileOnly("de.robv.android.xposed:api:82")
+    compileOnly(project(":hidden-api"))
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
+    implementation("com.github.kyuubiran:EzXHelper:2.0.5")
 }

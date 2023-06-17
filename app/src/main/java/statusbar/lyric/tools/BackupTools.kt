@@ -20,14 +20,14 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-package statusbar.lyric.utils
+package statusbar.lyric.tools
 
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import org.json.JSONObject
-import statusbar.lyric.utils.Utils.isNotNull
+import statusbar.lyric.tools.Tools.isNotNull
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.InputStreamReader
@@ -35,7 +35,7 @@ import java.io.OutputStreamWriter
 import java.time.LocalDateTime
 
 
-object BackupUtils {
+object BackupTools {
     const val CREATE_DOCUMENT_CODE = 255774
     const val OPEN_DOCUMENT_CODE = 277451
 
@@ -93,6 +93,7 @@ object BackupUtils {
                                         edit.putString(keys, value)
                                     }
                                 }
+
                                 is Boolean -> edit.putBoolean(keys, value)
                                 is Int -> edit.putInt(keys, value)
                             }
@@ -101,10 +102,10 @@ object BackupUtils {
                     close()
                 }
             }
-            edit.commit()
-            ActivityUtils.showToastOnLooper(activity, "load ok")
+            edit.apply()
+            ActivityTools.showToastOnLooper("Load ok")
         } catch (e: Throwable) {
-            ActivityUtils.showToastOnLooper(activity, "load fail\n$e")
+            ActivityTools.showToastOnLooper("Load fail\n$e")
         }
     }
 
@@ -124,9 +125,9 @@ object BackupUtils {
                     close()
                 }
             }
-            ActivityUtils.showToastOnLooper(activity, "save ok")
+            ActivityTools.showToastOnLooper("Save ok")
         } catch (e: Throwable) {
-            ActivityUtils.showToastOnLooper(activity, "save fail\n$e")
+            ActivityTools.showToastOnLooper("Save fail\n$e")
         }
     }
 }

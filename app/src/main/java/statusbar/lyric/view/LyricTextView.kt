@@ -23,7 +23,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.widget.TextView
-import statusbar.lyric.utils.Utils.isNotNull
+import statusbar.lyric.tools.Tools.isNotNull
 import kotlin.math.abs
 
 @SuppressLint("ViewConstructor")

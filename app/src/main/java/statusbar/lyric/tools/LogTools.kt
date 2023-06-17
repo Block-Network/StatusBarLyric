@@ -20,7 +20,7 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-package statusbar.lyric.utils
+package statusbar.lyric.tools
 
 import android.content.Context
 import android.os.Handler
@@ -28,12 +28,11 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import de.robv.android.xposed.XposedBridge
-import statusbar.lyric.utils.XposedOwnSP.config
 
-object LogUtils {
+object LogTools {
     private const val maxLength = 4000
     private val handler by lazy { Handler(Looper.getMainLooper()) }
-    private const val TAG = "StatusBarLyric"
+    const val TAG = "StatusBarLyric"
 
     @JvmStatic
     fun toast(context: Context?, msg: String) {
@@ -42,7 +41,6 @@ object LogUtils {
 
     @JvmStatic
     fun log(obj: Any?, toXposed: Boolean = false, toLogd: Boolean = false) {
-        if (!config.getDebug()) return
         val content = if (obj is Throwable) Log.getStackTraceString(obj) else obj.toString()
         if (content.length > maxLength) {
             val chunkCount = content.length / maxLength

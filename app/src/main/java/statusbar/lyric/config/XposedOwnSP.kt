@@ -20,13 +20,11 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-package statusbar.lyric.hook;
+package statusbar.lyric.config
 
-import android.app.Notification;
+import statusbar.lyric.tools.Tools
 
-public class MeiZuNotification extends Notification {
-    public static final int FLAG_ALWAYS_SHOW_TICKER_HOOK = 0x01000000;
-    public static final int FLAG_ONLY_UPDATE_TICKER_HOOK = 0x02000000;
-    public static final int FLAG_ALWAYS_SHOW_TICKER = 0x01000000;
-    public static final int FLAG_ONLY_UPDATE_TICKER = 0x02000000;
+object XposedOwnSP {
+
+    val config: Config by lazy { Config(Tools.getPref("Config")) }
 }

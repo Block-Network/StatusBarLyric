@@ -20,14 +20,14 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-package statusbar.lyric.utils
+package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import de.robv.android.xposed.XSharedPreferences
-import statusbar.lyric.utils.Utils.isNull
+import statusbar.lyric.tools.Tools.isNull
 
-class ConfigUtils {
+class ConfigTools {
     private var xSP: XSharedPreferences? = null
     private var mSP: SharedPreferences? = null
     private var mSPEditor: SharedPreferences.Editor? = null
@@ -45,7 +45,7 @@ class ConfigUtils {
 
     fun update() {
         if (xSP.isNull()) {
-            xSP = Utils.getPref("Lyric_Config")
+            xSP = Tools.getPref("Lyric_Config")
             mSP = xSP
             return
         }
@@ -62,32 +62,19 @@ class ConfigUtils {
         mSPEditor?.apply()
     }
 
-    fun optInt(key: String, i: Int): Int {
+    @Suppress("UNCHECKED_CAST")
+    fun <T> opt(key: String, defValue: T): T {
         if (mSP.isNull()) {
-            return i
+            return defValue
         }
-        return mSP!!.getInt(key, i)
-    }
-
-    fun optBoolean(key: String, bool: Boolean): Boolean {
-        if (mSP.isNull()) {
-            return bool
+        return when (defValue) {
+            is String -> mSP!!.getString(key, defValue.toString()) as T
+            is Int -> mSP!!.getInt(key, defValue) as T
+            is Boolean -> mSP!!.getBoolean(key, defValue) as T
+            is Double -> mSP!!.getFloat(key, defValue.toFloat()) as T
+            is Float -> mSP!!.getFloat(key, defValue) as T
+            else -> "" as T
         }
-        return mSP!!.getBoolean(key, bool)
-    }
-
-    fun optString(key: String, str: String): String {
-        if (mSP.isNull()) {
-            return str
-        }
-        return mSP!!.getString(key, str).toString()
-    }
-
-    fun optFloat(key: String, f: Float): Float {
-        if (mSP.isNull()) {
-            return f
-        }
-        return mSP!!.getFloat(key, f)
     }
 
     fun clearConfig() {

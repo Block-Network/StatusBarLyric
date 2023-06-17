@@ -6,7 +6,7 @@ dependencyResolutionManagement {
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
-rootProject.name = "状态栏歌词"
+rootProject.name = "Statusbar Lyric"
 include(":app")
 include(":blockmiui")
 include(":hidden-api")

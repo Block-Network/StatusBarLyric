@@ -20,13 +20,14 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-package statusbar.lyric.utils
+package statusbar.lyric.tools
 
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.TypedArray
+import android.content.pm.PackageInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -38,40 +39,50 @@ import org.json.JSONException
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
-import statusbar.lyric.config.Config
-import statusbar.lyric.utils.Utils.isNotNull
+import statusbar.lyric.config.ActivityOwnSP
+import statusbar.lyric.tools.Tools.isNot
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
 
+@SuppressLint("StaticFieldLeak")
+object ActivityTools {
+    lateinit var context: Context
 
-object ActivityUtils {
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     // 弹出toast
-    @Suppress("DEPRECATION")
-    fun showToastOnLooper(context: Context, message: String) {
+    fun showToastOnLooper(message: String) {
         try {
-            handler.post { //                XToast.makeToast(context, message, toastIcon =context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+            handler.post {
                 XToast.makeText(context, message, toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+                LogTools.d(message)
             }
         } catch (e: RuntimeException) {
             e.printStackTrace()
         }
     }
 
+    fun checkInstalled(pkgName: String): PackageInfo? {
+        return try {
+            context.packageManager.getPackageInfo(pkgName, 0)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     //清除配置
     fun cleanConfig(activity: Activity) {
         ActivityOwnSP.ownSPConfig.clear()
-        showToastOnLooper(activity, activity.getString(R.string.ResetSuccess))
+        showToastOnLooper(activity.getString(R.string.ConfigResetSuccess))
         activity.finishActivity(0)
     }
 
-    fun openUrl(context: Context, url: String) {
+    fun openUrl(url: String) {
         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
     }
 
-    //检查更新
+
     fun getUpdate(activity: Activity) {
         val handler = Handler(Looper.getMainLooper()) { message: Message ->
             val data: String = message.data.getString("value") as String
@@ -79,40 +90,38 @@ object ActivityUtils {
                 val jsonObject = JSONObject(data)
                 if (jsonObject.getString("tag_name").split("v").toTypedArray()[1].toInt() > BuildConfig.VERSION_CODE) {
                     MIUIDialog(activity) {
-                        setTitle(String.format("%s [%s]", activity.getString(R.string.NewVer), jsonObject.getString("name")))
+                        setTitle(String.format("%s [%s]", activity.getString(R.string.HaveNewVersion), jsonObject.getString("name")))
                         setMessage(jsonObject.getString("body").replace("#", ""))
                         setRButton(R.string.Update) {
                             try {
-                                val uri: Uri = Uri.parse(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
+                                val uri = Uri.parse(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
                                 val intent = Intent(Intent.ACTION_VIEW, uri)
                                 activity.startActivity(intent)
                             } catch (e: JSONException) {
-                                showToastOnLooper(activity, activity.getString(R.string.GetNewVerError) + e)
+                                showToastOnLooper(activity.getString(R.string.GetNewVersionError) + e)
                             }
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 } else {
-                    if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.NoVerUpdate))
+                    showToastOnLooper(activity.getString(R.string.NoNewVersion))
                 }
-            } catch (ignored: JSONException) {
-                if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
+            } catch (_: JSONException) {
+                showToastOnLooper(activity.getString(R.string.CheckUpdateError))
             }
-
             true
         }
         Thread {
-            val value: String? = getHttp("https://api.github.com/repos/Block-Network/StatusBarLyric/releases/latest")
-            if (value.isNotNull()) {
+            getHttp("https://api.github.com/repos/Block-Network/StatusBarLyric/releases/latest") { response ->
                 handler.obtainMessage().let {
                     it.data = Bundle().apply {
-                        putString("value", value)
+                        putString("value", response)
                     }
                     handler.sendMessage(it)
                 }
-            } else {
-                if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.CheckUpdateError))
+            }.isNot {
+                showToastOnLooper(activity.getString(R.string.CheckUpdateError))
             }
         }.start()
     }
@@ -126,59 +135,51 @@ object ActivityUtils {
                 if (BuildConfig.VERSION_CODE in minVersionCode..maxVersionCode) {
                     if (jsonObject.getBoolean("forcibly")) {
                         MIUIDialog(activity) {
-                            setTitle(activity.getString(R.string.NewNotice))
+                            setTitle(activity.getString(R.string.Announcement))
                             setMessage(jsonObject.getString("data"))
-                            setRButton(activity.getString(R.string.Done)) { dismiss() }
+                            setRButton(activity.getString(R.string.OK)) { dismiss() }
                             if (jsonObject.getBoolean("isLButton")) {
                                 setLButton(jsonObject.getString("lButton")) {
-                                    openUrl(activity, jsonObject.getString("url"))
+                                    openUrl(jsonObject.getString("url"))
                                     dismiss()
                                 }
                             }
                         }.show()
                     }
                 }
-                return@Handler true
-            } catch (ignored: JSONException) {
+            } catch (_: JSONException) {
+                showToastOnLooper(activity.getString(R.string.GetAnnouncementError))
             }
-            showToastOnLooper(activity, activity.getString(R.string.GetNewNoticeError))
+
             false
         }
         Thread {
-            val value: String? = getHttp("https://app.xiaowine.cc/app/notice.json")
-            if (value.isNotNull()) {
-                val message = handler.obtainMessage()
-                val bundle = Bundle()
-                bundle.putString("value", value)
-                message.data = bundle
-                handler.sendMessage(message)
-            } else {
-                if (ActivityOwnSP.ownSPConfig.getDebug()) showToastOnLooper(activity, activity.getString(R.string.GetNewNoticeError))
+            getHttp("https://app.xiaowine.cc/app/notice.json") { response ->
+                handler.obtainMessage().let {
+                    it.data = Bundle().apply {
+                        putString("value", response)
+                    }
+                    handler.sendMessage(it)
+                }
+            }.isNot {
+                showToastOnLooper(activity.getString(R.string.GetAnnouncementError))
             }
+
         }.start()
     }
 
-    fun setMusicList(activity: Activity, config: Config) {
-        Thread {
-            var str = ""
-            val mArray = activity.resources.getStringArray(R.array.need_module)
-            mArray.forEach {
-                str = "${it}|${str}"
-            }
-            config.setMusicList(str)
-        }.start()
-    }
 
-    private fun getHttp(Url: String): String? {
-        try {
-            val connection = URL(Url).openConnection() as java.net.HttpURLConnection
+    private fun getHttp(url: String, callback: (String) -> Unit): Boolean {
+        return try {
+            val connection = URL(url).openConnection() as java.net.HttpURLConnection
             connection.requestMethod = "GET"
             connection.connectTimeout = 5000
             val reader = BufferedReader(InputStreamReader(connection.inputStream))
-            return reader.readLine()
+            callback(reader.readLine())
+            true
         } catch (e: Exception) {
             e.printStackTrace()
+            false
         }
-        return null
     }
 }

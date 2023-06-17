@@ -2,22 +2,5 @@
 <resources>
     <array name="need_module">
         <item>com.android.systemui</item>
-        <item>com.kugou.android</item>
-        <item>com.kugou.android.lite</item>
-        <item>com.netease.cloudmusic</item>
-        <item>com.tencent.qqmusic</item>
-        <item>cn.kuwo.player</item>
-        <item>remix.myplayer</item>
-        <item>cmccwm.mobilemusic</item>
-        <item>com.meizu.media.music</item>
-        <item>miui.cn.fkj233.xposed.statusbarlyric.ext</item>
-        <item>com.salt.music</item>
-        <item>com.meizu.media.music</item>
-        <item>notification.statusbar</item>
-        <item>miui.statusbar.lyric.ext</item>
-        <item>com.miui.player</item>
-        <item>com.r.rplayer</item>
-        <item>cn.toside.music.mobile</item>
-        <item>com.apple.android.music</item>
     </array>
 </resources>
