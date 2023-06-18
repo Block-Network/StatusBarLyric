@@ -35,8 +35,18 @@
     <string name="RestartUITips">Are you sure you want to restart the System UI?</string>
     <string name="masterSwitch">Master Switch</string>
     <string name="TestMode">Test Mode</string>
+    <string name="TimeFormat">TimeFormat</string>
+    <string name="LyricMode">Lyric Mode</string>
     <string name="RestartEffect">Restart the software to take effect</string>
     <string name="WhetherSoftware">Whether to restart the software</string>
     <string name="GetHook">Get the Hook point</string>
-
+    <string name="MasterOff">Master switch is off</string>
+    <string name="HookSucceeded">Hook Succeeded</string>
+    <string name="HookFailed">Hook Failed</string>
+    <string name="StartHookingTextView">Start Hooking All TextView</string>
+    <string name="PrintTimeFormat">Time format: %s,Expected style: %s</string>
+    <string name="FirstFilter">Class Name: %s meets preliminary requirements,Total: %s meets requirements</string>
+    <string name="NoTextView">There is no Textview that meets the requirements</string>
+    <string name="SendTextViewClass">Send the class name of the TextView Class Name: %s ,Index: %s, Size: %s</string>
+    <string name="ClearTextViewList">Be clear about Text View Lists and their associated data</string>
 </resources>

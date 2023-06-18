@@ -50,7 +50,7 @@ object Tools {
         }
         return this != TextView::class.java.name
     }
-    fun String.dispose()=this.replace(" ", "").replace("\n", "").replace("\t", "").replace("0", "")
+    fun String.dispose()=this.replace(" ", "").replace("\n", "")
 
     fun getPref(key: String): XSharedPreferences? {
         val pref = XSharedPreferences(BuildConfig.APPLICATION_ID, key)

@@ -26,7 +26,7 @@ class MainPage : BasePage() {
         }
         TextSSw(textId = R.string.masterSwitch, key = "masterSwitch")
         TextSA(textId = R.string.TestMode, onClickListener = {
-            showPage(TestModePage())
+            showPage(TestModePage::class.java)
         })
     }
 }

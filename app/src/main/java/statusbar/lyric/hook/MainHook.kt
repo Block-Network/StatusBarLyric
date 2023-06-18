@@ -1,10 +1,13 @@
 package statusbar.lyric.hook
 
 import com.github.kyuubiran.ezxhelper.EzXHelper
+import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
+import com.github.kyuubiran.ezxhelper.Log
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
+import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.hook.app.SystemUILyric
 import statusbar.lyric.hook.app.SystemUITest
@@ -14,17 +17,17 @@ import java.util.Locale
 class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         if (!XposedOwnSP.config.masterSwitch) {
-            LogTools.e("lyricSwitch is off")
+            LogTools.e(moduleRes.getString(R.string.MasterOff))
             return
         }
         EzXHelper.initHandleLoadPackage(lpparam)
         if (lpparam.packageName == "com.android.systemui") {
-            LogTools.e("Debug enable")
             LogTools.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
-            LogTools.e("This packName: ${lpparam.packageName}")
             if (XposedOwnSP.config.testMode) {
+                LogTools.e(moduleRes.getString(R.string.TestMode))
                 initHooks(SystemUITest())
             } else {
+                LogTools.e(moduleRes.getString(R.string.LyricMode))
                 initHooks(SystemUILyric())
             }
 
@@ -33,7 +36,7 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
         if (!XposedOwnSP.config.masterSwitch) {
-            LogTools.e("lyricSwitch is off")
+            LogTools.e(moduleRes.getString(R.string.MasterOff))
             return
         }
         EzXHelper.initZygote(startupParam)
@@ -45,9 +48,9 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
                 if (it.isInit) return
                 it.init()
                 it.isInit = true
-                LogTools.e("Inited hook: ${it.javaClass.name}")
+                LogTools.e("${moduleRes.getString(R.string.HookSucceeded)}:${it.javaClass.simpleName}")
             } catch (_: Exception) {
-                LogTools.e("Failed init hook: ${it.javaClass.name}")
+                LogTools.e("${moduleRes.getString(R.string.HookFailed)}:${it.javaClass.simpleName}")
             }
         }
     }

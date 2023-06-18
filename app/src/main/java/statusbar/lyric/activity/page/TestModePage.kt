@@ -6,8 +6,13 @@ import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.R
+import statusbar.lyric.config.ActivityOwnSP
+import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.Tools
+import statusbar.lyric.tools.Tools.dispose
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @SuppressLint("NonConstantResourceId")
@@ -21,6 +26,21 @@ class TestModePage : BasePage() {
                 setRButton(getString(R.string.OK)) {
                     ActivityTools.restartApp()
                 }
+            }.show()
+        })
+        TextSA(textId = R.string.TimeFormat, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.TimeFormat))
+                setEditText(ActivityOwnSP.config.timeFormat, "H:mm")
+                setRButton(getString(R.string.OK)) {
+                    ActivityOwnSP.config.timeFormat = getEditText()
+                    val currentTime = System.currentTimeMillis()
+                    val dateFormat = SimpleDateFormat(ActivityOwnSP.config.timeFormat, Locale.getDefault())
+                    val nowTime = dateFormat.format(currentTime).dispose()
+                    ActivityTools.showToastOnLooper(getString(R.string.PrintTimeFormat).format(XposedOwnSP.config.timeFormat, nowTime))
+                }
+                setLButton(textId = R.string.Cancel)
+                finally { dismiss() }
             }.show()
         })
         TextSA(textId = R.string.GetHook, onClickListener = {

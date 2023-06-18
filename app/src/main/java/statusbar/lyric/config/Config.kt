@@ -24,6 +24,7 @@ package statusbar.lyric.config
 
 import android.content.SharedPreferences
 import de.robv.android.xposed.XSharedPreferences
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.tools.ConfigTools
 
 class Config {
@@ -51,6 +52,9 @@ class Config {
 
     var printXpLog: Boolean
         get() {
+            if (BuildConfig.DEBUG) {
+                return true
+            }
             return config.opt("printXpLog", false)
         }
         set(value) {
@@ -69,6 +73,13 @@ class Config {
         }
         set(value) {
             config.put("className", value)
+        }
+    var timeFormat: String
+        get() {
+            return config.opt("timeFormat", "H:mm")
+        }
+        set(value) {
+            config.put("timeFormat", value)
         }
 
     companion object {

@@ -34,8 +34,11 @@ import android.os.Build
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
+import statusbar.lyric.R
+import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.dispose
@@ -64,20 +67,23 @@ class SystemUITest : BaseHook() {
                 }
             }
         }
-
+        LogTools.e(moduleRes.getString(R.string.StartHookingTextView))
+        var currentTime = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat(config.timeFormat, Locale.getDefault())
+        var nowTime = dateFormat.format(currentTime).dispose()
+        LogTools.e(moduleRes.getString(R.string.PrintTimeFormat).format(config.timeFormat, nowTime))
         TextView::class.java.methodFinder().first { name == "setText" }.createHook {
             after {
                 val className = it.thisObject::class.java.name
-                val currentTime = System.currentTimeMillis()
-                val text = "${it.args[0]}".replace("", "").dispose()
-                val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-                val nowTime = dateFormat.format(currentTime).dispose()
+                currentTime = System.currentTimeMillis()
+                val text = "${it.args[0]}".dispose()
+                nowTime = dateFormat.format(currentTime).dispose()
                 if (text == nowTime && className.filterClassName()) {
                     if ((it.thisObject as TextView).parent is LinearLayout) {
-                        LogTools.e(className)
                         if (hookClassNameList.contains(className)) return@after
                         hookClassNameList.add(className)
                         textViewList.add(it.thisObject as TextView)
+                        LogTools.e(moduleRes.getString(R.string.FirstFilter).format(className, hookClassNameList.size))
                     }
                 }
             }
@@ -93,6 +99,7 @@ class SystemUITest : BaseHook() {
             when (intent.getStringExtra("Type")) {
                 "SendClass" -> {
                     if (textViewList.isEmpty()) {
+                        LogTools.e(moduleRes.getString(R.string.NoTextView))
                         context.sendBroadcast(Intent("AppTestReceiver").apply {
                             putExtra("Type", "ReceiveClass")
                             putExtra("ClassName", "")
@@ -101,6 +108,7 @@ class SystemUITest : BaseHook() {
                         })
                         return
                     } else {
+                        LogTools.e(moduleRes.getString(R.string.SendTextViewClass).format(hookClassNameList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassNameList.size))
                         context.sendBroadcast(Intent("AppTestReceiver").apply {
                             putExtra("Type", "ReceiveClass")
                             putExtra("ClassName", hookClassNameList[nowHookClassNameListIndex])
@@ -110,7 +118,7 @@ class SystemUITest : BaseHook() {
                     }
                     if (!this::testTextView.isInitialized) {
                         testTextView = TextView(context).apply {
-                            text = "测试"
+                            text = moduleRes.getString(R.string.OK)
                             isSingleLine = true
                             gravity = Gravity.CENTER
                             setBackgroundColor(Color.WHITE)
@@ -132,6 +140,7 @@ class SystemUITest : BaseHook() {
                 }
 
                 "Clear" -> {
+                    LogTools.e(moduleRes.getString(R.string.ClearTextViewList))
                     goMainThread {
                         if (this::parentLinearLayout.isInitialized) {
                             parentLinearLayout.removeView(testTextView)

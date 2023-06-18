@@ -22,25 +22,22 @@
 
 package statusbar.lyric.tools
 
-import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import de.robv.android.xposed.XposedBridge
+import statusbar.lyric.config.ActivityOwnSP
+import statusbar.lyric.config.XposedOwnSP
 
 object LogTools {
     private const val maxLength = 4000
-    private val handler by lazy { Handler(Looper.getMainLooper()) }
     const val TAG = "StatusBarLyric"
 
-    @JvmStatic
-    fun toast(context: Context?, msg: String) {
-        handler.post { Toast.makeText(context, msg, Toast.LENGTH_SHORT).show() }
-    }
 
-    @JvmStatic
-    fun log(obj: Any?, toXposed: Boolean = false, toLogd: Boolean = false) {
+    private fun log(obj: Any?, toXposed: Boolean = false, toLogd: Boolean = false) {
+        if (toXposed) {
+            if (!XposedOwnSP.config.printXpLog) return
+        } else {
+            if (!ActivityOwnSP.config.printXpLog) return
+        }
         val content = if (obj is Throwable) Log.getStackTraceString(obj) else obj.toString()
         if (content.length > maxLength) {
             val chunkCount = content.length / maxLength
