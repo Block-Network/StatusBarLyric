@@ -6,26 +6,36 @@ import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.XposedOwnSP
-import statusbar.lyric.hook.app.SystemUI
+import statusbar.lyric.hook.app.SystemUILyric
+import statusbar.lyric.hook.app.SystemUITest
 import statusbar.lyric.tools.LogTools
 import java.util.Locale
 
 class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
+        if (!XposedOwnSP.config.masterSwitch) {
+            LogTools.e("lyricSwitch is off")
+            return
+        }
         EzXHelper.initHandleLoadPackage(lpparam)
         if (lpparam.packageName == "com.android.systemui") {
-            if (!XposedOwnSP.config.masterSwitch) {
-                LogTools.e("lyricSwitch is off")
-                return
-            }
             LogTools.e("Debug enable")
             LogTools.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
             LogTools.e("This packName: ${lpparam.packageName}")
-            initHooks(SystemUI())
+            if (XposedOwnSP.config.testMode) {
+                initHooks(SystemUITest())
+            } else {
+                initHooks(SystemUILyric())
+            }
+
         }
     }
 
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
+        if (!XposedOwnSP.config.masterSwitch) {
+            LogTools.e("lyricSwitch is off")
+            return
+        }
         EzXHelper.initZygote(startupParam)
     }
 

@@ -28,6 +28,7 @@ import android.annotation.SuppressLint
 import android.content.*
 import android.os.Handler
 import android.os.Looper
+import android.widget.TextView
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import java.io.DataOutputStream
@@ -42,6 +43,14 @@ object Tools {
             handler.post(callback)
         }
     }
+    fun String.filterClassName(): Boolean {
+        val filterList = arrayListOf("controlcenter", "image", "keyguard")
+        filterList.forEach {
+            if (contains(it, true)) return false
+        }
+        return this != TextView::class.java.name
+    }
+    fun String.dispose()=this.replace(" ", "").replace("\n", "").replace("\t", "").replace("0", "")
 
     fun getPref(key: String): XSharedPreferences? {
         val pref = XSharedPreferences(BuildConfig.APPLICATION_ID, key)

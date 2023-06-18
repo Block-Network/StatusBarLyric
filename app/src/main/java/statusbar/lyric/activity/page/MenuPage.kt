@@ -29,7 +29,7 @@ class MenuPage : BasePage() {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED
             }, PackageManager.DONT_KILL_APP)
         }))
-        TextSw(textId = R.string.DebugMode, key = "debug", defValue = false)
+        TextSw(textId = R.string.PrintXpLog, key = "printXpLog", defValue = false)
         TextSw(textId = R.string.CheckUpdate, key = "checkUpdate", defValue = true)
 //        TextSummaryWithArrow(TextSummaryV(textId = R.string.ResetConfig, onClickListener = {
 //            MIUIDialog(activity) {
@@ -43,14 +43,6 @@ class MenuPage : BasePage() {
 //                setLButton(R.string.Cancel) { dismiss() }
 //            }.show()
 //        }))
-        if (ActivityOwnSP.ownSPConfig.debug) {
-            TextSA("获取Hook点，需开启DEBUG模式", onClickListener = {
-                ActivityTools.context.sendBroadcast(Intent().apply {
-                    action = "TestReceiver"
-                    putExtra("Type", "SendClass")
-                })
-            })
-        }
         TextSA(textId = R.string.ResetSystemUi, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.ResetSystemUi)

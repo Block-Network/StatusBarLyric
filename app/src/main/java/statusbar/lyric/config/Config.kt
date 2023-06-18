@@ -49,12 +49,19 @@ class Config {
             config.put("masterSwitch", value)
         }
 
-    var debug: Boolean
+    var printXpLog: Boolean
         get() {
-            return config.opt("debug", false)
+            return config.opt("printXpLog", false)
         }
         set(value) {
-            config.put("debug", value)
+            config.put("printXpLog", value)
+        }
+    var testMode: Boolean
+        get() {
+            return config.opt("testMode", false)
+        }
+        set(value) {
+            config.put("testMode", value)
         }
     var className: String
         get() {

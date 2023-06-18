@@ -29,7 +29,7 @@ import statusbar.lyric.tools.Tools
 @SuppressLint("StaticFieldLeak")
 object ActivityOwnSP {
     val ownSP by lazy { Tools.getSP(context, "Config")!! }
-    val ownSPConfig by lazy { Config(ownSP) }
+    val config by lazy { Config(ownSP) }
     private val ownEditor by lazy { ownSP.edit() }
 
     const val version = 2

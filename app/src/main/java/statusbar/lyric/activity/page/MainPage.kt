@@ -14,7 +14,6 @@ import statusbar.lyric.tools.Tools.isNotNull
 @BMMainPage
 class MainPage : BasePage() {
     override fun onCreate() {
-
         ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
             val apiVersion = it.versionName.split(".")[0].toInt()
             if (apiVersion != BuildConfig.apiVersion) {
@@ -26,5 +25,8 @@ class MainPage : BasePage() {
             })
         }
         TextSSw(textId = R.string.masterSwitch, key = "masterSwitch")
+        TextSA(textId = R.string.TestMode, onClickListener = {
+            showPage(TestModePage())
+        })
     }
 }

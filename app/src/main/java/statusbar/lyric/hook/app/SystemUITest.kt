@@ -38,16 +38,17 @@ import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools
+import statusbar.lyric.tools.Tools.dispose
+import statusbar.lyric.tools.Tools.filterClassName
 import statusbar.lyric.tools.Tools.goMainThread
 import java.text.SimpleDateFormat
 import java.util.Locale
-import statusbar.lyric.config.XposedOwnSP.config as Config
 
 val hookClassNameList by lazy { arrayListOf<String>() }
 var nowHookClassNameListIndex = 0
 val textViewList by lazy { arrayListOf<TextView>() }
 
-class SystemUI : BaseHook() {
+class SystemUITest : BaseHook() {
     lateinit var context: Context
     override val name: String get() = this::class.java.simpleName
 
@@ -56,45 +57,34 @@ class SystemUI : BaseHook() {
         Application::class.java.methodFinder().first { name == "attach" }.createHook {
             after {
                 context = it.args[0] as Context
-                if (Config.debug) {
-                    LogTools.e("cccccccccc")
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"), Context.RECEIVER_EXPORTED)
-                    } else {
-                        context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"), Context.RECEIVER_EXPORTED)
+                } else {
+                    context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"))
+                }
+            }
+        }
+
+        TextView::class.java.methodFinder().first { name == "setText" }.createHook {
+            after {
+                val className = it.thisObject::class.java.name
+                val currentTime = System.currentTimeMillis()
+                val text = "${it.args[0]}".replace("", "").dispose()
+                val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                val nowTime = dateFormat.format(currentTime).dispose()
+                if (text == nowTime && className.filterClassName()) {
+                    if ((it.thisObject as TextView).parent is LinearLayout) {
+                        LogTools.e(className)
+                        if (hookClassNameList.contains(className)) return@after
+                        hookClassNameList.add(className)
+                        textViewList.add(it.thisObject as TextView)
                     }
                 }
             }
         }
 
-        if (Config.debug) {
-            TextView::class.java.methodFinder().first { name == "setText" }.createHook {
-                after {
-                    val className = it.thisObject::class.java.name
-                    val currentTime = System.currentTimeMillis()
-                    val text = it.args[0]
-                    val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-                    val nowTime = dateFormat.format(currentTime)
-                    if (text == nowTime && className.filterClassName()) {
-                        if ((it.thisObject as TextView).parent is LinearLayout) {
-                            LogTools.e(className)
-                            if (hookClassNameList.contains(className)) return@after
-                            hookClassNameList.add(className)
-                            textViewList.add(it.thisObject as TextView)
-                        }
-                    }
-                }
-            }
-        }
     }
 
-    private fun String.filterClassName(): Boolean {
-        val filterList = arrayListOf("controlcenter", "image", "keyguard")
-        filterList.forEach {
-            if (contains(it, true)) return false
-        }
-        return this != TextView::class.java.name
-    }
 
     class TestReceiver : BroadcastReceiver() {
         private lateinit var parentLinearLayout: LinearLayout
@@ -102,11 +92,22 @@ class SystemUI : BaseHook() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
                 "SendClass" -> {
-                    context.sendBroadcast(Intent("AppTestReceiver").apply {
-                        putExtra("Type", "ReceiveClass")
-                        putExtra("ClassName", hookClassNameList[nowHookClassNameListIndex])
-                        putExtra("Index", nowHookClassNameListIndex)
-                    })
+                    if (textViewList.isEmpty()) {
+                        context.sendBroadcast(Intent("AppTestReceiver").apply {
+                            putExtra("Type", "ReceiveClass")
+                            putExtra("ClassName", "")
+                            putExtra("Index", 0)
+                            putExtra("Size", 0)
+                        })
+                        return
+                    } else {
+                        context.sendBroadcast(Intent("AppTestReceiver").apply {
+                            putExtra("Type", "ReceiveClass")
+                            putExtra("ClassName", hookClassNameList[nowHookClassNameListIndex])
+                            putExtra("Index", nowHookClassNameListIndex)
+                            putExtra("Size", hookClassNameList.size)
+                        })
+                    }
                     if (!this::testTextView.isInitialized) {
                         testTextView = TextView(context).apply {
                             text = "测试"
@@ -120,10 +121,9 @@ class SystemUI : BaseHook() {
                         if (this::parentLinearLayout.isInitialized) {
                             parentLinearLayout.removeView(testTextView)
                         }
-
                         parentLinearLayout = (textViewList[nowHookClassNameListIndex].parent as LinearLayout)
-                        parentLinearLayout.addView(testTextView)
-                        if (nowHookClassNameListIndex == hookClassNameList.size - 1) {
+                        parentLinearLayout.addView(testTextView, 0)
+                        if (nowHookClassNameListIndex == hookClassNameList.size - 1 || hookClassNameList.size == 0) {
                             nowHookClassNameListIndex = 0
                         } else {
                             nowHookClassNameListIndex += 1

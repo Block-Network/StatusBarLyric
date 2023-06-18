@@ -44,6 +44,7 @@ import statusbar.lyric.tools.Tools.isNot
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
+import kotlin.system.exitProcess
 
 @SuppressLint("StaticFieldLeak")
 object ActivityTools {
@@ -73,7 +74,7 @@ object ActivityTools {
 
     //清除配置
     fun cleanConfig(activity: Activity) {
-        ActivityOwnSP.ownSPConfig.clear()
+        ActivityOwnSP.config.clear()
         showToastOnLooper(activity.getString(R.string.ConfigResetSuccess))
         activity.finishActivity(0)
     }
@@ -181,5 +182,12 @@ object ActivityTools {
             e.printStackTrace()
             false
         }
+    }
+
+    fun restartApp() {
+        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+        intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        context.startActivity(intent)
+        exitProcess(0)
     }
 }

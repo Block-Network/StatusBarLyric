@@ -5,8 +5,9 @@
     <string name="XposedTips">If the lyrics cannot be displayed, please try to stop the music software and restart the SystemUI.</string>
     <string name="ConfigResetSuccess">The config reset succeeded</string>
     <string name="HaveNewVersion">There is a new version</string>
-    <string name="Update">Update\n</string>
+    <string name="Update">Update</string>
     <string name="Cancel">Cancel</string>
+    <string name="Exit">Exit</string>
     <string name="GetNewVersionError">Get the new version error</string>
     <string name="NoNewVersion">There is no new version</string>
     <string name="CheckUpdateError">Check for update errors</string>
@@ -23,7 +24,7 @@
     <string name="unsupportedLyricGetter">Unsupported LyricGetter</string>
     <string name="Menu">Menu</string>
     <string name="HideDeskIcon">Hide desktop icons</string>
-    <string name="DebugMode">DebugMode</string>
+    <string name="PrintXpLog">Print Xposed Log</string>
     <string name="CheckUpdate">Check for updates</string>
     <string name="ResetConfig">Reset the config</string>
     <string name="ResetSystemUi">Restart the SystemUi</string>
@@ -33,5 +34,9 @@
     <string name="ModuleBuildTime">Module build time</string>
     <string name="RestartUITips">Are you sure you want to restart the System UI?</string>
     <string name="masterSwitch">Master Switch</string>
+    <string name="TestMode">Test Mode</string>
+    <string name="RestartEffect">Restart the software to take effect</string>
+    <string name="WhetherSoftware">Whether to restart the software</string>
+    <string name="GetHook">Get the Hook point</string>
 
 </resources>

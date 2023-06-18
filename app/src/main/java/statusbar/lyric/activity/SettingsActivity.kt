@@ -34,16 +34,19 @@ import android.os.Build
 import android.os.Bundle
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.dialog.MIUIDialog
+import cn.fkj233.ui.dialog.NewDialog
 import statusbar.lyric.R
 import statusbar.lyric.activity.page.MainPage
 import statusbar.lyric.activity.page.MenuPage
+import statusbar.lyric.activity.page.TestModePage
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
+import statusbar.lyric.tools.ActivityTestTools
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.FileTools
+import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.isNotNull
-import kotlin.system.exitProcess
 
 
 class SettingsActivity : MIUIActivity() {
@@ -59,11 +62,13 @@ class SettingsActivity : MIUIActivity() {
         setAllCallBacks {
             updateConfig = true
         }
-        registerPage(MainPage::class.java, "MAIN")
-        registerPage(MenuPage::class.java, "MENU111111")
+        registerPage(MainPage::class.java)
+        registerPage(MenuPage::class.java)
+        registerPage(TestModePage::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        activity = this
         ActivityTools.context = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
@@ -95,8 +100,9 @@ class SettingsActivity : MIUIActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         runCatching { unregisterReceiver(appTestReceiver) }
+        ActivityTestTools.clear()
+        super.onDestroy()
     }
 
     private fun checkLSPosed(): Boolean {
@@ -105,15 +111,13 @@ class SettingsActivity : MIUIActivity() {
             updateConfigVer()
             init()
             true
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            e.printStackTrace()
             MIUIDialog(this) {
                 setTitle(R.string.FirstUseTips)
                 setMessage(R.string.NotSupportXposedFramework)
                 setRButton(R.string.ReStartApp) {
-                    val intent = packageManager.getLaunchIntentForPackage(packageName)
-                    intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    startActivity(intent)
-                    exitProcess(0)
+                    ActivityTools.restartApp()
                 }
                 setCancelable(false)
             }.show()
@@ -130,6 +134,7 @@ class SettingsActivity : MIUIActivity() {
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerReceiver() {
+        if (!ActivityOwnSP.config.testMode) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityTools.context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"), Context.RECEIVER_NOT_EXPORTED)
         } else {
@@ -146,32 +151,48 @@ class SettingsActivity : MIUIActivity() {
     }
 
     class AppTestReceiver : BroadcastReceiver() {
-        private lateinit var miuiDialog: MIUIDialog
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
                 "ReceiveClass" -> {
-                    val className = intent.getStringExtra("ClassName")
-                    className.isNotNull {
-                        if (!this::miuiDialog.isInitialized) {
-                            miuiDialog = MIUIDialog(context) {
-                                setTitle("是否选择这个Hook点")
-                                setRButton(context.getText(R.string.OK)) {
-                                    ActivityTools.showToastOnLooper("ClassName: $className")
-                                }
-                                setLButton(context.getText(R.string.Cancel))
-                                finally { dismiss() }
+                    val className = intent.getStringExtra("ClassName") ?: ""
+                    val index = intent.getIntExtra("Index", 0)
+                    val size = intent.getIntExtra("Size", 0)
+                    if (size == 0) {
+                        MIUIDialog(context) {
+                            setTitle("未找到Hook点")
+                            setMessage("请尝试重启系统界面，若依然无法找到，请联系开发者")
+                            setRButton(context.getText(R.string.OK)) {
+                                dismiss()
                             }
-                        } else {
-                            if (miuiDialog.isShowing) miuiDialog.dismiss()
-                        }
-                        miuiDialog.apply {
-                            setMessage("$className")
-                            show()
-                        }
+                        }.show()
+                        return
                     }
 
+                    LogTools.d("AppTestReceiver")
+                    NewDialog(context) {
+                        setTitle("是否选择这个Hook点")
+                        setMessage("第${index + 1}个Hook点，共${size}个\n$className")
+                        Button(context.getText(R.string.OK)) {
+                            ActivityOwnSP.config.className = className
+                            ActivityTools.showToastOnLooper("ClassName: $className")
+                            ActivityTestTools.clear()
+                            dismiss()
+                        }
+                        Button(context.getText(R.string.Cancel), cancelStyle = true) {
+                            ActivityTestTools.sendClass()
+                        }
+                        Button(context.getText(R.string.Exit), cancelStyle = true) {
+                            ActivityTestTools.clear()
+                        }
+                        Finally {
+                            dismiss()
+                        }
+                        setCancelable(false)
+                    }.show()
                 }
+
             }
         }
     }
 }
+
