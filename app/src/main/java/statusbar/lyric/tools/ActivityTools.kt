@@ -57,7 +57,7 @@ object ActivityTools {
         try {
             handler.post {
                 XToast.makeText(context, message, toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
-                LogTools.d(message)
+                LogTools.app(message)
             }
         } catch (e: RuntimeException) {
             e.printStackTrace()

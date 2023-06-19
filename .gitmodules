@@ -5,3 +5,6 @@
 [submodule "xtoast"]
 	path = xtoast
 	url = https://github.com/Wine-Network/xToast
+[submodule "LyricGetterApi"]
+	path = LyricGetterApi
+	url = https://github.com/xiaowine/LyricGetterApi

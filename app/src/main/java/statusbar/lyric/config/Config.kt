@@ -67,12 +67,12 @@ class Config {
         set(value) {
             config.put("testMode", value)
         }
-    var className: String
+    var `class`: String
         get() {
-            return config.opt("className", "")
+            return config.opt("class", "com.android.systemui.statusbar.views.MiuiClock")
         }
         set(value) {
-            config.put("className", value)
+            config.put("class", value)
         }
     var timeFormat: String
         get() {
@@ -80,6 +80,36 @@ class Config {
         }
         set(value) {
             config.put("timeFormat", value)
+        }
+
+
+    var lyricSize: Int
+        get() {
+            return config.opt("lyricSize", 0)
+        }
+        set(value) {
+            config.put("lyricSize", value)
+        }
+    var lyricLeft: Int
+        get() {
+            return config.opt("lyricLeft", 0)
+        }
+        set(value) {
+            config.put("lyricLeft", value)
+        }
+    var lyricTop: Int
+        get() {
+            return config.opt("lyricTop", 0)
+        }
+        set(value) {
+            config.put("lyricTop", value)
+        }
+    var iconTop: Int
+        get() {
+            return config.opt("iconTop", 0)
+        }
+        set(value) {
+            config.put("iconTop", value)
         }
 
     companion object {

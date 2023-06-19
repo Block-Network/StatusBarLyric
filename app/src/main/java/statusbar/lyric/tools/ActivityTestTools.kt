@@ -24,27 +24,7 @@ package statusbar.lyric.tools
 
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.net.Uri
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
-import app.xiaowine.xtoast.XToast
-import cn.fkj233.ui.dialog.MIUIDialog
-import org.json.JSONException
-import org.json.JSONObject
-import statusbar.lyric.BuildConfig
-import statusbar.lyric.R
-import statusbar.lyric.config.ActivityOwnSP
-import statusbar.lyric.tools.Tools.isNot
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.URL
-import kotlin.system.exitProcess
 
 @SuppressLint("StaticFieldLeak")
 object ActivityTestTools {
@@ -59,7 +39,7 @@ object ActivityTestTools {
         ActivityTools.context.sendBroadcast(Intent().apply {
             action = "TestReceiver"
             putExtra("Type", "Clear")
-            LogTools.d("Clear")
+            LogTools.app("Clear")
         })
     }
 }

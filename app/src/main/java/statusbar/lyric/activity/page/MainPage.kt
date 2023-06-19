@@ -21,7 +21,7 @@ class MainPage : BasePage() {
             }
         }.isNot {
             TextS(textId = R.string.NoLyricGetter, tipsId = R.string.clickToInstall, onClickListener = {
-                ActivityTools.openUrl("https://github.com/Block-Network/StatusBarLyric/realease")
+                ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/")
             })
         }
         TextSSw(textId = R.string.masterSwitch, key = "masterSwitch")

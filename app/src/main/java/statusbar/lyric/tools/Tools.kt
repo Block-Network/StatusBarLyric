@@ -35,14 +35,13 @@ import java.io.DataOutputStream
 import java.util.*
 
 
-@SuppressLint("StaticFieldLeak")
 object Tools {
-    fun goMainThread(callback: (() -> Unit)? = null) {
-        callback?.let {
-            val handler = Handler(Looper.getMainLooper())
-            handler.post(callback)
-        }
+    fun goMainThread(delayed: Long = 0, callback: () -> Unit): Boolean {
+        return Handler(Looper.getMainLooper()).postDelayed({
+            callback()
+        }, delayed * 1000)
     }
+
     fun String.filterClassName(): Boolean {
         val filterList = arrayListOf("controlcenter", "image", "keyguard")
         filterList.forEach {
@@ -50,7 +49,8 @@ object Tools {
         }
         return this != TextView::class.java.name
     }
-    fun String.dispose()=this.replace(" ", "").replace("\n", "")
+
+    fun String.dispose() = this.replace(" ", "").replace("\n", "")
 
     fun getPref(key: String): XSharedPreferences? {
         val pref = XSharedPreferences(BuildConfig.APPLICATION_ID, key)

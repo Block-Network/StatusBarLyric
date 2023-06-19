@@ -32,6 +32,7 @@ import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Build
 import android.view.Gravity
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
@@ -47,7 +48,7 @@ import statusbar.lyric.tools.Tools.goMainThread
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-val hookClassNameList by lazy { arrayListOf<String>() }
+val hookClassList by lazy { arrayListOf<String>() }
 var nowHookClassNameListIndex = 0
 val textViewList by lazy { arrayListOf<TextView>() }
 
@@ -67,11 +68,11 @@ class SystemUITest : BaseHook() {
                 }
             }
         }
-        LogTools.e(moduleRes.getString(R.string.StartHookingTextView))
+        LogTools.xp(moduleRes.getString(R.string.StartHookingTextView))
         var currentTime = System.currentTimeMillis()
         val dateFormat = SimpleDateFormat(config.timeFormat, Locale.getDefault())
         var nowTime = dateFormat.format(currentTime).dispose()
-        LogTools.e(moduleRes.getString(R.string.PrintTimeFormat).format(config.timeFormat, nowTime))
+        LogTools.xp(moduleRes.getString(R.string.PrintTimeFormat).format(config.timeFormat, nowTime))
         TextView::class.java.methodFinder().first { name == "setText" }.createHook {
             after {
                 val className = it.thisObject::class.java.name
@@ -80,10 +81,10 @@ class SystemUITest : BaseHook() {
                 nowTime = dateFormat.format(currentTime).dispose()
                 if (text == nowTime && className.filterClassName()) {
                     if ((it.thisObject as TextView).parent is LinearLayout) {
-                        if (hookClassNameList.contains(className)) return@after
-                        hookClassNameList.add(className)
+                        if (hookClassList.contains(className)) return@after
+                        hookClassList.add(className)
                         textViewList.add(it.thisObject as TextView)
-                        LogTools.e(moduleRes.getString(R.string.FirstFilter).format(className, hookClassNameList.size))
+                        LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(className, hookClassList.size))
                     }
                 }
             }
@@ -99,21 +100,21 @@ class SystemUITest : BaseHook() {
             when (intent.getStringExtra("Type")) {
                 "SendClass" -> {
                     if (textViewList.isEmpty()) {
-                        LogTools.e(moduleRes.getString(R.string.NoTextView))
+                        LogTools.xp(moduleRes.getString(R.string.NoTextView))
                         context.sendBroadcast(Intent("AppTestReceiver").apply {
                             putExtra("Type", "ReceiveClass")
-                            putExtra("ClassName", "")
+                            putExtra("Class", "")
                             putExtra("Index", 0)
                             putExtra("Size", 0)
                         })
                         return
                     } else {
-                        LogTools.e(moduleRes.getString(R.string.SendTextViewClass).format(hookClassNameList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassNameList.size))
+                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size))
                         context.sendBroadcast(Intent("AppTestReceiver").apply {
                             putExtra("Type", "ReceiveClass")
-                            putExtra("ClassName", hookClassNameList[nowHookClassNameListIndex])
+                            putExtra("Class", hookClassList[nowHookClassNameListIndex])
                             putExtra("Index", nowHookClassNameListIndex)
-                            putExtra("Size", hookClassNameList.size)
+                            putExtra("Size", hookClassList.size)
                         })
                     }
                     if (!this::testTextView.isInitialized) {
@@ -127,11 +128,13 @@ class SystemUITest : BaseHook() {
                     }
                     goMainThread {
                         if (this::parentLinearLayout.isInitialized) {
+                            textViewList[if (nowHookClassNameListIndex == 0) textViewList.size-1 else nowHookClassNameListIndex - 1].visibility = View.VISIBLE
                             parentLinearLayout.removeView(testTextView)
                         }
+                        textViewList[nowHookClassNameListIndex].visibility = View.GONE
                         parentLinearLayout = (textViewList[nowHookClassNameListIndex].parent as LinearLayout)
                         parentLinearLayout.addView(testTextView, 0)
-                        if (nowHookClassNameListIndex == hookClassNameList.size - 1 || hookClassNameList.size == 0) {
+                        if (nowHookClassNameListIndex == hookClassList.size - 1 || hookClassList.size == 0) {
                             nowHookClassNameListIndex = 0
                         } else {
                             nowHookClassNameListIndex += 1
@@ -140,13 +143,13 @@ class SystemUITest : BaseHook() {
                 }
 
                 "Clear" -> {
-                    LogTools.e(moduleRes.getString(R.string.ClearTextViewList))
+                    LogTools.xp(moduleRes.getString(R.string.ClearTextViewList))
                     goMainThread {
                         if (this::parentLinearLayout.isInitialized) {
                             parentLinearLayout.removeView(testTextView)
                         }
                     }
-                    hookClassNameList.clear()
+                    hookClassList.clear()
                     nowHookClassNameListIndex = 0
                     textViewList.clear()
                 }

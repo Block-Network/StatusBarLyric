@@ -45,7 +45,6 @@ import statusbar.lyric.tools.ActivityTestTools
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.FileTools
-import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.isNotNull
 
 
@@ -154,27 +153,25 @@ class SettingsActivity : MIUIActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
                 "ReceiveClass" -> {
-                    val className = intent.getStringExtra("ClassName") ?: ""
+                    val `class` = intent.getStringExtra("Class") ?: ""
                     val index = intent.getIntExtra("Index", 0)
                     val size = intent.getIntExtra("Size", 0)
-                    if (size == 0) {
+                    if (size == 0 || `class`.isEmpty()) {
                         MIUIDialog(context) {
-                            setTitle("未找到Hook点")
-                            setMessage("请尝试重启系统界面，若依然无法找到，请联系开发者")
+                            setTitle(context.getString(R.string.NotFoundHook))
+                            setMessage(context.getString(R.string.NotFoundHookTips))
                             setRButton(context.getText(R.string.OK)) {
                                 dismiss()
                             }
                         }.show()
                         return
                     }
-
-                    LogTools.d("AppTestReceiver")
                     NewDialog(context) {
-                        setTitle("是否选择这个Hook点")
-                        setMessage("第${index + 1}个Hook点，共${size}个\n$className")
+                        setTitle(context.getString(R.string.SelectHook))
+                        setMessage(context.getString(R.string.SelectHookTips).format(index + 1, size, `class`))
                         Button(context.getText(R.string.OK)) {
-                            ActivityOwnSP.config.className = className
-                            ActivityTools.showToastOnLooper("ClassName: $className")
+                            ActivityOwnSP.config.`class` = `class`
+                            ActivityTools.showToastOnLooper("Class: $`class`")
                             ActivityTestTools.clear()
                             dismiss()
                         }

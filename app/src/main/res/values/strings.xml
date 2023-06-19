@@ -45,8 +45,17 @@
     <string name="HookFailed">Hook Failed</string>
     <string name="StartHookingTextView">Start Hooking All TextView</string>
     <string name="PrintTimeFormat">Time format: %s,Expected style: %s</string>
-    <string name="FirstFilter">Class Name: %s meets preliminary requirements,Total: %s meets requirements</string>
+    <string name="FirstFilter">Class: %s meets preliminary requirements,Total: %s meets requirements</string>
     <string name="NoTextView">There is no Textview that meets the requirements</string>
-    <string name="SendTextViewClass">Send the class name of the TextView Class Name: %s ,Index: %s, Size: %s</string>
+    <string name="SendTextViewClass">Send the class of the TextView Class Name: %s ,Index: %s, Size: %s</string>
     <string name="ClearTextViewList">Be clear about Text View Lists and their associated data</string>
+    <string name="UnderstandTimeFormat">I don\'t understand the time format</string>
+    <string name="LoadClass">Load Class: %s</string>
+    <string name="LoadClassEmpty">Class is Empty, turn on Test Mode Configuration</string>
+    <string name="LoadClassFailed">Load failed,Class not found</string>
+    <string name="LoadClassSucceed">Load Succeed,Class: %s</string>
+    <string name="NotFoundHook">Hook not found</string>
+    <string name="NotFoundHookTips">Please try restarting the SystemUi, if you still can\'t find it, contact the developer</string>
+    <string name="SelectHook">Whether to select this Hook point</string>
+    <string name="SelectHookTips">The %s hook points, for a total of %s\n%s</string>
 </resources>

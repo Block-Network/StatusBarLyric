@@ -57,11 +57,11 @@ object LogTools {
         }
     }
 
-    fun e(obj: Any?) {
+    fun xp(obj: Any?) {
         log(obj, toXposed = true)
     }
 
-    fun d(obj: Any?) {
+    fun app(obj: Any?) {
         log(obj, toLogd = true)
     }
 

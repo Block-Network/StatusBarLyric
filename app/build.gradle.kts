@@ -62,5 +62,6 @@ dependencies { //API
     compileOnly(project(":hidden-api"))
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
+    implementation(project(":LyricGetterApi"))
     implementation("com.github.kyuubiran:EzXHelper:2.0.5")
 }

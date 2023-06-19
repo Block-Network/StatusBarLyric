@@ -26,43 +26,25 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.text.TextPaint
-import android.text.TextUtils
-import android.widget.LinearLayout
 import android.widget.TextSwitcher
 import android.widget.TextView
 
 @SuppressLint("ViewConstructor")
-class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwitcher(context) {
+class LyricSwitchView(context: Context) : TextSwitcher(context) {
     private val lyricTextView: LyricTextView = LyricTextView(context)
     private val lyricTextView2: LyricTextView = LyricTextView(context)
-    private val autoMarqueeTextView: AutoMarqueeTextView = AutoMarqueeTextView(context)
-    private val autoMarqueeTextView2: AutoMarqueeTextView = AutoMarqueeTextView(context)
     private val viewArray: ArrayList<TextView> = arrayListOf()
 
-    val text: CharSequence
-        get() = (currentView as TextView).text
+    val text: CharSequence get() = (currentView as TextView).text
 
     val paint: TextPaint
         get() = (currentView as TextView).paint
 
     init {
-        if (hasMeizu) {
-            lyricTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            lyricTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            addView(lyricTextView)
-            addView(lyricTextView2)
-            viewArray.add(lyricTextView)
-            viewArray.add(lyricTextView2)
-        } else {
-            autoMarqueeTextView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            autoMarqueeTextView2.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            autoMarqueeTextView.ellipsize = TextUtils.TruncateAt.MARQUEE
-            autoMarqueeTextView2.ellipsize = TextUtils.TruncateAt.MARQUEE
-            addView(autoMarqueeTextView)
-            addView(autoMarqueeTextView2)
-            viewArray.add(autoMarqueeTextView)
-            viewArray.add(autoMarqueeTextView2)
-        }
+        addView(lyricTextView)
+        addView(lyricTextView2)
+        viewArray.add(lyricTextView)
+        viewArray.add(lyricTextView2)
     }
 
     fun setWidth(i: Int) {
@@ -78,10 +60,8 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwi
     }
 
     fun setSpeed(f: Float) {
-        if (hasMeizu) {
-            lyricTextView.setSpeed(f)
-            lyricTextView2.setSpeed(f)
-        }
+        lyricTextView.setSpeed(f)
+        lyricTextView2.setSpeed(f)
     }
 
     fun horizontalFadingEdge() {
@@ -105,18 +85,11 @@ class LyricSwitchView(context: Context, private var hasMeizu: Boolean) : TextSwi
         viewArray.forEach { view -> view.setTextSize(i, f) }
     }
 
-    fun setMargins(i: Int, i1: Int, i2: Int, i3: Int) {
+    fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
         viewArray.forEach { view: TextView ->
-            view.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                setMargins(i, i1, i2, i3)
-            }
-        }
-    }
-
-    fun setMarqueeRepeatLimit(i: Int) {
-        if (!hasMeizu) {
-            autoMarqueeTextView.marqueeRepeatLimit = i
-            autoMarqueeTextView2.marqueeRepeatLimit = i
+            val layoutParams = view.layoutParams as MarginLayoutParams
+            layoutParams.setMargins(left, top, right, bottom)
+            view.layoutParams = layoutParams
         }
     }
 
