@@ -136,7 +136,6 @@ class SystemUILyric : BaseHook() {
             clockViewParent.addView(lyricLayout, 0)
         }
         receptionLyric(context) {
-            LogTools.xp(it.type)
             if (it.type == DataType.UPDATE) {
                 val lyric = it.lyric
                 updateLyric(lyric)
@@ -148,7 +147,7 @@ class SystemUILyric : BaseHook() {
 
     private fun updateLyric(lyric: String) {
         goMainThread {
-            if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE   
+            if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
             if (clockView.visibility != View.GONE) clockView.visibility = View.GONE
             val lyricWidth = getLyricWidth(lyricView.paint, lyric)
             lyricView.setText(lyric)
