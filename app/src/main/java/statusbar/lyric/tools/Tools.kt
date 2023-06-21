@@ -39,7 +39,7 @@ object Tools {
     fun goMainThread(delayed: Long = 0, callback: () -> Unit): Boolean {
         return Handler(Looper.getMainLooper()).postDelayed({
             callback()
-        }, delayed * 1000)
+        },  delayed * 1000)
     }
 
     fun String.filterClassName(): Boolean {
@@ -58,13 +58,12 @@ object Tools {
     }
 
     @SuppressLint("WorldReadableFiles")
-    @Suppress("DEPRECATION")
     fun getSP(context: Context, key: String?): SharedPreferences? {
         return context.createDeviceProtectedStorageContext().getSharedPreferences(key, Context.MODE_WORLD_READABLE)
     }
 
 
-    fun voidShell(command: String, isSu: Boolean) {
+    fun shell(command: String, isSu: Boolean) {
         try {
             if (isSu) {
                 val p = Runtime.getRuntime().exec("su")

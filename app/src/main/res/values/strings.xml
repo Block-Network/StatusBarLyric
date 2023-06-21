@@ -30,15 +30,20 @@
     <string name="ResetSystemUi">Restart the SystemUi</string>
     <string name="ModuleVersion">Module version</string>
     <string name="BackupConfig">Back up the config</string>
-    <string name="RecoveryConfig">Restore the config</string>
+    <string name="RecoveryConfig">Recovery the config</string>
     <string name="ModuleBuildTime">Module build time</string>
     <string name="RestartUITips">Are you sure you want to restart the System UI?</string>
     <string name="masterSwitch">Master Switch</string>
     <string name="TestMode">Test Mode</string>
+    <string name="LyricPage">Lyric Page</string>
+    <string name="LyricColorAndTransparency">Lyric Color And Transparency</string>
+    <string name="LyricColorAndTransparencyTips">Please enter a decimal Color</string>
+    <string name="LyricSize">Lyric Size</string>
+    <string name="LyricSizeTips">Range: 0%–100% of the height of the status bar, 0 is the following clock</string>
+    <string name="ColorError">Color Error</string>
+    <string name="InputError">Input Error</string>
     <string name="TimeFormat">TimeFormat</string>
     <string name="LyricMode">Lyric Mode</string>
-    <string name="RestartEffect">Restart the software to take effect</string>
-    <string name="WhetherSoftware">Whether to restart the software</string>
     <string name="GetHook">Get the Hook point</string>
     <string name="MasterOff">Master switch is off</string>
     <string name="HookSucceeded">Hook Succeeded</string>
@@ -58,4 +63,5 @@
     <string name="NotFoundHookTips">Please try restarting the SystemUi, if you still can\'t find it, contact the developer</string>
     <string name="SelectHook">Whether to select this Hook point</string>
     <string name="SelectHookTips">The %s hook points, for a total of %s\n%s</string>
+    <string name="RestartAppEffect">Restart App Effect</string>
 </resources>

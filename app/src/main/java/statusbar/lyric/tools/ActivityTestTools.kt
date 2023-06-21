@@ -29,10 +29,10 @@ import android.content.Intent
 @SuppressLint("StaticFieldLeak")
 object ActivityTestTools {
     val context by lazy { ActivityTools.context }
-    fun sendClass() {
+    fun getClass() {
         ActivityTools.context.sendBroadcast(Intent().apply {
             action = "TestReceiver"
-            putExtra("Type", "SendClass")
+            putExtra("Type", "GetClass")
         })
     }
     fun clear() {

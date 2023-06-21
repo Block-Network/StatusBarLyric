@@ -43,7 +43,7 @@ class ConfigTools {
         mSPEditor = sharedPreferences.edit()
     }
 
-    fun update() {
+    fun reload() {
         if (xSP.isNull()) {
             xSP = Tools.getPref("Lyric_Config")
             mSP = xSP

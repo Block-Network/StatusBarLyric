@@ -48,12 +48,13 @@ import statusbar.lyric.tools.Tools.goMainThread
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-val hookClassList by lazy { arrayListOf<String>() }
-var nowHookClassNameListIndex = 0
-val textViewList by lazy { arrayListOf<TextView>() }
-
 class SystemUITest : BaseHook() {
     lateinit var context: Context
+
+    val hookClassList by lazy { arrayListOf<String>() }
+    var nowHookClassNameListIndex = 0
+    val textViewList by lazy { arrayListOf<TextView>() }
+
     override val name: String get() = this::class.java.simpleName
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -93,12 +94,12 @@ class SystemUITest : BaseHook() {
     }
 
 
-    class TestReceiver : BroadcastReceiver() {
+    inner class TestReceiver : BroadcastReceiver() {
         private lateinit var parentLinearLayout: LinearLayout
         private lateinit var testTextView: TextView
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
-                "SendClass" -> {
+                "GetClass" -> {
                     if (textViewList.isEmpty()) {
                         LogTools.xp(moduleRes.getString(R.string.NoTextView))
                         context.sendBroadcast(Intent("AppTestReceiver").apply {
@@ -128,7 +129,7 @@ class SystemUITest : BaseHook() {
                     }
                     goMainThread {
                         if (this::parentLinearLayout.isInitialized) {
-                            textViewList[if (nowHookClassNameListIndex == 0) textViewList.size-1 else nowHookClassNameListIndex - 1].visibility = View.VISIBLE
+                            textViewList[if (nowHookClassNameListIndex == 0) textViewList.size - 1 else nowHookClassNameListIndex - 1].visibility = View.VISIBLE
                             parentLinearLayout.removeView(testTextView)
                         }
                         textViewList[nowHookClassNameListIndex].visibility = View.GONE

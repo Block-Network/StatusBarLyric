@@ -39,6 +39,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
+import statusbar.lyric.activity.SettingsActivity
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.Tools.isNot
 import java.io.BufferedReader
@@ -51,6 +52,16 @@ object ActivityTools {
     lateinit var context: Context
 
     private val handler by lazy { Handler(Looper.getMainLooper()) }
+
+    fun updateConfig(type: String = "normal", path: String = "") {
+        Thread {
+            Thread.sleep(200)
+            context.sendBroadcast(Intent("updateConfig").apply {
+                putExtra("type", type)
+                putExtra("path", path)
+            })
+        }.start()
+    }
 
     // 弹出toast
     fun showToastOnLooper(message: String) {
@@ -70,13 +81,6 @@ object ActivityTools {
         } catch (_: Exception) {
             null
         }
-    }
-
-    //清除配置
-    fun cleanConfig(activity: Activity) {
-        ActivityOwnSP.config.clear()
-        showToastOnLooper(activity.getString(R.string.ConfigResetSuccess))
-        activity.finishActivity(0)
     }
 
     fun openUrl(url: String) {

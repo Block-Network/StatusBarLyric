@@ -2,7 +2,6 @@ package statusbar.lyric.activity.page
 
 import android.annotation.SuppressLint
 import android.content.ComponentName
-import android.content.Intent
 import android.content.pm.PackageManager
 import cn.fkj233.ui.activity.annotation.BMMenuPage
 import cn.fkj233.ui.activity.data.BasePage
@@ -31,24 +30,30 @@ class MenuPage : BasePage() {
         }))
         TextSw(textId = R.string.PrintXpLog, key = "printXpLog", defValue = false)
         TextSw(textId = R.string.CheckUpdate, key = "checkUpdate", defValue = true)
-//        TextSummaryWithArrow(TextSummaryV(textId = R.string.ResetConfig, onClickListener = {
-//            MIUIDialog(activity) {
-//                setTitle(R.string.ResetModuleDialog)
-//                setMessage(R.string.ResetModuleDialogTips)
-//                setRButton(R.string.Ok) {
-//                    ActivityUtils.cleanConfig(activity)
-//                        SettingsActivity.updateConfig = true
-//                    dismiss()
-//                }
-//                setLButton(R.string.Cancel) { dismiss() }
-//            }.show()
-//        }))
+        TextSA(textId = R.string.ResetConfig, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(R.string.ResetConfig)
+                setLButton(R.string.OK) {
+                    ActivityOwnSP.config.clear()
+                    ActivityTools.updateConfig()
+                    MIUIDialog(activity) {
+                        setTitle(getString(R.string.RestartAppEffect))
+                        setRButton(getString(R.string.OK)) {
+                            ActivityTools.restartApp()
+                        }
+                        setCancelable(false)
+                    }.show()
+                }
+                setRButton(R.string.Cancel)
+                finally { dismiss() }
+            }.show()
+        })
         TextSA(textId = R.string.ResetSystemUi, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.ResetSystemUi)
                 setMessage(R.string.RestartUITips)
                 setLButton(R.string.OK) {
-                    Tools.voidShell("pkill -f com.android.systemui", true)
+                    Tools.shell("pkill -f com.android.systemui", true)
                     dismiss()
                 }
                 setRButton(R.string.Cancel) { dismiss() }

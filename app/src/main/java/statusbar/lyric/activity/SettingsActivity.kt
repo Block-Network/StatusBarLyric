@@ -25,6 +25,8 @@ package statusbar.lyric.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -36,6 +38,7 @@ import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.fkj233.ui.dialog.NewDialog
 import statusbar.lyric.R
+import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
 import statusbar.lyric.activity.page.MenuPage
 import statusbar.lyric.activity.page.TestModePage
@@ -45,7 +48,9 @@ import statusbar.lyric.tools.ActivityTestTools
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.FileTools
+import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.isNotNull
+import kotlin.properties.Delegates
 
 
 class SettingsActivity : MIUIActivity() {
@@ -53,17 +58,14 @@ class SettingsActivity : MIUIActivity() {
 
 
     companion object {
-        var updateConfig = false
         const val OPEN_FONT_FILE = 2114745
     }
 
     init {
-        setAllCallBacks {
-            updateConfig = true
-        }
         registerPage(MainPage::class.java)
         registerPage(MenuPage::class.java)
         registerPage(TestModePage::class.java)
+        registerPage(LyricPage::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,7 +101,7 @@ class SettingsActivity : MIUIActivity() {
     }
 
     override fun onDestroy() {
-        runCatching { unregisterReceiver(appTestReceiver) }
+        unregisterReceiver(appTestReceiver)
         ActivityTestTools.clear()
         super.onDestroy()
     }
@@ -133,7 +135,6 @@ class SettingsActivity : MIUIActivity() {
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerReceiver() {
-        if (!ActivityOwnSP.config.testMode) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityTools.context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"), Context.RECEIVER_NOT_EXPORTED)
         } else {
@@ -176,7 +177,7 @@ class SettingsActivity : MIUIActivity() {
                             dismiss()
                         }
                         Button(context.getText(R.string.Cancel), cancelStyle = true) {
-                            ActivityTestTools.sendClass()
+                            ActivityTestTools.getClass()
                         }
                         Button(context.getText(R.string.Exit), cancelStyle = true) {
                             ActivityTestTools.clear()
@@ -187,7 +188,6 @@ class SettingsActivity : MIUIActivity() {
                         setCancelable(false)
                     }.show()
                 }
-
             }
         }
     }

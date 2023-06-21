@@ -1,13 +1,13 @@
 package statusbar.lyric.activity.page
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.fkj233.ui.dialog.NewDialog
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
+import statusbar.lyric.tools.ActivityTestTools
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.dispose
@@ -24,16 +24,7 @@ class TestModePage : BasePage() {
             setMessage("先打开testMode的开关，再重启界面（请确保时间格式与系统状态栏时间格式相同），再点击GetHook，选择一个时间旁会显示 OK 的hook点", false)
             setRButton(getString(R.string.OK)) { dismiss() }
         }.show()
-        TextSSw(textId = R.string.TestMode, key = "testMode", onClickListener = {
-            MIUIDialog(activity) {
-                setTitle(getString(R.string.RestartEffect))
-                setMessage(getString(R.string.WhetherSoftware))
-                setRButton(getString(R.string.OK)) {
-                    ActivityTools.restartApp()
-                }
-                setCancelable(false)
-            }.show()
-        })
+        TextSSw(textId = R.string.TestMode, key = "testMode")
         TextSA(textId = R.string.TimeFormat, onClickListener = {
             NewDialog(activity) {
                 setTitle(getString(R.string.TimeFormat))
@@ -51,10 +42,7 @@ class TestModePage : BasePage() {
             }.show()
         })
         TextSA(textId = R.string.GetHook, onClickListener = {
-            ActivityTools.context.sendBroadcast(Intent().apply {
-                action = "TestReceiver"
-                putExtra("Type", "SendClass")
-            })
+            ActivityTestTools.getClass()
         })
         Line()
         TextSA(textId = R.string.ResetSystemUi, onClickListener = {
@@ -62,7 +50,7 @@ class TestModePage : BasePage() {
                 setTitle(R.string.ResetSystemUi)
                 setMessage(R.string.RestartUITips)
                 setLButton(R.string.OK) {
-                    Tools.voidShell("pkill -f com.android.systemui", true)
+                    Tools.shell("pkill -f com.android.systemui", true)
                     dismiss()
                 }
                 setRButton(R.string.Cancel) { dismiss() }

@@ -23,9 +23,15 @@
 package statusbar.lyric.hook.app
 
 
+import android.annotation.SuppressLint
 import android.app.AndroidAppHelper
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.Color
 import android.graphics.Paint
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
@@ -34,6 +40,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import cn.lyric.getter.api.data.DataType
+import cn.lyric.getter.api.data.LyricData
+import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import cn.lyric.getter.api.tools.Tools.receptionLyric
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClass
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
@@ -55,7 +63,14 @@ import kotlin.math.min
 
 
 class SystemUILyric : BaseHook() {
-    private var isHook = false
+
+    private var lastColor: Int = 0
+    private var lastLyric: String = ""
+    private var lastPackageName: String = ""
+    private var lastBase64Icon: String = ""
+    private var customColors: Boolean = false
+
+    private var isHook: Boolean = false
 
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
@@ -66,68 +81,61 @@ class SystemUILyric : BaseHook() {
 
     private lateinit var clockView: TextView
     private val clockViewParent: LinearLayout by lazy {
-        (clockView.parent as LinearLayout).apply {
-            gravity = Gravity.CENTER
-            orientation = LinearLayout.HORIZONTAL
-        }
+        (clockView.parent as LinearLayout)
     }
     private val lyricView: LyricSwitchView by lazy {
         LyricSwitchView(context).apply {
             layoutParams = clockView.layoutParams
             setSingleLine(true)
             setMaxLines(1)
-            setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
-            setMargins(config.lyricLeft, config.lyricTop, 0, 0)
         }
     }
-    private val iconView: ImageView by lazy {
-        ImageView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(0, 7, config.iconTop, 0) }
-        }
-    }
+    private val iconView: ImageView by lazy { ImageView(context) }
     private val lyricLayout: LinearLayout by lazy {
         LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
             addView(iconView)
             addView(lyricView)
         }
     }
 
+    //////////////////////////////Hook//////////////////////////////////////
     override fun init() {
         val className = config.`class`
         if (className.isEmpty()) {
             LogTools.xp(moduleRes.getString(R.string.LoadClassEmpty))
             return
         }
-        loadClass("com.android.systemui.SystemUIApplication").methodFinder().first { name == "onCreate" }.createHook {
-            after {
-                LogTools.xp(moduleRes.getString(R.string.LoadClass).format(className))
-                loadClassOrNull(className).isNotNull {
-                    LogTools.xp(moduleRes.getString(R.string.LoadClassSucceed).format(className))
-                    it.constructorFinder().first().createHook {
-                        after {
-                            runCatching {
-                                lyricInit(it)
-                            }
+        loadClassOrNull(className).isNotNull {
+            LogTools.xp(moduleRes.getString(R.string.LoadClassSucceed).format(className))
+            it.constructorFinder().first().createHook {
+                LogTools.xp(moduleRes.getString(R.string.LoadClassSucceed).format(className))
+                it.constructorFinder().first().createHook {
+                    after {
+                        runCatching {
+                            lyricInit(it)
                         }
                     }
-                }.isNot {
-                    LogTools.xp(moduleRes.getString(R.string.LoadClassFailed))
                 }
             }
+        }.isNot {
+            LogTools.xp(moduleRes.getString(R.string.LoadClassFailed))
         }
         loadClass("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").methodFinder().first { name == "applyIconTint" }.createHook {
             after {
                 if (!isHook) return@after
                 it.thisObject.objectHelper {
                     val color = getObjectOrNullAs<Int>("mIconTint") ?: 0
-                    setColor(color)
+                    changeColor(color)
                 }
 
             }
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun lyricInit(it: XC_MethodHook.MethodHookParam) {
         if (isHook) return
         isHook = true
@@ -139,19 +147,44 @@ class SystemUILyric : BaseHook() {
             if (it.type == DataType.UPDATE) {
                 val lyric = it.lyric
                 updateLyric(lyric)
+                updateIcon(it)
             } else if (it.type == DataType.STOP) {
                 hideLyric()
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
+        } else {
+            context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"))
+        }
+        changeConfig()
     }
 
     private fun updateLyric(lyric: String) {
+        if (lastLyric == lyric) return
+        lastLyric = lyric
         goMainThread {
             if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
             if (clockView.visibility != View.GONE) clockView.visibility = View.GONE
             val lyricWidth = getLyricWidth(lyricView.paint, lyric)
             lyricView.setText(lyric)
             lyricView.width = lyricWidth
+        }
+    }
+
+    private fun updateIcon(it: LyricData) {
+        goMainThread {
+            runCatching {
+                iconView.setImageBitmap(if (it.customIcon) {
+                    if (lastBase64Icon == it.base64Icon) return@runCatching
+                    lastBase64Icon = it.base64Icon
+                    base64ToDrawable(it.base64Icon)
+                } else {
+                    if (lastPackageName == it.packageName) return@runCatching
+                    lastPackageName = it.packageName
+                    base64ToDrawable(config.getDefaultIcon(it.packageName, false))
+                })
+            }
         }
     }
 
@@ -164,9 +197,34 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private fun setColor(color: Int) {
+    private fun changeColor(color: Int) {
+        if (lastColor == color) return
+        lastColor = color
         goMainThread {
             lyricView.setTextColor(color)
+            iconView.setColorFilter(color)
+        }
+    }
+
+    private fun changeConfig() {
+        config.update()
+        goMainThread {
+            lyricView.apply {
+                setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
+                setMargins(config.lyricLeft, config.lyricTop, 0, 0)
+                if (config.lyricColor.isNotEmpty()) {
+                    if (!customColors) customColors = true
+                    setTextColor(Color.parseColor(config.lyricColor))
+                } else {
+                    if (customColors) customColors = false
+                }
+            }
+            iconView.apply {
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeft, config.iconTop, 0, 0) }.apply {
+                    width = clockView.height / 2
+                    height = clockView.height / 2
+                }
+            }
         }
     }
 
@@ -174,5 +232,21 @@ class SystemUILyric : BaseHook() {
         return min(paint.measureText(text).toInt() + 6, clockViewParent.width)
     }
 
+
     override val name: String get() = this::class.java.simpleName
+
+
+    inner class UpdateConfig : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.getStringExtra("type")) {
+                "normal" -> {
+                    changeConfig()
+                }
+
+                "change_font" -> {}
+                "reset_font" -> {}
+            }
+        }
+
+    }
 }
