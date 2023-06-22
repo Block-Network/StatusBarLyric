@@ -151,6 +151,7 @@ class SystemUILyric : BaseHook() {
             } else if (it.type == DataType.STOP) {
                 hideLyric()
             }
+            LogTools.xp(it.toString())
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
@@ -220,7 +221,7 @@ class SystemUILyric : BaseHook() {
                     setTextColor(clockView.textColors)
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
-                strokeWidth(config.lyricStrokeWidth/100f)
+                strokeWidth(config.lyricStrokeWidth / 100f)
             }
             iconView.apply {
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeft, config.iconTop, 0, 0) }.apply {
