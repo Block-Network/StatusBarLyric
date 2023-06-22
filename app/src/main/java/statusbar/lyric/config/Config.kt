@@ -118,6 +118,20 @@ class Config {
         set(value) {
             config.put("iconLeft", value)
         }
+    var lyricWidth: Int
+        get() {
+            return config.opt("lyricWidth", 0)
+        }
+        set(value) {
+            config.put("lyricWidth", value)
+        }
+    var fixedLyricWidth: Boolean
+        get() {
+            return config.opt("fixedLyricWidth", false)
+        }
+        set(value) {
+            config.put("fixedLyricWidth", value)
+        }
     var lyricColor: String
         get() {
             return config.opt("lyricColor", "")

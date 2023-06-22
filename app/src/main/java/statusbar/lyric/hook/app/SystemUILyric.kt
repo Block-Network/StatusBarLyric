@@ -56,10 +56,12 @@ import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.goMainThread
+import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.view.LyricSwitchView
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
@@ -79,6 +81,7 @@ class SystemUILyric : BaseHook() {
     private val displayWidth: Int by lazy { displayMetrics.widthPixels }
     private val displayHeight: Int by lazy { displayMetrics.heightPixels }
 
+
     private lateinit var clockView: TextView
     private val clockViewParent: LinearLayout by lazy {
         (clockView.parent as LinearLayout)
@@ -90,6 +93,7 @@ class SystemUILyric : BaseHook() {
             setMaxLines(1)
         }
     }
+
     private val iconView: ImageView by lazy { ImageView(context) }
     private val lyricLayout: LinearLayout by lazy {
         LinearLayout(context).apply {
@@ -146,8 +150,8 @@ class SystemUILyric : BaseHook() {
         receptionLyric(context) {
             if (it.type == DataType.UPDATE) {
                 val lyric = it.lyric
-                updateLyric(lyric)
-                updateIcon(it)
+                changeLyric(lyric)
+                changeIcon(it)
             } else if (it.type == DataType.STOP) {
                 hideLyric()
             }
@@ -161,19 +165,18 @@ class SystemUILyric : BaseHook() {
         changeConfig()
     }
 
-    private fun updateLyric(lyric: String) {
+    private fun changeLyric(lyric: String) {
         if (lastLyric == lyric) return
         lastLyric = lyric
         goMainThread {
             if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
             if (clockView.visibility != View.GONE) clockView.visibility = View.GONE
-            val lyricWidth = getLyricWidth(lyricView.paint, lyric)
             lyricView.setText(lyric)
-            lyricView.width = lyricWidth
+            lyricView.width = getLyricWidth(lyricView.paint, lyric)
         }
     }
 
-    private fun updateIcon(it: LyricData) {
+    private fun changeIcon(it: LyricData) {
         goMainThread {
             runCatching {
                 iconView.setImageBitmap(if (it.customIcon) {
@@ -233,9 +236,25 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun getLyricWidth(paint: Paint, text: String): Int {
-        return min(paint.measureText(text).toInt() + 6, clockViewParent.width)
+        return if (config.lyricWidth == 0) {
+            min(paint.measureText(text).toInt() + 6, clockViewParent.width)
+        } else {
+            if (config.fixedLyricWidth) {
+                scaleWidth()
+            } else {
+                min(paint.measureText(text).toInt() + 6, scaleWidth())
+            }
+
+        }
     }
 
+    private fun scaleWidth(): Int {
+        return (config.lyricWidth / 100f * if (context.isLandscape()) {
+            displayWidth
+        } else {
+            displayHeight
+        }).roundToInt()
+    }
 
     override val name: String get() = this::class.java.simpleName
 

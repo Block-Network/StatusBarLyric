@@ -36,6 +36,10 @@
     <string name="masterSwitch">Master Switch</string>
     <string name="TestMode">Test Mode</string>
     <string name="LyricPage">Lyric Page</string>
+    <string name="LyricWidth">Lyric Width</string>
+    <string name="LyricWidthTips">Range: 0%–100% , 0 is Adaptive width</string>
+    <string name="FixedLyricWidth">Fixed lyric width</string>
+    <string name="fixedLyricWidthTips">When turned on, the outer width of the lyrics is fixed and does not change with the lyrics</string>
     <string name="LyricColorAndTransparency">Lyric Color And Transparency</string>
     <string name="LyricColorAndTransparencyTips">Please enter a decimal Color</string>
     <string name="LyricSize">Lyric Size</string>

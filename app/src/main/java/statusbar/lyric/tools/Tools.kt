@@ -26,6 +26,7 @@ package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
 import android.content.*
+import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import android.widget.TextView
@@ -39,9 +40,10 @@ object Tools {
     fun goMainThread(delayed: Long = 0, callback: () -> Unit): Boolean {
         return Handler(Looper.getMainLooper()).postDelayed({
             callback()
-        },  delayed * 1000)
+        }, delayed * 1000)
     }
 
+    fun Context.isLandscape() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     fun String.filterClassName(): Boolean {
         val filterList = arrayListOf("controlcenter", "image", "keyguard")
         filterList.forEach {

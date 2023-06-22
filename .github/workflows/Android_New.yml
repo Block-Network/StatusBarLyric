@@ -114,7 +114,8 @@ jobs:
           MAPPING: ./app/build/outputs/mapping/release/mapping.txt
           COMMIT_MESSAGE: |+
             Github CI
-            重构版本
+            重构版本，功能缺少，逐步补全，缺少傻瓜式引导，慎用
+            
             ```
             ${{ github.event.head_commit.message }}
             ```

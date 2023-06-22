@@ -16,23 +16,25 @@ import statusbar.lyric.tools.ActivityTools.updateConfig
 @BMPage
 class LyricPage : BasePage() {
     override fun onCreate() {
-        TextSA(textId = R.string.LyricColorAndTransparency, onClickListener = {
+        TextSA(textId = R.string.LyricWidth, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.LyricColorAndTransparency))
-                setMessage(getString(R.string.LyricColorAndTransparencyTips))
-                setEditText(config.lyricColor, "#FFFFFF", config = {
-                    it.filters = arrayOf(InputFilter.LengthFilter(9))
+                setTitle(getString(R.string.LyricWidth))
+                setMessage(getString(R.string.LyricWidthTips))
+                setEditText(config.lyricWidth.toString(), "0", config = {
+                    it.filters = arrayOf(InputFilter.LengthFilter(3))
                 })
                 setRButton(getString(R.string.OK)) {
                     try {
-                        val value = getEditText()
-                        Color.parseColor(value)
-                        config.lyricColor = value
-                        updateConfig()
+                        val value = getEditText().toInt()
+                        if (value in 0..100) {
+                            config.lyricWidth = value
+                            updateConfig()
+                        } else {
+                            throw Exception()
+                        }
                     } catch (_: Exception) {
-                        ActivityTools.showToastOnLooper(getString(R.string.ColorError))
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
                     }
-
                 }
                 setLButton(getString(R.string.Cancel))
                 finally {
@@ -41,6 +43,7 @@ class LyricPage : BasePage() {
             }.show()
             updateConfig()
         })
+        TextSSw(textId = R.string.FixedLyricWidth, tipsId = R.string.fixedLyricWidthTips, key = "fixedLyricWidth", onClickListener = { updateConfig() })
         TextSA(textId = R.string.LyricSize, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.LyricSize))
