@@ -19,11 +19,6 @@ import java.util.Locale
 @BMPage
 class TestModePage : BasePage() {
     override fun onCreate() {
-        MIUIDialog(activity) {
-            setTitle("怎么使用？")
-            setMessage("先打开testMode的开关，再重启界面（请确保时间格式与系统状态栏时间格式相同），再点击GetHook，选择一个时间旁会显示 OK 的hook点", false)
-            setRButton(getString(R.string.OK)) { dismiss() }
-        }.show()
         TextSSw(textId = R.string.TestMode, key = "testMode")
         TextSA(textId = R.string.TimeFormat, onClickListener = {
             NewDialog(activity) {

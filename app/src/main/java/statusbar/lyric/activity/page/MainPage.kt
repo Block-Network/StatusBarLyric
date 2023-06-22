@@ -3,6 +3,7 @@ package statusbar.lyric.activity.page
 import android.annotation.SuppressLint
 import cn.fkj233.ui.activity.annotation.BMMainPage
 import cn.fkj233.ui.activity.data.BasePage
+import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.tools.ActivityTools
@@ -28,5 +29,14 @@ class MainPage : BasePage() {
         Line()
         TextSA(textId = R.string.TestMode, onClickListener = { showPage(TestModePage::class.java) })
         TextSA(textId = R.string.LyricPage, onClickListener = { showPage(LyricPage::class.java) })
+        MIUIDialog(activity) {
+            setTitle("提示")
+            setMessage("重构版，使用方法简单介绍")
+            setRButton(R.string.OK) {
+                ActivityTools.openUrl("https://github.com/Block-Network/StatusBarLyric/issues/310")
+            }
+            setLButton(getString(R.string.Cancel))
+            finally { dismiss() }
+        }.show()
     }
 }
