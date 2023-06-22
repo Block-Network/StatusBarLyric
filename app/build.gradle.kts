@@ -58,7 +58,9 @@ android {
 
 
 dependencies { //API
-    compileOnly("de.robv.android.xposed:api:82")
+//    为啥ci会找不到呢？被迫手动导入jar
+//    compileOnly("de.robv.android.xposed:api:82")
+    compileOnly(files("libs/api-82.jar"))
     compileOnly(project(":hidden-api"))
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
