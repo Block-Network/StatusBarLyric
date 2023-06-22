@@ -217,7 +217,10 @@ class SystemUILyric : BaseHook() {
                     setTextColor(Color.parseColor(config.lyricColor))
                 } else {
                     if (customColors) customColors = false
+                    setTextColor(clockView.textColors)
                 }
+                setLetterSpacings(config.lyricLetterSpacing / 100f)
+                strokeWidth(config.lyricStrokeWidth/100f)
             }
             iconView.apply {
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeft, config.iconTop, 0, 0) }.apply {

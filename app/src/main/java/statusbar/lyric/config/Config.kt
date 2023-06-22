@@ -126,6 +126,21 @@ class Config {
             config.put("lyricColor", value)
         }
 
+    var lyricLetterSpacing: Int
+        get() {
+            return config.opt("lyricLetterSpacing", 0)
+        }
+        set(value) {
+            config.put("lyricLetterSpacing", value)
+        }
+    var lyricStrokeWidth: Int
+        get() {
+            return config.opt("lyricStrokeWidth", 130)
+        }
+        set(value) {
+            config.put("lyricStrokeWidth", value)
+        }
+
     fun getDefaultIcon(packageName: String, forceShow: Boolean = false): String {
         return when (packageName) {
             "com.tencent.qqmusic" -> qQMusicIcon

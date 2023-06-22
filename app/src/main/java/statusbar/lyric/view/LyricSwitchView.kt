@@ -24,16 +24,19 @@ package statusbar.lyric.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextPaint
 import android.widget.TextSwitcher
 import android.widget.TextView
+import statusbar.lyric.tools.LogTools
 
 @SuppressLint("ViewConstructor")
 class LyricSwitchView(context: Context) : TextSwitcher(context) {
     private val lyricTextView: LyricTextView = LyricTextView(context)
     private val lyricTextView2: LyricTextView = LyricTextView(context)
-    private val viewArray: ArrayList<TextView> = arrayListOf()
+    private val viewArray: ArrayList<TextView> = arrayListOf(lyricTextView, lyricTextView2)
 
     val text: CharSequence get() = (currentView as TextView).text
 
@@ -43,8 +46,6 @@ class LyricSwitchView(context: Context) : TextSwitcher(context) {
     init {
         addView(lyricTextView)
         addView(lyricTextView2)
-        viewArray.add(lyricTextView)
-        viewArray.add(lyricTextView2)
     }
 
     fun setWidth(i: Int) {
@@ -52,6 +53,10 @@ class LyricSwitchView(context: Context) : TextSwitcher(context) {
     }
 
     fun setTextColor(i: Int) {
+        viewArray.forEach { view -> view.setTextColor(i) }
+    }
+
+    fun setTextColor(i: ColorStateList) {
         viewArray.forEach { view -> view.setTextColor(i) }
     }
 
@@ -73,8 +78,11 @@ class LyricSwitchView(context: Context) : TextSwitcher(context) {
         viewArray.forEach { view -> view.letterSpacing = letterSpacing }
     }
 
-    fun setHeight(i: Int) {
-        viewArray.forEach { view -> view.height = i }
+    fun strokeWidth(i: Float) {
+        viewArray.forEach { view ->
+            view.paint.style = Paint.Style.FILL_AND_STROKE
+            view.paint.strokeWidth = i
+        }
     }
 
     fun setTypeface(typeface: Typeface) {
