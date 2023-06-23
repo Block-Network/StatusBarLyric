@@ -22,8 +22,5 @@
 -optimizationpasses 5
 -keep class statusbar.lyric.hook.MainHook
 -keep class statusbar.lyric.activity.page.*
-
+-keep class cn.lyric.getter.api.**{*;}
 -repackageclasses "截图看NM日志"
--obfuscationdictionary dict.txt
--classobfuscationdictionary dict.txt
--packageobfuscationdictionary dict.txt

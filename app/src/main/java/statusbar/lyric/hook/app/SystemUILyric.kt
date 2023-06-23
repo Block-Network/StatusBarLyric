@@ -115,12 +115,9 @@ class SystemUILyric : BaseHook() {
         loadClassOrNull(className).isNotNull {
             LogTools.xp(moduleRes.getString(R.string.LoadClassSucceed).format(className))
             it.constructorFinder().first().createHook {
-                LogTools.xp(moduleRes.getString(R.string.LoadClassSucceed).format(className))
-                it.constructorFinder().first().createHook {
-                    after {
-                        runCatching {
-                            lyricInit(it)
-                        }
+                after {
+                    runCatching {
+                        lyricInit(it)
                     }
                 }
             }
