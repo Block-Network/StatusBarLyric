@@ -150,6 +150,14 @@ class SystemUITest : BaseHook() {
                             parentLinearLayout.removeView(testTextView)
                         }
                     }
+                    if (hookClassList.isNotEmpty()) {
+                        return
+                    }
+                    if (nowHookClassNameListIndex == 0) {
+                        textViewList[hookClassList.size].visibility = View.VISIBLE
+                    } else {
+                        textViewList[nowHookClassNameListIndex - 1].visibility = View.VISIBLE
+                    }
                     hookClassList.clear()
                     nowHookClassNameListIndex = 0
                     textViewList.clear()
