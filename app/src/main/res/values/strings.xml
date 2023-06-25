@@ -51,6 +51,8 @@
     <string name="lyricSpeed">Lyric Speed</string>
     <string name="lyricSpeedTips">Range 0–20</string>
     <string name="lyricBlurredEdges">Lyric Blurred Edges</string>
+    <string name="lyricBlurredEdgesRadius">* Lyric Blurred Edges Radius</string>
+    <string name="lyricBlurredEdgesRadiusTips">Range 0–100</string>
     <string name="ColorError">Color Error</string>
     <string name="InputError">Input Error</string>
     <string name="TimeFormat">TimeFormat</string>

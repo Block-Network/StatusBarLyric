@@ -103,7 +103,7 @@ class SystemUILyric : BaseHook() {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
             addView(iconView)
             addView(if (config.lyricBlurredEdges) {
-                EdgeTransparentView(context).apply {
+                EdgeTransparentView(context, config.lyricBlurredEdgesRadius.toFloat()).apply {
                     addView(lyricView)
                 }
             } else {

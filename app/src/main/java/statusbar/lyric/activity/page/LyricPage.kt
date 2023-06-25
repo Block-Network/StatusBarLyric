@@ -124,7 +124,7 @@ class LyricPage : BasePage() {
                 setMessage(getString(R.string.lyricSpeedTips))
                 setEditText(config.lyricSpeed.toString(), "4", config = {
                     it.inputType = InputType.TYPE_CLASS_NUMBER
-                    it.filters = arrayOf(InputFilter.LengthFilter(3))
+                    it.filters = arrayOf(InputFilter.LengthFilter(2))
                 })
                 setRButton(getString(R.string.OK)) {
                     try {
@@ -144,5 +144,30 @@ class LyricPage : BasePage() {
             }.show()
         })
         TextSSw(textId = R.string.lyricBlurredEdges, key = "lyricBlurredEdges", defValue = true, onClickListener = { updateConfig() })
+        TextSA(textId = R.string.lyricBlurredEdgesRadius, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.lyricBlurredEdgesRadius))
+                setMessage(getString(R.string.lyricBlurredEdgesRadiusTips))
+                setEditText(config.lyricBlurredEdgesRadius.toString(), "40", config = {
+                    it.inputType = InputType.TYPE_CLASS_NUMBER
+                    it.filters = arrayOf(InputFilter.LengthFilter(3))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in 0..100) {
+                            config.lyricBlurredEdgesRadius = value
+                            updateConfig()
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
     }
 }
