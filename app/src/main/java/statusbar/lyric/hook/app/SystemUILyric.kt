@@ -220,7 +220,7 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             lyricView.apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
-                setMargins(config.lyricLeft, config.lyricTop, 0, 0)
+                setMargins(config.lyricLeftMargins, config.lyricTopMargins, 0, 0)
                 if (config.lyricColor.isNotEmpty()) {
                     if (!customColors) customColors = true
                     setTextColor(Color.parseColor(config.lyricColor))
@@ -233,7 +233,7 @@ class SystemUILyric : BaseHook() {
                 setSpeed(config.lyricSpeed.toFloat())
             }
             iconView.apply {
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeft, config.iconTop, 0, 0) }.apply {
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeftMargins, config.iconTopMargins, 0, 0) }.apply {
                     width = clockView.height / 2
                     height = clockView.height / 2
                 }

@@ -169,5 +169,55 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
+        TextSA(textId = R.string.lyricTopMargins, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.lyricTopMargins))
+                setMessage(getString(R.string.lyricTopMarginsTips))
+                setEditText(config.lyricTopMargins.toString(), "0", config = {
+                    it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+                    it.filters = arrayOf(InputFilter.LengthFilter(4))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in -100..100) {
+                            config.lyricTopMargins = value
+                            updateConfig()
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
+        TextSA(textId = R.string.lyricLeftMargins, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.lyricLeftMargins))
+                setMessage(getString(R.string.lyricLeftMarginsTips))
+                setEditText(config.lyricLeftMargins.toString(), "0", config = {
+                    it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+                    it.filters = arrayOf(InputFilter.LengthFilter(4))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in -100..100) {
+                            config.lyricLeftMargins = value
+                            updateConfig()
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
     }
 }

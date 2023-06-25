@@ -90,28 +90,28 @@ class Config {
         set(value) {
             config.put("lyricSize", value)
         }
-    var lyricLeft: Int
+    var lyricLeftMargins: Int
         get() {
             return config.opt("lyricLeft", 7)
         }
         set(value) {
             config.put("lyricLeft", value)
         }
-    var lyricTop: Int
+    var lyricTopMargins: Int
         get() {
             return config.opt("lyricTop", 0)
         }
         set(value) {
             config.put("lyricTop", value)
         }
-    var iconTop: Int
+    var iconTopMargins: Int
         get() {
             return config.opt("iconTop", 0)
         }
         set(value) {
             config.put("iconTop", value)
         }
-    var iconLeft: Int
+    var iconLeftMargins: Int
         get() {
             return config.opt("iconLeft", 0)
         }
