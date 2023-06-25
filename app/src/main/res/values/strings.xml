@@ -58,6 +58,8 @@
     <string name="LyricTopMarginsTips">Range –100–100</string>
     <string name="LyricLeftMargins">Lyric Left Margins</string>
     <string name="LyricLeftMarginsTips">Range –100–100</string>
+    <string name="RegexReplace">* Regex Replace</string>
+    <string name="RegexReplaceTips">Block lyrics with regular expression matching</string>
     <string name="IconSwitch">Icon Switch</string>
     <string name="IconSize">Icon Size</string>
     <string name="IconSizeTips">Range: 0%–100% of the height of the status bar, 0 is the following clock</string>

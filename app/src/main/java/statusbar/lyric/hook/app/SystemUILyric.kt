@@ -59,6 +59,7 @@ import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
+import statusbar.lyric.tools.Tools.regexReplace
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
 import kotlin.math.min
@@ -153,9 +154,11 @@ class SystemUILyric : BaseHook() {
         }
         receptionLyric(context) {
             if (it.type == DataType.UPDATE) {
-                val lyric = it.lyric
-                changeLyric(lyric)
-                changeIcon(it)
+                val lyric = it.lyric.regexReplace(config.regexReplace, "")
+                if (lyric.isNotEmpty()){
+                    changeLyric(lyric)
+                    changeIcon(it)
+                }
             } else if (it.type == DataType.STOP) {
                 hideLyric()
             }
@@ -172,6 +175,7 @@ class SystemUILyric : BaseHook() {
     private fun changeLyric(lyric: String) {
         if (lastLyric == lyric) return
         lastLyric = lyric
+        LogTools.xp("lyric:$lyric")
         goMainThread {
             if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
             if (clockView.visibility != View.GONE) clockView.visibility = View.GONE

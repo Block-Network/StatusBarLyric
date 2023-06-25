@@ -20,8 +20,6 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-@file:Suppress("DEPRECATION")
-
 package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
@@ -34,9 +32,16 @@ import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import java.io.DataOutputStream
 import java.util.*
+import java.util.regex.Pattern
 
 
 object Tools {
+    fun String.regexReplace(pattern: String, newString: String): String {
+        val p = Pattern.compile("(?i)$pattern")
+        val m = p.matcher(this)
+        return m.replaceAll(newString)
+    }
+
     fun goMainThread(delayed: Long = 0, callback: () -> Unit): Boolean {
         return Handler(Looper.getMainLooper()).postDelayed({
             callback()
@@ -52,7 +57,7 @@ object Tools {
         return this != TextView::class.java.name
     }
 
-    fun String.dispose() = this.replace(" ", "").replace("\n", "")
+    fun String.dispose() = this.regexReplace(" ", "").regexReplace("\n", "")
 
     fun getPref(key: String): XSharedPreferences? {
         val pref = XSharedPreferences(BuildConfig.APPLICATION_ID, key)

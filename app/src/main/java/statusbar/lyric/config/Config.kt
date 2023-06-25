@@ -196,6 +196,13 @@ class Config {
         set(value) {
             config.put("iconSize", value)
         }
+    var regexReplace: String
+        get() {
+            return config.opt("regexReplace", "")
+        }
+        set(value) {
+            config.put("regexReplace", value)
+        }
 
     fun getDefaultIcon(packageName: String, forceShow: Boolean = false): String {
         return when (packageName) {

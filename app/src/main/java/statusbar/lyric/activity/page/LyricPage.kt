@@ -261,5 +261,20 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
+        TextSA(textId = R.string.RegexReplace, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.RegexReplace))
+                setMessage(getString(R.string.RegexReplaceTips))
+                setEditText(config.regexReplace, "", config = {
+                    it.inputType = InputType.TYPE_CLASS_TEXT
+                    it.filters = arrayOf(InputFilter.LengthFilter(100))
+                })
+                setRButton(getString(R.string.OK)) {
+                    config.regexReplace = getEditText()
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
     }
 }
