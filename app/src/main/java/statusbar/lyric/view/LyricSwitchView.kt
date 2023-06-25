@@ -53,9 +53,6 @@ class LyricSwitchView(context: Context) : TextSwitcher(context) {
         viewArray.forEach { view -> view.setTextColor(i) }
     }
 
-    fun setTextColor(i: ColorStateList) {
-        viewArray.forEach { view -> view.setTextColor(i) }
-    }
 
     fun setSourceText(str: CharSequence) {
         viewArray.forEach { view -> view.text = str }

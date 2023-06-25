@@ -39,8 +39,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
-import statusbar.lyric.activity.SettingsActivity
-import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.Tools.isNot
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -53,7 +51,7 @@ object ActivityTools {
 
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
-    fun updateConfig(type: String = "normal", path: String = "") {
+    fun changeConfig(type: String = "normal", path: String = "") {
         Thread {
             Thread.sleep(200)
             context.sendBroadcast(Intent("updateConfig").apply {

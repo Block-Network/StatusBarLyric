@@ -38,6 +38,7 @@ import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.fkj233.ui.dialog.NewDialog
 import statusbar.lyric.R
+import statusbar.lyric.activity.page.IconPage
 import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
 import statusbar.lyric.activity.page.MenuPage
@@ -66,6 +67,7 @@ class SettingsActivity : MIUIActivity() {
         registerPage(MenuPage::class.java)
         registerPage(TestModePage::class.java)
         registerPage(LyricPage::class.java)
+        registerPage(IconPage::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

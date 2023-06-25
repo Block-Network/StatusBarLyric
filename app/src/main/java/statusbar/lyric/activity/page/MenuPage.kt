@@ -35,7 +35,7 @@ class MenuPage : BasePage() {
                 setTitle(R.string.ResetConfig)
                 setLButton(R.string.OK) {
                     ActivityOwnSP.config.clear()
-                    ActivityTools.updateConfig()
+                    ActivityTools.changeConfig()
                     MIUIDialog(activity) {
                         setTitle(getString(R.string.RestartAppEffect))
                         setRButton(getString(R.string.OK)) {

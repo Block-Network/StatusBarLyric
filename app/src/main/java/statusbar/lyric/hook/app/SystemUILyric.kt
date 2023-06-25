@@ -71,7 +71,7 @@ class SystemUILyric : BaseHook() {
     private var lastLyric: String = ""
     private var lastPackageName: String = ""
     private var lastBase64Icon: String = ""
-    private var customColors: Boolean = false
+    private var iconSwitch: Boolean = true
 
     private var isHook: Boolean = false
 
@@ -181,6 +181,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeIcon(it: LyricData) {
+        if (!iconSwitch) return
         goMainThread {
             runCatching {
                 iconView.setImageBitmap(if (it.customIcon) {
@@ -221,23 +222,44 @@ class SystemUILyric : BaseHook() {
             lyricView.apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
                 setMargins(config.lyricLeftMargins, config.lyricTopMargins, 0, 0)
-                if (config.lyricColor.isNotEmpty()) {
-                    if (!customColors) customColors = true
-                    setTextColor(Color.parseColor(config.lyricColor))
+                if (config.lyricColor.isEmpty()) {
+                    setTextColor(clockView.textColors.defaultColor)
                 } else {
-                    if (customColors) customColors = false
-                    setTextColor(clockView.textColors)
+                    setTextColor(Color.parseColor(config.lyricColor))
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
                 setSpeed(config.lyricSpeed.toFloat())
             }
-            iconView.apply {
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeftMargins, config.iconTopMargins, 0, 0) }.apply {
-                    width = clockView.height / 2
-                    height = clockView.height / 2
+            if (!config.iconSwitch) {
+                if (iconView.visibility != View.GONE) {
+                    iconView.visibility = View.GONE
+                }
+                iconSwitch = false
+            } else {
+                if (iconView.visibility != View.VISIBLE) {
+                    iconView.visibility = View.VISIBLE
+                }
+                iconSwitch = true
+                iconView.apply {
+                    layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeftMargins, config.iconTopMargins, 0, 0) }.apply {
+                        if (config.iconSize == 0) {
+                            width = clockView.height / 2
+                            height = clockView.height / 2
+                        } else {
+                            width = config.iconSize
+                            height = config.iconSize
+                        }
+                    }
+                    if (config.iconColor.isEmpty()) {
+                        setColorFilter(clockView.textColors.defaultColor)
+                    } else {
+                        setColorFilter(Color.parseColor(config.iconColor))
+                    }
+
                 }
             }
+
         }
     }
 

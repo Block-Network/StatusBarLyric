@@ -112,11 +112,6 @@ class SystemUITest : BaseHook() {
                     } else {
                         LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size))
                         context.receiveClass(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size)
-                        context.sendBroadcast(Intent("AppTestReceiver").apply {
-                            putExtra("Type", "ReceiveClass")
-                            putExtra("Class", hookClassList[nowHookClassNameListIndex])
-                            putExtra("Index", nowHookClassNameListIndex)
-                        })
                     }
                     if (!this::testTextView.isInitialized) {
                         testTextView = TextView(context).apply {

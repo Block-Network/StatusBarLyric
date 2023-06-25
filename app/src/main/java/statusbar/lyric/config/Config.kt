@@ -139,7 +139,13 @@ class Config {
         set(value) {
             config.put("lyricColor", value)
         }
-
+    var iconColor: String
+        get() {
+            return config.opt("iconColor", "")
+        }
+        set(value) {
+            config.put("iconColor", value)
+        }
     var lyricLetterSpacing: Int
         get() {
             return config.opt("lyricLetterSpacing", 0)
@@ -163,7 +169,7 @@ class Config {
         }
     var lyricBlurredEdgesRadius: Int
         get() {
-            return config.opt("lyricBlurredEdgesRadius", 10)
+            return config.opt("lyricBlurredEdgesRadius", 40)
         }
         set(value) {
             config.put("lyricBlurredEdgesRadius", value)
@@ -175,6 +181,20 @@ class Config {
         }
         set(value) {
             config.put("lyricSpeed", value)
+        }
+    var iconSwitch: Boolean
+        get() {
+            return config.opt("iconSwitch", true)
+        }
+        set(value) {
+            config.put("iconSwitch", value)
+        }
+    var iconSize: Int
+        get() {
+            return config.opt("iconSize", 0)
+        }
+        set(value) {
+            config.put("iconSize", value)
         }
 
     fun getDefaultIcon(packageName: String, forceShow: Boolean = false): String {
