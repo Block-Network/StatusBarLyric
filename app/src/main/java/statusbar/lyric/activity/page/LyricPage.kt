@@ -1,7 +1,6 @@
 package statusbar.lyric.activity.page
 
 
-import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
 import cn.fkj233.ui.activity.annotation.BMPage
@@ -144,5 +143,6 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
+        TextSSw(textId = R.string.lyricBlurredEdges, key = "lyricBlurredEdges", defValue = true, onClickListener = { updateConfig() })
     }
 }

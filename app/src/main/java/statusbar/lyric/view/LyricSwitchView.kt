@@ -22,7 +22,6 @@
 
 package statusbar.lyric.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Paint
@@ -30,9 +29,7 @@ import android.graphics.Typeface
 import android.text.TextPaint
 import android.widget.TextSwitcher
 import android.widget.TextView
-import statusbar.lyric.tools.LogTools
 
-@SuppressLint("ViewConstructor")
 class LyricSwitchView(context: Context) : TextSwitcher(context) {
     private val lyricTextView: LyricTextView = LyricTextView(context)
     private val lyricTextView2: LyricTextView = LyricTextView(context)

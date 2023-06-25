@@ -3,4 +3,16 @@
     <array name="need_module">
         <item>com.android.systemui</item>
     </array>
+
+    <declare-styleable name="EdgeTransparentView">
+        <attr name="edge_position">
+            <flag name="top" value="0x01" />
+            <flag name="bottom" value="0x02" />
+            <flag name="left" value="0x04" />
+            <flag name="right" value="0x08" />
+        </attr>
+
+        <attr name="edge_width" format="dimension" />
+    </declare-styleable>
+
 </resources>

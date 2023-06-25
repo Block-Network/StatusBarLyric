@@ -154,6 +154,13 @@ class Config {
         set(value) {
             config.put("lyricStrokeWidth", value)
         }
+    var lyricBlurredEdges: Boolean
+        get() {
+            return config.opt("lyricBlurredEdges", true)
+        }
+        set(value) {
+            config.put("lyricBlurredEdges", value)
+        }
 
     var lyricSpeed: Int
         get() {

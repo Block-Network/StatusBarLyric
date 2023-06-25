@@ -59,6 +59,7 @@ import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
+import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -101,7 +102,13 @@ class SystemUILyric : BaseHook() {
             gravity = Gravity.CENTER
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
             addView(iconView)
-            addView(lyricView)
+            addView(if (config.lyricBlurredEdges) {
+                EdgeTransparentView(context).apply {
+                    addView(lyricView)
+                }
+            } else {
+                lyricView
+            })
         }
     }
 
