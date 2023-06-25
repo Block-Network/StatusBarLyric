@@ -2,9 +2,9 @@ name: Android CI Dev
 
 on:
   push:
-    branches: [ Dev ]
-
-
+    branches: [ dev ]
+    paths-ignore:
+      - 'README.md'
 jobs:
   build:
     runs-on: ubuntu-latest

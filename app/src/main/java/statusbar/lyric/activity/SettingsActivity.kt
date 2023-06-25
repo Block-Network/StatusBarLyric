@@ -25,8 +25,6 @@ package statusbar.lyric.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -49,9 +47,7 @@ import statusbar.lyric.tools.ActivityTestTools
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.FileTools
-import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.isNotNull
-import kotlin.properties.Delegates
 
 
 class SettingsActivity : MIUIActivity() {
@@ -138,7 +134,7 @@ class SettingsActivity : MIUIActivity() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ActivityTools.context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"), Context.RECEIVER_NOT_EXPORTED)
+            ActivityTools.context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"), Context.RECEIVER_EXPORTED)
         } else {
             ActivityTools.context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"))
         }

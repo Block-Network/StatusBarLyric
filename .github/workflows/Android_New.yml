@@ -3,6 +3,9 @@ name: Android CI Dev
 on:
   push:
     branches: [ new ]
+    paths-ignore:
+      - 'README.md'
+
 
 
 jobs:

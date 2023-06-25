@@ -25,12 +25,8 @@ package statusbar.lyric.hook.app
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
@@ -54,6 +50,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class SystemUITest : BaseHook() {
+    private lateinit var textview: TextView
     lateinit var context: Context
 
     val hookClassList by lazy { arrayListOf<String>() }
@@ -105,12 +102,12 @@ class SystemUITest : BaseHook() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
                 "GetClass" -> {
-                    if (textViewList.isEmpty()) {
+                    if (hookClassList.size == 0) {
                         LogTools.xp(moduleRes.getString(R.string.NoTextView))
                         context.receiveClass("", 0, 0)
                         return
                     } else {
-                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size))
+//                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size))
                         context.receiveClass(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size)
                     }
                     if (!this::testTextView.isInitialized) {
@@ -124,17 +121,14 @@ class SystemUITest : BaseHook() {
                     }
                     goMainThread {
                         if (this::parentLinearLayout.isInitialized) {
-                            textViewList[if (nowHookClassNameListIndex == 0) textViewList.size - 1 else nowHookClassNameListIndex - 1].visibility = View.VISIBLE
+                            textview.visibility = View.VISIBLE
                             parentLinearLayout.removeView(testTextView)
                         }
-                        textViewList[nowHookClassNameListIndex].visibility = View.GONE
+                        textview = textViewList[nowHookClassNameListIndex]
+                        textview.visibility = View.GONE
                         parentLinearLayout = (textViewList[nowHookClassNameListIndex].parent as LinearLayout)
                         parentLinearLayout.addView(testTextView, 0)
-                        if (nowHookClassNameListIndex == hookClassList.size - 1 || hookClassList.size == 0) {
-                            nowHookClassNameListIndex = 0
-                        } else {
-                            nowHookClassNameListIndex += 1
-                        }
+                        nowHookClassNameListIndex = (nowHookClassNameListIndex + 1) % hookClassList.size
                     }
                 }
 
@@ -145,11 +139,11 @@ class SystemUITest : BaseHook() {
                             parentLinearLayout.removeView(testTextView)
                         }
                     }
-                    if (hookClassList.isNotEmpty()) {
+                    if (hookClassList.size == 0) {
                         return
                     }
                     if (nowHookClassNameListIndex == 0) {
-                        textViewList[hookClassList.size].visibility = View.VISIBLE
+                        textViewList[hookClassList.size - 1].visibility = View.VISIBLE
                     } else {
                         textViewList[nowHookClassNameListIndex - 1].visibility = View.VISIBLE
                     }
