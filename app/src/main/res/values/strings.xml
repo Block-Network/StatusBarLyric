@@ -43,11 +43,13 @@
     <string name="LyricColorAndTransparency">Lyric Color And Transparency</string>
     <string name="LyricColorAndTransparencyTips">Please enter a decimal Color</string>
     <string name="LyricSize">Lyric Size</string>
+    <string name="LyricSizeTips">Range: 0%–100% of the height of the status bar, 0 is the following clock</string>
     <string name="LyricLetterSpacing">Lyric Letter Spacing</string>
     <string name="LyricLetterSpacingTips">Range 0–50</string>
     <string name="lyricStrokeWidth">Lyric Stroke Width</string>
     <string name="lyricStrokeWidthTips">Range 0–400</string>
-    <string name="LyricSizeTips">Range: 0%–100% of the height of the status bar, 0 is the following clock</string>
+    <string name="lyricSpeed">Lyric Speed</string>
+    <string name="lyricSpeedTips">Range 0–20</string>
     <string name="ColorError">Color Error</string>
     <string name="InputError">Input Error</string>
     <string name="TimeFormat">TimeFormat</string>

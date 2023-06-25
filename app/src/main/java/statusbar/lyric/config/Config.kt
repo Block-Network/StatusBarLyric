@@ -155,6 +155,14 @@ class Config {
             config.put("lyricStrokeWidth", value)
         }
 
+    var lyricSpeed: Int
+        get() {
+            return config.opt("lyricSpeed", 4)
+        }
+        set(value) {
+            config.put("lyricSpeed", value)
+        }
+
     fun getDefaultIcon(packageName: String, forceShow: Boolean = false): String {
         return when (packageName) {
             "com.tencent.qqmusic" -> qQMusicIcon

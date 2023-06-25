@@ -69,11 +69,6 @@ class LyricSwitchView(context: Context) : TextSwitcher(context) {
         lyricTextView2.setSpeed(f)
     }
 
-    fun horizontalFadingEdge() {
-        viewArray.forEach { view -> view.isHorizontalFadingEdgeEnabled = true }
-
-    }
-
     fun setLetterSpacings(letterSpacing: Float) {
         viewArray.forEach { view -> view.letterSpacing = letterSpacing }
     }

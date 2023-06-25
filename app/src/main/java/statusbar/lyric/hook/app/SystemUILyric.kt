@@ -208,6 +208,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeConfig() {
+        LogTools.xp("Change Config")
         config.update()
         goMainThread {
             lyricView.apply {
@@ -222,6 +223,7 @@ class SystemUILyric : BaseHook() {
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
+                setSpeed(config.lyricSpeed.toFloat())
             }
             iconView.apply {
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeft, config.iconTop, 0, 0) }.apply {

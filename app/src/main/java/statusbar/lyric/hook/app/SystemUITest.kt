@@ -25,8 +25,12 @@ package statusbar.lyric.hook.app
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
@@ -41,6 +45,7 @@ import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinde
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
+import statusbar.lyric.tools.ActivityTestTools.receiveClass
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.dispose
 import statusbar.lyric.tools.Tools.filterClassName
@@ -102,20 +107,15 @@ class SystemUITest : BaseHook() {
                 "GetClass" -> {
                     if (textViewList.isEmpty()) {
                         LogTools.xp(moduleRes.getString(R.string.NoTextView))
-                        context.sendBroadcast(Intent("AppTestReceiver").apply {
-                            putExtra("Type", "ReceiveClass")
-                            putExtra("Class", "")
-                            putExtra("Index", 0)
-                            putExtra("Size", 0)
-                        })
+                        context.receiveClass("", 0, 0)
                         return
                     } else {
                         LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size))
+                        context.receiveClass(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size)
                         context.sendBroadcast(Intent("AppTestReceiver").apply {
                             putExtra("Type", "ReceiveClass")
                             putExtra("Class", hookClassList[nowHookClassNameListIndex])
                             putExtra("Index", nowHookClassNameListIndex)
-                            putExtra("Size", hookClassList.size)
                         })
                     }
                     if (!this::testTextView.isInitialized) {

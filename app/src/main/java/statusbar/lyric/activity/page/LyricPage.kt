@@ -119,5 +119,30 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
+        TextSA(textId = R.string.lyricSpeed, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.lyricSpeed))
+                setMessage(getString(R.string.lyricSpeedTips))
+                setEditText(config.lyricSpeed.toString(), "4", config = {
+                    it.inputType = InputType.TYPE_CLASS_NUMBER
+                    it.filters = arrayOf(InputFilter.LengthFilter(3))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in 0..10) {
+                            config.lyricSpeed = value
+                            updateConfig()
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
     }
 }

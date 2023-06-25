@@ -24,22 +24,35 @@ package statusbar.lyric.tools
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 
 @SuppressLint("StaticFieldLeak")
 object ActivityTestTools {
-    val context by lazy { ActivityTools.context }
+    private val appContext by lazy { ActivityTools.context }
     fun getClass() {
-        ActivityTools.context.sendBroadcast(Intent().apply {
+        appContext.sendBroadcast(Intent().apply {
             action = "TestReceiver"
             putExtra("Type", "GetClass")
+            LogTools.app("GetClass")
         })
     }
+
     fun clear() {
-        ActivityTools.context.sendBroadcast(Intent().apply {
+        appContext.sendBroadcast(Intent().apply {
             action = "TestReceiver"
             putExtra("Type", "Clear")
             LogTools.app("Clear")
         })
+    }
+
+    fun Context.receiveClass(`class`: String, index: Int, size: Int) {
+        sendBroadcast(Intent("AppTestReceiver").apply {
+            putExtra("Type", "ReceiveClass")
+            putExtra("Class", `class`)
+            putExtra("Index", index)
+            putExtra("Size", size)
+        })
+        LogTools.xp("ReceiveClass: $`class`,$index,$size")
     }
 }
