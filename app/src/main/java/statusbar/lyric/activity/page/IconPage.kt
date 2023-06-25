@@ -3,6 +3,8 @@ package statusbar.lyric.activity.page
 import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
+import android.view.View
+import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
@@ -14,7 +16,13 @@ import statusbar.lyric.tools.ActivityTools.changeConfig
 @BMPage
 class IconPage : BasePage() {
     override fun onCreate() {
-        TextSSw(textId = R.string.IconSwitch, key = "iconSwitch", defValue = true, onClickListener = { changeConfig() })
+        val binding = GetDataBinding({ config.iconSwitch }) { view, _, data ->
+            view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+        }
+        TextSSw(textId = R.string.IconSwitch, key = "iconSwitch", defValue = true, onClickListener = {
+            changeConfig()
+            binding.send(it)
+        })
         TextSA(textId = R.string.IconSize, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.IconSize))
@@ -39,7 +47,7 @@ class IconPage : BasePage() {
                 setLButton(getString(R.string.Cancel))
                 finally { dismiss() }
             }.show()
-        })
+        }, dataBindingRecv = binding.getRecv(1))
         TextSA(textId = R.string.IconColorAndTransparency, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.IconColorAndTransparency))
@@ -53,7 +61,7 @@ class IconPage : BasePage() {
                         val value = getEditText()
                         if (value.isEmpty()) {
                             config.iconColor = ""
-                        }else{
+                        } else {
                             Color.parseColor(value)
                             config.iconColor = value
                         }
@@ -65,7 +73,7 @@ class IconPage : BasePage() {
                 setLButton(getString(R.string.Cancel))
                 finally { dismiss() }
             }.show()
-        })
+        }, dataBindingRecv = binding.getRecv(1))
         TextSA(textId = R.string.IconTopMargins, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.IconTopMargins))
@@ -90,7 +98,7 @@ class IconPage : BasePage() {
                 setLButton(getString(R.string.Cancel))
                 finally { dismiss() }
             }.show()
-        })
+        }, dataBindingRecv = binding.getRecv(1))
         TextSA(textId = R.string.IconLeftMargins, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.IconLeftMargins))
@@ -115,7 +123,7 @@ class IconPage : BasePage() {
                 setLButton(getString(R.string.Cancel))
                 finally { dismiss() }
             }.show()
-        })
+        }, dataBindingRecv = binding.getRecv(1))
 
     }
 }

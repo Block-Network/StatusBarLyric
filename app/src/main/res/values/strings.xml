@@ -51,7 +51,7 @@
     <string name="LyricStrokeWidthTips">Range 0–400</string>
     <string name="LyricSpeed">Lyric Speed</string>
     <string name="LyricSpeedTips">Range 0–20</string>
-    <string name="LyricBlurredEdges">Lyric Blurred Edges</string>
+    <string name="LyricBlurredEdges">* Lyric Blurred Edges</string>
     <string name="LyricBlurredEdgesRadius">* Lyric Blurred Edges Radius</string>
     <string name="LyricBlurredEdgesRadiusTips">Range 0–100</string>
     <string name="LyricTopMargins">Lyric Top Margins</string>

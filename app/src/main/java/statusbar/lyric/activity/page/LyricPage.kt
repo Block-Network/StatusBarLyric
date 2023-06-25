@@ -4,6 +4,9 @@ package statusbar.lyric.activity.page
 import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.SeekBar
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
@@ -16,6 +19,15 @@ import statusbar.lyric.tools.ActivityTools.changeConfig
 @BMPage
 class LyricPage : BasePage() {
     override fun onCreate() {
+        val widthBinding = GetDataBinding({ config.lyricWidth }) { view, flag, data ->
+            if (flag == 1) {
+                view.visibility = if (data as Int != 0) View.VISIBLE else View.GONE
+            } else {
+                val linearLayout = view as LinearLayout
+                val seekBar = linearLayout.getChildAt(0) as SeekBar
+                seekBar.progress = data as Int
+            }
+        }
         TextSA(textId = R.string.LyricWidth, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.LyricWidth))
@@ -29,6 +41,7 @@ class LyricPage : BasePage() {
                         if (value in 0..100) {
                             config.lyricWidth = value
                             changeConfig()
+                            widthBinding.send(value)
                         } else {
                             throw Exception()
                         }
@@ -41,9 +54,9 @@ class LyricPage : BasePage() {
                     dismiss()
                 }
             }.show()
-            changeConfig()
         })
-        TextSSw(textId = R.string.FixedLyricWidth, tipsId = R.string.fixedLyricWidthTips, key = "fixedLyricWidth", onClickListener = { changeConfig() })
+        SeekBarWithText(key = "lyricWidth", min = 0, max = 100, defaultProgress = 0, dataBindingRecv = widthBinding.getRecv(2), dataBindingSend = widthBinding.bindingSend)
+        TextSSw(textId = R.string.FixedLyricWidth, tipsId = R.string.fixedLyricWidthTips, key = "fixedLyricWidth", onClickListener = { changeConfig() }, dataBindingRecv = widthBinding.getRecv(1))
         TextSA(textId = R.string.LyricSize, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.LyricSize))
@@ -82,7 +95,7 @@ class LyricPage : BasePage() {
                         val value = getEditText()
                         if (value.isEmpty()) {
                             config.lyricColor = ""
-                        }else{
+                        } else {
                             Color.parseColor(value)
                             config.lyricColor = value
                         }
@@ -170,7 +183,9 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
-        TextSSw(textId = R.string.LyricBlurredEdges, key = "lyricBlurredEdges", defValue = true, onClickListener = { changeConfig() })
+        TextSSw(textId = R.string.LyricBlurredEdges, key = "lyricBlurredEdges", defValue = true, onClickListener = {
+            changeConfig()
+        })
         TextSA(textId = R.string.LyricBlurredEdgesRadius, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.LyricBlurredEdgesRadius))
