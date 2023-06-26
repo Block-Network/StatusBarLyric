@@ -2,7 +2,7 @@
 <resources>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
-    <string name="XposedTips">If the lyrics cannot be displayed, please try to stop the music software and restart the SystemUI.</string>
+    <string name="XposedTips">If the lyrics cannot be displayed, please try to stop the music software and restart the SystemUI,and check Lyric Getter</string>
     <string name="ConfigResetSuccess">The config reset succeeded</string>
     <string name="HaveNewVersion">There is a new version</string>
     <string name="Update">Update</string>
