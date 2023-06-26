@@ -42,9 +42,9 @@
     <string name="FixedLyricWidth">固定歌詞寬度</string>
     <string name="fixedLyricWidthTips">打開後，歌詞的外部寬度固定，不隨歌詞變化而變化</string>
     <string name="LyricColorAndTransparency">歌詞顏色和透明度</string>
-    <string name="LyricColorAndTransparencyTips">請輸入十進制顏色值</string>
+    <string name="LyricColorAndTransparencyTips">請輸入十六進制顏色值</string>
     <string name="LyricSize">歌詞大小</string>
-    <string name="LyricSizeTips">範圍：狀態欄高度的0％–100％，0代表以下時鐘</string>
+    <string name="LyricSizeTips">範圍：狀態欄高度的0％–100％，0代表跟隨時間</string>
     <string name="LyricLetterSpacing">歌詞字間距</string>
     <string name="LyricLetterSpacingTips">範圍：0–50</string>
     <string name="LyricStrokeWidth">歌詞筆劃寬度</string>
@@ -68,7 +68,7 @@
     <string name="IconLeftMargins">圖標左邊距</string>
     <string name="IconLeftMarginsTips">範圍：–100–100</string>
     <string name="IconColorAndTransparency">圖標顏色和透明度</string>
-    <string name="IconColorAndTransparencyTips">請輸入十進制顏色值</string>
+    <string name="IconColorAndTransparencyTips">請輸入十六進制顏色值</string>
     <string name="ColorError">顏色錯誤</string>
     <string name="InputError">輸入錯誤</string>
     <string name="TimeFormat">時間格式</string>
@@ -79,18 +79,18 @@
     <string name="HookFailed">Hook失敗</string>
     <string name="StartHookingTextView">開始Hook所有TextView</string>
     <string name="PrintTimeFormat">時間格式：%s，預期樣式：%s</string>
-    <string name="FirstFilter">類：%s已滿足初步要求，共有%s個符合要求</string>
+    <string name="FirstFilter">Class：%s已滿足初步要求，共有%s個符合要求</string>
     <string name="NoTextView">沒有符合要求的TextView</string>
-    <string name="SendTextViewClass">發送的TextView類名稱：Class Name：%s，Index：%s，Size：%s</string>
+    <string name="SendTextViewClass">發送的TextView Class Name：%s，Index：%s，Size：%s</string>
     <string name="ClearTextViewList">清除TextView列表及其關聯數據</string>
     <string name="UnderstandTimeFormat">我不理解時間格式</string>
-    <string name="LoadClass">加載類：%s</string>
-    <string name="LoadClassEmpty">類為空，請打開測試模式配置</string>
+    <string name="LoadClass">加載Class：%s</string>
+    <string name="LoadClassEmpty">Class為空，請打開測試模式配置</string>
     <string name="LoadClassFailed">加載失敗，未找到該Class</string>
-    <string name="LoadClassSucceed">加載成功，類:%s</string>
+    <string name="LoadClassSucceed">加載成功，Class:%s</string>
     <string name="NotFoundHook">未找到Hook點</string>
     <string name="NotFoundHookTips">請嘗試重新啟動SystemUi，如果仍然無法找到，請聯繫開發人員</string>
     <string name="SelectHook">是否選擇此Hook點</string>
-    <string name="SelectHookTips">共有%s個掛鉤點，總共%s個\n%s</string>
-    <string name="RestartAppEffect">重啟應用程式的效果</string>
+    <string name="SelectHookTips">第%s個掛鉤點，總共%s個\n%s</string>
+    <string name="RestartAppEffect">重啟應用程式生效</string>
 </resources>

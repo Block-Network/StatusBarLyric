@@ -131,9 +131,11 @@ class SystemUILyric : BaseHook() {
         }.isNot {
             LogTools.xp(moduleRes.getString(R.string.LoadClassFailed))
         }
-        loadClass("com.android.systemui.statusbar.phone.NotificationIconAreaController").methodFinder().filterByName("onDarkChanged").first().createHook {
-            after {
-                changeColor(it.args[2] as Int)
+        loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
+            it.methodFinder().filterByName("onDarkChanged").first().createHook {
+                after { hookParam ->
+                    changeColor(hookParam.args[2] as Int)
+                }
             }
         }
     }

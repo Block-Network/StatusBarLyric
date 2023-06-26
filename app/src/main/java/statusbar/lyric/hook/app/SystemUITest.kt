@@ -111,7 +111,7 @@ class SystemUITest : BaseHook() {
                     }
                     if (!this::testTextView.isInitialized) {
                         testTextView = TextView(context).apply {
-                            text = moduleRes.getString(R.string.OK)
+                            text = moduleRes.getString(R.string.AppName)
                             isSingleLine = true
                             gravity = Gravity.CENTER
                             setBackgroundColor(Color.WHITE)
