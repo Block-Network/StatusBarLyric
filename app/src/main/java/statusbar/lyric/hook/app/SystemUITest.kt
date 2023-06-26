@@ -61,7 +61,7 @@ class SystemUITest : BaseHook() {
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun init() {
-        Application::class.java.methodFinder().first { name == "attach" }.createHook {
+        Application::class.java.methodFinder().filterByName("attach").first().createHook {
             after {
                 context = it.args[0] as Context
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -76,7 +76,7 @@ class SystemUITest : BaseHook() {
         val dateFormat = SimpleDateFormat(config.timeFormat, Locale.getDefault())
         var nowTime = dateFormat.format(currentTime).dispose()
         LogTools.xp(moduleRes.getString(R.string.PrintTimeFormat).format(config.timeFormat, nowTime))
-        TextView::class.java.methodFinder().first { name == "setText" }.createHook {
+        TextView::class.java.methodFinder().filterByName("setText").first().createHook {
             after {
                 val className = it.thisObject::class.java.name
                 currentTime = System.currentTimeMillis()
@@ -92,7 +92,6 @@ class SystemUITest : BaseHook() {
                 }
             }
         }
-
     }
 
 

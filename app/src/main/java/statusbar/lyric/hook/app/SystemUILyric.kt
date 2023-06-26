@@ -47,7 +47,6 @@ import com.github.kyuubiran.ezxhelper.ClassUtils.loadClass
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
-import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
@@ -132,14 +131,9 @@ class SystemUILyric : BaseHook() {
         }.isNot {
             LogTools.xp(moduleRes.getString(R.string.LoadClassFailed))
         }
-        loadClass("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").methodFinder().first { name == "applyIconTint" }.createHook {
+        loadClass("com.android.systemui.statusbar.phone.NotificationIconAreaController").methodFinder().filterByName("onDarkChanged").first().createHook {
             after {
-                if (!isHook) return@after
-                it.thisObject.objectHelper {
-                    val color = getObjectOrNullAs<Int>("mIconTint") ?: 0
-                    changeColor(color)
-                }
-
+                changeColor(it.args[2] as Int)
             }
         }
     }
@@ -153,9 +147,10 @@ class SystemUILyric : BaseHook() {
             clockViewParent.addView(lyricLayout, 0)
         }
         receptionLyric(context) {
+            if (!this::clockView.isInitialized) return@receptionLyric
             if (it.type == DataType.UPDATE) {
                 val lyric = it.lyric.regexReplace(config.regexReplace, "")
-                if (lyric.isNotEmpty()){
+                if (lyric.isNotEmpty()) {
                     changeLyric(lyric)
                     changeIcon(it)
                 }
@@ -211,6 +206,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeColor(color: Int) {
+        if (!this::clockView.isInitialized) return
         if (lastColor == color) return
         lastColor = color
         goMainThread {
@@ -220,6 +216,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeConfig() {
+        if (!this::clockView.isInitialized) return
         LogTools.xp("Change Config")
         config.update()
         goMainThread {
