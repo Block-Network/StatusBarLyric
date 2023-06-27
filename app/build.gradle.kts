@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "statusbar.lyric"
-    compileSdk = 33
+    compileSdk = 34
     val buildTime = System.currentTimeMillis()
     defaultConfig {
         applicationId = "statusbar.lyric"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 165
         versionName = "5.4.2$buildTime"
         aaptOptions.cruncherEnabled = false
