@@ -43,7 +43,6 @@ import cn.lyric.getter.api.data.DataType
 import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import cn.lyric.getter.api.tools.Tools.receptionLyric
-import com.github.kyuubiran.ezxhelper.ClassUtils.loadClass
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
@@ -69,7 +68,6 @@ class SystemUILyric : BaseHook() {
 
     private var lastColor: Int = 0
     private var lastLyric: String = ""
-    private var lastPackageName: String = ""
     private var lastBase64Icon: String = ""
     private var iconSwitch: Boolean = true
 
@@ -184,17 +182,17 @@ class SystemUILyric : BaseHook() {
     private fun changeIcon(it: LyricData) {
         if (!iconSwitch) return
         goMainThread {
-            runCatching {
-                iconView.setImageBitmap(if (it.customIcon) {
-                    if (lastBase64Icon == it.base64Icon) return@runCatching
-                    lastBase64Icon = it.base64Icon
-                    base64ToDrawable(it.base64Icon)
-                } else {
-                    if (lastPackageName == it.packageName) return@runCatching
-                    lastPackageName = it.packageName
-                    base64ToDrawable(config.getDefaultIcon(it.packageName, false))
-                })
-            }
+            iconView.setImageBitmap(if (it.customIcon) {
+                if (it.base64Icon == lastBase64Icon) return@goMainThread
+                lastBase64Icon = it.base64Icon
+                base64ToDrawable(it.base64Icon)
+            } else {
+                val baseIcon = config.getDefaultIcon(it.packageName, false)
+                if (baseIcon == lastBase64Icon) return@goMainThread
+                lastBase64Icon = it.base64Icon
+                base64ToDrawable(baseIcon)
+            })
+
         }
     }
 
