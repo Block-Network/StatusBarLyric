@@ -112,6 +112,7 @@ class SystemUILyric : BaseHook() {
 
     //////////////////////////////Hook//////////////////////////////////////
     override fun init() {
+        LogTools.xp("Init")
         val className = config.`class`
         if (className.isEmpty()) {
             LogTools.xp(moduleRes.getString(R.string.LoadClassEmpty))
@@ -141,6 +142,7 @@ class SystemUILyric : BaseHook() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun lyricInit(it: XC_MethodHook.MethodHookParam) {
         if (isHook) return
+        LogTools.xp("Lyric Init")
         isHook = true
         clockView = (it.thisObject as TextView)
         goMainThread(1) {
@@ -180,14 +182,16 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeIcon(it: LyricData) {
+        LogTools.xp("Change Icon")
         if (!iconSwitch) return
+        val customIcon = it.customIcon && it.base64Icon.isNotEmpty()
         goMainThread {
-            iconView.setImageBitmap(if (it.customIcon) {
+            iconView.setImageBitmap(if (customIcon) {
                 if (it.base64Icon == lastBase64Icon) return@goMainThread
                 lastBase64Icon = it.base64Icon
                 base64ToDrawable(it.base64Icon)
             } else {
-                val baseIcon = config.getDefaultIcon(it.packageName, false)
+                val baseIcon = config.getDefaultIcon(it.packageName, config.forceTheIconToBeDisplayed)
                 if (baseIcon == lastBase64Icon) return@goMainThread
                 lastBase64Icon = it.base64Icon
                 base64ToDrawable(baseIcon)
@@ -197,6 +201,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun hideLyric() {
+        LogTools.xp("Hide Lyric")
         goMainThread {
             if (lyricLayout.visibility != View.GONE) lyricLayout.visibility = View.GONE
             if (clockView.visibility != View.VISIBLE) clockView.visibility = View.VISIBLE
@@ -207,6 +212,7 @@ class SystemUILyric : BaseHook() {
 
     private fun changeColor(color: Int) {
         if (!this::clockView.isInitialized) return
+        LogTools.xp("Change Color")
         if (lastColor == color) return
         lastColor = color
         goMainThread {
@@ -265,6 +271,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun getLyricWidth(paint: Paint, text: String): Int {
+        LogTools.xp("Get Lyric Width")
         return if (config.lyricWidth == 0) {
             min(paint.measureText(text).toInt() + 6, clockViewParent.width)
         } else {
@@ -278,6 +285,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun scaleWidth(): Int {
+        LogTools.xp("Scale Width")
         return (config.lyricWidth / 100f * if (context.isLandscape()) {
             displayWidth
         } else {

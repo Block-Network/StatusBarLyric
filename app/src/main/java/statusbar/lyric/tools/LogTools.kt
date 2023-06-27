@@ -24,6 +24,7 @@ package statusbar.lyric.tools
 
 import android.util.Log
 import de.robv.android.xposed.XposedBridge
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.XposedOwnSP
 
@@ -33,6 +34,7 @@ object LogTools {
 
 
     private fun log(obj: Any?, toXposed: Boolean = false, toLogd: Boolean = false) {
+        if (!BuildConfig.DEBUG) return
         if (toXposed) {
             if (!XposedOwnSP.config.printXpLog) return
         } else {

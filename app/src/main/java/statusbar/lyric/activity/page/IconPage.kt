@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
 import android.view.View
-import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
@@ -124,6 +123,6 @@ class IconPage : BasePage() {
                 finally { dismiss() }
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
-
+        TextSSw(textId = R.string.ForceTheIconToBeDisplayed, key = "forceTheIconToBeDisplayed", onClickListener = { changeConfig() }, dataBindingRecv = binding.getRecv(1))
     }
 }

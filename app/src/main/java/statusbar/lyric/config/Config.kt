@@ -204,6 +204,14 @@ class Config {
             config.put("regexReplace", value)
         }
 
+    var forceTheIconToBeDisplayed: Boolean
+        get() {
+            return config.opt("forceTheIconToBeDisplayed", false)
+        }
+        set(value) {
+            config.put("forceTheIconToBeDisplayed", value)
+        }
+
     fun getDefaultIcon(packageName: String, forceShow: Boolean = false): String {
         return when (packageName) {
             "com.tencent.qqmusic" -> qQMusicIcon

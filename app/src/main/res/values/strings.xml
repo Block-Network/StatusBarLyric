@@ -93,4 +93,5 @@
     <string name="SelectHook">Whether to select this Hook point</string>
     <string name="SelectHookTips">The %s hook points, for a total of %s\n%s</string>
     <string name="RestartAppEffect">Restart App Effect</string>
+    <string name="ForceTheIconToBeDisplayed">Force The Icon To Be Displayed</string>
 </resources>
