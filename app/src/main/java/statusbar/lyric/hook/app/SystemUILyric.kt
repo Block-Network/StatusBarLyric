@@ -36,6 +36,7 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -82,9 +83,7 @@ class SystemUILyric : BaseHook() {
 
 
     private lateinit var clockView: TextView
-    private val clockViewParent: LinearLayout by lazy {
-        (clockView.parent as LinearLayout)
-    }
+    private val clockViewParent: ViewGroup by lazy { (clockView.parent as ViewGroup) }
     private val lyricView: LyricSwitchView by lazy {
         LyricSwitchView(context).apply {
             layoutParams = clockView.layoutParams
@@ -182,7 +181,6 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeIcon(it: LyricData) {
-        LogTools.xp("Change Icon")
         if (!iconSwitch) return
         val customIcon = it.customIcon && it.base64Icon.isNotEmpty()
         goMainThread {
@@ -193,10 +191,10 @@ class SystemUILyric : BaseHook() {
             } else {
                 val baseIcon = config.getDefaultIcon(it.packageName, config.forceTheIconToBeDisplayed)
                 if (baseIcon == lastBase64Icon) return@goMainThread
-                lastBase64Icon = it.base64Icon
+                lastBase64Icon = baseIcon
                 base64ToDrawable(baseIcon)
             })
-
+            LogTools.xp("Change Icon")
         }
     }
 

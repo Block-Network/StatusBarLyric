@@ -33,7 +33,7 @@ import android.graphics.Color
 import android.os.Build
 import android.view.Gravity
 import android.view.View
-import android.widget.LinearLayout
+import android.view.ViewGroup
 import android.widget.TextView
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
@@ -83,7 +83,7 @@ class SystemUITest : BaseHook() {
                 val text = "${it.args[0]}".dispose()
                 nowTime = dateFormat.format(currentTime).dispose()
                 if (text == nowTime && className.filterClassName()) {
-                    if ((it.thisObject as TextView).parent is LinearLayout) {
+                    if ((it.thisObject as TextView).parent is ViewGroup) {
                         if (hookClassList.contains(className)) return@after
                         hookClassList.add(className)
                         textViewList.add(it.thisObject as TextView)
@@ -96,7 +96,7 @@ class SystemUITest : BaseHook() {
 
 
     inner class TestReceiver : BroadcastReceiver() {
-        private lateinit var parentLinearLayout: LinearLayout
+        private lateinit var parentLinearLayout: ViewGroup
         private lateinit var testTextView: TextView
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
@@ -106,7 +106,7 @@ class SystemUITest : BaseHook() {
                         context.receiveClass("", 0, 0)
                         return
                     } else {
-//                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size))
+                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size))
                         context.receiveClass(hookClassList[nowHookClassNameListIndex], nowHookClassNameListIndex, hookClassList.size)
                     }
                     if (!this::testTextView.isInitialized) {
@@ -125,8 +125,8 @@ class SystemUITest : BaseHook() {
                         }
                         textview = textViewList[nowHookClassNameListIndex]
                         textview.visibility = View.GONE
-                        parentLinearLayout = (textViewList[nowHookClassNameListIndex].parent as LinearLayout)
-                        parentLinearLayout.addView(testTextView, 0)
+                        parentLinearLayout = (textViewList[nowHookClassNameListIndex].parent as ViewGroup)
+                        parentLinearLayout.addView(testTextView)
                         nowHookClassNameListIndex = (nowHookClassNameListIndex + 1) % hookClassList.size
                     }
                 }
