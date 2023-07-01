@@ -14,7 +14,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 166
-        versionName = "5.9.9beta"
+        versionName = "5.9.9beta1"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
@@ -63,5 +63,5 @@ dependencies {
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
     implementation(project(":LyricGetterApi"))
-    implementation("com.github.kyuubiran:EzXHelper:2.0.5")
+    implementation("com.github.kyuubiran:EzXHelper:2.0.6")
 }

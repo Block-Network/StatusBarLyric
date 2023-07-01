@@ -143,10 +143,9 @@ class SystemUILyric : BaseHook() {
     private fun lyricInit(it: XC_MethodHook.MethodHookParam) {
         if (isHook) return
         hook.unhook()
-        val view = (it.thisObject as TextView)
+        clockView = (it.thisObject as TextView)
         LogTools.xp("Lyric Init")
         isHook = true
-        clockView = view
         goMainThread(1) {
             clockViewParent.addView(lyricLayout, 0)
         }

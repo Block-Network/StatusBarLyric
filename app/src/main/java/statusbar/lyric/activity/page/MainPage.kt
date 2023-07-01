@@ -15,17 +15,7 @@ import statusbar.lyric.tools.Tools.isNotNull
 @BMMainPage
 class MainPage : BasePage() {
     override fun onCreate() {
-        ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
-            val value = it.versionName.split(".")
-            val apiVersion = value[value.lastIndex].toInt()
-            if (apiVersion != BuildConfig.apiVersion) {
-                Text(textId = R.string.NoSupportedVersionLyricGetter)
-            }
-        }.isNot {
-            TextS(textId = R.string.NoLyricGetter, tipsId = R.string.clickToInstall, onClickListener = {
-                ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/")
-            })
-        }
+        checkApi()
         TextSSw(textId = R.string.masterSwitch, key = "masterSwitch")
         Line()
         TextSA(textId = R.string.TestMode, onClickListener = { showPage(TestModePage::class.java) })
@@ -41,5 +31,19 @@ class MainPage : BasePage() {
             setLButton(getString(R.string.Cancel))
             finally { dismiss() }
         }.show()
+    }
+
+    private fun checkApi() {
+        ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
+            val value = it.versionName.split(".")
+            val apiVersion = value[value.lastIndex].toInt()
+            if (apiVersion == BuildConfig.apiVersion) {
+                return
+            }
+        }
+        TextSA(textId = R.string.NoLyricGetter, tipsId = R.string.clickToInstall, onClickListener = {
+            ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/")
+        })
+
     }
 }
