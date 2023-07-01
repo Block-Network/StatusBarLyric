@@ -43,14 +43,18 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
     private fun initHooks(vararg hook: BaseHook) {
         hook.forEach {
-            try {
-                if (it.isInit) return
-                it.init()
-                it.isInit = true
-                LogTools.xp("${moduleRes.getString(R.string.HookSucceeded)}:${it.javaClass.simpleName}")
-            } catch (_: Exception) {
-                LogTools.xp("${moduleRes.getString(R.string.HookFailed)}:${it.javaClass.simpleName}")
-            }
+            if (it.isInit) return
+            it.init()
+            it.isInit = true
+            LogTools.xp("${moduleRes.getString(R.string.HookSucceeded)}:${it.javaClass.simpleName}")
+//            try {
+//                if (it.isInit) return
+//                it.init()
+//                it.isInit = true
+//                LogTools.xp("${moduleRes.getString(R.string.HookSucceeded)}:${it.javaClass.simpleName}")
+//            } catch (_: Exception) {
+//                LogTools.xp("${moduleRes.getString(R.string.HookFailed)}:${it.javaClass.simpleName}")
+//            }
         }
     }
 }

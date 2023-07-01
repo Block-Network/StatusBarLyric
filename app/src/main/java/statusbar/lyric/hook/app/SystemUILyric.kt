@@ -36,7 +36,6 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -47,7 +46,6 @@ import cn.lyric.getter.api.tools.Tools.receptionLyric
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
-import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.R
@@ -56,7 +54,6 @@ import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
-import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.regexReplace
 import statusbar.lyric.view.EdgeTransparentView
@@ -66,7 +63,7 @@ import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
-
+    private lateinit var hook: XC_MethodHook.Unhook
     private var lastColor: Int = 0
     private var lastLyric: String = ""
     private var lastBase64Icon: String = ""
@@ -83,7 +80,7 @@ class SystemUILyric : BaseHook() {
 
 
     private lateinit var clockView: TextView
-    private val clockViewParent: ViewGroup by lazy { (clockView.parent as ViewGroup) }
+    private val clockViewParent: LinearLayout by lazy { (clockView.parent as LinearLayout) }
     private val lyricView: LyricSwitchView by lazy {
         LyricSwitchView(context).apply {
             layoutParams = clockView.layoutParams
@@ -113,22 +110,26 @@ class SystemUILyric : BaseHook() {
     override fun init() {
         LogTools.xp("Init")
         val className = config.`class`
-        if (className.isEmpty()) {
+        if (className.isEmpty() || config.parentID == 0) {
             LogTools.xp(moduleRes.getString(R.string.LoadClassEmpty))
             return
         }
         loadClassOrNull(className).isNotNull {
-            LogTools.xp(moduleRes.getString(R.string.LoadClassSucceed).format(className))
-            it.constructorFinder().first().createHook {
+            hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
                 after {
-                    runCatching {
-                        lyricInit(it)
+                    val view = (it.thisObject as TextView)
+                    if (view::class.java.name == config.`class`) {
+                        if (view.visibility == View.VISIBLE && view.parent is LinearLayout) {
+                            val parentView = (view.parent as LinearLayout)
+                            if (config.parentID == parentView.id) {
+                                lyricInit(it)
+                            }
+                        }
                     }
                 }
             }
-        }.isNot {
-            LogTools.xp(moduleRes.getString(R.string.LoadClassFailed))
         }
+
         loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
             it.methodFinder().filterByName("onDarkChanged").first().createHook {
                 after { hookParam ->
@@ -141,9 +142,11 @@ class SystemUILyric : BaseHook() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun lyricInit(it: XC_MethodHook.MethodHookParam) {
         if (isHook) return
+        hook.unhook()
+        val view = (it.thisObject as TextView)
         LogTools.xp("Lyric Init")
         isHook = true
-        clockView = (it.thisObject as TextView)
+        clockView = view
         goMainThread(1) {
             clockViewParent.addView(lyricLayout, 0)
         }

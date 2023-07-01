@@ -8,6 +8,7 @@
     <string name="Update">Update</string>
     <string name="Cancel">Cancel</string>
     <string name="Exit">Exit</string>
+    <string name="Reset">Reset</string>
     <string name="GetNewVersionError">Get the new version error</string>
     <string name="NoNewVersion">There is no new version</string>
     <string name="CheckUpdateError">Check for update errors</string>
@@ -37,6 +38,7 @@
     <string name="TestMode">Test Mode</string>
     <string name="LyricPage">Lyric Page</string>
     <string name="IconPage">Icon Page</string>
+    <string name="CustomizeIconPage">Customize Icon Page</string>
     <string name="LyricWidth">Lyric Width</string>
     <string name="LyricWidthTips">Range: 0%–100% , 0 is Adaptive width</string>
     <string name="FixedLyricWidth">Fixed lyric width</string>
@@ -85,13 +87,13 @@
     <string name="ClearTextViewList">Be clear about Text View Lists and their associated data</string>
     <string name="UnderstandTimeFormat">I don\'t understand the time format</string>
     <string name="LoadClass">Load Class: %s</string>
-    <string name="LoadClassEmpty">Class is Empty, turn on Test Mode Configuration</string>
+    <string name="LoadClassEmpty">Please turn on the test mode configuration first</string>
     <string name="LoadClassFailed">Load failed,Class not found</string>
     <string name="LoadClassSucceed">Load Succeed,Class: %s</string>
     <string name="NotFoundHook">Hook not found</string>
     <string name="NotFoundHookTips">Please try restarting the SystemUi, if you still can\'t find it, contact the developer</string>
     <string name="SelectHook">Whether to select this Hook point</string>
-    <string name="SelectHookTips">The %s hook points, for a total of %s\n%s</string>
+    <string name="SelectHookTips">The %s hook points, for a total of %s\n%s\nParent component ID: %s</string>
     <string name="RestartAppEffect">Restart App Effect</string>
     <string name="ForceTheIconToBeDisplayed">Force The Icon To Be Displayed</string>
 </resources>

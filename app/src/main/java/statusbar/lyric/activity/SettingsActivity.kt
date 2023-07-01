@@ -36,6 +36,7 @@ import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.fkj233.ui.dialog.NewDialog
 import statusbar.lyric.R
+import statusbar.lyric.activity.page.CustomizeIconPage
 import statusbar.lyric.activity.page.IconPage
 import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
@@ -58,12 +59,13 @@ class SettingsActivity : MIUIActivity() {
         const val OPEN_FONT_FILE = 2114745
     }
 
-    init {
-        registerPage(MainPage::class.java)
-        registerPage(MenuPage::class.java)
-        registerPage(TestModePage::class.java)
-        registerPage(LyricPage::class.java)
-        registerPage(IconPage::class.java)
+    override fun register() {
+        registerPage(MainPage::class.java, activity.getString(R.string.AppName))
+        registerPage(MenuPage::class.java, activity.getString(R.string.Menu))
+        registerPage(TestModePage::class.java, activity.getString(R.string.TestMode))
+        registerPage(LyricPage::class.java, activity.getString(R.string.LyricPage))
+        registerPage(IconPage::class.java, activity.getString(R.string.IconPage))
+        registerPage(CustomizeIconPage::class.java, activity.getString(R.string.CustomizeIconPage))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -154,6 +156,7 @@ class SettingsActivity : MIUIActivity() {
                 "ReceiveClass" -> {
                     val `class` = intent.getStringExtra("Class") ?: ""
                     val index = intent.getIntExtra("Index", 0)
+                    val parentID = intent.getIntExtra("ParentID", 0)
                     val size = intent.getIntExtra("Size", 0)
                     if (size == 0 || `class`.isEmpty()) {
                         MIUIDialog(context) {
@@ -167,9 +170,10 @@ class SettingsActivity : MIUIActivity() {
                     }
                     NewDialog(context) {
                         setTitle(context.getString(R.string.SelectHook))
-                        setMessage(context.getString(R.string.SelectHookTips).format(index + 1, size, `class`))
+                        setMessage(context.getString(R.string.SelectHookTips).format(index + 1, size, `class`, "0x${parentID.toString(16)}"))
                         Button(context.getText(R.string.OK)) {
                             ActivityOwnSP.config.`class` = `class`
+                            ActivityOwnSP.config.parentID = parentID
                             ActivityTools.showToastOnLooper("Class: $`class`")
                             ActivityTestTools.clear()
                             dismiss()
