@@ -24,7 +24,6 @@ package statusbar.lyric.config
 
 import android.content.SharedPreferences
 import de.robv.android.xposed.XSharedPreferences
-import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.tools.ConfigTools
 
