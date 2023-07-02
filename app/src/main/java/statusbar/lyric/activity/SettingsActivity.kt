@@ -102,7 +102,6 @@ class SettingsActivity : MIUIActivity() {
 
     override fun onDestroy() {
         unregisterReceiver(appTestReceiver)
-        ActivityTestTools.clear()
         super.onDestroy()
     }
 
@@ -174,7 +173,6 @@ class SettingsActivity : MIUIActivity() {
                         setMessage(context.getString(R.string.SelectHookTips).format(index + 1, size, `class`, parentClass, "0x${parentID.toString(16)}"))
                         Button(context.getText(R.string.OK)) {
                             ActivityOwnSP.config.`class` = `class`
-                            ActivityOwnSP.config.parentID = parentID
                             ActivityOwnSP.config.parentID = parentID
                             ActivityOwnSP.config.parentClass = parentClass
                             ActivityTestTools.clear()
