@@ -95,8 +95,7 @@ class SystemUITest : BaseHook() {
                         if (parentView.id != id) {
                             val data = Data(className, view, parentView)
                             list.add(data)
-                            LogTools.xp(data)
-                            LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(className, list.size))
+                            LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(data, list.size))
                         }
                     }
 
@@ -116,11 +115,11 @@ class SystemUITest : BaseHook() {
                     isHooked = true
                     if (list.size == 0) {
                         LogTools.xp(moduleRes.getString(R.string.NoTextView))
-                        context.receiveClass("", 0, 0, 0)
+                        context.receiveClass("", "", 0, 0, 0)
                         return
                     } else {
-                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(list[nowHookClassNameListIndex].`class`, nowHookClassNameListIndex, list.size))
-                        context.receiveClass(list[nowHookClassNameListIndex].`class`, list[nowHookClassNameListIndex].parent.id, nowHookClassNameListIndex, list.size)
+                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(list[nowHookClassNameListIndex]))
+                        context.receiveClass(list[nowHookClassNameListIndex].`class`, list[nowHookClassNameListIndex].parent::class.java.name, list[nowHookClassNameListIndex].parent.id, nowHookClassNameListIndex, list.size)
                     }
                     if (!this::testTextView.isInitialized) {
                         testTextView = TextView(context).apply {

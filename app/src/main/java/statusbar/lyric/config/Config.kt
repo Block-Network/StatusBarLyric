@@ -74,6 +74,13 @@ class Config {
         set(value) {
             config.put("class", value)
         }
+    var parentClass: String
+        get() {
+            return config.opt("parentClass", "")
+        }
+        set(value) {
+            config.put("parentClass", value)
+        }
     var parentID:Int
         get() {
             return config.opt("parentID", 0)

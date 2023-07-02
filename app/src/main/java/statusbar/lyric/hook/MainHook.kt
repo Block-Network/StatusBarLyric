@@ -19,17 +19,19 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
             LogTools.xp(moduleRes.getString(R.string.MasterOff))
             return
         }
-        EzXHelper.initHandleLoadPackage(lpparam)
-        if (lpparam.packageName == "com.android.systemui") {
-            LogTools.xp("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
-            if (XposedOwnSP.config.testMode) {
-                LogTools.xp(moduleRes.getString(R.string.TestMode))
-                initHooks(SystemUITest())
-            } else {
-                LogTools.xp(moduleRes.getString(R.string.LyricMode))
-                initHooks(SystemUILyric())
-            }
 
+        EzXHelper.initHandleLoadPackage(lpparam)
+        when (lpparam.packageName) {
+            "com.android.systemui" -> {
+                LogTools.xp("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
+                if (XposedOwnSP.config.testMode) {
+                    LogTools.xp(moduleRes.getString(R.string.TestMode))
+                    initHooks(SystemUITest())
+                } else {
+                    LogTools.xp(moduleRes.getString(R.string.LyricMode))
+                    initHooks(SystemUILyric())
+                }
+            }
         }
     }
 

@@ -46,10 +46,11 @@ object ActivityTestTools {
         })
     }
 
-    fun Context.receiveClass(`class`: String, parentID: Int, index: Int, size: Int) {
+    fun Context.receiveClass(`class`: String, parentClass: String, parentID: Int, index: Int, size: Int) {
         sendBroadcast(Intent("AppTestReceiver").apply {
             putExtra("Type", "ReceiveClass")
             putExtra("Class", `class`)
+            putExtra("parentClass", parentClass)
             putExtra("ParentID", parentID)
             putExtra("Index", index)
             putExtra("Size", size)

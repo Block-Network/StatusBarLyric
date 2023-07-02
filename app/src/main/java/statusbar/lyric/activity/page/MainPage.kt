@@ -37,13 +37,15 @@ class MainPage : BasePage() {
         ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
             val value = it.versionName.split(".")
             val apiVersion = value[value.lastIndex].toInt()
-            if (apiVersion == BuildConfig.apiVersion) {
-                return
+            if (apiVersion != BuildConfig.apiVersion) {
+                TextSA(textId = R.string.NoSupportedVersionLyricGetter, tipsId = R.string.clickToInstall, onClickListener = {
+                    ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/")
+                })
             }
+        }.isNot {
+            TextSA(textId = R.string.NoLyricGetter, tipsId = R.string.clickToInstall, onClickListener = {
+                ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/")
+            })
         }
-        TextSA(textId = R.string.NoLyricGetter, tipsId = R.string.clickToInstall, onClickListener = {
-            ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/")
-        })
-
     }
 }

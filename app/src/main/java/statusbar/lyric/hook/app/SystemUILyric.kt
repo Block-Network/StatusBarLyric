@@ -110,7 +110,9 @@ class SystemUILyric : BaseHook() {
     override fun init() {
         LogTools.xp("Init")
         val className = config.`class`
-        if (className.isEmpty() || config.parentID == 0) {
+        val parentClass = config.parentClass
+        val parentID = config.parentID
+        if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
             LogTools.xp(moduleRes.getString(R.string.LoadClassEmpty))
             return
         }
@@ -121,8 +123,10 @@ class SystemUILyric : BaseHook() {
                     if (view::class.java.name == config.`class`) {
                         if (view.parent is LinearLayout) {
                             val parentView = (view.parent as LinearLayout)
-                            if (config.parentID == parentView.id) {
-                                lyricInit(it)
+                            if (parentView::class.java.name == parentClass) {
+                                if (parentID == parentView.id) {
+                                    lyricInit(it)
+                                }
                             }
                         }
                     }

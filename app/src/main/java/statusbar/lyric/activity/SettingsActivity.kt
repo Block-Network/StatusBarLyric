@@ -155,6 +155,7 @@ class SettingsActivity : MIUIActivity() {
             when (intent.getStringExtra("Type")) {
                 "ReceiveClass" -> {
                     val `class` = intent.getStringExtra("Class") ?: ""
+                    val parentClass = intent.getStringExtra("parentClass") ?: ""
                     val index = intent.getIntExtra("Index", 0)
                     val parentID = intent.getIntExtra("ParentID", 0)
                     val size = intent.getIntExtra("Size", 0)
@@ -170,11 +171,12 @@ class SettingsActivity : MIUIActivity() {
                     }
                     NewDialog(context) {
                         setTitle(context.getString(R.string.SelectHook))
-                        setMessage(context.getString(R.string.SelectHookTips).format(index + 1, size, `class`, "0x${parentID.toString(16)}"))
+                        setMessage(context.getString(R.string.SelectHookTips).format(index + 1, size, `class`, parentClass, "0x${parentID.toString(16)}"))
                         Button(context.getText(R.string.OK)) {
                             ActivityOwnSP.config.`class` = `class`
                             ActivityOwnSP.config.parentID = parentID
-                            ActivityTools.showToastOnLooper("Class: $`class`")
+                            ActivityOwnSP.config.parentID = parentID
+                            ActivityOwnSP.config.parentClass = parentClass
                             ActivityTestTools.clear()
                             dismiss()
                         }

@@ -81,9 +81,9 @@
     <string name="HookFailed">钩子失败</string>
     <string name="StartHookingTextView">开始Hook所有TextView</string>
     <string name="PrintTimeFormat">时间格式：%s，预期样式：%s</string>
-    <string name="FirstFilter">Class：%s已满足初步要求，共有%s个符合要求</string>
+    <string name="FirstFilter">%s已满足初步要求，共有%s个符合要求</string>
     <string name="NoTextView">没有符合要求的TextView</string>
-    <string name="SendTextViewClass">发送的TextView Class Name：%s，Index：%s，Size：%s</string>
+    <string name="SendTextViewClass">发送：%s</string>
     <string name="ClearTextViewList">清除TextView列表及其关联数据</string>
     <string name="UnderstandTimeFormat">我不理解时间格式</string>
     <string name="LoadClass">加载Class：%s</string>
@@ -93,7 +93,7 @@
     <string name="NotFoundHook">未找到Hook点</string>
     <string name="NotFoundHookTips">请尝试重新启动SystemUi，如果仍然无法找到，请联系开发人员</string>
     <string name="SelectHook">是否选择此Hook点</string>
-    <string name="SelectHookTips">第%s个Hook点，总共%s个\n%s\n父组件ID：%s</string>
+    <string name="SelectHookTips">第%s个Hook点，总共%s个\n%s\n父组件：%s\n父组件ID：%s</string>
     <string name="RestartAppEffect">重启应用程序生效</string>
     <string name="ForceTheIconToBeDisplayed">强制显示图标</string>
 </resources>
