@@ -119,7 +119,7 @@ class SystemUILyric : BaseHook() {
                 after {
                     val view = (it.thisObject as TextView)
                     if (view::class.java.name == config.`class`) {
-                        if (view.visibility == View.VISIBLE && view.parent is LinearLayout) {
+                        if (view.parent is LinearLayout) {
                             val parentView = (view.parent as LinearLayout)
                             if (config.parentID == parentView.id) {
                                 lyricInit(it)

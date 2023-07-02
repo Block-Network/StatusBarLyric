@@ -65,7 +65,7 @@ class SystemUITest : BaseHook() {
 
     override val name: String get() = this::class.java.simpleName
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    @SuppressLint("UnspecifiedRegisterReceiverFlag", "DiscouragedApi")
     override fun init() {
         Application::class.java.methodFinder().filterByName("attach").first().createHook {
             after {
@@ -88,19 +88,18 @@ class SystemUITest : BaseHook() {
                 val text = "${it.args[0]}".dispose()
                 nowTime = dateFormat.format(System.currentTimeMillis()).dispose()
                 val view = (it.thisObject as TextView)
-                if (view.visibility == View.VISIBLE && view.parent is LinearLayout) {
+                if (view.parent is LinearLayout) {
                     val parentView = (view.parent as LinearLayout)
-                    if (parentView.visibility == View.VISIBLE) {
-                        if (text == nowTime && className.filterClassName()) {
-                            val id = context.resources.getIdentifier("clock_container", "id", context.packageName)
-                            if (parentView.id != id) {
-                                val data = Data(className, view, parentView)
-                                list.add(data)
-                                LogTools.xp(data)
-                                LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(className, list.size))
-                            }
+                    if (text == nowTime && className.filterClassName()) {
+                        val id = context.resources.getIdentifier("clock_container", "id", context.packageName)
+                        if (parentView.id != id) {
+                            val data = Data(className, view, parentView)
+                            list.add(data)
+                            LogTools.xp(data)
+                            LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(className, list.size))
                         }
                     }
+
                 }
             }
         }
