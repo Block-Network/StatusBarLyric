@@ -165,6 +165,7 @@ class SystemUITest : BaseHook() {
                     val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         intent.getSerializableExtra("Data", Data::class.java)
                     } else {
+                        @Suppress("DEPRECATION")
                         intent.getSerializableExtra("Data") as Data
                     }!!
                     goMainThread {
@@ -176,7 +177,7 @@ class SystemUITest : BaseHook() {
                                 }
                                 textview.visibility = View.GONE
                                 val parentLinearLayout = textview.parent as LinearLayout
-                                parentLinearLayout.addView(testView)
+                                parentLinearLayout.addView(testView,0)
                                 lastView = textview
                                 return@forEach
                             }

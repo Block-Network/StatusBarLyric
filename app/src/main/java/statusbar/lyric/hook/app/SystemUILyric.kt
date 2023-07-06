@@ -297,10 +297,10 @@ class SystemUILyric : BaseHook() {
 
     private fun scaleWidth(): Int {
         LogTools.xp("Scale Width")
-        return (config.lyricWidth / 100f * if (context.isLandscape()) {
-            displayWidth
-        } else {
+        return (config.lyricWidth / 100.0 * if (context.isLandscape()) {
             displayHeight
+        } else {
+            displayWidth
         }).roundToInt()
     }
 

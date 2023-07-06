@@ -97,7 +97,7 @@
     <string name="RestartAppEffect">Restart App Effect</string>
     <string name="ForceTheIconToBeDisplayed">Force The Icon To Be Displayed</string>
     <!--    想不到取啥名字好   -->
-    <string name="AAATips">IsRepeat: %s ; Index: %s</string>
+    <string name="AAATips">IsRepeat: %s;Index: %s</string>
     <string name="BroadcastReceiveTimeout">Broadcast Receive Timeout</string>
     <string name="BroadcastReceiveTimeoutTips">Please restart the SystemUI first, if it still times out, please contact the developer</string>
 </resources>

@@ -96,7 +96,7 @@
     <string name="SelectHook">是否選擇此Hook點</string>
     <string name="RestartAppEffect">重啟應用程式生效</string>
     <string name="ForceTheIconToBeDisplayed">強制顯示圖示</string>
-    <string name="AAATips">是否重複：%s ； Index：%s</string>
+    <string name="AAATips">是否重複：%s；Index：%s</string>
     <string name="BroadcastReceiveTimeout">廣播接收超時</string>
     <string name="BroadcastReceiveTimeoutTips">請先重啟系統介面，如依然超時請聯繫開發者</string>
 </resources>
