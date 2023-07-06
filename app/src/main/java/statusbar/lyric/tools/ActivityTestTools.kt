@@ -26,26 +26,63 @@ package statusbar.lyric.tools
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import cn.fkj233.ui.dialog.MIUIDialog
+import statusbar.lyric.R
+import statusbar.lyric.data.Data
+import statusbar.lyric.tools.Tools.goMainThread
+import java.util.Timer
+import java.util.TimerTask
 
 @SuppressLint("StaticFieldLeak")
 object ActivityTestTools {
-    private val appContext by lazy { ActivityTools.context }
-    fun getClass() {
-        appContext.sendBroadcast(Intent().apply {
+
+    private val timer by lazy { Timer() }
+    private var isTimer = false
+
+    fun Context.getClass() {
+        this.sendBroadcast(Intent().apply {
             action = "TestReceiver"
             putExtra("Type", "GetClass")
             LogTools.app("GetClass")
         })
     }
 
-    fun Context.receiveClass(`class`: String, parentClass: String, parentID: Int, index: Int, size: Int) {
+
+    fun Context.receiveClass(dataList: ArrayList<Data>) {
         sendBroadcast(Intent("AppTestReceiver").apply {
             putExtra("Type", "ReceiveClass")
-            putExtra("Class", `class`)
-            putExtra("parentClass", parentClass)
-            putExtra("ParentID", parentID)
-            putExtra("Index", index)
-            putExtra("Size", size)
+            putExtra("DataList", dataList)
         })
     }
+
+    fun Context.showView(data: Data) {
+        sendBroadcast(Intent("TestReceiver").apply {
+            putExtra("Type", "ShowView")
+            putExtra("Data", data)
+        })
+    }
+
+    fun waitResponse() {
+        if (isTimer) return
+        isTimer = true
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                stopResponse()
+                goMainThread {
+                    MIUIDialog(ActivityTools.context) {
+                        setTitle(R.string.BroadcastReceiveTimeout)
+                        setMessage(R.string.BroadcastReceiveTimeoutTips)
+                        setRButton(R.string.OK) { dismiss() }
+                    }.show()
+                }
+            }
+        }, 3000)
+    }
+
+    fun stopResponse() {
+        timer.cancel()
+        timer.purge()
+        isTimer = false
+    }
+
 }

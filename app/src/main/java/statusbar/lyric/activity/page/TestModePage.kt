@@ -1,6 +1,9 @@
 package statusbar.lyric.activity.page
 
 import android.annotation.SuppressLint
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.SeekBar
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
@@ -8,6 +11,8 @@ import cn.fkj233.ui.dialog.NewDialog
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTestTools
+import statusbar.lyric.tools.ActivityTestTools.getClass
+import statusbar.lyric.tools.ActivityTestTools.waitResponse
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.dispose
@@ -19,7 +24,10 @@ import java.util.Locale
 @BMPage
 class TestModePage : BasePage() {
     override fun onCreate() {
-        TextSSw(textId = R.string.TestMode, key = "testMode")
+        val testModeBinding = GetDataBinding({ ActivityOwnSP.config.testMode }) { view, flag, data ->
+            view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+        }
+        TextSSw(textId = R.string.TestMode, key = "testMode", onClickListener = { testModeBinding.send(it) })
         TextSA(textId = R.string.TimeFormat, onClickListener = {
             NewDialog(activity) {
                 setTitle(getString(R.string.TimeFormat))
@@ -35,10 +43,11 @@ class TestModePage : BasePage() {
                 Button(getString(R.string.Cancel), cancelStyle = true)
                 Finally { dismiss() }
             }.show()
-        })
+        }, dataBindingRecv = testModeBinding.getRecv(1))
         TextSA(textId = R.string.GetHook, onClickListener = {
-            ActivityTestTools.getClass()
-        })
+            waitResponse()
+            activity.getClass()
+        }, dataBindingRecv = testModeBinding.getRecv(1))
         Line()
         TextSA(textId = R.string.ResetSystemUi, onClickListener = {
             MIUIDialog(activity) {

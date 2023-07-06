@@ -109,23 +109,30 @@ class SystemUILyric : BaseHook() {
     //////////////////////////////Hook//////////////////////////////////////
     override fun init() {
         LogTools.xp("Init")
-        val className = config.`class`
-        val parentClass = config.parentClass
+        val className = config.textViewClassName
+        val parentClass = config.parentClassName
         val parentID = config.parentID
         if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
             LogTools.xp(moduleRes.getString(R.string.LoadClassEmpty))
             return
         }
         loadClassOrNull(className).isNotNull {
+            var index = 0
             hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
                 after {
                     val view = (it.thisObject as TextView)
-                    if (view::class.java.name == config.`class`) {
-                        if (view.parent is LinearLayout) {
-                            val parentView = (view.parent as LinearLayout)
-                            if (parentView::class.java.name == parentClass) {
-                                if (parentID == parentView.id) {
-                                    lyricInit(it)
+                    if (view::class.java.name == config.textViewClassName) {
+                        if (view.id == config.textViewID) {
+                            if (view.parent is LinearLayout) {
+                                val parentView = (view.parent as LinearLayout)
+                                if (parentView::class.java.name == parentClass) {
+                                    if (parentID == parentView.id) {
+                                        if (index == config.index) {
+                                            lyricInit(it)
+                                        } else {
+                                            index += 1
+                                        }
+                                    }
                                 }
                             }
                         }

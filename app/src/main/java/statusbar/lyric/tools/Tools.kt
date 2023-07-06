@@ -49,13 +49,6 @@ object Tools {
     }
 
     fun Context.isLandscape() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    fun String.filterClassName(): Boolean {
-        val filterList = arrayListOf("controlcenter", "image", "keyguard")
-        filterList.forEach {
-            if (contains(it, true)) return false
-        }
-        return this != TextView::class.java.name
-    }
 
     fun String.dispose() = this.regexReplace(" ", "").regexReplace("\n", "")
 

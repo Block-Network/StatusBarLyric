@@ -39,6 +39,7 @@
     <string name="LyricPage">Lyric Page</string>
     <string name="IconPage">Icon Page</string>
     <string name="CustomizeIconPage">Customize Icon Page</string>
+    <string name="ChoosePage">Choose Page</string>
     <string name="LyricWidth">Lyric Width</string>
     <string name="LyricWidthTips">Range: 0%–100% , 0 is Adaptive width</string>
     <string name="FixedLyricWidth">Fixed lyric width</string>
@@ -93,7 +94,10 @@
     <string name="NotFoundHook">Hook not found</string>
     <string name="NotFoundHookTips">Please try restarting the SystemUi, if you still can\'t find it, contact the developer</string>
     <string name="SelectHook">Whether to select this Hook point</string>
-    <string name="SelectHookTips">The %s hook points, for a total of %s\n%s\nParent component: %s\nParent component ID: %s</string>
     <string name="RestartAppEffect">Restart App Effect</string>
     <string name="ForceTheIconToBeDisplayed">Force The Icon To Be Displayed</string>
+    <!--    想不到取啥名字好   -->
+    <string name="AAATips">IsRepeat: %s ; Index: %s</string>
+    <string name="BroadcastReceiveTimeout">Broadcast Receive Timeout</string>
+    <string name="BroadcastReceiveTimeoutTips">Please restart the SystemUI first, if it still times out, please contact the developer</string>
 </resources>

@@ -39,6 +39,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
+import statusbar.lyric.data.Data
 import statusbar.lyric.tools.Tools.isNot
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -51,6 +52,9 @@ object ActivityTools {
 
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
+
+    lateinit var dataList: ArrayList<Data>
+
     fun changeConfig(type: String = "normal", path: String = "") {
         Thread {
             Thread.sleep(200)
@@ -62,10 +66,10 @@ object ActivityTools {
     }
 
     // 弹出toast
-    fun showToastOnLooper(message: String) {
+    fun showToastOnLooper(message: Any?) {
         try {
             handler.post {
-                XToast.makeText(context, message, toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+                XToast.makeText(context, message.toString(), toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
                 LogTools.app(message)
             }
         } catch (e: RuntimeException) {

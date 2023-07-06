@@ -33,7 +33,6 @@ import android.graphics.Color
 import android.os.Build
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
@@ -42,32 +41,35 @@ import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinde
 import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
+import statusbar.lyric.data.Data
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.ActivityTestTools.receiveClass
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.dispose
-import statusbar.lyric.tools.Tools.filterClassName
 import statusbar.lyric.tools.Tools.goMainThread
-import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.util.LinkedList
 import java.util.Locale
 
 class SystemUITest : BaseHook() {
     private lateinit var hook: XC_MethodHook.Unhook
     private var lastTime: Int = 0
-    private lateinit var textview: TextView
     lateinit var context: Context
-
-    data class Data(val `class`: String, val textView: TextView, val parent: LinearLayout) : Serializable
-
-    val dataList by lazy { LinkedList<Data>() }
-    var nowHookClassNameListIndex = 0
+    lateinit var lastView: TextView
+    val testView by lazy {
+        TextView(context).apply {
+            text = moduleRes.getString(R.string.AppName)
+            isSingleLine = true
+            gravity = Gravity.CENTER
+            setBackgroundColor(Color.WHITE)
+            setTextColor(Color.BLACK)
+        }
+    }
+    private val dataHashMap by lazy { HashMap<TextView, Data>() }
 
     override val name: String get() = this::class.java.simpleName
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag", "DiscouragedApi")
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun init() {
         Application::class.java.methodFinder().filterByName("attach").first().createHook {
             after {
@@ -90,65 +92,95 @@ class SystemUITest : BaseHook() {
                 val time = System.currentTimeMillis()
                 nowTime = dateFormat.format(time)
                 if (text == nowTime && className.filterClassName()) {
-                    val minutes = LocalDateTime.now().minute
-                    if (lastTime == 0) {
-                        lastTime = minutes
-                    } else {
-                        if (lastTime - minutes == -1) {
-                            hook.unhook()
-                            return@after
-                        }
-                    }
+                    if (canUnhook()) return@after
                     val view = (it.thisObject as TextView)
-                    if (view.parent is LinearLayout) {
+                    view.filterView {
                         val parentView = (view.parent as LinearLayout)
-                        val id = context.resources.getIdentifier("clock_container", "id", context.packageName)
-                        if (parentView.id != id) {
-                            val data = Data(className, view, parentView)
-                            dataList.add(data)
-                            LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(data, dataList.size))
+                        val data = if (dataHashMap.size == 0) {
+                            Data(className, view.id, parentView::class.java.name, parentView.id, false, 0)
+                        } else {
+                            var index = 0
+                            dataHashMap.values.forEach { data ->
+                                if (data.textViewClassName == className && data.textViewID == view.id && data.parentClassName == parentView::class.java.name && data.parentID == parentView.id) {
+                                    index += 1
+                                }
+                            }
+                            Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index)
                         }
+                        dataHashMap[view] = data
+                        LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(data, dataHashMap.size))
                     }
-
                 }
             }
         }
     }
 
+    private fun String.filterClassName(): Boolean {
+        val filterList = arrayListOf("controlcenter", "image", "keyguard")
+        filterList.forEach {
+            if (contains(it, true)) return false
+        }
+        return this != TextView::class.java.name
+    }
+
+    @SuppressLint("DiscouragedApi")
+    private fun View.filterView(function: () -> Unit) {
+        if (this.parent is LinearLayout) {
+            val parentView = (this.parent as LinearLayout)
+            val id = context.resources.getIdentifier("clock_container", "id", context.packageName)
+            if (parentView.id != id) {
+                function()
+            }
+        }
+    }
+
+    private fun canUnhook(): Boolean {
+        val minutes = LocalDateTime.now().minute
+        if (lastTime == 0) {
+            lastTime = minutes
+        } else {
+            if (lastTime - minutes == -1) {
+                hook.unhook()
+                return true
+            }
+        }
+        return false
+    }
 
     inner class TestReceiver : BroadcastReceiver() {
-        private lateinit var parentLinearLayout: ViewGroup
-        private lateinit var testTextView: TextView
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
                 "GetClass" -> {
-                    if (dataList.size == 0) {
+                    if (dataHashMap.size == 0) {
                         LogTools.xp(moduleRes.getString(R.string.NoTextView))
-                        context.receiveClass("", "", 0, 0, 0)
+                        context.receiveClass(arrayListOf())
                         return
                     } else {
-                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(dataList[nowHookClassNameListIndex]))
-                        context.receiveClass(dataList[nowHookClassNameListIndex].`class`, dataList[nowHookClassNameListIndex].parent::class.java.name, dataList[nowHookClassNameListIndex].parent.id, nowHookClassNameListIndex, dataList.size)
+                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(dataHashMap))
+                        context.receiveClass(ArrayList(dataHashMap.values))
                     }
-                    if (!this::testTextView.isInitialized) {
-                        testTextView = TextView(context).apply {
-                            text = moduleRes.getString(R.string.AppName)
-                            isSingleLine = true
-                            gravity = Gravity.CENTER
-                            setBackgroundColor(Color.WHITE)
-                            setTextColor(Color.BLACK)
-                        }
-                    }
+                }
+
+                "ShowView" -> {
+                    val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getSerializableExtra("Data", Data::class.java)
+                    } else {
+                        intent.getSerializableExtra("Data") as Data
+                    }!!
                     goMainThread {
-                        if (this::parentLinearLayout.isInitialized) {
-                            textview.visibility = View.VISIBLE
-                            parentLinearLayout.removeView(testTextView)
+                        dataHashMap.forEach { (textview, da) ->
+                            if (da.textViewClassName == data.textViewClassName && da.textViewID == data.textViewID && da.parentClassName == data.parentClassName && da.parentID == data.parentID && da.index == data.index) {
+                                if (this@SystemUITest::lastView.isInitialized) {
+                                    (lastView.parent as LinearLayout).removeView(testView)
+                                    lastView.visibility = View.VISIBLE
+                                }
+                                textview.visibility = View.GONE
+                                val parentLinearLayout = textview.parent as LinearLayout
+                                parentLinearLayout.addView(testView)
+                                lastView = textview
+                                return@forEach
+                            }
                         }
-                        textview = dataList[nowHookClassNameListIndex].textView
-                        textview.visibility = View.GONE
-                        parentLinearLayout = (dataList[nowHookClassNameListIndex].textView.parent as ViewGroup)
-                        parentLinearLayout.addView(testTextView, 0)
-                        nowHookClassNameListIndex = (nowHookClassNameListIndex + 1) % dataList.size
                     }
                 }
             }

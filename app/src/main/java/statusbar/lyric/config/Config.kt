@@ -67,26 +67,40 @@ class Config {
         set(value) {
             config.put("testMode", value)
         }
-    var `class`: String
+    var textViewClassName: String
         get() {
-            return config.opt("class", "")
+            return config.opt("textViewClassName", "")
         }
         set(value) {
-            config.put("class", value)
+            config.put("textViewClassName", value)
         }
-    var parentClass: String
+    var textViewID: Int
         get() {
-            return config.opt("parentClass", "")
+            return config.opt("textViewID", 0)
         }
         set(value) {
-            config.put("parentClass", value)
+            config.put("textViewID", value)
         }
-    var parentID:Int
+    var parentClassName: String
+        get() {
+            return config.opt("parentClassName", "")
+        }
+        set(value) {
+            config.put("parentClassName", value)
+        }
+    var parentID: Int
         get() {
             return config.opt("parentID", 0)
         }
         set(value) {
             config.put("parentID", value)
+        }
+    var index: Int
+        get() {
+            return config.opt("index", 0)
+        }
+        set(value) {
+            config.put("index", value)
         }
     var timeFormat: String
         get() {
@@ -255,7 +269,6 @@ class Config {
     fun getDefaultIcon(packageName: String, forceShow: Boolean = false): String {
         return if (defIconHashMap.containsKey(packageName)) defIconHashMap[packageName]!! else if (forceShow) defaultIcon else ""
     }
-
 
 
     private val defaultIcon by lazy {

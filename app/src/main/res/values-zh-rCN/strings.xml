@@ -39,6 +39,7 @@
     <string name="LyricPage">歌词页</string>
     <string name="IconPage">图标页</string>
     <string name="CustomizeIconPage">自定义图标页</string>
+    <string name="ChoosePage">选择页</string>
     <string name="LyricWidth">歌词宽度</string>
     <string name="LyricWidthTips">范围：0％–100％，0代表自适应宽度</string>
     <string name="FixedLyricWidth">固定歌词宽度</string>
@@ -93,7 +94,9 @@
     <string name="NotFoundHook">未找到Hook点</string>
     <string name="NotFoundHookTips">请尝试重新启动SystemUi，如果仍然无法找到，请联系开发人员</string>
     <string name="SelectHook">是否选择此Hook点</string>
-    <string name="SelectHookTips">第%s个Hook点，总共%s个\n%s\n父组件：%s\n父组件ID：%s</string>
     <string name="RestartAppEffect">重启应用程序生效</string>
     <string name="ForceTheIconToBeDisplayed">强制显示图标</string>
+    <string name="AAATips">是否重复：%s ； Index：%s</string>
+    <string name="BroadcastReceiveTimeout">广播接收超时</string>
+    <string name="BroadcastReceiveTimeoutTips">请先重启系统界面，如依然超时请联系开发者</string>
 </resources>

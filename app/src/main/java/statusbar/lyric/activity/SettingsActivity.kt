@@ -36,6 +36,7 @@ import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.fkj233.ui.dialog.NewDialog
 import statusbar.lyric.R
+import statusbar.lyric.activity.page.ChoosePage
 import statusbar.lyric.activity.page.CustomizeIconPage
 import statusbar.lyric.activity.page.IconPage
 import statusbar.lyric.activity.page.LyricPage
@@ -44,16 +45,19 @@ import statusbar.lyric.activity.page.MenuPage
 import statusbar.lyric.activity.page.TestModePage
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
+import statusbar.lyric.data.Data
 import statusbar.lyric.tools.ActivityTestTools
+import statusbar.lyric.tools.ActivityTestTools.stopResponse
 import statusbar.lyric.tools.ActivityTools
+import statusbar.lyric.tools.ActivityTools.dataList
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.FileTools
 import statusbar.lyric.tools.Tools.isNotNull
+import java.util.LinkedList
 
 
 class SettingsActivity : MIUIActivity() {
     private val appTestReceiver by lazy { AppTestReceiver() }
-
 
     companion object {
         const val OPEN_FONT_FILE = 2114745
@@ -66,6 +70,7 @@ class SettingsActivity : MIUIActivity() {
         registerPage(LyricPage::class.java, activity.getString(R.string.LyricPage))
         registerPage(IconPage::class.java, activity.getString(R.string.IconPage))
         registerPage(CustomizeIconPage::class.java, activity.getString(R.string.CustomizeIconPage))
+        registerPage(ChoosePage::class.java, activity.getString(R.string.ChoosePage))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,16 +154,18 @@ class SettingsActivity : MIUIActivity() {
         }
     }
 
-    class AppTestReceiver : BroadcastReceiver() {
+    inner class AppTestReceiver : BroadcastReceiver() {
+
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
                 "ReceiveClass" -> {
-                    val `class` = intent.getStringExtra("Class") ?: ""
-                    val parentClass = intent.getStringExtra("parentClass") ?: ""
-                    val index = intent.getIntExtra("Index", 0)
-                    val parentID = intent.getIntExtra("ParentID", 0)
-                    val size = intent.getIntExtra("Size", 0)
-                    if (size == 0 || `class`.isEmpty()) {
+                    stopResponse()
+                    dataList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getSerializableExtra("DataList", ArrayList<Data>()::class.java)
+                    } else {
+                        intent.getSerializableExtra("DataList") as ArrayList<Data>
+                    }!!
+                    if (dataList.size == 0) {
                         MIUIDialog(context) {
                             setTitle(context.getString(R.string.NotFoundHook))
                             setMessage(context.getString(R.string.NotFoundHookTips))
@@ -167,25 +174,9 @@ class SettingsActivity : MIUIActivity() {
                             }
                         }.show()
                         return
+                    }else{
+                        showFragment(ChoosePage::class.java.simpleName)
                     }
-                    NewDialog(context) {
-                        setTitle(context.getString(R.string.SelectHook))
-                        setMessage(context.getString(R.string.SelectHookTips).format(index + 1, size, `class`, parentClass, parentID.toString(16)))
-                        Button(context.getText(R.string.OK)) {
-                            ActivityOwnSP.config.`class` = `class`
-                            ActivityOwnSP.config.parentID = parentID
-                            ActivityOwnSP.config.parentClass = parentClass
-                            dismiss()
-                        }
-                        Button(context.getText(R.string.Cancel), cancelStyle = true) {
-                            ActivityTestTools.getClass()
-                        }
-                        Button(context.getText(R.string.Exit), cancelStyle = true)
-                        Finally {
-                            dismiss()
-                        }
-                        setCancelable(false)
-                    }.show()
                 }
             }
         }
