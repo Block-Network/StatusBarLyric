@@ -170,20 +170,17 @@ class SettingsActivity : MIUIActivity() {
                     }
                     NewDialog(context) {
                         setTitle(context.getString(R.string.SelectHook))
-                        setMessage(context.getString(R.string.SelectHookTips).format(index + 1, size, `class`, parentClass, "0x${parentID.toString(16)}"))
+                        setMessage(context.getString(R.string.SelectHookTips).format(index + 1, size, `class`, parentClass, parentID.toString(16)))
                         Button(context.getText(R.string.OK)) {
                             ActivityOwnSP.config.`class` = `class`
                             ActivityOwnSP.config.parentID = parentID
                             ActivityOwnSP.config.parentClass = parentClass
-                            ActivityTestTools.clear()
                             dismiss()
                         }
                         Button(context.getText(R.string.Cancel), cancelStyle = true) {
                             ActivityTestTools.getClass()
                         }
-                        Button(context.getText(R.string.Exit), cancelStyle = true) {
-                            ActivityTestTools.clear()
-                        }
+                        Button(context.getText(R.string.Exit), cancelStyle = true)
                         Finally {
                             dismiss()
                         }

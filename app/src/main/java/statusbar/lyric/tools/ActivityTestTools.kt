@@ -38,14 +38,6 @@ object ActivityTestTools {
         })
     }
 
-    fun clear() {
-        appContext.sendBroadcast(Intent().apply {
-            action = "TestReceiver"
-            putExtra("Type", "Clear")
-            LogTools.app("Clear")
-        })
-    }
-
     fun Context.receiveClass(`class`: String, parentClass: String, parentID: Int, index: Int, size: Int) {
         sendBroadcast(Intent("AppTestReceiver").apply {
             putExtra("Type", "ReceiveClass")
