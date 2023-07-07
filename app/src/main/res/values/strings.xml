@@ -102,4 +102,5 @@
     <string name="AAATips">IsRepeat: %s;Index: %s</string>
     <string name="BroadcastReceiveTimeout">Broadcast Receive Timeout</string>
     <string name="BroadcastReceiveTimeoutTips">Please restart the SystemUI first, if it still times out, please contact the developer</string>
+    <string name="HideTime">Hide Time</string>
 </resources>

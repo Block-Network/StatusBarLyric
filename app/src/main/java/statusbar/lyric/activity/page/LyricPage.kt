@@ -276,5 +276,8 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
+        TextSw(textId = R.string.HideTime, key = "hideTime", defValue = true, onClickListener = {
+            changeConfig()
+        })
     }
 }

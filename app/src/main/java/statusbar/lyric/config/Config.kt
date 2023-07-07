@@ -60,6 +60,14 @@ class Config {
         set(value) {
             config.put("printXpLog", value)
         }
+
+    var hideTime: Boolean
+        get() {
+            return config.opt("hideTime", true)
+        }
+        set(value) {
+            config.put("hideTime", value)
+        }
     var testMode: Boolean
         get() {
             return config.opt("testMode", false)

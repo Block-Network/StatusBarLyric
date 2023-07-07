@@ -187,7 +187,7 @@ class SystemUILyric : BaseHook() {
         LogTools.xp("lyric:$lyric")
         goMainThread {
             if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
-            if (clockView.visibility != View.GONE) clockView.visibility = View.GONE
+            if (config.hideTime && clockView.visibility != View.GONE) clockView.visibility = View.GONE
             lyricView.setText(lyric)
             lyricView.width = getLyricWidth(lyricView.paint, lyric)
         }
@@ -215,7 +215,7 @@ class SystemUILyric : BaseHook() {
         LogTools.xp("Hide Lyric")
         goMainThread {
             if (lyricLayout.visibility != View.GONE) lyricLayout.visibility = View.GONE
-            if (clockView.visibility != View.VISIBLE) clockView.visibility = View.VISIBLE
+            if (config.hideTime && clockView.visibility != View.VISIBLE) clockView.visibility = View.VISIBLE
             lyricView.setText("")
             lyricView.width = 0
         }
@@ -274,10 +274,8 @@ class SystemUILyric : BaseHook() {
                     } else {
                         setColorFilter(Color.parseColor(config.iconColor))
                     }
-
                 }
             }
-
         }
     }
 

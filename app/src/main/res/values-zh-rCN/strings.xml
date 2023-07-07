@@ -101,4 +101,5 @@
     <string name="AAATips">是否重复：%s；Index：%s</string>
     <string name="BroadcastReceiveTimeout">广播接收超时</string>
     <string name="BroadcastReceiveTimeoutTips">请先重启系统界面，如依然超时请联系开发者</string>
+    <string name="HideTime">隐藏时间</string>
 </resources>
