@@ -67,6 +67,13 @@ class Config {
         set(value) {
             config.put("testMode", value)
         }
+    var relaxConditions: Boolean
+        get() {
+            return config.opt("relaxConditions", false)
+        }
+        set(value) {
+            config.put("relaxConditions", value)
+        }
     var textViewClassName: String
         get() {
             return config.opt("textViewClassName", "")

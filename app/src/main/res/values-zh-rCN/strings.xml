@@ -35,7 +35,9 @@
     <string name="ModuleBuildTime">模块构建时间</string>
     <string name="RestartUITips">确定要重新启动SystemUI吗？</string>
     <string name="masterSwitch">主开关</string>
-    <string name="TestMode">测试模式</string>
+    <string name="TestMode">测试模式</string>>
+    <string name="RelaxConditions">放宽条件</string>
+    <string name="RelaxConditionsTips">允许TextView出现，但是可能会怎加许多hook点</string>
     <string name="LyricPage">歌词页</string>
     <string name="IconPage">图标页</string>
     <string name="CustomizeIconPage">自定义图标页</string>

@@ -91,7 +91,7 @@ class SystemUITest : BaseHook() {
                 val text = "${it.args[0]}".dispose()
                 val time = System.currentTimeMillis()
                 nowTime = dateFormat.format(time)
-                if (text == nowTime && className.filterClassName()) {
+                if (nowTime.toRegex().containsMatchIn(text) && className.filterClassName()) {
                     if (canUnhook()) return@after
                     val view = (it.thisObject as TextView)
                     view.filterView {
@@ -120,7 +120,7 @@ class SystemUITest : BaseHook() {
         filterList.forEach {
             if (contains(it, true)) return false
         }
-        return this != TextView::class.java.name
+        return if (config.relaxConditions) true else this != TextView::class.java.name
     }
 
     @SuppressLint("DiscouragedApi")
@@ -165,8 +165,7 @@ class SystemUITest : BaseHook() {
                     val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         intent.getSerializableExtra("Data", Data::class.java)
                     } else {
-                        @Suppress("DEPRECATION")
-                        intent.getSerializableExtra("Data") as Data
+                        @Suppress("DEPRECATION") intent.getSerializableExtra("Data") as Data
                     }!!
                     goMainThread {
                         dataHashMap.forEach { (textview, da) ->
@@ -177,7 +176,7 @@ class SystemUITest : BaseHook() {
                                 }
                                 textview.visibility = View.GONE
                                 val parentLinearLayout = textview.parent as LinearLayout
-                                parentLinearLayout.addView(testView,0)
+                                parentLinearLayout.addView(testView, 0)
                                 lastView = textview
                                 return@forEach
                             }

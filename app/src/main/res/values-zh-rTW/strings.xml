@@ -36,6 +36,8 @@
     <string name="RestartUITips">確定要重新啟動System UI嗎？</string>
     <string name="masterSwitch">主開關</string>
     <string name="TestMode">測試模式</string>
+    <string name="RelaxConditions">放寬條件</string>
+    <string name="RelaxConditionsTips">允許TextView出現，但是可能會怎加許多hook點</string>
     <string name="LyricPage">歌詞頁</string>
     <string name="IconPage">圖標頁</string>
     <string name="CustomizeIconPage">自訂圖示頁</string>
