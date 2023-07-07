@@ -25,7 +25,7 @@ class TestModePage : BasePage() {
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
         TextSSw(textId = R.string.TestMode, key = "testMode", onClickListener = { testModeBinding.send(it) })
-        TextSSw(textId = R.string.RelaxConditions, tipsId = R.string.RelaxConditionsTips, key = "relaxConditions", onClickListener = { testModeBinding.send(it) }, dataBindingRecv = testModeBinding.getRecv(1))
+        TextSSw(textId = R.string.RelaxConditions, tipsId = R.string.RelaxConditionsTips, key = "relaxConditions", dataBindingRecv = testModeBinding.getRecv(1))
         TextSA(textId = R.string.TimeFormat, onClickListener = {
             NewDialog(activity) {
                 setTitle(getString(R.string.TimeFormat))
