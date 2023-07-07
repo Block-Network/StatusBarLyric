@@ -37,7 +37,7 @@
     <string name="masterSwitch">Master Switch</string>
     <string name="TestMode">Test Mode</string>
     <string name="RelaxConditions">Relax Conditions</string>
-    <string name="RelaxConditionsTips">TextView is allowed, but many hooks may be added</string>
+    <string name="RelaxConditionsTips">Some classes are allowed, but there may be many more hook points</string>
     <string name="LyricPage">Lyric Page</string>
     <string name="IconPage">Icon Page</string>
     <string name="CustomizeIconPage">Customize Icon Page</string>

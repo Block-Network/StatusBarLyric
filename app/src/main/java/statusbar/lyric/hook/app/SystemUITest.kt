@@ -116,11 +116,12 @@ class SystemUITest : BaseHook() {
     }
 
     private fun String.filterClassName(): Boolean {
+        if (config.relaxConditions) return true
         val filterList = arrayListOf("controlcenter", "image", "keyguard")
         filterList.forEach {
             if (contains(it, true)) return false
         }
-        return if (config.relaxConditions) true else this != TextView::class.java.name
+        return this != TextView::class.java.name
     }
 
     @SuppressLint("DiscouragedApi")
