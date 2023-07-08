@@ -279,5 +279,21 @@ class LyricPage : BasePage() {
         TextSw(textId = R.string.HideTime, key = "hideTime", defValue = true, onClickListener = {
             changeConfig()
         })
+        val animationMaps: LinkedHashMap<String, String> = LinkedHashMap<String, String>().apply {
+            this["None"] = getString(R.string.LyricsAnimationNone)
+            this["Top"] = getString(R.string.LyricsAnimationTop)
+            this["Bottom"] = getString(R.string.LyricsAnimationBottom)
+            this["Start"] = getString(R.string.LyricsAnimationStart)
+            this["End"] = getString(R.string.LyricsAnimationEnd)
+            this["Random"] = getString(R.string.LyricsAnimationRandom)
+        }
+        TextSSp(textId = R.string.LyricsAnimation, currentValue = config.animation, data = {
+            animationMaps.forEach {
+                add(it.value) {
+                    config.animation = (it.key)
+                    changeConfig()
+                }
+            }
+        })
     }
 }

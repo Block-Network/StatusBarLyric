@@ -254,6 +254,13 @@ class Config {
         set(value) {
             config.put("forceTheIconToBeDisplayed", value)
         }
+    var animation: String
+        get() {
+            return config.opt("animation", "Start")
+        }
+        set(value) {
+            config.put("animation", value)
+        }
     var iconData: String
         get() {
             return config.opt("IconData", "")
