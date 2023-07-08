@@ -192,9 +192,9 @@ class SystemUILyric : BaseHook() {
             if (config.hideTime && clockView.visibility != View.GONE) clockView.visibility = View.GONE
             lyricView.apply {
                 if (config.animation == "Random") {
-                    val anim = config.animation
-                    inAnimation = Tools.inAnimation(anim)
-                    outAnimation = Tools.outAnimation(anim)
+                    val effect = arrayListOf("Top", "Bottom", "Start", "End").random()
+                    inAnimation = Tools.inAnimation(effect)
+                    outAnimation = Tools.outAnimation(effect)
                 }
                 setText(lyric)
                 width = getLyricWidth(lyricView.paint, lyric)
