@@ -23,7 +23,7 @@
 package statusbar.lyric.config
 
 import android.annotation.SuppressLint
-import statusbar.lyric.tools.ActivityTools.context
+import cn.fkj233.ui.activity.MIUIActivity.Companion.context
 import statusbar.lyric.tools.Tools
 
 @SuppressLint("StaticFieldLeak")

@@ -26,6 +26,7 @@ package statusbar.lyric.tools
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import cn.fkj233.ui.activity.MIUIActivity.Companion.context
 import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.R
 import statusbar.lyric.data.Data
@@ -69,7 +70,7 @@ object ActivityTestTools {
             override fun run() {
                 stopResponse()
                 goMainThread {
-                    MIUIDialog(ActivityTools.context) {
+                    MIUIDialog(context) {
                         setTitle(R.string.BroadcastReceiveTimeout)
                         setMessage(R.string.BroadcastReceiveTimeoutTips)
                         setRButton(R.string.OK) { dismiss() }
