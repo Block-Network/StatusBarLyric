@@ -178,7 +178,7 @@ class SystemUILyric : BaseHook() {
         } else {
             context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"))
         }
-        changeConfig()
+        changeConfig(1)
     }
 
     private fun changeLyric(lyric: String) {
@@ -232,11 +232,11 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private fun changeConfig() {
+    private fun changeConfig(delay: Long = 0L) {
         if (!this::clockView.isInitialized) return
         LogTools.xp("Change Config")
         config.update()
-        goMainThread {
+        goMainThread(delay) {
             lyricView.apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
                 setMargins(config.lyricLeftMargins, config.lyricTopMargins, 0, 0)
