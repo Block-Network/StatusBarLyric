@@ -73,6 +73,8 @@ class SettingsActivity : MIUIActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        activity= this
+        context= this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
     }
