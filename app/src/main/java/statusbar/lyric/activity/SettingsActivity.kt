@@ -34,7 +34,6 @@ import android.os.Build
 import android.os.Bundle
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.dialog.MIUIDialog
-import cn.fkj233.ui.dialog.NewDialog
 import statusbar.lyric.R
 import statusbar.lyric.activity.page.ChoosePage
 import statusbar.lyric.activity.page.CustomizeIconPage
@@ -46,14 +45,14 @@ import statusbar.lyric.activity.page.TestModePage
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.data.Data
-import statusbar.lyric.tools.ActivityTestTools
 import statusbar.lyric.tools.ActivityTestTools.stopResponse
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.dataList
+import statusbar.lyric.tools.ActivityTools.getNotice
+import statusbar.lyric.tools.ActivityTools.getUpdate
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.FileTools
 import statusbar.lyric.tools.Tools.isNotNull
-import java.util.LinkedList
 
 
 class SettingsActivity : MIUIActivity() {
@@ -74,8 +73,6 @@ class SettingsActivity : MIUIActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        activity = this
-        ActivityTools.context = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
     }
@@ -132,17 +129,18 @@ class SettingsActivity : MIUIActivity() {
 
 
     private fun init() {
-        ActivityTools.context = this
         requestPermission()
         registerReceiver()
+        getUpdate()
+        getNotice()
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ActivityTools.context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"), Context.RECEIVER_EXPORTED)
+            context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"), Context.RECEIVER_EXPORTED)
         } else {
-            ActivityTools.context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"))
+            context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"))
         }
     }
 

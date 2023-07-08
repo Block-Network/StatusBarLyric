@@ -52,19 +52,21 @@ object BackupTools {
     }
 
     private fun openFile(activity: Activity) {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.type = "application/json"
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+        }
         activity.startActivityForResult(intent, OPEN_DOCUMENT_CODE)
     }
 
 
     private fun saveFile(activity: Activity, fileName: String) {
-        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.type = "application/json"
-        intent.putExtra(Intent.EXTRA_TITLE, fileName)
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+            putExtra(Intent.EXTRA_TITLE, fileName)
+        }
         activity.startActivityForResult(intent, CREATE_DOCUMENT_CODE)
     }
 
