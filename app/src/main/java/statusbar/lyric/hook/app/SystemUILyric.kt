@@ -104,6 +104,7 @@ class SystemUILyric : BaseHook() {
             } else {
                 lyricView
             })
+            visibility = View.GONE
         }
     }
 

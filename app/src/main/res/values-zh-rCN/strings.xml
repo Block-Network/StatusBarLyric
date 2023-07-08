@@ -102,4 +102,11 @@
     <string name="BroadcastReceiveTimeout">广播接收超时</string>
     <string name="BroadcastReceiveTimeoutTips">请先重启系统界面，如依然超时请联系开发者</string>
     <string name="HideTime">隐藏时间</string>
+    <string name="LyricsAnimation">歌词动画</string>
+    <string name="LyricsAnimationNone">None</string>
+    <string name="LyricsAnimationTop">Top</string>
+    <string name="LyricsAnimationBottom">Bottom</string>
+    <string name="LyricsAnimationStart">Start</string>
+    <string name="LyricsAnimationEnd">End</string>
+    <string name="LyricsAnimationRandom">Random</string>
 </resources>

@@ -183,9 +183,7 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
-        TextSSw(textId = R.string.LyricBlurredEdges, key = "lyricBlurredEdges", defValue = true, onClickListener = {
-            changeConfig()
-        })
+        TextSSw(textId = R.string.LyricBlurredEdges, key = "lyricBlurredEdges", defValue = false)
         TextSA(textId = R.string.LyricBlurredEdgesRadius, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.LyricBlurredEdgesRadius))
@@ -199,7 +197,6 @@ class LyricPage : BasePage() {
                         val value = getEditText().toInt()
                         if (value in 0..100) {
                             config.lyricBlurredEdgesRadius = value
-                            changeConfig()
                         } else {
                             throw Exception()
                         }

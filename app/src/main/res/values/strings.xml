@@ -103,7 +103,7 @@
     <string name="BroadcastReceiveTimeout">Broadcast Receive Timeout</string>
     <string name="BroadcastReceiveTimeoutTips">Please restart the SystemUI first, if it still times out, please contact the developer</string>
     <string name="HideTime">Hide Time</string>
-    <string name="LyricsAnimation">Lyric  Animation</string>
+    <string name="LyricsAnimation">Lyric Animation</string>
     <string name="LyricsAnimationNone">None</string>
     <string name="LyricsAnimationTop">Top</string>
     <string name="LyricsAnimationBottom">Bottom</string>
