@@ -51,16 +51,12 @@ import statusbar.lyric.tools.ActivityTools.dataList
 import statusbar.lyric.tools.ActivityTools.getNotice
 import statusbar.lyric.tools.ActivityTools.getUpdate
 import statusbar.lyric.tools.BackupTools
-import statusbar.lyric.tools.FileTools
 import statusbar.lyric.tools.Tools.isNotNull
 
 
 class SettingsActivity : MIUIActivity() {
     private val appTestReceiver by lazy { AppTestReceiver() }
 
-    companion object {
-        const val OPEN_FONT_FILE = 2114745
-    }
 
     override fun register() {
         registerPage(MainPage::class.java, activity.getString(R.string.AppName))
@@ -88,17 +84,6 @@ class SettingsActivity : MIUIActivity() {
 
                 BackupTools.OPEN_DOCUMENT_CODE -> {
                     BackupTools.handleReadDocument(activity, data!!.data)
-                }
-
-                OPEN_FONT_FILE -> {
-                    data!!.data?.let {
-                        activity.sendBroadcast(Intent().apply {
-                            action = "Lyric_Server"
-                            putExtra("Lyric_Type", "copy_font")
-                            putExtra("Lyric_PackageName", activity.packageName)
-                            putExtra("Font_Path", FileTools(activity).getFilePathByUri(it))
-                        })
-                    }
                 }
             }
         }
@@ -156,6 +141,7 @@ class SettingsActivity : MIUIActivity() {
 
     inner class AppTestReceiver : BroadcastReceiver() {
 
+        @Suppress("DEPRECATION", "UNCHECKED_CAST")
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
                 "ReceiveClass" -> {

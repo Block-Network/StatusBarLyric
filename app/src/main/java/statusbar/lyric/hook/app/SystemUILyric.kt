@@ -31,6 +31,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -59,6 +60,7 @@ import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.regexReplace
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
+import java.io.File
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -263,6 +265,12 @@ class SystemUILyric : BaseHook() {
                 if (animation != "Random") {
                     inAnimation = Tools.inAnimation(animation)
                     outAnimation = Tools.outAnimation(animation)
+                }
+                runCatching {
+                    val file = File("${context.filesDir.path}/font")
+                    if (file.exists() && file.canRead()) {
+                        setTypeface(Typeface.createFromFile(file))
+                    }
                 }
             }
             if (!config.iconSwitch) {
