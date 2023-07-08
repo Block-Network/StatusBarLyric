@@ -35,6 +35,7 @@
     <string name="ModuleBuildTime">Module build time</string>
     <string name="RestartUITips">Are you sure you want to restart the System UI?</string>
     <string name="masterSwitch">Master Switch</string>
+    <string name="HookPage">Hook Page</string>
     <string name="TestMode">Test Mode</string>
     <string name="RelaxConditions">Relax Conditions</string>
     <string name="RelaxConditionsTips">Some classes are allowed, but there may be many more hook points</string>
@@ -110,4 +111,7 @@
     <string name="LyricsAnimationStart">Start</string>
     <string name="LyricsAnimationEnd">End</string>
     <string name="LyricsAnimationRandom">Random</string>
+    <string name="AddLocation">Add Location</string>
+    <string name="AddLocationStart">Start</string>
+    <string name="AddLocationEnd">End</string>
 </resources>

@@ -41,7 +41,7 @@ import statusbar.lyric.activity.page.IconPage
 import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
 import statusbar.lyric.activity.page.MenuPage
-import statusbar.lyric.activity.page.TestModePage
+import statusbar.lyric.activity.page.HookPage
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.data.Data
@@ -61,7 +61,7 @@ class SettingsActivity : MIUIActivity() {
     override fun register() {
         registerPage(MainPage::class.java, activity.getString(R.string.AppName))
         registerPage(MenuPage::class.java, activity.getString(R.string.Menu))
-        registerPage(TestModePage::class.java, activity.getString(R.string.TestMode))
+        registerPage(HookPage::class.java, activity.getString(R.string.HookPage))
         registerPage(LyricPage::class.java, activity.getString(R.string.LyricPage))
         registerPage(IconPage::class.java, activity.getString(R.string.IconPage))
         registerPage(CustomizeIconPage::class.java, activity.getString(R.string.CustomizeIconPage))

@@ -19,8 +19,17 @@ import java.util.Locale
 
 @SuppressLint("NonConstantResourceId")
 @BMPage
-class TestModePage : BasePage() {
+class HookPage : BasePage() {
     override fun onCreate() {
+        val indexMaps: LinkedHashMap<Int, String> = LinkedHashMap<Int, String>().apply {
+            this[0] = getString(R.string.AddLocationStart)
+            this[1] = getString(R.string.AddLocationEnd)
+        }
+        TextSSp(textId = R.string.AddLocation, currentValue = indexMaps[ActivityOwnSP.config.viewIndex].toString(), data = {
+            indexMaps.forEach {
+                add(it.value) { ActivityOwnSP.config.viewIndex = it.key }
+            }
+        })
         val testModeBinding = GetDataBinding({ ActivityOwnSP.config.testMode }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }

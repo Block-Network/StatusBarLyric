@@ -177,7 +177,11 @@ class SystemUITest : BaseHook() {
                                 }
                                 textview.visibility = View.GONE
                                 val parentLinearLayout = textview.parent as LinearLayout
-                                parentLinearLayout.addView(testView, 0)
+                                if (config.viewIndex == 0) {
+                                    parentLinearLayout.addView(testView, 0)
+                                } else {
+                                    parentLinearLayout.addView(testView)
+                                }
                                 lastView = textview
                                 return@forEach
                             }

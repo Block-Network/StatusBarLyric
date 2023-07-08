@@ -35,6 +35,7 @@
     <string name="ModuleBuildTime">模塊構建時間</string>
     <string name="RestartUITips">確定要重新啟動System UI嗎？</string>
     <string name="masterSwitch">主開關</string>
+    <string name="HookPage">Hook頁</string>
     <string name="TestMode">測試模式</string>
     <string name="RelaxConditions">放寬條件</string>
     <string name="RelaxConditionsTips">允許部分類出現，但是可能會多許多hook點</string>
@@ -109,4 +110,7 @@
     <string name="LyricsAnimationStart">Start</string>
     <string name="LyricsAnimationEnd">End</string>
     <string name="LyricsAnimationRandom">Random</string>
+    <string name="AddLocation">添加位置</string>
+    <string name="AddLocationStart">Start</string>
+    <string name="AddLocationEnd">End</string>
 </resources>

@@ -162,7 +162,11 @@ class SystemUILyric : BaseHook() {
         LogTools.xp("Lyric Init")
         isHook = true
         goMainThread(1) {
-            clockViewParent.addView(lyricLayout, 0)
+            if (config.viewIndex == 0) {
+                clockViewParent.addView(lyricLayout, 0)
+            } else {
+                clockViewParent.addView(lyricLayout)
+            }
         }
         receptionLyric(context) {
             if (!this::clockView.isInitialized) return@receptionLyric

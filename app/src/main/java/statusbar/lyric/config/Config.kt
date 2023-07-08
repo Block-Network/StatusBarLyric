@@ -261,6 +261,13 @@ class Config {
         set(value) {
             config.put("animation", value)
         }
+    var viewIndex: Int
+        get() {
+            return config.opt("viewIndex", 0)
+        }
+        set(value) {
+            config.put("viewIndex", value)
+        }
     var iconData: String
         get() {
             return config.opt("IconData", "")

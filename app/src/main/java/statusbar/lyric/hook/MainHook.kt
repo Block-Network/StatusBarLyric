@@ -25,7 +25,7 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
             "com.android.systemui" -> {
                 LogTools.xp("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
                 if (XposedOwnSP.config.testMode) {
-                    LogTools.xp(moduleRes.getString(R.string.TestMode))
+                    LogTools.xp(moduleRes.getString(R.string.HookPage))
                     initHooks(SystemUITest())
                 } else {
                     LogTools.xp(moduleRes.getString(R.string.LyricMode))
