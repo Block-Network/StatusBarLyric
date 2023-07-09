@@ -115,4 +115,6 @@
     <string name="AddLocationStart">Start</string>
     <string name="AddLocationEnd">End</string>
     <string name="HideNotificationIcon">有歌詞時自動隱藏通知圖示</string>
+    <string name="LimitVisibilityChange">* 限制可見性更改</string>
+    <string name="LimitVisibilityChangeTips">可以防止部分系統的特性導致有時間會出現</string>
 </resources>

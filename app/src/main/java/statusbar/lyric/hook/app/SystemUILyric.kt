@@ -37,6 +37,7 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -45,13 +46,11 @@ import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import cn.lyric.getter.api.tools.Tools.receptionLyric
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
-import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
-import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools
@@ -59,6 +58,7 @@ import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isNotNull
+import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.regexReplace
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
@@ -73,7 +73,7 @@ class SystemUILyric : BaseHook() {
     private var lastLyric: String = ""
     private var lastBase64Icon: String = ""
     private var iconSwitch: Boolean = true
-
+    private var isShow: Boolean = false
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private val displayMetrics: DisplayMetrics by lazy { context.resources.displayMetrics }
@@ -83,7 +83,7 @@ class SystemUILyric : BaseHook() {
 
 
     private lateinit var clockView: TextView
-    private lateinit var targetView: LinearLayout
+    private lateinit var targetView: ViewGroup
     private val lyricView: LyricSwitchView by lazy {
         LyricSwitchView(context).apply {
             layoutParams = clockView.layoutParams
@@ -115,35 +115,24 @@ class SystemUILyric : BaseHook() {
     //////////////////////////////Hook//////////////////////////////////////
     override fun init() {
         LogTools.xp("Init")
-        val className = config.textViewClassName
-        val parentClass = config.parentClassName
-        val parentID = config.parentID
-        if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
-            LogTools.xp(moduleRes.getString(R.string.LoadClassEmpty))
-            return
-        }
-        loadClassOrNull(className).isNotNull {
-            var index = 0
+        loadClassOrNull(config.textViewClassName).isNotNull {
             hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
-                after {
-                    val view = (it.thisObject as TextView)
-                    if (view::class.java.name == config.textViewClassName) {
-                        if (view.id == config.textViewID) {
-                            if (view.parent is LinearLayout) {
-                                val parentView = (view.parent as LinearLayout)
-                                if (parentView::class.java.name == parentClass) {
-                                    if (parentID == parentView.id) {
-                                        if (index == config.index) {
-                                            LogTools.xp("Lyric Init")
-                                            clockView = (it.thisObject as TextView)
-                                            targetView = (clockView.parent as LinearLayout)
-                                            lyricInit()
-                                            hook.unhook()
-                                        } else {
-                                            index += 1
-                                        }
-                                    }
-                                }
+                after { hookParam ->
+                    (hookParam.thisObject as View).isTargetView { view ->
+                        LogTools.xp("Lyric Init")
+                        clockView = view
+                        targetView = (clockView.parent as LinearLayout)
+                        lyricInit()
+                        hook.unhook()
+                    }
+                }
+            }
+            if (config.limitVisibilityChange) {
+                it.methodFinder().filterByName("setVisibility").first().createHook {
+                    before { hookParam ->
+                        if (isShow) {
+                            when (hookParam.args[0]) {
+                                View.VISIBLE -> hookParam.args[0] = View.GONE
                             }
                         }
                     }
@@ -201,6 +190,7 @@ class SystemUILyric : BaseHook() {
     private fun changeLyric(lyric: String) {
         if (lastLyric == lyric) return
         lastLyric = lyric
+        isShow = true
         LogTools.xp("lyric:$lyric")
         goMainThread {
             if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
@@ -237,6 +227,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun hideLyric() {
+        isShow = false
         LogTools.xp("Hide Lyric")
         goMainThread {
             if (lyricLayout.visibility != View.GONE) lyricLayout.visibility = View.GONE

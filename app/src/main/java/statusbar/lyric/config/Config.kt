@@ -197,6 +197,13 @@ class Config {
         set(value) {
             config.put("iconColor", value)
         }
+    var limitVisibilityChange: Boolean
+        get() {
+            return config.opt("limitVisibilityChange", false)
+        }
+        set(value) {
+            config.put("limitVisibilityChange", value)
+        }
     var lyricLetterSpacing: Int
         get() {
             return config.opt("lyricLetterSpacing", 0)
