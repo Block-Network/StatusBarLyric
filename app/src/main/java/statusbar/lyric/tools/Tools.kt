@@ -45,37 +45,33 @@ import java.util.regex.Pattern
 
 
 object Tools {
-        private var index: Int = 0
-        fun View.isTargetView(callback: (TextView) -> Unit) {
-            val className = XposedOwnSP.config.textViewClassName
-            val textViewID = XposedOwnSP.config.textViewID
-            val parentClass = XposedOwnSP.config.parentClassName
-            val parentID = XposedOwnSP.config.parentID
-            if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
-                LogTools.xp(EzXHelper.moduleRes.getString(R.string.LoadClassEmpty))
-                return
-            }
-            if (this is TextView) {
-                if (this::class.java.name == className) {
-                    if (this.id == textViewID) {
-                        if (this.parent is LinearLayout) {
-                            val parentView = (this.parent as LinearLayout)
-                            if (parentView::class.java.name == parentClass) {
-                                if (parentID == parentView.id) {
-                                    if (index == XposedOwnSP.config.index) {
-                                        callback(this)
-                                    } else {
-                                        index += 1
-                                    }
-                                }
+    private var index: Int = 0
+    fun View.isTargetView(callback: (TextView) -> Unit) {
+        val className = XposedOwnSP.config.textViewClassName
+        val textViewID = XposedOwnSP.config.textViewID
+        val parentClass = XposedOwnSP.config.parentClassName
+        val parentID = XposedOwnSP.config.parentID
+        if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
+            LogTools.xp(EzXHelper.moduleRes.getString(R.string.LoadClassEmpty))
+            return
+        }
+        if (this is TextView) {
+            if (this.id == textViewID) {
+                if (this.parent is LinearLayout) {
+                    val parentView = (this.parent as LinearLayout)
+                    if (parentView::class.java.name == parentClass) {
+                        if (parentID == parentView.id) {
+                            if (index == XposedOwnSP.config.index) {
+                                callback(this)
+                            } else {
+                                index += 1
                             }
                         }
                     }
                 }
             }
         }
-
-
+    }
 
 
     fun String.regexReplace(pattern: String, newString: String): String {

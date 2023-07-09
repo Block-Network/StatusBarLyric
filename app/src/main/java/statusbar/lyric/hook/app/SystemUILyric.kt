@@ -116,7 +116,7 @@ class SystemUILyric : BaseHook() {
     override fun init() {
         LogTools.xp("Init")
         loadClassOrNull(config.textViewClassName).isNotNull {
-            hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
+            hook = it.methodFinder().filterByName("onAttachedToWindow").first().createHook {
                 after { hookParam ->
                     (hookParam.thisObject as View).isTargetView { view ->
                         LogTools.xp("Lyric Init")
@@ -339,7 +339,7 @@ class SystemUILyric : BaseHook() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("type")) {
                 "normal" -> {
-                    if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized))return
+                    if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return
                     changeConfig()
                 }
 
