@@ -74,8 +74,6 @@ class SystemUILyric : BaseHook() {
     private var lastBase64Icon: String = ""
     private var iconSwitch: Boolean = true
 
-    private var isHook: Boolean = false
-
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private val displayMetrics: DisplayMetrics by lazy { context.resources.displayMetrics }
@@ -85,7 +83,7 @@ class SystemUILyric : BaseHook() {
 
 
     private lateinit var clockView: TextView
-    private val clockViewParent: LinearLayout by lazy { (clockView.parent as LinearLayout) }
+    private lateinit var targetView: LinearLayout
     private val lyricView: LyricSwitchView by lazy {
         LyricSwitchView(context).apply {
             layoutParams = clockView.layoutParams
@@ -136,7 +134,11 @@ class SystemUILyric : BaseHook() {
                                 if (parentView::class.java.name == parentClass) {
                                     if (parentID == parentView.id) {
                                         if (index == config.index) {
-                                            lyricInit(it)
+                                            LogTools.xp("Lyric Init")
+                                            clockView = (it.thisObject as TextView)
+                                            targetView = (clockView.parent as LinearLayout)
+                                            lyricInit()
+                                            hook.unhook()
                                         } else {
                                             index += 1
                                         }
@@ -167,17 +169,12 @@ class SystemUILyric : BaseHook() {
 
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    private fun lyricInit(it: XC_MethodHook.MethodHookParam) {
-        if (isHook) return
-        hook.unhook()
-        clockView = (it.thisObject as TextView)
-        LogTools.xp("Lyric Init")
-        isHook = true
+    private fun lyricInit() {
         goMainThread(1) {
             if (config.viewIndex == 0) {
-                clockViewParent.addView(lyricLayout, 0)
+                targetView.addView(lyricLayout, 0)
             } else {
-                clockViewParent.addView(lyricLayout)
+                targetView.addView(lyricLayout)
             }
         }
         receptionLyric(context) {
@@ -258,8 +255,8 @@ class SystemUILyric : BaseHook() {
         if (lastColor == color) return
         lastColor = color
         goMainThread {
-            lyricView.setTextColor(color)
-            iconView.setColorFilter(color)
+            if (config.lyricColor.isEmpty()) lyricView.setTextColor(color)
+            if (config.iconColor.isEmpty()) iconView.setColorFilter(color)
         }
     }
 
@@ -325,7 +322,7 @@ class SystemUILyric : BaseHook() {
     private fun getLyricWidth(paint: Paint, text: String): Int {
         LogTools.xp("Get Lyric Width")
         return if (config.lyricWidth == 0) {
-            min(paint.measureText(text).toInt() + 6, clockViewParent.width)
+            min(paint.measureText(text).toInt() + 6, targetView.width)
         } else {
             if (config.fixedLyricWidth) {
                 scaleWidth()
