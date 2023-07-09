@@ -37,6 +37,7 @@ import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.R
 import statusbar.lyric.activity.page.ChoosePage
 import statusbar.lyric.activity.page.CustomizeIconPage
+import statusbar.lyric.activity.page.ExtendPage
 import statusbar.lyric.activity.page.IconPage
 import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
@@ -66,6 +67,7 @@ class SettingsActivity : MIUIActivity() {
         registerPage(IconPage::class.java, activity.getString(R.string.IconPage))
         registerPage(CustomizeIconPage::class.java, activity.getString(R.string.CustomizeIconPage))
         registerPage(ChoosePage::class.java, activity.getString(R.string.ChoosePage))
+        registerPage(ExtendPage::class.java, activity.getString(R.string.ChoosePage))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

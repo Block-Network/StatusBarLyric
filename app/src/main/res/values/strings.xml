@@ -42,6 +42,7 @@
     <string name="LyricPage">Lyric Page</string>
     <string name="IconPage">Icon Page</string>
     <string name="CustomizeIconPage">Customize Icon Page</string>
+    <string name="ExtendPage">Extend Page</string>
     <string name="ChoosePage">Choose Page</string>
     <string name="LyricWidth">Lyric Width</string>
     <string name="LyricWidthTips">Range: 0%–100% , 0 is Adaptive width</string>

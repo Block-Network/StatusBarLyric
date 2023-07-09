@@ -22,6 +22,8 @@ class MainPage : BasePage() {
         TextSA(textId = R.string.LyricPage, onClickListener = { showPage(LyricPage::class.java) })
         TextSA(textId = R.string.IconPage, onClickListener = { showPage(IconPage::class.java) })
         TextSA(textId = R.string.CustomizeIconPage, onClickListener = { showPage(CustomizeIconPage::class.java) })
+        Line()
+        TextSA(textId = R.string.ExtendPage, onClickListener = { showPage(ExtendPage::class.java) })
         MIUIDialog(activity) {
             setTitle("提示")
             setMessage("重构版，使用方法简单介绍")

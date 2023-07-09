@@ -68,6 +68,14 @@ class Config {
         set(value) {
             config.put("hideTime", value)
         }
+
+    var hideNotificationIcon: Boolean
+        get() {
+            return config.opt("hideNotificationIcon", false)
+        }
+        set(value) {
+            config.put("hideNotificationIcon", value)
+        }
     var testMode: Boolean
         get() {
             return config.opt("testMode", false)

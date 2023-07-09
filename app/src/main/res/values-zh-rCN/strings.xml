@@ -42,6 +42,7 @@
     <string name="LyricPage">歌词页</string>
     <string name="IconPage">图标页</string>
     <string name="CustomizeIconPage">自定义图标页</string>
+    <string name="ExtendPage">扩展页</string>
     <string name="ChoosePage">选择页</string>
     <string name="LyricWidth">歌词宽度</string>
     <string name="LyricWidthTips">范围：0％–100％，0代表自适应宽度</string>
