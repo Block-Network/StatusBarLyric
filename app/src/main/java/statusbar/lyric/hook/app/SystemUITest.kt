@@ -79,21 +79,26 @@ class SystemUITest : BaseHook() {
                 } else {
                     context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"))
                 }
+                LogTools.xp(moduleRes.getString(R.string.StartHookingTextView))
+                val timeFormat = config.getTimeFormat(context)
+                val dateFormat = SimpleDateFormat(timeFormat, Locale.getDefault())
+                val nowTime = dateFormat.format(System.currentTimeMillis())
+                LogTools.xp(moduleRes.getString(R.string.PrintTimeFormat).format(timeFormat, nowTime))
+                hook(dateFormat)
             }
         }
-        LogTools.xp(moduleRes.getString(R.string.StartHookingTextView))
-        val dateFormat = SimpleDateFormat(config.timeFormat, Locale.getDefault())
-        var nowTime = dateFormat.format(System.currentTimeMillis())
-        LogTools.xp(moduleRes.getString(R.string.PrintTimeFormat).format(config.timeFormat, nowTime))
+    }
+
+    private fun hook(dateFormat: SimpleDateFormat) {
         hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
-            after {
-                val className = it.thisObject::class.java.name
-                val text = "${it.args[0]}".dispose()
+            after { hookParam ->
+                val className = hookParam.thisObject::class.java.name
+                val text = "${hookParam.args[0]}".dispose()
                 val time = System.currentTimeMillis()
-                nowTime = dateFormat.format(time)
+                val nowTime = dateFormat.format(time)
                 if (nowTime.toRegex().containsMatchIn(text) && className.filterClassName()) {
                     if (canUnhook()) return@after
-                    val view = (it.thisObject as TextView)
+                    val view = (hookParam.thisObject as TextView)
                     view.filterView {
                         val parentView = (view.parent as LinearLayout)
                         val data = if (dataHashMap.size == 0) {

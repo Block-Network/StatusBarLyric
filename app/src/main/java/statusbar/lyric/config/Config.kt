@@ -22,10 +22,13 @@
 
 package statusbar.lyric.config
 
+import android.content.Context
 import android.content.SharedPreferences
+import android.text.format.DateFormat.is24HourFormat
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.tools.ConfigTools
+
 
 class Config {
     var config: ConfigTools
@@ -125,14 +128,14 @@ class Config {
         set(value) {
             config.put("index", value)
         }
-    var timeFormat: String
-        get() {
-            return config.opt("timeFormat", "H:mm")
-        }
-        set(value) {
-            config.put("timeFormat", value)
-        }
 
+    fun getTimeFormat(context: Context): String {
+        return config.opt("timeFormat", if (is24HourFormat(context)) "H:mm" else "h:mm")
+    }
+
+    fun setTimeFormat(value: String) {
+        config.put("timeFormat", value)
+    }
 
     var lyricSize: Int
         get() {

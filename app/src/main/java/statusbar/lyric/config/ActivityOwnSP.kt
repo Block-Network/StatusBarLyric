@@ -24,6 +24,7 @@ package statusbar.lyric.config
 
 import android.annotation.SuppressLint
 import cn.fkj233.ui.activity.MIUIActivity.Companion.context
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.tools.Tools
 
 @SuppressLint("StaticFieldLeak")
@@ -32,9 +33,8 @@ object ActivityOwnSP {
     val config by lazy { Config(ownSP) }
     private val ownEditor by lazy { ownSP.edit() }
 
-    const val version = 2
 
-    fun set(key: String, any: Any) {
+   private fun set(key: String, any: Any) {
         when (any) {
             is Int -> ownEditor.putInt(key, any)
             is Float -> ownEditor.putFloat(key, any)
@@ -44,12 +44,16 @@ object ActivityOwnSP {
         }
         ownEditor.apply()
     }
+    private fun remove(key: String) {
+        ownEditor.remove(key).apply()
+    }
 
     fun updateConfigVer() {
-        if (ownSP.getInt("ver", 0) < version) {
-            set("ver", version)
+        if (ownSP.getInt("ver", 0) < BuildConfig.CONFIG_VERSION) {
+            set("ver", BuildConfig.CONFIG_VERSION)
             runCatching { set("LyricViewPosition", ownSP.getString("LyricViewPosition", "first") == "first") }
             runCatching { set("CustomizeViewPosition", ownSP.getString("CustomizeViewPosition", "first") == "first") }
+            runCatching { remove("timeFormat") }
         }
     }
 }

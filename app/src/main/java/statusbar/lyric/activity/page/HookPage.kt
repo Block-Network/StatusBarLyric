@@ -35,22 +35,22 @@ class HookPage : BasePage() {
         }
         TextSSw(textId = R.string.TestMode, key = "testMode", onClickListener = { testModeBinding.send(it) })
         TextSSw(textId = R.string.RelaxConditions, tipsId = R.string.RelaxConditionsTips, key = "relaxConditions", dataBindingRecv = testModeBinding.getRecv(1))
-        TextSA(textId = R.string.TimeFormat, onClickListener = {
-            NewDialog(activity) {
-                setTitle(getString(R.string.TimeFormat))
-                setEditText(ActivityOwnSP.config.timeFormat, "H:mm")
-                Button(getString(R.string.UnderstandTimeFormat)) { ActivityTools.openUrl("https://zhuanlan.zhihu.com/p/51695220") }
-                Button(getString(R.string.OK)) {
-                    ActivityOwnSP.config.timeFormat = getEditText()
-                    val currentTime = System.currentTimeMillis()
-                    val dateFormat = SimpleDateFormat(ActivityOwnSP.config.timeFormat, Locale.getDefault())
-                    val nowTime = dateFormat.format(currentTime).dispose()
-                    ActivityTools.showToastOnLooper(getString(R.string.PrintTimeFormat).format(getEditText(), nowTime))
-                }
-                Button(getString(R.string.Cancel), cancelStyle = true)
-                Finally { dismiss() }
-            }.show()
-        }, dataBindingRecv = testModeBinding.getRecv(1))
+//        TextSA(textId = R.string.TimeFormat, onClickListener = {
+//            NewDialog(activity) {
+//                setTitle(getString(R.string.TimeFormat))
+//                setEditText(ActivityOwnSP.config.getTimeFormat(context), "H:mm")
+//                Button(getString(R.string.UnderstandTimeFormat)) { ActivityTools.openUrl("https://zhuanlan.zhihu.com/p/51695220") }
+//                Button(getString(R.string.OK)) {
+//                    ActivityOwnSP.config.setTimeFormat(getEditText())
+//                    val currentTime = System.currentTimeMillis()
+//                    val dateFormat = SimpleDateFormat(ActivityOwnSP.config.getTimeFormat(context), Locale.getDefault())
+//                    val nowTime = dateFormat.format(currentTime).dispose()
+//                    ActivityTools.showToastOnLooper(getString(R.string.PrintTimeFormat).format(getEditText(), nowTime))
+//                }
+//                Button(getString(R.string.Cancel), cancelStyle = true)
+//                Finally { dismiss() }
+//            }.show()
+//        }, dataBindingRecv = testModeBinding.getRecv(1))
         TextSA(textId = R.string.GetHook, onClickListener = {
             waitResponse()
             activity.getClass()

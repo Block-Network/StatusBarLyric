@@ -27,6 +27,7 @@ import android.content.*
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
+import android.text.format.DateFormat.is24HourFormat
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
