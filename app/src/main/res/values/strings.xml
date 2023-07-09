@@ -115,4 +115,5 @@
     <string name="AddLocation">Add Location</string>
     <string name="AddLocationStart">Start</string>
     <string name="AddLocationEnd">End</string>
+    <string name="HideNotificationIcon">Automatically hide notification icons when there are lyrics</string>
 </resources>

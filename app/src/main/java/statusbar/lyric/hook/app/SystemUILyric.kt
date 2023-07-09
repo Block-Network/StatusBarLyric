@@ -208,7 +208,7 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
             if (config.hideTime && clockView.visibility != View.GONE) clockView.visibility = View.GONE
-            if (config.hideNotificationIcon && mNotificationIconArea.visibility != View.GONE) mNotificationIconArea.visibility = View.GONE
+            if (this::mNotificationIconArea.isInitialized) if (config.hideNotificationIcon && mNotificationIconArea.visibility != View.GONE) mNotificationIconArea.visibility = View.GONE
             lyricView.apply {
                 if (config.animation == "Random") {
                     val effect = arrayListOf("Top", "Bottom", "Start", "End").random()
@@ -244,7 +244,7 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             if (lyricLayout.visibility != View.GONE) lyricLayout.visibility = View.GONE
             if (config.hideTime && clockView.visibility != View.VISIBLE) clockView.visibility = View.VISIBLE
-            if (config.hideNotificationIcon && mNotificationIconArea.visibility != View.VISIBLE) mNotificationIconArea.visibility = View.VISIBLE
+            if (this::mNotificationIconArea.isInitialized) if (config.hideNotificationIcon && mNotificationIconArea.visibility != View.VISIBLE) mNotificationIconArea.visibility = View.VISIBLE
             lyricView.apply {
                 setText("")
                 width = 0
@@ -318,7 +318,7 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-            mNotificationIconArea.visibility = if (config.hideNotificationIcon) View.GONE else View.VISIBLE
+            if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.visibility = if (config.hideNotificationIcon) View.GONE else View.VISIBLE
         }
     }
 

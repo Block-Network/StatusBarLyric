@@ -114,4 +114,5 @@
     <string name="AddLocation">添加位置</string>
     <string name="AddLocationStart">Start</string>
     <string name="AddLocationEnd">End</string>
+    <string name="HideNotificationIcon">有歌词时自动隐藏通知图标</string>
 </resources>
