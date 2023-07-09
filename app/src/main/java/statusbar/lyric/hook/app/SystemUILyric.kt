@@ -143,6 +143,7 @@ class SystemUILyric : BaseHook() {
         loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
             it.methodFinder().filterByName("onDarkChanged").first().createHook {
                 after { hookParam ->
+                    if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
                     changeColor(hookParam.args[2] as Int)
                 }
             }
@@ -167,7 +168,7 @@ class SystemUILyric : BaseHook() {
             }
         }
         receptionLyric(context) {
-            if (!this::clockView.isInitialized) return@receptionLyric
+            if (!(this::clockView.isInitialized && this::targetView.isInitialized)) return@receptionLyric
             if (it.type == DataType.UPDATE) {
                 val lyric = it.lyric.regexReplace(config.regexReplace, "")
                 if (lyric.isNotEmpty()) {
@@ -241,7 +242,6 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeColor(color: Int) {
-        if (!this::clockView.isInitialized) return
         LogTools.xp("Change Color")
         if (lastColor == color) return
         lastColor = color
@@ -252,7 +252,6 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeConfig(delay: Long = 0L) {
-        if (!this::clockView.isInitialized) return
         LogTools.xp("Change Config")
         config.update()
         goMainThread(delay) {
@@ -340,6 +339,7 @@ class SystemUILyric : BaseHook() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("type")) {
                 "normal" -> {
+                    if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized))return
                     changeConfig()
                 }
 
