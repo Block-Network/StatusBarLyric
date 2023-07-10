@@ -286,14 +286,14 @@ class Config {
         set(value) {
             config.put("viewIndex", value)
         }
-    var iconData: String
+
+    var hideLyricWhenLockScreen: Boolean
         get() {
-            return config.opt("IconData", "")
+            return config.opt("hideLyricWhenLockScreen", false)
         }
         set(value) {
-            config.put("IconData", value)
+            config.put("hideLyricWhenLockScreen", value)
         }
-
 
     val defIconHashMap by lazy {
         HashMap<String, String>().apply {

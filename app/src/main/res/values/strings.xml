@@ -118,4 +118,5 @@
     <string name="HideNotificationIcon">Automatically hide notification icons when there are lyrics</string>
     <string name="LimitVisibilityChange">* Limit Visibility Change</string>
     <string name="LimitVisibilityChangeTips">It can prevent the characteristics of some systems from causing time to appear</string>
+    <string name="HideLyricWhenLockScreen">* Hide Lyric When Lock Screen</string>
 </resources>

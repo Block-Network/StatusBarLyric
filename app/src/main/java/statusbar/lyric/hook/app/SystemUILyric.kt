@@ -68,6 +68,7 @@ import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
+    private var isScreenLock: Boolean = false
     private lateinit var hook: XC_MethodHook.Unhook
     private var lastColor: Int = 0
     private var lastLyric: String = ""
@@ -116,7 +117,7 @@ class SystemUILyric : BaseHook() {
     override fun init() {
         LogTools.xp("Init")
         loadClassOrNull(config.textViewClassName).isNotNull {
-            hook =TextView::class.java.methodFinder().filterByName("setText").first().createHook {
+            hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
                 after { hookParam ->
                     (hookParam.thisObject as View).isTargetView { view ->
                         LogTools.xp("Lyric Init")
@@ -158,7 +159,7 @@ class SystemUILyric : BaseHook() {
     }
 
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
         goMainThread(1) {
             if (config.viewIndex == 0) {
@@ -185,11 +186,23 @@ class SystemUILyric : BaseHook() {
         } else {
             context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"))
         }
+        if (config.hideLyricWhenLockScreen) {
+            val screenLockFilter = IntentFilter().apply {
+                addAction(Intent.ACTION_SCREEN_OFF)
+                addAction(Intent.ACTION_SCREEN_ON)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(ScreenLockReceiver(), screenLockFilter, Context.RECEIVER_EXPORTED)
+            } else {
+                context.registerReceiver(ScreenLockReceiver(), screenLockFilter)
+            }
+
+        }
         changeConfig(1)
     }
 
     private fun changeLyric(lyric: String) {
-        if (lastLyric == lyric) return
+        if (lastLyric == lyric || isScreenLock) return
         lastLyric = lyric
         isShow = true
         LogTools.xp("lyric:$lyric")
@@ -345,6 +358,16 @@ class SystemUILyric : BaseHook() {
 
                 "change_font" -> {}
                 "reset_font" -> {}
+            }
+        }
+
+    }
+
+    inner class ScreenLockReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            isScreenLock = intent.action == Intent.ACTION_SCREEN_OFF
+            if (isScreenLock) {
+                hideLyric()
             }
         }
 

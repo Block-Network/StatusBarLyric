@@ -10,5 +10,6 @@ class ExtendPage : BasePage() {
     override fun onCreate() {
         TextSw(textId = R.string.HideNotificationIcon, key = "hideNotificationIcon", onClickListener = { changeConfig() })
         TextSSw(textId = R.string.LimitVisibilityChange, tipsId = R.string.LimitVisibilityChangeTips, key = "limitVisibilityChange", onClickListener = { changeConfig() })
+        TextSw(textId = R.string.HideLyricWhenLockScreen, key = "hideLyricWhenLockScreen", onClickListener = { changeConfig() })
     }
 }
