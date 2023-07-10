@@ -18,7 +18,8 @@ android {
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
-        buildConfigField("long", "apiVersion", "2")
+        buildConfigField("long", "API_VERSION", "2")
+        buildConfigField("int", "CONFIG_VERSION", "3")
     }
 
     buildTypes {
