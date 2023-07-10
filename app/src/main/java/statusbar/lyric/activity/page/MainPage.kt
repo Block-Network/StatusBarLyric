@@ -3,7 +3,6 @@ package statusbar.lyric.activity.page
 import android.annotation.SuppressLint
 import cn.fkj233.ui.activity.annotation.BMMainPage
 import cn.fkj233.ui.activity.data.BasePage
-import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.tools.ActivityTools
@@ -21,7 +20,7 @@ class MainPage : BasePage() {
         TextSA(textId = R.string.HookPage, onClickListener = { showPage(HookPage::class.java) })
         TextSA(textId = R.string.LyricPage, onClickListener = { showPage(LyricPage::class.java) })
         TextSA(textId = R.string.IconPage, onClickListener = { showPage(IconPage::class.java) })
-        TextSA(textId = R.string.CustomizeIconPage, onClickListener = { showPage(CustomizeIconPage::class.java) })
+//        TextSA(textId = R.string.CustomizeIconPage, onClickListener = { showPage(CustomizeIconPage::class.java) })
         Line()
         TextSA(textId = R.string.ExtendPage, onClickListener = { showPage(ExtendPage::class.java) })
     }
