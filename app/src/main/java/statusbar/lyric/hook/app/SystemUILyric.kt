@@ -116,7 +116,7 @@ class SystemUILyric : BaseHook() {
     override fun init() {
         LogTools.xp("Init")
         loadClassOrNull(config.textViewClassName).isNotNull {
-            hook = it.methodFinder().filterByName("onAttachedToWindow").first().createHook {
+            hook =TextView::class.java.methodFinder().filterByName("setText").first().createHook {
                 after { hookParam ->
                     (hookParam.thisObject as View).isTargetView { view ->
                         LogTools.xp("Lyric Init")

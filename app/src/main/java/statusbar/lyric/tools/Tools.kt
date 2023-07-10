@@ -57,15 +57,17 @@ object Tools {
             return
         }
         if (this is TextView) {
-            if (this.id == textViewID) {
-                if (this.parent is LinearLayout) {
-                    val parentView = (this.parent as LinearLayout)
-                    if (parentView::class.java.name == parentClass) {
-                        if (parentID == parentView.id) {
-                            if (index == XposedOwnSP.config.index) {
-                                callback(this)
-                            } else {
-                                index += 1
+            if (this::class.java.name == className) {
+                if (this.id == textViewID) {
+                    if (this.parent is LinearLayout) {
+                        val parentView = (this.parent as LinearLayout)
+                        if (parentView::class.java.name == parentClass) {
+                            if (parentID == parentView.id) {
+                                if (index == XposedOwnSP.config.index) {
+                                    callback(this)
+                                } else {
+                                    index += 1
+                                }
                             }
                         }
                     }
