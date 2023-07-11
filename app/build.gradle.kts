@@ -13,12 +13,12 @@ android {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 34
-        versionCode = 166
-        versionName = "5.9.9beta1"
+        versionCode = 167
+        versionName = "5.9.9beta2"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
-        buildConfigField("long", "API_VERSION", "2")
+        buildConfigField("int", "API_VERSION", "2")
         buildConfigField("int", "CONFIG_VERSION", "3")
     }
 
@@ -60,7 +60,6 @@ android {
 
 dependencies {
     compileOnly("de.robv.android.xposed:api:82")
-    compileOnly(project(":hidden-api"))
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
     implementation(project(":LyricGetterApi"))

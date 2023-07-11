@@ -9,6 +9,5 @@ dependencyResolutionManagement {
 rootProject.name = "Statusbar Lyric"
 include(":app")
 include(":blockmiui")
-include(":hidden-api")
 include(":xtoast")
 include(":LyricGetterApi")

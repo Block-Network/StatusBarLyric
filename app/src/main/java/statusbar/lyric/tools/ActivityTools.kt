@@ -24,8 +24,11 @@ package statusbar.lyric.tools
 
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -73,9 +76,9 @@ object ActivityTools {
         }
     }
 
-    fun checkInstalled(pkgName: String): PackageInfo? {
+    fun checkInstalled(pkgName: String): ApplicationInfo? {
         return try {
-            context.packageManager.getPackageInfo(pkgName, 0)
+            context.packageManager.getApplicationInfo(pkgName, PackageManager.GET_META_DATA)
         } catch (_: Exception) {
             null
         }

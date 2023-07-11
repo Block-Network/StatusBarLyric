@@ -12,6 +12,7 @@ import statusbar.lyric.tools.ActivityTestTools.showView
 class ChoosePage : BasePage() {
     override fun onCreate() {
         TitleText(textId = R.string.ChoosePageTips)
+        Line()
         dataList.forEach { data ->
             TextSA(text = "${data.textViewClassName} ${data.textViewID}", tips = "${data.parentClassName} ${data.parentID}", onClickListener = {
                 activity.showView(data)
