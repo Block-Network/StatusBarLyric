@@ -110,7 +110,7 @@
     <string name="LyricsAnimationStart">Start</string>
     <string name="LyricsAnimationEnd">End</string>
     <string name="LyricsAnimationRandom">Random</string>
-    <string name="AddLocation">添加位置</string>
+    <string name="LyricAddLocation">歌词添加位置</string>
     <string name="AddLocationStart">Start</string>
     <string name="AddLocationEnd">End</string>
     <string name="HideNotificationIcon">有歌词时自动隐藏通知图标</string>
@@ -118,4 +118,6 @@
     <string name="LimitVisibilityChangeTips">可以防止部分系统的特性导致有时间会出现</string>
     <string name="HideLyricWhenLockScreen">* 锁定屏幕时隐藏歌词</string>
     <string name="ChoosePageTips">建议先关闭其他修改状态栏布局的模块后，再来此页面选择Hook点\n有效的Hook点选择：状态栏显示模块名字，并且时间隐藏</string>
+    <string name="LyricInNotificationIconAreaInner">* 歌词在通知图标区域中</string>
+    <string name="LyricInNotificationIconAreaInnerTips">启用后，有歌词时自动隐藏通知图标</string>
 </resources>

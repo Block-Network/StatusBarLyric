@@ -38,6 +38,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -48,7 +49,6 @@ import cn.lyric.getter.api.tools.Tools.receptionLyric
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
-import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.config.XposedOwnSP.config
@@ -112,7 +112,7 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private lateinit var mNotificationIconArea: View
+    private lateinit var mNotificationIconAreaInner: ViewGroup
 
     //////////////////////////////Hook//////////////////////////////////////
     override fun init() {
@@ -123,7 +123,9 @@ class SystemUILyric : BaseHook() {
                     (hookParam.thisObject as View).isTargetView { view ->
                         LogTools.xp("Lyric Init")
                         clockView = view
-                        targetView = (clockView.parent as LinearLayout)
+                        targetView = (clockView.parent as LinearLayout).apply {
+                            gravity = Gravity.CENTER
+                        }
                         lyricInit()
                         hook.unhook()
                     }
@@ -152,24 +154,31 @@ class SystemUILyric : BaseHook() {
 
                 }
             }
-            it.constructorFinder().first().createHook {
+        }
+        loadClassOrNull("com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment").isNotNull {
+            it.methodFinder().filterByName("initNotificationIconArea").first().createHook {
                 after { hookParam ->
                     hookParam.thisObject.objectHelper {
-                        mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                        mNotificationIconAreaInner = this.getObjectOrNullAs<ViewGroup>("mNotificationIconAreaInner")!!
                     }
                 }
             }
         }
+
     }
 
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
         goMainThread(1) {
-            if (config.viewIndex == 0) {
-                targetView.addView(lyricLayout, 0)
+            if (config.lyricInNotificationIconAreaInner) {
+                (mNotificationIconAreaInner.parent as FrameLayout).addView(lyricLayout, 0)
             } else {
-                targetView.addView(lyricLayout)
+                if (config.viewIndex == 0) {
+                    targetView.addView(lyricLayout, 0)
+                } else {
+                    targetView.addView(lyricLayout)
+                }
             }
         }
         receptionLyric(context) {
@@ -213,7 +222,7 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
             if (config.hideTime && clockView.visibility != View.GONE) clockView.visibility = View.GONE
-            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon && mNotificationIconArea.visibility != View.GONE) mNotificationIconArea.visibility = View.GONE
+            if (this::mNotificationIconAreaInner.isInitialized && config.hideNotificationIcon && mNotificationIconAreaInner.visibility != View.GONE) mNotificationIconAreaInner.visibility = View.GONE
             lyricView.apply {
                 if (config.animation == "Random") {
                     val effect = arrayListOf("Top", "Bottom", "Start", "End").random()
@@ -250,7 +259,7 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             if (lyricLayout.visibility != View.GONE) lyricLayout.visibility = View.GONE
             if (config.hideTime && clockView.visibility != View.VISIBLE) clockView.visibility = View.VISIBLE
-            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon && mNotificationIconArea.visibility != View.VISIBLE) mNotificationIconArea.visibility = View.VISIBLE
+            if (this::mNotificationIconAreaInner.isInitialized && config.hideNotificationIcon && mNotificationIconAreaInner.visibility != View.VISIBLE) mNotificationIconAreaInner.visibility = View.VISIBLE
             lyricView.apply {
                 setText("")
                 width = 0
@@ -322,7 +331,7 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-            if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.visibility = if (config.hideNotificationIcon) View.GONE else View.VISIBLE
+            if (this::mNotificationIconAreaInner.isInitialized) mNotificationIconAreaInner.visibility = if (config.hideNotificationIcon) View.GONE else View.VISIBLE
         }
     }
 

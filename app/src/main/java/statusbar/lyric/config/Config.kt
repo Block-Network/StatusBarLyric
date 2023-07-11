@@ -72,6 +72,7 @@ class Config {
 
     var hideNotificationIcon: Boolean
         get() {
+            if (lyricInNotificationIconAreaInner) return true
             return config.opt("hideNotificationIcon", false)
         }
         set(value) {
@@ -285,6 +286,14 @@ class Config {
         set(value) {
             config.put("hideLyricWhenLockScreen", value)
         }
+    var lyricInNotificationIconAreaInner: Boolean
+        get() {
+            return config.opt("lyricInNotificationIconAreaInner", true)
+        }
+        set(value) {
+            config.put("lyricInNotificationIconAreaInner", value)
+        }
+
 
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
