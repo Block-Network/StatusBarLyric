@@ -143,10 +143,13 @@ class SystemUILyric : BaseHook() {
         }
 
         loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-            it.methodFinder().filterByName("onDarkChanged").first().createHook {
+            it.methodFinder().filterByName("applyNotificationIconsTint").first().createHook {
                 after { hookParam ->
                     if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
-                    changeColor(hookParam.args[2] as Int)
+                    hookParam.thisObject.objectHelper {
+                        changeColor(getObjectOrNullAs<Int>("mIconTint") ?: clockView.currentTextColor)
+                    }
+
                 }
             }
             it.constructorFinder().first().createHook {
@@ -273,7 +276,7 @@ class SystemUILyric : BaseHook() {
                 setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
                 setMargins(config.lyricLeftMargins, config.lyricTopMargins, 0, 0)
                 if (config.lyricColor.isEmpty()) {
-                    setTextColor(clockView.textColors.defaultColor)
+                    setTextColor(clockView.currentTextColor)
                 } else {
                     setTextColor(Color.parseColor(config.lyricColor))
                 }
@@ -313,7 +316,7 @@ class SystemUILyric : BaseHook() {
                         }
                     }
                     if (config.iconColor.isEmpty()) {
-                        setColorFilter(clockView.textColors.defaultColor)
+                        setColorFilter(clockView.currentTextColor)
                     } else {
                         setColorFilter(Color.parseColor(config.iconColor))
                     }
