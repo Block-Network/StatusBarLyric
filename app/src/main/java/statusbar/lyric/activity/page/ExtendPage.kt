@@ -21,6 +21,5 @@ class ExtendPage : BasePage() {
         TextSw(textId = R.string.HideNotificationIcon, key = "hideNotificationIcon", onClickListener = { changeConfig() })
         TextSSw(textId = R.string.LimitVisibilityChange, tipsId = R.string.LimitVisibilityChangeTips, key = "limitVisibilityChange", onClickListener = { changeConfig() })
         TextSw(textId = R.string.HideLyricWhenLockScreen, key = "hideLyricWhenLockScreen", onClickListener = { changeConfig() })
-        TextSSw(textId = R.string.LyricInNotificationIconAreaInner, tipsId = R.string.LyricInNotificationIconAreaInnerTips, key = "lyricInNotificationIconAreaInner", onClickListener = { changeConfig() })
     }
 }

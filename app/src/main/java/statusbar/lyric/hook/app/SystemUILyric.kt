@@ -38,7 +38,6 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -69,25 +68,24 @@ import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
+    private var isScreenLock: Boolean = false
     private lateinit var hook: XC_MethodHook.Unhook
-
     private var lastColor: Int = 0
     private var lastLyric: String = ""
     private var lastBase64Icon: String = ""
     private var iconSwitch: Boolean = true
-
     private var isShow: Boolean = false
-    private var isScreenLock: Boolean = false
-
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private val displayMetrics: DisplayMetrics by lazy { context.resources.displayMetrics }
+
     private val displayWidth: Int by lazy { displayMetrics.widthPixels }
     private val displayHeight: Int by lazy { displayMetrics.heightPixels }
 
 
     private lateinit var clockView: TextView
     private lateinit var targetView: ViewGroup
+    private lateinit var mNotificationIconArea: View
     private val lyricView: LyricSwitchView by lazy {
         LyricSwitchView(context).apply {
             setTypeface(clockView.typeface)
@@ -96,6 +94,7 @@ class SystemUILyric : BaseHook() {
             setMaxLines(1)
         }
     }
+
     private val iconView: ImageView by lazy { ImageView(context) }
     private val lyricLayout: LinearLayout by lazy {
         LinearLayout(context).apply {
@@ -113,9 +112,8 @@ class SystemUILyric : BaseHook() {
             visibility = View.GONE
         }
     }
-    private lateinit var mNotificationIconAreaInner: ViewGroup
 
-    private lateinit var collapsedStatusBarFragmentClass: Any
+
 
     //////////////////////////////Hook//////////////////////////////////////
     override fun init() {
@@ -148,6 +146,13 @@ class SystemUILyric : BaseHook() {
         }
 
         loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
+            it.constructorFinder().first().createHook {
+                after { hookParam ->
+                    hookParam.thisObject.objectHelper {
+                        mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                    }
+                }
+            }
             it.methodFinder().filterByName("applyNotificationIconsTint").first().createHook {
                 after { hookParam ->
                     if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
@@ -158,28 +163,6 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        if (config.hideNotificationIcon) {
-            loadClassOrNull("com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment").isNotNull {
-                it.constructorFinder().first().createHook {
-                    after { hookParam ->
-                        collapsedStatusBarFragmentClass = hookParam.thisObject
-                    }
-                }
-                it.methodFinder().filterByName("showNotificationIconArea").first().createHook {
-                    before {
-                        if (isShow) interrupt()
-                    }
-                }
-
-                it.methodFinder().filterByName("initNotificationIconArea").first().createHook {
-                    after { hookParam ->
-                        hookParam.thisObject.objectHelper {
-                            mNotificationIconAreaInner = this.getObjectOrNullAs<ViewGroup>("mNotificationIconAreaInner")!!
-                        }
-                    }
-                }
-            }
-        }
 
     }
 
@@ -187,14 +170,10 @@ class SystemUILyric : BaseHook() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
         goMainThread(1) {
-            if (config.lyricInNotificationIconAreaInner) {
-                (mNotificationIconAreaInner.parent as FrameLayout).addView(lyricLayout, 0)
+            if (config.viewIndex == 0) {
+                targetView.addView(lyricLayout, 0)
             } else {
-                if (config.viewIndex == 0) {
-                    targetView.addView(lyricLayout, 0)
-                } else {
-                    targetView.addView(lyricLayout)
-                }
+                targetView.addView(lyricLayout)
             }
         }
         receptionLyric(context) {
@@ -238,9 +217,7 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
             if (config.hideTime && clockView.visibility != View.GONE) clockView.visibility = View.GONE
-            if (this::collapsedStatusBarFragmentClass.isInitialized && config.hideNotificationIcon) collapsedStatusBarFragmentClass.objectHelper {
-                invokeMethodBestMatch("hideNotificationIconArea", null, true)
-            }
+            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon && mNotificationIconArea.visibility != View.GONE) mNotificationIconArea.visibility = View.GONE
             lyricView.apply {
                 if (config.animation == "Random") {
                     val effect = arrayListOf("Top", "Bottom", "Start", "End").random()
@@ -277,9 +254,7 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             if (lyricLayout.visibility != View.GONE) lyricLayout.visibility = View.GONE
             if (config.hideTime && clockView.visibility != View.VISIBLE) clockView.visibility = View.VISIBLE
-            if (this::collapsedStatusBarFragmentClass.isInitialized && config.hideNotificationIcon) collapsedStatusBarFragmentClass.objectHelper {
-                invokeMethodBestMatch("showNotificationIconArea", null, true)
-            }
+            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon && mNotificationIconArea.visibility != View.VISIBLE) mNotificationIconArea.visibility = View.VISIBLE
             lyricView.apply {
                 setText("")
                 width = 0
@@ -351,9 +326,7 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-            if (this::collapsedStatusBarFragmentClass.isInitialized) collapsedStatusBarFragmentClass.objectHelper {
-                invokeMethodBestMatch(if (config.hideNotificationIcon) "hideNotificationIconArea" else "showNotificationIconArea", null, true)
-            }
+            if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.visibility = if (config.hideNotificationIcon) View.GONE else View.VISIBLE
         }
     }
 

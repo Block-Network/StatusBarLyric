@@ -119,6 +119,4 @@
     <string name="LimitVisibilityChangeTips">It can prevent the characteristics of some systems from causing time to appear</string>
     <string name="HideLyricWhenLockScreen">* Hide Lyric When Lock Screen</string>
     <string name="ChoosePageTips">It is recommended to close other modules that modify the layout of the status bar first, and then come to this page to select Hook Points\nEffective Hook Point Selection: The status bar displays the module name, and the time is hidden</string>
-    <string name="LyricInNotificationIconAreaInner">* Lyric In Notification Icon Area Inner</string>
-    <string name="LyricInNotificationIconAreaInnerTips">When enabled, the Hide Notification Icon will be displayed</string>
 </resources>
