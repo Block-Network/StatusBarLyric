@@ -87,6 +87,7 @@ class SystemUILyric : BaseHook() {
     private lateinit var targetView: ViewGroup
     private val lyricView: LyricSwitchView by lazy {
         LyricSwitchView(context).apply {
+            setTypeface(clockView.typeface)
             layoutParams = clockView.layoutParams
             setSingleLine(true)
             setMaxLines(1)

@@ -20,7 +20,6 @@ class MainPage : BasePage() {
         TextSA(textId = R.string.HookPage, onClickListener = { showPage(HookPage::class.java) })
         TextSA(textId = R.string.LyricPage, onClickListener = { showPage(LyricPage::class.java) })
         TextSA(textId = R.string.IconPage, onClickListener = { showPage(IconPage::class.java) })
-//        TextSA(textId = R.string.CustomizeIconPage, onClickListener = { showPage(CustomizeIconPage::class.java) })
         Line()
         TextSA(textId = R.string.ExtendPage, onClickListener = { showPage(ExtendPage::class.java) })
     }

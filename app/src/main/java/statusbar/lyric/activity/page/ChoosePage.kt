@@ -11,6 +11,7 @@ import statusbar.lyric.tools.ActivityTestTools.showView
 @BMPage
 class ChoosePage : BasePage() {
     override fun onCreate() {
+        TitleText(textId = R.string.ChoosePageTips)
         dataList.forEach { data ->
             TextSA(text = "${data.textViewClassName} ${data.textViewID}", tips = "${data.parentClassName} ${data.parentID}", onClickListener = {
                 activity.showView(data)

@@ -137,7 +137,7 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.LyricStrokeWidth))
                 setMessage(getString(R.string.LyricStrokeWidthTips))
-                setEditText(config.lyricStrokeWidth.toString(), "0", config = {
+                setEditText(config.lyricStrokeWidth.toString(), "130", config = {
                     it.inputType = InputType.TYPE_CLASS_NUMBER
                     it.filters = arrayOf(InputFilter.LengthFilter(3))
                 })
