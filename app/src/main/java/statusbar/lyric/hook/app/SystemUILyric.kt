@@ -48,7 +48,6 @@ import cn.lyric.getter.api.tools.Tools.receptionLyric
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
-import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.config.XposedOwnSP.config
@@ -114,7 +113,6 @@ class SystemUILyric : BaseHook() {
     }
 
 
-
     //////////////////////////////Hook//////////////////////////////////////
     override fun init() {
         LogTools.xp("Init")
@@ -146,10 +144,12 @@ class SystemUILyric : BaseHook() {
         }
 
         loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-            it.constructorFinder().first().createHook {
-                after { hookParam ->
-                    hookParam.thisObject.objectHelper {
-                        mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+            if (config.hideNotificationIcon) {
+                it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
+                    after { hookParam ->
+                        hookParam.thisObject.objectHelper {
+                            mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                        }
                     }
                 }
             }
