@@ -54,12 +54,14 @@ import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools
-import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.regexReplace
+import statusbar.lyric.tools.ViewTools
+import statusbar.lyric.tools.ViewTools.hideView
+import statusbar.lyric.tools.ViewTools.showView
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
@@ -111,12 +113,13 @@ class SystemUILyric : BaseHook() {
             } else {
                 lyricView
             })
-            visibility = View.GONE
+            hideView()
         }
     }
 
 
     //////////////////////////////Hook//////////////////////////////////////
+    @SuppressLint("DiscouragedApi")
     override fun init() {
         LogTools.xp("Init")
         loadClassOrNull(config.textViewClassName).isNotNull {
@@ -227,15 +230,15 @@ class SystemUILyric : BaseHook() {
         isShow = true
         LogTools.xp("lyric:$lyric")
         goMainThread {
-            if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
-            if (config.hideTime && clockView.visibility != View.GONE) clockView.visibility = View.GONE
-            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon && mNotificationIconArea.visibility != View.GONE) mNotificationIconArea.visibility = View.GONE
-            if (this::mCarrierLabel.isInitialized && config.hideCarrier && mCarrierLabel.visibility != View.GONE) mCarrierLabel.visibility = View.GONE
+            lyricLayout.showView()
+            if (config.hideTime) clockView.hideView()
+            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon) mNotificationIconArea.hideView()
+            if (this::mCarrierLabel.isInitialized && config.hideCarrier) mCarrierLabel.hideView()
             lyricView.apply {
                 if (config.animation == "Random") {
                     val effect = arrayListOf("Top", "Bottom", "Start", "End").random()
-                    inAnimation = Tools.inAnimation(effect)
-                    outAnimation = Tools.outAnimation(effect)
+                    inAnimation = ViewTools.switchViewInAnima(effect)
+                    outAnimation = ViewTools.switchViewOutAnima(effect)
                 }
                 setText(lyric)
                 width = getLyricWidth(lyricView.paint, lyric)
@@ -265,14 +268,10 @@ class SystemUILyric : BaseHook() {
         isShow = false
         LogTools.xp("Hide Lyric")
         goMainThread {
-            if (lyricLayout.visibility != View.GONE) lyricLayout.visibility = View.GONE
-            if (clockView.visibility != View.VISIBLE) clockView.visibility = View.VISIBLE
-            if (this::mNotificationIconArea.isInitialized && mNotificationIconArea.visibility != View.VISIBLE) mNotificationIconArea.visibility = View.VISIBLE
-            if (this::mCarrierLabel.isInitialized && mCarrierLabel.visibility != View.VISIBLE) mCarrierLabel.visibility = View.VISIBLE
-            lyricView.apply {
-                setText("")
-                width = 0
-            }
+            lyricLayout.hideView()
+            clockView.showView()
+            if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
+            if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
         }
     }
 
@@ -303,8 +302,8 @@ class SystemUILyric : BaseHook() {
                 setSpeed(config.lyricSpeed.toFloat())
                 val animation = config.animation
                 if (animation != "Random") {
-                    inAnimation = Tools.inAnimation(animation)
-                    outAnimation = Tools.outAnimation(animation)
+                    inAnimation = ViewTools.switchViewInAnima(animation)
+                    outAnimation = ViewTools.switchViewOutAnima(animation)
                 }
                 runCatching {
                     val file = File("${context.filesDir.path}/font")
@@ -314,14 +313,10 @@ class SystemUILyric : BaseHook() {
                 }
             }
             if (!config.iconSwitch) {
-                if (iconView.visibility != View.GONE) {
-                    iconView.visibility = View.GONE
-                }
+                iconView.hideView()
                 iconSwitch = false
             } else {
-                if (iconView.visibility != View.VISIBLE) {
-                    iconView.visibility = View.VISIBLE
-                }
+                iconView.showView()
                 iconSwitch = true
                 iconView.apply {
                     layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeftMargins, config.iconTopMargins, 0, 0) }.apply {
@@ -340,7 +335,7 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-            if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.visibility = if (config.hideNotificationIcon) View.GONE else View.VISIBLE
+            if (this::mNotificationIconArea.isInitialized) if (config.hideNotificationIcon) mNotificationIconArea.hideView() else mNotificationIconArea.showView()
         }
     }
 

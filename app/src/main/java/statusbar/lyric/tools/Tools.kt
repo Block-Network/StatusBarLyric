@@ -122,45 +122,6 @@ object Tools {
         }
     }
 
-    private fun animation(into: Boolean): AnimationSet {
-        val alphaAnimation = (if (into) AlphaAnimation(0F, 1F) else AlphaAnimation(1F, 0F)).apply {
-            duration = 300
-        }
-        return AnimationSet(true).apply {
-            addAnimation(alphaAnimation)
-        }
-    }
-
-    fun inAnimation(str: String?): Animation? {
-        val translateAnimation: TranslateAnimation = when (str) {
-            "Top" -> TranslateAnimation(0F, 0F, 100F, 0F)
-            "Bottom" -> TranslateAnimation(0F, 0F, -100F, 0F)
-            "Start" -> TranslateAnimation(100F, 0F, 0F, 0F)
-            "End" -> TranslateAnimation(-100F, 0F, 0F, 0F)
-            else -> return null
-        }.apply {
-            duration = 300
-        }
-        return animation(true).apply {
-            addAnimation(translateAnimation)
-        }
-    }
-
-
-    fun outAnimation(str: String?): Animation? {
-        val translateAnimation: TranslateAnimation = when (str) {
-            "Top" -> TranslateAnimation(0F, 0F, 0F, -100F)
-            "Bottom" -> TranslateAnimation(0F, 0F, 0F, 100F)
-            "Start" -> TranslateAnimation(0F, -100F, 0F, 0F)
-            "End" -> TranslateAnimation(0F, 100F, 0F, 0F)
-            else -> return null
-        }.apply {
-            duration = 300
-        }
-        return animation(false).apply {
-            addAnimation(translateAnimation)
-        }
-    }
 
 
     inline fun <T> T?.isNotNull(callback: (T) -> Unit): Boolean {
