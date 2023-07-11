@@ -284,6 +284,7 @@ class LyricPage : BasePage() {
             this["Bottom"] = getString(R.string.LyricsAnimationBottom)
             this["Start"] = getString(R.string.LyricsAnimationStart)
             this["End"] = getString(R.string.LyricsAnimationEnd)
+            this["Scale"] = getString(R.string.LyricsAnimationScale)
             this["Random"] = getString(R.string.LyricsAnimationRandom)
         }
         TextSSp(textId = R.string.LyricsAnimation, currentValue = config.animation, data = {

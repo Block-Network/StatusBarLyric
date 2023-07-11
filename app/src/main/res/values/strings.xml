@@ -110,6 +110,7 @@
     <string name="LyricsAnimationBottom">Bottom</string>
     <string name="LyricsAnimationStart">Start</string>
     <string name="LyricsAnimationEnd">End</string>
+    <string name="LyricsAnimationScale">Scale</string>
     <string name="LyricsAnimationRandom">Random</string>
     <string name="LyricAddLocation">* Lyric Add Location</string>
     <string name="AddLocationStart">Start</string>
