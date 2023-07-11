@@ -40,6 +40,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import cn.lyric.getter.api.data.DataType
 import cn.lyric.getter.api.data.LyricData
@@ -67,6 +68,7 @@ import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
+
     private var isScreenLock: Boolean = false
     private lateinit var hook: XC_MethodHook.Unhook
     private var lastColor: Int = 0
@@ -85,6 +87,7 @@ class SystemUILyric : BaseHook() {
     private lateinit var clockView: TextView
     private lateinit var targetView: ViewGroup
     private lateinit var mNotificationIconArea: View
+    private lateinit var mCarrierLabel: View
     private val lyricView: LyricSwitchView by lazy {
         LyricSwitchView(context).apply {
             setTypeface(clockView.typeface)
@@ -163,7 +166,16 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-
+        if (config.hideCarrier) {
+            loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
+                it.methodFinder().filterByName("onFinishInflate").first().createHook {
+                    after { hookParam ->
+                        val frameLayout = hookParam.thisObject as RelativeLayout
+                        mCarrierLabel = frameLayout.findViewById(context.resources.getIdentifier("keyguard_carrier_text", "id", context.packageName))
+                    }
+                }
+            }
+        }
     }
 
 
@@ -218,6 +230,7 @@ class SystemUILyric : BaseHook() {
             if (lyricLayout.visibility != View.VISIBLE) lyricLayout.visibility = View.VISIBLE
             if (config.hideTime && clockView.visibility != View.GONE) clockView.visibility = View.GONE
             if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon && mNotificationIconArea.visibility != View.GONE) mNotificationIconArea.visibility = View.GONE
+            if (this::mCarrierLabel.isInitialized && config.hideCarrier && mCarrierLabel.visibility != View.GONE) mCarrierLabel.visibility = View.GONE
             lyricView.apply {
                 if (config.animation == "Random") {
                     val effect = arrayListOf("Top", "Bottom", "Start", "End").random()
@@ -253,8 +266,9 @@ class SystemUILyric : BaseHook() {
         LogTools.xp("Hide Lyric")
         goMainThread {
             if (lyricLayout.visibility != View.GONE) lyricLayout.visibility = View.GONE
-            if (config.hideTime && clockView.visibility != View.VISIBLE) clockView.visibility = View.VISIBLE
-            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon && mNotificationIconArea.visibility != View.VISIBLE) mNotificationIconArea.visibility = View.VISIBLE
+            if (clockView.visibility != View.VISIBLE) clockView.visibility = View.VISIBLE
+            if (this::mNotificationIconArea.isInitialized && mNotificationIconArea.visibility != View.VISIBLE) mNotificationIconArea.visibility = View.VISIBLE
+            if (this::mCarrierLabel.isInitialized && mCarrierLabel.visibility != View.VISIBLE) mCarrierLabel.visibility = View.VISIBLE
             lyricView.apply {
                 setText("")
                 width = 0

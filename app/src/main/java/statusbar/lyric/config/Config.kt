@@ -286,6 +286,14 @@ class Config {
             config.put("hideLyricWhenLockScreen", value)
         }
 
+    var hideCarrier: Boolean
+        get() {
+            return config.opt("hideCarrier", false)
+        }
+        set(value) {
+            config.put("hideCarrier", value)
+        }
+
 
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
