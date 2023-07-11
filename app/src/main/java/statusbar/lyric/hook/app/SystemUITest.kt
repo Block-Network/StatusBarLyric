@@ -71,8 +71,11 @@ class SystemUITest : BaseHook() {
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun init() {
+        var isLoad = false
         Application::class.java.methodFinder().filterByName("attach").first().createHook {
             after {
+                if (isLoad) return@after
+                isLoad = true
                 context = it.args[0] as Context
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"), Context.RECEIVER_EXPORTED)
@@ -80,42 +83,50 @@ class SystemUITest : BaseHook() {
                     context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"))
                 }
                 LogTools.xp(moduleRes.getString(R.string.StartHookingTextView))
-                val timeFormat = config.getTimeFormat(context)
-                val dateFormat = SimpleDateFormat(timeFormat, Locale.getDefault())
-                val nowTime = dateFormat.format(System.currentTimeMillis())
-                LogTools.xp(moduleRes.getString(R.string.PrintTimeFormat).format(timeFormat, nowTime))
-                hook(dateFormat)
+                hook()
             }
         }
     }
 
-    private fun hook(dateFormat: SimpleDateFormat) {
+    private fun hook() {
         hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
             after { hookParam ->
-                val className = hookParam.thisObject::class.java.name
-                val text = "${hookParam.args[0]}".dispose()
-                val time = System.currentTimeMillis()
-                val nowTime = dateFormat.format(time)
-                if (nowTime.toRegex().containsMatchIn(text) && className.filterClassName()) {
-                    if (canUnhook()) return@after
-                    val view = (hookParam.thisObject as TextView)
-                    view.filterView {
-                        val parentView = (view.parent as LinearLayout)
-                        val data = if (dataHashMap.size == 0) {
-                            Data(className, view.id, parentView::class.java.name, parentView.id, false, 0)
-                        } else {
-                            var index = 0
-                            dataHashMap.values.forEach { data ->
-                                if (data.textViewClassName == className && data.textViewID == view.id && data.parentClassName == parentView::class.java.name && data.parentID == parentView.id) {
-                                    index += 1
+                canHook {
+                    val className = hookParam.thisObject::class.java.name
+                    val text = "${hookParam.args[0]}".dispose()
+                    text.isTimeSame {
+                        if (className.filterClassName()) {
+                            val view = (hookParam.thisObject as TextView)
+                            view.filterView {
+                                val parentView = (view.parent as LinearLayout)
+                                val data = if (dataHashMap.size == 0) {
+                                    Data(className, view.id, parentView::class.java.name, parentView.id, false, 0)
+                                } else {
+                                    var index = 0
+                                    dataHashMap.values.forEach { data ->
+                                        if (data.textViewClassName == className && data.textViewID == view.id && data.parentClassName == parentView::class.java.name && data.parentID == parentView.id) {
+                                            index += 1
+                                        }
+                                    }
+                                    Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index)
                                 }
+                                dataHashMap[view] = data
+                                LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(data, dataHashMap.size))
                             }
-                            Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index)
                         }
-                        dataHashMap[view] = data
-                        LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(data, dataHashMap.size))
                     }
                 }
+            }
+        }
+    }
+
+    private fun String.isTimeSame(callback: () -> Unit) {
+        val timeFormat = arrayOf(SimpleDateFormat("H:mm", Locale.getDefault()), SimpleDateFormat("H:mm", Locale.getDefault()))
+        val nowTime = System.currentTimeMillis()
+        timeFormat.forEach {
+            if (it.format(nowTime).toRegex().containsMatchIn(this)) {
+                callback()
+                return
             }
         }
     }
@@ -140,17 +151,16 @@ class SystemUITest : BaseHook() {
         }
     }
 
-    private fun canUnhook(): Boolean {
+    private fun canHook(callback: () -> Unit) {
         val minutes = LocalDateTime.now().minute
         if (lastTime == 0) {
             lastTime = minutes
         } else {
             if (lastTime - minutes == -1) {
                 hook.unhook()
-                return true
             }
         }
-        return false
+        callback()
     }
 
     inner class TestReceiver : BroadcastReceiver() {

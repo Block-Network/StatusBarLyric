@@ -85,7 +85,6 @@
     <string name="HookSucceeded">Hook成功</string>
     <string name="HookFailed">Hook失敗</string>
     <string name="StartHookingTextView">開始Hook所有TextView</string>
-    <string name="PrintTimeFormat">時間格式：%s，預期樣式：%s</string>
     <string name="FirstFilter">%s已滿足初步要求，共有%s個符合要求</string>
     <string name="NoTextView">沒有符合要求的TextView</string>
     <string name="SendTextViewClass">發送：%s</string>

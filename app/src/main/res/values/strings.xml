@@ -85,7 +85,6 @@
     <string name="HookSucceeded">Hook Succeeded</string>
     <string name="HookFailed">Hook Failed</string>
     <string name="StartHookingTextView">Start Hooking All TextView</string>
-    <string name="PrintTimeFormat">Time format: %s,Expected style: %s</string>
     <string name="FirstFilter">%s meets preliminary requirements,Total: %s meets requirements</string>
     <string name="NoTextView">There is no Textview that meets the requirements</string>
     <string name="SendTextViewClass">Send: %s</string>

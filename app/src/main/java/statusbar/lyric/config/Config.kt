@@ -22,9 +22,7 @@
 
 package statusbar.lyric.config
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.text.format.DateFormat.is24HourFormat
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.tools.ConfigTools
@@ -129,13 +127,6 @@ class Config {
             config.put("index", value)
         }
 
-    fun getTimeFormat(context: Context): String {
-        return config.opt("timeFormat", if (is24HourFormat(context)) "H:mm" else "h:mm")
-    }
-
-    fun setTimeFormat(value: String) {
-        config.put("timeFormat", value)
-    }
 
     var lyricSize: Int
         get() {
@@ -295,7 +286,7 @@ class Config {
             config.put("hideLyricWhenLockScreen", value)
         }
 
-    val defIconHashMap by lazy {
+    private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon
             this["com.miui.player"] = miPlayerIcon
