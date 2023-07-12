@@ -134,7 +134,7 @@ class IconPage : BasePage() {
                 setRButton(getString(R.string.OK)) {
                     try {
                         val value = getEditText().toInt()
-                        if (value in -100..100) {
+                        if (value in -500..500) {
                             config.iconStartMargins = value
                             changeConfig()
                         } else {

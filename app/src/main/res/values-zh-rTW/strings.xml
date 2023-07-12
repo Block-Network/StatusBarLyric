@@ -64,9 +64,9 @@
     <string name="LyricTopMargins">歌詞上邊距</string>
     <string name="LyricTopMarginsTips">範圍：–100–100</string>
     <string name="LyricEndMargins">歌詞右邊距</string>
-    <string name="LyricEndMarginsTips">範圍：–100–100</string>
+    <string name="LyricEndMarginsTips">範圍：–500–500</string>
     <string name="LyricStartMargins">歌詞左邊距</string>
-    <string name="LyricStartMarginsTips">範圍：–100–100</string>
+    <string name="LyricStartMarginsTips">範圍：–500–500</string>
     <string name="LyricBottomMargins">歌詞底邊距</string>
     <string name="LyricBottomMarginsTips">範圍：–100–100</string>
     <string name="RegexReplace">* 正則表達式屏蔽</string>
@@ -79,7 +79,7 @@
     <string name="IconBottomMargins">圖示下邊距</string>
     <string name="IconBottomMarginsTips">範圍：–100–100</string>
     <string name="IconStartMargins">圖標左邊距</string>
-    <string name="IconStartMarginsTips">範圍：–100–100</string>
+    <string name="IconStartMarginsTips">範圍：–500–500</string>
     <string name="IconColorAndTransparency">圖標顏色和透明度</string>
     <string name="IconColorAndTransparencyTips">請輸入十六進制顏色值</string>
     <string name="ColorError">顏色錯誤</string>

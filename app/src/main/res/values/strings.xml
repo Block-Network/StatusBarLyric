@@ -64,9 +64,9 @@
     <string name="LyricTopMargins">Lyric Top Margins</string>
     <string name="LyricTopMarginsTips">Range –100–100</string>
     <string name="LyricEndMargins">Lyric End Margins</string>
-    <string name="LyricEndMarginsTips">Range –100–100</string>
+    <string name="LyricEndMarginsTips">Range –500–500</string>
     <string name="LyricStartMargins">Lyric Start Margins</string>
-    <string name="LyricStartMarginsTips">Range –100–100</string>
+    <string name="LyricStartMarginsTips">Range –500–500</string>
     <string name="LyricBottomMargins">Lyric Bottom Margins</string>
     <string name="LyricBottomMarginsTips">Range –100–100</string>
     <string name="RegexReplace">* Regex Replace</string>
@@ -79,7 +79,7 @@
     <string name="IconBottomMargins">Icon Bottom Margins</string>
     <string name="IconBottomMarginsTips">Range –100–100</string>
     <string name="IconStartMargins">Icon Left Margins</string>
-    <string name="IconStartMarginsTips">Range –100–100</string>
+    <string name="IconStartMarginsTips">Range –500–500</string>
     <string name="IconColorAndTransparency">Icon Color And Transparency</string>
     <string name="IconColorAndTransparencyTips">Please enter a decimal Color</string>
     <string name="ColorError">Color Error</string>
