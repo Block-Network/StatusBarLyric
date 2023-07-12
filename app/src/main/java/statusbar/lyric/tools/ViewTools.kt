@@ -23,7 +23,9 @@ object ViewTools {
             "Bottom" -> TranslateAnimation(0F, 0F, -100F, 0F)
             "Start" -> TranslateAnimation(100F, 0F, 0F, 0F)
             "End" -> TranslateAnimation(-100F, 0F, 0F, 0F)
-            "Scale" -> ScaleAnimation(0f, 1f, 0f, 1f)
+            "ScaleXY" -> ScaleAnimation(0f, 1f, 0f, 1f)
+            "ScaleX" -> ScaleAnimation(0f, 1f, 1f, 1f)
+            "ScaleY" -> ScaleAnimation(1f, 1f, 0f, 1f)
             else -> return null
         }.apply {
             duration = 300
@@ -40,7 +42,9 @@ object ViewTools {
             "Bottom" -> TranslateAnimation(0F, 0F, 0F, 100F)
             "Start" -> TranslateAnimation(0F, -100F, 0F, 0F)
             "End" -> TranslateAnimation(0F, 100F, 0F, 0F)
-            "Scale" -> ScaleAnimation(1f, 0f, 1f, 0f)
+            "ScaleXY" -> ScaleAnimation(1f, 0f, 1f, 0f)
+            "ScaleX" -> ScaleAnimation(1f, 0f, 1f, 1f)
+            "ScaleY" -> ScaleAnimation(1f, 1f, 1f, 0f)
             else -> return null
         }.apply {
             duration = 300

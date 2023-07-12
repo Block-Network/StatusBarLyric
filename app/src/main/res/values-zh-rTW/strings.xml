@@ -109,7 +109,9 @@
     <string name="LyricsAnimationBottom">Bottom</string>
     <string name="LyricsAnimationStart">Start</string>
     <string name="LyricsAnimationEnd">End</string>
-    <string name="LyricsAnimationScale">Scale</string>
+    <string name="LyricsAnimationScaleXY">ScaleXY</string>
+    <string name="LyricsAnimationScaleX">ScaleX</string>
+    <string name="LyricsAnimationScaleY">ScaleY</string>
     <string name="LyricsAnimationRandom">Random</string>
     <string name="LyricAddLocation">* 歌詞添加位置</string>
     <string name="AddLocationStart">Start</string>
