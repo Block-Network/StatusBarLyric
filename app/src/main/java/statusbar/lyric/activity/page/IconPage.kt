@@ -18,7 +18,7 @@ class IconPage : BasePage() {
         val binding = GetDataBinding({ config.iconSwitch }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
-        TextSSw(textId = R.string.IconSwitch, key = "iconSwitch", defValue = true, onClickListener = {
+        TextSSw(textId = R.string.IconSwitch, key = "iconSwitch", defValue = false, onClickListener = {
             changeConfig()
             binding.send(it)
         })

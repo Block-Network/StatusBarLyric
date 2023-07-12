@@ -260,7 +260,7 @@ class Config {
         }
     var iconSwitch: Boolean
         get() {
-            return config.opt("iconSwitch", true)
+            return config.opt("iconSwitch", false)
         }
         set(value) {
             config.put("iconSwitch", value)
@@ -289,7 +289,7 @@ class Config {
         }
     var animation: String
         get() {
-            return config.opt("animation", "Start")
+            return config.opt("animation", "ScaleXY")
         }
         set(value) {
             config.put("animation", value)
