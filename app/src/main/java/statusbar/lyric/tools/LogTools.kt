@@ -41,16 +41,16 @@ object LogTools {
                 if (max >= content.length) {
                     val value = content.substring(maxLength * i)
                     Log.d(TAG, value)
-                    Log.d(XP_TAG, value)
+                    Log.d(XP_TAG, "$TAG:$value")
                 } else {
                     val value = content.substring(maxLength * i, max)
                     Log.d(TAG, value)
-                    Log.d(XP_TAG, value)
+                    Log.d(XP_TAG, "$TAG:$value")
                 }
             }
         } else {
             Log.d(TAG, content)
-            Log.d(XP_TAG, content)
+            Log.d(XP_TAG, "$TAG:$content")
         }
     }
 }

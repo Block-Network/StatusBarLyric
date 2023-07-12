@@ -149,7 +149,15 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-
+        loadClassOrNull("com.android.systemui.statusbar.phone.LightBarTransitionsController").isNotNull {
+            it.methodFinder().filterByName("setIconsDark").first().createHook {
+                after { hookParam ->
+                    if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
+                    val isDark = hookParam.args[0] as Boolean
+                    changeColor(if (isDark) Color.BLACK else Color.WHITE)
+                }
+            }
+        }
         loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
             if (config.hideNotificationIcon) {
                 it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
@@ -158,15 +166,6 @@ class SystemUILyric : BaseHook() {
                             mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
                         }
                     }
-                }
-            }
-            it.methodFinder().filterByName("applyNotificationIconsTint").first().createHook {
-                after { hookParam ->
-                    if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
-                    hookParam.thisObject.objectHelper {
-                        changeColor(getObjectOrNullAs<Int>("mIconTint") ?: clockView.currentTextColor)
-                    }
-
                 }
             }
         }
