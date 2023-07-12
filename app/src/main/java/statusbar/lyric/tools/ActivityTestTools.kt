@@ -30,6 +30,7 @@ import cn.fkj233.ui.activity.MIUIActivity.Companion.context
 import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.R
 import statusbar.lyric.data.Data
+import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import java.util.Timer
 import java.util.TimerTask
@@ -43,7 +44,7 @@ object ActivityTestTools {
     fun Context.getClass() {
         this.sendBroadcast(Intent("TestReceiver").apply {
             putExtra("Type", "GetClass")
-            LogTools.app("GetClass")
+            "GetClass".log()
         })
     }
 

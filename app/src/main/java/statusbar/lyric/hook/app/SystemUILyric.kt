@@ -54,7 +54,7 @@ import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinde
 import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
-import statusbar.lyric.tools.LogTools
+import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isNotNull
@@ -122,12 +122,12 @@ class SystemUILyric : BaseHook() {
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
     override fun init() {
-        LogTools.xp("Init")
+        "Init".log()
         loadClassOrNull(config.textViewClassName).isNotNull {
             hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
                 after { hookParam ->
                     (hookParam.thisObject as View).isTargetView { view ->
-                        LogTools.xp("Lyric Init")
+                        "Lyric Init".log()
                         clockView = view
                         targetView = (clockView.parent as LinearLayout).apply {
                             gravity = Gravity.CENTER
@@ -203,7 +203,7 @@ class SystemUILyric : BaseHook() {
             } else if (it.type == DataType.STOP) {
                 hideLyric()
             }
-            LogTools.xp(it.toString())
+            it.log()
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
@@ -229,7 +229,7 @@ class SystemUILyric : BaseHook() {
         if (lastLyric == lyric || isScreenLock) return
         lastLyric = lyric
         isShow = true
-        LogTools.xp("lyric:$lyric")
+        "lyric:$lyric".log()
         goMainThread {
             lyricLayout.showView()
             if (config.hideTime) clockView.hideView()
@@ -261,13 +261,13 @@ class SystemUILyric : BaseHook() {
                 lastBase64Icon = baseIcon
                 base64ToDrawable(baseIcon)
             })
-            LogTools.xp("Change Icon")
+            "Change Icon".log()
         }
     }
 
     private fun hideLyric() {
         isShow = false
-        LogTools.xp("Hide Lyric")
+        "Hide Lyric".log()
         goMainThread {
             lyricLayout.hideView()
             clockView.showView()
@@ -277,7 +277,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeColor(color: Int) {
-        LogTools.xp("Change Color")
+        "Change Color".log()
         if (lastColor == color) return
         lastColor = color
         goMainThread {
@@ -287,7 +287,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeConfig(delay: Long = 0L) {
-        LogTools.xp("Change Config")
+        "Change Config".log()
         config.update()
         goMainThread(delay) {
             lyricView.apply {
@@ -350,7 +350,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun getLyricWidth(paint: Paint, text: String): Int {
-        LogTools.xp("Get Lyric Width")
+        "Get Lyric Width".log()
         return if (config.lyricWidth == 0) {
             min(paint.measureText(text).toInt() + 6, targetView.width)
         } else {
@@ -364,7 +364,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun scaleWidth(): Int {
-        LogTools.xp("Scale Width")
+        "Scale Width".log()
         return (config.lyricWidth / 100.0 * if (context.isLandscape()) {
             displayHeight
         } else {

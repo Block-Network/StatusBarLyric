@@ -24,10 +24,8 @@ package statusbar.lyric.tools
 
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Handler
@@ -41,6 +39,7 @@ import org.json.JSONObject
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.data.Data
+import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isNot
 import java.io.BufferedReader
@@ -69,7 +68,7 @@ object ActivityTools {
         try {
             handler.post {
                 XToast.makeText(context, message.toString(), toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round, context.theme)).show()
-                LogTools.app(message)
+                message.log()
             }
         } catch (e: RuntimeException) {
             e.printStackTrace()

@@ -40,6 +40,7 @@ import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
+import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
 import java.util.*
 import java.util.regex.Pattern
@@ -53,7 +54,7 @@ object Tools {
         val parentClass = XposedOwnSP.config.parentClassName
         val parentID = XposedOwnSP.config.parentID
         if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
-            LogTools.xp(EzXHelper.moduleRes.getString(R.string.LoadClassEmpty))
+            EzXHelper.moduleRes.getString(R.string.LoadClassEmpty).log()
             return
         }
         if (this is TextView) {

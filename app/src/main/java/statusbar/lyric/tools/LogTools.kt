@@ -23,43 +23,34 @@
 package statusbar.lyric.tools
 
 import android.util.Log
-import de.robv.android.xposed.XposedBridge
 import statusbar.lyric.BuildConfig
-import statusbar.lyric.config.ActivityOwnSP
-import statusbar.lyric.config.XposedOwnSP
 
 object LogTools {
     private const val maxLength = 4000
     private const val TAG = "StatusBarLyric"
+    private const val XP_TAG = "LSPosed-Bridge"
 
 
-    private fun log(obj: Any?, toXposed: Boolean = false, toLogd: Boolean = false) {
+    fun Any?.log() {
         if (!BuildConfig.DEBUG) return
-        val content = if (obj is Throwable) Log.getStackTraceString(obj) else obj.toString()
+        val content = if (this is Throwable) Log.getStackTraceString(this) else this.toString()
         if (content.length > maxLength) {
             val chunkCount = content.length / maxLength
             for (i in 0..chunkCount) {
                 val max = 4000 * (i + 1)
                 if (max >= content.length) {
-                    if (toXposed) XposedBridge.log("$TAG: ${content.substring(maxLength * i)}")
-                    if (toLogd) Log.d(TAG, content.substring(maxLength * i))
+                    val value = content.substring(maxLength * i)
+                    Log.d(TAG, value)
+                    Log.d(XP_TAG, value)
                 } else {
-                    if (toXposed) XposedBridge.log("$TAG: ${content.substring(maxLength * i, max)}")
-                    if (toLogd) Log.d(TAG, content.substring(maxLength * i, max))
+                    val value = content.substring(maxLength * i, max)
+                    Log.d(TAG, value)
+                    Log.d(XP_TAG, value)
                 }
             }
         } else {
-            if (toXposed) XposedBridge.log("$TAG: $content")
-            if (toLogd) Log.d(TAG, content)
+            Log.d(TAG, content)
+            Log.d(XP_TAG, content)
         }
     }
-
-    fun xp(obj: Any?) {
-        log(obj, toXposed = true)
-    }
-
-    fun app(obj: Any?) {
-        log(obj, toLogd = true)
-    }
-
 }

@@ -44,7 +44,7 @@ import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.data.Data
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.ActivityTestTools.receiveClass
-import statusbar.lyric.tools.LogTools
+import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.dispose
 import statusbar.lyric.tools.Tools.goMainThread
 import java.text.SimpleDateFormat
@@ -82,7 +82,7 @@ class SystemUITest : BaseHook() {
                 } else {
                     context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"))
                 }
-                LogTools.xp(moduleRes.getString(R.string.StartHookingTextView))
+                moduleRes.getString(R.string.StartHookingTextView).log()
                 hook()
             }
         }
@@ -111,7 +111,7 @@ class SystemUITest : BaseHook() {
                                     Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index)
                                 }
                                 dataHashMap[view] = data
-                                LogTools.xp(moduleRes.getString(R.string.FirstFilter).format(data, dataHashMap.size))
+                                moduleRes.getString(R.string.FirstFilter).format(data, dataHashMap.size).log()
                             }
                         }
                     }
@@ -168,11 +168,11 @@ class SystemUITest : BaseHook() {
             when (intent.getStringExtra("Type")) {
                 "GetClass" -> {
                     if (dataHashMap.size == 0) {
-                        LogTools.xp(moduleRes.getString(R.string.NoTextView))
+                        moduleRes.getString(R.string.NoTextView).log()
                         context.receiveClass(arrayListOf())
                         return
                     } else {
-                        LogTools.xp(moduleRes.getString(R.string.SendTextViewClass).format(dataHashMap))
+                        moduleRes.getString(R.string.SendTextViewClass).format(dataHashMap).log()
                         context.receiveClass(ArrayList(dataHashMap.values))
                     }
                 }
