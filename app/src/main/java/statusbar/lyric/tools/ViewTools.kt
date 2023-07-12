@@ -1,11 +1,16 @@
 package statusbar.lyric.tools
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
+import android.widget.ImageView
+import statusbar.lyric.view.LyricSwitchView
 
 object ViewTools {
     private fun getAlphaAnimation(into: Boolean, duration: Long = 300): AnimationSet {
@@ -82,5 +87,24 @@ object ViewTools {
             })
         }
         startAnimation(alphaAnimation)
+    }
+
+    private fun ObjectAnimator.colorAnimator() {
+        this.apply {
+            setEvaluator(ArgbEvaluator())
+            duration = 200L
+        }.start()
+    }
+
+    @SuppressLint("Recycle")
+    fun LyricSwitchView.textColorAnima(color: Int) {
+        this.viewArray.forEach {
+            ObjectAnimator.ofInt(it, "textColor", it.currentTextColor, color).colorAnimator()
+        }
+    }
+
+    @SuppressLint("Recycle")
+    fun ImageView.iconColorAnima(startColor: Int, endColor: Int) {
+        ObjectAnimator.ofInt(this, "colorFilter", startColor, endColor).colorAnimator()
     }
 }

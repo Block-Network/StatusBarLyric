@@ -32,7 +32,7 @@ import android.widget.TextView
 class LyricSwitchView(context: Context) : TextSwitcher(context) {
     private val lyricTextView: LyricTextView = LyricTextView(context)
     private val lyricTextView2: LyricTextView = LyricTextView(context)
-    private val viewArray: ArrayList<TextView> = arrayListOf(lyricTextView, lyricTextView2)
+    val viewArray: Array<TextView> = arrayOf(lyricTextView, lyricTextView2)
 
     val text: CharSequence get() = (currentView as TextView).text
 

@@ -62,7 +62,9 @@ import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.regexReplace
 import statusbar.lyric.tools.ViewTools
 import statusbar.lyric.tools.ViewTools.hideView
+import statusbar.lyric.tools.ViewTools.iconColorAnima
 import statusbar.lyric.tools.ViewTools.showView
+import statusbar.lyric.tools.ViewTools.textColorAnima
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
@@ -278,11 +280,11 @@ class SystemUILyric : BaseHook() {
     private fun changeColor(color: Int) {
         "Change Color".log()
         if (lastColor == color) return
-        lastColor = color
         goMainThread {
-            if (config.lyricColor.isEmpty()) lyricView.setTextColor(color)
-            if (config.iconColor.isEmpty()) iconView.setColorFilter(color)
+            if (config.lyricColor.isEmpty()) lyricView.textColorAnima(color)
+            if (config.iconColor.isEmpty()) iconView.iconColorAnima(lastColor, color)
         }
+        lastColor = color
     }
 
     private fun changeConfig(delay: Long = 0L) {
@@ -293,9 +295,9 @@ class SystemUILyric : BaseHook() {
                 setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
                 setMargins(config.lyricStartMargins, config.lyricTopMargins, config.lyricEndMargins, config.lyricBottomMargins)
                 if (config.lyricColor.isEmpty()) {
-                    setTextColor(clockView.currentTextColor)
+                    textColorAnima(clockView.currentTextColor)
                 } else {
-                    setTextColor(Color.parseColor(config.lyricColor))
+                    textColorAnima(Color.parseColor(config.lyricColor))
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
@@ -338,9 +340,9 @@ class SystemUILyric : BaseHook() {
                         }
                     }
                     if (config.iconColor.isEmpty()) {
-                        setColorFilter(clockView.currentTextColor)
+                        iconColorAnima(lastColor, clockView.currentTextColor)
                     } else {
-                        setColorFilter(Color.parseColor(config.iconColor))
+                        iconColorAnima(lastColor, Color.parseColor(config.iconColor))
                     }
                 }
             }
