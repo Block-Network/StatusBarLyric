@@ -121,7 +121,7 @@ class SystemUITest : BaseHook() {
     }
 
     private fun String.isTimeSame(callback: () -> Unit) {
-        val timeFormat = arrayOf(SimpleDateFormat("H:mm", Locale.getDefault()), SimpleDateFormat("H:mm", Locale.getDefault()))
+        val timeFormat = arrayOf(SimpleDateFormat("H:mm", Locale.getDefault()), SimpleDateFormat("h:mm", Locale.getDefault()))
         val nowTime = System.currentTimeMillis()
         timeFormat.forEach {
             if (it.format(nowTime).toRegex().containsMatchIn(this)) {

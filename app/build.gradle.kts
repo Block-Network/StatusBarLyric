@@ -13,12 +13,12 @@ android {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 34
-        versionCode = 167
-        versionName = "5.9.9beta2"
+        versionCode = 168
+        versionName = "5.9.9pre1"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
-        buildConfigField("int", "API_VERSION", "2")
+        buildConfigField("int", "API_VERSION", "3")
         buildConfigField("int", "CONFIG_VERSION", "3")
     }
 
