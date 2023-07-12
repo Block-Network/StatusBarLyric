@@ -63,8 +63,12 @@
     <string name="LyricBlurredEdgesRadiusTips">Range 0–100</string>
     <string name="LyricTopMargins">Lyric Top Margins</string>
     <string name="LyricTopMarginsTips">Range –100–100</string>
-    <string name="LyricLeftMargins">Lyric Left Margins</string>
-    <string name="LyricLeftMarginsTips">Range –100–100</string>
+    <string name="LyricEndMargins">Lyric End Margins</string>
+    <string name="LyricEndMarginsTips">Range –100–100</string>
+    <string name="LyricStartMargins">Lyric Start Margins</string>
+    <string name="LyricStartMarginsTips">Range –100–100</string>
+    <string name="LyricBottomMargins">Lyric Bottom Margins</string>
+    <string name="LyricBottomMarginsTips">Range –100–100</string>
     <string name="RegexReplace">* Regex Replace</string>
     <string name="RegexReplaceTips">Block lyrics with regular expression matching</string>
     <string name="IconSwitch">Icon Switch</string>

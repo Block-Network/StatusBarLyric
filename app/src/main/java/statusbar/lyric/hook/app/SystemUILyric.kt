@@ -291,7 +291,7 @@ class SystemUILyric : BaseHook() {
         goMainThread(delay) {
             lyricView.apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
-                setMargins(config.lyricLeftMargins, config.lyricTopMargins, 0, 0)
+                setMargins(config.lyricStartMargins, config.lyricTopMargins, config.lyricEndMargins, config.lyricBottomMargins)
                 if (config.lyricColor.isEmpty()) {
                     setTextColor(clockView.currentTextColor)
                 } else {

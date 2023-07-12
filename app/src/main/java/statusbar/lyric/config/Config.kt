@@ -135,12 +135,12 @@ class Config {
         set(value) {
             config.put("lyricSize", value)
         }
-    var lyricLeftMargins: Int
+    var lyricStartMargins: Int
         get() {
-            return config.opt("lyricLeft", 7)
+            return config.opt("lyricStart", 7)
         }
         set(value) {
-            config.put("lyricLeft", value)
+            config.put("lyricStart", value)
         }
     var lyricTopMargins: Int
         get() {
@@ -148,6 +148,20 @@ class Config {
         }
         set(value) {
             config.put("lyricTop", value)
+        }
+    var lyricEndMargins: Int
+        get() {
+            return config.opt("lyricEnd", 0)
+        }
+        set(value) {
+            config.put("lyricEnd", value)
+        }
+    var lyricBottomMargins: Int
+        get() {
+            return config.opt("lyricBottom", 0)
+        }
+        set(value) {
+            config.put("lyricBottom", value)
         }
     var iconTopMargins: Int
         get() {

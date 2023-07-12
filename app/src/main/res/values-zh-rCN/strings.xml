@@ -61,10 +61,14 @@
     <string name="LyricBlurredEdges">* 歌词模糊边缘</string>
     <string name="LyricBlurredEdgesRadius">* 歌词模糊半径</string>
     <string name="LyricBlurredEdgesRadiusTips">范围：0–100</string>
-    <string name="LyricTopMargins">歌词上边距</string>
+    <string name="LyricTopMargins">歌词顶边距</string>
     <string name="LyricTopMarginsTips">范围：–100–100</string>
-    <string name="LyricLeftMargins">歌词左边距</string>
-    <string name="LyricLeftMarginsTips">范围：–100–100</string>
+    <string name="LyricEndMargins">歌词右边距</string>
+    <string name="LyricEndMarginsTips">范围：–100–100</string>
+    <string name="LyricStartMargins">歌词左边距</string>
+    <string name="LyricStartMarginsTips">范围：–100–100</string>
+    <string name="LyricBottomMargins">歌词底边距</string>
+    <string name="LyricBottomMarginsTips">范围：–100–100</string>
     <string name="RegexReplace">* 正则表达式屏蔽</string>
     <string name="RegexReplaceTips">使用正则表达式匹配来屏蔽歌词</string>
     <string name="IconSwitch">图标开关</string>

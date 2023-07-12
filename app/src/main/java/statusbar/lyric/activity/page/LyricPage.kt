@@ -235,11 +235,11 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
-        TextSA(textId = R.string.LyricLeftMargins, onClickListener = {
+        TextSA(textId = R.string.LyricBottomMargins, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.LyricLeftMargins))
-                setMessage(getString(R.string.LyricLeftMarginsTips))
-                setEditText(config.lyricLeftMargins.toString(), "7", config = {
+                setTitle(getString(R.string.LyricBottomMargins))
+                setMessage(getString(R.string.LyricBottomMarginsTips))
+                setEditText(config.lyricBottomMargins.toString(), "0", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })
@@ -247,7 +247,57 @@ class LyricPage : BasePage() {
                     try {
                         val value = getEditText().toInt()
                         if (value in -100..100) {
-                            config.lyricLeftMargins = value
+                            config.lyricBottomMargins = value
+                            changeConfig()
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
+        TextSA(textId = R.string.LyricStartMargins, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.LyricStartMargins))
+                setMessage(getString(R.string.LyricStartMarginsTips))
+                setEditText(config.lyricStartMargins.toString(), "7", config = {
+                    it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+                    it.filters = arrayOf(InputFilter.LengthFilter(4))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in -100..100) {
+                            config.lyricStartMargins = value
+                            changeConfig()
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
+        TextSA(textId = R.string.LyricEndMargins, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.LyricEndMargins))
+                setMessage(getString(R.string.LyricEndMarginsTips))
+                setEditText(config.lyricEndMargins.toString(), "0", config = {
+                    it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+                    it.filters = arrayOf(InputFilter.LengthFilter(4))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in -100..100) {
+                            config.lyricEndMargins = value
                             changeConfig()
                         } else {
                             throw Exception()

@@ -23,7 +23,6 @@
 package statusbar.lyric.view
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextPaint
@@ -82,10 +81,10 @@ class LyricSwitchView(context: Context) : TextSwitcher(context) {
         viewArray.forEach { view -> view.setTextSize(i, f) }
     }
 
-    fun setMargins(left: Int, top: Int, right: Int, bottom: Int) {
+    fun setMargins(start: Int, top: Int, end: Int, bottom: Int) {
         viewArray.forEach { view: TextView ->
             val layoutParams = view.layoutParams as MarginLayoutParams
-            layoutParams.setMargins(left, top, right, bottom)
+            layoutParams.setMargins(start, top, end, bottom)
             view.layoutParams = layoutParams
         }
     }
