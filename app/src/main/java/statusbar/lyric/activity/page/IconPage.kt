@@ -98,11 +98,11 @@ class IconPage : BasePage() {
                 finally { dismiss() }
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
-        TextSA(textId = R.string.IconLeftMargins, onClickListener = {
+        TextSA(textId = R.string.IconBottomMargins, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.IconLeftMargins))
-                setMessage(getString(R.string.IconLeftMarginsTips))
-                setEditText(config.iconLeftMargins.toString(), "0", config = {
+                setTitle(getString(R.string.IconBottomMargins))
+                setMessage(getString(R.string.IconBottomMarginsTips))
+                setEditText(config.iconBottomMargins.toString(), "0", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })
@@ -110,7 +110,32 @@ class IconPage : BasePage() {
                     try {
                         val value = getEditText().toInt()
                         if (value in -100..100) {
-                            config.iconLeftMargins = value
+                            config.iconBottomMargins = value
+                            changeConfig()
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        }, dataBindingRecv = binding.getRecv(1))
+        TextSA(textId = R.string.IconStartMargins, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.IconStartMargins))
+                setMessage(getString(R.string.IconStartMarginsTips))
+                setEditText(config.iconStartMargins.toString(), "0", config = {
+                    it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+                    it.filters = arrayOf(InputFilter.LengthFilter(4))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in -100..100) {
+                            config.iconStartMargins = value
                             changeConfig()
                         } else {
                             throw Exception()

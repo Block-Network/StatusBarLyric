@@ -24,7 +24,6 @@ package statusbar.lyric.config
 
 import android.content.SharedPreferences
 import de.robv.android.xposed.XSharedPreferences
-import statusbar.lyric.BuildConfig
 import statusbar.lyric.tools.ConfigTools
 
 
@@ -51,16 +50,6 @@ class Config {
             config.put("masterSwitch", value)
         }
 
-    var printXpLog: Boolean
-        get() {
-            if (BuildConfig.DEBUG) {
-                return true
-            }
-            return config.opt("printXpLog", false)
-        }
-        set(value) {
-            config.put("printXpLog", value)
-        }
 
     var hideTime: Boolean
         get() {
@@ -170,12 +159,19 @@ class Config {
         set(value) {
             config.put("iconTop", value)
         }
-    var iconLeftMargins: Int
+    var iconStartMargins: Int
         get() {
-            return config.opt("iconLeft", 0)
+            return config.opt("iconStart", 0)
         }
         set(value) {
-            config.put("iconLeft", value)
+            config.put("iconStart", value)
+        }
+    var iconBottomMargins: Int
+        get() {
+            return config.opt("iconBottom", 0)
+        }
+        set(value) {
+            config.put("iconBottom", value)
         }
     var lyricWidth: Int
         get() {
@@ -197,6 +193,20 @@ class Config {
         }
         set(value) {
             config.put("lyricColor", value)
+        }
+    var lyricBackgroundColor: String
+        get() {
+            return config.opt("lyricBackgroundColor", "#00000000")
+        }
+        set(value) {
+            config.put("lyricBackgroundColor", value)
+        }
+    var lyricBackgroundRadius: Int
+        get() {
+            return config.opt("lyricBackgroundRadius", 0)
+        }
+        set(value) {
+            config.put("lyricBackgroundRadius", value)
         }
     var iconColor: String
         get() {

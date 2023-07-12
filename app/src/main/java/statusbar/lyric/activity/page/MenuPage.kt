@@ -28,9 +28,6 @@ class MenuPage : BasePage() {
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED
             }, PackageManager.DONT_KILL_APP)
         }))
-        if (BuildConfig.DEBUG) {
-            TextSw(textId = R.string.PrintXpLog, key = "printXpLog", defValue = false)
-        }
         TextSw(textId = R.string.CheckUpdate, key = "checkUpdate", defValue = true)
         TextSA(textId = R.string.ResetConfig, onClickListener = {
             MIUIDialog(activity) {

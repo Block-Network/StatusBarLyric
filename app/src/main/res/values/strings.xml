@@ -76,8 +76,10 @@
     <string name="IconSizeTips">Range: 0%–100% of the height of the status bar, 0 is the following clock</string>
     <string name="IconTopMargins">Icon Top Margins</string>
     <string name="IconTopMarginsTips">Range –100–100</string>
-    <string name="IconLeftMargins">Icon Left Margins</string>
-    <string name="IconLeftMarginsTips">Range –100–100</string>
+    <string name="IconBottomMargins">Icon Bottom Margins</string>
+    <string name="IconBottomMarginsTips">Range –100–100</string>
+    <string name="IconStartMargins">Icon Left Margins</string>
+    <string name="IconStartMarginsTips">Range –100–100</string>
     <string name="IconColorAndTransparency">Icon Color And Transparency</string>
     <string name="IconColorAndTransparencyTips">Please enter a decimal Color</string>
     <string name="ColorError">Color Error</string>
@@ -127,4 +129,8 @@
     <string name="HideLyricWhenLockScreen">* Hide Lyric When Lock Screen</string>
     <string name="ChoosePageTips">It is recommended to close other modules that modify the layout of the status bar first, and then come to this page to select Hook Points\nEffective Hook Point Selection: The status bar displays the module name, and the time is hidden</string>
     <string name="HideCarrier">* Hide Carrier</string>
+    <string name="LyricBackgroundColorAndTransparency">Lyric Background Color And Transparency</string>
+    <string name="LyricBackgroundColorAndTransparencyTips">Please enter a decimal Color</string>
+    <string name="LyricBackgroundRadius">Lyric Background Radius</string>
+    <string name="LyricBackgroundRadiusTips">Range 0–100</string>
 </resources>

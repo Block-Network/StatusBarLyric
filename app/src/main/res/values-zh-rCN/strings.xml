@@ -76,8 +76,10 @@
     <string name="IconSizeTips">范围：状态栏高度的0％–100％，0代表以下时钟</string>
     <string name="IconTopMargins">图标上边距</string>
     <string name="IconTopMarginsTips">范围：–100–100</string>
-    <string name="IconLeftMargins">图标左边距</string>
-    <string name="IconLeftMarginsTips">范围：–100–100</string>
+    <string name="IconBottomMargins">图标下边距</string>
+    <string name="IconBottomMarginsTips">范围：–100–100</string>
+    <string name="IconStartMargins">图标左边距</string>
+    <string name="IconStartMarginsTips">范围：–100–100</string>
     <string name="IconColorAndTransparency">图标颜色和透明度</string>
     <string name="IconColorAndTransparencyTips">请输入十六进制颜色值</string>
     <string name="ColorError">颜色错误</string>
@@ -126,4 +128,8 @@
     <string name="HideLyricWhenLockScreen">* 锁定屏幕时隐藏歌词</string>
     <string name="ChoosePageTips">建议先关闭其他修改状态栏布局的模块后，再来此页面选择Hook点\n有效的Hook点选择：状态栏显示模块名字，并且时间隐藏</string>
     <string name="HideCarrier">* 隐藏运营商</string>
+    <string name="LyricBackgroundColorAndTransparency">歌词背景颜色和透明度</string>
+    <string name="LyricBackgroundColorAndTransparencyTips">请输入十六进制颜色值</string>
+    <string name="LyricBackgroundRadius">歌词背景半径</string>
+    <string name="LyricBackgroundRadiusTips">范围：0–100</string>
 </resources>

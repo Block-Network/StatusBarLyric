@@ -76,8 +76,10 @@
     <string name="IconSizeTips">範圍：狀態欄高度的0％–100％，0代表以下時鐘</string>
     <string name="IconTopMargins">圖標上邊距</string>
     <string name="IconTopMarginsTips">範圍：–100–100</string>
-    <string name="IconLeftMargins">圖標左邊距</string>
-    <string name="IconLeftMarginsTips">範圍：–100–100</string>
+    <string name="IconBottomMargins">圖示下邊距</string>
+    <string name="IconBottomMarginsTips">範圍：–100–100</string>
+    <string name="IconStartMargins">圖標左邊距</string>
+    <string name="IconStartMarginsTips">範圍：–100–100</string>
     <string name="IconColorAndTransparency">圖標顏色和透明度</string>
     <string name="IconColorAndTransparencyTips">請輸入十六進制顏色值</string>
     <string name="ColorError">顏色錯誤</string>
@@ -126,4 +128,8 @@
     <string name="HideLyricWhenLockScreen">* 鎖定螢幕時隱藏歌詞</string>
     <string name="ChoosePageTips">建議先關閉其他修改狀態列佈局的模組后，再來此頁面選擇Hook點\n有效的Hook點選擇：狀態列顯示模組名字，並且時間隱藏</string>
     <string name="HideCarrier">* 隱藏運營商</string>
+    <string name="LyricBackgroundColorAndTransparency">歌詞背景顏色和透明度</string>
+    <string name="LyricBackgroundColorAndTransparencyTips">請輸入十六進制顏色值</string>
+    <string name="LyricBackgroundRadius">歌詞背景半徑</string>
+    <string name="LyricBackgroundRadiusTips">範圍：0–100</string>
 </resources>

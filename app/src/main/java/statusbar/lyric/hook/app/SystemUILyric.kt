@@ -32,6 +32,7 @@ import android.content.IntentFilter
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -300,6 +301,15 @@ class SystemUILyric : BaseHook() {
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
                 setSpeed(config.lyricSpeed.toFloat())
+                if (config.lyricBackgroundRadius != 0) {
+                    setBackgroundColor(Color.TRANSPARENT)
+                    background = GradientDrawable().apply {
+                        cornerRadius = config.lyricBackgroundRadius.toFloat()
+                        setColor(Color.parseColor(config.lyricBackgroundColor))
+                    }
+                } else {
+                    setBackgroundColor(Color.parseColor(config.lyricBackgroundColor))
+                }
                 val animation = config.animation
                 if (animation != "Random") {
                     inAnimation = ViewTools.switchViewInAnima(animation)
@@ -319,7 +329,7 @@ class SystemUILyric : BaseHook() {
                 iconView.showView()
                 iconSwitch = true
                 iconView.apply {
-                    layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconLeftMargins, config.iconTopMargins, 0, 0) }.apply {
+                    layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconStartMargins, config.iconTopMargins, 0, config.iconBottomMargins) }.apply {
                         if (config.iconSize == 0) {
                             width = clockView.height / 2
                             height = clockView.height / 2

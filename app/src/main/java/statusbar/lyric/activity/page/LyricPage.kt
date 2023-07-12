@@ -110,6 +110,58 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
+        TextSA(textId = R.string.LyricBackgroundColorAndTransparency, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.LyricBackgroundColorAndTransparency))
+                setMessage(getString(R.string.LyricBackgroundColorAndTransparencyTips))
+                setEditText(config.lyricBackgroundColor, "#00000000", config = {
+                    it.inputType = InputType.TYPE_CLASS_TEXT
+                    it.filters = arrayOf(InputFilter.LengthFilter(9))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText()
+                        if (value.isEmpty()) {
+                            config.lyricBackgroundColor = ""
+                        } else {
+                            Color.parseColor(value)
+                            config.lyricBackgroundColor = value
+                        }
+                        changeConfig()
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
+        //背景圆角
+        TextSA(textId = R.string.LyricBackgroundRadius, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.LyricBackgroundRadius))
+                setMessage(getString(R.string.LyricBackgroundRadiusTips))
+                setEditText(config.lyricBackgroundRadius.toString(), "0", config = {
+                    it.inputType = InputType.TYPE_CLASS_NUMBER
+                    it.filters = arrayOf(InputFilter.LengthFilter(3))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in 0..100) {
+                            config.lyricBackgroundRadius = value
+                            changeConfig()
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
         TextSA(textId = R.string.LyricLetterSpacing, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.LyricLetterSpacing))

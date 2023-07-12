@@ -30,16 +30,11 @@ import statusbar.lyric.config.XposedOwnSP
 
 object LogTools {
     private const val maxLength = 4000
-    const val TAG = "StatusBarLyric"
+    private const val TAG = "StatusBarLyric"
 
 
     private fun log(obj: Any?, toXposed: Boolean = false, toLogd: Boolean = false) {
         if (!BuildConfig.DEBUG) return
-        if (toXposed) {
-            if (!XposedOwnSP.config.printXpLog) return
-        } else {
-            if (!ActivityOwnSP.config.printXpLog) return
-        }
         val content = if (obj is Throwable) Log.getStackTraceString(obj) else obj.toString()
         if (content.length > maxLength) {
             val chunkCount = content.length / maxLength
