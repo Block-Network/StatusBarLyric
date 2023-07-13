@@ -152,11 +152,15 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        loadClassOrNull("com.android.systemui.statusbar.phone.LightBarTransitionsController").isNotNull {
-            it.methodFinder().filterByName("setIconsDark").first().createHook {
+        loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
+            it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
                 after { hookParam ->
                     if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
-                    changeColor(clockView.currentTextColor)
+                    hookParam.thisObject.objectHelper {
+                        val mIconTint = getObjectOrNullAs<Int>("mIconTint") ?: Color.BLACK
+                        changeColor(mIconTint)
+                    }
+
                 }
             }
         }

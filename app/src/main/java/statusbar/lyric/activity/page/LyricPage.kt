@@ -121,12 +121,8 @@ class LyricPage : BasePage() {
                 setRButton(getString(R.string.OK)) {
                     try {
                         val value = getEditText()
-                        if (value.isEmpty()) {
-                            config.lyricBackgroundColor = ""
-                        } else {
-                            Color.parseColor(value)
-                            config.lyricBackgroundColor = value
-                        }
+                        Color.parseColor(value)
+                        config.lyricBackgroundColor = value
                         changeConfig()
                     } catch (_: Exception) {
                         ActivityTools.showToastOnLooper(getString(R.string.InputError))
