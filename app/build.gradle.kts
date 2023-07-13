@@ -1,9 +1,14 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
+
+val localProperties = Properties()
+if (rootProject.file("local.properties").canRead())
+    localProperties.load(rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "statusbar.lyric"
@@ -21,8 +26,18 @@ android {
         buildConfigField("int", "API_VERSION", "3")
         buildConfigField("int", "CONFIG_VERSION", "3")
     }
-
+    val config = localProperties.getProperty("androidStoreFile")?.let {
+        signingConfigs.create("config") {
+            storeFile = file(it)
+            storePassword = localProperties.getProperty("androidStorePassword")
+            keyAlias = localProperties.getProperty("androidKeyAlias")
+            keyPassword = localProperties.getProperty("androidKeyPassword")
+        }
+    }
     buildTypes {
+        all {
+            signingConfig = config ?: signingConfigs["debug"]
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
