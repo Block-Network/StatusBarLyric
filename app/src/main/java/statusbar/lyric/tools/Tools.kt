@@ -48,6 +48,21 @@ import java.util.regex.Pattern
 
 object Tools {
     private var index: Int = 0
+
+    val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
+    private fun isPresent(name: String): Boolean {
+        return try {
+            Thread.currentThread().contextClassLoader.isNotNull {
+                it.loadClass(name)
+            }.isNot {
+                throw ClassNotFoundException()
+            }
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    }
+
     fun View.isTargetView(callback: (TextView) -> Unit) {
         val className = XposedOwnSP.config.textViewClassName
         val textViewID = XposedOwnSP.config.textViewID
@@ -122,7 +137,6 @@ object Tools {
         } catch (ignored: Throwable) {
         }
     }
-
 
 
     inline fun <T> T?.isNotNull(callback: (T) -> Unit): Boolean {

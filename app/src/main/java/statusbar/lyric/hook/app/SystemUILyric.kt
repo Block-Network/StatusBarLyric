@@ -57,6 +57,7 @@ import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
+import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.regexReplace
@@ -139,7 +140,7 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-            if (config.limitVisibilityChange) {
+            if (config.limitVisibilityChange && !isMIUI) {
                 it.methodFinder().filterByName("setVisibility").first().createHook {
                     before { hookParam ->
                         if (isShow) {
@@ -155,8 +156,7 @@ class SystemUILyric : BaseHook() {
             it.methodFinder().filterByName("setIconsDark").first().createHook {
                 after { hookParam ->
                     if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
-                    val isDark = hookParam.args[0] as Boolean
-                    changeColor(if (isDark) Color.BLACK else Color.WHITE)
+                    changeColor(clockView.currentTextColor)
                 }
             }
         }

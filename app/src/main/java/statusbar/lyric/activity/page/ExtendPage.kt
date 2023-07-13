@@ -5,6 +5,7 @@ import cn.fkj233.ui.activity.data.BasePage
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTools.changeConfig
+import statusbar.lyric.tools.Tools
 
 @BMPage
 class ExtendPage : BasePage() {
@@ -19,7 +20,9 @@ class ExtendPage : BasePage() {
             }
         })
         TextSw(textId = R.string.HideNotificationIcon, key = "hideNotificationIcon", onClickListener = { changeConfig() })
-        TextSSw(textId = R.string.LimitVisibilityChange, tipsId = R.string.LimitVisibilityChangeTips, key = "limitVisibilityChange")
+        if (!Tools.isMIUI) {
+            TextSSw(textId = R.string.LimitVisibilityChange, tipsId = R.string.LimitVisibilityChangeTips, key = "limitVisibilityChange")
+        }
         TextSw(textId = R.string.HideLyricWhenLockScreen, key = "hideLyricWhenLockScreen")
         TextSw(textId = R.string.HideCarrier, key = "hideCarrier")
     }
