@@ -32,6 +32,8 @@ android {
             storePassword = localProperties.getProperty("androidStorePassword")
             keyAlias = localProperties.getProperty("androidKeyAlias")
             keyPassword = localProperties.getProperty("androidKeyPassword")
+            enableV3Signing = true
+            enableV4Signing = true
         }
     }
     buildTypes {
