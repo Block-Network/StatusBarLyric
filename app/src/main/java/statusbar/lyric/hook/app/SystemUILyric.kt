@@ -267,7 +267,7 @@ class SystemUILyric : BaseHook() {
                 lastBase64Icon = it.base64Icon
                 base64ToDrawable(it.base64Icon)
             } else {
-                val baseIcon = config.getDefaultIcon(it.packageName, config.forceTheIconToBeDisplayed)
+                val baseIcon = config.getDefaultIcon(it.packageName)
                 if (baseIcon == lastBase64Icon) return@goMainThread
                 lastBase64Icon = baseIcon
                 base64ToDrawable(baseIcon)
