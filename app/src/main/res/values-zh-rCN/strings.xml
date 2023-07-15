@@ -132,7 +132,7 @@
     <string name="LyricBackgroundColorAndTransparencyTips">请输入十六进制颜色值</string>
     <string name="LyricBackgroundRadius">歌词背景半径</string>
     <string name="LyricBackgroundRadiusTips">范围：0–100</string>
-    <string name="ColorScheme1">配色方案 1</string>
-    <string name="ColorScheme2">配色方案 2</string>
-    <string name="LyricColorScheme">* 歌词配色方案</string>
+    <string name="ColorScheme1">方案 1</string>
+    <string name="ColorScheme2">方案 2</string>
+    <string name="LyricColorScheme">* 歌词反色方案</string>
 </resources>
