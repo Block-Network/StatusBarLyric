@@ -136,4 +136,5 @@
     <string name="ColorScheme1">Color Scheme 1</string>
     <string name="ColorScheme2">Color Scheme 2</string>
     <string name="LyricColorScheme">* Lyric Color Scheme</string>
+    <string name="notEnabledTips">Please activate the module and enable the main switch</string>
 </resources>

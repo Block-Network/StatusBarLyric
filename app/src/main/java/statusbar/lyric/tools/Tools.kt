@@ -110,8 +110,13 @@ object Tools {
     fun String.dispose() = this.regexReplace(" ", "").regexReplace("\n", "")
 
     fun getPref(key: String): XSharedPreferences? {
-        val pref = XSharedPreferences(BuildConfig.APPLICATION_ID, key)
-        return if (pref.file.canRead()) pref else null
+        return try {
+            val pref = XSharedPreferences(BuildConfig.APPLICATION_ID, key)
+            if (pref.file.canRead()) pref else null
+        } catch (e: Throwable) {
+            e.log()
+            null
+        }
     }
 
     @SuppressLint("WorldReadableFiles")

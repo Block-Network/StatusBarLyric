@@ -135,4 +135,5 @@
     <string name="ColorScheme1">方案 1</string>
     <string name="ColorScheme2">方案 2</string>
     <string name="LyricColorScheme">* 歌词反色方案</string>
+    <string name="notEnabledTips">请激活模块并打开主开关</string>
 </resources>

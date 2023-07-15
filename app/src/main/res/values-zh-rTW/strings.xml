@@ -135,4 +135,5 @@
     <string name="ColorScheme1">方案 1</string>
     <string name="ColorScheme2">方案 2</string>
     <string name="LyricColorScheme">* 歌詞反色方案</string>
+    <string name="notEnabledTips">請啟用模組並打開主開關</string>
 </resources>
