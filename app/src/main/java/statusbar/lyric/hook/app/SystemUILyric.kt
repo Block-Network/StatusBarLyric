@@ -48,16 +48,17 @@ import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import cn.lyric.getter.api.tools.Tools.receptionLyric
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
+import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
+import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
-import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.regexReplace
@@ -125,7 +126,7 @@ class SystemUILyric : BaseHook() {
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
     override fun init() {
-        "Init".log()
+        "Init Hook".log()
         loadClassOrNull(config.textViewClassName).isNotNull {
             hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
                 after { hookParam ->
@@ -140,12 +141,15 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-            if (config.limitVisibilityChange && !isMIUI) {
-                it.methodFinder().filterByName("setVisibility").first().createHook {
+            if (config.limitVisibilityChange) {
+                moduleRes.getString(R.string.LimitVisibilityChange).log()
+                View::class.java.methodFinder().filterByName("setVisibility").first().createHook {
                     before { hookParam ->
                         if (isShow) {
-                            when (hookParam.args[0]) {
-                                View.VISIBLE -> hookParam.args[0] = View.GONE
+                            if (hookParam.args[0] == View.VISIBLE) {
+                                (hookParam.thisObject as View).isTargetView {
+                                    hookParam.args[0] = View.GONE
+                                }
                             }
                         }
                     }
@@ -164,8 +168,9 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-            if (config.hideNotificationIcon) {
+        if (config.hideNotificationIcon) {
+            loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
+                moduleRes.getString(R.string.HideNotificationIcon).log()
                 it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
                     after { hookParam ->
                         hookParam.thisObject.objectHelper {
@@ -176,6 +181,7 @@ class SystemUILyric : BaseHook() {
             }
         }
         if (config.hideCarrier) {
+            moduleRes.getString(R.string.HideCarrier).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
                 it.methodFinder().filterByName("onFinishInflate").first().createHook {
                     after { hookParam ->

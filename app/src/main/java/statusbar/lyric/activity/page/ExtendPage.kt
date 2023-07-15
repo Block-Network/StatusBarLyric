@@ -20,9 +20,7 @@ class ExtendPage : BasePage() {
             }
         })
         TextSw(textId = R.string.HideNotificationIcon, key = "hideNotificationIcon", onClickListener = { changeConfig() })
-        if (!Tools.isMIUI) {
-            TextSSw(textId = R.string.LimitVisibilityChange, tipsId = R.string.LimitVisibilityChangeTips, key = "limitVisibilityChange")
-        }
+        TextSSw(textId = R.string.LimitVisibilityChange, tipsId = R.string.LimitVisibilityChangeTips, key = "limitVisibilityChange")
         TextSw(textId = R.string.HideLyricWhenLockScreen, key = "hideLyricWhenLockScreen")
         TextSw(textId = R.string.HideCarrier, key = "hideCarrier")
     }
