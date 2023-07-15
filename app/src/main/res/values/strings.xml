@@ -133,4 +133,7 @@
     <string name="LyricBackgroundColorAndTransparencyTips">Please enter a decimal Color</string>
     <string name="LyricBackgroundRadius">Lyric Background Radius</string>
     <string name="LyricBackgroundRadiusTips">Range 0–100</string>
+    <string name="ColorScheme1">Color Scheme 1</string>
+    <string name="ColorScheme2">Color Scheme 2</string>
+    <string name="LyricColorScheme">* Lyric Color Scheme</string>
 </resources>

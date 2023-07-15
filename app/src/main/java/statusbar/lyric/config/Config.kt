@@ -317,7 +317,13 @@ class Config {
         set(value) {
             config.put("hideCarrier", value)
         }
-
+    var lyricColorScheme: Int
+        get() {
+            return config.opt("lyricColorScheme", 0)
+        }
+        set(value) {
+            config.put("lyricColorScheme", value)
+        }
 
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {

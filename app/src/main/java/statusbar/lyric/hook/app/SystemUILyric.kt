@@ -157,18 +157,37 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
-            it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
-                after { hookParam ->
-                    if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
-                    hookParam.thisObject.objectHelper {
-                        val mIconTint = getObjectOrNullAs<Int>("mIconTint") ?: Color.BLACK
-                        changeColor(mIconTint)
-                    }
+        when (config.lyricColorScheme) {
+            0 -> {
+                loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
+                    it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
+                        after { hookParam ->
+                            if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
+                            hookParam.thisObject.objectHelper {
+                                val mIconTint = getObjectOrNullAs<Int>("mIconTint") ?: Color.BLACK
+                                changeColor(mIconTint)
+                            }
 
+                        }
+                    }
                 }
             }
+
+            1 -> {
+                loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
+                    it.methodFinder().filterByName("onDarkChanged").filterByParamCount(3).first().createHook {
+                        after { hookParam ->
+                            if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
+                            val isDark = (hookParam.args[1] as Float) == 1f
+                            changeColor(if (isDark) Color.BLACK else Color.WHITE)
+                        }
+                    }
+                }
+            }
+
+            else -> {}
         }
+
         if (config.hideNotificationIcon) {
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
                 moduleRes.getString(R.string.HideNotificationIcon).log()

@@ -22,5 +22,15 @@ class ExtendPage : BasePage() {
         TextSSw(textId = R.string.LimitVisibilityChange, tipsId = R.string.LimitVisibilityChangeTips, key = "limitVisibilityChange")
         TextSw(textId = R.string.HideLyricWhenLockScreen, key = "hideLyricWhenLockScreen")
         TextSw(textId = R.string.HideCarrier, key = "hideCarrier")
+        val lyricColorScheme: LinkedHashMap<Int, String> = LinkedHashMap<Int, String>().apply {
+            this[0] = getString(R.string.ColorScheme1)
+            this[1] = getString(R.string.ColorScheme2)
+        }
+        TextSSp(textId = R.string.LyricColorScheme, currentValue = lyricColorScheme[ActivityOwnSP.config.lyricColorScheme].toString(), data = {
+            lyricColorScheme.forEach {
+                add(it.value) { ActivityOwnSP.config.lyricColorScheme = it.key }
+            }
+        })
+
     }
 }
