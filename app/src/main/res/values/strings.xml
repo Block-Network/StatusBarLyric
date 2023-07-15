@@ -1,210 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ApplicableVersion">Applicable version</string>
-    <string name="HideDeskIcon">Hide desktop icons</string>
-    <string name="BaseSetting">Basic Settings</string>
-    <string name="AllSwitch">Master switch</string>
-    <string name="SongPauseCloseLyrics">* Old Song Pause Close Lyrics</string>
-    <string name="LyricWidth">Lyrics width</string>
-    <string name="Off">Off</string>
-    <string name="LyricAutoMaxWidth">Lyrics adaptive maximum width</string>
-    <string name="LyricsAnimation">Lyrics animation</string>
-    <string name="LyricColor">Lyrics color and transparency</string>
-    <string name="BackgroundColor">Background color and transparency</string>
-    <string name="IconColor">Icon color and transparency</string>
-    <string name="LyricIcon">* Lyrics icon</string>
-    <string name="ShowEmptyIcon">* Force the icon to be displayed</string>
-    <string name="LyricSpeed">Lyrics scroll speed</string>
-    <string name="AdvancedSettings">Advanced settings</string>
-    <string name="ClickLyric">* Click on the lyrics to switch the clock and lyrics</string>
-    <string name="AbScreen">* Anti-burn screen</string>
-    <string name="IconHigh">Icon up and down position</string>
-    <string name="IconSpacing">Icon Lyrics Spacing</string>
-    <string name="LyricPos">Left and right positions of lyrics
-    </string>
-    <string name="Default">Default</string>
-    <string name="UnlockShow">Unlock display only</string>
-    <string name="AutoHideNotiIcon">Auto hide notification icons</string>
-    <string name="HideNetWork">Hide network speed</string>
-    <string name="AutoHideCarrierName">Auto hide lock screen carrier name</string>
-    <string name="CustomHook">* Custom Hook (do not move if you don\'t understand)</string>
-    <string name="CustomHookTips">Some Hook Points\nmStatusClock mClockView mLeftClock mCenterClock mRightClock</string>
-    <string name="DebugMode">Debug mode</string>
-    <string name="OnlyGetLyric">* Get lyrics only</string>
-    <string name="OnlyGetLyricTips">Get lyrics only without displaying them in the status bar</string>
-    <string name="TimeHide">* Time Hide lyric</string>
-    <string name="TimeHideTime">Timed Hide lyric time</string>
-    <string name="GetTitle">* Force the music title to appear</string>
-    <string name="JudgementTitle">* Enhanced stop hiding lyrics</string>
-    <string name="ReStartSystemUI">Restart SystemUI</string>
-    <string name="ResetModule">Reset module</string>
-    <string name="About">About</string>
-    <string name="AboutModule">About the module</string>
-    <string name="AboutTips1">Mainly responsible for Hook and UI</string>
-    <string name="AboutTips2">Mainly responsible for fool around</string>
-    <string name="ThkListTips">Thank you list (in no particular order)</string>
-    <string name="Other">Other</string>
-    <string name="Source">Project Address</string>
-    <string name="Tips">Tips</string>
-    <string name="ReStart">Restart APP</string>
-    <string name="VerExplanation">Version explanation</string>
-    <string name="Done">Done</string>
-    <string name="CurrentVer">current version</string>
-    <string name="VerExp">Applicable situation：\n
-        - APlayer 1.5.9.1 ~ now (status bar lyrics mode)\n
-        - QQ music unknown ~ now (status bar lyrics mode)\n
-        - Migu music unknown ~ now (status bar lyrics mode)\n
-        - Netease cloud music 8.2. 10 ~ Now (status bar lyrics mode)\n
-        - Netease Cloud Music unknown ~ 8.0.40 (car Bluetooth lyrics mode)\n
-        - Kugou Music unknown ~ 11.4.4 (car Bluetooth lyrics mode)\n
-        - Kugou music concept Version unknown ~ 3.2.0(Car Bluetooth lyrics mode)\n
-        - Kuwo Music unknown ~ 10.3.4.0(Car Bluetooth lyrics mode)\n
-        - Salt &amp; Pepper Music 4.5 ~ Now (API mode)\n
-        - Meizu Music Unknown ~ Now ( Status bar lyrics mode)\n
-        - Mi Music 4.6.0 ~ 4.11.1.0 (car Bluetooth lyrics mode)\n
-        - RPlayer unknown ~ now (status bar lyrics mode)\n
-        -  LX Music  unknown ~ now(API mode or Desktop lyrics mode)\n
-        - Apple Music  3.10 ~ 4.0.0\n\n
-
-        Versions not in this range may not be available, but versions in this range will definitely work
-    </string>
     <string name="AppName">StatusBar lyric</string>
     <string name="QuickTitle">Status bar lyric</string>
-    <string name="XposedTips">If the lyrics cannot be displayed, please try to stop the music software and restart the
-        SystemUI\n or check the instructions for use. Are you using the correct version?
-    </string>
-    <string name="NewVer">New version found</string>
+    <string name="XposedTips">If the lyrics cannot be displayed, please try to stop the music software and restart the SystemUI,and check Lyric Getter</string>
+    <string name="ConfigResetSuccess">The config reset succeeded</string>
+    <string name="HaveNewVersion">There is a new version</string>
     <string name="Update">Update</string>
-    <string name="GetNewVerError">Failed to get the latest version download address:</string>
     <string name="Cancel">Cancel</string>
-    <string name="NoVerUpdate">No new version to update</string>
-    <string name="CheckUpdateError">Check failed, please try again later!</string>
-    <string name="CheckUpdateFailed">Check for update failed</string>
-    <string name="top">Slide up</string>
-    <string name="lower">Decline</string>
-    <string name="left">Swipe left</string>
-    <string name="right">Swipe right</string>
-    <string name="random">random</string>
-    <string name="LyricColorTips">Please enter the hexadecimal color code, for example: #C0C0C0</string>
-    <string name="LyricColorError">The color code is incorrect!</string>
-    <string name="InputError">The input range is incorrect!</string>
-    <string name="LyricPosTips">-900~900(Unit:pixel)</string>
-    <string name="LyricHighTips">-100~100(Unit:pixel)</string>
-    <string name="IconSpacingTips">0~20(Unit:pixel)</string>
-    <string name="Ok">Sure</string>
-    <string name="HookSetTips">Hook has been set to:\n</string>
-    <string name="RestartSystemUI">Please restart SystemUI</string>
-    <string name="RestartUI">Are you sure to restart the system interface?</string>
-    <string name="RestartUITips">If you suddenly find that you cannot use it during use, you can try to restart the
-        SystemUI.
-    </string>
-    <string name="ResetModuleDialog">Do you want to reset the module</string>
-    <string name="ResetModuleDialogTips">The module is OK, please don\'t reset it at will</string>
-    <string name="StartCheckUpdate">Start checking for updates</string>
-    <string name="MeizuStyle">* Meizu lyrics scroll style</string>
-    <string name="lShowOnce">* Lyrics only scroll once</string>
-    <string name="WarnExplanation">Module Considerations</string>
-    <string name="WarnExp">Module notes\n\n
-        The module is perfectly used in the official status bar layout, modifying the layout may cause problems\n\n
-
-        If the lyrics cannot be displayed,Please restart the system interface and make sure the module switch is turned on\n
-        "Car Bluetooth Lyrics Mode" Please make sure "Car Bluetooth Lyrics" is enabled in the music software settings\n
-        "Status Bar Lyrics Mode" Please make sure "Status Bar Lyrics" is enabled in the music software settings\n\n
-        "API Mode" Please make sure the corresponding switch in the music software settings is turned on\n\n
-
-        The function changes with * need to restart the system interface\n\n
-
-        If the module does not take effect, please open debug and restart SystemUI, attach the log, and go to GitHub
-        Telegram for feedback
-    </string>
-    <string name="NotSupport">This module is not activated, please activate this module in Lsposed\nThis module only
-        supports the latest version of Lsposed
-    </string>
-    <string name="PrivacyPolicy">Privacy Policy</string>
-    <string name="UseSystemReverseColor">* Reverse color using system mode</string>
-    <string name="IconSettings">Icon settings</string>
-    <string name="NewNotice">NewNotice</string>
-    <string name="GetNewNoticeError">Get NewNotice Error</string>
-    <string name="ResetSuccess">Reset successfully</string>
-    <string name="MakeIconTitle1">Please enter Base 64 without prefix, recommended pixel size is 32*32</string>
-    <string name="MakeIconTitle2">Icon modification restarts to take effect</string>
-    <string name="LyricHigh">Lyrics up and down position</string>
-    <string name="PlaceSelect">Place select</string>
-    <string name="Edit">Edit</string>
-    <string name="Copy">Copy</string>
-    <string name="Export">Export</string>
-    <string name="Add">Add</string>
-    <string name="Import">Import</string>
-    <string name="SetPackageName">Set package name</string>
-    <string name="SetIconBase64">Set Icon Base64</string>
-    <string name="LyricSize">Lyrics Size</string>
-    <string name="IconSize">Icon Size</string>
-    <string name="LyricSizeTips">0~50, current:</string>
-    <string name="LyricTips">-1%~100%, current:</string>
-    <string name="IconSizeTips">0~100, current:</string>
-    <string name="Test">Module Test</string>
-    <string name="TestDialogTips">This function is embedded in the system UI and may cause the system UI to crash and
-        restart!
-    </string>
-    <string name="Start">Start</string>
-    <string name="Back">Back</string>
-    <string name="CustomLyric">Lyric Custom</string>
-    <string name="CustomIcon">Icon Custom</string>
-    <string name="InputCustomHook">Input custom hook, Input empty of off</string>
-    <string name="HideTime">Hide Time</string>
-    <string name="FadingEdge">* Edge blur</string>
-    <string name="SponsoredList">Sponsored List</string>
-    <string name="Donate">Support us</string>
-    <string name="HookSure">Hook SystemUI</string>
-    <string name="HookSureSuccess">Hook SystemUI Success</string>
-    <string name="HookSureFail">Hook SystemUI failed\nThis SystemUI does not support, the author of the packaged
-        SystemUI
-    </string>
-    <string name="First">View Header</string>
-    <string name="Latest">View Latest</string>
-    <string name="LyricViewPosition">* Lyrics view add position</string>
-    <string name="CustomizePosition">* CustomizeText view add position</string>
-    <string name="Menu">Menu</string>
-    <string name="CheckUpdate">Check Update</string>
-    <string name="Backup">Backup Config</string>
-    <string name="Recovery">Recovery Config</string>
-    <string name="Manual">Help Manual</string>
-    <string name="CustomFont">Custom font</string>
-    <string name="DeleteFont">Delete font</string>
-    <string name="CustomFontSuccess">Set custom font success</string>
-    <string name="CustomFoneFail">Set custom font fail</string>
-    <string name="DeleteFontSuccess">Delete font success</string>
-    <string name="DeleteFoneFail">Delete font fail</string>
-    <string name="ChooseFont">Choose font</string>
+    <string name="Exit">Exit</string>
     <string name="Reset">Reset</string>
-    <string name="FontWeight">* Font weight</string>
-    <string name="LyricSpacing">Lyrics spacing</string>
-    <string name="ReverseColorTime">Normal inversion time</string>
-    <string name="ReverseColorTimeTips">1–3000 (unit: milliseconds)</string>
-    <string name="AntiBurnTime">Burn-in move time</string>
-    <string name="AntiBurnTimeTips">1–3600000 (unit: milliseconds)</string>
-    <string name="SongPauseCloseLyricsTime">* old Song pause close Lyrics time</string>
-    <string name="showAd">Watch advertisements</string>
-    <string name="MakeIcon">Make Icon</string>
-    <string name="MakeIconError">Can\'t jump，Please check if it is installed\n爱玩机工具箱</string>
-    <string name="DelayedLoading">Delayed loading</string>
-    <string name="FirstTip">This module uses Microsoft AppCenter to count or collect metrics such as monthly activity,
-        crash data, and all content
-        has nothing to do with the module
-    </string>
-    <string name="TitleTips1">Please do not take screenshots of the feedback log\n
-        save it as a file feedback in the upper right corner of the Lsp
-    </string>
-    <string name="TitleTips2">The function changes with * need to restart the SystemUI</string>
-    <string name="TitleTips3">The title above the horizontal scroll bar can be clicked to manually enter the range</string>
-    <string name="TitleTips4">If you think this module is easy to use, please support it</string>
-    <string name="CustomizeText">Customize Text</string>
-    <string name="BlockLyricTips">Use keywords or regular expressions to mask lyrics</string>
-    <string name="BlockLyric">Block lyrics</string>
-    <string name="BlockLyricMode">Regular expression</string>
-    <string name="BlockLyricOff">Whether to cancel the display of shielded lyrics</string>
-    <string name="ModuleVersion">Module Version</string>
-    <string name="BuildTime">Build Time</string>
-    <string name="BgCorners">Background rounded corners</string>
-    <string name="OldAbScreen">* Anti-burn screen(Old Version)</string>
+    <string name="GetNewVersionError">Get the new version error</string>
+    <string name="NoNewVersion">There is no new version</string>
+    <string name="CheckUpdateError">Check for update errors</string>
+    <string name="Announcement">Announcement</string>
+    <string name="OK">OK</string>
+    <string name="GetAnnouncementError">Get the announcement error</string>
+    <string name="FirstUseTips">Tips for first use</string>
+    <string name="NotSupportXposedFramework">The Xposed framework is not supported</string>
+    <string name="ReStartApp">Restart the App</string>
+    <string name="NoLyricGetter">No LyricGetter</string>
+    <string name="NoSupportedVersionLyricGetter">No LyricGetter</string>
+    <string name="clickToInstall">Click Install</string>
+    <string name="Installed">Installed</string>
+    <string name="unsupportedLyricGetter">Unsupported LyricGetter</string>
+    <string name="Menu">Menu</string>
+    <string name="HideDeskIcon">Hide desktop icons</string>
+    <string name="PrintXpLog">Print Xposed Log</string>
+    <string name="CheckUpdate">Check for updates</string>
+    <string name="ResetConfig">Reset the config</string>
+    <string name="ResetSystemUi">Restart the SystemUi</string>
+    <string name="ModuleVersion">Module version</string>
+    <string name="BackupConfig">Back up the config</string>
+    <string name="RecoveryConfig">Recovery the config</string>
+    <string name="ModuleBuildTime">Module build time</string>
+    <string name="RestartUITips">Are you sure you want to restart the System UI?</string>
+    <string name="masterSwitch">Master Switch</string>
+    <string name="HookPage">Hook Page</string>
+    <string name="TestMode">Test Mode</string>
+    <string name="RelaxConditions">Relax Conditions</string>
+    <string name="RelaxConditionsTips">Some classes are allowed, but there may be many more hook points</string>
+    <string name="LyricPage">Lyric Page</string>
+    <string name="IconPage">Icon Page</string>
+    <string name="CustomizeIconPage">Customize Icon Page</string>
+    <string name="ExtendPage">Extend Page</string>
+    <string name="ChoosePage">Choose Page</string>
+    <string name="LyricWidth">Lyric Width</string>
+    <string name="LyricWidthTips">Range: 0%–100% , 0 is Adaptive width</string>
+    <string name="FixedLyricWidth">Fixed lyric width</string>
+    <string name="fixedLyricWidthTips">When turned on, the outer width of the lyrics is fixed and does not change with the lyrics</string>
+    <string name="LyricColorAndTransparency">Lyric Color And Transparency</string>
+    <string name="LyricColorAndTransparencyTips">Please enter a decimal Color</string>
+    <string name="LyricSize">Lyric Size</string>
+    <string name="LyricSizeTips">Range: 0%–100% of the height of the status bar, 0 is the following clock</string>
+    <string name="LyricLetterSpacing">Lyric Letter Spacing</string>
+    <string name="LyricLetterSpacingTips">Range 0–50</string>
+    <string name="LyricStrokeWidth">Lyric Stroke Width</string>
+    <string name="LyricStrokeWidthTips">Range 0–400</string>
+    <string name="LyricSpeed">Lyric Speed</string>
+    <string name="LyricSpeedTips">Range 0–20</string>
+    <string name="LyricBlurredEdges">* Lyric Blurred Edges</string>
+    <string name="LyricBlurredEdgesRadius">* Lyric Blurred Edges Radius</string>
+    <string name="LyricBlurredEdgesRadiusTips">Range 0–100</string>
+    <string name="LyricTopMargins">Lyric Top Margins</string>
+    <string name="LyricTopMarginsTips">Range –100–100</string>
+    <string name="LyricEndMargins">Lyric End Margins</string>
+    <string name="LyricEndMarginsTips">Range –500–500</string>
+    <string name="LyricStartMargins">Lyric Start Margins</string>
+    <string name="LyricStartMarginsTips">Range –500–500</string>
+    <string name="LyricBottomMargins">Lyric Bottom Margins</string>
+    <string name="LyricBottomMarginsTips">Range –100–100</string>
+    <string name="RegexReplace">* Regex Replace</string>
+    <string name="RegexReplaceTips">Block lyrics with regular expression matching</string>
+    <string name="IconSwitch">Icon Switch</string>
+    <string name="IconSize">Icon Size</string>
+    <string name="IconSizeTips">Range: 0%–100% of the height of the status bar, 0 is the following clock</string>
+    <string name="IconTopMargins">Icon Top Margins</string>
+    <string name="IconTopMarginsTips">Range –100–100</string>
+    <string name="IconBottomMargins">Icon Bottom Margins</string>
+    <string name="IconBottomMarginsTips">Range –100–100</string>
+    <string name="IconStartMargins">Icon Left Margins</string>
+    <string name="IconStartMarginsTips">Range –500–500</string>
+    <string name="IconColorAndTransparency">Icon Color And Transparency</string>
+    <string name="IconColorAndTransparencyTips">Please enter a decimal Color</string>
+    <string name="ColorError">Color Error</string>
+    <string name="InputError">Input Error</string>
+    <string name="TimeFormat">TimeFormat</string>
+    <string name="LyricMode">Lyric Mode</string>
+    <string name="GetHook">Get the Hook point</string>
+    <string name="MasterOff">Master switch is off</string>
+    <string name="HookSucceeded">Hook Succeeded</string>
+    <string name="HookFailed">Hook Failed</string>
+    <string name="StartHookingTextView">Start Hooking All TextView</string>
+    <string name="FirstFilter">%s meets preliminary requirements,Total: %s meets requirements</string>
+    <string name="NoTextView">There is no Textview that meets the requirements</string>
+    <string name="SendTextViewClass">Send: %s</string>
+    <string name="ClearTextViewList">Be clear about Text View Lists and their associated data</string>
+    <string name="UnderstandTimeFormat">I don\'t understand the time format</string>
+    <string name="LoadClass">Load Class: %s</string>
+    <string name="LoadClassEmpty">Please turn on the test mode configuration first</string>
+    <string name="LoadClassFailed">Load failed,Class not found</string>
+    <string name="LoadClassSucceed">Load Succeed,Class: %s</string>
+    <string name="NotFoundHook">Hook not found</string>
+    <string name="NotFoundHookTips">Please try restarting the SystemUi, if you still can\'t find it, contact the developer</string>
+    <string name="SelectHook">Whether to select this Hook point</string>
+    <string name="RestartAppEffect">Restart App Effect</string>
+    <string name="ForceTheIconToBeDisplayed">Force The Icon To Be Displayed</string>
+    <!--    想不到取啥名字好   -->
+    <string name="AAATips">IsRepeat: %s;Index: %s</string>
+    <string name="BroadcastReceiveTimeout">Broadcast Receive Timeout</string>
+    <string name="BroadcastReceiveTimeoutTips">Please restart the SystemUI first, if it still times out, please contact the developer</string>
+    <string name="HideTime">Hide Time</string>
+    <string name="LyricsAnimation">Lyric Animation</string>
+    <string name="LyricsAnimationNone">None</string>
+    <string name="LyricsAnimationTop">Top</string>
+    <string name="LyricsAnimationBottom">Bottom</string>
+    <string name="LyricsAnimationStart">Start</string>
+    <string name="LyricsAnimationEnd">End</string>
+    <string name="LyricsAnimationScaleXY">ScaleXY</string>
+    <string name="LyricsAnimationScaleX">ScaleX</string>
+    <string name="LyricsAnimationScaleY">ScaleY</string>
+    <string name="LyricsAnimationRandom">Random</string>
+    <string name="LyricAddLocation">* Lyric Add Location</string>
+    <string name="AddLocationStart">Start</string>
+    <string name="AddLocationEnd">End</string>
+    <string name="HideNotificationIcon">Automatically hide notification icons when there are lyrics</string>
+    <string name="LimitVisibilityChange">* Limit Visibility Change</string>
+    <string name="LimitVisibilityChangeTips">It can prevent the characteristics of some systems from causing time to appear</string>
+    <string name="HideLyricWhenLockScreen">* Hide Lyric When Lock Screen</string>
+    <string name="ChoosePageTips">It is recommended to close other modules that modify the layout of the status bar first, and then come to this page to select Hook Points\nEffective Hook Point Selection: The status bar displays the module name, and the time is hidden</string>
+    <string name="HideCarrier">* Hide Carrier</string>
+    <string name="LyricBackgroundColorAndTransparency">Lyric Background Color And Transparency</string>
+    <string name="LyricBackgroundColorAndTransparencyTips">Please enter a decimal Color</string>
+    <string name="LyricBackgroundRadius">Lyric Background Radius</string>
+    <string name="LyricBackgroundRadiusTips">Range 0–100</string>
 </resources>

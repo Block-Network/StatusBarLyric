@@ -17,17 +17,15 @@
 
 package statusbar.lyric.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.util.AttributeSet
+import android.widget.LinearLayout
 import android.widget.TextView
-import statusbar.lyric.utils.Utils.isNotNull
+import statusbar.lyric.tools.Tools.isNotNull
 import kotlin.math.abs
 
-@SuppressLint("ViewConstructor")
-class LyricTextView constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0x01010084, defStyleRes: Int = 0) : TextView(context, attrs, defStyleAttr, defStyleRes) {
+class LyricTextView(context: Context) : TextView(context) {
     private var isStop = true
     private var textLength = 0f
     private var viewWidth = 0f
@@ -41,6 +39,11 @@ class LyricTextView constructor(context: Context, attrs: AttributeSet? = null, d
         xx = 0f
         textLength = getTextLength()
         viewWidth = width.toFloat()
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
     }
 
     override fun onDetachedFromWindow() {
