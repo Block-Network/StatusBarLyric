@@ -5,7 +5,6 @@ import cn.fkj233.ui.activity.data.BasePage
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTools.changeConfig
-import statusbar.lyric.tools.Tools
 
 @BMPage
 class ExtendPage : BasePage() {

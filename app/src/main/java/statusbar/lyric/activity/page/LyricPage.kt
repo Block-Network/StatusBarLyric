@@ -132,7 +132,6 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
-        //背景圆角
         TextSA(textId = R.string.LyricBackgroundRadius, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.LyricBackgroundRadius))
