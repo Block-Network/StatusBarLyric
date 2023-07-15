@@ -59,6 +59,7 @@ import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
+import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.regexReplace
@@ -262,7 +263,7 @@ class SystemUILyric : BaseHook() {
         if (!iconSwitch) return
         val customIcon = it.customIcon && it.base64Icon.isNotEmpty()
         goMainThread {
-            iconView.setImageBitmap(if (customIcon) {
+            val bitmap = if (customIcon) {
                 if (it.base64Icon == lastBase64Icon) return@goMainThread
                 lastBase64Icon = it.base64Icon
                 base64ToDrawable(it.base64Icon)
@@ -270,8 +271,15 @@ class SystemUILyric : BaseHook() {
                 val baseIcon = config.getDefaultIcon(it.packageName)
                 if (baseIcon == lastBase64Icon) return@goMainThread
                 lastBase64Icon = baseIcon
-                base64ToDrawable(baseIcon)
-            })
+                val base64ToDrawable = base64ToDrawable(baseIcon)
+                base64ToDrawable
+            }
+            bitmap.isNotNull {
+                iconView.showView()
+                iconView.setImageBitmap(it)
+            }.isNot {
+                iconView.hideView()
+            }
             "Change Icon".log()
         }
     }
