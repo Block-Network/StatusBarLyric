@@ -22,7 +22,6 @@
 
 package statusbar.lyric.service
 
-import android.content.Intent
 import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
@@ -31,33 +30,33 @@ import statusbar.lyric.config.Config
 import statusbar.lyric.tools.Tools
 
 class QuickTitleService : TileService() {
+    lateinit var config: Config
+    override fun onCreate() {
+        super.onCreate()
+        config = Tools.getSP(baseContext, "Config")?.let { Config(it) }!!
+    }
+
     private lateinit var tile: Tile
 
     override fun onClick() {
         super.onClick()
-        val config = Config(Tools.getSP(baseContext, "Lyric_Config")!!)
         config.masterSwitch = !config.masterSwitch
         set(config)
     }
 
     fun set(config: Config) {
-        tile.icon = Icon.createWithResource(this, R.drawable.ic_notification)
-        tile.label = getString(R.string.QuickTitle)
-        tile.contentDescription = getString(R.string.QuickTitle)
-        tile.state = if (config.masterSwitch) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
-        tile.updateTile()
-        application.sendBroadcast(Intent().apply {
-            action = "Lyric_Server"
-            putExtra("Lyric_Type", "update_config")
-            putExtra("Lyric_PackageName", application.packageName)
-        })
+        tile.apply {
+            icon = Icon.createWithResource(baseContext, R.drawable.ic_notification)
+            label = getString(R.string.QuickTitle)
+            contentDescription = getString(R.string.QuickTitle)
+            state = if (config.masterSwitch) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+        }.updateTile()
     }
 
     override fun onStartListening() {
         super.onStartListening()
-        val config: Config? = Tools.getSP(baseContext, "Lyric_Config")?.let { Config(it) }
         tile = qsTile
-        config?.let { set(it) }
+        set(config)
     }
 }
 
