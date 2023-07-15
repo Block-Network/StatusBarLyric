@@ -3,11 +3,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
+        maven("https://api.xposed.info")
     }
 }
-rootProject.name = "状态栏歌词"
+rootProject.name = "Statusbar Lyric"
 include(":app")
 include(":blockmiui")
-include(":hidden-api")
 include(":xtoast")
+include(":LyricGetterApi")

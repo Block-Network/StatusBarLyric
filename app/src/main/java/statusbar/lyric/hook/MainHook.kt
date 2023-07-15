@@ -1,114 +1,59 @@
-/*
- * StatusBarLyric
- * Copyright (C) 2021-2022 fkj@fkj233.cn
- * https://github.com/577fkj/StatusBarLyric
- *
- * This software is free opensource software: you can redistribute it
- * and/or modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either
- * version 3 of the License, or any later version and our eula as published
- * by 577fkj.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * and eula along with this software.  If not, see
- * <https://www.gnu.org/licenses/>
- * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
- */
-
 package statusbar.lyric.hook
 
+import com.github.kyuubiran.ezxhelper.EzXHelper
+import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import de.robv.android.xposed.IXposedHookLoadPackage
+import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
-import statusbar.lyric.hook.app.*
-import statusbar.lyric.utils.LogUtils
-import statusbar.lyric.utils.ktx.init
-import java.util.*
+import statusbar.lyric.R
+import statusbar.lyric.config.XposedOwnSP
+import statusbar.lyric.hook.app.SystemUILyric
+import statusbar.lyric.hook.app.SystemUITest
+import statusbar.lyric.tools.LogTools.log
+import java.util.Locale
 
-class MainHook : IXposedHookLoadPackage {
+class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        LogUtils.e("Debug enable")
-        LogUtils.e("${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})")
-        LogUtils.e("This packName: ${lpparam.packageName}")
-        init(lpparam)
+        if (!XposedOwnSP.config.masterSwitch) {
+            moduleRes.getString(R.string.MasterOff).log()
+            return
+        }
 
-        val hook = when (lpparam.packageName) {
+        EzXHelper.initHandleLoadPackage(lpparam)
+        when (lpparam.packageName) {
             "com.android.systemui" -> {
-                LogUtils.e("start hook systemui")
-                SystemUI()
-            }
-
-            "com.netease.cloudmusic" -> {
-                LogUtils.e("start hook netease")
-                Netease()
-            }
-
-            "com.kugou.android", "com.kugou.android.lite" -> {
-                LogUtils.e("start hook kugou")
-                Kugou(lpparam.packageName)
-            }
-
-            "cn.kuwo.player" -> {
-                LogUtils.e("start hook kuwo")
-                Kuwo()
-            }
-
-            "com.tencent.qqmusic" -> {
-                LogUtils.e("start hook qqmusic")
-                QQMusic()
-            }
-
-            "remix.myplayer" -> {
-                LogUtils.e("start Hook myplayer")
-                MeiZuStatusBarLyric.guiseFlyme(true)
-                null
-            }
-
-            "cmccwm.mobilemusic" -> {
-                LogUtils.e("start Hook migu")
-                MeiZuStatusBarLyric.guiseFlyme(true)
-                null
-            }
-
-            "com.miui.player" -> {
-                LogUtils.e("start Hook xiaomi Player")
-                Miplayer()
-            }
-
-            "com.meizu.media.music" -> {
-                LogUtils.e("start Hook Meizu Music")
-                MeiZuStatusBarLyric.guiseFlyme(true)
-                null
-            }
-
-            "com.r.rplayer" -> {
-                LogUtils.e("start Hook RPlayer")
-                MeiZuStatusBarLyric.guiseFlyme(true)
-                RPlayer()
-            }
-
-            "cn.toside.music.mobile" -> {
-                LogUtils.e("start Hook LX Music")
-                LXMusic()
-            }
-
-            "com.apple.android.music" -> {
-                LogUtils.e("start Hook Apple Music")
-                AppleMusic(lpparam)
-                null
-            }
-
-            else -> {
-                LogUtils.e("start Hook ${lpparam.processName}")
-                Api()
+                "${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})".log()
+                if (XposedOwnSP.config.testMode) {
+                    moduleRes.getString(R.string.HookPage).log()
+                    initHooks(SystemUITest())
+                } else {
+                    moduleRes.getString(R.string.LyricMode).log()
+                    initHooks(SystemUILyric())
+                }
             }
         }
-        hook?.hook()
-        LogUtils.e("Hook ${lpparam.processName} end")
+    }
+
+    override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
+        EzXHelper.initZygote(startupParam)
+        if (!XposedOwnSP.config.masterSwitch) {
+            moduleRes.getString(R.string.MasterOff).log()
+            return
+        }
+    }
+
+    private fun initHooks(vararg hook: BaseHook) {
+        hook.forEach {
+            try {
+                if (it.isInit) return
+                it.init()
+                it.isInit = true
+                "${moduleRes.getString(R.string.HookSucceeded)}:${it.javaClass.simpleName}".log()
+            } catch (e: Exception) {
+                "${moduleRes.getString(R.string.HookFailed)}:${it.javaClass.simpleName}".log()
+                e.log()
+            }
+        }
     }
 }

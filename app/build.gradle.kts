@@ -1,25 +1,45 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    id("org.jetbrains.kotlin.android")
 }
 
+val localProperties = Properties()
+if (rootProject.file("local.properties").canRead())
+    localProperties.load(rootProject.file("local.properties").inputStream())
+
 android {
-    compileSdk = 33
-    val buildTime=System.currentTimeMillis()
+    namespace = "statusbar.lyric"
+    compileSdk = 34
+    val buildTime = System.currentTimeMillis()
     defaultConfig {
         applicationId = "statusbar.lyric"
         minSdk = 26
-        targetSdk = 33
-        versionCode = 165
-        versionName = "5.4.2"
+        targetSdk = 34
+        versionCode = 200
+        versionName = "6.0.0"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
-        buildConfigField("String", "BUILD_TIME", "\"$buildTime\"")
+        buildConfigField("long", "BUILD_TIME", "$buildTime")
+        buildConfigField("int", "API_VERSION", "3")
+        buildConfigField("int", "CONFIG_VERSION", "3")
     }
-
+    val config = localProperties.getProperty("androidStoreFile")?.let {
+        signingConfigs.create("config") {
+            storeFile = file(it)
+            storePassword = localProperties.getProperty("androidStorePassword")
+            keyAlias = localProperties.getProperty("androidKeyAlias")
+            keyPassword = localProperties.getProperty("androidKeyPassword")
+            enableV3Signing = true
+            enableV4Signing = true
+        }
+    }
     buildTypes {
+        all {
+            signingConfig = config ?: signingConfigs["debug"]
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -55,14 +75,10 @@ android {
 }
 
 
-dependencies { //API
-    compileOnly("de.robv.android.xposed:api:82") //带源码Api
-//    compileOnly("de.robv.android.xposed:api:82:sources") // Use Hide Api
-    compileOnly(project(":hidden-api")) //MIUI 通知栏
-    implementation(files("libs/miui_sdk.jar")) // microsoft app center
-    val appCenterSdkVersion = "4.4.3"
-    implementation("com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}")
-    implementation("com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}")
+dependencies {
+    compileOnly("de.robv.android.xposed:api:82")
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
+    implementation(project(":LyricGetterApi"))
+    implementation("com.github.kyuubiran:EzXHelper:2.0.6")
 }
