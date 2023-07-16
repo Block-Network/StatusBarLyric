@@ -304,7 +304,7 @@ class Config {
 
     var hideLyricWhenLockScreen: Boolean
         get() {
-            return config.opt("hideLyricWhenLockScreen", false)
+            return config.opt("hideLyricWhenLockScreen", true)
         }
         set(value) {
             config.put("hideLyricWhenLockScreen", value)

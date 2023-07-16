@@ -20,7 +20,7 @@ class ExtendPage : BasePage() {
         })
         TextSw(textId = R.string.HideNotificationIcon, key = "hideNotificationIcon", onClickListener = { changeConfig() })
         TextSSw(textId = R.string.LimitVisibilityChange, tipsId = R.string.LimitVisibilityChangeTips, key = "limitVisibilityChange")
-        TextSw(textId = R.string.HideLyricWhenLockScreen, key = "hideLyricWhenLockScreen")
+        TextSw(textId = R.string.HideLyricWhenLockScreen, key = "hideLyricWhenLockScreen", defValue = true)
         TextSw(textId = R.string.HideCarrier, key = "hideCarrier")
         val lyricColorScheme: LinkedHashMap<Int, String> = LinkedHashMap<Int, String>().apply {
             this[0] = getString(R.string.ColorScheme1)

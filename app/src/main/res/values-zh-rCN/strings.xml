@@ -135,4 +135,5 @@
     <string name="ColorScheme1">方案 1</string>
     <string name="ColorScheme2">方案 2</string>
     <string name="LyricColorScheme">* 歌词反色方案</string>
+    <string name="Tips1">带<font color="red"> * </font>的选项，<font color="#FFF000">重启SystemUI</font>生效</string>
 </resources>
