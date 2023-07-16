@@ -27,12 +27,7 @@ import android.content.*
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
-import android.text.format.DateFormat.is24HourFormat
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
-import android.view.animation.TranslateAnimation
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.github.kyuubiran.ezxhelper.EzXHelper
@@ -46,43 +41,41 @@ import java.util.*
 import java.util.regex.Pattern
 
 
+@SuppressLint("StaticFieldLeak")
 object Tools {
+
+    private lateinit var target: TextView
+
     private var index: Int = 0
 
-    val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
-    private fun isPresent(name: String): Boolean {
-        return try {
-            Thread.currentThread().contextClassLoader.isNotNull {
-                it.loadClass(name)
-            }.isNot {
-                throw ClassNotFoundException()
-            }
-            true
-        } catch (e: ClassNotFoundException) {
-            false
-        }
-    }
 
     fun View.isTargetView(callback: (TextView) -> Unit) {
-        val className = XposedOwnSP.config.textViewClassName
-        val textViewID = XposedOwnSP.config.textViewID
-        val parentClass = XposedOwnSP.config.parentClassName
-        val parentID = XposedOwnSP.config.parentID
-        if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
-            EzXHelper.moduleRes.getString(R.string.LoadClassEmpty).log()
-            return
-        }
-        if (this is TextView) {
-            if (this::class.java.name == className) {
-                if (this.id == textViewID) {
-                    if (this.parent is LinearLayout) {
-                        val parentView = (this.parent as LinearLayout)
-                        if (parentView::class.java.name == parentClass) {
-                            if (parentID == parentView.id) {
-                                if (index == XposedOwnSP.config.index) {
-                                    callback(this)
-                                } else {
-                                    index += 1
+        if (this@Tools::target.isInitialized) {
+            if (this == target) {
+                callback(target)
+            }
+        } else {
+            val className = XposedOwnSP.config.textViewClassName
+            val textViewID = XposedOwnSP.config.textViewID
+            val parentClass = XposedOwnSP.config.parentClassName
+            val parentID = XposedOwnSP.config.parentID
+            if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
+                EzXHelper.moduleRes.getString(R.string.LoadClassEmpty).log()
+                return
+            }
+            if (this is TextView) {
+                if (this::class.java.name == className) {
+                    if (this.id == textViewID) {
+                        if (this.parent is LinearLayout) {
+                            val parentView = (this.parent as LinearLayout)
+                            if (parentView::class.java.name == parentClass) {
+                                if (parentID == parentView.id) {
+                                    if (index == XposedOwnSP.config.index) {
+                                        target = this
+                                        callback(this)
+                                    } else {
+                                        index += 1
+                                    }
                                 }
                             }
                         }
@@ -90,6 +83,7 @@ object Tools {
                 }
             }
         }
+
     }
 
 
@@ -110,13 +104,18 @@ object Tools {
     fun String.dispose() = this.regexReplace(" ", "").regexReplace("\n", "")
 
     fun getPref(key: String): XSharedPreferences? {
-        val pref = XSharedPreferences(BuildConfig.APPLICATION_ID, key)
-        return if (pref.file.canRead()) pref else null
+        return try {
+            val pref = XSharedPreferences(BuildConfig.APPLICATION_ID, key)
+            if (pref.file.canRead()) pref else null
+        } catch (e: Throwable) {
+            e.log()
+            null
+        }
     }
 
     @SuppressLint("WorldReadableFiles")
-    fun getSP(context: Context, key: String?): SharedPreferences? {
-        return context.createDeviceProtectedStorageContext().getSharedPreferences(key, Context.MODE_WORLD_READABLE)
+    fun getSP(context: Context, key: String): SharedPreferences? {
+        @Suppress("DEPRECATION") return context.createDeviceProtectedStorageContext().getSharedPreferences(key, Context.MODE_WORLD_READABLE)
     }
 
 

@@ -1,10 +1,12 @@
 package statusbar.lyric.activity.page
 
 import android.annotation.SuppressLint
+import android.view.View
 import cn.fkj233.ui.activity.annotation.BMMainPage
 import cn.fkj233.ui.activity.data.BasePage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
+import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
@@ -15,13 +17,16 @@ import statusbar.lyric.tools.Tools.isNotNull
 class MainPage : BasePage() {
     override fun onCreate() {
         checkApi()
-        TextSSw(textId = R.string.masterSwitch, key = "masterSwitch")
-        Line()
-        TextSA(textId = R.string.HookPage, onClickListener = { showPage(HookPage::class.java) })
-        TextSA(textId = R.string.LyricPage, onClickListener = { showPage(LyricPage::class.java) })
-        TextSA(textId = R.string.IconPage, onClickListener = { showPage(IconPage::class.java) })
-        Line()
-        TextSA(textId = R.string.ExtendPage, onClickListener = { showPage(ExtendPage::class.java) })
+        val masterSwitchBinding = GetDataBinding({ ActivityOwnSP.config.masterSwitch }) { view, _, data ->
+            view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+        }
+        TextSSw(textId = R.string.masterSwitch, key = "masterSwitch", onClickListener = { masterSwitchBinding.send(it) })
+        Line(dataBindingRecv = masterSwitchBinding.getRecv(1))
+        TextSA(textId = R.string.HookPage, onClickListener = { showPage(HookPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
+        TextSA(textId = R.string.LyricPage, onClickListener = { showPage(LyricPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
+        TextSA(textId = R.string.IconPage, onClickListener = { showPage(IconPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
+        Line(dataBindingRecv = masterSwitchBinding.getRecv(1))
+        TextSA(textId = R.string.ExtendPage, onClickListener = { showPage(ExtendPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
     }
 
     private fun checkApi() {
