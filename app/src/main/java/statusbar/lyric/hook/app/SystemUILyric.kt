@@ -273,8 +273,18 @@ class SystemUILyric : BaseHook() {
                     inAnimation = ViewTools.switchViewInAnima(effect)
                     outAnimation = ViewTools.switchViewOutAnima(effect)
                 }
+                width = getLyricWidth(paint, lyric)
+                if (config.dynamicLyricSpeed) {
+                    val theoreticalWidth = min(paint.measureText(lyric).toInt(), targetView.width)
+                    val i = theoreticalWidth - width
+                    if (i > 0) {
+                        val proportion = i * 1.0 / displayWidth
+                        val speed = 15 * proportion + 0.5
+                        speed.log()
+                        setSpeed(speed.toFloat())
+                    }
+                }
                 setText(lyric)
-                width = getLyricWidth(lyricView.paint, lyric)
             }
         }
     }
@@ -339,7 +349,7 @@ class SystemUILyric : BaseHook() {
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
-                setSpeed(config.lyricSpeed.toFloat())
+                if (!config.dynamicLyricSpeed) setSpeed(config.lyricSpeed.toFloat())
                 if (config.lyricBackgroundRadius != 0) {
                     setBackgroundColor(Color.TRANSPARENT)
                     background = GradientDrawable().apply {
@@ -396,7 +406,7 @@ class SystemUILyric : BaseHook() {
             if (config.fixedLyricWidth) {
                 scaleWidth()
             } else {
-                min(paint.measureText(text).toInt() + 6, scaleWidth())
+                min(paint.measureText(text).toInt(), scaleWidth())
             }
         }
     }

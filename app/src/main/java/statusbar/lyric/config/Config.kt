@@ -324,6 +324,13 @@ class Config {
         set(value) {
             config.put("lyricColorScheme", value)
         }
+    var dynamicLyricSpeed: Boolean
+        get() {
+            return config.opt("dynamicLyricSpeed", false)
+        }
+        set(value) {
+            config.put("dynamicLyricSpeed", value)
+        }
 
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {

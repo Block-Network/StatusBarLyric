@@ -31,6 +31,6 @@ class ExtendPage : BasePage() {
                 add(it.value) { ActivityOwnSP.config.lyricColorScheme = it.key }
             }
         })
-
+        TextSw(textId = R.string.DynamicLyricSpeed, key = "dynamicLyricSpeed", onClickListener = { changeConfig() })
     }
 }
