@@ -4,6 +4,7 @@ package statusbar.lyric.activity.page
 import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import cn.fkj233.ui.activity.annotation.BMPage
@@ -13,8 +14,6 @@ import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
-import statusbar.lyric.tools.ViewTools.hideView
-import statusbar.lyric.tools.ViewTools.showView
 
 
 @BMPage
@@ -22,7 +21,7 @@ class LyricPage : BasePage() {
     override fun onCreate() {
         val widthBinding = GetDataBinding({ config.lyricWidth }) { view, flag, data ->
             if (flag == 1) {
-                if (data as Int != 0) view.showView() else view.hideView()
+                view.visibility = if (data as Int != 0) View.VISIBLE else View.GONE
             } else {
                 val linearLayout = view as LinearLayout
                 val seekBar = linearLayout.getChildAt(0) as SeekBar

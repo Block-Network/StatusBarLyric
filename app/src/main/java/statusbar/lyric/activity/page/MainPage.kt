@@ -1,5 +1,6 @@
 package statusbar.lyric.activity.page
 
+import android.view.View
 import cn.fkj233.ui.activity.annotation.BMMainPage
 import cn.fkj233.ui.activity.data.BasePage
 import statusbar.lyric.BuildConfig
@@ -8,8 +9,6 @@ import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
-import statusbar.lyric.tools.ViewTools.hideView
-import statusbar.lyric.tools.ViewTools.showView
 
 
 @BMMainPage
@@ -17,7 +16,7 @@ class MainPage : BasePage() {
     override fun onCreate() {
         checkApi()
         val masterSwitchBinding = GetDataBinding({ ActivityOwnSP.config.masterSwitch }) { view, _, data ->
-            if (data as Boolean) view.showView() else view.hideView()
+            view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
         TextSSw(textId = R.string.masterSwitch, key = "masterSwitch", onClickListener = { masterSwitchBinding.send(it) })
         Line(dataBindingRecv = masterSwitchBinding.getRecv(1))
