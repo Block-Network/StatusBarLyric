@@ -38,16 +38,15 @@ object LogTools {
             val chunkCount = content.length / maxLength
             for (i in 0..chunkCount) {
                 val max = 4000 * (i + 1)
-                if (max >= content.length) {
-                    val value = content.substring(maxLength * i)
-                    Log.d(TAG, value)
-                    Log.d(XP_TAG, "$TAG:$value")
+                val value = if (max >= content.length) {
+                    content.substring(maxLength * i)
                 } else {
-                    val value = content.substring(maxLength * i, max)
-                    Log.d(TAG, value)
-                    Log.d(XP_TAG, "$TAG:$value")
+                    content.substring(maxLength * i, max)
                 }
+                Log.d(TAG, value)
+                Log.d(XP_TAG, "$TAG:$value")
             }
+
         } else {
             Log.d(TAG, content)
             Log.d(XP_TAG, "$TAG:$content")

@@ -53,6 +53,7 @@ import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
@@ -223,7 +224,7 @@ class SystemUILyric : BaseHook() {
                 targetView.addView(lyricLayout)
             }
         }
-        receptionLyric(context) {
+        receptionLyric(context,BuildConfig.VERSION_CODE) {
             if (!(this::clockView.isInitialized && this::targetView.isInitialized)) return@receptionLyric
             if (it.type == DataType.UPDATE) {
                 val lyric = it.lyric.regexReplace(config.regexReplace, "")

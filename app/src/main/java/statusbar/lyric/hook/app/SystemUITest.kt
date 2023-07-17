@@ -47,6 +47,8 @@ import statusbar.lyric.tools.ActivityTestTools.receiveClass
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.dispose
 import statusbar.lyric.tools.Tools.goMainThread
+import statusbar.lyric.tools.ViewTools.hideView
+import statusbar.lyric.tools.ViewTools.showView
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Locale
@@ -84,6 +86,7 @@ class SystemUITest : BaseHook() {
                 }
                 moduleRes.getString(R.string.StartHookingTextView).log()
                 hook()
+
             }
         }
     }
@@ -188,9 +191,9 @@ class SystemUITest : BaseHook() {
                             if (da.textViewClassName == data.textViewClassName && da.textViewID == data.textViewID && da.parentClassName == data.parentClassName && da.parentID == data.parentID && da.index == data.index) {
                                 if (this@SystemUITest::lastView.isInitialized) {
                                     (lastView.parent as LinearLayout).removeView(testView)
-                                    lastView.visibility = View.VISIBLE
+                                    lastView.showView()
                                 }
-                                textview.visibility = View.GONE
+                                textview.hideView()
                                 val parentLinearLayout = textview.parent as LinearLayout
                                 if (config.viewIndex == 0) {
                                     parentLinearLayout.addView(testView, 0)
