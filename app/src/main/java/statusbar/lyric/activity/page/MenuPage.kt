@@ -1,6 +1,5 @@
 package statusbar.lyric.activity.page
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import cn.fkj233.ui.activity.annotation.BMMenuPage
@@ -15,9 +14,9 @@ import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.Tools
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
-@SuppressLint("NonConstantResourceId")
+
 @BMMenuPage
 class MenuPage : BasePage() {
     override fun onCreate() {

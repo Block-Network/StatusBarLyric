@@ -1,6 +1,5 @@
 package statusbar.lyric.activity.page
 
-import android.annotation.SuppressLint
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
@@ -13,7 +12,6 @@ import statusbar.lyric.tools.ViewTools.hideView
 import statusbar.lyric.tools.ViewTools.showView
 
 
-@SuppressLint("NonConstantResourceId")
 @BMPage
 class HookPage : BasePage() {
     override fun onCreate() {

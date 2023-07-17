@@ -1,6 +1,5 @@
 package statusbar.lyric.activity.page
 
-import android.annotation.SuppressLint
 import cn.fkj233.ui.activity.annotation.BMMainPage
 import cn.fkj233.ui.activity.data.BasePage
 import statusbar.lyric.BuildConfig
@@ -13,7 +12,6 @@ import statusbar.lyric.tools.ViewTools.hideView
 import statusbar.lyric.tools.ViewTools.showView
 
 
-@SuppressLint("NonConstantResourceId")
 @BMMainPage
 class MainPage : BasePage() {
     override fun onCreate() {
