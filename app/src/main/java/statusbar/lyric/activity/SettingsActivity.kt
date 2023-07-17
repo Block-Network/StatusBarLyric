@@ -34,6 +34,7 @@ import android.os.Build
 import android.os.Bundle
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.dialog.MIUIDialog
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.activity.page.ChoosePage
 import statusbar.lyric.activity.page.ExtendPage
@@ -69,8 +70,8 @@ class SettingsActivity : MIUIActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        activity= this
-        context= this
+        activity = this
+        context = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
     }
@@ -118,8 +119,10 @@ class SettingsActivity : MIUIActivity() {
     private fun init() {
         requestPermission()
         registerReceiver()
-        getUpdate()
-        getNotice()
+        if (!BuildConfig.DEBUG) {
+            getUpdate()
+            getNotice()
+        }
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -160,7 +163,7 @@ class SettingsActivity : MIUIActivity() {
                             }
                         }.show()
                         return
-                    }else{
+                    } else {
                         showFragment(ChoosePage::class.java.simpleName)
                     }
                 }
