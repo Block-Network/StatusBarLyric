@@ -224,7 +224,7 @@ class SystemUILyric : BaseHook() {
                 targetView.addView(lyricLayout)
             }
         }
-        receptionLyric(context,BuildConfig.API_VERSION) {
+        receptionLyric(context, BuildConfig.API_VERSION) {
             if (!(this::clockView.isInitialized && this::targetView.isInitialized)) return@receptionLyric
             if (it.type == DataType.UPDATE) {
                 val lyric = it.lyric.regexReplace(config.regexReplace, "")

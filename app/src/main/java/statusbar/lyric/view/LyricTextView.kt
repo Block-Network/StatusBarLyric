@@ -30,11 +30,12 @@ class LyricTextView(context: Context) : TextView(context) {
     private var textLength = 0f
     private var viewWidth = 0f
     private var speed = 4f
-    private var time: Long = 0
     private var xx = 0f
     private var text: String? = null
     private val mPaint: Paint?
     private var mStartScrollRunnable = Runnable { startScroll() }
+    private val invalidateRunnable = Runnable { invalidate() }
+
     private fun init() {
         xx = 0f
         textLength = getTextLength()
@@ -66,27 +67,15 @@ class LyricTextView(context: Context) : TextView(context) {
     }
 
     override fun onDraw(canvas: Canvas) {
-        var mSpeed = speed
-        if (text.isNotNull()) {
-            if (getText().length <= 20 && System.currentTimeMillis() - time <= 1500) {
-                val y = height / 2 + abs(mPaint!!.ascent() + mPaint.descent()) / 2
-                canvas.drawText(text!!, xx, y, mPaint)
-                invalidateAfter()
-                return
-            } else if (getText().length >= 20) {
-                mSpeed += mSpeed
-            }
-        }
-        if (text.isNotNull()) {
-            val y = height / 2 + abs(mPaint!!.ascent() + mPaint.descent()) / 2
-            canvas.drawText(text!!, xx, y, mPaint)
-        }
+        val y = height / 2 + abs(mPaint!!.ascent() + mPaint.descent()) / 2
+        canvas.drawText(text!!, xx, y, mPaint)
+        invalidateAfter()
         if (!isStop) {
-            if (viewWidth - xx + mSpeed >= textLength) {
+            if (viewWidth - xx + speed >= textLength) {
                 xx = if (viewWidth > textLength) 0F else viewWidth - textLength
                 stopScroll()
             } else {
-                xx -= mSpeed
+                xx -= speed
             }
             invalidateAfter()
         }
@@ -96,8 +85,6 @@ class LyricTextView(context: Context) : TextView(context) {
         removeCallbacks(invalidateRunnable)
         postDelayed(invalidateRunnable, invalidateDelay.toLong())
     }
-
-    private val invalidateRunnable = Runnable { this.invalidate() }
 
     init {
         mPaint = paint
@@ -121,11 +108,6 @@ class LyricTextView(context: Context) : TextView(context) {
 
     fun setSpeed(speed: Float) {
         this.speed = speed
-    }
-
-    fun setTextT(charSequence: CharSequence) {
-        super.setText(charSequence)
-        time = System.currentTimeMillis()
     }
 
     companion object {
