@@ -137,4 +137,5 @@
     <string name="ColorScheme2">Color Scheme 2</string>
     <string name="LyricColorScheme">* Lyric Color Scheme</string>
     <string name="Tips1">Option with <font color="red"> * </font>, <font color="#FFF000">Restart SystemUI</font> to take effect</string>
+    <string name="DynamicLyricSpeed">Dynamic Lyric Speed(Beta)</string>
 </resources>
