@@ -19,11 +19,11 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 200
-        versionName = "6.0.0"
+        versionName = "6.0.0$buildTime"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
-        buildConfigField("int", "API_VERSION", "3")
+        buildConfigField("int", "API_VERSION", "4")
         buildConfigField("int", "CONFIG_VERSION", "3")
     }
     val config = localProperties.getProperty("androidStoreFile")?.let {
