@@ -3,7 +3,6 @@ package statusbar.lyric.activity.page
 import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
-import android.view.View
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
@@ -11,12 +10,14 @@ import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
+import statusbar.lyric.tools.ViewTools.hideView
+import statusbar.lyric.tools.ViewTools.showView
 
 @BMPage
 class IconPage : BasePage() {
     override fun onCreate() {
         val binding = GetDataBinding({ config.iconSwitch }) { view, _, data ->
-            view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+            if (data as Boolean) view.showView() else view.hideView()
         }
         TextSSw(textId = R.string.IconSwitch, key = "iconSwitch", defValue = false, onClickListener = {
             changeConfig()

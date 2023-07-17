@@ -76,7 +76,7 @@ object ViewTools {
 
     fun View.showView() {
         if (visibility == View.VISIBLE) return
-        val alphaAnimation = getAlphaAnimation(true, 400).apply {
+        val alphaAnimation = getAlphaAnimation(true).apply {
             setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {}
                 override fun onAnimationEnd(animation: Animation) {
