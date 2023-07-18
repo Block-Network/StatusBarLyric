@@ -106,7 +106,11 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private val iconView: ImageView by lazy { ImageView(context) }
+    private val iconView: ImageView by lazy {
+        ImageView(context).apply {
+            visibility = View.GONE
+        }
+    }
     private val lyricLayout: LinearLayout by lazy {
         LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -229,8 +233,8 @@ class SystemUILyric : BaseHook() {
             if (it.type == DataType.UPDATE) {
                 val lyric = it.lyric.regexReplace(config.regexReplace, "")
                 if (lyric.isNotEmpty()) {
-                    changeLyric(lyric)
                     changeIcon(it)
+                    changeLyric(lyric)
                 }
             } else if (it.type == DataType.STOP) {
                 hideLyric()
@@ -279,8 +283,9 @@ class SystemUILyric : BaseHook() {
                     val i = theoreticalWidth - width
                     if (i > 0) {
                         val proportion = i * 1.0 / displayWidth
+                        "proportion:$proportion".log()
                         val speed = 15 * proportion + 0.5
-                        speed.log()
+                        "speed:$speed".log()
                         setSpeed(speed.toFloat())
                     }
                 }
