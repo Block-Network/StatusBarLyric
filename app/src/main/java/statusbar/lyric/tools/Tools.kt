@@ -49,10 +49,10 @@ object Tools {
     private var index: Int = 0
 
 
-    fun View.isTargetView(callback: (TextView) -> Unit) {
+    fun View.isTargetView(): Boolean {
         if (this@Tools::target.isInitialized) {
             if (this == target) {
-                callback(target)
+                return true
             }
         } else {
             val className = XposedOwnSP.config.textViewClassName
@@ -61,7 +61,7 @@ object Tools {
             val parentID = XposedOwnSP.config.parentID
             if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
                 EzXHelper.moduleRes.getString(R.string.LoadClassEmpty).log()
-                return
+                return false
             }
             if (this is TextView) {
                 if (this::class.java.name == className) {
@@ -72,7 +72,7 @@ object Tools {
                                 if (parentID == parentView.id) {
                                     if (index == XposedOwnSP.config.index) {
                                         target = this
-                                        callback(this)
+                                        return true
                                     } else {
                                         index += 1
                                     }
@@ -83,7 +83,7 @@ object Tools {
                 }
             }
         }
-
+        return false
     }
 
 

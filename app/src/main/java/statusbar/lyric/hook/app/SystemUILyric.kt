@@ -136,9 +136,10 @@ class SystemUILyric : BaseHook() {
         loadClassOrNull(config.textViewClassName).isNotNull {
             hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
                 after { hookParam ->
-                    (hookParam.thisObject as View).isTargetView { view ->
+                    val view = (hookParam.thisObject as View)
+                    if (view.isTargetView()) {
                         "Lyric Init".log()
-                        clockView = view
+                        clockView = view as TextView
                         targetView = (clockView.parent as LinearLayout).apply {
                             gravity = Gravity.CENTER
                         }
@@ -153,10 +154,12 @@ class SystemUILyric : BaseHook() {
                     before { hookParam ->
                         if (isShow) {
                             if (hookParam.args[0] == View.VISIBLE) {
-                                (hookParam.thisObject as View).isTargetView {
+                                val view = hookParam.thisObject as View
+                                if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view)) {
                                     hookParam.args[0] = View.GONE
                                 }
                             }
+
                         }
                     }
                 }
