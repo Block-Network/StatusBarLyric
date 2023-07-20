@@ -137,4 +137,5 @@
     <string name="LyricColorScheme">* 歌詞反色方案</string>
     <string name="Tips1">帶<font color="red"> * </font>的選項，<font color="#FFF000">重啟SystemUI</font>生效</string>
     <string name="DynamicLyricSpeed">動態歌詞速度(Beta)</string>
+    <string name="ClickStatusBarToHideLyric">* 點擊狀態列隱藏歌詞</string>
 </resources>

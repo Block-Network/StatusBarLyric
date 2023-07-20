@@ -331,6 +331,13 @@ class Config {
         set(value) {
             config.put("dynamicLyricSpeed", value)
         }
+    var clickStatusBarToHideLyric: Boolean
+        get() {
+            return config.opt("clickStatusBarToHideLyric", false)
+        }
+        set(value) {
+            config.put("clickStatusBarToHideLyric", value)
+        }
 
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {

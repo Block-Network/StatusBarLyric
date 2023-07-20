@@ -37,6 +37,7 @@ import android.os.Build
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -84,7 +85,10 @@ class SystemUILyric : BaseHook() {
     private var lastLyric: String = ""
     private var lastBase64Icon: String = ""
     private var iconSwitch: Boolean = true
-    private var isShow: Boolean = false
+    private var isPlaying: Boolean = false
+    private var isHiding: Boolean = true
+    private var isMove = false
+
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private val displayMetrics: DisplayMetrics by lazy { context.resources.displayMetrics }
@@ -152,7 +156,7 @@ class SystemUILyric : BaseHook() {
                 moduleRes.getString(R.string.LimitVisibilityChange).log()
                 View::class.java.methodFinder().filterByName("setVisibility").first().createHook {
                     before { hookParam ->
-                        if (isShow) {
+                        if (isPlaying) {
                             if (hookParam.args[0] == View.VISIBLE) {
                                 val view = hookParam.thisObject as View
                                 if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view)) {
@@ -219,6 +223,47 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
+        if (config.clickStatusBarToHideLyric) {
+            loadClassOrNull("com.android.systemui.statusbar.phone.PhoneStatusBarView").isNotNull {
+                it.methodFinder().filterByName("onTouchEvent").first().createHook {
+                    after { hookParam ->
+                        val motionEvent = hookParam.args[0] as MotionEvent
+                        when (motionEvent.action) {
+                            MotionEvent.ACTION_MOVE -> {
+                                isMove = true
+                            }
+
+                            MotionEvent.ACTION_UP -> {
+                                if (!isMove) {
+                                    if (motionEvent.eventTime - motionEvent.downTime < 200) {
+                                        "Single Click".log()
+                                        if (isHiding) {
+                                            val x = motionEvent.x.toInt()
+                                            val y = motionEvent.y.toInt()
+                                            val left = lyricLayout.left
+                                            val top = lyricLayout.top
+                                            val right = lyricLayout.right
+                                            val bottom = lyricLayout.bottom
+                                            if (x in left..right && y in top..bottom) {
+                                                if (isPlaying) {
+                                                    hideLyric()
+                                                    isHiding = false
+                                                }
+                                            }
+                                        } else {
+                                            changeLyric(lastLyric)
+                                            isHiding = true
+                                        }
+                                    }
+                                } else {
+                                    isMove = false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -234,12 +279,14 @@ class SystemUILyric : BaseHook() {
         receptionLyric(context, BuildConfig.API_VERSION) {
             if (!(this::clockView.isInitialized && this::targetView.isInitialized)) return@receptionLyric
             if (it.type == DataType.UPDATE) {
+                if (!isHiding) return@receptionLyric
                 val lyric = it.lyric.regexReplace(config.regexReplace, "")
                 if (lyric.isNotEmpty()) {
                     changeIcon(it)
                     changeLyric(lyric)
                 }
             } else if (it.type == DataType.STOP) {
+                if (!isHiding) isHiding = true
                 hideLyric()
             }
             it.log()
@@ -267,7 +314,7 @@ class SystemUILyric : BaseHook() {
     private fun changeLyric(lyric: String) {
         if (lastLyric == lyric || isScreenLock) return
         lastLyric = lyric
-        isShow = true
+        isPlaying = true
         "lyric:$lyric".log()
         goMainThread {
             lyricLayout.showView()
@@ -323,7 +370,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun hideLyric() {
-        isShow = false
+        isPlaying = false
         "Hide Lyric".log()
         goMainThread {
             lyricLayout.hideView()

@@ -32,5 +32,6 @@ class ExtendPage : BasePage() {
             }
         })
         TextSw(textId = R.string.DynamicLyricSpeed, key = "dynamicLyricSpeed", onClickListener = { changeConfig() })
+        TextSw(textId = R.string.ClickStatusBarToHideLyric, key = "clickStatusBarToHideLyric")
     }
 }
