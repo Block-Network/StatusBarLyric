@@ -1,7 +1,10 @@
 package statusbar.lyric.activity.page
 
+import android.text.InputFilter
+import android.text.InputType
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
+import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTools.changeConfig
@@ -33,5 +36,20 @@ class ExtendPage : BasePage() {
         })
         TextSw(textId = R.string.DynamicLyricSpeed, key = "dynamicLyricSpeed", onClickListener = { changeConfig() })
         TextSw(textId = R.string.ClickStatusBarToHideLyric, key = "clickStatusBarToHideLyric")
+        TextSA(textId = R.string.RegexReplace, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.RegexReplace))
+                setMessage(getString(R.string.RegexReplaceTips))
+                setEditText(ActivityOwnSP.config.regexReplace, "", config = {
+                    it.inputType = InputType.TYPE_CLASS_TEXT
+                    it.filters = arrayOf(InputFilter.LengthFilter(200))
+                })
+                setRButton(getString(R.string.OK)) {
+                    ActivityOwnSP.config.regexReplace = getEditText()
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        })
     }
 }
