@@ -19,7 +19,7 @@
     <string name="NotSupportXposedFramework">The Xposed framework is not supported</string>
     <string name="ReStartApp">Restart the App</string>
     <string name="NoLyricGetter">No LyricGetter</string>
-    <string name="NoSupportedVersionLyricGetter">No LyricGetter</string>
+    <string name="NoSupportedVersionLyricGetter">No Supported Version Lyric Getter</string>
     <string name="clickToInstall">Click Install</string>
     <string name="Installed">Installed</string>
     <string name="unsupportedLyricGetter">Unsupported LyricGetter</string>

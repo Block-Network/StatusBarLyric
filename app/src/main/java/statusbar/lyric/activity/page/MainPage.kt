@@ -31,8 +31,9 @@ class MainPage : BasePage() {
     private fun checkApi() {
         val openLyricGetter = { ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/") }
         ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
-            if (it.metaData.getInt("Getter_Version") != BuildConfig.API_VERSION) {
-                TextSA(textId = R.string.NoSupportedVersionLyricGetter, tipsId = R.string.clickToInstall, onClickListener = {
+            val getterVersion = it.metaData.getInt("Getter_Version")
+            if (getterVersion != BuildConfig.API_VERSION) {
+                TextSA(text = "${getString(R.string.NoSupportedVersionLyricGetter)}\nLyric Getter Api Version:${getterVersion}", tipsId = R.string.clickToInstall, onClickListener = {
                     openLyricGetter()
                 })
             }

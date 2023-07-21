@@ -19,7 +19,7 @@
     <string name="NotSupportXposedFramework">不支持Xposed框架</string>
     <string name="ReStartApp">重新启动应用</string>
     <string name="NoLyricGetter">没有Lyric Getter</string>
-    <string name="NoSupportedVersionLyricGetter">没有支持的版本的Lyric Getter</string>
+    <string name="NoSupportedVersionLyricGetter">没有支持的Lyric Getter</string>
     <string name="clickToInstall">点击安装</string>
     <string name="Installed">已安装</string>
     <string name="unsupportedLyricGetter">不支持的Lyric Getter</string>

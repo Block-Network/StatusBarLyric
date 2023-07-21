@@ -18,8 +18,8 @@
     <string name="FirstUseTips">首次使用提示</string>
     <string name="NotSupportXposedFramework">不支持Xposed框架</string>
     <string name="ReStartApp">重新啟動應用</string>
-    <string name="NoLyricGetter">沒有歌詞獲取器</string>
-    <string name="NoSupportedVersionLyricGetter">沒有支持的版本的歌詞獲取器 </string>
+    <string name="NoLyricGetter">沒有Lyric Getter</string>
+    <string name="NoSupportedVersionLyricGetter">沒有支持的Lyric Getter</string>
     <string name="clickToInstall">點擊安裝</string>
     <string name="Installed">已安裝</string>
     <string name="unsupportedLyricGetter">不支持的歌詞獲取器 </string>
