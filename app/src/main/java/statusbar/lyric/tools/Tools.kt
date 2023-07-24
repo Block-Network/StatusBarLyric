@@ -48,6 +48,16 @@ object Tools {
 
     private var index: Int = 0
 
+    val isMIUI: Boolean = isPresent("android.provider.MiuiSettings")
+    private fun isPresent(name: String): Boolean {
+        return try {
+            Objects.requireNonNull(Thread.currentThread().contextClassLoader).loadClass(name)
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    }
+
 
     fun View.isTargetView(): Boolean {
         if (this@Tools::target.isInitialized) {

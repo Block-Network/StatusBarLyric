@@ -44,6 +44,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import cn.lyric.getter.api.data.DataType
 import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.tools.Tools.base64ToDrawable
@@ -61,6 +62,7 @@ import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
+import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
@@ -174,7 +176,7 @@ class SystemUILyric : BaseHook() {
                 loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
                     it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
                         after { hookParam ->
-                            if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
+                            if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized) || lyricView.visibility != View.VISIBLE) return@after
                             hookParam.thisObject.objectHelper {
                                 val mIconTint = getObjectOrNullAs<Int>("mIconTint") ?: Color.BLACK
                                 changeColor(mIconTint)
@@ -189,7 +191,7 @@ class SystemUILyric : BaseHook() {
                 loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
                     it.methodFinder().filterByName("onDarkChanged").filterByParamCount(3).first().createHook {
                         after { hookParam ->
-                            if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
+                            if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized) || lyricView.visibility != View.VISIBLE) return@after
                             val isDark = (hookParam.args[1] as Float) == 1f
                             changeColor(if (isDark) Color.BLACK else Color.WHITE)
                         }
@@ -264,6 +266,16 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
+        if (isMIUI) {
+            loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull {
+                it.methodFinder().filterByName("onConfigurationChanged").first().createHook {
+                    after {
+                        "onConfigurationChanged".log()
+                        Toast.makeText(context, moduleRes.getString(R.string.MIUIConfigurationChangedTips), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
 
@@ -334,7 +346,7 @@ class SystemUILyric : BaseHook() {
                     if (i > 0) {
                         val proportion = i * 1.0 / displayWidth
                         "proportion:$proportion".log()
-                        val speed = 15 * proportion + 0.5
+                        val speed = 15 * proportion + 0.7
                         "speed:$speed".log()
                         setSpeed(speed.toFloat())
                     }
