@@ -2,7 +2,7 @@
 <resources>
     <string name="AppName">墨-状态栏歌词</string>
     <string name="QuickTitle">墨-状态栏歌词</string>
-    <string name="XposedTips">如果无法显示歌词，请尝试停止音乐软件并重新启动SystemUI，并检查Lyric Getter</string>
+    <string name="XposedTips">如果无法显示歌词，请尝试停止音乐软件并重新启动系统界面，并检查Lyric Getter</string>
     <string name="ConfigResetSuccess">配置重置成功</string>
     <string name="HaveNewVersion">有新版本</string>
     <string name="Update">更新</string>
@@ -28,12 +28,12 @@
     <string name="PrintXpLog">打印Xposed日志</string>
     <string name="CheckUpdate">检查更新</string>
     <string name="ResetConfig">重置配置</string>
-    <string name="ResetSystemUi">重启SystemUI</string>
+    <string name="ResetSystemUi">重启系统界面</string>
     <string name="ModuleVersion">模块版本</string>
     <string name="BackupConfig">备份配置</string>
     <string name="RecoveryConfig">恢复配置</string>
     <string name="ModuleBuildTime">模块构建时间</string>
-    <string name="RestartUITips">确定要重新启动SystemUI吗？</string>
+    <string name="RestartUITips">确定要重新启动系统界面吗？</string>
     <string name="masterSwitch">主开关</string>
     <string name="HookPage">Hook页</string>>
     <string name="TestMode">测试模式</string>
@@ -54,14 +54,14 @@
     <string name="LyricSizeTips">范围：状态栏高度的0％–100％，0代表跟随时间</string>
     <string name="LyricLetterSpacing">歌词字间距</string>
     <string name="LyricLetterSpacingTips">范围：0–50</string>
-    <string name="LyricStrokeWidth">歌词笔画宽度</string>
+    <string name="LyricStrokeWidth">歌词粗细</string>
     <string name="LyricStrokeWidthTips">范围：0–400</string>
     <string name="LyricSpeed">歌词速度</string>
     <string name="LyricSpeedTips">范围：0–20</string>
     <string name="LyricBlurredEdges">* 歌词模糊边缘</string>
     <string name="LyricBlurredEdgesRadius">* 歌词模糊半径</string>
     <string name="LyricBlurredEdgesRadiusTips">范围：0–100</string>
-    <string name="LyricTopMargins">歌词顶边距</string>
+    <string name="LyricTopMargins">歌词上边距</string>
     <string name="LyricTopMarginsTips">范围：–100–100</string>
     <string name="LyricEndMargins">歌词右边距</string>
     <string name="LyricEndMarginsTips">范围：–500–500</string>
@@ -101,7 +101,7 @@
     <string name="LoadClassFailed">加载失败，未找到该Class</string>
     <string name="LoadClassSucceed">加载成功，Class:%s</string>
     <string name="NotFoundHook">未找到Hook点</string>
-    <string name="NotFoundHookTips">请尝试重新启动SystemUi，如果仍然无法找到，请联系开发人员</string>
+    <string name="NotFoundHookTips">请尝试重新启动系统界面，如果仍然无法找到，请联系开发人员</string>
     <string name="SelectHook">是否选择此Hook点</string>
     <string name="RestartAppEffect">重启应用程序生效</string>
     <string name="ForceTheIconToBeDisplayed">强制显示图标</string>
@@ -110,18 +110,18 @@
     <string name="BroadcastReceiveTimeoutTips">请先重启系统界面，如依然超时请联系开发者</string>
     <string name="HideTime">隐藏时间</string>
     <string name="LyricsAnimation">歌词动画</string>
-    <string name="LyricsAnimationNone">None</string>
-    <string name="LyricsAnimationTop">Top</string>
-    <string name="LyricsAnimationBottom">Bottom</string>
-    <string name="LyricsAnimationStart">Start</string>
-    <string name="LyricsAnimationEnd">End</string>
-    <string name="LyricsAnimationScaleXY">ScaleXY</string>
-    <string name="LyricsAnimationScaleX">ScaleX</string>
-    <string name="LyricsAnimationScaleY">ScaleY</string>
-    <string name="LyricsAnimationRandom">Random</string>
+    <string name="LyricsAnimationNone">无效果</string>
+    <string name="LyricsAnimationTop">上划效果</string>
+    <string name="LyricsAnimationBottom">下划效果</string>
+    <string name="LyricsAnimationStart">左划效果</string>
+    <string name="LyricsAnimationEnd">右划效果</string>
+    <string name="LyricsAnimationScaleXY">吸收效果</string>
+    <string name="LyricsAnimationScaleX">X轴翻页</string>
+    <string name="LyricsAnimationScaleY">Y轴翻页</string>
+    <string name="LyricsAnimationRandom">随机效果</string>
     <string name="LyricAddLocation">* 歌词添加位置</string>
-    <string name="AddLocationStart">Start</string>
-    <string name="AddLocationEnd">End</string>
+    <string name="AddLocationStart">靠左</string>
+    <string name="AddLocationEnd">靠右</string>
     <string name="HideNotificationIcon">* 有歌词时自动隐藏通知图标</string>
     <string name="LimitVisibilityChange">* 限制可见性更改</string>
     <string name="LimitVisibilityChangeTips">可以防止部分系统的特性导致有时间会出现</string>
@@ -135,7 +135,7 @@
     <string name="ColorScheme1">方案 1</string>
     <string name="ColorScheme2">方案 2</string>
     <string name="LyricColorScheme">* 歌词反色方案</string>
-    <string name="Tips1">带<font color="red"> * </font>的选项，<font color="#FFF000">重启SystemUI</font>生效</string>
+    <string name="Tips1">带<font color="red"> * </font>的选项，<font color="#FFF000">重启系统界面</font>生效</string>
     <string name="DynamicLyricSpeed">动态歌词速度(Beta)</string>
     <string name="ClickStatusBarToHideLyric">* 点击状态栏隐藏歌词</string>
     <string name="MIUIConfigurationChangedTips">MIUI特性：切换外观后，墨-状态栏歌词 重启系统界面生效</string>
