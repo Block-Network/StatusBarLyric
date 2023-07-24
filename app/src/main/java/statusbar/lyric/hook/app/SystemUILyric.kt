@@ -29,6 +29,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -90,7 +91,7 @@ class SystemUILyric : BaseHook() {
     private var isPlaying: Boolean = false
     private var isHiding: Boolean = true
     private var isMove = false
-
+    private var oldNightMode: Int = 0
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private val displayMetrics: DisplayMetrics by lazy { context.resources.displayMetrics }
@@ -269,18 +270,23 @@ class SystemUILyric : BaseHook() {
         if (isMIUI) {
             loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull {
                 it.methodFinder().filterByName("onConfigurationChanged").first().createHook {
-                    after {
-                        "onConfigurationChanged".log()
-                        Toast.makeText(context, moduleRes.getString(R.string.MIUIConfigurationChangedTips), Toast.LENGTH_SHORT).show()
+                    after { hookParam ->
+                        val newConfig = hookParam.args[0] as Configuration
+                        val currentNightMode: Int = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                        if (currentNightMode != oldNightMode) {
+                            oldNightMode = currentNightMode
+                            "onConfigurationChanged".log()
+                            Toast.makeText(context, moduleRes.getString(R.string.MIUIConfigurationChangedTips), Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
         }
     }
 
-
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
+        oldNightMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
         goMainThread(1) {
             if (config.viewIndex == 0) {
                 targetView.addView(lyricLayout, 0)
