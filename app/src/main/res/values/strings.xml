@@ -139,5 +139,5 @@
     <string name="Tips1">Option with <font color="red"> * </font>, <font color="#FFF000">Restart SystemUI</font> to take effect</string>
     <string name="DynamicLyricSpeed">Dynamic Lyric Speed(Beta)</string>
     <string name="ClickStatusBarToHideLyric">* Click Status Bar To Hide Lyric</string>
-    <string name="MIUIConfigurationChangedTips">MIUI features: After switching appearance, the ink - status bar lyrics restart the system interface to take effect</string>
+    <string name="ConfigurationChangedTips">System features: After switching appearance, the ink - status bar lyrics restart the system interface to take effect</string>
 </resources>
