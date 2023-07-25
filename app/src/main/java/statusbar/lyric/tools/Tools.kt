@@ -48,13 +48,12 @@ object Tools {
 
     private var index: Int = 0
 
+    val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
     val togglePrompts: Boolean
         get() {
-            arrayOf(
-                "android.provider.MiuiSettings",
-                "com.lge.adaptive.JavaImageUtil"
-            ).forEach {
+            arrayOf("com.lge.adaptive.JavaImageUtil").forEach {
                 if (isPresent(it)) return true
+                if (isMIUI) return true
             }
             return false
         }

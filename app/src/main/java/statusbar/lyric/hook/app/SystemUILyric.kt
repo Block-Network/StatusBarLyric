@@ -54,8 +54,10 @@ import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
+import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
+import org.w3c.dom.Text
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
@@ -63,6 +65,7 @@ import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
+import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
@@ -135,6 +138,7 @@ class SystemUILyric : BaseHook() {
         }
     }
 
+    private lateinit var mMIUINetworkSpeedView: TextView
 
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
@@ -155,26 +159,27 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-            if (config.limitVisibilityChange) {
-                moduleRes.getString(R.string.LimitVisibilityChange).log()
-                View::class.java.methodFinder().filterByName("setVisibility").first().createHook {
-                    before { hookParam ->
-                        if (isPlaying) {
-                            if (hookParam.args[0] == View.VISIBLE) {
-                                val view = hookParam.thisObject as View
-                                if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view)) {
-                                    hookParam.args[0] = View.GONE
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }
         }.isNot {
             moduleRes.getString(R.string.LoadClassEmpty).log()
             return
         }
+        if (config.limitVisibilityChange) {
+            moduleRes.getString(R.string.LimitVisibilityChange).log()
+            View::class.java.methodFinder().filterByName("setVisibility").first().createHook {
+                before { hookParam ->
+                    if (isPlaying) {
+                        if (hookParam.args[0] == View.VISIBLE) {
+                            val view = hookParam.thisObject as View
+                            if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMIUINetworkSpeedView.isInitialized && mMIUINetworkSpeedView == view)) {
+                                hookParam.args[0] = View.GONE
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        "${moduleRes.getString(R.string.LyricColorScheme)}:${moduleRes.getString(R.string.LyricColorScheme)}".log()
         when (config.lyricColorScheme) {
             0 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
@@ -207,6 +212,7 @@ class SystemUILyric : BaseHook() {
         }
 
         if (config.hideNotificationIcon) {
+            moduleRes.getString(R.string.HideNotificationIcon).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
                 moduleRes.getString(R.string.HideNotificationIcon).log()
                 it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
@@ -286,6 +292,23 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
+        if (isMIUI && config.mMIUIHideNetworkSpeed) {
+            moduleRes.getString(R.string.MIUIHideNetworkSpeed).log()
+            loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
+                it.constructorFinder().first().createHook {
+                    after { hookParam ->
+                        mMIUINetworkSpeedView = hookParam.thisObject as TextView
+                    }
+                }
+                it.methodFinder().filterByName("setVisibilityByController").first().createHook {
+                    before { hookParam ->
+                        if (isPlaying) {
+                            hookParam.args[0] = false
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
@@ -343,6 +366,7 @@ class SystemUILyric : BaseHook() {
             if (config.hideTime) clockView.hideView()
             if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon) mNotificationIconArea.hideView()
             if (this::mCarrierLabel.isInitialized && config.hideCarrier) mCarrierLabel.hideView()
+            if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
             lyricView.apply {
                 if (config.animation == "Random") {
                     val effect = arrayListOf("Top", "Bottom", "Start", "End").random()
@@ -399,6 +423,7 @@ class SystemUILyric : BaseHook() {
             clockView.showView()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
+            if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.showView()
         }
     }
 

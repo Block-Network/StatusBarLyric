@@ -31,8 +31,8 @@ object LogTools {
     private const val XP_TAG = "LSPosed-Bridge"
 
 
-    fun Any?.log() {
-        if (!BuildConfig.DEBUG) return
+    fun Any?.log(): Any? {
+        if (!BuildConfig.DEBUG) return this
         val content = if (this is Throwable) Log.getStackTraceString(this) else this.toString()
         if (content.length > maxLength) {
             val chunkCount = content.length / maxLength
@@ -51,5 +51,6 @@ object LogTools {
             Log.d(TAG, content)
             Log.d(XP_TAG, "$TAG:$content")
         }
+        return this
     }
 }

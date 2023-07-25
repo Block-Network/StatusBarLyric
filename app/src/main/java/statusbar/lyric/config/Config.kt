@@ -339,6 +339,14 @@ class Config {
             config.put("clickStatusBarToHideLyric", value)
         }
 
+    var mMIUIHideNetworkSpeed: Boolean
+        get() {
+            return config.opt("mMIUIHideNetworkSpeed", false)
+        }
+        set(value) {
+            config.put("mMIUIHideNetworkSpeed", value)
+        }
+
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon

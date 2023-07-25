@@ -371,7 +371,7 @@ class LyricPage : BasePage() {
             this["ScaleXY"] = getString(R.string.LyricsAnimationScaleXY)
             this["Random"] = getString(R.string.LyricsAnimationRandom)
         }
-        TextSSp(textId = R.string.LyricsAnimation, currentValue = config.animation, data = {
+        TextSSp(textId = R.string.LyricsAnimation, currentValue = animationMaps[config.animation].toString(), data = {
             animationMaps.forEach {
                 add(it.value) {
                     config.animation = (it.key)
