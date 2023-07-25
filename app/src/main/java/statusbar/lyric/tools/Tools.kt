@@ -48,7 +48,17 @@ object Tools {
 
     private var index: Int = 0
 
-    val isMIUI: Boolean = isPresent("android.provider.MiuiSettings")
+    val togglePrompts: Boolean
+        get() {
+            arrayOf(
+                "android.provider.MiuiSettings",
+                "com.lge.adaptive.JavaImageUtil"
+            ).forEach {
+                if (isPresent(it)) return true
+            }
+            return false
+        }
+
     private fun isPresent(name: String): Boolean {
         return try {
             Objects.requireNonNull(Thread.currentThread().contextClassLoader).loadClass(name)

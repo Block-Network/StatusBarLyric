@@ -138,5 +138,5 @@
     <string name="Tips1">带<font color="red"> * </font>的选项，<font color="#FFF000">重启系统界面</font>生效</string>
     <string name="DynamicLyricSpeed">动态歌词速度(Beta)</string>
     <string name="ClickStatusBarToHideLyric">* 点击状态栏隐藏歌词</string>
-    <string name="MIUIConfigurationChangedTips">MIUI特性：切换外观后，墨-状态栏歌词 重启系统界面生效</string>
+    <string name="ConfigurationChangedTips">系统特性：切换外观后，墨-状态栏歌词 重启系统界面生效</string>
 </resources>

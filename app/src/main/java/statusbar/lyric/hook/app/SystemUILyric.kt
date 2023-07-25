@@ -63,11 +63,11 @@ import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
-import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.regexReplace
+import statusbar.lyric.tools.Tools.togglePrompts
 import statusbar.lyric.tools.ViewTools
 import statusbar.lyric.tools.ViewTools.hideView
 import statusbar.lyric.tools.ViewTools.iconColorAnima
@@ -268,7 +268,7 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        if (isMIUI) {
+        if (togglePrompts) {
             loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull {
                 it.methodFinder().filterByName("onConfigurationChanged").first().createHook {
                     after { hookParam ->
@@ -277,7 +277,7 @@ class SystemUILyric : BaseHook() {
                         if (currentNightMode != oldNightMode) {
                             oldNightMode = currentNightMode
                             "onConfigurationChanged".log()
-                            Toast.makeText(context, moduleRes.getString(R.string.MIUIConfigurationChangedTips), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, moduleRes.getString(R.string.ConfigurationChangedTips), Toast.LENGTH_LONG).show()
                         }
                     }
                 }
