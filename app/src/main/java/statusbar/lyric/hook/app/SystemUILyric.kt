@@ -171,6 +171,9 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
+        }.isNot {
+            moduleRes.getString(R.string.LoadClassEmpty).log()
+            return
         }
         when (config.lyricColorScheme) {
             0 -> {

@@ -14,7 +14,10 @@ import android.widget.FrameLayout
 
 @SuppressLint("ViewConstructor")
 open class EdgeTransparentView(context: Context, private val drawSize: Float = 50f) : FrameLayout(context) {
-    private var mPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var mPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
+    }
     private var mWidth = 0
     private var mHeight = 0
 
@@ -26,11 +29,6 @@ open class EdgeTransparentView(context: Context, private val drawSize: Float = 5
         mHeight = height
     }
 
-    //渐变颜色
-    init {
-        mPaint.style = Paint.Style.FILL
-        mPaint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.DST_OUT))
-    }
 
     private fun initShader() {
         mPaint.setShader(LinearGradient(0f, 0f, 0f, drawSize, intArrayOf(Color.WHITE, Color.TRANSPARENT), floatArrayOf(0f, 1f), Shader.TileMode.CLAMP))
