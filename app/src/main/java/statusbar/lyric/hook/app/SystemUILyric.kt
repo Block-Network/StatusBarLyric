@@ -57,7 +57,6 @@ import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
-import org.w3c.dom.Text
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
@@ -369,7 +368,7 @@ class SystemUILyric : BaseHook() {
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
             lyricView.apply {
                 if (config.animation == "Random") {
-                    val effect = arrayListOf("Top", "Bottom", "Start", "End").random()
+                    val effect = arrayListOf("Top", "Bottom", "Start", "End", "ScaleXY", "ScaleX", "ScaleY").random()
                     inAnimation = ViewTools.switchViewInAnima(effect)
                     outAnimation = ViewTools.switchViewOutAnima(effect)
                 }
