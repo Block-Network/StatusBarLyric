@@ -2,6 +2,7 @@
 
 <div align="center">
 
+[![Icon](/icon.png)]()
 ![Release Download](https://img.shields.io/github/downloads/577fkj/StatusBarLyric/total?style=flat-square)
 [![Release Version](https://img.shields.io/github/v/release/577fkj/StatusBarLyric?style=flat-square)](https://github.com/577fkj/StatusBarLyric/releases/latest)
 [![GitHub license](https://img.shields.io/github/license/577fkj/StatusBarLyric?style=flat-square)](LICENSE)
