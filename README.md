@@ -1,4 +1,4 @@
-<h1 align="center">墨•状态栏歌词</h1>
+<h1 align="center">墨-状态栏歌词</h1>
 
 <div align="center">
 
