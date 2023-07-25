@@ -3,13 +3,15 @@ package statusbar.lyric.activity.page
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import statusbar.lyric.R
+import statusbar.lyric.tools.Tools.isMIUI
 
 @BMPage
 class SystemSpecialPage : BasePage() {
     override fun onCreate() {
-        TitleText(getString(R.string.MIUI))
-        TextSw(textId = R.string.MIUIHideNetworkSpeed, key = "mMIUIHideNetworkSpeed")
+        if (isMIUI) {
+            TextSw(textId = R.string.MIUIHideNetworkSpeed, key = "mMIUIHideNetworkSpeed")
+        }
         Line()
-        TitleText("More...")
+        TitleText("Wait for More...")
     }
 }

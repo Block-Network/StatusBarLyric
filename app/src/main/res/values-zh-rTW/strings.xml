@@ -139,7 +139,6 @@
     <string name="DynamicLyricSpeed">動態歌詞速度(Beta)</string>
     <string name="ClickStatusBarToHideLyric">* 點擊狀態列隱藏歌詞</string>
     <string name="ConfigurationChangedTips">系統特性：切換外觀后，墨-狀態列歌詞 重啟系統UI生效</string>
-    <string name="MIUI">MIUI</string>
     <string name="SystemSpecialPage">系統特供頁</string>
     <string name="MIUIHideNetworkSpeed">MIUI隱藏網速</string>
 </resources>
