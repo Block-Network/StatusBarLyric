@@ -140,5 +140,5 @@
     <string name="ClickStatusBarToHideLyric">* 点击状态栏隐藏歌词</string>
     <string name="ConfigurationChangedTips">系统特性：切换外观后，墨-状态栏歌词 重启系统界面生效</string>
     <string name="SystemSpecialPage">系统特供页</string>
-    <string name="MIUIHideNetworkSpeed">MIUI隐藏网速</string>
+    <string name="MIUIHideNetworkSpeed">* MIUI隐藏网速</string>
 </resources>
