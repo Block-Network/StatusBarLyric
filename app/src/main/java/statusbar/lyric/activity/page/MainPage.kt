@@ -25,6 +25,7 @@ class MainPage : BasePage() {
         TextSA(textId = R.string.IconPage, onClickListener = { showPage(IconPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
         Line(dataBindingRecv = masterSwitchBinding.getRecv(1))
         TextSA(textId = R.string.ExtendPage, onClickListener = { showPage(ExtendPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
+        TextSA(textId = R.string.SystemSpecialPage, onClickListener = { showPage(SystemSpecialPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
         TitleText(textId = R.string.Tips1)
     }
 

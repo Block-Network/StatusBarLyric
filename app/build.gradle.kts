@@ -23,7 +23,7 @@ android {
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
-        buildConfigField("int", "API_VERSION", "4")
+        buildConfigField("int", "API_VERSION", "5")
         buildConfigField("int", "CONFIG_VERSION", "3")
     }
     val config = localProperties.getProperty("androidStoreFile")?.let {
@@ -43,7 +43,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro", "proguard-log.pro"))
+            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
         }
     }
     compileOptions {

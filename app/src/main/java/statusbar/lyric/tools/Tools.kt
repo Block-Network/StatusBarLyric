@@ -48,6 +48,25 @@ object Tools {
 
     private var index: Int = 0
 
+    val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
+    val togglePrompts: Boolean
+        get() {
+            arrayOf("com.lge.adaptive.JavaImageUtil").forEach {
+                if (isPresent(it)) return true
+                if (isMIUI) return true
+            }
+            return false
+        }
+
+    private fun isPresent(name: String): Boolean {
+        return try {
+            Objects.requireNonNull(Thread.currentThread().contextClassLoader).loadClass(name)
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    }
+
 
     fun View.isTargetView(): Boolean {
         if (this@Tools::target.isInitialized) {

@@ -43,6 +43,7 @@ import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
 import statusbar.lyric.activity.page.MenuPage
 import statusbar.lyric.activity.page.HookPage
+import statusbar.lyric.activity.page.SystemSpecialPage
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.data.Data
@@ -67,6 +68,7 @@ class SettingsActivity : MIUIActivity() {
         registerPage(IconPage::class.java, activity.getString(R.string.IconPage))
         registerPage(ChoosePage::class.java, activity.getString(R.string.ChoosePage))
         registerPage(ExtendPage::class.java, activity.getString(R.string.ChoosePage))
+        registerPage(SystemSpecialPage::class.java, activity.getString(R.string.SystemSpecialPage))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

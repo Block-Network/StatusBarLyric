@@ -250,6 +250,13 @@ class Config {
         set(value) {
             config.put("lyricBlurredEdgesRadius", value)
         }
+    var lyricBlurredEdgesType: Int
+        get() {
+            return config.opt("lyricBlurredEdgesType", 0)
+        }
+        set(value) {
+            config.put("lyricBlurredEdgesType", value)
+        }
 
     var lyricSpeed: Int
         get() {
@@ -337,6 +344,14 @@ class Config {
         }
         set(value) {
             config.put("clickStatusBarToHideLyric", value)
+        }
+
+    var mMIUIHideNetworkSpeed: Boolean
+        get() {
+            return config.opt("mMIUIHideNetworkSpeed", false)
+        }
+        set(value) {
+            config.put("mMIUIHideNetworkSpeed", value)
         }
 
     private val defIconHashMap by lazy {
