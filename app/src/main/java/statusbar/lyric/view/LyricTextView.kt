@@ -54,7 +54,7 @@ class LyricTextView(context: Context) : TextView(context) {
 
     override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
-        stopScroll()
+        if (!isStop)stopScroll()
         this.text = text.toString()
         init()
         postInvalidate()
