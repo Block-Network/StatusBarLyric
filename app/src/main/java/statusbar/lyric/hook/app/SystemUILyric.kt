@@ -363,8 +363,8 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             lyricLayout.showView()
             if (config.hideTime) clockView.hideView()
-            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon) mNotificationIconArea.hideView()
-            if (this::mCarrierLabel.isInitialized && config.hideCarrier) mCarrierLabel.hideView()
+            if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
+            if (this::mCarrierLabel.isInitialized) mCarrierLabel.hideView()
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
             lyricView.apply {
                 if (config.animation == "Random") {
