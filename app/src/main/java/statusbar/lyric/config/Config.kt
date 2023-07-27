@@ -250,6 +250,13 @@ class Config {
         set(value) {
             config.put("lyricBlurredEdgesRadius", value)
         }
+    var lyricBlurredEdgesType: Int
+        get() {
+            return config.opt("lyricBlurredEdgesType", 0)
+        }
+        set(value) {
+            config.put("lyricBlurredEdgesType", value)
+        }
 
     var lyricSpeed: Int
         get() {

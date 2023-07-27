@@ -141,4 +141,8 @@
     <string name="ConfigurationChangedTips">系統特性：切換外觀后，墨-狀態列歌詞 重啟系統UI生效</string>
     <string name="SystemSpecialPage">系統特供頁</string>
     <string name="MIUIHideNetworkSpeed">* MIUI隱藏網速</string>
+    <string name='lyricBlurredEdgesTypeEnd'>僅右邊</string>
+    <string name='lyricBlurredEdgesTypeStart'>僅左邊</string>
+    <string name='lyricBlurredEdgesTypeAll'>兩邊</string>
+    <string name="LyricBlurredEdgesType">* 歌詞模糊邊緣類型</string>
 </resources>

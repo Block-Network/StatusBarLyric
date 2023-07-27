@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode
 import android.graphics.Shader
 import android.view.View
 import android.widget.FrameLayout
+import statusbar.lyric.config.XposedOwnSP.config
 
 @SuppressLint("ViewConstructor")
 open class EdgeTransparentView(context: Context, private val drawSize: Float = 50f) : FrameLayout(context) {
@@ -35,21 +36,42 @@ open class EdgeTransparentView(context: Context, private val drawSize: Float = 5
     }
 
     override fun drawChild(canvas: Canvas, child: View, drawingTime: Long): Boolean {
-        val layerSave = canvas.saveLayer(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), null, Canvas.ALL_SAVE_FLAG)
         val drawChild = super.drawChild(canvas, child, drawingTime)
         val offset = (mHeight - mWidth) / 2f
-
         val saveCount = canvas.save()
-        canvas.rotate(270f, mWidth / 2f, mHeight / 2f)
-        canvas.translate(0f, offset)
-        canvas.drawRect(0 - offset, 0f, mWidth + offset, drawSize, mPaint)
-        canvas.restoreToCount(saveCount)
+        var start = false
+        var end = false
+        when (config.lyricBlurredEdgesType) {
+            0 -> {
+                start = true
+                end = true
+            }
 
-        canvas.rotate(90f, mWidth / 2f, mHeight / 2f)
-        canvas.translate(0f, offset)
-        canvas.drawRect(0 - offset, 0f, mWidth + offset, drawSize, mPaint)
-        canvas.restoreToCount(saveCount)
+            1 -> {
+                start = true
+            }
 
+            2 -> {
+                end = true
+            }
+        }
+        if (start) {
+            canvas.apply {
+                rotate(270f, mWidth / 2f, mHeight / 2f)
+                translate(0f, offset)
+                drawRect(0 - offset, 0f, mWidth + offset, drawSize, mPaint)
+                restoreToCount(saveCount)
+            }
+        }
+        if (end) {
+            canvas.apply {
+                rotate(90f, mWidth / 2f, mHeight / 2f)
+                translate(0f, offset)
+                drawRect(0 - offset, 0f, mWidth + offset, drawSize, mPaint)
+                restoreToCount(saveCount)
+            }
+        }
+        val layerSave = canvas.saveLayer(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), null, Canvas.ALL_SAVE_FLAG)
         canvas.restoreToCount(layerSave)
         return drawChild
     }

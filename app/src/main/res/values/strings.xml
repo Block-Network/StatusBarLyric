@@ -142,4 +142,8 @@
     <string name="ConfigurationChangedTips">System features: After switching appearance, the ink - status bar lyrics restart the system interface to take effect</string>
     <string name="SystemSpecialPage">System Special Page</string>
     <string name="MIUIHideNetworkSpeed">* MIUI Hide Network Speed</string>
+    <string name="lyricBlurredEdgesTypeEnd">Lyric Blurred Edges Type End</string>
+    <string name="lyricBlurredEdgesTypeStart">Lyric Blurred Edges Type Start</string>
+    <string name="lyricBlurredEdgesTypeAll">Lyric Blurred Edges Type All</string>
+    <string name="LyricBlurredEdgesType">* Lyric Blurred Edges Type</string>
 </resources>
