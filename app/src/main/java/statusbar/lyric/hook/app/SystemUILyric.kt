@@ -276,38 +276,7 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        if (togglePrompts) {
-            loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull {
-                it.methodFinder().filterByName("onConfigurationChanged").first().createHook {
-                    after { hookParam ->
-                        val newConfig = hookParam.args[0] as Configuration
-                        val currentNightMode: Int = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
-                        if (currentNightMode != oldNightMode) {
-                            oldNightMode = currentNightMode
-                            "onConfigurationChanged".log()
-                            Toast.makeText(context, moduleRes.getString(R.string.ConfigurationChangedTips), Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
-            }
-        }
-        if (isMIUI && config.mMIUIHideNetworkSpeed) {
-            moduleRes.getString(R.string.MIUIHideNetworkSpeed).log()
-            loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
-                it.constructorFinder().first().createHook {
-                    after { hookParam ->
-                        mMIUINetworkSpeedView = hookParam.thisObject as TextView
-                    }
-                }
-                it.methodFinder().filterByName("setVisibilityByController").first().createHook {
-                    before { hookParam ->
-                        if (isPlaying) {
-                            hookParam.args[0] = false
-                        }
-                    }
-                }
-            }
-        }
+        SystemUISpecial()
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
@@ -523,6 +492,42 @@ class SystemUILyric : BaseHook() {
 
     override val name: String get() = this::class.java.simpleName
 
+    inner class SystemUISpecial {
+        init {
+            if (togglePrompts) {
+                loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull {
+                    it.methodFinder().filterByName("onConfigurationChanged").first().createHook {
+                        after { hookParam ->
+                            val newConfig = hookParam.args[0] as Configuration
+                            val currentNightMode: Int = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                            if (currentNightMode != oldNightMode) {
+                                oldNightMode = currentNightMode
+                                "onConfigurationChanged".log()
+                                Toast.makeText(context, moduleRes.getString(R.string.ConfigurationChangedTips), Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                }
+            }
+            if (isMIUI && config.mMIUIHideNetworkSpeed) {
+                moduleRes.getString(R.string.MIUIHideNetworkSpeed).log()
+                loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
+                    it.constructorFinder().first().createHook {
+                        after { hookParam ->
+                            mMIUINetworkSpeedView = hookParam.thisObject as TextView
+                        }
+                    }
+                    it.methodFinder().filterByName("setVisibilityByController").first().createHook {
+                        before { hookParam ->
+                            if (isPlaying) {
+                                hookParam.args[0] = false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     inner class UpdateConfig : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
