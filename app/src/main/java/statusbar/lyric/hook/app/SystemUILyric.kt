@@ -78,11 +78,14 @@ import statusbar.lyric.tools.ViewTools.textColorAnima
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
+
 
     private var isScreenLock: Boolean = false
     private lateinit var hook: XC_MethodHook.Unhook
@@ -94,6 +97,7 @@ class SystemUILyric : BaseHook() {
     private var isHiding: Boolean = true
     private var isMove = false
     private var oldNightMode: Int = 0
+    private var theoreticalWidth: Int = 0
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private val displayMetrics: DisplayMetrics by lazy { context.resources.displayMetrics }
@@ -251,7 +255,7 @@ class SystemUILyric : BaseHook() {
                                     if (motionEvent.eventTime - motionEvent.downTime < 200) {
                                         "Single Click".log()
                                         if (isHiding) {
-                                            changeLyric(lastLyric)
+                                            changeLyric(lastLyric, 0)
                                             isHiding = false
                                         } else {
                                             val x = motionEvent.x.toInt()
@@ -296,7 +300,7 @@ class SystemUILyric : BaseHook() {
                 val lyric = it.lyric.regexReplace(config.regexReplace, "")
                 if (lyric.isNotEmpty()) {
                     changeIcon(it)
-                    changeLyric(lyric)
+                    changeLyric(lyric, it.delay)
                 }
             } else if (it.type == DataType.STOP) {
                 if (isHiding) isHiding = false
@@ -324,7 +328,7 @@ class SystemUILyric : BaseHook() {
         changeConfig(1)
     }
 
-    private fun changeLyric(lyric: String) {
+    private fun changeLyric(lyric: String, delay: Int) {
         if ((!isHiding && lastLyric == lyric) || isScreenLock) return
         lastLyric = lyric
         isPlaying = true
@@ -342,15 +346,21 @@ class SystemUILyric : BaseHook() {
                     outAnimation = ViewTools.switchViewOutAnima(effect)
                 }
                 width = getLyricWidth(paint, lyric)
-                if (config.dynamicLyricSpeed) {
-                    val theoreticalWidth = min(paint.measureText(lyric).toInt(), targetView.width)
-                    val i = theoreticalWidth - width
+                if (config.dynamicLyricSpeed && delay == 0) {
+                    val i = width - theoreticalWidth
                     if (i > 0) {
                         val proportion = i * 1.0 / displayWidth
                         "proportion:$proportion".log()
                         val speed = 15 * proportion + 0.7
                         "speed:$speed".log()
                         setSpeed(speed.toFloat())
+                    }
+                }
+                if (delay > 0) {
+                    val i = width - theoreticalWidth
+                    if (i > 0) {
+                        val speed = BigDecimal(i * 1.0 / 211).setScale(2, RoundingMode.HALF_UP).toFloat()
+                        setSpeed(speed)
                     }
                 }
                 setText(lyric)
@@ -471,7 +481,8 @@ class SystemUILyric : BaseHook() {
     private fun getLyricWidth(paint: Paint, text: String): Int {
         "Get Lyric Width".log()
         return if (config.lyricWidth == 0) {
-            min(paint.measureText(text).toInt(), targetView.width)
+            theoreticalWidth = min(paint.measureText(text).toInt(), targetView.width)
+            theoreticalWidth
         } else {
             if (config.fixedLyricWidth) {
                 scaleWidth()
