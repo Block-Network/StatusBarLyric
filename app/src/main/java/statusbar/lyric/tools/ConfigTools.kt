@@ -44,7 +44,7 @@ class ConfigTools {
     }
 
     fun reload() {
-        if (xSP.isNull()) {
+        xSP.isNull {
             xSP = Tools.getPref("Lyric_Config")
             mSP = xSP
             return
@@ -64,7 +64,7 @@ class ConfigTools {
 
     @Suppress("UNCHECKED_CAST")
     fun <T> opt(key: String, defValue: T): T {
-        if (mSP.isNull()) {
+        mSP.isNull {
             return defValue
         }
         return when (defValue) {

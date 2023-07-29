@@ -97,25 +97,25 @@ class SettingsActivity : MIUIActivity() {
         super.onDestroy()
     }
 
-    private fun checkLSPosed(): Boolean {
-        return try {
-            setSP(ActivityOwnSP.ownSP)
-            updateConfigVer()
-            init()
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            MIUIDialog(this) {
-                setTitle(R.string.FirstUseTips)
-                setMessage(R.string.NotSupportXposedFramework)
-                setRButton(R.string.ReStartApp) {
-                    ActivityTools.restartApp()
-                }
-                setCancelable(false)
-            }.show()
-            false
+        private fun checkLSPosed(): Boolean {
+            return try {
+                setSP(ActivityOwnSP.ownSP)
+                updateConfigVer()
+                init()
+                true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                MIUIDialog(this) {
+                    setTitle(R.string.FirstUseTips)
+                    setMessage(R.string.NotSupportXposedFramework)
+                    setRButton(R.string.ReStartApp) {
+                        ActivityTools.restartApp()
+                    }
+                    setCancelable(false)
+                }.show()
+                false
+            }
         }
-    }
 
 
     private fun init() {
