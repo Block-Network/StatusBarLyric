@@ -35,6 +35,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.os.PowerManager
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
@@ -69,6 +70,7 @@ import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.regexReplace
+import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.Tools.togglePrompts
 import statusbar.lyric.tools.ViewTools
 import statusbar.lyric.tools.ViewTools.hideView
@@ -514,7 +516,14 @@ class SystemUILyric : BaseHook() {
                             if (currentNightMode != oldNightMode) {
                                 oldNightMode = currentNightMode
                                 "onConfigurationChanged".log()
-                                Toast.makeText(context, moduleRes.getString(R.string.ConfigurationChangedTips), Toast.LENGTH_LONG).show()
+                                runCatching {
+                                    val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+                                    if (!pm.isInteractive) {
+                                        shell("pkill -f com.android.systemui", false)
+                                    }else{
+                                        Toast.makeText(context, moduleRes.getString(R.string.ConfigurationChangedTips), Toast.LENGTH_LONG).show()
+                                    }
+                                }
                             }
                         }
                     }
