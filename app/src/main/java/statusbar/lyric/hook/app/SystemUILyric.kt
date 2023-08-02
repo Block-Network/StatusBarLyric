@@ -44,7 +44,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import cn.lyric.getter.api.data.DataType
@@ -87,8 +86,6 @@ import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
-
-
     private var isScreenLock: Boolean = false
     private lateinit var hook: XC_MethodHook.Unhook
     private var lastColor: Int = 0
@@ -96,7 +93,7 @@ class SystemUILyric : BaseHook() {
     private var lastBase64Icon: String = ""
     private var iconSwitch: Boolean = true
     private var isPlaying: Boolean = false
-    private var isHiding: Boolean = true
+    private var isHiding: Boolean = false
     private var isMove = false
     private var oldNightMode: Int = 0
     private var theoreticalWidth: Int = 0
@@ -189,13 +186,9 @@ class SystemUILyric : BaseHook() {
             0 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
                     it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
-                        after { hookParam ->
+                        after {
                             if (!isPlaying) return@after
-                            hookParam.thisObject.objectHelper {
-                                val mIconTint = getObjectOrNullAs<Int>("mIconTint") ?: Color.BLACK
-                                changeColor(mIconTint)
-                            }
-
+                            changeColor(clockView.currentTextColor)
                         }
                     }
                 }
@@ -204,16 +197,13 @@ class SystemUILyric : BaseHook() {
             1 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
                     it.methodFinder().filterByName("onDarkChanged").filterByParamCount(3).first().createHook {
-                        after { hookParam ->
+                        after {
                             if (!isPlaying) return@after
-                            val isDark = (hookParam.args[1] as Float) == 1f
-                            changeColor(if (isDark) Color.BLACK else Color.WHITE)
+                            changeColor(clockView.currentTextColor)
                         }
                     }
                 }
             }
-
-            else -> {}
         }
 
         if (config.hideNotificationIcon) {
@@ -222,8 +212,13 @@ class SystemUILyric : BaseHook() {
                 moduleRes.getString(R.string.HideNotificationIcon).log()
                 it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
                     after { hookParam ->
-                        hookParam.thisObject.objectHelper {
-                            mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                        val clazz = hookParam.thisObject::class.java
+                        if (clazz.simpleName == "NotificationIconAreaController") {
+                            hookParam.thisObject.objectHelper {
+                                mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                            }
+                        } else {
+                            mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
                         }
                     }
                 }
@@ -234,8 +229,14 @@ class SystemUILyric : BaseHook() {
             loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
                 it.methodFinder().filterByName("onFinishInflate").first().createHook {
                     after { hookParam ->
-                        val frameLayout = hookParam.thisObject as RelativeLayout
-                        mCarrierLabel = frameLayout.findViewById(context.resources.getIdentifier("keyguard_carrier_text", "id", context.packageName))
+                        val clazz = hookParam.thisObject::class.java
+                        if (clazz.simpleName == "KeyguardStatusBarView") {
+                            hookParam.thisObject.objectHelper {
+                                mCarrierLabel = this.getObjectOrNullAs<View>("mCarrierLabel")!!
+                            }
+                        } else {
+                            mCarrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as TextView
+                        }
                     }
                 }
             }
@@ -257,8 +258,8 @@ class SystemUILyric : BaseHook() {
                                     if (motionEvent.eventTime - motionEvent.downTime < 200) {
                                         "Single Click".log()
                                         if (isHiding) {
-                                            changeLyric(lastLyric, 0)
                                             isHiding = false
+                                            changeLyric(lastLyric, 0)
                                         } else {
                                             val x = motionEvent.x.toInt()
                                             val y = motionEvent.y.toInt()
@@ -271,7 +272,6 @@ class SystemUILyric : BaseHook() {
                                                 isHiding = true
                                             }
                                         }
-                                        isHiding.log()
                                     }
                                 } else {
                                     isMove = false
@@ -298,9 +298,10 @@ class SystemUILyric : BaseHook() {
         receptionLyric(context, BuildConfig.API_VERSION) {
             if (!(this::clockView.isInitialized && this::targetView.isInitialized)) return@receptionLyric
             if (it.type == DataType.UPDATE) {
-                if (isHiding) return@receptionLyric
                 val lyric = it.lyric.regexReplace(config.regexReplace, "")
                 if (lyric.isNotEmpty()) {
+                    lastLyric = lyric
+                    if (isHiding) return@receptionLyric
                     changeIcon(it)
                     changeLyric(lyric, it.delay)
                 }
@@ -331,8 +332,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeLyric(lyric: String, delay: Int) {
-        if ((!isHiding && lastLyric == lyric) || isScreenLock) return
-        lastLyric = lyric
+        if (isHiding || isScreenLock) return
         isPlaying = true
         "lyric:$lyric".log()
         goMainThread {
@@ -520,7 +520,7 @@ class SystemUILyric : BaseHook() {
                                     val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
                                     if (!pm.isInteractive) {
                                         shell("pkill -f com.android.systemui", false)
-                                    }else{
+                                    } else {
                                         Toast.makeText(context, moduleRes.getString(R.string.ConfigurationChangedTips), Toast.LENGTH_LONG).show()
                                     }
                                 }
