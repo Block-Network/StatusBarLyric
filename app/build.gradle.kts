@@ -19,7 +19,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 201
-        versionName = "6.0.1"
+        versionName = "6.0.1$buildTime"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
@@ -80,6 +80,6 @@ dependencies {
     compileOnly("de.robv.android.xposed:api:82")
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
-    implementation(project(":LyricGetterApi"))
     implementation("com.github.kyuubiran:EzXHelper:2.0.6")
+    implementation("com.github.xiaowine:Lyric-Getter-Api:5.0.1")
 }
