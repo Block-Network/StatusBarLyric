@@ -39,6 +39,8 @@ import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.properties.Delegates
+import kotlin.properties.ReadWriteProperty
 
 
 @SuppressLint("StaticFieldLeak")
@@ -66,7 +68,13 @@ object Tools {
             false
         }
     }
-
+    fun <T> observableChange(initialValue: T, onChange: (oldValue: T, newValue: T) -> Unit): ReadWriteProperty<Any?, T> {
+        return Delegates.observable(initialValue) { _, oldVal, newVal ->
+            if (oldVal != newVal) {
+                onChange(oldVal, newVal)
+            }
+        }
+    }
 
     fun View.isTargetView(): Boolean {
         if (this@Tools::target.isInitialized) {

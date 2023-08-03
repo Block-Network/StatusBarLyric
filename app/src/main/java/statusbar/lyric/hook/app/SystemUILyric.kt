@@ -68,6 +68,7 @@ import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
+import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.regexReplace
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.Tools.togglePrompts
@@ -88,9 +89,25 @@ import kotlin.math.roundToInt
 class SystemUILyric : BaseHook() {
     private var isScreenLock: Boolean = false
     private lateinit var hook: XC_MethodHook.Unhook
-    private var lastColor: Int = 0
+    private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
+        goMainThread {
+            if (config.lyricColor.isEmpty()) lyricView.textColorAnima(newValue)
+            if (config.iconColor.isEmpty()) iconView.iconColorAnima(lastColor, newValue)
+        }
+        "Change Color".log()
+    }
     private var lastLyric: String = ""
-    private var lastBase64Icon: String = ""
+    private var lastBase64Icon: String by observableChange("") { _, newValue ->
+        goMainThread {
+            base64ToDrawable(newValue).isNotNull {
+                iconView.showView()
+                iconView.setImageBitmap(it)
+            }.isNot {
+                iconView.hideView()
+            }
+            "Change Icon".log()
+        }
+    }
     private var iconSwitch: Boolean = true
     private var isPlaying: Boolean = false
     private var isHiding: Boolean = false
@@ -188,7 +205,7 @@ class SystemUILyric : BaseHook() {
                     it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
                         after {
                             if (!isPlaying) return@after
-                            changeColor(clockView.currentTextColor)
+                            lastColor = clockView.currentTextColor
                         }
                     }
                 }
@@ -199,7 +216,7 @@ class SystemUILyric : BaseHook() {
                     it.methodFinder().filterByName("onDarkChanged").filterByParamCount(3).first().createHook {
                         after {
                             if (!isPlaying) return@after
-                            changeColor(clockView.currentTextColor)
+                            lastColor = clockView.currentTextColor
                         }
                     }
                 }
@@ -209,7 +226,6 @@ class SystemUILyric : BaseHook() {
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.HideNotificationIcon).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-                moduleRes.getString(R.string.HideNotificationIcon).log()
                 it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
                     after { hookParam ->
                         val clazz = hookParam.thisObject::class.java
@@ -373,25 +389,10 @@ class SystemUILyric : BaseHook() {
     private fun changeIcon(it: LyricData) {
         if (!iconSwitch) return
         val customIcon = it.customIcon && it.base64Icon.isNotEmpty()
-        goMainThread {
-            val bitmap = if (customIcon) {
-                if (it.base64Icon == lastBase64Icon) return@goMainThread
-                lastBase64Icon = it.base64Icon
-                base64ToDrawable(it.base64Icon)
-            } else {
-                val baseIcon = config.getDefaultIcon(it.packageName)
-                if (baseIcon == lastBase64Icon) return@goMainThread
-                lastBase64Icon = baseIcon
-                val base64ToDrawable = base64ToDrawable(baseIcon)
-                base64ToDrawable
-            }
-            bitmap.isNotNull {
-                iconView.showView()
-                iconView.setImageBitmap(it)
-            }.isNot {
-                iconView.hideView()
-            }
-            "Change Icon".log()
+        lastBase64Icon = if (customIcon) {
+            it.base64Icon
+        } else {
+            config.getDefaultIcon(it.packageName)
         }
     }
 
@@ -405,16 +406,6 @@ class SystemUILyric : BaseHook() {
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.showView()
         }
-    }
-
-    private fun changeColor(color: Int) {
-        "Change Color".log()
-        if (lastColor == color) return
-        goMainThread {
-            if (config.lyricColor.isEmpty()) lyricView.textColorAnima(color)
-            if (config.iconColor.isEmpty()) iconView.iconColorAnima(lastColor, color)
-        }
-        lastColor = color
     }
 
     private fun changeConfig(delay: Long = 0L) {
