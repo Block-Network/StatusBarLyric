@@ -146,4 +146,9 @@
     <string name="lyricBlurredEdgesTypeStart">Lyric Blurred Edges Type Start</string>
     <string name="lyricBlurredEdgesTypeAll">Lyric Blurred Edges Type All</string>
     <string name="LyricBlurredEdgesType">* Lyric Blurred Edges Type</string>
+    <string name="SlideStatusBarCutSongs">* Slide Status Bar Cut Songs</string>
+    <string name="SlideStatusBarCutSongsXRadius">* Slide Status Bar Cut Songs X Radius</string>
+    <string name="SlideStatusBarCutSongsXRadiusTips">Range 50–2000</string>
+    <string name="SlideStatusBarCutSongsYRadius">* Slide Status Bar Cut Songs Y Radius</string>
+    <string name="SlideStatusBarCutSongsYRadiusTips">Range 10–100</string>
 </resources>
