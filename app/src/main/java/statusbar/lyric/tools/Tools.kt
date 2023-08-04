@@ -39,6 +39,8 @@ import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
 import java.util.*
 import java.util.regex.Pattern
+import kotlin.properties.Delegates
+import kotlin.properties.ReadWriteProperty
 
 
 @SuppressLint("StaticFieldLeak")
@@ -48,11 +50,36 @@ object Tools {
 
     private var index: Int = 0
 
+    val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
+    val togglePrompts: Boolean
+        get() {
+            arrayOf("com.lge.adaptive.JavaImageUtil").forEach {
+                if (isPresent(it)) return true
+                if (isMIUI) return true
+            }
+            return false
+        }
 
-    fun View.isTargetView(callback: (TextView) -> Unit) {
+    private fun isPresent(name: String): Boolean {
+        return try {
+            Objects.requireNonNull(Thread.currentThread().contextClassLoader).loadClass(name)
+            true
+        } catch (e: ClassNotFoundException) {
+            false
+        }
+    }
+    fun <T> observableChange(initialValue: T, onChange: (oldValue: T, newValue: T) -> Unit): ReadWriteProperty<Any?, T> {
+        return Delegates.observable(initialValue) { _, oldVal, newVal ->
+            if (oldVal != newVal) {
+                onChange(oldVal, newVal)
+            }
+        }
+    }
+
+    fun View.isTargetView(): Boolean {
         if (this@Tools::target.isInitialized) {
             if (this == target) {
-                callback(target)
+                return true
             }
         } else {
             val className = XposedOwnSP.config.textViewClassName
@@ -60,8 +87,8 @@ object Tools {
             val parentClass = XposedOwnSP.config.parentClassName
             val parentID = XposedOwnSP.config.parentID
             if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
-                EzXHelper.moduleRes.getString(R.string.LoadClassEmpty).log()
-                return
+                EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
+                return false
             }
             if (this is TextView) {
                 if (this::class.java.name == className) {
@@ -72,7 +99,7 @@ object Tools {
                                 if (parentID == parentView.id) {
                                     if (index == XposedOwnSP.config.index) {
                                         target = this
-                                        callback(this)
+                                        return true
                                     } else {
                                         index += 1
                                     }
@@ -83,7 +110,7 @@ object Tools {
                 }
             }
         }
-
+        return false
     }
 
 

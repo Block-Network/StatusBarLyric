@@ -72,9 +72,9 @@ object ActivityTestTools {
                 stopResponse()
                 goMainThread {
                     MIUIDialog(context) {
-                        setTitle(R.string.BroadcastReceiveTimeout)
-                        setMessage(R.string.BroadcastReceiveTimeoutTips)
-                        setRButton(R.string.OK) { dismiss() }
+                        setTitle(R.string.broadcast_receive_timeout)
+                        setMessage(R.string.broadcast_receive_timeout_tips)
+                        setRButton(R.string.ok) { dismiss() }
                     }.show()
                 }
             }

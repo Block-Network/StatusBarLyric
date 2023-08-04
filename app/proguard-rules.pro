@@ -23,4 +23,3 @@
 -keep class statusbar.lyric.hook.MainHook
 -keep class statusbar.lyric.activity.page.*
 -keep class cn.lyric.getter.api.data.*{*;}
--repackageclasses "截图看NM日志"

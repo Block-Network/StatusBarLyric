@@ -95,28 +95,26 @@ object ActivityTools {
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getString("tag_name").split("v").toTypedArray()[1].toInt() > BuildConfig.VERSION_CODE) {
                         MIUIDialog(activity) {
-                            setTitle(String.format("%s [%s]", activity.getString(R.string.HaveNewVersion), jsonObject.getString("name")))
+                            setTitle(String.format("%s [%s]", activity.getString(R.string.have_new_version), jsonObject.getString("name")))
                             setMessage(jsonObject.getString("body").replace("#", ""))
-                            setRButton(R.string.Update) {
+                            setRButton(R.string.update) {
                                 try {
-                                    val uri = Uri.parse(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
-                                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                                    activity.startActivity(intent)
+                                    openUrl(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
                                 } catch (e: JSONException) {
-                                    showToastOnLooper(activity.getString(R.string.GetNewVersionError) + e)
+                                    showToastOnLooper(activity.getString(R.string.get_new_version_error) + e)
                                 }
                                 dismiss()
                             }
-                            setLButton(R.string.Cancel) { dismiss() }
+                            setLButton(R.string.cancel) { dismiss() }
                         }.show()
                     } else {
-                        showToastOnLooper(activity.getString(R.string.NoNewVersion))
+                        showToastOnLooper(activity.getString(R.string.no_new_version))
                     }
                 } catch (_: JSONException) {
-                    showToastOnLooper(activity.getString(R.string.CheckUpdateError))
+                    showToastOnLooper(activity.getString(R.string.check_update_error))
                 }
             }.isNot {
-                showToastOnLooper(activity.getString(R.string.CheckUpdateError))
+                showToastOnLooper(activity.getString(R.string.check_update_error))
             }
         }.start()
     }
@@ -131,9 +129,9 @@ object ActivityTools {
                     if (BuildConfig.VERSION_CODE in minVersionCode..maxVersionCode) {
                         if (jsonObject.getBoolean("forcibly")) {
                             MIUIDialog(activity) {
-                                setTitle(activity.getString(R.string.Announcement))
+                                setTitle(activity.getString(R.string.announcement))
                                 setMessage(jsonObject.getString("data"))
-                                setRButton(activity.getString(R.string.OK)) { dismiss() }
+                                setRButton(activity.getString(R.string.ok)) { dismiss() }
                                 if (jsonObject.getBoolean("isLButton")) {
                                     setLButton(jsonObject.getString("lButton")) {
                                         openUrl(jsonObject.getString("url"))
@@ -146,7 +144,7 @@ object ActivityTools {
 
                 }
             }.isNot {
-                showToastOnLooper(activity.getString(R.string.GetAnnouncementError))
+                showToastOnLooper(activity.getString(R.string.get_announcement_error))
             }
 
         }.start()

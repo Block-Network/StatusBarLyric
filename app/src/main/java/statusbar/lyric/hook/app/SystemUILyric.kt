@@ -29,28 +29,34 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Point
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.os.PowerManager
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
+import cn.lyric.getter.api.LyricListener
 import cn.lyric.getter.api.data.DataType
 import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.tools.Tools.base64ToDrawable
-import cn.lyric.getter.api.tools.Tools.receptionLyric
+import cn.lyric.getter.api.tools.Tools.registerLyricListener
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
+import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.BuildConfig
@@ -60,10 +66,14 @@ import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
+import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
+import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.regexReplace
+import statusbar.lyric.tools.Tools.shell
+import statusbar.lyric.tools.Tools.togglePrompts
 import statusbar.lyric.tools.ViewTools
 import statusbar.lyric.tools.ViewTools.hideView
 import statusbar.lyric.tools.ViewTools.iconColorAnima
@@ -72,19 +82,54 @@ import statusbar.lyric.tools.ViewTools.textColorAnima
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
+import java.math.BigDecimal
+import java.math.RoundingMode
+import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
-
     private var isScreenLock: Boolean = false
     private lateinit var hook: XC_MethodHook.Unhook
-    private var lastColor: Int = 0
+    private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
+        goMainThread {
+            if (config.lyricColor.isEmpty()) lyricView.textColorAnima(newValue)
+            if (config.iconColor.isEmpty()) iconView.iconColorAnima(lastColor, newValue)
+        }
+        "Change Color".log()
+    }
     private var lastLyric: String = ""
-    private var lastBase64Icon: String = ""
+    private var lastBase64Icon: String by observableChange("") { _, newValue ->
+        goMainThread {
+            base64ToDrawable(newValue).isNotNull {
+                iconView.showView()
+                iconView.setImageBitmap(it)
+            }.isNot {
+                iconView.hideView()
+            }
+            "Change Icon".log()
+        }
+    }
     private var iconSwitch: Boolean = true
-    private var isShow: Boolean = false
+    private var isPlaying: Boolean = false
+    private var isHiding: Boolean = false
+    private var isMove = false
+    private var themeMode: Int by observableChange(0) { oldValue, _ ->
+        if (oldValue == 0) return@observableChange
+        "onConfigurationChanged".log()
+        runCatching {
+            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!pm.isInteractive) {
+                shell("pkill -f com.android.systemui", false)
+            } else {
+                Toast.makeText(context, moduleRes.getString(R.string.configuration_changed_tips), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+    private var theoreticalWidth: Int = 0
+    private lateinit var point: Point
+
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private val displayMetrics: DisplayMetrics by lazy { context.resources.displayMetrics }
@@ -106,7 +151,11 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private val iconView: ImageView by lazy { ImageView(context) }
+    private val iconView: ImageView by lazy {
+        ImageView(context).apply {
+            visibility = View.GONE
+        }
+    }
     private val lyricLayout: LinearLayout by lazy {
         LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -124,6 +173,7 @@ class SystemUILyric : BaseHook() {
         }
     }
 
+    private lateinit var mMIUINetworkSpeedView: TextView
 
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
@@ -132,9 +182,10 @@ class SystemUILyric : BaseHook() {
         loadClassOrNull(config.textViewClassName).isNotNull {
             hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
                 after { hookParam ->
-                    (hookParam.thisObject as View).isTargetView { view ->
+                    val view = (hookParam.thisObject as View)
+                    if (view.isTargetView()) {
                         "Lyric Init".log()
-                        clockView = view
+                        clockView = view as TextView
                         targetView = (clockView.parent as LinearLayout).apply {
                             gravity = Gravity.CENTER
                         }
@@ -143,32 +194,34 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-            if (config.limitVisibilityChange) {
-                moduleRes.getString(R.string.LimitVisibilityChange).log()
-                View::class.java.methodFinder().filterByName("setVisibility").first().createHook {
-                    before { hookParam ->
-                        if (isShow) {
-                            if (hookParam.args[0] == View.VISIBLE) {
-                                (hookParam.thisObject as View).isTargetView {
-                                    hookParam.args[0] = View.GONE
-                                }
+        }.isNot {
+            moduleRes.getString(R.string.load_class_empty).log()
+            return
+        }
+        if (config.limitVisibilityChange) {
+            moduleRes.getString(R.string.limit_visibility_change).log()
+            View::class.java.methodFinder().filterByName("setVisibility").first().createHook {
+                before { hookParam ->
+                    if (isPlaying) {
+                        if (hookParam.args[0] == View.VISIBLE) {
+                            val view = hookParam.thisObject as View
+                            if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMIUINetworkSpeedView.isInitialized && mMIUINetworkSpeedView == view)) {
+                                hookParam.args[0] = View.GONE
                             }
                         }
                     }
                 }
             }
         }
+
+        "${moduleRes.getString(R.string.lyric_color_scheme)}:${moduleRes.getString(R.string.lyric_color_scheme)}".log()
         when (config.lyricColorScheme) {
             0 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
                     it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
-                        after { hookParam ->
-                            if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
-                            hookParam.thisObject.objectHelper {
-                                val mIconTint = getObjectOrNullAs<Int>("mIconTint") ?: Color.BLACK
-                                changeColor(mIconTint)
-                            }
-
+                        after {
+                            if (!isPlaying) return@after
+                            lastColor = clockView.currentTextColor
                         }
                     }
                 }
@@ -177,46 +230,116 @@ class SystemUILyric : BaseHook() {
             1 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
                     it.methodFinder().filterByName("onDarkChanged").filterByParamCount(3).first().createHook {
-                        after { hookParam ->
-                            if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@after
-                            val isDark = (hookParam.args[1] as Float) == 1f
-                            changeColor(if (isDark) Color.BLACK else Color.WHITE)
+                        after {
+                            if (!isPlaying) return@after
+                            lastColor = clockView.currentTextColor
                         }
                     }
                 }
             }
-
-            else -> {}
         }
 
         if (config.hideNotificationIcon) {
+            moduleRes.getString(R.string.hide_notification_icon).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-                moduleRes.getString(R.string.HideNotificationIcon).log()
                 it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
                     after { hookParam ->
-                        hookParam.thisObject.objectHelper {
-                            mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                        val clazz = hookParam.thisObject::class.java
+                        if (clazz.simpleName == "NotificationIconAreaController") {
+                            hookParam.thisObject.objectHelper {
+                                mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                            }
+                        } else {
+                            mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
                         }
                     }
                 }
             }
         }
         if (config.hideCarrier) {
-            moduleRes.getString(R.string.HideCarrier).log()
+            moduleRes.getString(R.string.hide_carrier).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
                 it.methodFinder().filterByName("onFinishInflate").first().createHook {
                     after { hookParam ->
-                        val frameLayout = hookParam.thisObject as RelativeLayout
-                        mCarrierLabel = frameLayout.findViewById(context.resources.getIdentifier("keyguard_carrier_text", "id", context.packageName))
+                        val clazz = hookParam.thisObject::class.java
+                        if (clazz.simpleName == "KeyguardStatusBarView") {
+                            hookParam.thisObject.objectHelper {
+                                mCarrierLabel = this.getObjectOrNullAs<View>("mCarrierLabel")!!
+                            }
+                        } else {
+                            mCarrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as TextView
+                        }
                     }
                 }
             }
         }
-    }
+        if (config.clickStatusBarToHideLyric || config.slideStatusBarCutSongs) {
+            loadClassOrNull("com.android.systemui.statusbar.phone.PhoneStatusBarView").isNotNull {
+                it.methodFinder().filterByName("onTouchEvent").first().createHook {
+                    before { hookParam ->
+                        val motionEvent = hookParam.args[0] as MotionEvent
+                        when (motionEvent.action) {
+                            MotionEvent.ACTION_DOWN -> {
+                                point = Point(motionEvent.rawX.toInt(), motionEvent.rawY.toInt())
+                            }
 
+                            MotionEvent.ACTION_MOVE -> {
+                                isMove = true
+                            }
+
+                            MotionEvent.ACTION_UP -> {
+                                if (!isMove) {
+                                    if (config.clickStatusBarToHideLyric) {
+                                        if (motionEvent.eventTime - motionEvent.downTime < 200) {
+                                            moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
+                                            if (isHiding) {
+                                                isHiding = false
+                                                changeLyric(lastLyric, 0)
+                                                hookParam.result = true
+                                            } else {
+                                                val x = motionEvent.x.toInt()
+                                                val y = motionEvent.y.toInt()
+                                                val left = lyricLayout.left
+                                                val top = lyricLayout.top
+                                                val right = lyricLayout.right
+                                                val bottom = lyricLayout.bottom
+                                                if (x in left..right && y in top..bottom) {
+                                                    hideLyric()
+                                                    isHiding = true
+                                                    hookParam.result = true
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if (config.slideStatusBarCutSongs && isPlaying) {
+                                        if (abs(point.y - motionEvent.rawY.toInt()) <= config.slideStatusBarCutSongsYRadius) {
+                                            val i = point.x - motionEvent.rawX.toInt()
+                                            if (abs(i) > config.slideStatusBarCutSongsXRadius) {
+                                                moduleRes.getString(R.string.slide_status_bar_cut_songs).log()
+                                                if (i > 0) {
+                                                    shell("input keyevent 87", false)
+                                                } else {
+                                                    shell("input keyevent 88", false)
+                                                }
+                                                hookParam.result = true
+                                            }
+                                        }
+                                    }
+                                    isMove = false
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        SystemUISpecial()
+    }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
+        themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
         goMainThread(1) {
             if (config.viewIndex == 0) {
                 targetView.addView(lyricLayout, 0)
@@ -224,19 +347,27 @@ class SystemUILyric : BaseHook() {
                 targetView.addView(lyricLayout)
             }
         }
-        receptionLyric(context, BuildConfig.API_VERSION) {
-            if (!(this::clockView.isInitialized && this::targetView.isInitialized)) return@receptionLyric
-            if (it.type == DataType.UPDATE) {
-                val lyric = it.lyric.regexReplace(config.regexReplace, "")
-                if (lyric.isNotEmpty()) {
-                    changeLyric(lyric)
-                    changeIcon(it)
+        registerLyricListener(context, BuildConfig.API_VERSION, object : LyricListener {
+            override fun onReceived(lyricData: LyricData) {
+                if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return
+                if (lyricData.type == DataType.UPDATE) {
+                    val lyric = lyricData.lyric.regexReplace(config.regexReplace, "")
+                    if (lyric.isNotEmpty()) {
+                        lastLyric = lyric
+                        if (isHiding) return
+                        changeIcon(lyricData)
+                        changeLyric(lyric, lyricData.delay)
+                    }
+                } else if (lyricData.type == DataType.STOP) {
+                    if (isHiding) isHiding = false
+                    hideLyric()
                 }
-            } else if (it.type == DataType.STOP) {
-                hideLyric()
+                lyricData.log()
             }
-            it.log()
-        }
+        })
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
         } else {
@@ -257,31 +388,38 @@ class SystemUILyric : BaseHook() {
         changeConfig(1)
     }
 
-    private fun changeLyric(lyric: String) {
-        if (lastLyric == lyric || isScreenLock) return
-        lastLyric = lyric
-        isShow = true
+    private fun changeLyric(lyric: String, delay: Int) {
+        if (isHiding || isScreenLock) return
+        isPlaying = true
         "lyric:$lyric".log()
         goMainThread {
             lyricLayout.showView()
             if (config.hideTime) clockView.hideView()
-            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon) mNotificationIconArea.hideView()
-            if (this::mCarrierLabel.isInitialized && config.hideCarrier) mCarrierLabel.hideView()
+            if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
+            if (this::mCarrierLabel.isInitialized) mCarrierLabel.hideView()
+            if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
             lyricView.apply {
                 if (config.animation == "Random") {
-                    val effect = arrayListOf("Top", "Bottom", "Start", "End").random()
+                    val effect = arrayListOf("Top", "Bottom", "Start", "End", "ScaleXY", "ScaleX", "ScaleY").random()
                     inAnimation = ViewTools.switchViewInAnima(effect)
                     outAnimation = ViewTools.switchViewOutAnima(effect)
                 }
                 width = getLyricWidth(paint, lyric)
-                if (config.dynamicLyricSpeed) {
-                    val theoreticalWidth = min(paint.measureText(lyric).toInt(), targetView.width)
-                    val i = theoreticalWidth - width
+                if (config.dynamicLyricSpeed && delay == 0) {
+                    val i = width - theoreticalWidth
                     if (i > 0) {
                         val proportion = i * 1.0 / displayWidth
-                        val speed = 15 * proportion + 0.5
-                        speed.log()
+                        "proportion:$proportion".log()
+                        val speed = 15 * proportion + 0.7
+                        "speed:$speed".log()
                         setSpeed(speed.toFloat())
+                    }
+                }
+                if (delay > 0) {
+                    val i = width - theoreticalWidth
+                    if (i > 0) {
+                        val speed = BigDecimal(i * 1.0 / 211).setScale(2, RoundingMode.HALF_UP).toFloat()
+                        setSpeed(speed)
                     }
                 }
                 setText(lyric)
@@ -292,47 +430,23 @@ class SystemUILyric : BaseHook() {
     private fun changeIcon(it: LyricData) {
         if (!iconSwitch) return
         val customIcon = it.customIcon && it.base64Icon.isNotEmpty()
-        goMainThread {
-            val bitmap = if (customIcon) {
-                if (it.base64Icon == lastBase64Icon) return@goMainThread
-                lastBase64Icon = it.base64Icon
-                base64ToDrawable(it.base64Icon)
-            } else {
-                val baseIcon = config.getDefaultIcon(it.packageName)
-                if (baseIcon == lastBase64Icon) return@goMainThread
-                lastBase64Icon = baseIcon
-                val base64ToDrawable = base64ToDrawable(baseIcon)
-                base64ToDrawable
-            }
-            bitmap.isNotNull {
-                iconView.showView()
-                iconView.setImageBitmap(it)
-            }.isNot {
-                iconView.hideView()
-            }
-            "Change Icon".log()
+        lastBase64Icon = if (customIcon) {
+            it.base64Icon
+        } else {
+            config.getDefaultIcon(it.packageName)
         }
     }
 
     private fun hideLyric() {
-        isShow = false
+        isPlaying = false
         "Hide Lyric".log()
         goMainThread {
             lyricLayout.hideView()
             clockView.showView()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
+            if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.showView()
         }
-    }
-
-    private fun changeColor(color: Int) {
-        "Change Color".log()
-        if (lastColor == color) return
-        goMainThread {
-            if (config.lyricColor.isEmpty()) lyricView.textColorAnima(color)
-            if (config.iconColor.isEmpty()) iconView.iconColorAnima(lastColor, color)
-        }
-        lastColor = color
     }
 
     private fun changeConfig(delay: Long = 0L) {
@@ -401,7 +515,8 @@ class SystemUILyric : BaseHook() {
     private fun getLyricWidth(paint: Paint, text: String): Int {
         "Get Lyric Width".log()
         return if (config.lyricWidth == 0) {
-            min(paint.measureText(text).toInt(), targetView.width)
+            theoreticalWidth = min(paint.measureText(text).toInt(), targetView.width)
+            theoreticalWidth
         } else {
             if (config.fixedLyricWidth) {
                 scaleWidth()
@@ -420,8 +535,38 @@ class SystemUILyric : BaseHook() {
         }).roundToInt()
     }
 
-    override val name: String get() = this::class.java.simpleName
 
+    inner class SystemUISpecial {
+        init {
+            if (togglePrompts) {
+                loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull {
+                    it.methodFinder().filterByName("onConfigurationChanged").first().createHook {
+                        after { hookParam ->
+                            val newConfig = hookParam.args[0] as Configuration
+                            themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                        }
+                    }
+                }
+            }
+            if (isMIUI && config.mMIUIHideNetworkSpeed) {
+                moduleRes.getString(R.string.miui_hide_network_speed).log()
+                loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
+                    it.constructorFinder().first().createHook {
+                        after { hookParam ->
+                            mMIUINetworkSpeedView = hookParam.thisObject as TextView
+                        }
+                    }
+                    it.methodFinder().filterByName("setVisibilityByController").first().createHook {
+                        before { hookParam ->
+                            if (isPlaying) {
+                                hookParam.args[0] = false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     inner class UpdateConfig : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {

@@ -60,7 +60,7 @@ class SystemUITest : BaseHook() {
     lateinit var lastView: TextView
     val testView by lazy {
         TextView(context).apply {
-            text = moduleRes.getString(R.string.AppName)
+            text = moduleRes.getString(R.string.app_name)
             isSingleLine = true
             gravity = Gravity.CENTER
             setBackgroundColor(Color.WHITE)
@@ -69,7 +69,6 @@ class SystemUITest : BaseHook() {
     }
     private val dataHashMap by lazy { HashMap<TextView, Data>() }
 
-    override val name: String get() = this::class.java.simpleName
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun init() {
@@ -84,7 +83,7 @@ class SystemUITest : BaseHook() {
                 } else {
                     context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"))
                 }
-                moduleRes.getString(R.string.StartHookingTextView).log()
+                moduleRes.getString(R.string.start_hooking_text_view).log()
                 hook()
 
             }
@@ -114,7 +113,7 @@ class SystemUITest : BaseHook() {
                                     Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index)
                                 }
                                 dataHashMap[view] = data
-                                moduleRes.getString(R.string.FirstFilter).format(data, dataHashMap.size).log()
+                                moduleRes.getString(R.string.first_filter).format(data, dataHashMap.size).log()
                             }
                         }
                     }
@@ -171,11 +170,11 @@ class SystemUITest : BaseHook() {
             when (intent.getStringExtra("Type")) {
                 "GetClass" -> {
                     if (dataHashMap.size == 0) {
-                        moduleRes.getString(R.string.NoTextView).log()
+                        moduleRes.getString(R.string.no_text_view).log()
                         context.receiveClass(arrayListOf())
                         return
                     } else {
-                        moduleRes.getString(R.string.SendTextViewClass).format(dataHashMap).log()
+                        moduleRes.getString(R.string.send_text_view_class).format(dataHashMap).log()
                         context.receiveClass(ArrayList(dataHashMap.values))
                     }
                 }

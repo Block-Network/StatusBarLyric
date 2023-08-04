@@ -16,7 +16,7 @@ import java.util.Locale
 class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         if (!XposedOwnSP.config.masterSwitch) {
-            moduleRes.getString(R.string.MasterOff).log()
+            moduleRes.getString(R.string.master_off).log()
             return
         }
 
@@ -25,10 +25,10 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
             "com.android.systemui" -> {
                 "${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})".log()
                 if (XposedOwnSP.config.testMode) {
-                    moduleRes.getString(R.string.HookPage).log()
+                    moduleRes.getString(R.string.hook_page).log()
                     initHooks(SystemUITest())
                 } else {
-                    moduleRes.getString(R.string.LyricMode).log()
+                    moduleRes.getString(R.string.lyric_mode).log()
                     initHooks(SystemUILyric())
                 }
             }
@@ -38,7 +38,7 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
         EzXHelper.initZygote(startupParam)
         if (!XposedOwnSP.config.masterSwitch) {
-            moduleRes.getString(R.string.MasterOff).log()
+            moduleRes.getString(R.string.master_off).log()
             return
         }
     }
@@ -49,9 +49,9 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
                 if (it.isInit) return
                 it.init()
                 it.isInit = true
-                "${moduleRes.getString(R.string.HookSucceeded)}:${it.javaClass.simpleName}".log()
+                "${moduleRes.getString(R.string.hook_succeeded)}:${it.javaClass.simpleName}".log()
             } catch (e: Exception) {
-                "${moduleRes.getString(R.string.HookFailed)}:${it.javaClass.simpleName}".log()
+                "${moduleRes.getString(R.string.hook_failed)}:${it.javaClass.simpleName}".log()
                 e.log()
             }
         }

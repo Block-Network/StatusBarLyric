@@ -18,12 +18,12 @@ android {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 34
-        versionCode = 201
-        versionName = "6.0.1"
+        versionCode = 202
+        versionName = "6.0.2"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
-        buildConfigField("int", "API_VERSION", "4")
+        buildConfigField("int", "API_VERSION", "5")
         buildConfigField("int", "CONFIG_VERSION", "3")
     }
     val config = localProperties.getProperty("androidStoreFile")?.let {
@@ -43,7 +43,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro", "proguard-log.pro"))
+            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
         }
     }
     compileOptions {
@@ -66,10 +66,11 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
     applicationVariants.all {
         outputs.all {
-            (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName($versionCode)-$name-$buildTime.apk"
+            (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName-$versionCode-$name-$buildTime.apk"
         }
     }
 }
@@ -79,6 +80,6 @@ dependencies {
     compileOnly("de.robv.android.xposed:api:82")
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
-    implementation(project(":LyricGetterApi"))
     implementation("com.github.kyuubiran:EzXHelper:2.0.6")
+    implementation("com.github.xiaowine:Lyric-Getter-Api:5.0.2")
 }

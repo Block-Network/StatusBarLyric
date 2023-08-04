@@ -43,6 +43,7 @@ import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
 import statusbar.lyric.activity.page.MenuPage
 import statusbar.lyric.activity.page.HookPage
+import statusbar.lyric.activity.page.SystemSpecialPage
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.data.Data
@@ -60,13 +61,14 @@ class SettingsActivity : MIUIActivity() {
 
 
     override fun register() {
-        registerPage(MainPage::class.java, activity.getString(R.string.AppName))
-        registerPage(MenuPage::class.java, activity.getString(R.string.Menu))
-        registerPage(HookPage::class.java, activity.getString(R.string.HookPage))
-        registerPage(LyricPage::class.java, activity.getString(R.string.LyricPage))
-        registerPage(IconPage::class.java, activity.getString(R.string.IconPage))
-        registerPage(ChoosePage::class.java, activity.getString(R.string.ChoosePage))
-        registerPage(ExtendPage::class.java, activity.getString(R.string.ChoosePage))
+        registerPage(MainPage::class.java, activity.getString(R.string.app_name))
+        registerPage(MenuPage::class.java, activity.getString(R.string.menu))
+        registerPage(HookPage::class.java, activity.getString(R.string.hook_page))
+        registerPage(LyricPage::class.java, activity.getString(R.string.lyric_page))
+        registerPage(IconPage::class.java, activity.getString(R.string.icon_page))
+        registerPage(ChoosePage::class.java, activity.getString(R.string.choose_page))
+        registerPage(ExtendPage::class.java, activity.getString(R.string.choose_page))
+        registerPage(SystemSpecialPage::class.java, activity.getString(R.string.system_special_page))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,25 +97,25 @@ class SettingsActivity : MIUIActivity() {
         super.onDestroy()
     }
 
-    private fun checkLSPosed(): Boolean {
-        return try {
-            setSP(ActivityOwnSP.ownSP)
-            updateConfigVer()
-            init()
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            MIUIDialog(this) {
-                setTitle(R.string.FirstUseTips)
-                setMessage(R.string.NotSupportXposedFramework)
-                setRButton(R.string.ReStartApp) {
-                    ActivityTools.restartApp()
-                }
-                setCancelable(false)
-            }.show()
-            false
+        private fun checkLSPosed(): Boolean {
+            return try {
+                setSP(ActivityOwnSP.ownSP)
+                updateConfigVer()
+                init()
+                true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                MIUIDialog(this) {
+                    setTitle(R.string.first_use_tips)
+                    setMessage(R.string.not_support_xposed_framework)
+                    setRButton(R.string.re_start_app) {
+                        ActivityTools.restartApp()
+                    }
+                    setCancelable(false)
+                }.show()
+                false
+            }
         }
-    }
 
 
     private fun init() {
@@ -156,9 +158,9 @@ class SettingsActivity : MIUIActivity() {
                     }!!
                     if (dataList.size == 0) {
                         MIUIDialog(context) {
-                            setTitle(context.getString(R.string.NotFoundHook))
-                            setMessage(context.getString(R.string.NotFoundHookTips))
-                            setRButton(context.getText(R.string.OK)) {
+                            setTitle(context.getString(R.string.not_found_hook))
+                            setMessage(context.getString(R.string.not_found_hook_tips))
+                            setRButton(context.getText(R.string.ok)) {
                                 dismiss()
                             }
                         }.show()
