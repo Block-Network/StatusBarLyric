@@ -46,10 +46,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import cn.lyric.getter.api.LyricListener
 import cn.lyric.getter.api.data.DataType
 import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.tools.Tools.base64ToDrawable
-import cn.lyric.getter.api.tools.Tools.receptionLyric
+import cn.lyric.getter.api.tools.Tools.registerLyricListener
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
@@ -322,22 +323,27 @@ class SystemUILyric : BaseHook() {
                 targetView.addView(lyricLayout)
             }
         }
-        receptionLyric(context, BuildConfig.API_VERSION) {
-            if (!(this::clockView.isInitialized && this::targetView.isInitialized)) return@receptionLyric
-            if (it.type == DataType.UPDATE) {
-                val lyric = it.lyric.regexReplace(config.regexReplace, "")
-                if (lyric.isNotEmpty()) {
-                    lastLyric = lyric
-                    if (isHiding) return@receptionLyric
-                    changeIcon(it)
-                    changeLyric(lyric, it.delay)
+        registerLyricListener(context, BuildConfig.API_VERSION, object : LyricListener {
+            override fun onReceived(lyricData: LyricData) {
+                if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return@onReceived
+                if (lyricData.type == DataType.UPDATE) {
+                    val lyric = lyricData.lyric.regexReplace(config.regexReplace, "")
+                    if (lyric.isNotEmpty()) {
+                        lastLyric = lyric
+                        if (isHiding) return@onReceived
+                        changeIcon(lyricData)
+                        changeLyric(lyric, lyricData.delay)
+                    }
+                } else if (lyricData.type == DataType.STOP) {
+                    if (isHiding) isHiding = false
+                    hideLyric()
                 }
-            } else if (it.type == DataType.STOP) {
-                if (isHiding) isHiding = false
-                hideLyric()
+                lyricData.log()
             }
-            it.log()
-        }
+        })
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
         } else {
