@@ -123,7 +123,7 @@ class SystemUILyric : BaseHook() {
             if (!pm.isInteractive) {
                 shell("pkill -f com.android.systemui", false)
             } else {
-                Toast.makeText(context, moduleRes.getString(R.string.ConfigurationChangedTips), Toast.LENGTH_LONG).show()
+                Toast.makeText(context, moduleRes.getString(R.string.configuration_changed_tips), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -195,11 +195,11 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }.isNot {
-            moduleRes.getString(R.string.LoadClassEmpty).log()
+            moduleRes.getString(R.string.load_class_empty).log()
             return
         }
         if (config.limitVisibilityChange) {
-            moduleRes.getString(R.string.LimitVisibilityChange).log()
+            moduleRes.getString(R.string.limit_visibility_change).log()
             View::class.java.methodFinder().filterByName("setVisibility").first().createHook {
                 before { hookParam ->
                     if (isPlaying) {
@@ -214,7 +214,7 @@ class SystemUILyric : BaseHook() {
             }
         }
 
-        "${moduleRes.getString(R.string.LyricColorScheme)}:${moduleRes.getString(R.string.LyricColorScheme)}".log()
+        "${moduleRes.getString(R.string.lyric_color_scheme)}:${moduleRes.getString(R.string.lyric_color_scheme)}".log()
         when (config.lyricColorScheme) {
             0 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
@@ -240,7 +240,7 @@ class SystemUILyric : BaseHook() {
         }
 
         if (config.hideNotificationIcon) {
-            moduleRes.getString(R.string.HideNotificationIcon).log()
+            moduleRes.getString(R.string.hide_notification_icon).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
                 it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
                     after { hookParam ->
@@ -257,7 +257,7 @@ class SystemUILyric : BaseHook() {
             }
         }
         if (config.hideCarrier) {
-            moduleRes.getString(R.string.HideCarrier).log()
+            moduleRes.getString(R.string.hide_carrier).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
                 it.methodFinder().filterByName("onFinishInflate").first().createHook {
                     after { hookParam ->
@@ -291,7 +291,7 @@ class SystemUILyric : BaseHook() {
                                 if (!isMove) {
                                     if (config.clickStatusBarToHideLyric) {
                                         if (motionEvent.eventTime - motionEvent.downTime < 200) {
-                                            "Single Click".log()
+                                            moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
                                             if (isHiding) {
                                                 isHiding = false
                                                 changeLyric(lastLyric, 0)
@@ -316,6 +316,7 @@ class SystemUILyric : BaseHook() {
                                         if (abs(point.y - motionEvent.rawY.toInt()) <= config.slideStatusBarCutSongsYRadius) {
                                             val i = point.x - motionEvent.rawX.toInt()
                                             if (abs(i) > config.slideStatusBarCutSongsXRadius) {
+                                                moduleRes.getString(R.string.slide_status_bar_cut_songs).log()
                                                 if (i > 0) {
                                                     shell("input keyevent 87", false)
                                                 } else {
@@ -548,7 +549,7 @@ class SystemUILyric : BaseHook() {
                 }
             }
             if (isMIUI && config.mMIUIHideNetworkSpeed) {
-                moduleRes.getString(R.string.MIUIHideNetworkSpeed).log()
+                moduleRes.getString(R.string.miui_hide_network_speed).log()
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
                     it.constructorFinder().first().createHook {
                         after { hookParam ->

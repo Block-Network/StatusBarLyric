@@ -87,7 +87,7 @@ object Tools {
             val parentClass = XposedOwnSP.config.parentClassName
             val parentID = XposedOwnSP.config.parentID
             if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
-                EzXHelper.moduleRes.getString(R.string.LoadClassEmpty).log()
+                EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
                 return false
             }
             if (this is TextView) {

@@ -17,22 +17,22 @@ class HookPage : BasePage() {
         val testModeBinding = GetDataBinding({ ActivityOwnSP.config.testMode }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
-        TextSSw(textId = R.string.TestMode, key = "testMode", onClickListener = { testModeBinding.send(it) })
-        TextSSw(textId = R.string.RelaxConditions, tipsId = R.string.RelaxConditionsTips, key = "relaxConditions", dataBindingRecv = testModeBinding.getRecv(1))
-        TextSA(textId = R.string.GetHook, onClickListener = {
+        TextSSw(textId = R.string.test_mode, key = "testMode", onClickListener = { testModeBinding.send(it) })
+        TextSSw(textId = R.string.relax_conditions, tipsId = R.string.relax_conditions_tips, key = "relaxConditions", dataBindingRecv = testModeBinding.getRecv(1))
+        TextSA(textId = R.string.get_hook, onClickListener = {
             waitResponse()
             activity.getClass()
         }, dataBindingRecv = testModeBinding.getRecv(1))
         Line()
-        TextSA(textId = R.string.ResetSystemUi, onClickListener = {
+        TextSA(textId = R.string.reset_system_ui, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(R.string.ResetSystemUi)
-                setMessage(R.string.RestartUITips)
-                setLButton(R.string.OK) {
+                setTitle(R.string.reset_system_ui)
+                setMessage(R.string.restart_systemui_tips)
+                setLButton(R.string.ok) {
                     Tools.shell("pkill -f com.android.systemui", true)
                     dismiss()
                 }
-                setRButton(R.string.Cancel) { dismiss() }
+                setRButton(R.string.cancel) { dismiss() }
             }.show()
         })
     }

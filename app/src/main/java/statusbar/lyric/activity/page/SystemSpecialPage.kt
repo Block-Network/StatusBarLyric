@@ -9,7 +9,7 @@ import statusbar.lyric.tools.Tools.isMIUI
 class SystemSpecialPage : BasePage() {
     override fun onCreate() {
         if (isMIUI) {
-            TextSw(textId = R.string.MIUIHideNetworkSpeed, key = "mMIUIHideNetworkSpeed")
+            TextSw(textId = R.string.miui_hide_network_speed, key = "mMIUIHideNetworkSpeed")
         }
         Line()
         TitleText("Wait for More...")

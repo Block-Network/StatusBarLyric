@@ -18,19 +18,19 @@ class IconPage : BasePage() {
         val binding = GetDataBinding({ config.iconSwitch }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
-        TextSSw(textId = R.string.IconSwitch, key = "iconSwitch", defValue = false, onClickListener = {
+        TextSSw(textId = R.string.icon_switch, key = "iconSwitch", defValue = false, onClickListener = {
             changeConfig()
             binding.send(it)
         })
-        TextSA(textId = R.string.IconSize, onClickListener = {
+        TextSA(textId = R.string.icon_size, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.IconSize))
-                setMessage(getString(R.string.IconSizeTips))
+                setTitle(getString(R.string.icon_size))
+                setMessage(getString(R.string.icon_size_tips))
                 setEditText(config.iconSize.toString(), "0", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(3))
                 })
-                setRButton(getString(R.string.OK)) {
+                setRButton(getString(R.string.ok)) {
                     try {
                         val value = getEditText().toInt()
                         if (value in 0..100) {
@@ -40,22 +40,22 @@ class IconPage : BasePage() {
                             throw Exception()
                         }
                     } catch (_: Exception) {
-                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
                     }
                 }
-                setLButton(getString(R.string.Cancel))
+                setLButton(getString(R.string.cancel))
                 finally { dismiss() }
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
-        TextSA(textId = R.string.IconColorAndTransparency, onClickListener = {
+        TextSA(textId = R.string.icon_color_and_transparency, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.IconColorAndTransparency))
-                setMessage(getString(R.string.IconColorAndTransparencyTips))
+                setTitle(getString(R.string.icon_color_and_transparency))
+                setMessage(getString(R.string.icon_color_and_transparency_tips))
                 setEditText(config.iconColor, "#FFFFFF", config = {
                     it.inputType = InputType.TYPE_CLASS_TEXT
                     it.filters = arrayOf(InputFilter.LengthFilter(9))
                 })
-                setRButton(getString(R.string.OK)) {
+                setRButton(getString(R.string.ok)) {
                     try {
                         val value = getEditText()
                         if (value.isEmpty()) {
@@ -66,22 +66,22 @@ class IconPage : BasePage() {
                         }
                         changeConfig()
                     } catch (_: Exception) {
-                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
                     }
                 }
-                setLButton(getString(R.string.Cancel))
+                setLButton(getString(R.string.cancel))
                 finally { dismiss() }
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
-        TextSA(textId = R.string.IconTopMargins, onClickListener = {
+        TextSA(textId = R.string.icon_top_margins, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.IconTopMargins))
-                setMessage(getString(R.string.IconTopMarginsTips))
+                setTitle(getString(R.string.icon_top_margins))
+                setMessage(getString(R.string.icon_top_margins_tips))
                 setEditText(config.iconTopMargins.toString(), "0", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })
-                setRButton(getString(R.string.OK)) {
+                setRButton(getString(R.string.ok)) {
                     try {
                         val value = getEditText().toInt()
                         if (value in -100..100) {
@@ -91,22 +91,22 @@ class IconPage : BasePage() {
                             throw Exception()
                         }
                     } catch (_: Exception) {
-                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
                     }
                 }
-                setLButton(getString(R.string.Cancel))
+                setLButton(getString(R.string.cancel))
                 finally { dismiss() }
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
-        TextSA(textId = R.string.IconBottomMargins, onClickListener = {
+        TextSA(textId = R.string.icon_bottom_margins, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.IconBottomMargins))
-                setMessage(getString(R.string.IconBottomMarginsTips))
+                setTitle(getString(R.string.icon_bottom_margins))
+                setMessage(getString(R.string.icon_bottom_margins_tips))
                 setEditText(config.iconBottomMargins.toString(), "0", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })
-                setRButton(getString(R.string.OK)) {
+                setRButton(getString(R.string.ok)) {
                     try {
                         val value = getEditText().toInt()
                         if (value in -100..100) {
@@ -116,22 +116,22 @@ class IconPage : BasePage() {
                             throw Exception()
                         }
                     } catch (_: Exception) {
-                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
                     }
                 }
-                setLButton(getString(R.string.Cancel))
+                setLButton(getString(R.string.cancel))
                 finally { dismiss() }
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
-        TextSA(textId = R.string.IconStartMargins, onClickListener = {
+        TextSA(textId = R.string.icon_start_margins, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.IconStartMargins))
-                setMessage(getString(R.string.IconStartMarginsTips))
+                setTitle(getString(R.string.icon_start_margins))
+                setMessage(getString(R.string.icon_start_margins_tips))
                 setEditText(config.iconStartMargins.toString(), "0", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })
-                setRButton(getString(R.string.OK)) {
+                setRButton(getString(R.string.ok)) {
                     try {
                         val value = getEditText().toInt()
                         if (value in -500..500) {
@@ -141,13 +141,13 @@ class IconPage : BasePage() {
                             throw Exception()
                         }
                     } catch (_: Exception) {
-                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
                     }
                 }
-                setLButton(getString(R.string.Cancel))
+                setLButton(getString(R.string.cancel))
                 finally { dismiss() }
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
-        TextSSw(textId = R.string.ForceTheIconToBeDisplayed, key = "forceTheIconToBeDisplayed", onClickListener = { changeConfig() }, dataBindingRecv = binding.getRecv(1))
+        TextSSw(textId = R.string.force_the_icon_to_be_displayed, key = "forceTheIconToBeDisplayed", onClickListener = { changeConfig() }, dataBindingRecv = binding.getRecv(1))
     }
 }
