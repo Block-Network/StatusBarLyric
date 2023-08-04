@@ -99,9 +99,7 @@ object ActivityTools {
                             setMessage(jsonObject.getString("body").replace("#", ""))
                             setRButton(R.string.update) {
                                 try {
-                                    val uri = Uri.parse(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
-                                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                                    activity.startActivity(intent)
+                                    openUrl(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
                                 } catch (e: JSONException) {
                                     showToastOnLooper(activity.getString(R.string.get_new_version_error) + e)
                                 }
