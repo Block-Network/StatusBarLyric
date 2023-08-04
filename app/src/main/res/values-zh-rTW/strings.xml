@@ -145,4 +145,9 @@
     <string name='lyricBlurredEdgesTypeStart'>僅左邊</string>
     <string name='lyricBlurredEdgesTypeAll'>兩邊</string>
     <string name="LyricBlurredEdgesType">* 歌詞模糊邊緣類型</string>
+    <string name="SlideStatusBarCutSongs">* 狀態列滑動切歌</string>
+    <string name="SlideStatusBarCutSongsXRadius">* 滑動切歌X半徑</string>
+    <string name="SlideStatusBarCutSongsXRadiusTips">範圍：50–2000</string>
+    <string name="SlideStatusBarCutSongsYRadius">* 滑動切歌Y半徑</string>
+    <string name="SlideStatusBarCutSongsYRadiusTips">範圍：10–100</string>
 </resources>

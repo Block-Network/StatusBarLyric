@@ -53,6 +53,7 @@ class ExtendPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
+        Line()
         val lyricBlurredEdgesRadiusBinding = GetDataBinding({ ActivityOwnSP.config.lyricBlurredEdges }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
@@ -83,17 +84,69 @@ class ExtendPage : BasePage() {
                 finally { dismiss() }
             }.show()
         }, dataBindingRecv = lyricBlurredEdgesRadiusBinding.binding.getRecv(1))
-
         val lyricBlurredEdgesType: LinkedHashMap<Int, String> = LinkedHashMap<Int, String>().apply {
             this[0] = getString(R.string.lyricBlurredEdgesTypeAll)
-            this[1] =  getString(R.string.lyricBlurredEdgesTypeStart)
-            this[2] =  getString(R.string.lyricBlurredEdgesTypeEnd)
+            this[1] = getString(R.string.lyricBlurredEdgesTypeStart)
+            this[2] = getString(R.string.lyricBlurredEdgesTypeEnd)
         }
         TextSSp(textId = R.string.LyricBlurredEdgesType, currentValue = lyricBlurredEdgesType[ActivityOwnSP.config.lyricBlurredEdgesType].toString(), data = {
             lyricBlurredEdgesType.forEach {
                 add(it.value) { ActivityOwnSP.config.lyricBlurredEdgesType = it.key }
             }
         }, dataBindingRecv = lyricBlurredEdgesRadiusBinding.binding.getRecv(1))
-
+        Line()
+        val slideStatusBarCutSongsBinding = GetDataBinding({ ActivityOwnSP.config.slideStatusBarCutSongs }) { view, _, data ->
+            view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
+        }
+        TextSw(textId = R.string.SlideStatusBarCutSongs, key = "slideStatusBarCutSongs", onClickListener = { slideStatusBarCutSongsBinding.send(it) })
+        TextSA(textId = R.string.SlideStatusBarCutSongsXRadius, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.SlideStatusBarCutSongsXRadius))
+                setMessage(getString(R.string.SlideStatusBarCutSongsXRadiusTips))
+                setEditText(ActivityOwnSP.config.slideStatusBarCutSongsXRadius.toString(), "150", config = {
+                    it.inputType = InputType.TYPE_CLASS_NUMBER
+                    it.filters = arrayOf(InputFilter.LengthFilter(4))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in 20..2000) {
+                            ActivityOwnSP.config.slideStatusBarCutSongsXRadius = value
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        }, dataBindingRecv = slideStatusBarCutSongsBinding.binding.getRecv(1))
+        TextSA(textId = R.string.SlideStatusBarCutSongsYRadius, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.SlideStatusBarCutSongsYRadius))
+                setMessage(getString(R.string.SlideStatusBarCutSongsYRadiusTips))
+                setEditText(ActivityOwnSP.config.slideStatusBarCutSongsYRadius.toString(), "25", config = {
+                    it.inputType = InputType.TYPE_CLASS_NUMBER
+                    it.filters = arrayOf(InputFilter.LengthFilter(4))
+                })
+                setRButton(getString(R.string.OK)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in 10..100) {
+                            ActivityOwnSP.config.slideStatusBarCutSongsYRadius = value
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.InputError))
+                    }
+                }
+                setLButton(getString(R.string.Cancel))
+                finally { dismiss() }
+            }.show()
+        }, dataBindingRecv = slideStatusBarCutSongsBinding.binding.getRecv(1))
+        Line()
     }
 }
