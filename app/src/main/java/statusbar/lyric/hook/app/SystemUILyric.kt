@@ -276,8 +276,56 @@ class SystemUILyric : BaseHook() {
         if (config.clickStatusBarToHideLyric || config.slideStatusBarCutSongs) {
             loadClassOrNull("com.android.systemui.statusbar.phone.PhoneStatusBarView").isNotNull {
                 it.methodFinder().filterByName("onTouchEvent").first().createHook {
-                    after { hookParam ->
-                        touchStatusBar(hookParam.args[0] as MotionEvent)
+                    before { hookParam ->
+                        val motionEvent = hookParam.args[0] as MotionEvent
+                        when (motionEvent.action) {
+                            MotionEvent.ACTION_DOWN -> {
+                                point = Point(motionEvent.rawX.toInt(), motionEvent.rawY.toInt())
+                            }
+
+                            MotionEvent.ACTION_MOVE -> {
+                                isMove = true
+                            }
+
+                            MotionEvent.ACTION_UP -> {
+                                if (!isMove) {
+                                    if (config.clickStatusBarToHideLyric) {
+                                        if (motionEvent.eventTime - motionEvent.downTime < 200) {
+                                            "Single Click".log()
+                                            if (isHiding) {
+                                                isHiding = false
+                                                changeLyric(lastLyric, 0)
+                                            } else {
+                                                val x = motionEvent.x.toInt()
+                                                val y = motionEvent.y.toInt()
+                                                val left = lyricLayout.left
+                                                val top = lyricLayout.top
+                                                val right = lyricLayout.right
+                                                val bottom = lyricLayout.bottom
+                                                if (x in left..right && y in top..bottom) {
+                                                    hideLyric()
+                                                    isHiding = true
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    if (config.slideStatusBarCutSongs && isPlaying) {
+                                        if (abs(point.y - motionEvent.rawY.toInt()) <= config.slideStatusBarCutSongsYRadius) {
+                                            val i = point.x - motionEvent.rawX.toInt()
+                                            if (abs(i) > config.slideStatusBarCutSongsXRadius) {
+                                                if (i > 0) {
+                                                    shell("input keyevent 87", false)
+                                                } else {
+                                                    shell("input keyevent 88", false)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    isMove = false
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -483,56 +531,6 @@ class SystemUILyric : BaseHook() {
         }).roundToInt()
     }
 
-    private fun touchStatusBar(motionEvent: MotionEvent) {
-        when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> {
-                point = Point(motionEvent.rawX.toInt(), motionEvent.rawY.toInt())
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                isMove = true
-            }
-
-            MotionEvent.ACTION_UP -> {
-                if (!isMove) {
-                    if (config.clickStatusBarToHideLyric) {
-                        if (motionEvent.eventTime - motionEvent.downTime < 200) {
-                            "Single Click".log()
-                            if (isHiding) {
-                                isHiding = false
-                                changeLyric(lastLyric, 0)
-                            } else {
-                                val x = motionEvent.x.toInt()
-                                val y = motionEvent.y.toInt()
-                                val left = lyricLayout.left
-                                val top = lyricLayout.top
-                                val right = lyricLayout.right
-                                val bottom = lyricLayout.bottom
-                                if (x in left..right && y in top..bottom) {
-                                    hideLyric()
-                                    isHiding = true
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (config.slideStatusBarCutSongs && isPlaying) {
-                        if (abs(point.y - motionEvent.rawY.toInt()) <= config.slideStatusBarCutSongsYRadius) {
-                            val i = point.x - motionEvent.rawX.toInt()
-                            if (abs(i) > config.slideStatusBarCutSongsXRadius) {
-                                if (i > 0) {
-                                    shell("input keyevent 87", false)
-                                } else {
-                                    shell("input keyevent 88", false)
-                                }
-                            }
-                        }
-                    }
-                    isMove = false
-                }
-            }
-        }
-    }
 
     inner class SystemUISpecial {
         init {
