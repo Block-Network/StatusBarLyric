@@ -69,7 +69,6 @@ class SystemUITest : BaseHook() {
     }
     private val dataHashMap by lazy { HashMap<TextView, Data>() }
 
-    override val name: String get() = this::class.java.simpleName
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun init() {

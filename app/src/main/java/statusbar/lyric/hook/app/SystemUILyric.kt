@@ -505,7 +505,6 @@ class SystemUILyric : BaseHook() {
         }).roundToInt()
     }
 
-    override val name: String get() = this::class.java.simpleName
 
     inner class SystemUISpecial {
         init {
