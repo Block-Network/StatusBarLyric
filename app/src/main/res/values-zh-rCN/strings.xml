@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">墨-状态栏歌词</string>
-    <string name="QuickTitle">墨-状态栏歌词</string>
     <string name="xposed_tips">如果无法显示歌词，请尝试停止音乐软件并重新启动系统界面，并检查Lyric Getter</string>
     <string name="config_reset_success">配置重置成功</string>
     <string name="have_new_version">有新版本</string>

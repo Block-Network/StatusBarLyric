@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">墨-狀態列歌詞</string>
-    <string name="QuickTitle">墨-狀態列歌詞</string>
     <string name="xposed_tips">如果無法顯示歌詞，請嘗試停止音樂軟體並重新啟動系統UI，並檢查Lyric Getter</string>
     <string name="config_reset_success">配置重置成功</string>
     <string name="have_new_version">有新版本</string>
