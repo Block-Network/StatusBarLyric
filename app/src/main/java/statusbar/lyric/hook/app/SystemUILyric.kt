@@ -112,7 +112,18 @@ class SystemUILyric : BaseHook() {
     private var isPlaying: Boolean = false
     private var isHiding: Boolean = false
     private var isMove = false
-    private var oldNightMode: Int = 0
+    private var themeMode: Int by observableChange(0) { oldValue, _ ->
+        if (oldValue == 0) return@observableChange
+        "onConfigurationChanged".log()
+        runCatching {
+            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!pm.isInteractive) {
+                shell("pkill -f com.android.systemui", false)
+            } else {
+                Toast.makeText(context, moduleRes.getString(R.string.ConfigurationChangedTips), Toast.LENGTH_LONG).show()
+            }
+        }
+    }
     private var theoreticalWidth: Int = 0
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
@@ -303,7 +314,7 @@ class SystemUILyric : BaseHook() {
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
-        oldNightMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
+        themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
         goMainThread(1) {
             if (config.viewIndex == 0) {
                 targetView.addView(lyricLayout, 0)
@@ -503,19 +514,7 @@ class SystemUILyric : BaseHook() {
                     it.methodFinder().filterByName("onConfigurationChanged").first().createHook {
                         after { hookParam ->
                             val newConfig = hookParam.args[0] as Configuration
-                            val currentNightMode: Int = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
-                            if (currentNightMode != oldNightMode) {
-                                oldNightMode = currentNightMode
-                                "onConfigurationChanged".log()
-                                runCatching {
-                                    val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-                                    if (!pm.isInteractive) {
-                                        shell("pkill -f com.android.systemui", false)
-                                    } else {
-                                        Toast.makeText(context, moduleRes.getString(R.string.ConfigurationChangedTips), Toast.LENGTH_LONG).show()
-                                    }
-                                }
-                            }
+                            themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         }
                     }
                 }
