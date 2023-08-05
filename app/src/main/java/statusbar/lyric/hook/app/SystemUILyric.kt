@@ -288,9 +288,10 @@ class SystemUILyric : BaseHook() {
                             }
 
                             MotionEvent.ACTION_UP -> {
-                                if (!isMove) {
+                                if (!isMove || (abs(point.y - motionEvent.rawY.toInt()) < 50 && abs(point.y - motionEvent.rawY.toInt()) < 50)) {
                                     if (config.clickStatusBarToHideLyric) {
-                                        if (motionEvent.eventTime - motionEvent.downTime < 200) {
+                                        val isClick = motionEvent.eventTime - motionEvent.downTime < 200
+                                        if (isClick) {
                                             moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
                                             if (isHiding) {
                                                 isHiding = false
