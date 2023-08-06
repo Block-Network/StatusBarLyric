@@ -48,7 +48,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import cn.lyric.getter.api.LyricListener
-import cn.lyric.getter.api.data.DataType
 import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import cn.lyric.getter.api.tools.Tools.registerLyricListener
@@ -174,6 +173,8 @@ class SystemUILyric : BaseHook() {
     }
 
     private lateinit var mMIUINetworkSpeedView: TextView
+
+    val isReally by lazy { this@SystemUILyric::targetView.isInitialized }
 
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
@@ -348,27 +349,24 @@ class SystemUILyric : BaseHook() {
                 targetView.addView(lyricLayout)
             }
         }
-        registerLyricListener(context, BuildConfig.API_VERSION, object : LyricListener {
-            override fun onReceived(lyricData: LyricData) {
-                if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return
-                if (lyricData.type == DataType.UPDATE) {
-                    val lyric = lyricData.lyric.regexReplace(config.regexReplace, "")
-                    if (lyric.isNotEmpty()) {
-                        lastLyric = lyric
-                        if (isHiding) return
-                        changeIcon(lyricData)
-                        changeLyric(lyric, lyricData.delay)
-                    }
-                } else if (lyricData.type == DataType.STOP) {
-                    if (isHiding) isHiding = false
-                    hideLyric()
+        registerLyricListener(context, BuildConfig.API_VERSION, object : LyricListener() {
+            override fun onStop(lyricData: LyricData) {
+                if (!(isReally)) return
+                if (isHiding) isHiding = false
+                hideLyric()
+            }
+
+            override fun onUpdate(lyricData: LyricData) {
+                if (!(isReally)) return
+                val lyric = lyricData.lyric.regexReplace(config.regexReplace, "")
+                if (lyric.isNotEmpty()) {
+                    lastLyric = lyric
+                    if (isHiding) return
+                    changeIcon(lyricData)
+                    changeLyric(lyric, lyricData.delay)
                 }
-                lyricData.log()
             }
         })
-
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
         } else {
@@ -573,7 +571,7 @@ class SystemUILyric : BaseHook() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("type")) {
                 "normal" -> {
-                    if (!(this@SystemUILyric::clockView.isInitialized && this@SystemUILyric::targetView.isInitialized)) return
+                    if (!(isReally)) return
                     changeConfig()
                 }
 
