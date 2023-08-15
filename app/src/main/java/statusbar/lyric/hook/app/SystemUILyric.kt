@@ -292,12 +292,13 @@ class SystemUILyric : BaseHook() {
                                 if (!isMove || (abs(point.y - motionEvent.rawY.toInt()) < 50 && abs(point.y - motionEvent.rawY.toInt()) < 50)) {
                                     if (config.clickStatusBarToHideLyric) {
                                         val isClick = motionEvent.eventTime - motionEvent.downTime < 200
-                                        if (isClick) {
+                                        if (isClick && isPlaying) {
                                             moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
+                                            isHiding.log()
                                             if (isHiding) {
                                                 isHiding = false
-                                                changeLyric(lastLyric, 0)
                                                 hookParam.result = true
+                                                changeLyric(lastLyric, 0)
                                             } else {
                                                 val x = motionEvent.x.toInt()
                                                 val y = motionEvent.y.toInt()
@@ -306,9 +307,9 @@ class SystemUILyric : BaseHook() {
                                                 val right = lyricLayout.right
                                                 val bottom = lyricLayout.bottom
                                                 if (x in left..right && y in top..bottom) {
-                                                    hideLyric()
                                                     isHiding = true
                                                     hookParam.result = true
+                                                    hideLyric()
                                                 }
                                             }
                                         }
@@ -437,7 +438,9 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun hideLyric() {
-        isPlaying = false
+        if (!isHiding && isPlaying) {
+            isPlaying = false
+        }
         "Hide Lyric".log()
         goMainThread {
             lyricLayout.hideView()
