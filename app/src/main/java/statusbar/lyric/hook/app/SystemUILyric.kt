@@ -220,9 +220,12 @@ class SystemUILyric : BaseHook() {
             0 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
                     it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
-                        after {
+                        after { hookParam ->
                             if (!isPlaying) return@after
-                            lastColor = clockView.currentTextColor
+                            hookParam.thisObject.objectHelper {
+                                val mIconTint = getObjectOrNullAs<Int>("mIconTint") ?: Color.BLACK
+                                lastColor = mIconTint
+                            }
                         }
                     }
                 }
@@ -231,9 +234,10 @@ class SystemUILyric : BaseHook() {
             1 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
                     it.methodFinder().filterByName("onDarkChanged").filterByParamCount(3).first().createHook {
-                        after {
+                        after { hookParam ->
                             if (!isPlaying) return@after
-                            lastColor = clockView.currentTextColor
+                            val isDark = (hookParam.args[1] as Float) == 1f
+                            lastColor = if (isDark) Color.BLACK else Color.WHITE
                         }
                     }
                 }
