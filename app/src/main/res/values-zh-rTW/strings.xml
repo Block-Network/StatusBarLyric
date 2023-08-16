@@ -68,8 +68,6 @@
     <string name="lyric_start_margins_tips">範圍：–500–500</string>
     <string name="lyric_bottom_margins">歌詞底邊距</string>
     <string name="lyric_bottom_margins_tips">範圍：–100–100</string>
-    <string name="regex_replace">* 正則表達式屏蔽</string>
-    <string name="regex_replace_tips">使用正則表達式匹配來屏蔽歌詞</string>
     <string name="icon_switch">圖示開關</string>
     <string name="icon_size">圖示大小</string>
     <string name="icon_size_tips">範圍：狀態列高度的0％–100％，0代表以下時鐘</string>

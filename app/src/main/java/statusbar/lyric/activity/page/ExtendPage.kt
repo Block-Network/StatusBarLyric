@@ -38,21 +38,6 @@ class ExtendPage : BasePage() {
         })
         TextSw(textId = R.string.dynamic_lyric_speed, key = "dynamicLyricSpeed", onClickListener = { changeConfig() })
         TextSw(textId = R.string.click_status_bar_to_hide_lyric, key = "clickStatusBarToHideLyric")
-        TextSA(textId = R.string.regex_replace, onClickListener = {
-            MIUIDialog(activity) {
-                setTitle(getString(R.string.regex_replace))
-                setMessage(getString(R.string.regex_replace_tips))
-                setEditText(ActivityOwnSP.config.regexReplace, "", config = {
-                    it.inputType = InputType.TYPE_CLASS_TEXT
-                    it.filters = arrayOf(InputFilter.LengthFilter(200))
-                })
-                setRButton(getString(R.string.ok)) {
-                    ActivityOwnSP.config.regexReplace = getEditText()
-                }
-                setLButton(getString(R.string.cancel))
-                finally { dismiss() }
-            }.show()
-        })
         Line()
         val lyricBlurredEdgesRadiusBinding = GetDataBinding({ ActivityOwnSP.config.lyricBlurredEdges }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE

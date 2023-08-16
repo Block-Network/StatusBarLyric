@@ -70,7 +70,6 @@ import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
-import statusbar.lyric.tools.Tools.regexReplace
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.Tools.togglePrompts
 import statusbar.lyric.tools.ViewTools
@@ -363,7 +362,7 @@ class SystemUILyric : BaseHook() {
 
             override fun onUpdate(lyricData: LyricData) {
                 if (!(isReally)) return
-                val lyric = lyricData.lyric.regexReplace(config.regexReplace, "")
+                val lyric = lyricData.lyric
                 if (lyric.isNotEmpty()) {
                     lastLyric = lyric
                     if (isHiding) return

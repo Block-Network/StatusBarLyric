@@ -68,8 +68,6 @@
     <string name="lyric_start_margins_tips">范围：–500–500</string>
     <string name="lyric_bottom_margins">歌词底边距</string>
     <string name="lyric_bottom_margins_tips">范围：–100–100</string>
-    <string name="regex_replace">* 正则表达式屏蔽</string>
-    <string name="regex_replace_tips">使用正则表达式匹配来屏蔽歌词</string>
     <string name="icon_switch">图标开关</string>
     <string name="icon_size">图标大小</string>
     <string name="icon_size_tips">范围：状态栏高度的0％–100％，0代表以下时钟</string>
