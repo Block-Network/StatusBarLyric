@@ -294,6 +294,20 @@ class Config {
         set(value) {
             config.put("animation", value)
         }
+    var interpolator: String
+        get() {
+            return config.opt("interpolator", "Linear")
+        }
+        set(value) {
+            config.put("interpolator", value)
+        }
+    var animationDuration: Int
+        get() {
+            return config.opt("animationDuration", 500)
+        }
+        set(value) {
+            config.put("animationDuration", value)
+        }
     var viewIndex: Int
         get() {
             return config.opt("viewIndex", 0)

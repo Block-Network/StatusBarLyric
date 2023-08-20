@@ -116,6 +116,15 @@
     <string name="lyrics_animation_scale_x">X轴翻页</string>
     <string name="lyrics_animation_scale_y">Y轴翻页</string>
     <string name="lyrics_animation_random">随机效果</string>
+    <string name="lyrics_animation_interpolator">歌词动画插值器</string>
+    <string name="lyrics_interpolator_linear">线性效果</string>
+    <string name="lyrics_interpolator_accelerate">加速效果</string>
+    <string name="lyrics_interpolator_decelerate">减速效果</string>
+    <string name="lyrics_interpolator_accelerate_decelerate">加速+减速</string>
+    <string name="lyrics_interpolator_overshoot">越界效果</string>
+    <string name="lyrics_interpolator_bounce">弹跳效果</string>
+    <string name="lyrics_animation_duration">歌词动画时间</string>
+    <string name="lyric_animation_duration_tips">范围： 300~1000</string>
     <string name="lyric_add_location">* 歌词添加位置</string>
     <string name="add_location_start">靠左</string>
     <string name="add_location_end">靠右</string>

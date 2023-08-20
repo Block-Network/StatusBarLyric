@@ -354,5 +354,46 @@ class LyricPage : BasePage() {
                 }
             }
         })
+        val interpolatorMaps: LinkedHashMap<String, String> = LinkedHashMap<String, String>().apply {
+            this["Linear"] = getString(R.string.lyrics_interpolator_linear)
+            this["Accelerate"] = getString(R.string.lyrics_interpolator_accelerate)
+            this["Decelerate"] = getString(R.string.lyrics_interpolator_decelerate)
+            this["Accelerate&Decelerate"] = getString(R.string.lyrics_interpolator_accelerate_decelerate)
+            this["Overshoot"] = getString(R.string.lyrics_interpolator_overshoot)
+            this["Bounce"] = getString(R.string.lyrics_interpolator_bounce)
+        }
+        TextSSp(textId = R.string.lyrics_animation_interpolator, currentValue = interpolatorMaps[config.interpolator].toString(), data = {
+            interpolatorMaps.forEach {
+                add(it.value) {
+                    config.interpolator = (it.key)
+                    changeConfig()
+                }
+            }
+        })
+        TextSA(textId = R.string.lyrics_animation_duration, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.lyrics_animation_duration))
+                setMessage(getString(R.string.lyric_animation_duration_tips))
+                setEditText(config.animationDuration.toString(), "500", config = {
+                    it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
+                    it.filters = arrayOf(InputFilter.LengthFilter(4))
+                })
+                setRButton(getString(R.string.ok)) {
+                    try {
+                        val value = getEditText().toInt()
+                        if (value in 300..1000) {
+                            config.animationDuration = value
+                            changeConfig()
+                        } else {
+                            throw Exception()
+                        }
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
+                    }
+                }
+                setLButton(getString(R.string.cancel))
+                finally { dismiss() }
+            }.show()
+        })
     }
 }
