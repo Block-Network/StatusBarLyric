@@ -30,20 +30,21 @@ object ViewTools {
 
     fun switchViewInAnima(str: String?, interpolator: String?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
-        val translateAnimation: Animation = when (str) {
+        val translateAnimation: Animation? = when (str) {
             "Top" -> TranslateAnimation(0F, 0F, 100F, 0F)
             "Bottom" -> TranslateAnimation(0F, 0F, -100F, 0F)
             "Start" -> TranslateAnimation(100F, 0F, 0F, 0F)
             "End" -> TranslateAnimation(-100F, 0F, 0F, 0F)
+            "Fade" -> null
             "ScaleXY" -> ScaleAnimation(0f, 1f, 0f, 1f)
             "ScaleX" -> ScaleAnimation(0f, 1f, 1f, 1f)
             "ScaleY" -> ScaleAnimation(1f, 1f, 0f, 1f)
             else -> return null
-        }.apply {
+        }?.apply {
             duration = t
         }
         return getAlphaAnimation(true, t).apply {
-            addAnimation(translateAnimation)
+            translateAnimation?.let { addAnimation(it) }
             switchInterpolator(interpolator)
         }
     }
@@ -51,20 +52,21 @@ object ViewTools {
 
     fun switchViewOutAnima(str: String?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
-        val translateAnimation: Animation = when (str) {
+        val translateAnimation: Animation? = when (str) {
             "Top" -> TranslateAnimation(0F, 0F, 0F, -100F)
             "Bottom" -> TranslateAnimation(0F, 0F, 0F, 100F)
             "Start" -> TranslateAnimation(0F, -100F, 0F, 0F)
             "End" -> TranslateAnimation(0F, 100F, 0F, 0F)
+            "Fade" -> null
             "ScaleXY" -> ScaleAnimation(1f, 0f, 1f, 0f)
             "ScaleX" -> ScaleAnimation(1f, 0f, 1f, 1f)
             "ScaleY" -> ScaleAnimation(1f, 1f, 1f, 0f)
             else -> return null
-        }.apply {
+        }?.apply {
             duration = t
         }
         return getAlphaAnimation(false, t).apply {
-            addAnimation(translateAnimation)
+            translateAnimation?.let { addAnimation(it) }
         }
     }
 

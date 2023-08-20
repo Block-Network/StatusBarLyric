@@ -341,6 +341,7 @@ class LyricPage : BasePage() {
             this["Bottom"] = getString(R.string.lyrics_animation_bottom)
             this["Start"] = getString(R.string.lyrics_animation_start)
             this["End"] = getString(R.string.lyrics_animation_end)
+            this["Fade"] = getString(R.string.lyrics_animation_fade)
             this["ScaleX"] = getString(R.string.lyrics_animation_scale_x)
             this["ScaleY"] = getString(R.string.lyrics_animation_scale_y)
             this["ScaleXY"] = getString(R.string.lyrics_animation_scale_x_y)

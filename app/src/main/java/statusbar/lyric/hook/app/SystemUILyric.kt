@@ -405,7 +405,7 @@ class SystemUILyric : BaseHook() {
                 val interpolator = config.interpolator
                 val duration = config.animationDuration
                 if (config.animation == "Random") {
-                    val effect = arrayListOf("Top", "Bottom", "Start", "End", "ScaleXY", "ScaleX", "ScaleY").random()
+                    val effect = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY").random()
                     inAnimation = ViewTools.switchViewInAnima(effect, interpolator, duration)
                     outAnimation = ViewTools.switchViewOutAnima(effect, duration)
                 }

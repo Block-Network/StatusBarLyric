@@ -113,6 +113,7 @@
     <string name="lyrics_animation_bottom">Bottom</string>
     <string name="lyrics_animation_start">Start</string>
     <string name="lyrics_animation_end">End</string>
+    <string name="lyrics_animation_fade">Fade</string>
     <string name="lyrics_animation_scale_x_y">ScaleXY</string>
     <string name="lyrics_animation_scale_x">ScaleX</string>
     <string name="lyrics_animation_scale_y">ScaleY</string>

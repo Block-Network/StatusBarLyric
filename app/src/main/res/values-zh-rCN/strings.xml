@@ -112,6 +112,7 @@
     <string name="lyrics_animation_bottom">下划效果</string>
     <string name="lyrics_animation_start">左划效果</string>
     <string name="lyrics_animation_end">右划效果</string>
+    <string name="lyrics_animation_fade">淡出淡入</string>
     <string name="lyrics_animation_scale_x_y">吸收效果</string>
     <string name="lyrics_animation_scale_x">X轴翻页</string>
     <string name="lyrics_animation_scale_y">Y轴翻页</string>
