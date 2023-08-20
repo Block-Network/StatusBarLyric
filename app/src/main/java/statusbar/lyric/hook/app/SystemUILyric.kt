@@ -402,10 +402,12 @@ class SystemUILyric : BaseHook() {
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.hideView()
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
             lyricView.apply {
+                val interpolator = config.interpolator
+                val duration = config.animationDuration
                 if (config.animation == "Random") {
-                    val effect = arrayListOf("Top", "Bottom", "Start", "End", "ScaleXY", "ScaleX", "ScaleY").random()
-                    inAnimation = ViewTools.switchViewInAnima(effect)
-                    outAnimation = ViewTools.switchViewOutAnima(effect)
+                    val effect = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY").random()
+                    inAnimation = ViewTools.switchViewInAnima(effect, interpolator, duration)
+                    outAnimation = ViewTools.switchViewOutAnima(effect, duration)
                 }
                 width = getLyricWidth(paint, lyric)
                 if (config.dynamicLyricSpeed && delay == 0) {
@@ -479,9 +481,11 @@ class SystemUILyric : BaseHook() {
                     setBackgroundColor(Color.parseColor(config.lyricBackgroundColor))
                 }
                 val animation = config.animation
+                val interpolator = config.interpolator
+                val duration = config.animationDuration
                 if (animation != "Random") {
-                    inAnimation = ViewTools.switchViewInAnima(animation)
-                    outAnimation = ViewTools.switchViewOutAnima(animation)
+                    inAnimation = ViewTools.switchViewInAnima(animation, interpolator, duration)
+                    outAnimation = ViewTools.switchViewOutAnima(animation, duration)
                 }
                 runCatching {
                     val file = File("${context.filesDir.path}/font")
