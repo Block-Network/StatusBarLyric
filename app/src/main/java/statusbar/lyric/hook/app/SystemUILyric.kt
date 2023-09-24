@@ -393,9 +393,12 @@ class SystemUILyric : BaseHook() {
 
     private fun changeLyric(lyric: String, delay: Int) {
         if (isHiding || isScreenLock) return
-        isPlaying = true
         "lyric:$lyric".log()
         goMainThread {
+            if (!isPlaying) {
+                lyricView.setTextColor(clockView.currentTextColor)
+                isPlaying = true
+            }
             lyricLayout.showView()
             if (config.hideTime) clockView.hideView()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
