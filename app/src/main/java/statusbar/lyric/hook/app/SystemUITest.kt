@@ -106,7 +106,7 @@ class SystemUITest : BaseHook() {
                                 } else {
                                     var index = 0
                                     dataHashMap.values.forEach { data ->
-                                        if (data.textViewClassName == className && data.textViewID == view.id && data.parentClassName == parentView::class.java.name && data.parentID == parentView.id) {
+                                        if (data.textViewClassName == className && data.textViewId == view.id && data.parentViewClassName == parentView::class.java.name && data.parentViewId == parentView.id) {
                                             index += 1
                                         }
                                     }
@@ -181,13 +181,13 @@ class SystemUITest : BaseHook() {
 
                 "ShowView" -> {
                     val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        intent.getSerializableExtra("Data", Data::class.java)
+                        intent.getParcelableExtra("Data", Data::class.java)
                     } else {
-                        @Suppress("DEPRECATION") intent.getSerializableExtra("Data") as Data
+                        @Suppress("DEPRECATION") intent.getParcelableExtra("Data")
                     }!!
                     goMainThread {
                         dataHashMap.forEach { (textview, da) ->
-                            if (da.textViewClassName == data.textViewClassName && da.textViewID == data.textViewID && da.parentClassName == data.parentClassName && da.parentID == data.parentID && da.index == data.index) {
+                            if (da.textViewClassName == data.textViewClassName && da.textViewId == data.textViewId && da.parentViewClassName == data.parentViewClassName && da.parentViewId == data.parentViewId && da.index == data.index) {
                                 if (this@SystemUITest::lastView.isInitialized) {
                                     (lastView.parent as LinearLayout).removeView(testView)
                                     lastView.showView()

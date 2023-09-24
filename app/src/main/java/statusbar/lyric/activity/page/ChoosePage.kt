@@ -14,15 +14,15 @@ class ChoosePage : BasePage() {
         TitleText(textId = R.string.choose_page_tips)
         Line()
         dataList.forEach { data ->
-            TextSA(text = "${data.textViewClassName} ${data.textViewID}", tips = "${data.parentClassName} ${data.parentID}", onClickListener = {
+            TextSA(text = "${data.textViewClassName} ${data.textViewId}", tips = "${data.parentViewClassName} ${data.parentViewId}", onClickListener = {
                 activity.showView(data)
                 MIUIDialog(activity) {
                     setTitle(activity.getString(R.string.select_hook))
                     setRButton(activity.getString(R.string.ok)) {
                         config.textViewClassName = data.textViewClassName
-                        config.textViewID = data.textViewID
-                        config.parentClassName = data.parentClassName
-                        config.parentID = data.parentID
+                        config.textViewId = data.textViewId
+                        config.parentViewClassName = data.parentViewClassName
+                        config.parentViewId = data.parentViewId
                         config.index = data.index
                     }
                     setLButton(activity.getString(R.string.cancel))

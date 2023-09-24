@@ -87,26 +87,26 @@ class Config {
         set(value) {
             config.put("textViewClassName", value)
         }
-    var textViewID: Int
+    var textViewId: Int
         get() {
-            return config.opt("textViewID", 0)
+            return config.opt("textViewId", 0)
         }
         set(value) {
-            config.put("textViewID", value)
+            config.put("textViewId", value)
         }
-    var parentClassName: String
+    var parentViewClassName: String
         get() {
-            return config.opt("parentClassName", "")
+            return config.opt("parentViewClassName", "")
         }
         set(value) {
-            config.put("parentClassName", value)
+            config.put("parentViewClassName", value)
         }
-    var parentID: Int
+    var parentViewId: Int
         get() {
-            return config.opt("parentID", 0)
+            return config.opt("parentViewId", 0)
         }
         set(value) {
-            config.put("parentID", value)
+            config.put("parentViewId", value)
         }
     var index: Int
         get() {

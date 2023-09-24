@@ -1,9 +1,57 @@
 package statusbar.lyric.data
 
-import java.io.Serializable
+import android.os.Parcel
+import android.os.Parcelable
 
-data class Data(var textViewClassName: String, var textViewID: Int, var parentClassName: String, var parentID: Int, var isRepeat: Boolean, var index: Int) : Serializable {
-    companion object {
-        private const val serialVersionUID = 2562L
+
+class Data private constructor(parcel: Parcel) : Parcelable {
+    var textViewClassName: String = ""
+    var textViewId: Int = 0
+    var parentViewClassName: String = ""
+    var parentViewId: Int = 0
+    var isRepeat: Boolean = false
+    var index: Int = 0
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    constructor() : this(Parcel.obtain())
+    constructor(textViewClassName: String, textViewId: Int, parentViewClassName: String, parentViewId: Int, isRepeat: Boolean, index: Int) : this() {
+        this.textViewClassName = textViewClassName
+        this.textViewId = textViewId
+        this.parentViewClassName = parentViewClassName
+        this.parentViewId = parentViewId
+        this.isRepeat = isRepeat
+        this.index = index
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.apply {
+            writeString(textViewClassName)
+            writeInt(textViewId)
+            writeString(parentViewClassName)
+            writeInt(parentViewId)
+            writeInt(if (isRepeat) 1 else 0)
+            writeInt(index)
+        }
+    }
+
+    init {
+        textViewClassName = parcel.readString().toString()
+        textViewId = parcel.readInt()
+        parentViewClassName = parcel.readString().toString()
+        parentViewId = parcel.readInt()
+        isRepeat = parcel.readInt() == 1
+        index = parcel.readInt()
+    }
+
+    companion object CREATOR : Parcelable.Creator<Data> {
+        override fun createFromParcel(parcel: Parcel): Data {
+            return Data(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Data?> {
+            return arrayOfNulls(size)
+        }
     }
 }

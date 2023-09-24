@@ -82,21 +82,21 @@ object Tools {
                 return true
             }
         } else {
-            val className = XposedOwnSP.config.textViewClassName
-            val textViewID = XposedOwnSP.config.textViewID
-            val parentClass = XposedOwnSP.config.parentClassName
-            val parentID = XposedOwnSP.config.parentID
-            if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
+            val textViewClassName = XposedOwnSP.config.textViewClassName
+            val textViewId = XposedOwnSP.config.textViewId
+            val parentViewClassName = XposedOwnSP.config.parentViewClassName
+            val parentViewId = XposedOwnSP.config.parentViewId
+            if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0|| parentViewId == 0) {
                 EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
                 return false
             }
             if (this is TextView) {
-                if (this::class.java.name == className) {
-                    if (this.id == textViewID) {
+                if (this::class.java.name == textViewClassName) {
+                    if (this.id == textViewId) {
                         if (this.parent is LinearLayout) {
                             val parentView = (this.parent as LinearLayout)
-                            if (parentView::class.java.name == parentClass) {
-                                if (parentID == parentView.id) {
+                            if (parentView::class.java.name == parentViewClassName) {
+                                if (parentViewId == parentView.id) {
                                     if (index == XposedOwnSP.config.index) {
                                         target = this
                                         return true
@@ -114,7 +114,7 @@ object Tools {
     }
 
 
-    fun String.regexReplace(pattern: String, newString: String): String {
+    private fun String.regexReplace(pattern: String, newString: String): String {
         val p = Pattern.compile("(?i)$pattern")
         val m = p.matcher(this)
         return m.replaceAll(newString)
