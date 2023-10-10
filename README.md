@@ -4,6 +4,7 @@
 
 [![Icon](/icon.png)]()  
 ![Release Download](https://img.shields.io/github/downloads/577fkj/StatusBarLyric/total?style=flat-square)
+![Release Download](https://img.shields.io/github/downloads/Xposed-Modules-Repo/statusbar.lyric/total?style=flat-square)
 [![Release Version](https://img.shields.io/github/v/release/577fkj/StatusBarLyric?style=flat-square)](https://github.com/577fkj/StatusBarLyric/releases/latest)
 [![GitHub license](https://img.shields.io/github/license/577fkj/StatusBarLyric?style=flat-square)](LICENSE)
 [![GitHub Star](https://img.shields.io/github/stars/577fkj/StatusBarLyric?style=flat-square)](https://github.com/577fkj/StatusBarLyric/stargazers)
