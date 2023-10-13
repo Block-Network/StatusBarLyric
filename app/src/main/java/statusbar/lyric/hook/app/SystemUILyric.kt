@@ -396,7 +396,7 @@ class SystemUILyric : BaseHook() {
         "lyric:$lyric".log()
         goMainThread {
             if (!isPlaying) {
-                lyricView.setTextColor(clockView.currentTextColor)
+                if (config.lyricColor.isEmpty()) lastColor = clockView.currentTextColor
                 isPlaying = true
             }
             lyricLayout.showView()
