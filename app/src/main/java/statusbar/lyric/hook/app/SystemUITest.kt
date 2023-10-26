@@ -58,7 +58,7 @@ class SystemUITest : BaseHook() {
     private var lastTime: Int = 0
     lateinit var context: Context
     lateinit var lastView: TextView
-    val testView by lazy {
+    val testTextView by lazy {
         TextView(context).apply {
             text = moduleRes.getString(R.string.app_name)
             isSingleLine = true
@@ -102,7 +102,7 @@ class SystemUITest : BaseHook() {
                             view.filterView {
                                 val parentView = (view.parent as LinearLayout)
                                 val data = if (dataHashMap.size == 0) {
-                                    Data(className, view.id, parentView::class.java.name, parentView.id, false, 0)
+                                    Data(className, view.id, parentView::class.java.name, parentView.id, false, 0, view.textSize)
                                 } else {
                                     var index = 0
                                     dataHashMap.values.forEach { data ->
@@ -110,7 +110,7 @@ class SystemUITest : BaseHook() {
                                             index += 1
                                         }
                                     }
-                                    Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index)
+                                    Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index, view.textSize)
                                 }
                                 dataHashMap[view] = data
                                 moduleRes.getString(R.string.first_filter).format(data, dataHashMap.size).log()
@@ -127,6 +127,20 @@ class SystemUITest : BaseHook() {
         val nowTime = System.currentTimeMillis()
         timeFormat.forEach {
             if (it.format(nowTime).toRegex().containsMatchIn(this)) {
+                callback()
+                return
+            }
+        }
+        if (config.relaxConditions) {
+            if (this.contains("周")) {
+                callback()
+                return
+            }
+            if (this.contains("月")) {
+                callback()
+                return
+            }
+            if (this.contains("日")) {
                 callback()
                 return
             }
@@ -189,15 +203,15 @@ class SystemUITest : BaseHook() {
                         dataHashMap.forEach { (textview, da) ->
                             if (da.textViewClassName == data.textViewClassName && da.textViewId == data.textViewId && da.parentViewClassName == data.parentViewClassName && da.parentViewId == data.parentViewId && da.index == data.index) {
                                 if (this@SystemUITest::lastView.isInitialized) {
-                                    (lastView.parent as LinearLayout).removeView(testView)
+                                    (lastView.parent as LinearLayout).removeView(testTextView)
                                     lastView.showView()
                                 }
                                 textview.hideView()
                                 val parentLinearLayout = textview.parent as LinearLayout
                                 if (config.viewIndex == 0) {
-                                    parentLinearLayout.addView(testView, 0)
+                                    parentLinearLayout.addView(testTextView, 0)
                                 } else {
-                                    parentLinearLayout.addView(testView)
+                                    parentLinearLayout.addView(testTextView)
                                 }
                                 lastView = textview
                                 return@forEach

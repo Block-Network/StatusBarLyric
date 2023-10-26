@@ -11,18 +11,20 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     var parentViewId: Int = 0
     var isRepeat: Boolean = false
     var index: Int = 0
+    var textSize: Float = 0f
     override fun describeContents(): Int {
         return 0
     }
 
     constructor() : this(Parcel.obtain())
-    constructor(textViewClassName: String, textViewId: Int, parentViewClassName: String, parentViewId: Int, isRepeat: Boolean, index: Int) : this() {
+    constructor(textViewClassName: String, textViewId: Int, parentViewClassName: String, parentViewId: Int, isRepeat: Boolean, index: Int, size: Float) : this() {
         this.textViewClassName = textViewClassName
         this.textViewId = textViewId
         this.parentViewClassName = parentViewClassName
         this.parentViewId = parentViewId
         this.isRepeat = isRepeat
         this.index = index
+        this.textSize = size
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -33,6 +35,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
             writeInt(parentViewId)
             writeInt(if (isRepeat) 1 else 0)
             writeInt(index)
+            writeFloat(textSize)
         }
     }
 
@@ -43,6 +46,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         parentViewId = parcel.readInt()
         isRepeat = parcel.readInt() == 1
         index = parcel.readInt()
+        textSize = parcel.readFloat()
     }
 
     companion object CREATOR : Parcelable.Creator<Data> {

@@ -115,7 +115,13 @@ class Config {
         set(value) {
             config.put("index", value)
         }
-
+    var textSize: Float
+        get() {
+            return config.opt("textSize", 0f)
+        }
+        set(value) {
+            config.put("textSize", value)
+        }
 
     var lyricSize: Int
         get() {
@@ -381,6 +387,15 @@ class Config {
         set(value) {
             config.put("slideStatusBarCutSongsYRadius", value)
         }
+
+    var mMiuiPadOptimize: Boolean
+        get() {
+            return config.opt("mMiuiPadOptimize", false)
+        }
+        set(value) {
+            config.put("mMiuiPadOptimize", value)
+        }
+
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon

@@ -14,7 +14,7 @@ class ChoosePage : BasePage() {
         TitleText(textId = R.string.choose_page_tips)
         Line()
         dataList.forEach { data ->
-            TextSA(text = "${data.textViewClassName} ${data.textViewId}", tips = "${data.parentViewClassName} ${data.parentViewId}", onClickListener = {
+            TextSA(text = "${data.textViewClassName} ${data.textViewId}", tips = "${data.parentViewClassName} ${data.parentViewId} textSize:${data.textSize}", onClickListener = {
                 activity.showView(data)
                 MIUIDialog(activity) {
                     setTitle(activity.getString(R.string.select_hook))
@@ -24,6 +24,7 @@ class ChoosePage : BasePage() {
                         config.parentViewClassName = data.parentViewClassName
                         config.parentViewId = data.parentViewId
                         config.index = data.index
+                        config.textSize = data.textSize
                     }
                     setLButton(activity.getString(R.string.cancel))
                     finally { dismiss() }

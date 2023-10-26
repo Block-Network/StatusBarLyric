@@ -63,6 +63,7 @@ import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools.log
+import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isMIUI
@@ -140,6 +141,7 @@ class SystemUILyric : BaseHook() {
     private lateinit var targetView: ViewGroup
     private lateinit var mNotificationIconArea: View
     private lateinit var mCarrierLabel: View
+    private lateinit var mPadClockView: View
     private val lyricView: LyricSwitchView by lazy {
         LyricSwitchView(context).apply {
             setTypeface(clockView.typeface)
@@ -205,7 +207,7 @@ class SystemUILyric : BaseHook() {
                     if (isPlaying) {
                         if (hookParam.args[0] == View.VISIBLE) {
                             val view = hookParam.thisObject as View
-                            if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMIUINetworkSpeedView.isInitialized && mMIUINetworkSpeedView == view)) {
+                            if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMIUINetworkSpeedView.isInitialized && mMIUINetworkSpeedView == view) || (this@SystemUILyric::mPadClockView.isInitialized && mPadClockView == view)) {
                                 hookParam.args[0] = View.GONE
                             }
                         }
@@ -242,7 +244,6 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.hide_notification_icon).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
@@ -404,6 +405,7 @@ class SystemUILyric : BaseHook() {
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.hideView()
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
+            if (this::mPadClockView.isInitialized) mPadClockView.hideView()
             lyricView.apply {
                 val interpolator = config.interpolator
                 val duration = config.animationDuration
@@ -456,6 +458,7 @@ class SystemUILyric : BaseHook() {
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.showView()
+            if (this::mPadClockView.isInitialized) mPadClockView.showView()
         }
     }
 
@@ -551,15 +554,33 @@ class SystemUILyric : BaseHook() {
     inner class SystemUISpecial {
         init {
             if (togglePrompts) {
-                loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull {
-                    it.methodFinder().filterByName("onConfigurationChanged").first().createHook {
+                loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
+                    clazz.methodFinder().filterByName("onConfigurationChanged").first().createHook {
                         after { hookParam ->
                             val newConfig = hookParam.args[0] as Configuration
                             themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         }
                     }
+                    if (isMIUI && config.mMiuiPadOptimize) {
+                        clazz.methodFinder().filterByName("onCreate").first().createHook {
+                            after {
+                                if (isPad) {
+                                    loadClassOrNull("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment").isNotNull {
+                                        it.methodFinder().filterByName("initMiuiViewsOnViewCreated").first().createHook {
+                                            after { hookParam ->
+                                                hookParam.thisObject.objectHelper {
+                                                    mPadClockView = this.getObjectOrNullAs<View>("mPadClockView")!!
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
+
             if (isMIUI && config.mMIUIHideNetworkSpeed) {
                 moduleRes.getString(R.string.miui_hide_network_speed).log()
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
@@ -604,4 +625,6 @@ class SystemUILyric : BaseHook() {
         }
 
     }
+
+    val isPad get() = Tools.getSystemProperties(context, "ro.build.characteristics") == "tablet"
 }

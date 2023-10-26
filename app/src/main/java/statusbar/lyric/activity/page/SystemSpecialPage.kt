@@ -10,6 +10,7 @@ class SystemSpecialPage : BasePage() {
     override fun onCreate() {
         if (isMIUI) {
             TextSw(textId = R.string.miui_hide_network_speed, key = "mMIUIHideNetworkSpeed")
+            TextSw(textId = R.string.miui_pad_optimize, key = "mMiuiPadOptimize")
         }
         Line()
         TitleText("Wait for More...")
