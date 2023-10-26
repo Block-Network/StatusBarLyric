@@ -68,6 +68,29 @@ object Tools {
             false
         }
     }
+
+    @SuppressLint("PrivateApi")
+    fun getSystemProperties(context: Context, key: String): String {
+        var ret = ""
+        try {
+            val cl = context.classLoader
+            val systemProperties = cl.loadClass("android.os.SystemProperties")
+            //参数类型
+            val paramTypes: Array<Class<*>?> = arrayOfNulls(1)
+            paramTypes[0] = String::class.java
+            val get = systemProperties.getMethod("get", *paramTypes)
+            //参数
+            val params = arrayOfNulls<Any>(1)
+            params[0] = key
+            ret = get.invoke(systemProperties, *params) as String
+        } catch (iAE: IllegalArgumentException) {
+            throw iAE
+        } catch (e: Exception) {
+            ret = ""
+        }
+        return ret
+    }
+
     fun <T> observableChange(initialValue: T, onChange: (oldValue: T, newValue: T) -> Unit): ReadWriteProperty<Any?, T> {
         return Delegates.observable(initialValue) { _, oldVal, newVal ->
             if (oldVal != newVal) {
@@ -86,7 +109,7 @@ object Tools {
             val textViewId = XposedOwnSP.config.textViewId
             val parentViewClassName = XposedOwnSP.config.parentViewClassName
             val parentViewId = XposedOwnSP.config.parentViewId
-            if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0|| parentViewId == 0) {
+            if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0) {
                 EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
                 return false
             }
