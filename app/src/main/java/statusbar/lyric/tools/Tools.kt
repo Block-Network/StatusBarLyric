@@ -109,7 +109,8 @@ object Tools {
             val textViewId = XposedOwnSP.config.textViewId
             val parentViewClassName = XposedOwnSP.config.parentViewClassName
             val parentViewId = XposedOwnSP.config.parentViewId
-            if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0) {
+            val textSize = XposedOwnSP.config.textSize
+            if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0|| textSize == 0f) {
                 EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
                 return false
             }

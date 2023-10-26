@@ -201,13 +201,14 @@ class SystemUITest : BaseHook() {
                     }!!
                     goMainThread {
                         dataHashMap.forEach { (textview, da) ->
-                            if (da.textViewClassName == data.textViewClassName && da.textViewId == data.textViewId && da.parentViewClassName == data.parentViewClassName && da.parentViewId == data.parentViewId && da.index == data.index) {
+                            if (da.textViewClassName == data.textViewClassName && da.textViewId == data.textViewId && da.parentViewClassName == data.parentViewClassName && da.parentViewId == data.parentViewId && da.textSize == data.textSize && da.index == data.index) {
                                 if (this@SystemUITest::lastView.isInitialized) {
                                     (lastView.parent as LinearLayout).removeView(testTextView)
                                     lastView.showView()
                                 }
                                 textview.hideView()
                                 val parentLinearLayout = textview.parent as LinearLayout
+                                testTextView.textSize = da.textSize
                                 if (config.viewIndex == 0) {
                                     parentLinearLayout.addView(testTextView, 0)
                                 } else {
