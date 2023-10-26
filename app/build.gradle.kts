@@ -7,8 +7,7 @@ plugins {
 }
 
 val localProperties = Properties()
-if (rootProject.file("local.properties").canRead())
-    localProperties.load(rootProject.file("local.properties").inputStream())
+if (rootProject.file("local.properties").canRead()) localProperties.load(rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "statusbar.lyric"
@@ -53,20 +52,13 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
-    packagingOptions {
+    packaging {
         resources {
-            excludes += "/META-INF/**"
-            excludes += "/kotlin/**"
-            excludes += "/*.txt"
-            excludes += "/*.bin"
-        }
-        dex {
-            useLegacyPackaging = true
+            excludes += "**"
         }
     }
     buildFeatures {
         viewBinding = true
-        buildConfig = true
     }
     applicationVariants.all {
         outputs.all {
@@ -75,6 +67,11 @@ android {
     }
 }
 
+kotlin {
+    sourceSets.all {
+        languageSettings { languageVersion = "2.0" }
+    }
+}
 
 dependencies {
     compileOnly("de.robv.android.xposed:api:82")
