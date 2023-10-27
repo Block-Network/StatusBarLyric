@@ -204,7 +204,7 @@ class SystemUILyric : BaseHook() {
             moduleRes.getString(R.string.limit_visibility_change).log()
             View::class.java.methodFinder().filterByName("setVisibility").first().createHook {
                 before { hookParam ->
-                    if (isPlaying) {
+                    if (isPlaying && !isHiding) {
                         if (hookParam.args[0] == View.VISIBLE) {
                             val view = hookParam.thisObject as View
                             if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMIUINetworkSpeedView.isInitialized && mMIUINetworkSpeedView == view) || (this@SystemUILyric::mPadClockView.isInitialized && mPadClockView == view)) {
@@ -293,8 +293,8 @@ class SystemUILyric : BaseHook() {
                             }
 
                             MotionEvent.ACTION_UP -> {
-                                if (!isMove || (abs(point.y - motionEvent.rawY.toInt()) < 50 && abs(point.y - motionEvent.rawY.toInt()) < 50)) {
-                                    if (config.clickStatusBarToHideLyric) {
+                                if (!isMove || (abs(point.y - motionEvent.rawY.toInt()) < 50 && abs(point.x - motionEvent.rawX.toInt()) < 50)) {
+                                   if (config.clickStatusBarToHideLyric) {
                                         val isClick = motionEvent.eventTime - motionEvent.downTime < 200
                                         if (isClick && isPlaying) {
                                             moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
