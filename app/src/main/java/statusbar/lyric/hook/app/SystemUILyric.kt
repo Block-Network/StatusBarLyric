@@ -113,7 +113,6 @@ class SystemUILyric : BaseHook() {
     private var iconSwitch: Boolean = true
     private var isPlaying: Boolean = false
     private var isHiding: Boolean = false
-    private var isMove = false
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
         if (oldValue == 0) return@observableChange
         "onConfigurationChanged".log()
@@ -289,51 +288,69 @@ class SystemUILyric : BaseHook() {
                             }
 
                             MotionEvent.ACTION_MOVE -> {
-                                isMove = true
                             }
 
                             MotionEvent.ACTION_UP -> {
-                                if (!isMove || (abs(point.y - motionEvent.rawY.toInt()) < 50 && abs(point.x - motionEvent.rawX.toInt()) < 50)) {
-                                   if (config.clickStatusBarToHideLyric) {
-                                        val isClick = motionEvent.eventTime - motionEvent.downTime < 200
-                                        if (isClick && isPlaying) {
-                                            moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
-                                            isHiding.log()
-                                            if (isHiding) {
-                                                isHiding = false
-                                                hookParam.result = true
-                                                changeLyric(lastLyric, 0)
-                                            } else {
-                                                val x = motionEvent.x.toInt()
-                                                val y = motionEvent.y.toInt()
-                                                val left = lyricLayout.left
-                                                val top = lyricLayout.top
-                                                val right = lyricLayout.right
-                                                val bottom = lyricLayout.bottom
-                                                if (x in left..right && y in top..bottom) {
-                                                    isHiding = true
+                                val isMove = abs(point.y - motionEvent.rawY.toInt()) > 50 || abs(point.x - motionEvent.rawX.toInt()) > 50
+                                val isLongChick = motionEvent.eventTime - motionEvent.downTime > 500
+                                isMove.log()
+                                isLongChick.log()
+                                when (isMove) {
+                                    true -> {
+                                        if (config.slideStatusBarCutSongs && isPlaying) {
+                                            if (abs(point.y - motionEvent.rawY.toInt()) <= config.slideStatusBarCutSongsYRadius) {
+                                                val i = point.x - motionEvent.rawX.toInt()
+                                                if (abs(i) > config.slideStatusBarCutSongsXRadius) {
+                                                    moduleRes.getString(R.string.slide_status_bar_cut_songs).log()
+                                                    if (i > 0) {
+                                                        shell("input keyevent 87", false)
+                                                    } else {
+                                                        shell("input keyevent 88", false)
+                                                    }
                                                     hookParam.result = true
-                                                    hideLyric()
                                                 }
                                             }
                                         }
                                     }
-                                } else {
-                                    if (config.slideStatusBarCutSongs && isPlaying) {
-                                        if (abs(point.y - motionEvent.rawY.toInt()) <= config.slideStatusBarCutSongsYRadius) {
-                                            val i = point.x - motionEvent.rawX.toInt()
-                                            if (abs(i) > config.slideStatusBarCutSongsXRadius) {
-                                                moduleRes.getString(R.string.slide_status_bar_cut_songs).log()
-                                                if (i > 0) {
-                                                    shell("input keyevent 87", false)
-                                                } else {
-                                                    shell("input keyevent 88", false)
+
+                                    false -> {
+                                        when (isLongChick) {
+                                            true -> {
+                                                if (config.longClickStatusBarStop) {
+                                                    moduleRes.getString(R.string.long_click_status_bar_stop).log()
+                                                    shell("input keyevent 85", false)
+                                                    hookParam.result = true
                                                 }
-                                                hookParam.result = true
+                                            }
+
+                                            false -> {
+                                                if (config.clickStatusBarToHideLyric) {
+                                                    val isClick = motionEvent.eventTime - motionEvent.downTime < 200
+                                                    if (isClick && isPlaying) {
+                                                        moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
+                                                        isHiding.log()
+                                                        if (isHiding) {
+                                                            isHiding = false
+                                                            hookParam.result = true
+                                                            changeLyric(lastLyric, 0)
+                                                        } else {
+                                                            val x = motionEvent.x.toInt()
+                                                            val y = motionEvent.y.toInt()
+                                                            val left = lyricLayout.left
+                                                            val top = lyricLayout.top
+                                                            val right = lyricLayout.right
+                                                            val bottom = lyricLayout.bottom
+                                                            if (x in left..right && y in top..bottom) {
+                                                                isHiding = true
+                                                                hookParam.result = true
+                                                                hideLyric()
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
-                                    isMove = false
                                 }
                             }
                         }

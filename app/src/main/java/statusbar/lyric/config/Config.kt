@@ -228,6 +228,13 @@ class Config {
         set(value) {
             config.put("limitVisibilityChange", value)
         }
+    var longClickStatusBarStop: Boolean
+        get() {
+            return config.opt("longClickStatusBarStop", false)
+        }
+        set(value) {
+            config.put("longClickStatusBarStop", value)
+        }
     var lyricLetterSpacing: Int
         get() {
             return config.opt("lyricLetterSpacing", 0)

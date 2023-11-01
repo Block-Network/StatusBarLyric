@@ -102,7 +102,7 @@
     <string name="select_hook">是否選擇此Hook點</string>
     <string name="restart_app_effect">重啟應用程式生效</string>
     <string name="force_the_icon_to_be_displayed">強制顯示圖示</string>
-    <string name="a_a_a_tips">是否重複：%s；Index：%s</string>
+    <string name="a_a_a_tips">是否重複：%s；Index：%s；textSize：%s</string>
     <string name="broadcast_receive_timeout">廣播接收超時</string>
     <string name="broadcast_receive_timeout_tips">請先重啟系統UI，如依然超時請聯繫開發者</string>
     <string name="hide_time">隱藏時間</string>
@@ -145,6 +145,7 @@
     <string name="tips1">帶<font color="red"> * </font>的選項，<font color="#FFF000">重啟系統UI</font>生效</string>
     <string name="dynamic_lyric_speed">動態歌詞速度(Beta)</string>
     <string name="click_status_bar_to_hide_lyric">* 點擊狀態列隱藏歌詞</string>
+    <string name="long_click_status_bar_stop">* 長按狀態列停止音樂</string>
     <string name="configuration_changed_tips">系統特性：切換外觀后，墨-狀態列歌詞 重啟系統UI生效</string>
     <string name="system_special_page">系統特供頁</string>
     <string name="miui_hide_network_speed">* MIUI隱藏網速</string>

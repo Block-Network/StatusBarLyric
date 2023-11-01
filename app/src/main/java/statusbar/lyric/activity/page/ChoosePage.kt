@@ -31,7 +31,7 @@ class ChoosePage : BasePage() {
                 }.show()
 
             })
-            TitleText(activity.getString(R.string.a_a_a_tips).format(data.isRepeat, data.index))
+            TitleText(activity.getString(R.string.a_a_a_tips).format(data.isRepeat, data.index, data.textSize))
             Line()
         }
     }
