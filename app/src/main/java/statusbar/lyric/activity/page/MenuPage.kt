@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import cn.fkj233.ui.activity.annotation.BMMenuPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.activity.view.SwitchV
+import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.activity.view.TextV
 import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.BuildConfig
