@@ -403,34 +403,6 @@ class Config {
             config.put("mMiuiPadOptimize", value)
         }
 
-    var mMIUIHideNetworkSpeed: Boolean
-        get() {
-            return config.opt("mMIUIHideNetworkSpeed", false)
-        }
-        set(value) {
-            config.put("mMIUIHideNetworkSpeed", value)
-        }
-    var slideStatusBarCutSongs: Boolean
-        get() {
-            return config.opt("slideStatusBarCutSongs", false)
-        }
-        set(value) {
-            config.put("slideStatusBarCutSongs", value)
-        }
-    var slideStatusBarCutSongsXRadius: Int
-        get() {
-            return config.opt("slideStatusBarCutSongsXRadius", 150)
-        }
-        set(value) {
-            config.put("slideStatusBarCutSongsXRadius", value)
-        }
-    var slideStatusBarCutSongsYRadius: Int
-        get() {
-            return config.opt("slideStatusBarCutSongsYRadius", 25)
-        }
-        set(value) {
-            config.put("slideStatusBarCutSongsYRadius", value)
-        }
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon
