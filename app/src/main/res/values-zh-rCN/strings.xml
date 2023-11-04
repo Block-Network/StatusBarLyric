@@ -146,7 +146,6 @@
     <string name="dynamic_lyric_speed">动态歌词速度(Beta)</string>
     <string name="click_status_bar_to_hide_lyric">* 点击状态栏隐藏歌词</string>
     <string name="long_click_status_bar_stop">* 长按状态栏停止音乐</string>
-    <string name="configuration_changed_tips">系统特性：切换外观后，墨-状态栏歌词 重启系统界面生效</string>
     <string name="system_special_page">系统特供页</string>
     <string name="miui_hide_network_speed">* MIUI隐藏网速</string>
     <string name="miui_pad_optimize">* MIUI平板优化</string>
