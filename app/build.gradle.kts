@@ -7,8 +7,7 @@ plugins {
 }
 
 val localProperties = Properties()
-if (rootProject.file("local.properties").canRead())
-    localProperties.load(rootProject.file("local.properties").inputStream())
+if (rootProject.file("local.properties").canRead()) localProperties.load(rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "statusbar.lyric"
@@ -18,8 +17,8 @@ android {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 34
-        versionCode = 202
-        versionName = "6.0.2"
+        versionCode = 203
+        versionName = "6.1.0"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
@@ -53,20 +52,13 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
-    packagingOptions {
+    packaging {
         resources {
-            excludes += "/META-INF/**"
-            excludes += "/kotlin/**"
-            excludes += "/*.txt"
-            excludes += "/*.bin"
-        }
-        dex {
-            useLegacyPackaging = true
+            excludes += "**"
         }
     }
     buildFeatures {
         viewBinding = true
-        buildConfig = true
     }
     applicationVariants.all {
         outputs.all {
@@ -75,11 +67,16 @@ android {
     }
 }
 
+kotlin {
+    sourceSets.all {
+        languageSettings { languageVersion = "2.0" }
+    }
+}
 
 dependencies {
     compileOnly("de.robv.android.xposed:api:82")
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
-    implementation("com.github.kyuubiran:EzXHelper:2.0.6")
-    implementation("com.github.xiaowine:Lyric-Getter-Api:5.0.2")
+    implementation("com.github.kyuubiran:EzXHelper:2.0.8")
+    implementation("com.github.xiaowine:Lyric-Getter-Api:5.0.5")
 }

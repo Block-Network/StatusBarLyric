@@ -58,7 +58,7 @@ class SystemUITest : BaseHook() {
     private var lastTime: Int = 0
     lateinit var context: Context
     lateinit var lastView: TextView
-    val testView by lazy {
+    val testTextView by lazy {
         TextView(context).apply {
             text = moduleRes.getString(R.string.app_name)
             isSingleLine = true
@@ -91,26 +91,26 @@ class SystemUITest : BaseHook() {
     }
 
     private fun hook() {
-        hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
+        hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
             after { hookParam ->
                 canHook {
+                    val view = (hookParam.thisObject as TextView)
                     val className = hookParam.thisObject::class.java.name
-                    val text = "${hookParam.args[0]}".dispose()
+                    val text = view.text.toString().dispose()
                     text.isTimeSame {
                         if (className.filterClassName()) {
-                            val view = (hookParam.thisObject as TextView)
                             view.filterView {
                                 val parentView = (view.parent as LinearLayout)
                                 val data = if (dataHashMap.size == 0) {
-                                    Data(className, view.id, parentView::class.java.name, parentView.id, false, 0)
+                                    Data(className, view.id, parentView::class.java.name, parentView.id, false, 0, view.textSize)
                                 } else {
                                     var index = 0
                                     dataHashMap.values.forEach { data ->
-                                        if (data.textViewClassName == className && data.textViewID == view.id && data.parentClassName == parentView::class.java.name && data.parentID == parentView.id) {
+                                        if (data.textViewClassName == className && data.textViewId == view.id && data.parentViewClassName == parentView::class.java.name && data.parentViewId == parentView.id && data.textSize == view.textSize) {
                                             index += 1
                                         }
                                     }
-                                    Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index)
+                                    Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index, view.textSize)
                                 }
                                 dataHashMap[view] = data
                                 moduleRes.getString(R.string.first_filter).format(data, dataHashMap.size).log()
@@ -127,6 +127,20 @@ class SystemUITest : BaseHook() {
         val nowTime = System.currentTimeMillis()
         timeFormat.forEach {
             if (it.format(nowTime).toRegex().containsMatchIn(this)) {
+                callback()
+                return
+            }
+        }
+        if (config.relaxConditions) {
+            if (this.contains("周")) {
+                callback()
+                return
+            }
+            if (this.contains("月")) {
+                callback()
+                return
+            }
+            if (this.contains("日")) {
                 callback()
                 return
             }
@@ -181,23 +195,23 @@ class SystemUITest : BaseHook() {
 
                 "ShowView" -> {
                     val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        intent.getSerializableExtra("Data", Data::class.java)
+                        intent.getParcelableExtra("Data", Data::class.java)
                     } else {
-                        @Suppress("DEPRECATION") intent.getSerializableExtra("Data") as Data
+                        @Suppress("DEPRECATION") intent.getParcelableExtra("Data")
                     }!!
                     goMainThread {
                         dataHashMap.forEach { (textview, da) ->
-                            if (da.textViewClassName == data.textViewClassName && da.textViewID == data.textViewID && da.parentClassName == data.parentClassName && da.parentID == data.parentID && da.index == data.index) {
+                            if (da.textViewClassName == data.textViewClassName && da.textViewId == data.textViewId && da.parentViewClassName == data.parentViewClassName && da.parentViewId == data.parentViewId && da.textSize == data.textSize && da.index == data.index) {
                                 if (this@SystemUITest::lastView.isInitialized) {
-                                    (lastView.parent as LinearLayout).removeView(testView)
+                                    (lastView.parent as LinearLayout).removeView(testTextView)
                                     lastView.showView()
                                 }
                                 textview.hideView()
                                 val parentLinearLayout = textview.parent as LinearLayout
                                 if (config.viewIndex == 0) {
-                                    parentLinearLayout.addView(testView, 0)
+                                    parentLinearLayout.addView(testTextView, 0)
                                 } else {
-                                    parentLinearLayout.addView(testView)
+                                    parentLinearLayout.addView(testTextView)
                                 }
                                 lastView = textview
                                 return@forEach

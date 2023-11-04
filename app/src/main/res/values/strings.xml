@@ -68,8 +68,6 @@
     <string name="lyric_start_margins_tips">Range –500–500</string>
     <string name="lyric_bottom_margins">Lyric Bottom Margins</string>
     <string name="lyric_bottom_margins_tips">Range –100–100</string>
-    <string name="regex_replace">* Regex Replace</string>
-    <string name="regex_replace_tips">Block lyrics with regular expression matching</string>
     <string name="icon_switch">Icon Switch</string>
     <string name="icon_size">Icon Size</string>
     <string name="icon_size_tips">Range: 0%–100% of the height of the status bar, 0 is the following clock</string>
@@ -105,7 +103,7 @@
     <string name="restart_app_effect">Restart App Effect</string>
     <string name="force_the_icon_to_be_displayed">Force The Icon To Be Displayed</string>
     <!--    想不到取啥名字好   -->
-    <string name="a_a_a_tips">IsRepeat: %s;Index: %s</string>
+    <string name="a_a_a_tips">IsRepeat: %s;Index: %s;textSize: %s</string>
     <string name="broadcast_receive_timeout">Broadcast Receive Timeout</string>
     <string name="broadcast_receive_timeout_tips">Please restart the SystemUI first, if it still times out, please contact the developer</string>
     <string name="hide_time">Hide Time</string>
@@ -115,10 +113,20 @@
     <string name="lyrics_animation_bottom">Bottom</string>
     <string name="lyrics_animation_start">Start</string>
     <string name="lyrics_animation_end">End</string>
+    <string name="lyrics_animation_fade">Fade</string>
     <string name="lyrics_animation_scale_x_y">ScaleXY</string>
     <string name="lyrics_animation_scale_x">ScaleX</string>
     <string name="lyrics_animation_scale_y">ScaleY</string>
     <string name="lyrics_animation_random">Random</string>
+    <string name="lyrics_animation_interpolator">Lyric Animation Interpolator</string>
+    <string name="lyrics_interpolator_linear">Linear</string>
+    <string name="lyrics_interpolator_accelerate">Accelerate</string>
+    <string name="lyrics_interpolator_decelerate">Decelerate</string>
+    <string name="lyrics_interpolator_accelerate_decelerate">Accelerate+Decelerate</string>
+    <string name="lyrics_interpolator_overshoot">Overshoot</string>
+    <string name="lyrics_interpolator_bounce">Bounce</string>
+    <string name="lyrics_animation_duration">Lyric Animation Duration</string>
+    <string name="lyric_animation_duration_tips">Range 300~1000</string>
     <string name="lyric_add_location">* Lyric Add Location</string>
     <string name="add_location_start">Start</string>
     <string name="add_location_end">End</string>
@@ -138,9 +146,10 @@
     <string name="tips1">Option with <font color="red"> * </font>, <font color="#FFF000">Restart SystemUI</font> to take effect</string>
     <string name="dynamic_lyric_speed">Dynamic Lyric Speed(Beta)</string>
     <string name="click_status_bar_to_hide_lyric">* Click Status Bar To Hide Lyric</string>
-    <string name="configuration_changed_tips">System features: After switching appearance, the ink - status bar lyrics restart the system interface to take effect</string>
+    <string name="long_click_status_bar_stop">* Long Click Status Bar Stop Music</string>
     <string name="system_special_page">System Special Page</string>
     <string name="miui_hide_network_speed">* MIUI Hide Network Speed</string>
+    <string name="miui_pad_optimize">* MIUI tablet optimization</string>
     <string name="lyric_blurred_edges_type_end">Lyric Blurred Edges Type End</string>
     <string name="lyric_blurred_edges_type_start">Lyric Blurred Edges Type Start</string>
     <string name="lyric_blurred_edges_type_all">Lyric Blurred Edges Type All</string>

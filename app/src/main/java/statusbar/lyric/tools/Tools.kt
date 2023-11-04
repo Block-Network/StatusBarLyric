@@ -45,9 +45,6 @@ import kotlin.properties.ReadWriteProperty
 
 @SuppressLint("StaticFieldLeak")
 object Tools {
-
-    private lateinit var target: TextView
-
     private var index: Int = 0
 
     val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
@@ -68,6 +65,29 @@ object Tools {
             false
         }
     }
+
+    @SuppressLint("PrivateApi")
+    fun getSystemProperties(context: Context, key: String): String {
+        var ret: String
+        try {
+            val cl = context.classLoader
+            val systemProperties = cl.loadClass("android.os.SystemProperties")
+            //参数类型
+            val paramTypes: Array<Class<*>?> = arrayOfNulls(1)
+            paramTypes[0] = String::class.java
+            val get = systemProperties.getMethod("get", *paramTypes)
+            //参数
+            val params = arrayOfNulls<Any>(1)
+            params[0] = key
+            ret = get.invoke(systemProperties, *params) as String
+        } catch (iAE: IllegalArgumentException) {
+            throw iAE
+        } catch (e: Exception) {
+            ret = ""
+        }
+        return ret
+    }
+
     fun <T> observableChange(initialValue: T, onChange: (oldValue: T, newValue: T) -> Unit): ReadWriteProperty<Any?, T> {
         return Delegates.observable(initialValue) { _, oldVal, newVal ->
             if (oldVal != newVal) {
@@ -77,28 +97,24 @@ object Tools {
     }
 
     fun View.isTargetView(): Boolean {
-        if (this@Tools::target.isInitialized) {
-            if (this == target) {
-                return true
-            }
-        } else {
-            val className = XposedOwnSP.config.textViewClassName
-            val textViewID = XposedOwnSP.config.textViewID
-            val parentClass = XposedOwnSP.config.parentClassName
-            val parentID = XposedOwnSP.config.parentID
-            if (className.isEmpty() || parentClass.isEmpty() || parentID == 0) {
+            val textViewClassName = XposedOwnSP.config.textViewClassName
+            val textViewId = XposedOwnSP.config.textViewId
+            val parentViewClassName = XposedOwnSP.config.parentViewClassName
+            val parentViewId = XposedOwnSP.config.parentViewId
+            val textSize = XposedOwnSP.config.textSize
+            if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0|| textSize == 0f) {
                 EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
                 return false
             }
             if (this is TextView) {
-                if (this::class.java.name == className) {
-                    if (this.id == textViewID) {
+                if (this::class.java.name == textViewClassName) {
+                    if (this.id == textViewId) {
+                    if (this.textSize == textSize) {
                         if (this.parent is LinearLayout) {
                             val parentView = (this.parent as LinearLayout)
-                            if (parentView::class.java.name == parentClass) {
-                                if (parentID == parentView.id) {
+                            if (parentView::class.java.name == parentViewClassName) {
+                                if (parentViewId == parentView.id) {
                                     if (index == XposedOwnSP.config.index) {
-                                        target = this
                                         return true
                                     } else {
                                         index += 1
@@ -106,15 +122,15 @@ object Tools {
                                 }
                             }
                         }
+                        }
                     }
                 }
             }
-        }
         return false
     }
 
 
-    fun String.regexReplace(pattern: String, newString: String): String {
+    private fun String.regexReplace(pattern: String, newString: String): String {
         val p = Pattern.compile("(?i)$pattern")
         val m = p.matcher(this)
         return m.replaceAll(newString)

@@ -68,8 +68,6 @@
     <string name="lyric_start_margins_tips">範圍：–500–500</string>
     <string name="lyric_bottom_margins">歌詞底邊距</string>
     <string name="lyric_bottom_margins_tips">範圍：–100–100</string>
-    <string name="regex_replace">* 正則表達式屏蔽</string>
-    <string name="regex_replace_tips">使用正則表達式匹配來屏蔽歌詞</string>
     <string name="icon_switch">圖示開關</string>
     <string name="icon_size">圖示大小</string>
     <string name="icon_size_tips">範圍：狀態列高度的0％–100％，0代表以下時鐘</string>
@@ -104,7 +102,7 @@
     <string name="select_hook">是否選擇此Hook點</string>
     <string name="restart_app_effect">重啟應用程式生效</string>
     <string name="force_the_icon_to_be_displayed">強制顯示圖示</string>
-    <string name="a_a_a_tips">是否重複：%s；Index：%s</string>
+    <string name="a_a_a_tips">是否重複：%s；Index：%s；textSize：%s</string>
     <string name="broadcast_receive_timeout">廣播接收超時</string>
     <string name="broadcast_receive_timeout_tips">請先重啟系統UI，如依然超時請聯繫開發者</string>
     <string name="hide_time">隱藏時間</string>
@@ -114,10 +112,20 @@
     <string name="lyrics_animation_bottom">下滑效果</string>
     <string name="lyrics_animation_start">左劃效果</string>
     <string name="lyrics_animation_end">右劃效果</string>
+    <string name="lyrics_animation_fade">淡出淡入</string>
     <string name="lyrics_animation_scale_x_y">吸收效果</string>
     <string name="lyrics_animation_scale_x">X軸翻頁</string>
     <string name="lyrics_animation_scale_y">Y軸翻頁</string>
     <string name="lyrics_animation_random">隨機效果</string>
+    <string name="lyrics_animation_interpolator">歌詞動畫插值器</string>
+    <string name="lyrics_interpolator_linear">线性效果</string>
+    <string name="lyrics_interpolator_accelerate">加速效果</string>
+    <string name="lyrics_interpolator_decelerate">減速效果</string>
+    <string name="lyrics_interpolator_accelerate_decelerate">加速+減速</string>
+    <string name="lyrics_interpolator_overshoot">越界效果</string>
+    <string name="lyrics_interpolator_bounce">彈跳效果</string>
+    <string name="lyrics_animation_duration">歌詞動畫時間</string>
+    <string name="lyric_animation_duration_tips">範圍： 300~1000</string>
     <string name="lyric_add_location">* 歌詞添加位置</string>
     <string name="add_location_start">靠左</string>
     <string name="add_location_end">靠右</string>
@@ -137,9 +145,10 @@
     <string name="tips1">帶<font color="red"> * </font>的選項，<font color="#FFF000">重啟系統UI</font>生效</string>
     <string name="dynamic_lyric_speed">動態歌詞速度(Beta)</string>
     <string name="click_status_bar_to_hide_lyric">* 點擊狀態列隱藏歌詞</string>
-    <string name="configuration_changed_tips">系統特性：切換外觀后，墨-狀態列歌詞 重啟系統UI生效</string>
+    <string name="long_click_status_bar_stop">* 長按狀態列停止音樂</string>
     <string name="system_special_page">系統特供頁</string>
     <string name="miui_hide_network_speed">* MIUI隱藏網速</string>
+    <string name="miui_pad_optimize">* MIUI平板優化</string>
     <string name='lyric_blurred_edges_type_end'>僅右邊</string>
     <string name='lyric_blurred_edges_type_start'>僅左邊</string>
     <string name='lyric_blurred_edges_type_all'>兩邊</string>

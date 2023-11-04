@@ -87,26 +87,26 @@ class Config {
         set(value) {
             config.put("textViewClassName", value)
         }
-    var textViewID: Int
+    var textViewId: Int
         get() {
-            return config.opt("textViewID", 0)
+            return config.opt("textViewId", 0)
         }
         set(value) {
-            config.put("textViewID", value)
+            config.put("textViewId", value)
         }
-    var parentClassName: String
+    var parentViewClassName: String
         get() {
-            return config.opt("parentClassName", "")
+            return config.opt("parentViewClassName", "")
         }
         set(value) {
-            config.put("parentClassName", value)
+            config.put("parentViewClassName", value)
         }
-    var parentID: Int
+    var parentViewId: Int
         get() {
-            return config.opt("parentID", 0)
+            return config.opt("parentViewId", 0)
         }
         set(value) {
-            config.put("parentID", value)
+            config.put("parentViewId", value)
         }
     var index: Int
         get() {
@@ -115,7 +115,13 @@ class Config {
         set(value) {
             config.put("index", value)
         }
-
+    var textSize: Float
+        get() {
+            return config.opt("textSize", 0f)
+        }
+        set(value) {
+            config.put("textSize", value)
+        }
 
     var lyricSize: Int
         get() {
@@ -222,6 +228,13 @@ class Config {
         set(value) {
             config.put("limitVisibilityChange", value)
         }
+    var longClickStatusBarStop: Boolean
+        get() {
+            return config.opt("longClickStatusBarStop", false)
+        }
+        set(value) {
+            config.put("longClickStatusBarStop", value)
+        }
     var lyricLetterSpacing: Int
         get() {
             return config.opt("lyricLetterSpacing", 0)
@@ -279,13 +292,6 @@ class Config {
         set(value) {
             config.put("iconSize", value)
         }
-    var regexReplace: String
-        get() {
-            return config.opt("regexReplace", "")
-        }
-        set(value) {
-            config.put("regexReplace", value)
-        }
 
     private var forceTheIconToBeDisplayed: Boolean
         get() {
@@ -300,6 +306,20 @@ class Config {
         }
         set(value) {
             config.put("animation", value)
+        }
+    var interpolator: String
+        get() {
+            return config.opt("interpolator", "Linear")
+        }
+        set(value) {
+            config.put("interpolator", value)
+        }
+    var animationDuration: Int
+        get() {
+            return config.opt("animationDuration", 500)
+        }
+        set(value) {
+            config.put("animationDuration", value)
         }
     var viewIndex: Int
         get() {
@@ -374,6 +394,15 @@ class Config {
         set(value) {
             config.put("slideStatusBarCutSongsYRadius", value)
         }
+
+    var mMiuiPadOptimize: Boolean
+        get() {
+            return config.opt("mMiuiPadOptimize", false)
+        }
+        set(value) {
+            config.put("mMiuiPadOptimize", value)
+        }
+
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon
