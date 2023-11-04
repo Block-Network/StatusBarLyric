@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import cn.fkj233.ui.activity.annotation.BMMenuPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.activity.view.SwitchV
-import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.activity.view.TextV
 import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.BuildConfig
@@ -63,9 +62,9 @@ class MenuPage : BasePage() {
 
         Line()
         TitleText(textId = R.string.module_version)
-        TextSummaryV(textId = R.string.module_version, tips = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
+        TextS(textId = R.string.module_version, tips = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
         val buildTime = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(BuildConfig.BUILD_TIME)
-        TextSummaryV(textId = R.string.module_build_time, tips = buildTime)
+        TextS(textId = R.string.module_build_time, tips = buildTime)
         Text()
     }
 }
