@@ -36,7 +36,6 @@ import android.graphics.Point
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
-import android.os.PowerManager
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
@@ -46,7 +45,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import cn.lyric.getter.api.LyricListener
 import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.tools.Tools.base64ToDrawable
@@ -118,15 +116,7 @@ class SystemUILyric : BaseHook() {
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
         if (oldValue == 0) return@observableChange
         canLoad = true
-//        "onConfigurationChanged".log()
-//        runCatching {
-//            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-//            if (!pm.isInteractive) {
-//                shell("pkill -f com.android.systemui", false)
-//            } else {
-//                Toast.makeText(context, moduleRes.getString(R.string.configuration_changed_tips), Toast.LENGTH_LONG).show()
-//            }
-//        }
+        hideLyric()
     }
     private var theoreticalWidth: Int = 0
     private lateinit var point: Point
