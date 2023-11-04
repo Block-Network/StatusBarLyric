@@ -147,7 +147,6 @@
     <string name="dynamic_lyric_speed">Dynamic Lyric Speed(Beta)</string>
     <string name="click_status_bar_to_hide_lyric">* Click Status Bar To Hide Lyric</string>
     <string name="long_click_status_bar_stop">* Long Click Status Bar Stop Music</string>
-    <string name="configuration_changed_tips">System features: After switching appearance, the ink - status bar lyrics restart the system interface to take effect</string>
     <string name="system_special_page">System Special Page</string>
     <string name="miui_hide_network_speed">* MIUI Hide Network Speed</string>
     <string name="miui_pad_optimize">* MIUI tablet optimization</string>
