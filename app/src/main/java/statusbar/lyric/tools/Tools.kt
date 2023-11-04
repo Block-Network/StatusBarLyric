@@ -45,9 +45,6 @@ import kotlin.properties.ReadWriteProperty
 
 @SuppressLint("StaticFieldLeak")
 object Tools {
-
-    private lateinit var target: TextView
-
     private var index: Int = 0
 
     val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
@@ -71,7 +68,7 @@ object Tools {
 
     @SuppressLint("PrivateApi")
     fun getSystemProperties(context: Context, key: String): String {
-        var ret = ""
+        var ret: String
         try {
             val cl = context.classLoader
             val systemProperties = cl.loadClass("android.os.SystemProperties")
@@ -100,11 +97,6 @@ object Tools {
     }
 
     fun View.isTargetView(): Boolean {
-        if (this@Tools::target.isInitialized) {
-            if (this == target) {
-                return true
-            }
-        } else {
             val textViewClassName = XposedOwnSP.config.textViewClassName
             val textViewId = XposedOwnSP.config.textViewId
             val parentViewClassName = XposedOwnSP.config.parentViewClassName
@@ -117,12 +109,12 @@ object Tools {
             if (this is TextView) {
                 if (this::class.java.name == textViewClassName) {
                     if (this.id == textViewId) {
+                    if (this.textSize == textSize) {
                         if (this.parent is LinearLayout) {
                             val parentView = (this.parent as LinearLayout)
                             if (parentView::class.java.name == parentViewClassName) {
                                 if (parentViewId == parentView.id) {
                                     if (index == XposedOwnSP.config.index) {
-                                        target = this
                                         return true
                                     } else {
                                         index += 1
@@ -130,10 +122,10 @@ object Tools {
                                 }
                             }
                         }
+                        }
                     }
                 }
             }
-        }
         return false
     }
 

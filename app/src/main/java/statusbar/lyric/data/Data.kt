@@ -58,4 +58,8 @@ class Data private constructor(parcel: Parcel) : Parcelable {
             return arrayOfNulls(size)
         }
     }
+
+    override fun toString(): String {
+        return "Data(textViewClassName='$textViewClassName', textViewId=$textViewId, parentViewClassName='$parentViewClassName', parentViewId=$parentViewId, isRepeat=$isRepeat, index=$index, textSize=$textSize)"
+    }
 }

@@ -69,6 +69,7 @@ import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
+import statusbar.lyric.tools.Tools.isNull
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
@@ -89,7 +90,6 @@ import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
-    private var isScreenLock: Boolean = false
     private lateinit var hook: XC_MethodHook.Unhook
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
         goMainThread {
@@ -110,20 +110,23 @@ class SystemUILyric : BaseHook() {
             "Change Icon".log()
         }
     }
+    private var canLoad: Boolean = true
+    private var isScreenLock: Boolean = false
     private var iconSwitch: Boolean = true
     private var isPlaying: Boolean = false
     private var isHiding: Boolean = false
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
         if (oldValue == 0) return@observableChange
-        "onConfigurationChanged".log()
-        runCatching {
-            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-            if (!pm.isInteractive) {
-                shell("pkill -f com.android.systemui", false)
-            } else {
-                Toast.makeText(context, moduleRes.getString(R.string.configuration_changed_tips), Toast.LENGTH_LONG).show()
-            }
-        }
+        canLoad = true
+//        "onConfigurationChanged".log()
+//        runCatching {
+//            val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+//            if (!pm.isInteractive) {
+//                shell("pkill -f com.android.systemui", false)
+//            } else {
+//                Toast.makeText(context, moduleRes.getString(R.string.configuration_changed_tips), Toast.LENGTH_LONG).show()
+//            }
+//        }
     }
     private var theoreticalWidth: Int = 0
     private lateinit var point: Point
@@ -181,17 +184,19 @@ class SystemUILyric : BaseHook() {
     override fun init() {
         "Init Hook".log()
         loadClassOrNull(config.textViewClassName).isNotNull {
-            hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
+            hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
                 after { hookParam ->
                     val view = (hookParam.thisObject as View)
                     if (view.isTargetView()) {
+                        if (!canLoad) return@after
                         "Lyric Init".log()
                         clockView = view as TextView
                         targetView = (clockView.parent as LinearLayout).apply {
                             gravity = Gravity.CENTER
                         }
+                        canLoad = false
                         lyricInit()
-                        hook.unhook()
+                        if (!togglePrompts) hook.unhook()
                     }
                 }
             }
@@ -293,8 +298,6 @@ class SystemUILyric : BaseHook() {
                             MotionEvent.ACTION_UP -> {
                                 val isMove = abs(point.y - motionEvent.rawY.toInt()) > 50 || abs(point.x - motionEvent.rawX.toInt()) > 50
                                 val isLongChick = motionEvent.eventTime - motionEvent.downTime > 500
-                                isMove.log()
-                                isLongChick.log()
                                 when (isMove) {
                                     true -> {
                                         if (config.slideStatusBarCutSongs && isPlaying) {
@@ -363,14 +366,17 @@ class SystemUILyric : BaseHook() {
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
-        themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
+        val firstLoad = lyricLayout.parent.isNull()
         goMainThread(1) {
+            runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
             if (config.viewIndex == 0) {
                 targetView.addView(lyricLayout, 0)
             } else {
                 targetView.addView(lyricLayout)
             }
+            themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
         }
+        if (!firstLoad) return
         registerLyricListener(context, BuildConfig.API_VERSION, object : LyricListener() {
             override fun onStop(lyricData: LyricData) {
                 if (!(isReally)) return

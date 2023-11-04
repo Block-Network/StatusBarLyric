@@ -91,14 +91,14 @@ class SystemUITest : BaseHook() {
     }
 
     private fun hook() {
-        hook = TextView::class.java.methodFinder().filterByName("setText").first().createHook {
+        hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
             after { hookParam ->
                 canHook {
+                    val view = (hookParam.thisObject as TextView)
                     val className = hookParam.thisObject::class.java.name
-                    val text = "${hookParam.args[0]}".dispose()
+                    val text = view.text.toString().dispose()
                     text.isTimeSame {
                         if (className.filterClassName()) {
-                            val view = (hookParam.thisObject as TextView)
                             view.filterView {
                                 val parentView = (view.parent as LinearLayout)
                                 val data = if (dataHashMap.size == 0) {
@@ -106,7 +106,7 @@ class SystemUITest : BaseHook() {
                                 } else {
                                     var index = 0
                                     dataHashMap.values.forEach { data ->
-                                        if (data.textViewClassName == className && data.textViewId == view.id && data.parentViewClassName == parentView::class.java.name && data.parentViewId == parentView.id) {
+                                        if (data.textViewClassName == className && data.textViewId == view.id && data.parentViewClassName == parentView::class.java.name && data.parentViewId == parentView.id && data.textSize == view.textSize) {
                                             index += 1
                                         }
                                     }
@@ -208,7 +208,6 @@ class SystemUITest : BaseHook() {
                                 }
                                 textview.hideView()
                                 val parentLinearLayout = textview.parent as LinearLayout
-                                testTextView.textSize = da.textSize
                                 if (config.viewIndex == 0) {
                                     parentLinearLayout.addView(testTextView, 0)
                                 } else {
