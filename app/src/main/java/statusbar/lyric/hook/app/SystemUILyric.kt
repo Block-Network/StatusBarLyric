@@ -36,6 +36,7 @@ import android.graphics.Point
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.os.PowerManager
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
@@ -88,6 +89,7 @@ import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
+
     private lateinit var hook: XC_MethodHook.Unhook
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
         goMainThread {

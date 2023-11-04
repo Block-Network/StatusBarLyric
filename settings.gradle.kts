@@ -7,6 +7,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://jitpack.io")
         maven("https://api.xposed.info")
+        maven("https://jitpack.io")
     }
 }
 rootProject.name = "Statusbar Lyric"
