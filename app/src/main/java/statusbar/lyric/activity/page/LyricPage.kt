@@ -293,7 +293,7 @@ class LyricPage : BasePage() {
                 setRButton(getString(R.string.ok)) {
                     try {
                         val value = getEditText().toInt()
-                        if (value in -500..500) {
+                        if (value in -2000..2000) {
                             config.lyricStartMargins = value
                             changeConfig()
                         } else {
@@ -318,7 +318,7 @@ class LyricPage : BasePage() {
                 setRButton(getString(R.string.ok)) {
                     try {
                         val value = getEditText().toInt()
-                        if (value in -500..500) {
+                        if (value in -2000..2000) {
                             config.lyricEndMargins = value
                             changeConfig()
                         } else {

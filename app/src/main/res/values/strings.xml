@@ -63,9 +63,9 @@
     <string name="lyric_top_margins">Lyric Top Margins</string>
     <string name="lyric_top_margins_tips">Range –100–100</string>
     <string name="lyric_end_margins">Lyric End Margins</string>
-    <string name="lyric_end_margins_tips">Range –500–500</string>
+    <string name="lyric_end_margins_tips">Range –2000–2000</string>
     <string name="lyric_start_margins">Lyric Start Margins</string>
-    <string name="lyric_start_margins_tips">Range –500–500</string>
+    <string name="lyric_start_margins_tips">Range –2000–2000</string>
     <string name="lyric_bottom_margins">Lyric Bottom Margins</string>
     <string name="lyric_bottom_margins_tips">Range –100–100</string>
     <string name="icon_switch">Icon Switch</string>

@@ -570,6 +570,7 @@ class SystemUILyric : BaseHook() {
                 loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
                     clazz.methodFinder().filterByName("onConfigurationChanged").first().createHook {
                         after { hookParam ->
+                            "onConfigurationChanged".log()
                             val newConfig = hookParam.args[0] as Configuration
                             themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         }
