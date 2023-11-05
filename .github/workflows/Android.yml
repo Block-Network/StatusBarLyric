@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths-ignore:
       - 'README.md'
+  pull_request:     
 
 jobs:
   build:
@@ -17,7 +18,6 @@ jobs:
           submodules: "recursive"
 
       - name: Write key
-        if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
         run: |
           if [ ! -z "${{ secrets.SIGNING_KEY }}" ]; then
             echo androidStorePassword='${{ secrets.KEY_STORE_PASSWORD }}' >> local.properties
