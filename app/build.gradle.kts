@@ -22,7 +22,7 @@ android {
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
-        buildConfigField("int", "API_VERSION", "5")
+        buildConfigField("int", "API_VERSION", "6")
         buildConfigField("int", "CONFIG_VERSION", "3")
     }
     val config = localProperties.getProperty("androidStoreFile")?.let {
@@ -78,5 +78,5 @@ dependencies {
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
     implementation("com.github.kyuubiran:EzXHelper:2.0.8")
-    implementation("com.github.xiaowine:Lyric-Getter-Api:5.0.5")
+    implementation("com.github.xiaowine:Lyric-Getter-Api:6.0.0dev")
 }

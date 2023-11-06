@@ -45,8 +45,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import cn.lyric.getter.api.LyricListener
+import cn.lyric.getter.api.data.ExtraData
 import cn.lyric.getter.api.data.LyricData
+import cn.lyric.getter.api.listener.LyricListener
+import cn.lyric.getter.api.listener.LyricReceiver
 import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import cn.lyric.getter.api.tools.Tools.registerLyricListener
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
@@ -367,7 +369,7 @@ class SystemUILyric : BaseHook() {
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
         }
         if (!firstLoad) return
-        registerLyricListener(context, BuildConfig.API_VERSION, object : LyricListener() {
+        val lyricReceiver = LyricReceiver(object : LyricListener() {
             override fun onStop(lyricData: LyricData) {
                 if (!(isReally)) return
                 if (isHiding) isHiding = false
@@ -380,11 +382,12 @@ class SystemUILyric : BaseHook() {
                 if (lyric.isNotEmpty()) {
                     lastLyric = lyric
                     if (isHiding) return
-                    changeIcon(lyricData)
-                    changeLyric(lyric, lyricData.delay)
+                    changeIcon(lyricData.extraData)
+                    changeLyric(lyric, lyricData.extraData.delay)
                 }
             }
         })
+        registerLyricListener(context, BuildConfig.API_VERSION, lyricReceiver)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
         } else {
@@ -450,7 +453,7 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private fun changeIcon(it: LyricData) {
+    private fun changeIcon(it: ExtraData) {
         if (!iconSwitch) return
         val customIcon = it.customIcon && it.base64Icon.isNotEmpty()
         lastBase64Icon = if (customIcon) {
