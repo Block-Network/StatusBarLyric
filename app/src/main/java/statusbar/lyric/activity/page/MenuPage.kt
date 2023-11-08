@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import cn.fkj233.ui.activity.annotation.BMMenuPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.activity.view.SwitchV
-import cn.fkj233.ui.activity.view.TextSummaryV
 import cn.fkj233.ui.activity.view.TextV
 import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.BuildConfig
@@ -52,7 +51,7 @@ class MenuPage : BasePage() {
                 setTitle(R.string.reset_system_ui)
                 setMessage(R.string.restart_systemui_tips)
                 setLButton(R.string.ok) {
-                    Tools.shell("pkill -f com.android.systemui", true)
+                    Tools.shell("killall com.android.systemui", true)
                     dismiss()
                 }
                 setRButton(R.string.cancel) { dismiss() }

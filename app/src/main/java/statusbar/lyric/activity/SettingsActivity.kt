@@ -45,6 +45,7 @@ import statusbar.lyric.activity.page.MenuPage
 import statusbar.lyric.activity.page.HookPage
 import statusbar.lyric.activity.page.SystemSpecialPage
 import statusbar.lyric.config.ActivityOwnSP
+import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.ActivityTestTools.stopResponse
@@ -97,32 +98,32 @@ class SettingsActivity : MIUIActivity() {
         super.onDestroy()
     }
 
-        private fun checkLSPosed(): Boolean {
-            return try {
-                setSP(ActivityOwnSP.ownSP)
-                updateConfigVer()
-                init()
-                true
-            } catch (e: Exception) {
-                e.printStackTrace()
-                MIUIDialog(this) {
-                    setTitle(R.string.first_use_tips)
-                    setMessage(R.string.not_support_xposed_framework)
-                    setRButton(R.string.re_start_app) {
-                        ActivityTools.restartApp()
-                    }
-                    setCancelable(false)
-                }.show()
-                false
-            }
+    private fun checkLSPosed(): Boolean {
+        return try {
+            setSP(ActivityOwnSP.ownSP)
+            updateConfigVer()
+            init()
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            MIUIDialog(this) {
+                setTitle(R.string.first_use_tips)
+                setMessage(R.string.not_support_xposed_framework)
+                setRButton(R.string.re_start_app) {
+                    ActivityTools.restartApp()
+                }
+                setCancelable(false)
+            }.show()
+            false
         }
+    }
 
 
     private fun init() {
         requestPermission()
         registerReceiver()
         if (!BuildConfig.DEBUG) {
-            getUpdate()
+            if (config.checkUpdate) getUpdate()
             getNotice()
         }
     }

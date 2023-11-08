@@ -29,7 +29,7 @@ class HookPage : BasePage() {
                 setTitle(R.string.reset_system_ui)
                 setMessage(R.string.restart_systemui_tips)
                 setLButton(R.string.ok) {
-                    Tools.shell("pkill -f com.android.systemui", true)
+                    Tools.shell("killall com.android.systemui", true)
                     dismiss()
                 }
                 setRButton(R.string.cancel) { dismiss() }
