@@ -17,8 +17,8 @@ android {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 34
-        versionCode = 204
-        versionName = "6.1.1"
+        versionCode = 205
+        versionName = "6.1.2"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
@@ -78,5 +78,5 @@ dependencies {
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
     implementation("com.github.kyuubiran:EzXHelper:2.0.8")
-    implementation("com.github.xiaowine:Lyric-Getter-Api:6.0.0dev")
+    implementation("com.github.xiaowine:Lyric-Getter-Api:6.0.0")
 }
