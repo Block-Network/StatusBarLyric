@@ -63,9 +63,9 @@
     <string name="lyric_top_margins">歌词上边距</string>
     <string name="lyric_top_margins_tips">范围：–100–100</string>
     <string name="lyric_end_margins">歌词右边距</string>
-    <string name="lyric_end_margins_tips">范围：–500–500</string>
+    <string name="lyric_end_margins_tips">范围：–2000–2000</string>
     <string name="lyric_start_margins">歌词左边距</string>
-    <string name="lyric_start_margins_tips">范围：–500–500</string>
+    <string name="lyric_start_margins_tips">范围：–2000–2000</string>
     <string name="lyric_bottom_margins">歌词底边距</string>
     <string name="lyric_bottom_margins_tips">范围：–100–100</string>
     <string name="icon_switch">图标开关</string>

@@ -344,6 +344,13 @@ class Config {
         set(value) {
             config.put("hideCarrier", value)
         }
+    var checkUpdate: Boolean
+        get() {
+            return config.opt("checkUpdate", true)
+        }
+        set(value) {
+            config.put("checkUpdate", value)
+        }
     var lyricColorScheme: Int
         get() {
             return config.opt("lyricColorScheme", 0)
