@@ -177,7 +177,7 @@ class SystemUILyric : BaseHook() {
     override fun init() {
         "Init Hook".log()
         loadClassOrNull(config.textViewClassName).isNotNull {
-            hook = TextView::class.java.methodFinder().filterByName("onMeasure").first().createHook {
+            hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
                 after { hookParam ->
                     val view = (hookParam.thisObject as View)
                     if (view.isTargetView()) {

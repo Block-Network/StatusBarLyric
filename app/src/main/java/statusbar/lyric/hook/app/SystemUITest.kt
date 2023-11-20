@@ -94,7 +94,7 @@ class SystemUITest : BaseHook() {
     }
 
     private fun hook() {
-        hook = TextView::class.java.methodFinder().filterByName("onMeasure").first().createHook {
+        hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
             after { hookParam ->
                 canHook {
                     val view = (hookParam.thisObject as TextView)
