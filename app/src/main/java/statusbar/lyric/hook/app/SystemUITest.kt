@@ -35,10 +35,13 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.github.kyuubiran.ezxhelper.ClassUtils.loadClass
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
+import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XC_MethodHook.MethodHookParam
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.data.Data
@@ -91,7 +94,7 @@ class SystemUITest : BaseHook() {
     }
 
     private fun hook() {
-        hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
+        hook = TextView::class.java.methodFinder().filterByName("onMeasure").first().createHook {
             after { hookParam ->
                 canHook {
                     val view = (hookParam.thisObject as TextView)

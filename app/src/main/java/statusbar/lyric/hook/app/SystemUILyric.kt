@@ -117,6 +117,7 @@ class SystemUILyric : BaseHook() {
     private var isHiding: Boolean = false
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
         if (oldValue == 0) return@observableChange
+        "onConfigurationChanged".log()
         canLoad = true
         hideLyric()
     }
@@ -176,7 +177,7 @@ class SystemUILyric : BaseHook() {
     override fun init() {
         "Init Hook".log()
         loadClassOrNull(config.textViewClassName).isNotNull {
-            hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
+            hook = TextView::class.java.methodFinder().filterByName("onMeasure").first().createHook {
                 after { hookParam ->
                     val view = (hookParam.thisObject as View)
                     if (view.isTargetView()) {
@@ -573,9 +574,21 @@ class SystemUILyric : BaseHook() {
                 loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
                     clazz.methodFinder().filterByName("onConfigurationChanged").first().createHook {
                         after { hookParam ->
-                            "onConfigurationChanged".log()
                             val newConfig = hookParam.args[0] as Configuration
                             themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                        }
+                    }
+                    if (isMIUI){
+                        loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$3").isNotNull {
+                            it.methodFinder().filterByName("onWallpaperChanged").first().createHook {
+                                after {
+                                    if (isReally) {
+                                        "onWallpaperChanged".log()
+                                        canLoad = true
+                                        hideLyric()
+                                    }
+                                }
+                            }
                         }
                     }
                     if (isMIUI && config.mMiuiPadOptimize) {
