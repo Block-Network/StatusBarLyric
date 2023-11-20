@@ -170,7 +170,7 @@ class SystemUILyric : BaseHook() {
 
     private lateinit var mMIUINetworkSpeedView: TextView
 
-    val isReally by lazy { this@SystemUILyric::targetView.isInitialized }
+    val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
 
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
@@ -244,15 +244,25 @@ class SystemUILyric : BaseHook() {
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.hide_notification_icon).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-                it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
-                    after { hookParam ->
-                        val clazz = hookParam.thisObject::class.java
-                        if (clazz.simpleName == "NotificationIconAreaController") {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    it.constructorFinder().first().createHook {
+                        after { hookParam ->
                             hookParam.thisObject.objectHelper {
                                 mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
                             }
-                        } else {
-                            mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
+                        }
+                    }
+                } else {
+                    it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
+                        after { hookParam ->
+                            val clazz = hookParam.thisObject::class.java
+                            if (clazz.simpleName == "NotificationIconAreaController") {
+                                hookParam.thisObject.objectHelper {
+                                    mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                                }
+                            } else {
+                                mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
+                            }
                         }
                     }
                 }
@@ -578,11 +588,11 @@ class SystemUILyric : BaseHook() {
                             themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         }
                     }
-                    if (isMIUI){
+                    if (isMIUI) {
                         loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$3").isNotNull {
                             it.methodFinder().filterByName("onWallpaperChanged").first().createHook {
                                 after {
-                                    if (isReally) {
+                                    if (this@SystemUILyric::clockView.isInitialized) {
                                         "onWallpaperChanged".log()
                                         canLoad = true
                                         hideLyric()
