@@ -577,20 +577,24 @@ class SystemUILyric : BaseHook() {
         }).roundToInt()
     }
 
+    private fun Class<*>.hasMethod(methodName: String): Boolean {
+        val methods = declaredMethods
+        for (method in methods) {
+            if (method.name == methodName) {
+                return true
+            }
+        }
+        return false
+    }
 
     inner class SystemUISpecial {
         init {
-            if (togglePrompts) {
-                loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
-                    clazz.methodFinder().filterByName("onConfigurationChanged").first().createHook {
-                        after { hookParam ->
-                            val newConfig = hookParam.args[0] as Configuration
-                            themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
-                        }
-                    }
-                    if (isMIUI) {
-                        loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$3").isNotNull {
-                            it.methodFinder().filterByName("onWallpaperChanged").first().createHook {
+            if (isMIUI) {
+                for (i in 0..10) {
+                    val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$$i")
+                    if (clazz.isNotNull()) {
+                        if (clazz!!.hasMethod("onWallpaperChanged")) {
+                            clazz.methodFinder().filterByName("onWallpaperChanged").first().createHook {
                                 after {
                                     if (this@SystemUILyric::clockView.isInitialized) {
                                         "onWallpaperChanged".log()
@@ -599,6 +603,19 @@ class SystemUILyric : BaseHook() {
                                     }
                                 }
                             }
+                        }
+                        break
+                    }
+                }
+            }
+
+
+            if (togglePrompts) {
+                loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
+                    clazz.methodFinder().filterByName("onConfigurationChanged").first().createHook {
+                        after { hookParam ->
+                            val newConfig = hookParam.args[0] as Configuration
+                            themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         }
                     }
                     if (isMIUI && config.mMiuiPadOptimize) {
