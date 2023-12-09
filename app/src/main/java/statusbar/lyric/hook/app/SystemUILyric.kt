@@ -279,7 +279,7 @@ class SystemUILyric : BaseHook() {
                                 mCarrierLabel = this.getObjectOrNullAs<View>("mCarrierLabel")!!
                             }
                         } else {
-                            mCarrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as TextView
+                            mCarrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as View
                         }
                     }
                 }
@@ -623,10 +623,16 @@ class SystemUILyric : BaseHook() {
                             after {
                                 if (isPad) {
                                     loadClassOrNull("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment").isNotNull {
-                                        it.methodFinder().filterByName("initMiuiViewsOnViewCreated").first().createHook {
-                                            after { hookParam ->
-                                                hookParam.thisObject.objectHelper {
-                                                    mPadClockView = this.getObjectOrNullAs<View>("mPadClockView")!!
+                                        if (it.hasMethod("initMiuiViewsOnViewCreated")) {
+                                            it.methodFinder().filterByName("initMiuiViewsOnViewCreated").first()
+                                        } else {
+                                            it.methodFinder().filterByName("onViewCreated").first()
+                                        }.let { method ->
+                                            method.createHook {
+                                                after { hookParam ->
+                                                    hookParam.thisObject.objectHelper {
+                                                        mPadClockView = this.getObjectOrNullAs<View>("mPadClockView")!!
+                                                    }
                                                 }
                                             }
                                         }
