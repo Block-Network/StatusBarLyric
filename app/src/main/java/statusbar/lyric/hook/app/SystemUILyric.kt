@@ -212,8 +212,7 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-
-        "${moduleRes.getString(R.string.lyric_color_scheme)}:${moduleRes.getString(R.string.lyric_color_scheme)}".log()
+        "${moduleRes.getString(R.string.lyric_color_scheme)}:${config.lyricColorScheme}".log()
         when (config.lyricColorScheme) {
             0 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
