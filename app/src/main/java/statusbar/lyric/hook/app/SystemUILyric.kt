@@ -267,7 +267,7 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        if (config.hideCarrier) {
+        if (config.hideCarrier && Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
             moduleRes.getString(R.string.hide_carrier).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
                 it.methodFinder().filterByName("onFinishInflate").first().createHook {
