@@ -415,6 +415,8 @@ class Config {
             this["com.tencent.qqmusic"] = qQMusicIcon
             this["com.miui.player"] = miPlayerIcon
             this["com.netease.cloudmusic"] = neteaseIcon
+            this["com.netease.cloudmusic.lite"] = neteaseIcon
+            this["com.hihonor.cloudmusic"] = neteaseIcon
             this["com.kugou.android"] = kuGouIcon
             this["com.kugou.android.lite"] = kuGouIcon
             this["cn.kuwo.player"] = kuWoIcon

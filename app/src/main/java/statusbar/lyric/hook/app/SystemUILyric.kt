@@ -117,6 +117,7 @@ class SystemUILyric : BaseHook() {
     private var isHiding: Boolean = false
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
         if (oldValue == 0) return@observableChange
+        "onConfigurationChanged".log()
         canLoad = true
         hideLyric()
     }
@@ -169,7 +170,7 @@ class SystemUILyric : BaseHook() {
 
     private lateinit var mMIUINetworkSpeedView: TextView
 
-    val isReally by lazy { this@SystemUILyric::targetView.isInitialized }
+    val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
 
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
@@ -211,8 +212,7 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-
-        "${moduleRes.getString(R.string.lyric_color_scheme)}:${moduleRes.getString(R.string.lyric_color_scheme)}".log()
+        "${moduleRes.getString(R.string.lyric_color_scheme)}:${config.lyricColorScheme}".log()
         when (config.lyricColorScheme) {
             0 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
@@ -243,21 +243,31 @@ class SystemUILyric : BaseHook() {
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.hide_notification_icon).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-                it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
-                    after { hookParam ->
-                        val clazz = hookParam.thisObject::class.java
-                        if (clazz.simpleName == "NotificationIconAreaController") {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    it.constructorFinder().first().createHook {
+                        after { hookParam ->
                             hookParam.thisObject.objectHelper {
                                 mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
                             }
-                        } else {
-                            mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
+                        }
+                    }
+                } else {
+                    it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
+                        after { hookParam ->
+                            val clazz = hookParam.thisObject::class.java
+                            if (clazz.simpleName == "NotificationIconAreaController") {
+                                hookParam.thisObject.objectHelper {
+                                    mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                                }
+                            } else {
+                                mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
+                            }
                         }
                     }
                 }
             }
         }
-        if (config.hideCarrier) {
+        if (config.hideCarrier && Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
             moduleRes.getString(R.string.hide_carrier).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
                 it.methodFinder().filterByName("onFinishInflate").first().createHook {
@@ -268,7 +278,7 @@ class SystemUILyric : BaseHook() {
                                 mCarrierLabel = this.getObjectOrNullAs<View>("mCarrierLabel")!!
                             }
                         } else {
-                            mCarrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as TextView
+                            mCarrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as View
                         }
                     }
                 }
@@ -566,9 +576,39 @@ class SystemUILyric : BaseHook() {
         }).roundToInt()
     }
 
+    private fun Class<*>.hasMethod(methodName: String): Boolean {
+        val methods = declaredMethods
+        for (method in methods) {
+            if (method.name == methodName) {
+                return true
+            }
+        }
+        return false
+    }
 
     inner class SystemUISpecial {
         init {
+            if (isMIUI) {
+                for (i in 0..10) {
+                    val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$$i")
+                    if (clazz.isNotNull()) {
+                        if (clazz!!.hasMethod("onWallpaperChanged")) {
+                            clazz.methodFinder().filterByName("onWallpaperChanged").first().createHook {
+                                after {
+                                    if (this@SystemUILyric::clockView.isInitialized) {
+                                        "onWallpaperChanged".log()
+                                        canLoad = true
+                                        hideLyric()
+                                    }
+                                }
+                            }
+                        }
+                        break
+                    }
+                }
+            }
+
+
             if (togglePrompts) {
                 loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
                     clazz.methodFinder().filterByName("onConfigurationChanged").first().createHook {
@@ -583,10 +623,16 @@ class SystemUILyric : BaseHook() {
                             after {
                                 if (isPad) {
                                     loadClassOrNull("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment").isNotNull {
-                                        it.methodFinder().filterByName("initMiuiViewsOnViewCreated").first().createHook {
-                                            after { hookParam ->
-                                                hookParam.thisObject.objectHelper {
-                                                    mPadClockView = this.getObjectOrNullAs<View>("mPadClockView")!!
+                                        if (it.hasMethod("initMiuiViewsOnViewCreated")) {
+                                            it.methodFinder().filterByName("initMiuiViewsOnViewCreated").first()
+                                        } else {
+                                            it.methodFinder().filterByName("onViewCreated").first()
+                                        }.let { method ->
+                                            method.createHook {
+                                                after { hookParam ->
+                                                    hookParam.thisObject.objectHelper {
+                                                        mPadClockView = this.getObjectOrNullAs<View>("mPadClockView")!!
+                                                    }
                                                 }
                                             }
                                         }

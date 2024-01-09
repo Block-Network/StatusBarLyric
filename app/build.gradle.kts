@@ -17,8 +17,8 @@ android {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 34
-        versionCode = 205
-        versionName = "6.1.2"
+        versionCode = 206
+        versionName = "6.1.3"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
@@ -58,7 +58,7 @@ android {
         }
     }
     buildFeatures {
-        viewBinding = true
+        viewBinding = false
     }
     applicationVariants.all {
         outputs.all {
