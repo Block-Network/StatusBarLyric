@@ -18,8 +18,8 @@ import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import statusbar.lyric.view.LyricSwitchView
 
-object ViewTools {
-    private fun getAlphaAnimation(into: Boolean, duration: Long = 300): AnimationSet {
+object LyeicViewTools {
+    fun getAlphaAnimation(into: Boolean, duration: Long = 300): AnimationSet {
         val alphaAnimation = (if (into) AlphaAnimation(0F, 1F) else AlphaAnimation(1F, 0F)).apply {
             this.duration = duration
         }
@@ -70,7 +70,7 @@ object ViewTools {
         }
     }
 
-    private fun Animation.switchInterpolator(str: String?) {
+    fun Animation.switchInterpolator(str: String?) {
         interpolator = when (str) {
             "Linear" -> LinearInterpolator()
             "Accelerate" -> AccelerateInterpolator()

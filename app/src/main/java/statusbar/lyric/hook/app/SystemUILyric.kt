@@ -35,6 +35,7 @@ import android.graphics.Paint
 import android.graphics.Point
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.media.MediaMetadata
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -74,11 +75,11 @@ import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.Tools.togglePrompts
-import statusbar.lyric.tools.ViewTools
-import statusbar.lyric.tools.ViewTools.hideView
-import statusbar.lyric.tools.ViewTools.iconColorAnima
-import statusbar.lyric.tools.ViewTools.showView
-import statusbar.lyric.tools.ViewTools.textColorAnima
+import statusbar.lyric.tools.LyeicViewTools
+import statusbar.lyric.tools.LyeicViewTools.hideView
+import statusbar.lyric.tools.LyeicViewTools.iconColorAnima
+import statusbar.lyric.tools.LyeicViewTools.showView
+import statusbar.lyric.tools.LyeicViewTools.textColorAnima
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
 import java.io.File
@@ -90,6 +91,7 @@ import kotlin.math.roundToInt
 
 
 class SystemUILyric : BaseHook() {
+
     private lateinit var hook: XC_MethodHook.Unhook
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
         goMainThread {
@@ -99,6 +101,18 @@ class SystemUILyric : BaseHook() {
         "Change Color".log()
     }
     private var lastLyric: String = ""
+    private var title: String by observableChange("") { _, newValue ->
+        newValue.log()
+        goMainThread {
+            dialog.apply {
+                if (newValue.isEmpty()) {
+                    hideTitle()
+                } else {
+                    showTitle(newValue.trim())
+                }
+            }
+        }
+    }
     private var lastBase64Icon: String by observableChange("") { _, newValue ->
         goMainThread {
             base64ToDrawable(newValue).isNotNull {
@@ -114,6 +128,7 @@ class SystemUILyric : BaseHook() {
     private var isScreenLock: Boolean = false
     private var iconSwitch: Boolean = true
     private var isPlaying: Boolean = false
+    private var isStop: Boolean = false
     private var isHiding: Boolean = false
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
         if (oldValue == 0) return@observableChange
@@ -167,10 +182,18 @@ class SystemUILyric : BaseHook() {
             hideView()
         }
     }
-
     private lateinit var mMIUINetworkSpeedView: TextView
 
     val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
+
+
+    val dialog by lazy {
+        TitleDialog(context).apply {
+//            val location = IntArray(2)
+//            clockView.getLocationOnScreen(location)
+//            setX(location[0])
+        }
+    }
 
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
@@ -209,6 +232,15 @@ class SystemUILyric : BaseHook() {
                             }
                         }
                     }
+                }
+            }
+        }
+        loadClassOrNull("com.android.systemui.statusbar.NotificationMediaManager").isNotNull {
+            it.methodFinder().filterByName("findAndUpdateMediaNotifications").first().createHook {
+                after { hookParam ->
+//                    if (!isReally) return@after
+                    if (isStop) return@after
+                    title = hookParam.thisObject.objectHelper().getObjectOrNullAs<MediaMetadata>("mMediaMetadata")?.getString(MediaMetadata.METADATA_KEY_TITLE) ?: ""
                 }
             }
         }
@@ -422,10 +454,11 @@ class SystemUILyric : BaseHook() {
         if (isHiding || isScreenLock) return
         "lyric:$lyric".log()
         goMainThread {
+            isStop = false
             if (!isPlaying) {
                 if (config.lyricColor.isEmpty()) lastColor = clockView.currentTextColor
-                isPlaying = true
             }
+            isPlaying = true
             lyricLayout.showView()
             if (config.hideTime) clockView.hideView()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
@@ -437,12 +470,12 @@ class SystemUILyric : BaseHook() {
                 val duration = config.animationDuration
                 if (config.animation == "Random") {
                     val effect = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY").random()
-                    inAnimation = ViewTools.switchViewInAnima(effect, interpolator, duration)
-                    outAnimation = ViewTools.switchViewOutAnima(effect, duration)
+                    inAnimation = LyeicViewTools.switchViewInAnima(effect, interpolator, duration)
+                    outAnimation = LyeicViewTools.switchViewOutAnima(effect, duration)
                 }
                 width = getLyricWidth(paint, lyric)
+                val i = width - theoreticalWidth
                 if (config.dynamicLyricSpeed && delay == 0) {
-                    val i = width - theoreticalWidth
                     if (i > 0) {
                         val proportion = i * 1.0 / displayWidth
                         "proportion:$proportion".log()
@@ -452,7 +485,6 @@ class SystemUILyric : BaseHook() {
                     }
                 }
                 if (delay > 0) {
-                    val i = width - theoreticalWidth
                     if (i > 0) {
                         val speed = BigDecimal(i * 1.0 / 211).setScale(2, RoundingMode.HALF_UP).toFloat()
                         setSpeed(speed)
@@ -474,13 +506,17 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun hideLyric() {
+        if (isStop) return
         if (!isHiding && isPlaying) {
             isPlaying = false
+            isStop = true
         }
+        "isPlaying:$isPlaying".log()
         "Hide Lyric".log()
         goMainThread {
             lyricLayout.hideView()
             clockView.showView()
+            dialog.hideTitle()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.showView()
@@ -516,8 +552,8 @@ class SystemUILyric : BaseHook() {
                 val interpolator = config.interpolator
                 val duration = config.animationDuration
                 if (animation != "Random") {
-                    inAnimation = ViewTools.switchViewInAnima(animation, interpolator, duration)
-                    outAnimation = ViewTools.switchViewOutAnima(animation, duration)
+                    inAnimation = LyeicViewTools.switchViewInAnima(animation, interpolator, duration)
+                    outAnimation = LyeicViewTools.switchViewOutAnima(animation, duration)
                 }
                 runCatching {
                     val file = File("${context.filesDir.path}/font")
