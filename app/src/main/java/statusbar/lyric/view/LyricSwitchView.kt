@@ -29,7 +29,7 @@ import android.text.TextPaint
 import android.widget.TextSwitcher
 import android.widget.TextView
 
-class LyricSwitchView(context: Context) : TextSwitcher(context) {
+open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     private val lyricTextView: LyricTextView = LyricTextView(context)
     private val lyricTextView2: LyricTextView = LyricTextView(context)
     val viewArray: Array<TextView> = arrayOf(lyricTextView, lyricTextView2)
@@ -44,7 +44,7 @@ class LyricSwitchView(context: Context) : TextSwitcher(context) {
         addView(lyricTextView2)
     }
 
-    fun setWidth(i: Int) {
+    open fun setWidth(i: Int) {
         viewArray.forEach { view -> view.width = i }
     }
 

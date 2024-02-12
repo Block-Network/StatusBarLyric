@@ -25,7 +25,7 @@ import android.widget.TextView
 import statusbar.lyric.tools.Tools.isNotNull
 import kotlin.math.abs
 
-class LyricTextView(context: Context) : TextView(context) {
+open class LyricTextView(context: Context) : TextView(context) {
     private var isStop = true
     private var textLength = 0f
     private var viewWidth = 0f

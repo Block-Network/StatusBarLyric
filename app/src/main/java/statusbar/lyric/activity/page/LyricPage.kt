@@ -218,7 +218,7 @@ class LyricPage : BasePage() {
                 setRButton(getString(R.string.ok)) {
                     try {
                         val value = getEditText().toInt()
-                        if (value in 0..10) {
+                        if (value in 0..20) {
                             config.lyricSpeed = value
                             changeConfig()
                         } else {

@@ -45,10 +45,10 @@ import statusbar.lyric.data.Data
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.ActivityTestTools.receiveClass
 import statusbar.lyric.tools.LogTools.log
+import statusbar.lyric.tools.LyeicViewTools.hideView
+import statusbar.lyric.tools.LyeicViewTools.showView
 import statusbar.lyric.tools.Tools.dispose
 import statusbar.lyric.tools.Tools.goMainThread
-import statusbar.lyric.tools.ViewTools.hideView
-import statusbar.lyric.tools.ViewTools.showView
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.Locale
