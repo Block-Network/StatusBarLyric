@@ -20,7 +20,7 @@
  * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
-package statusbar.lyric.hook.app
+package statusbar.lyric.hook.module
 
 
 import android.annotation.SuppressLint
@@ -75,13 +75,15 @@ import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.Tools.togglePrompts
-import statusbar.lyric.tools.LyeicViewTools
-import statusbar.lyric.tools.LyeicViewTools.hideView
-import statusbar.lyric.tools.LyeicViewTools.iconColorAnima
-import statusbar.lyric.tools.LyeicViewTools.showView
-import statusbar.lyric.tools.LyeicViewTools.textColorAnima
+import statusbar.lyric.tools.LyricViewTools
+import statusbar.lyric.tools.LyricViewTools.hideView
+import statusbar.lyric.tools.LyricViewTools.iconColorAnima
+import statusbar.lyric.tools.LyricViewTools.randomAnima
+import statusbar.lyric.tools.LyricViewTools.showView
+import statusbar.lyric.tools.LyricViewTools.textColorAnima
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
+import statusbar.lyric.view.TitleDialog
 import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -93,6 +95,8 @@ import kotlin.math.roundToInt
 class SystemUILyric : BaseHook() {
 
     private lateinit var hook: XC_MethodHook.Unhook
+    val context: Context by lazy { AndroidAppHelper.currentApplication() }
+
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
         goMainThread {
             if (config.lyricColor.isEmpty()) lyricView.textColorAnima(newValue)
@@ -102,9 +106,9 @@ class SystemUILyric : BaseHook() {
     }
     private var lastLyric: String = ""
     private var title: String by observableChange("") { _, newValue ->
-        newValue.log()
+        if (!config.titleShowWithSameLyric && lastLyric == newValue) return@observableChange
         goMainThread {
-            dialog.apply {
+            titleDialog.apply {
                 if (newValue.isEmpty()) {
                     hideTitle()
                 } else {
@@ -130,6 +134,9 @@ class SystemUILyric : BaseHook() {
     private var isPlaying: Boolean = false
     private var isStop: Boolean = false
     private var isHiding: Boolean = false
+    private var isRandomAnima: Boolean = false
+    val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
+
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
         if (oldValue == 0) return@observableChange
         "onConfigurationChanged".log()
@@ -139,10 +146,8 @@ class SystemUILyric : BaseHook() {
     private var theoreticalWidth: Int = 0
     private lateinit var point: Point
 
-    val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private val displayMetrics: DisplayMetrics by lazy { context.resources.displayMetrics }
-
     private val displayWidth: Int by lazy { displayMetrics.widthPixels }
     private val displayHeight: Int by lazy { displayMetrics.heightPixels }
 
@@ -160,7 +165,6 @@ class SystemUILyric : BaseHook() {
             setMaxLines(1)
         }
     }
-
     private val iconView: ImageView by lazy {
         ImageView(context).apply {
             visibility = View.GONE
@@ -183,17 +187,14 @@ class SystemUILyric : BaseHook() {
         }
     }
     private lateinit var mMIUINetworkSpeedView: TextView
-
-    val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
-
-
-    val dialog by lazy {
+    private val titleDialog by lazy {
         TitleDialog(context).apply {
 //            val location = IntArray(2)
 //            clockView.getLocationOnScreen(location)
 //            setX(location[0])
         }
     }
+
 
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
@@ -235,12 +236,13 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        loadClassOrNull("com.android.systemui.statusbar.NotificationMediaManager").isNotNull {
-            it.methodFinder().filterByName("findAndUpdateMediaNotifications").first().createHook {
-                after { hookParam ->
-//                    if (!isReally) return@after
-                    if (isStop) return@after
-                    title = hookParam.thisObject.objectHelper().getObjectOrNullAs<MediaMetadata>("mMediaMetadata")?.getString(MediaMetadata.METADATA_KEY_TITLE) ?: ""
+        if (config.titleSwitch) {
+            loadClassOrNull("com.android.systemui.statusbar.NotificationMediaManager").isNotNull {
+                it.methodFinder().filterByName("findAndUpdateMediaNotifications").first().createHook {
+                    after { hookParam ->
+                        if (isStop || !isPlaying) return@after
+                        title = hookParam.thisObject.objectHelper().getObjectOrNullAs<MediaMetadata>("mMediaMetadata")?.getString(MediaMetadata.METADATA_KEY_TITLE) ?: ""
+                    }
                 }
             }
         }
@@ -468,10 +470,10 @@ class SystemUILyric : BaseHook() {
             lyricView.apply {
                 val interpolator = config.interpolator
                 val duration = config.animationDuration
-                if (config.animation == "Random") {
-                    val effect = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY").random()
-                    inAnimation = LyeicViewTools.switchViewInAnima(effect, interpolator, duration)
-                    outAnimation = LyeicViewTools.switchViewOutAnima(effect, duration)
+                if (isRandomAnima) {
+                    val effect = randomAnima
+                    inAnimation = LyricViewTools.switchViewInAnima(effect, interpolator, duration)
+                    outAnimation = LyricViewTools.switchViewOutAnima(effect, duration)
                 }
                 width = getLyricWidth(paint, lyric)
                 val i = width - theoreticalWidth
@@ -516,7 +518,7 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             lyricLayout.hideView()
             clockView.showView()
-            dialog.hideTitle()
+            if (config.titleSwitch) titleDialog.hideTitle()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.showView()
@@ -551,9 +553,10 @@ class SystemUILyric : BaseHook() {
                 val animation = config.animation
                 val interpolator = config.interpolator
                 val duration = config.animationDuration
-                if (animation != "Random") {
-                    inAnimation = LyeicViewTools.switchViewInAnima(animation, interpolator, duration)
-                    outAnimation = LyeicViewTools.switchViewOutAnima(animation, duration)
+                isRandomAnima = config.animation == "Random"
+                if (!isRandomAnima) {
+                    inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
+                    outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
                 }
                 runCatching {
                     val file = File("${context.filesDir.path}/font")
@@ -569,7 +572,8 @@ class SystemUILyric : BaseHook() {
                 iconView.showView()
                 iconSwitch = true
                 iconView.apply {
-                    layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply { setMargins(config.iconStartMargins, config.iconTopMargins, 0, config.iconBottomMargins) }.apply {
+                    layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply {
+                        setMargins(config.iconStartMargins, config.iconTopMargins, 0, config.iconBottomMargins)
                         if (config.iconSize == 0) {
                             width = clockView.height / 2
                             height = clockView.height / 2

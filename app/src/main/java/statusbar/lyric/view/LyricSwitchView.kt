@@ -28,11 +28,9 @@ import android.graphics.Typeface
 import android.text.TextPaint
 import android.widget.TextSwitcher
 import android.widget.TextView
+import statusbar.lyric.tools.LogTools.log
 
 open class LyricSwitchView(context: Context) : TextSwitcher(context) {
-    private val lyricTextView: LyricTextView = LyricTextView(context)
-    private val lyricTextView2: LyricTextView = LyricTextView(context)
-    val viewArray: Array<TextView> = arrayOf(lyricTextView, lyricTextView2)
 
     val text: CharSequence get() = (currentView as TextView).text
 
@@ -40,60 +38,74 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         get() = (currentView as TextView).paint
 
     init {
-        addView(lyricTextView)
-        addView(lyricTextView2)
+        setFactory {
+            LyricTextView(context).apply {
+                layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
+            }
+        }
+    }
+
+
+    fun setAllView(unit: (LyricTextView) -> Unit) {
+        IntRange(0, childCount - 1).forEach {
+            unit(getChildAt(it) as LyricTextView)
+        }
     }
 
     open fun setWidth(i: Int) {
-        viewArray.forEach { view -> view.width = i }
+        setAllView { it.width = i }
     }
-
+//    var textViewColor: Int
+//        get() = (currentView as TextView).currentTextColor
+//        set(value) {
+//            setAllView { it.setTextColor(value) }
+//        }
     fun setTextColor(i: Int) {
-        viewArray.forEach { view -> view.setTextColor(i) }
+        setAllView { it.setTextColor(i) }
     }
 
 
     fun setSourceText(str: CharSequence) {
-        viewArray.forEach { view -> view.text = str }
+        setAllView { it.text = str }
     }
 
     fun setSpeed(f: Float) {
-        lyricTextView.setSpeed(f)
-        lyricTextView2.setSpeed(f)
+        setAllView { it.setSpeed(f) }
     }
 
     fun setLetterSpacings(letterSpacing: Float) {
-        viewArray.forEach { view -> view.letterSpacing = letterSpacing }
+        setAllView { it.letterSpacing = letterSpacing }
     }
 
     fun strokeWidth(i: Float) {
-        viewArray.forEach { view ->
-            view.paint.style = Paint.Style.FILL_AND_STROKE
-            view.paint.strokeWidth = i
+        setAllView {
+            it.paint.style = Paint.Style.FILL_AND_STROKE
+            it.paint.strokeWidth = i
         }
+
     }
 
     fun setTypeface(typeface: Typeface) {
-        viewArray.forEach { view -> view.typeface = typeface }
+        setAllView { it.typeface = typeface }
     }
 
     fun setTextSize(i: Int, f: Float) {
-        viewArray.forEach { view -> view.setTextSize(i, f) }
+        setAllView { it.setTextSize(i, f) }
     }
 
     fun setMargins(start: Int, top: Int, end: Int, bottom: Int) {
-        viewArray.forEach { view: TextView ->
-            val layoutParams = view.layoutParams as MarginLayoutParams
+        setAllView {
+            val layoutParams = it.layoutParams as MarginLayoutParams
             layoutParams.setMargins(start, top, end, bottom)
-            view.layoutParams = layoutParams
+            it.layoutParams = layoutParams
         }
     }
 
     fun setSingleLine(bool: Boolean) {
-        viewArray.forEach { view -> view.isSingleLine = bool }
+        setAllView { it.isSingleLine = bool }
     }
 
     fun setMaxLines(i: Int) {
-        viewArray.forEach { view -> view.maxLines = i }
+        setAllView { it.maxLines = i }
     }
 }

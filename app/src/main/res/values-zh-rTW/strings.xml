@@ -158,4 +158,18 @@
     <string name="slide_status_bar_cut_songs_x_radius_tips">範圍：50–2000</string>
     <string name="slide_status_bar_cut_songs_y_radius">* 滑動切歌Y半徑</string>
     <string name="slide_status_bar_cut_songs_y_radius_tips">範圍：10–100</string>
+    <string name="title_delay_duration">標題提示隱藏延遲隱藏時間</string>
+    <string name="title_delay_duration_tips">範圍：0–10000，單位：毫秒</string>
+    <string name="title_switch">標題提示開關</string>
+    <string name="title_tip">以下所有調節選項重啟生效</string>
+    <string name="title_color_and_transparency">標題提示背景顏色</string>
+    <string name="title_background_radius">標題提示背景圓角</string>
+    <string name="title_background_stroke_width">標題提示背景描邊寬度</string>
+    <string name="title_background_stroke_width_tips">範圍 0–30</string>
+    <string name="title_background_stroke_color">標題提示背景描邊顏色</string>
+    <string name="title_show_with_same_lyric">標題提示顯示相同的歌詞</string>
+    <string name="title_gravity_start">開始</string>
+    <string name="title_gravity_center">中心</string>
+    <string name="title_gravity_end">結束</string>
+    <string name="title_gravity">標題提示重力</string>
 </resources>

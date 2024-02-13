@@ -8,8 +8,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
-import statusbar.lyric.hook.app.SystemUILyric
-import statusbar.lyric.hook.app.SystemUITest
+import statusbar.lyric.hook.module.SystemUILyric
+import statusbar.lyric.hook.module.SystemUITest
 import statusbar.lyric.tools.LogTools.log
 import java.util.Locale
 
