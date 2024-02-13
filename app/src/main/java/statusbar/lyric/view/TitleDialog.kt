@@ -1,4 +1,4 @@
-package statusbar.lyric.hook.app
+package statusbar.lyric.view
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -18,9 +18,13 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.BounceInterpolator
 import android.view.animation.TranslateAnimation
+import android.widget.ImageView
 import android.widget.LinearLayout
-import statusbar.lyric.tools.LyeicViewTools
-import statusbar.lyric.view.LyricTextView
+import cn.fkj233.ui.activity.dp2px
+import com.github.kyuubiran.ezxhelper.EzXHelper
+import statusbar.lyric.R
+import statusbar.lyric.config.XposedOwnSP.config
+import statusbar.lyric.tools.LyricViewTools
 
 @SuppressLint("InternalInsetResource", "DiscouragedApi")
 class TitleDialog(context: Context) : Dialog(context) {
@@ -32,6 +36,12 @@ class TitleDialog(context: Context) : Dialog(context) {
     var showIng: Boolean = false
     var hiding: Boolean = false
     private var isStop: Boolean = false
+    private val baseGravity = when (config.titleGravity) {
+        0 -> Gravity.START
+        1 -> Gravity.CENTER
+        2 -> Gravity.END
+        else -> Gravity.START
+    }
 
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = Runnable {
@@ -42,24 +52,40 @@ class TitleDialog(context: Context) : Dialog(context) {
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
         setTextColor(Color.WHITE)
         gravity = Gravity.CENTER
+        if (baseGravity != Gravity.CENTER) {
+            maxWidth = this@TitleDialog.maxWidth
+        }
         maxLines = 1
     }
+    private val iconView: ImageView by lazy {
+        ImageView(context).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                width = dp2px(context, 15f)
+                height = dp2px(context, 15f)
+                setMargins(0, 0, 15, 0)
+            }
+            setImageDrawable(EzXHelper.moduleRes.getDrawable(R.drawable.ic_song, null))
+        }
+    }
     private var content: LinearLayout = LinearLayout(context).apply {
+        addView(iconView)
         addView(textView)
+        orientation = LinearLayout.HORIZONTAL
         gravity = Gravity.CENTER
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         background = GradientDrawable().apply {
-            cornerRadius = 50f
-            setColor(Color.BLACK)
+            cornerRadius = config.titleBackgroundRadius.toFloat()
+            setColor(Color.parseColor(config.titleColorAndTransparency))
+            setStroke(config.titleBackgroundStrokeWidth, Color.parseColor(config.titleBackgroundStrokeColorAndTransparency))
         }
         setPadding(40, 5, 40, 5)
     }
 
     private var root: LinearLayout = LinearLayout(context).apply {
         addView(content)
+        elevation = 10f
         gravity = Gravity.CENTER
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        setPadding(0, 0, 0, statusBarHeight + 20)
+        visibility = View.GONE
+        setPadding(h2, 0, h2, statusBarHeight + 20)
         setOnClickListener {
             if (!hiding) {
                 handler.removeCallbacks(runnable)
@@ -70,13 +96,12 @@ class TitleDialog(context: Context) : Dialog(context) {
 
     init {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-
         setContentView(root)
         window?.apply {
             setBackgroundDrawable(null)
             val params = attributes
             params.apply {
-                gravity = Gravity.START or Gravity.TOP
+                gravity = baseGravity or Gravity.TOP
                 flags = WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM or
                         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                         WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
@@ -85,17 +110,28 @@ class TitleDialog(context: Context) : Dialog(context) {
                 format = PixelFormat.TRANSLUCENT
                 width = WindowManager.LayoutParams.WRAP_CONTENT
                 height = WindowManager.LayoutParams.WRAP_CONTENT
-                x = h2
             }
             attributes = params
         }
         show()
     }
 
+    fun delayedHide() {
+        if (DELAY_DURATION == 0L) return
+        handler.removeCallbacks(runnable)
+        handler.postDelayed(runnable, DELAY_DURATION)
+    }
 
     fun showTitle(title: String) {
         setTitle(title)
-        if (showIng) return
+        if (root.visibility == View.VISIBLE) {
+            delayedHide()
+            return
+        }
+        if (showIng) {
+            handler.removeCallbacks(runnable)
+            return
+        }
         viewYAnimate(true)
     }
 
@@ -109,8 +145,8 @@ class TitleDialog(context: Context) : Dialog(context) {
     fun setTitle(title: String) {
         textView.apply {
             text = title
-            val w = textView.paint.measureText(title).toInt()
-            layoutParams.width = if (w > this@TitleDialog.maxWidth) this@TitleDialog.maxWidth else w
+//            val w = textView.paint.measureText(title).toInt()
+//            layoutParams.width = if (w > this@TitleDialog.maxWidth) this@TitleDialog.maxWidth else w
         }
     }
 
@@ -118,22 +154,19 @@ class TitleDialog(context: Context) : Dialog(context) {
         if (into) {
             root.visibility = View.VISIBLE
         }
-        val translateAnimation = createTranslateAnimation(into)
-        val alphaAnimation = createAllAnimation(into, translateAnimation)
+        val alphaAnimation = createAllAnimation(into)
         root.startAnimation(alphaAnimation)
     }
 
-    private fun createTranslateAnimation(into: Boolean): TranslateAnimation {
-        val fromY = if (into) h2.toFloat() else statusBarHeight.toFloat()
-        val toY = if (into) statusBarHeight.toFloat() else h2.toFloat()
-        return TranslateAnimation(0f, 0f, fromY, toY).apply {
-            duration = ANIMATION_DURATION
-        }
-    }
 
-    private fun createAllAnimation(into: Boolean, translateAnimation: TranslateAnimation): AnimationSet {
-        return LyeicViewTools.getAlphaAnimation(into, ALPHA_ANIMATION_DURATION).apply {
+    private fun createAllAnimation(into: Boolean): AnimationSet {
+        return LyricViewTools.getAlphaAnimation(into, ALPHA_ANIMATION_DURATION).apply {
             fillAfter = true
+            val fromY = if (into) h2.toFloat() else statusBarHeight.toFloat()
+            val toY = if (into) statusBarHeight.toFloat() else h2.toFloat()
+            val translateAnimation = TranslateAnimation(0f, 0f, fromY, toY).apply {
+                duration = ANIMATION_DURATION
+            }
             addAnimation(translateAnimation)
             interpolator = if (into) {
                 BounceInterpolator()
@@ -144,8 +177,7 @@ class TitleDialog(context: Context) : Dialog(context) {
                 override fun onAnimationStart(animation: Animation?) {
                     if (into) {
                         showIng = true
-                        handler.removeCallbacks(runnable)
-                        handler.postDelayed(runnable, DELAY_DURATION)
+                        delayedHide()
                     } else {
                         hiding = true
                     }
@@ -168,8 +200,8 @@ class TitleDialog(context: Context) : Dialog(context) {
     }
 
     companion object {
-        private const val ANIMATION_DURATION = 600L
-        private const val ALPHA_ANIMATION_DURATION = 500L
-        private const val DELAY_DURATION = 3000L
+        private const val ANIMATION_DURATION: Long = 600L
+        private const val ALPHA_ANIMATION_DURATION: Long = 500L
+        private val DELAY_DURATION: Long = config.titleDelayDuration.toLong()
     }
 }

@@ -42,11 +42,6 @@ open class LyricTextView(context: Context) : TextView(context) {
         viewWidth = width.toFloat()
     }
 
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-    }
-
     override fun onDetachedFromWindow() {
         removeCallbacks(mStartScrollRunnable)
         super.onDetachedFromWindow()

@@ -409,7 +409,62 @@ class Config {
         set(value) {
             config.put("mMiuiPadOptimize", value)
         }
-
+    var titleSwitch: Boolean
+        get() {
+            return config.opt("titleSwitch", true)
+        }
+        set(value) {
+            config.put("titleSwitch", value)
+        }
+    var titleDelayDuration: Int
+        get() {
+            return config.opt("title_delay_duration", 3000)
+        }
+        set(value) {
+            config.put("title_delay_duration", value)
+        }
+    var titleColorAndTransparency: String
+        get() {
+            return config.opt("titleColorAndTransparency", "#000000")
+        }
+        set(value) {
+            config.put("titleColorAndTransparency", value)
+        }
+    var titleBackgroundRadius: Int
+        get() {
+            return config.opt("titleBackgroundRadius", 50)
+        }
+        set(value) {
+            config.put("titleBackgroundRadius", value)
+        }
+    var titleBackgroundStrokeWidth: Int
+        get() {
+            return config.opt("titleBackgroundStrokeWidth", 0)
+        }
+        set(value) {
+            config.put("titleBackgroundStrokeWidth", value)
+        }
+    var titleBackgroundStrokeColorAndTransparency: String
+        get() {
+            return config.opt("titleBackgroundStrokeColorAndTransparency", "#FFFFFF")
+        }
+        set(value) {
+            config.put("titleBackgroundStrokeColorAndTransparency", value)
+        }
+    var titleShowWithSameLyric: Boolean
+        get() {
+            return config.opt("titleShowWithSameLyric", false)
+        }
+        set(value) {
+            config.put("titleShowWithSameLyric", value)
+        }
+    var titleGravity: Int
+        get() {
+            return config.opt("titleGravity", 0)
+        }
+        set(value) {
+            config.put("titleGravity", value)
+        }
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon

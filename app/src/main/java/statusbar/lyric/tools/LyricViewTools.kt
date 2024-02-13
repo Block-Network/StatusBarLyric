@@ -18,7 +18,9 @@ import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import statusbar.lyric.view.LyricSwitchView
 
-object LyeicViewTools {
+object LyricViewTools {
+    var animaList: ArrayList<String> = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY")
+    val randomAnima: String get() = animaList.random()
     fun getAlphaAnimation(into: Boolean, duration: Long = 300): AnimationSet {
         val alphaAnimation = (if (into) AlphaAnimation(0F, 1F) else AlphaAnimation(1F, 0F)).apply {
             this.duration = duration
@@ -70,7 +72,7 @@ object LyeicViewTools {
         }
     }
 
-    fun Animation.switchInterpolator(str: String?) {
+    private fun Animation.switchInterpolator(str: String?) {
         interpolator = when (str) {
             "Linear" -> LinearInterpolator()
             "Accelerate" -> AccelerateInterpolator()
@@ -121,7 +123,7 @@ object LyeicViewTools {
 
     @SuppressLint("Recycle")
     fun LyricSwitchView.textColorAnima(color: Int) {
-        this.viewArray.forEach {
+        this.setAllView {
             ObjectAnimator.ofInt(it, "textColor", it.currentTextColor, color).colorAnimator()
         }
     }
