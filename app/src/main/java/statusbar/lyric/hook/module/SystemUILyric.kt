@@ -237,11 +237,19 @@ class SystemUILyric : BaseHook() {
             }
         }
         if (config.titleSwitch) {
-            loadClassOrNull("com.android.systemui.statusbar.NotificationMediaManager").isNotNull {
-                it.methodFinder().filterByName("findAndUpdateMediaNotifications").first().createHook {
-                    after { hookParam ->
-                        if (isStop || !isPlaying) return@after
-                        title = hookParam.thisObject.objectHelper().getObjectOrNullAs<MediaMetadata>("mMediaMetadata")?.getString(MediaMetadata.METADATA_KEY_TITLE) ?: ""
+            for (i in 0..10) {
+                val clazz = loadClassOrNull("com.android.systemui.statusbar.NotificationMediaManager$$i")
+                clazz.log()
+                if (clazz.isNotNull()) {
+                    if (clazz!!.hasMethod("onMetadataChanged")) {
+                        clazz.methodFinder().filterByName("onMetadataChanged").first().createHook {
+                            after { hookParam ->
+                                if (isStop || !isPlaying) return@after
+                                val metadata = hookParam.args[0] as MediaMetadata
+                                title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE)
+                            }
+                        }
+                        break
                     }
                 }
             }
@@ -423,12 +431,10 @@ class SystemUILyric : BaseHook() {
             override fun onUpdate(lyricData: LyricData) {
                 if (!(isReally)) return
                 val lyric = lyricData.lyric
-                if (lyric.isNotEmpty()) {
-                    lastLyric = lyric
-                    if (isHiding) return
-                    changeIcon(lyricData.extraData)
-                    changeLyric(lyric, lyricData.extraData.delay)
-                }
+                lastLyric = lyric
+                if (isHiding) return
+                changeIcon(lyricData.extraData)
+                changeLyric(lyric, lyricData.extraData.delay)
             }
         })
         registerLyricListener(context, BuildConfig.API_VERSION, lyricReceiver)
