@@ -130,7 +130,7 @@ class SystemUILyric : BaseHook() {
     }
     private var canLoad: Boolean = true
     private var isScreenLock: Boolean = false
-    private var iconSwitch: Boolean = true
+    private var iconSwitch: Boolean = config.iconSwitch
     private var isPlaying: Boolean = false
     private var isStop: Boolean = false
     private var isHiding: Boolean = false
