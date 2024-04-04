@@ -64,6 +64,12 @@ import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.LogTools.log
+import statusbar.lyric.tools.LyricViewTools
+import statusbar.lyric.tools.LyricViewTools.hideView
+import statusbar.lyric.tools.LyricViewTools.iconColorAnima
+import statusbar.lyric.tools.LyricViewTools.randomAnima
+import statusbar.lyric.tools.LyricViewTools.showView
+import statusbar.lyric.tools.LyricViewTools.textColorAnima
 import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
@@ -75,18 +81,10 @@ import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.Tools.togglePrompts
-import statusbar.lyric.tools.LyricViewTools
-import statusbar.lyric.tools.LyricViewTools.hideView
-import statusbar.lyric.tools.LyricViewTools.iconColorAnima
-import statusbar.lyric.tools.LyricViewTools.randomAnima
-import statusbar.lyric.tools.LyricViewTools.showView
-import statusbar.lyric.tools.LyricViewTools.textColorAnima
 import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
 import statusbar.lyric.view.TitleDialog
 import java.io.File
-import java.math.BigDecimal
-import java.math.RoundingMode
 import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -494,8 +492,8 @@ class SystemUILyric : BaseHook() {
                 }
                 if (delay > 0) {
                     if (i > 0) {
-                        val speed = BigDecimal(i * 1.0 / 211).setScale(2, RoundingMode.HALF_UP).toFloat()
-                        setSpeed(speed)
+                        val d = delay * 1000.0 / 16.0
+                        setSpeed(((i / d).toFloat()))
                     }
                 }
                 setText(lyric)
