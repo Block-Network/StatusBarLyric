@@ -77,6 +77,6 @@ dependencies {
     compileOnly("de.robv.android.xposed:api:82")
     implementation(project(":blockmiui"))
     implementation(project(":xtoast"))
-    implementation("com.github.kyuubiran:EzXHelper:2.0.8")
+    implementation("com.github.kyuubiran:EzXHelper:2.0.9")
     implementation("com.github.xiaowine:Lyric-Getter-Api:6.0.0")
 }
