@@ -42,19 +42,12 @@ jobs:
       - name: Build with Gradle
         run: |
           ./gradlew assemble
-          ./gradlew bundleRelease
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v3
         with:
           name: StatusBarLyric_release
           path: ./app/build/outputs/apk/release
-
-      - name: Upload Release AAB APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: StatusBarLyric_aab
-          path: ./app/build/outputs/bundle/release
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
