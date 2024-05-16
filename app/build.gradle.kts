@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.konan.properties.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.lsposed.lsparanoid")
 }
 
 val localProperties = Properties()
@@ -73,6 +74,18 @@ kotlin {
     }
 }
 
+lsparanoid {
+    variantFilter = { variant ->
+        if (variant.buildType == "release") {
+            seed = System.currentTimeMillis().toInt() + 8848
+            classFilter = { true }
+            includeDependencies = true
+            true
+        } else {
+            false
+        }
+    }
+}
 dependencies {
     compileOnly("de.robv.android.xposed:api:82")
     implementation(project(":blockmiui"))
