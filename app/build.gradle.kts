@@ -18,7 +18,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 207
-        versionName = "断竹，续竹。"
+        versionName = "1"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
@@ -79,4 +79,6 @@ dependencies {
     implementation(project(":xtoast"))
     implementation("com.github.kyuubiran:EzXHelper:2.1.2")
     implementation("com.github.xiaowine:Lyric-Getter-Api:6.0.0")
+    implementation("com.jaredrummler:ktsh:1.0.0")
+    implementation("com.github.xiaowine:XKT:1.0.12")
 }

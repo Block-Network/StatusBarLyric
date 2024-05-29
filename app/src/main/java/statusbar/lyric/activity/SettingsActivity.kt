@@ -38,11 +38,11 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.activity.page.ChoosePage
 import statusbar.lyric.activity.page.ExtendPage
+import statusbar.lyric.activity.page.HookPage
 import statusbar.lyric.activity.page.IconPage
 import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
 import statusbar.lyric.activity.page.MenuPage
-import statusbar.lyric.activity.page.HookPage
 import statusbar.lyric.activity.page.SystemSpecialPage
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
