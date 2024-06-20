@@ -171,5 +171,20 @@
     <string name="title_gravity_start">开始</string>
     <string name="title_gravity_center">中心</string>
     <string name="title_gravity_end">结束</string>
-    <string name="title_gravity">标题提示重力</string>
+    <string name="title_gravity">标题提示居中</string>
+    <string name="not_senior_mode"><font color="#DAA520">此页面为高级模式内容\n当前未启用高级模式\n仅供预览，修改不生效</font></string>
+    <string name="already_donated">已经捐赠，已经激活模块</string>
+    <string name="not_donated">未捐赠，未激活模块</string>
+    <string name="see_how_to_donate">查看捐赠方式</string>
+    <string name="enter_the_activation_code">输入激活码</string>
+    <string name="enter_the_activation_code_tips">请输入激活码</string>
+    <string name="activationCode">激活码</string>
+    <string name="activation">激活</string>
+    <string name="get_the_feature_code">获取特征码</string>
+    <string name="feature_code">特征码</string>
+    <string name="wechat">微信</string>
+    <string name="alipay">支付宝</string>
+    <string name="donate">选择对应支付方式的二维码进行捐赠</string>
+    <string name="submit_your_donation">提交捐赠信息，获取高级版</string>
+    <string name="give_op">获取特征码前往Q群，发送特征码给管理员，等待管理员返回激活码后，填入即可激活高级模式</string>
 </resources>

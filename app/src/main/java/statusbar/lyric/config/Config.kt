@@ -24,6 +24,7 @@ package statusbar.lyric.config
 
 import android.content.SharedPreferences
 import de.robv.android.xposed.XSharedPreferences
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.tools.ConfigTools
 
 
@@ -57,6 +58,13 @@ class Config {
         }
         set(value) {
             config.put("hideTime", value)
+        }
+    var outLog: Boolean
+        get() {
+            return if (BuildConfig.DEBUG) true else config.opt("outlog", true)
+        }
+        set(value) {
+            config.put("outlog", value)
         }
 
     var hideNotificationIcon: Boolean

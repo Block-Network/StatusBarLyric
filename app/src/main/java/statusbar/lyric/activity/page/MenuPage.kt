@@ -12,6 +12,8 @@ import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
+import statusbar.lyric.tools.ShellTools.getRealBootID
+import statusbar.lyric.tools.ShellTools.c
 import statusbar.lyric.tools.Tools
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -21,13 +23,16 @@ import java.util.Locale
 class MenuPage : BasePage() {
     override fun onCreate() {
         TextWithSwitch(TextV(textId = R.string.hide_desk_icon), SwitchV("hLauncherIcon", onClickListener = {
-            activity.packageManager.setComponentEnabledSetting(ComponentName(activity, "${BuildConfig.APPLICATION_ID}.launcher"), if (it) {
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-            } else {
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-            }, PackageManager.DONT_KILL_APP)
+            activity.packageManager.setComponentEnabledSetting(
+                ComponentName(activity, "${BuildConfig.APPLICATION_ID}.launcher"), if (it) {
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                } else {
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                }, PackageManager.DONT_KILL_APP
+            )
         }))
         TextSw(textId = R.string.check_update, key = "checkUpdate", defValue = true)
+        TextSw(text = "Out Log", key = "outlog", defValue = false)
         TextSA(textId = R.string.reset_config, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(R.string.reset_config)
@@ -64,7 +69,20 @@ class MenuPage : BasePage() {
         TitleText(textId = R.string.module_version)
         TextS(textId = R.string.module_version, tips = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
         val buildTime = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(BuildConfig.BUILD_TIME)
-        TextS(textId = R.string.module_build_time, tips = buildTime)
+        TextS(textId = R.string.module_build_time, tips = buildTime, onClickListener = {
+            MIUIDialog(activity) {
+                setEditText(buildTime, "Build Time")
+                setLButton(R.string.ok) {
+                    try {
+                        val c = getEditText().getRealBootID().toString().c()
+                        Tools.copyToClipboard(context, c)
+                    } catch (_: Throwable) {
+                    }
+
+                    dismiss()
+                }
+            }.show()
+        })
         Text()
     }
 }
