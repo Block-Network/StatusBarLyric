@@ -1,36 +1,18 @@
 package statusbar.lyric.tools
 
 import cn.xiaowine.xkt.Tool.SHA256Encode
-import cn.xiaowine.xkt.Tool.base64Encode
 import com.jaredrummler.ktsh.Shell
-import statusbar.lyric.tools.LogTools.log
-import java.io.DataOutputStream
 import java.math.BigInteger
 
 object ShellTools {
+    var isA: Boolean = false
 
     private var dfe1: String = ""
     private var bootID: BigInteger = BigInteger.ZERO
+    private var premium = false
 
     private fun su(su: Boolean) = Shell(if (su) "su" else "sh")
 
-    fun shell(command: String, isSu: Boolean) {
-        command.log()
-        runCatching {
-            if (isSu) {
-                val p = Runtime.getRuntime().exec("su")
-                val outputStream = p.outputStream
-                DataOutputStream(outputStream).apply {
-                    writeBytes(command)
-                    flush()
-                    close()
-                }
-                outputStream.close()
-            } else {
-                Runtime.getRuntime().exec(command)
-            }
-        }
-    }
 
 //    fun checkIsSeniorMode(su: Boolean): Boolean {
 //        val saveSeniorModeInfo = getSeniorModeInfo(su)
@@ -42,7 +24,8 @@ object ShellTools {
 //        }
 //    }
 
-    fun a(su: Boolean): Boolean {
+    fun havePremium(su: Boolean): Boolean {
+        if (premium) return true
         getBootID(su).let {
             if (it == BigInteger.ZERO) {
                 return false
@@ -51,7 +34,8 @@ object ShellTools {
                     if (s.isEmpty()) {
                         return false
                     } else {
-                        return s == b(su)
+                        premium = s == b(su)
+                        return premium
                     }
                 }
             }
@@ -59,7 +43,11 @@ object ShellTools {
     }
 
     fun b(su: Boolean): String {
-        return "${getBootID(su)}3125".SHA256Encode().base64Encode().replace("A", "Z").replace("C", "E").replace("=", "😊").replace(" ", "")
+        return "${getBootID(su)}3125".SHA256Encode()
+    }
+
+    fun String.c(): String {
+        return "${this}3125".SHA256Encode()
     }
 
     fun String.saveSeniorModeInfo(su: Boolean): Boolean {
@@ -90,22 +78,20 @@ object ShellTools {
         }
     }
 
-    fun String.getRealBootID(su: Boolean): BigInteger {
-        getBootID(su).let {
-            val bigNumber = BigInteger(this)
-            val str = bigNumber.toString()
-            val length = str.length / 2
-            var count = 0
-            var stringWithoutHalfZeros = str
+    fun String.getRealBootID(): BigInteger {
+        val bigNumber = BigInteger(this)
+        val str = bigNumber.toString()
+        val length = str.length / 2
+        var count = 0
+        var stringWithoutHalfZeros = str
 
-            for (i in str.lastIndex downTo 0) {
-                if (str[i] == '0' && count < length) {
-                    stringWithoutHalfZeros = stringWithoutHalfZeros.removeRange(i..i)
-                    count++
-                }
+        for (i in str.lastIndex downTo 0) {
+            if (str[i] == '0' && count < length) {
+                stringWithoutHalfZeros = stringWithoutHalfZeros.removeRange(i..i)
+                count++
             }
-            return BigInteger(stringWithoutHalfZeros.replace("6", "3").replace("9", "4"))
         }
+        return BigInteger(stringWithoutHalfZeros.replace("6", "3").replace("9", "4"))
     }
 
     fun getBootID(su: Boolean): BigInteger {

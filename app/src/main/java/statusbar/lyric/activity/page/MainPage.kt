@@ -1,5 +1,6 @@
 package statusbar.lyric.activity.page
 
+import android.graphics.Color
 import android.view.View
 import cn.fkj233.ui.activity.annotation.BMMainPage
 import cn.fkj233.ui.activity.data.BasePage
@@ -7,6 +8,7 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTools
+import statusbar.lyric.tools.ShellTools.isA
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 
@@ -18,9 +20,12 @@ class MainPage : BasePage() {
         val masterSwitchBinding = GetDataBinding({ ActivityOwnSP.config.masterSwitch }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
+        Text(textId = if (isA) R.string.already_donated else R.string.not_donated, colorInt = Color.MAGENTA)
         TextSSw(textId = R.string.master_switch, key = "masterSwitch", onClickListener = { masterSwitchBinding.send(it) })
         Line(dataBindingRecv = masterSwitchBinding.getRecv(1))
+        TextSA(textId = R.string.premium_page, onClickListener = { showPage(PremiumPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
         TextSA(textId = R.string.hook_page, onClickListener = { showPage(HookPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
+        Line()
         TextSA(textId = R.string.lyric_page, onClickListener = { showPage(LyricPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
         TextSA(textId = R.string.icon_page, onClickListener = { showPage(IconPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
         Line(dataBindingRecv = masterSwitchBinding.getRecv(1))

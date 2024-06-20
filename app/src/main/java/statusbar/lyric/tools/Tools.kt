@@ -88,6 +88,12 @@ object Tools {
         return ret
     }
 
+    fun copyToClipboard(context: Context, text: String) {
+        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("text", text)
+        clipboardManager.setPrimaryClip(clipData)
+    }
+
     fun <T> observableChange(initialValue: T, onChange: (oldValue: T, newValue: T) -> Unit): ReadWriteProperty<Any?, T> {
         return Delegates.observable(initialValue) { _, oldVal, newVal ->
             if (oldVal != newVal) {
@@ -97,18 +103,18 @@ object Tools {
     }
 
     fun View.isTargetView(): Boolean {
-            val textViewClassName = XposedOwnSP.config.textViewClassName
-            val textViewId = XposedOwnSP.config.textViewId
-            val parentViewClassName = XposedOwnSP.config.parentViewClassName
-            val parentViewId = XposedOwnSP.config.parentViewId
-            val textSize = XposedOwnSP.config.textSize
-            if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0|| textSize == 0f) {
-                EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
-                return false
-            }
-            if (this is TextView) {
-                if (this::class.java.name == textViewClassName) {
-                    if (this.id == textViewId) {
+        val textViewClassName = XposedOwnSP.config.textViewClassName
+        val textViewId = XposedOwnSP.config.textViewId
+        val parentViewClassName = XposedOwnSP.config.parentViewClassName
+        val parentViewId = XposedOwnSP.config.parentViewId
+        val textSize = XposedOwnSP.config.textSize
+        if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0 || textSize == 0f) {
+            EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
+            return false
+        }
+        if (this is TextView) {
+            if (this::class.java.name == textViewClassName) {
+                if (this.id == textViewId) {
                     if (this.textSize == textSize) {
                         if (this.parent is LinearLayout) {
                             val parentView = (this.parent as LinearLayout)
@@ -122,10 +128,10 @@ object Tools {
                                 }
                             }
                         }
-                        }
                     }
                 }
             }
+        }
         return false
     }
 

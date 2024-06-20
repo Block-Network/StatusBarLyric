@@ -81,4 +81,5 @@ dependencies {
     implementation("com.github.xiaowine:Lyric-Getter-Api:6.0.0")
     implementation("com.jaredrummler:ktsh:1.0.0")
     implementation("com.github.xiaowine:XKT:1.0.12")
+    implementation("com.google.zxing:core:3.5.2")
 }
