@@ -84,7 +84,7 @@ class SettingsActivity : MIUIActivity() {
         context = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
-        isA = havePremium(true)
+        runCatching { isA = havePremium(true) }
         val signatureVerifier = SignatureVerifier(context)
         if (signatureVerifier.isSignatureValid(context.packageName)) {
             config.clear()
