@@ -12,7 +12,6 @@ import cn.fkj233.ui.activity.MIUIActivity.Companion.context
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
-import cn.xiaowine.xkt.AcTool.openURL
 import cn.xiaowine.xkt.ViewTool.getRoundedCornerBitmap
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -43,7 +42,16 @@ class PremiumPage : BasePage() {
             MIUIDialog(context) {
                 setTitle(context.getString(R.string.donate))
                 setRButton(context.getText(R.string.alipay)) {
-                    mAliPay.openURL()
+                    MIUIDialog(MIUIActivity.context) {
+                        setTitle(R.string.alipay)
+                        addView(ImageView(context).apply {
+                            setImageBitmap(createQRCodeImage(mAliPay))
+                            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        })
+                        setRButton(context.getText(R.string.ok)) {
+                            dismiss()
+                        }
+                    }.show()
                     dismiss()
                 }
                 setLButton(context.getText(R.string.wechat)) {
