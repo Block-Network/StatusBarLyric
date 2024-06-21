@@ -583,15 +583,33 @@ class SystemUILyric : BaseHook() {
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
                 if (!config.dynamicLyricSpeed) setSpeed(config.lyricSpeed.toFloat())
-                if (config.lyricBackgroundRadius != 0) {
-                    setBackgroundColor(Color.TRANSPARENT)
-                    background = GradientDrawable().apply {
-                        cornerRadius = config.lyricBackgroundRadius.toFloat()
-                        setColor(Color.parseColor(config.lyricBackgroundColor))
+                if (config.lyricBackgroundColor.isNotEmpty()) {
+                    if (config.lyricBackgroundColor.split(",").size < 2) {
+                        if (config.lyricBackgroundRadius != 0) {
+                            setBackgroundColor(Color.TRANSPARENT)
+                            background = GradientDrawable().apply {
+                                cornerRadius = config.lyricBackgroundRadius.toFloat()
+                                setColor(Color.parseColor(config.lyricBackgroundColor))
+                            }
+                        } else {
+                            setBackgroundColor(Color.parseColor(config.lyricBackgroundColor))
+                        }
+                    } else {
+                        config.lyricBackgroundColor.trim()
+                            .split(",")
+                            .map { Color.parseColor(it.trim()) }.let { colors ->
+                                val gradientDrawable = GradientDrawable(
+                                    GradientDrawable.Orientation.LEFT_RIGHT,
+                                    colors.toIntArray()
+                                ).apply {
+                                    if (config.lyricBackgroundRadius != 0) cornerRadius = config.lyricBackgroundRadius.toFloat()
+                                }
+                                background = gradientDrawable
+                            }
                     }
-                } else {
-                    setBackgroundColor(Color.parseColor(config.lyricBackgroundColor))
                 }
+
+
                 val animation = config.animation
                 val interpolator = config.interpolator
                 val duration = config.animationDuration

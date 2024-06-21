@@ -115,7 +115,7 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyrics_are_gradient_and_transparent))
                 setMessage(getString(R.string.lyrics_are_gradient_and_transparent_tips))
-                setEditText(config.lyricColor, "#ff0099,#d508a8,#aa10b8")
+                setEditText(config.lyricGradientColor, "#ff0099,#d508a8,#aa10b8")
                 setRButton(getString(R.string.ok)) {
                     var hasError = false
                     try {
@@ -148,21 +148,36 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
-        TextSA(textId = R.string.lyric_background_color_and_transparency, onClickListener = {
+        TextSA(textId = R.string.lyrics_gradient_background_color_and_transparency, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.lyric_background_color_and_transparency))
-                setMessage(getString(R.string.lyric_background_color_and_transparency_tips))
-                setEditText(config.lyricBackgroundColor, "#00000000", config = {
-                    it.inputType = InputType.TYPE_CLASS_TEXT
-                    it.filters = arrayOf(InputFilter.LengthFilter(9))
-                })
+                setTitle(getString(R.string.lyrics_gradient_background_color_and_transparency))
+                setMessage(getString(R.string.lyrics_gradient_background_color_and_transparency_tips))
+                setEditText(config.lyricBackgroundColor, "#00000000")
                 setRButton(getString(R.string.ok)) {
+                    var hasError = false
                     try {
                         val value = getEditText()
-                        Color.parseColor(value)
-                        config.lyricBackgroundColor = value
+                        if (value.isEmpty()) {
+                            value.split(",").forEach {
+                                if (it.isNotEmpty()) {
+                                    try {
+                                        Color.parseColor(it.trim())
+                                    } catch (e: Exception) {
+                                        context.getString(R.string.input_error).showToast()
+                                        hasError = true
+                                        return@forEach
+                                    }
+                                }
+                            }
+                            config.lyricBackgroundColor = ""
+                        } else {
+                            config.lyricBackgroundColor = value
+                        }
                         changeConfig()
                     } catch (_: Exception) {
+                        hasError = true
+                    }
+                    if (hasError) {
                         ActivityTools.showToastOnLooper(getString(R.string.input_error))
                     }
                 }

@@ -26,6 +26,7 @@ import android.content.Context
 import android.graphics.Paint
 import android.graphics.Shader
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.text.TextPaint
 import android.widget.TextSwitcher
 import android.widget.TextView
@@ -37,6 +38,7 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
 
     val paint: TextPaint
         get() = (currentView as TextView).paint
+
 
     init {
         setFactory {
@@ -70,6 +72,10 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         setAllView {
             it.paint.shader = shader
         }
+    }
+
+    override fun setBackground(background: Drawable?) {
+        setAllView { it.background = background }
     }
 
     fun setSourceText(str: CharSequence) {
