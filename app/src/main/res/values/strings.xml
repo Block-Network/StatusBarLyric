@@ -191,4 +191,6 @@
     <string name="give_op">Get the feature code and go to the Q group, send the feature code to the administrator, wait for the administrator to return the activation code, and fill it in to activate the advanced mode</string>
     <string name="change_all_icons">Change all icons</string>
     <string name="change_all_icons_tips">Please enter Base64</string>
+    <string name="lyrics_are_gradient_and_transparent_tips">请输入16进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
+    <string name="lyrics_are_gradient_and_transparent">歌词渐变色和透明</string>
 </resources>
