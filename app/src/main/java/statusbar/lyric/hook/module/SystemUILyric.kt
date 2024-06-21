@@ -31,8 +31,10 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Point
+import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.media.MediaMetadata
@@ -98,7 +100,7 @@ class SystemUILyric : BaseHook() {
 
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
         goMainThread {
-            if (config.lyricColor.isEmpty()) lyricView.textColorAnima(newValue)
+            if (config.lyricColor.isEmpty() && config.lyricGradientColor.isNotEmpty()) lyricView.textColorAnima(newValue)
             if (config.iconColor.isEmpty()) iconView.iconColorAnima(lastColor, newValue)
         }
         "Change Color".log()
@@ -157,7 +159,30 @@ class SystemUILyric : BaseHook() {
     private lateinit var mCarrierLabel: View
     private lateinit var mPadClockView: View
     private val lyricView: LyricSwitchView by lazy {
-        LyricSwitchView(context).apply {
+        object : LyricSwitchView(context) {
+            override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+                super.onSizeChanged(w, h, oldw, oldh)
+                if (config.lyricGradientColor.isNotEmpty()) {
+                    config.lyricGradientColor.trim()
+                        .split(",")
+                        .map { Color.parseColor(it.trim()) }.let { colors ->
+                            if (colors.isEmpty()) {
+                                setTextColor(Color.WHITE)
+                            } else
+                                if (colors.size < 2) {
+                                    setTextColor(colors[0])
+                                } else {
+                                    val textShader = LinearGradient(
+                                        0f, 0f, width.toFloat(), 0f,
+                                        colors.toIntArray(),
+                                        null, Shader.TileMode.CLAMP
+                                    )
+                                    setLinearGradient(textShader)
+                                }
+                        }
+                }
+            }
+        }.apply {
             setTypeface(clockView.typeface)
             layoutParams = clockView.layoutParams
             setSingleLine(true)
@@ -548,10 +573,12 @@ class SystemUILyric : BaseHook() {
             lyricView.apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
                 setMargins(config.lyricStartMargins, config.lyricTopMargins, config.lyricEndMargins, config.lyricBottomMargins)
-                if (config.lyricColor.isEmpty()) {
-                    textColorAnima(clockView.currentTextColor)
-                } else {
-                    textColorAnima(Color.parseColor(config.lyricColor))
+                if (config.lyricGradientColor.isEmpty()) {
+                    if (config.lyricColor.isEmpty()) {
+                        textColorAnima(clockView.currentTextColor)
+                    } else {
+                        textColorAnima(Color.parseColor(config.lyricColor))
+                    }
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)

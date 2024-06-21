@@ -10,6 +10,7 @@ import android.widget.SeekBar
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
+import cn.xiaowine.xkt.AcTool.showToast
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
@@ -103,6 +104,43 @@ class LyricPage : BasePage() {
                         }
                         changeConfig()
                     } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
+                    }
+                }
+                setLButton(getString(R.string.cancel))
+                finally { dismiss() }
+            }.show()
+        })
+        TextSA(textId = R.string.lyrics_are_gradient_and_transparent, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.lyrics_are_gradient_and_transparent))
+                setMessage(getString(R.string.lyrics_are_gradient_and_transparent_tips))
+                setEditText(config.lyricColor, "#ff0099,#d508a8,#aa10b8")
+                setRButton(getString(R.string.ok)) {
+                    var hasError = false
+                    try {
+                        val value = getEditText()
+                        if (value.isEmpty()) {
+                            value.split(",").forEach {
+                                if (it.isNotEmpty()) {
+                                    try {
+                                        Color.parseColor(it.trim())
+                                    } catch (e: Exception) {
+                                        context.getString(R.string.input_error).showToast()
+                                        hasError = true
+                                        return@forEach
+                                    }
+                                }
+                            }
+                            config.lyricGradientColor = ""
+                        } else {
+                            config.lyricGradientColor = value
+                        }
+                        changeConfig()
+                    } catch (_: Exception) {
+                        hasError = true
+                    }
+                    if (hasError) {
                         ActivityTools.showToastOnLooper(getString(R.string.input_error))
                     }
                 }

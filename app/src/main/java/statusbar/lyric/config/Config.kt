@@ -208,6 +208,13 @@ class Config {
         set(value) {
             config.put("lyricColor", value)
         }
+    var lyricGradientColor: String
+        get() {
+            return config.opt("lyricGradientColor", "")
+        }
+        set(value) {
+            config.put("lyricGradientColor", value)
+        }
     var lyricBackgroundColor: String
         get() {
             return config.opt("lyricBackgroundColor", "#00000000")

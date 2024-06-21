@@ -24,6 +24,7 @@ package statusbar.lyric.view
 
 import android.content.Context
 import android.graphics.Paint
+import android.graphics.Shader
 import android.graphics.Typeface
 import android.text.TextPaint
 import android.widget.TextSwitcher
@@ -55,7 +56,8 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     open fun setWidth(i: Int) {
         setAllView { it.width = i }
     }
-//    var textViewColor: Int
+
+    //    var textViewColor: Int
 //        get() = (currentView as TextView).currentTextColor
 //        set(value) {
 //            setAllView { it.setTextColor(value) }
@@ -64,6 +66,11 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         setAllView { it.setTextColor(i) }
     }
 
+    fun setLinearGradient(shader: Shader) {
+        setAllView {
+            it.paint.shader = shader
+        }
+    }
 
     fun setSourceText(str: CharSequence) {
         setAllView { it.text = str }
