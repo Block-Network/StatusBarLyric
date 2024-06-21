@@ -507,11 +507,15 @@ class SystemUILyric : BaseHook() {
 
     private fun changeIcon(it: ExtraData) {
         if (!iconSwitch) return
-        val customIcon = it.customIcon && it.base64Icon.isNotEmpty()
-        lastBase64Icon = if (customIcon) {
-            it.base64Icon
+        if (config.changeAllIcons.isNotEmpty()) {
+            lastBase64Icon = config.changeAllIcons
         } else {
-            config.getDefaultIcon(it.packageName)
+            val customIcon = it.customIcon && it.base64Icon.isNotEmpty()
+            lastBase64Icon = if (customIcon) {
+                it.base64Icon
+            } else {
+                config.getDefaultIcon(it.packageName)
+            }
         }
     }
 

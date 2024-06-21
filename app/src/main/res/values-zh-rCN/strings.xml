@@ -187,4 +187,6 @@
     <string name="donate">选择对应支付方式的二维码进行捐赠</string>
     <string name="submit_your_donation">提交捐赠信息，获取高级版</string>
     <string name="give_op">获取特征码前往Q群，发送特征码给管理员，等待管理员返回激活码后，填入即可激活高级模式</string>
+    <string name="change_all_icons">更改所有图标</string>
+    <string name="change_all_icons_tips">请输入Base64</string>
 </resources>

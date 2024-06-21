@@ -4,9 +4,11 @@ import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
 import android.view.View
+import cn.fkj233.ui.activity.MIUIActivity.Companion.context
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
+import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
@@ -149,5 +151,24 @@ class IconPage : BasePage() {
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
         TextSSw(textId = R.string.force_the_icon_to_be_displayed, key = "forceTheIconToBeDisplayed", onClickListener = { changeConfig() }, dataBindingRecv = binding.getRecv(1))
+        TextSA(textId = R.string.change_all_icons, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.change_all_icons))
+                setMessage(getString(R.string.change_all_icons_tips))
+                setEditText(config.changeAllIcons, "")
+                setRButton(getString(R.string.ok)) {
+                    try {
+                        val value = getEditText()
+                        base64ToDrawable(value)
+                        config.changeAllIcons = value
+                        changeConfig()
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
+                    }
+                }
+                setLButton(getString(R.string.cancel))
+                finally { dismiss() }
+            }.show()
+        }, dataBindingRecv = binding.getRecv(1))
     }
 }

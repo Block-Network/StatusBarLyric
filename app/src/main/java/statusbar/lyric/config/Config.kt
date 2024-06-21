@@ -473,6 +473,14 @@ class Config {
         set(value) {
             config.put("titleGravity", value)
         }
+
+    var changeAllIcons: String
+        get() {
+            return config.opt("changeAllIcons", "")
+        }
+        set(value) {
+            config.put("changeAllIcons", value)
+        }
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon
