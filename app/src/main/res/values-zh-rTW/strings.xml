@@ -48,7 +48,9 @@
     <string name="fixed_lyric_width">固定歌詞寬度</string>
     <string name="fixed_lyric_width_tips">打開後，歌詞的外部寬度固定，不隨歌詞變化而變化</string>
     <string name="lyric_color_and_transparency">歌詞顏色和透明度</string>
-    <string name="lyric_color_and_transparency_tips">請輸入十六進制顏色值</string>
+    <string name="lyric_color_and_transparency_tips">請輸入十進制顏色</string>
+    <string name="lyrics_gradient_background_color_and_transparency">歌詞背景漸變顏色和透明度</string>
+    <string name="lyrics_gradient_background_color_and_transparency_tips">請輸入16進制顏色，多個顏色為漸變色橫向排布，使用英文逗號分隔</string>
     <string name="lyric_size">歌詞大小</string>
     <string name="lyric_size_tips">範圍：狀態列高度的0％–100％，0代表跟隨時間</string>
     <string name="lyric_letter_spacing">歌詞字間距</string>
@@ -135,8 +137,6 @@
     <string name="hide_lyric_when_lock_screen">* 鎖定螢幕時隱藏歌詞</string>
     <string name="choose_page_tips">建議先關閉其他修改狀態列佈局的模組后，再來此頁面選擇Hook點\n有效的Hook點選擇：狀態列顯示模組名字，並且時間隱藏</string>
     <string name="hide_carrier">* 隱藏運營商</string>
-    <string name="lyric_background_color_and_transparency">歌詞背景顏色和透明度</string>
-    <string name="lyric_background_color_and_transparency_tips">請輸入十六進制顏色值</string>
     <string name="lyric_background_radius">歌詞背景半徑</string>
     <string name="lyric_background_radius_tips">範圍：0–100</string>
     <string name="color_scheme1">方案 1</string>
@@ -189,4 +189,6 @@
     <string name="give_op">獲取特徵碼前往Q群，發送特徵碼給管理員，等待管理員返回啟動碼後，填入即可啟動高級模式</string>
     <string name="change_all_icons">更改所有圖標</string>
     <string name="change_all_icons_tips">請輸入Base64</string>
+    <string name="lyrics_are_gradient_and_transparent_tips">請輸入16進制顏色，多個顏色為漸變色橫向排布，使用英文逗號分隔</string>
+    <string name="lyrics_are_gradient_and_transparent">* 歌詞漸變色和透明</string>
 </resources>

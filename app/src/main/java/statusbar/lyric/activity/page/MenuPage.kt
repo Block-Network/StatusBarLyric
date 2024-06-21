@@ -64,7 +64,6 @@ class MenuPage : BasePage() {
         })
         TextSA(textId = R.string.backup_config, onClickListener = { activity.getSP()?.let { BackupTools.backup(activity, it) } })
         TextSA(textId = R.string.recovery_config, onClickListener = { activity.getSP()?.let { BackupTools.recovery(activity, it) } })
-
         Line()
         TitleText(textId = R.string.module_version)
         TextS(textId = R.string.module_version, tips = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")

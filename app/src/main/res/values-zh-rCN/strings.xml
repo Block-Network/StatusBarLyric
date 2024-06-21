@@ -48,7 +48,9 @@
     <string name="fixed_lyric_width">固定歌词宽度</string>
     <string name="fixed_lyric_width_tips">打开后，歌词的外部宽度固定，不随歌词变化而变化</string>
     <string name="lyric_color_and_transparency">歌词颜色和透明度</string>
-    <string name="lyric_color_and_transparency_tips">请输入十六进制颜色值</string>
+    <string name="lyric_color_and_transparency_tips">请输入16进制颜色</string>
+    <string name="lyrics_gradient_background_color_and_transparency">歌词背景渐变颜色和透明度</string>
+    <string name="lyrics_gradient_background_color_and_transparency_tips">请输入16进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
     <string name="lyric_size">歌词大小</string>
     <string name="lyric_size_tips">范围：状态栏高度的0％–100％，0代表跟随时间</string>
     <string name="lyric_letter_spacing">歌词字间距</string>
@@ -135,8 +137,6 @@
     <string name="hide_lyric_when_lock_screen">* 锁定屏幕时隐藏歌词</string>
     <string name="choose_page_tips">建议先关闭其他修改状态栏布局的模块后，再来此页面选择Hook点\n有效的Hook点选择：状态栏显示模块名字，并且时间隐藏</string>
     <string name="hide_carrier">* 隐藏运营商</string>
-    <string name="lyric_background_color_and_transparency">歌词背景颜色和透明度</string>
-    <string name="lyric_background_color_and_transparency_tips">请输入十六进制颜色值</string>
     <string name="lyric_background_radius">歌词背景半径</string>
     <string name="lyric_background_radius_tips">范围：0–100</string>
     <string name="color_scheme1">方案 1</string>
@@ -189,4 +189,6 @@
     <string name="give_op">获取特征码前往Q群，发送特征码给管理员，等待管理员返回激活码后，填入即可激活高级模式</string>
     <string name="change_all_icons">更改所有图标</string>
     <string name="change_all_icons_tips">请输入Base64</string>
+    <string name="lyrics_are_gradient_and_transparent_tips">请输入16进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
+    <string name="lyrics_are_gradient_and_transparent">* 歌词渐变色和透明</string>
 </resources>
