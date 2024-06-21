@@ -13,7 +13,6 @@ import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.xiaowine.xkt.AcTool.openURL
-import cn.xiaowine.xkt.Tool.shiftString2
 import cn.xiaowine.xkt.ViewTool.getRoundedCornerBitmap
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -26,8 +25,8 @@ import statusbar.lyric.tools.ShellTools.saveSeniorModeInfo
 
 @BMPage
 class PremiumPage : BasePage() {
-    private val mAliPay = "kwwsv=22tu1dolsd|1frp2in{435<3|tz}wiy7rvknxfi".shiftString2()
-    private val mWxPay = "z{s=22i5i3rWe]0yv|w<bV4Z]k<W{gVzgQfMdl<xgU3HzE:Gw}WtbV|9Hi3T9zQIhmltPvd:F9".shiftString2()
+    private val mAliPay = "https://qr.alipay.com/fkx17750vhmx4dizxgdu62e"
+    private val mWxPay = "wxp://f2f1bwrA-XTL-AqpEFsOaXC1JdLBJf5piqKlia1t9KHWlM1538alIm0zkoRQUDp4-Wnd"
 
     override fun onCreate() {
         val aBinding = GetDataBinding({ isA }) { view, i, data ->
