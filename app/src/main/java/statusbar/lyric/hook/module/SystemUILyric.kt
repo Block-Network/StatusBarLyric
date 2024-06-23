@@ -100,7 +100,7 @@ class SystemUILyric : BaseHook() {
 
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
         goMainThread {
-            if (config.lyricColor.isEmpty() && config.lyricGradientColor.isNotEmpty()) lyricView.textColorAnima(newValue)
+            if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) lyricView.textColorAnima(newValue)
             if (config.iconColor.isEmpty()) iconView.iconColorAnima(lastColor, newValue)
         }
         "Change Color".log()
