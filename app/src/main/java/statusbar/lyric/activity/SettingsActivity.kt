@@ -137,6 +137,7 @@ class SettingsActivity : MIUIActivity() {
         if (!BuildConfig.DEBUG) {
             if (config.checkUpdate) getUpdate()
             getNotice()
+            LogTools.init(true)
         }
         LogTools.init(config.outLog)
         AcTool.init(this)

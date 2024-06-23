@@ -1,6 +1,7 @@
 package statusbar.lyric.tools
 
 import cn.xiaowine.xkt.Tool.SHA256Encode
+import cn.xiaowine.xkt.Tool.latinToLong
 import com.jaredrummler.ktsh.Shell
 import java.math.BigInteger
 
@@ -62,7 +63,7 @@ object ShellTools {
         return result.isSuccess
     }
 
-    fun getSeniorModeInfo(su: Boolean): String {
+    private fun getSeniorModeInfo(su: Boolean): String {
         if (dfe1.isNotEmpty()) return dfe1
         val result = su(su).run("settings get system dfe1")
         return if (result.isSuccess) {
@@ -94,7 +95,7 @@ object ShellTools {
         return BigInteger(stringWithoutHalfZeros.replace("6", "3").replace("9", "4"))
     }
 
-    fun getBootID(su: Boolean): BigInteger {
+    private fun getBootID(su: Boolean): BigInteger {
         if (bootID != BigInteger.ZERO) {
             return bootID
         }
@@ -120,7 +121,7 @@ object ShellTools {
                 val result = su(su).run("getprop ro.serialno")
                 bootID = if (result.isSuccess) {
                     val out = result.output()
-                    BigInteger(out.substring(5))
+                    BigInteger(out.latinToLong().toString().substring(5))
                 } else {
                     BigInteger.ZERO
                 }

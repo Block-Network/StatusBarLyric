@@ -23,7 +23,6 @@
 package statusbar.lyric.tools
 
 import android.util.Log
-import statusbar.lyric.BuildConfig
 
 object LogTools {
     private const val maxLength = 4000
