@@ -24,7 +24,7 @@ class MenuPage : BasePage() {
     override fun onCreate() {
         TextWithSwitch(TextV(textId = R.string.hide_desk_icon), SwitchV("hLauncherIcon", onClickListener = {
             activity.packageManager.setComponentEnabledSetting(
-                ComponentName(activity, "${BuildConfig.APPLICATION_ID}.launcher"), if (it) {
+                ComponentName(activity, "statusbar.lyric.launcher"), if (it) {
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED
                 } else {
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED
