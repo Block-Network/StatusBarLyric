@@ -161,6 +161,7 @@
     <string name="title_delay_duration">標題提示隱藏延遲隱藏時間</string>
     <string name="title_delay_duration_tips">範圍：0–10000，單位：毫秒</string>
     <string name="title_switch">標題提示開關</string>
+    <string name="use_blue_get_title">使用藍牙獲取標題方案</string>
     <string name="title_tip">以下所有調節選項重啟生效</string>
     <string name="title_color_and_transparency">標題提示背景顏色</string>
     <string name="title_background_radius">標題提示背景圓角</string>

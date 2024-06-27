@@ -431,6 +431,13 @@ class Config {
         set(value) {
             config.put("titleSwitch", value)
         }
+    var useBlueGetTitle: Boolean
+        get() {
+            return config.opt("useBlueGetTitle", false)
+        }
+        set(value) {
+            config.put("useBlueGetTitle", value)
+        }
     var titleDelayDuration: Int
         get() {
             return config.opt("title_delay_duration", 3000)
