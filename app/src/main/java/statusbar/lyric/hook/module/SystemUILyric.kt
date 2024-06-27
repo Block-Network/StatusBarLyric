@@ -273,7 +273,7 @@ class SystemUILyric : BaseHook() {
                             after { hookParam ->
                                 if (isStop || !isPlaying) return@after
                                 val metadata = hookParam.args[0] as MediaMetadata
-                                title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE)
+                                title = metadata.getString(if (config.useBlueGetTitle) MediaMetadata.METADATA_KEY_ARTIST else MediaMetadata.METADATA_KEY_TITLE)
                             }
                         }
                         break

@@ -161,6 +161,7 @@
     <string name="title_delay_duration">标题提示隐藏延迟隐藏时间</string>
     <string name="title_delay_duration_tips">范围：0–10000，单位：毫秒</string>
     <string name="title_switch">标题提示开关</string>
+    <string name="use_blue_get_title">使用蓝牙获取标题方案</string>
     <string name="title_tip">下列所有调节选项重启生效</string>
     <string name="title_color_and_transparency">标题提示背景颜色</string>
     <string name="title_background_radius">标题提示背景圆角</string>
