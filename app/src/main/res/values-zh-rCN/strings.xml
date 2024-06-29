@@ -24,6 +24,8 @@
     <string name="unsupported_lyric_getter">不支持的Lyric Getter</string>
     <string name="menu">菜单</string>
     <string name="hide_desk_icon">隐藏桌面图标</string>
+    <string name="use_su_to_elevate_privileges">使用SU提升权限</string>
+    <string name="use_su_to_elevate_privileges_tips">开启后一定要授予系统框架ROOT，否则会崩溃</string>
     <string name="print_xp_log">打印Xposed日志</string>
     <string name="check_update">检查更新</string>
     <string name="reset_config">重置配置</string>

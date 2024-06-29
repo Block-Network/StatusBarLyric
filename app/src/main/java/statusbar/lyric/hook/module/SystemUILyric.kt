@@ -108,6 +108,7 @@ class SystemUILyric : BaseHook() {
     private var lastLyric: String = ""
     private var title: String by observableChange("") { _, newValue ->
         if (!config.titleShowWithSameLyric && lastLyric == newValue) return@observableChange
+        if (!isPlaying) return@observableChange
         goMainThread {
             titleDialog.apply {
                 if (newValue.isEmpty()) {
@@ -223,7 +224,7 @@ class SystemUILyric : BaseHook() {
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
     override fun init() {
-        if (!havePremium(false)) {
+        if (!havePremium(config.useSUToElevatePrivileges)) {
             return
         }
         "Init Hook".log()
@@ -565,7 +566,7 @@ class SystemUILyric : BaseHook() {
 
     private fun changeConfig(delay: Long = 0L) {
         "Change Config".log()
-        if (!havePremium(false)) {
+        if (!havePremium(config.useSUToElevatePrivileges)) {
             return
         }
         config.update()

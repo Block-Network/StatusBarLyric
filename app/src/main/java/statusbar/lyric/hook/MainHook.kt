@@ -26,18 +26,17 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
         EzXHelper.initHandleLoadPackage(lpparam)
         when (lpparam.packageName) {
             "com.android.systemui" -> {
-                if (!havePremium(false)) return
+                if (!havePremium(config.useSUToElevatePrivileges)) {
+                    "Premium not found".log()
+                    return
+                }
                 "${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})".log()
                 if (config.testMode) {
                     moduleRes.getString(R.string.hook_page).log()
                     initHooks(SystemUITest())
                 } else {
-                    if (havePremium(false)) {
-                        moduleRes.getString(R.string.lyric_mode).log()
-                        initHooks(SystemUILyric())
-                    } else {
-                        "未激活高级模式".log()
-                    }
+                    moduleRes.getString(R.string.lyric_mode).log()
+                    initHooks(SystemUILyric())
                 }
             }
         }
