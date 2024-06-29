@@ -7,13 +7,14 @@ import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.activity.view.SwitchV
 import cn.fkj233.ui.activity.view.TextV
 import cn.fkj233.ui.dialog.MIUIDialog
+import com.jaredrummler.ktsh.Shell
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
-import statusbar.lyric.tools.ShellTools.getRealBootID
 import statusbar.lyric.tools.ShellTools.c
+import statusbar.lyric.tools.ShellTools.getRealBootID
 import statusbar.lyric.tools.Tools
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -22,6 +23,13 @@ import java.util.Locale
 @BMMenuPage
 class MenuPage : BasePage() {
     override fun onCreate() {
+        TitleText(textId = R.string.use_su_to_elevate_privileges_tips)
+        TextSw(textId = R.string.use_su_to_elevate_privileges, key = "useSUToElevatePrivileges", onClickListener = {
+            if (it) {
+                Shell("sh").run("su 1000 -c su").isSuccess
+            }
+        })
+        Line()
         TextWithSwitch(TextV(textId = R.string.hide_desk_icon), SwitchV("hLauncherIcon", onClickListener = {
             activity.packageManager.setComponentEnabledSetting(
                 ComponentName(activity, "statusbar.lyric.launcher"), if (it) {

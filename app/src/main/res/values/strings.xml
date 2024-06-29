@@ -23,6 +23,8 @@
     <string name="installed">Installed</string>
     <string name="unsupported_lyric_getter">Unsupported LyricGetter</string>
     <string name="menu">Menu</string>
+    <string name="use_su_to_elevate_privileges">use su to elevate privileges</string>
+    <string name="use_su_to_elevate_privileges_tips">After it is enabled, the system framework must be granted ROOT, otherwise it will crash</string>
     <string name="hide_desk_icon">Hide desktop icons</string>
     <string name="print_xp_log">Print Xposed Log</string>
     <string name="check_update">Check for updates</string>

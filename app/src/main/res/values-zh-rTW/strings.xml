@@ -24,6 +24,8 @@
     <string name="unsupported_lyric_getter">不支持的歌詞獲取器 </string>
     <string name="menu">菜單</string>
     <string name="hide_desk_icon">隱藏桌面圖示</string>
+    <string name="use_su_to_elevate_privileges">使用SU提升許可權</string>
+    <string name="use_su_to_elevate_privileges_tips">開啟後一定要授予系統框架ROOT，否則會崩潰</string>
     <string name="print_xp_log">打印Xposed日誌</string>
     <string name="check_update">檢查更新</string>
     <string name="reset_config">重置配置</string>
