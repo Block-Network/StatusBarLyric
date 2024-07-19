@@ -236,6 +236,13 @@ class Config {
         set(value) {
             config.put("iconColor", value)
         }
+    var iconBgColor: String
+        get() {
+            return config.opt("iconBgColor", "")
+        }
+        set(value) {
+            config.put("iconBgColor", value)
+        }
     var limitVisibilityChange: Boolean
         get() {
             return config.opt("limitVisibilityChange", false)
