@@ -648,6 +648,11 @@ class SystemUILyric : BaseHook() {
                     } else {
                         iconColorAnima(lastColor, Color.parseColor(config.iconColor))
                     }
+                    if (config.iconBgColor.isNotEmpty()) {
+                        setBackgroundColor(Color.parseColor(config.iconBgColor))
+                    } else {
+                        setBackgroundColor(Color.TRANSPARENT)
+                    }
                 }
             }
             if (this::mNotificationIconArea.isInitialized) if (config.hideNotificationIcon) mNotificationIconArea.hideView() else mNotificationIconArea.showView()

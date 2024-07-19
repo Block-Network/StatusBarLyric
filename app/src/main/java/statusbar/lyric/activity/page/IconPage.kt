@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.text.InputFilter
 import android.text.InputType
 import android.view.View
-import cn.fkj233.ui.activity.MIUIActivity.Companion.context
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
@@ -65,6 +64,32 @@ class IconPage : BasePage() {
                         } else {
                             Color.parseColor(value)
                             config.iconColor = value
+                        }
+                        changeConfig()
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
+                    }
+                }
+                setLButton(getString(R.string.cancel))
+                finally { dismiss() }
+            }.show()
+        }, dataBindingRecv = binding.getRecv(1))
+        TextSA(textId = R.string.icon_background_color_and_transparency, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.icon_background_color_and_transparency))
+                setMessage(getString(R.string.icon_background_color_and_transparency_tips))
+                setEditText(config.iconBgColor, "#FFFFFF", config = {
+                    it.inputType = InputType.TYPE_CLASS_TEXT
+                    it.filters = arrayOf(InputFilter.LengthFilter(9))
+                })
+                setRButton(getString(R.string.ok)) {
+                    try {
+                        val value = getEditText()
+                        if (value.isEmpty()) {
+                            config.iconBgColor = ""
+                        } else {
+                            Color.parseColor(value)
+                            config.iconBgColor = value
                         }
                         changeConfig()
                     } catch (_: Exception) {
