@@ -70,7 +70,7 @@ class SettingsActivity : MIUIActivity() {
         registerPage(LyricPage::class.java, activity.getString(R.string.lyric_page))
         registerPage(IconPage::class.java, activity.getString(R.string.icon_page))
         registerPage(ChoosePage::class.java, activity.getString(R.string.choose_page))
-        registerPage(ExtendPage::class.java, activity.getString(R.string.choose_page))
+        registerPage(ExtendPage::class.java, activity.getString(R.string.extend_page))
         registerPage(
             SystemSpecialPage::class.java,
             activity.getString(R.string.system_special_page)
