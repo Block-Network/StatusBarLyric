@@ -12,7 +12,6 @@ import statusbar.lyric.hook.module.SystemUILyric
 import statusbar.lyric.hook.module.SystemUITest
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.LogTools.log
-import statusbar.lyric.tools.ShellTools.havePremium
 import java.util.Locale
 
 class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
@@ -26,10 +25,6 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
         EzXHelper.initHandleLoadPackage(lpparam)
         when (lpparam.packageName) {
             "com.android.systemui" -> {
-                if (!havePremium(config.useSUToElevatePrivileges)) {
-                    "Premium not found".log()
-                    return
-                }
                 "${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})".log()
                 if (config.testMode) {
                     moduleRes.getString(R.string.hook_page).log()

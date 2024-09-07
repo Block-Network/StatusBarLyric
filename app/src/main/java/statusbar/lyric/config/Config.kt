@@ -445,13 +445,6 @@ class Config {
         set(value) {
             config.put("useBlueGetTitle", value)
         }
-    var useSUToElevatePrivileges: Boolean
-        get() {
-            return config.opt("useSUToElevatePrivileges", false)
-        }
-        set(value) {
-            config.put("useSUToElevatePrivileges", value)
-        }
     var titleDelayDuration: Int
         get() {
             return config.opt("title_delay_duration", 3000)
