@@ -1,6 +1,5 @@
 package statusbar.lyric.activity.page
 
-import android.graphics.Color
 import android.view.View
 import cn.fkj233.ui.activity.annotation.BMMainPage
 import cn.fkj233.ui.activity.data.BasePage
@@ -21,6 +20,9 @@ class MainPage : BasePage() {
         }
         TextSSw(textId = R.string.master_switch, key = "masterSwitch", onClickListener = { masterSwitchBinding.send(it) })
         Line(dataBindingRecv = masterSwitchBinding.getRecv(1))
+        val fullText = getString(R.string.test_mode_tips)
+        val firstPart = fullText.split("\n")[0]
+        TitleText(text = firstPart)
         TextSA(textId = R.string.hook_page, onClickListener = { showPage(HookPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
         Line()
         TextSA(textId = R.string.lyric_page, onClickListener = { showPage(LyricPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))

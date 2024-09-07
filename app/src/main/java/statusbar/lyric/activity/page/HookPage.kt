@@ -14,11 +14,20 @@ import statusbar.lyric.tools.Tools
 @BMPage
 class HookPage : BasePage() {
     override fun onCreate() {
+        TitleText(textId = R.string.test_mode_tips)
         val testModeBinding = GetDataBinding({ ActivityOwnSP.config.testMode }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
-        TextSSw(textId = R.string.test_mode, key = "testMode", onClickListener = { testModeBinding.send(it) })
-        TextSSw(textId = R.string.relax_conditions, tipsId = R.string.relax_conditions_tips, key = "relaxConditions", dataBindingRecv = testModeBinding.getRecv(1))
+        TextSSw(
+            textId = R.string.test_mode,
+            key = "testMode",
+            onClickListener = { testModeBinding.send(it) })
+        TextSSw(
+            textId = R.string.relax_conditions,
+            tipsId = R.string.relax_conditions_tips,
+            key = "relaxConditions",
+            dataBindingRecv = testModeBinding.getRecv(1)
+        )
         TextSA(textId = R.string.get_hook, onClickListener = {
             waitResponse()
             activity.getClass()

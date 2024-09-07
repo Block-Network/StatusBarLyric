@@ -36,6 +36,7 @@
     <string name="master_switch">Master Switch</string>
     <string name="hook_page">Hook Page</string>
     <string name="test_mode">Test Mode</string>
+    <string name="test_mode_tips">When installing the module for the first time, please set the anchor point before you can use this module\nEnable the anchor setting mode, restart the system interface, obtain the anchor and select it, turn off the anchor mode, and restart the system interface again</string>
     <string name="relax_conditions">Relax Conditions</string>
     <string name="relax_conditions_tips">Some classes are allowed, but there may be many more hook points</string>
     <string name="lyric_page">Lyric Page</string>
@@ -176,7 +177,7 @@
     <string name="title_gravity_center">Center</string>
     <string name="title_gravity_end">End</string>
     <string name="title_gravity">Title hint gravity</string>
-  <string name="change_all_icons">Change all icons</string>
+    <string name="change_all_icons">Change all icons</string>
     <string name="change_all_icons_tips">Please enter Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">Please enter hexadecimal color, multiple colors are gradient colors arranged horizontally, separated by English commas</string>
     <string name="lyrics_are_gradient_and_transparent">* Lyrics gradient and transparent</string>
