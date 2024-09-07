@@ -10,4 +10,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Statusbar Lyric"
-include(":app", ":blockmiui", ":xtoast")
+include(":app", ":blockmiui")
