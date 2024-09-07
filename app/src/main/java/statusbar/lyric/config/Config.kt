@@ -368,7 +368,8 @@ class Config {
         }
     var checkUpdate: Boolean
         get() {
-            return config.opt("checkUpdate", true)
+//            return config.opt("checkUpdate", true)
+            return false
         }
         set(value) {
             config.put("checkUpdate", value)
