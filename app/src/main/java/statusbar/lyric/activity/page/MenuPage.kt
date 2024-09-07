@@ -20,7 +20,6 @@ import java.util.Locale
 @BMMenuPage
 class MenuPage : BasePage() {
     override fun onCreate() {
-        Line()
         TextWithSwitch(TextV(textId = R.string.hide_desk_icon), SwitchV("hLauncherIcon", onClickListener = {
             activity.packageManager.setComponentEnabledSetting(
                 ComponentName(activity, "statusbar.lyric.launcher"), if (it) {

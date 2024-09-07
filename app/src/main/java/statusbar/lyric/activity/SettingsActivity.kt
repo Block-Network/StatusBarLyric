@@ -56,7 +56,6 @@ import statusbar.lyric.tools.ActivityTools.getNotice
 import statusbar.lyric.tools.ActivityTools.getUpdate
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.LogTools
-import statusbar.lyric.tools.SignatureVerifier
 import statusbar.lyric.tools.Tools.isNotNull
 
 
@@ -83,10 +82,6 @@ class SettingsActivity : MIUIActivity() {
         context = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
-        val signatureVerifier = SignatureVerifier(context)
-        if (signatureVerifier.isSignatureValid(context.packageName)) {
-            config.clear()
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
