@@ -14,16 +14,16 @@ android {
     compileSdk = 34
     val buildTime = System.currentTimeMillis()
     defaultConfig {
-        applicationId = "statusbar.lyric.dev"
+        applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 34
-        versionCode = 5
-        versionName = "1.0.3"
+        versionCode = 210
+        versionName = "6.2.0"
         aaptOptions.cruncherEnabled = false
         aaptOptions.useNewCruncher = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
         buildConfigField("int", "API_VERSION", "6")
-        buildConfigField("int", "CONFIG_VERSION", "1")
+        buildConfigField("int", "CONFIG_VERSION", "10")
     }
     val config = localProperties.getProperty("androidStoreFile")?.let {
         signingConfigs.create("config") {
