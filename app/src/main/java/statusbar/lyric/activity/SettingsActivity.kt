@@ -72,7 +72,10 @@ class SettingsActivity : MIUIActivity() {
         registerPage(IconPage::class.java, activity.getString(R.string.icon_page))
         registerPage(ChoosePage::class.java, activity.getString(R.string.choose_page))
         registerPage(ExtendPage::class.java, activity.getString(R.string.choose_page))
-        registerPage(SystemSpecialPage::class.java, activity.getString(R.string.system_special_page))
+        registerPage(
+            SystemSpecialPage::class.java,
+            activity.getString(R.string.system_special_page)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,7 +117,6 @@ class SettingsActivity : MIUIActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
             MIUIDialog(this) {
-                setTitle(R.string.first_use_tips)
                 setMessage(R.string.not_support_xposed_framework)
                 setRButton(R.string.re_start_app) {
                     ActivityTools.restartApp()
@@ -141,7 +143,11 @@ class SettingsActivity : MIUIActivity() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"), Context.RECEIVER_EXPORTED)
+            context.registerReceiver(
+                appTestReceiver,
+                IntentFilter("AppTestReceiver"),
+                Context.RECEIVER_EXPORTED
+            )
         } else {
             context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"))
         }
