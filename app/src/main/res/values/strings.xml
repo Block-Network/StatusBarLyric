@@ -23,8 +23,6 @@
     <string name="installed">Installed</string>
     <string name="unsupported_lyric_getter">Unsupported LyricGetter</string>
     <string name="menu">Menu</string>
-    <string name="use_su_to_elevate_privileges">use su to elevate privileges</string>
-    <string name="use_su_to_elevate_privileges_tips">After it is enabled, the system framework must be granted ROOT, otherwise it will crash</string>
     <string name="hide_desk_icon">Hide desktop icons</string>
     <string name="print_xp_log">Print Xposed Log</string>
     <string name="check_update">Check for updates</string>
@@ -36,7 +34,6 @@
     <string name="module_build_time">Module build time</string>
     <string name="restart_systemui_tips">Are you sure you want to restart the System UI?</string>
     <string name="master_switch">Master Switch</string>
-    <string name="premium_page">高级页面</string>
     <string name="hook_page">Hook Page</string>
     <string name="test_mode">Test Mode</string>
     <string name="relax_conditions">Relax Conditions</string>
@@ -179,22 +176,7 @@
     <string name="title_gravity_center">Center</string>
     <string name="title_gravity_end">End</string>
     <string name="title_gravity">Title hint gravity</string>
-    <string name="not_senior_mode"><font color="#DAA520">This page is for advanced mode content\nAdvanced mode is currently not enabled\nFor preview only, changes will not take effect</font></string>
-    <string name="already_donated">Already donated, module activated</string>
-    <string name="not_donated">Not donated, module not activated</string>
-    <string name="see_how_to_donate">View donation methods</string>
-    <string name="enter_the_activation_code">Enter the activation code</string>
-    <string name="enter_the_activation_code_tips">Please enter the activation code</string>
-    <string name="activationCode">Activation code</string>
-    <string name="activation">Activate</string>
-    <string name="get_the_feature_code">Get the feature code</string>
-    <string name="feature_code">Feature code</string>
-    <string name="wechat">WeChat</string>
-    <string name="alipay">Alipay</string>
-    <string name="donate">Choose the corresponding payment method QR code to donate</string>
-    <string name="submit_your_donation">Submit donation information, get the advanced version</string>
-    <string name="give_op">Get the feature code and go to the Q group, send the feature code to the administrator, wait for the administrator to return the activation code, and fill it in to activate the advanced mode</string>
-    <string name="change_all_icons">Change all icons</string>
+  <string name="change_all_icons">Change all icons</string>
     <string name="change_all_icons_tips">Please enter Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">Please enter hexadecimal color, multiple colors are gradient colors arranged horizontally, separated by English commas</string>
     <string name="lyrics_are_gradient_and_transparent">* Lyrics gradient and transparent</string>

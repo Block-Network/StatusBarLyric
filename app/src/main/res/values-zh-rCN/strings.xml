@@ -24,8 +24,6 @@
     <string name="unsupported_lyric_getter">不支持的Lyric Getter</string>
     <string name="menu">菜单</string>
     <string name="hide_desk_icon">隐藏桌面图标</string>
-    <string name="use_su_to_elevate_privileges">使用SU提升权限</string>
-    <string name="use_su_to_elevate_privileges_tips">开启后一定要授予系统框架ROOT，否则会崩溃</string>
     <string name="print_xp_log">打印Xposed日志</string>
     <string name="check_update">检查更新</string>
     <string name="reset_config">重置配置</string>
@@ -177,21 +175,6 @@
     <string name="title_gravity_center">中心</string>
     <string name="title_gravity_end">结束</string>
     <string name="title_gravity">标题提示居中</string>
-    <string name="not_senior_mode"><font color="#DAA520">此页面为高级模式内容\n当前未启用高级模式\n仅供预览，修改不生效</font></string>
-    <string name="already_donated">已经捐赠，已经激活模块</string>
-    <string name="not_donated">未捐赠，未激活模块</string>
-    <string name="see_how_to_donate">查看捐赠方式</string>
-    <string name="enter_the_activation_code">输入激活码</string>
-    <string name="enter_the_activation_code_tips">请输入激活码</string>
-    <string name="activationCode">激活码</string>
-    <string name="activation">激活</string>
-    <string name="get_the_feature_code">获取特征码</string>
-    <string name="feature_code">特征码</string>
-    <string name="wechat">微信</string>
-    <string name="alipay">支付宝</string>
-    <string name="donate">选择对应支付方式的二维码进行捐赠</string>
-    <string name="submit_your_donation">提交捐赠信息，获取高级版</string>
-    <string name="give_op">获取特征码前往Q群，发送特征码给管理员，等待管理员返回激活码后，填入即可激活高级模式</string>
     <string name="change_all_icons">更改所有图标</string>
     <string name="change_all_icons_tips">请输入Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">请输入16进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>

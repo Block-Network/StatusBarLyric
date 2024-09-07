@@ -7,14 +7,11 @@ import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.activity.view.SwitchV
 import cn.fkj233.ui.activity.view.TextV
 import cn.fkj233.ui.dialog.MIUIDialog
-import com.jaredrummler.ktsh.Shell
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
-import statusbar.lyric.tools.ShellTools.c
-import statusbar.lyric.tools.ShellTools.getRealBootID
 import statusbar.lyric.tools.Tools
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -23,12 +20,6 @@ import java.util.Locale
 @BMMenuPage
 class MenuPage : BasePage() {
     override fun onCreate() {
-        TitleText(textId = R.string.use_su_to_elevate_privileges_tips)
-        TextSw(textId = R.string.use_su_to_elevate_privileges, key = "useSUToElevatePrivileges", onClickListener = {
-            if (it) {
-                Shell("sh").run("su 1000 -c su").isSuccess
-            }
-        })
         Line()
         TextWithSwitch(TextV(textId = R.string.hide_desk_icon), SwitchV("hLauncherIcon", onClickListener = {
             activity.packageManager.setComponentEnabledSetting(
@@ -76,20 +67,7 @@ class MenuPage : BasePage() {
         TitleText(textId = R.string.module_version)
         TextS(textId = R.string.module_version, tips = "${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})-${BuildConfig.BUILD_TYPE}")
         val buildTime = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(BuildConfig.BUILD_TIME)
-        TextS(textId = R.string.module_build_time, tips = buildTime, onClickListener = {
-            MIUIDialog(activity) {
-                setEditText(buildTime, "Build Time")
-                setLButton(R.string.ok) {
-                    try {
-                        val c = getEditText().getRealBootID().toString().c()
-                        Tools.copyToClipboard(context, c)
-                    } catch (_: Throwable) {
-                    }
-
-                    dismiss()
-                }
-            }.show()
-        })
+        TextS(textId = R.string.module_build_time, tips = buildTime)
         Text()
     }
 }

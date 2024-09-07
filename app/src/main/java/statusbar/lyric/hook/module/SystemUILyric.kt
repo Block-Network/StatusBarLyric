@@ -72,7 +72,6 @@ import statusbar.lyric.tools.LyricViewTools.iconColorAnima
 import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.LyricViewTools.textColorAnima
-import statusbar.lyric.tools.ShellTools.havePremium
 import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isLandscape
@@ -224,9 +223,6 @@ class SystemUILyric : BaseHook() {
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
     override fun init() {
-        if (!havePremium(config.useSUToElevatePrivileges)) {
-            return
-        }
         "Init Hook".log()
         loadClassOrNull(config.textViewClassName).isNotNull {
             hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
@@ -566,9 +562,6 @@ class SystemUILyric : BaseHook() {
 
     private fun changeConfig(delay: Long = 0L) {
         "Change Config".log()
-        if (!havePremium(config.useSUToElevatePrivileges)) {
-            return
-        }
         config.update()
         goMainThread(delay) {
             lyricView.apply {

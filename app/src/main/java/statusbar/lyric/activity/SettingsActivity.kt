@@ -44,7 +44,6 @@ import statusbar.lyric.activity.page.IconPage
 import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
 import statusbar.lyric.activity.page.MenuPage
-import statusbar.lyric.activity.page.PremiumPage
 import statusbar.lyric.activity.page.SystemSpecialPage
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -57,8 +56,6 @@ import statusbar.lyric.tools.ActivityTools.getNotice
 import statusbar.lyric.tools.ActivityTools.getUpdate
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.LogTools
-import statusbar.lyric.tools.ShellTools.havePremium
-import statusbar.lyric.tools.ShellTools.isA
 import statusbar.lyric.tools.SignatureVerifier
 import statusbar.lyric.tools.Tools.isNotNull
 
@@ -76,7 +73,6 @@ class SettingsActivity : MIUIActivity() {
         registerPage(ChoosePage::class.java, activity.getString(R.string.choose_page))
         registerPage(ExtendPage::class.java, activity.getString(R.string.choose_page))
         registerPage(SystemSpecialPage::class.java, activity.getString(R.string.system_special_page))
-        registerPage(PremiumPage::class.java, activity.getString(R.string.system_special_page))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +80,6 @@ class SettingsActivity : MIUIActivity() {
         context = this
         if (!checkLSPosed()) isLoad = false
         super.onCreate(savedInstanceState)
-        runCatching { isA = havePremium(true) }
         val signatureVerifier = SignatureVerifier(context)
         if (signatureVerifier.isSignatureValid(context.packageName)) {
             config.clear()
