@@ -22,7 +22,6 @@
 
 package statusbar.lyric.hook.module
 
-
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.BroadcastReceiver

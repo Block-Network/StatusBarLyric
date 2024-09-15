@@ -19,9 +19,9 @@ import android.widget.ImageView
 import statusbar.lyric.view.LyricSwitchView
 
 object LyricViewTools {
-    var animaList: ArrayList<String> = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY")
+    private var animaList: ArrayList<String> = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY")
     val randomAnima: String get() = animaList.random()
-    fun getAlphaAnimation(into: Boolean, duration: Long = 300): AnimationSet {
+    fun getAlphaAnimation(into: Boolean, duration: Long = 250): AnimationSet {
         val alphaAnimation = (if (into) AlphaAnimation(0F, 1F) else AlphaAnimation(1F, 0F)).apply {
             this.duration = duration
         }
@@ -121,7 +121,7 @@ object LyricViewTools {
         }.start()
     }
 
-    @SuppressLint("Recycle")
+    @SuppressLint("Recycle", "AnimatorKeep")
     fun LyricSwitchView.textColorAnima(color: Int) {
         this.setAllView {
             ObjectAnimator.ofInt(it, "textColor", it.currentTextColor, color).colorAnimator()
@@ -132,4 +132,5 @@ object LyricViewTools {
     fun ImageView.iconColorAnima(startColor: Int, endColor: Int) {
         ObjectAnimator.ofInt(this, "colorFilter", startColor, endColor).colorAnimator()
     }
+
 }
