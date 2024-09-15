@@ -56,10 +56,23 @@ class LyricPage : BasePage() {
                 }
             }.show()
         })
-        SeekBarWithText(key = "lyricWidth", min = 0, max = 100, defaultProgress = 0, dataBindingRecv = widthBinding.getRecv(2), dataBindingSend = widthBinding.bindingSend, callBacks = { _, _ ->
-            changeConfig()
-        })
-        TextSSw(textId = R.string.fixed_lyric_width, tipsId = R.string.fixed_lyric_width_tips, key = "fixedLyricWidth", onClickListener = { changeConfig() }, dataBindingRecv = widthBinding.getRecv(1))
+        SeekBarWithText(
+            key = "lyricWidth",
+            min = 0,
+            max = 100,
+            defaultProgress = 0,
+            dataBindingRecv = widthBinding.getRecv(2),
+            dataBindingSend = widthBinding.bindingSend,
+            callBacks = { _, _ ->
+                changeConfig()
+            })
+        TextSSw(
+            textId = R.string.fixed_lyric_width,
+            tipsId = R.string.fixed_lyric_width_tips,
+            key = "fixedLyricWidth",
+            onClickListener = { changeConfig() },
+            dataBindingRecv = widthBinding.getRecv(1)
+        )
         TextSA(textId = R.string.lyric_size, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_size))
@@ -339,7 +352,7 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_start_margins))
                 setMessage(getString(R.string.lyric_start_margins_tips))
-                setEditText(config.lyricStartMargins.toString(), "7", config = {
+                setEditText(config.lyricStartMargins.toString(), "20", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })
@@ -364,7 +377,7 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_end_margins))
                 setMessage(getString(R.string.lyric_end_margins_tips))
-                setEditText(config.lyricEndMargins.toString(), "0", config = {
+                setEditText(config.lyricEndMargins.toString(), "20", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })
