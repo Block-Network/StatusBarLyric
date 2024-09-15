@@ -140,7 +140,7 @@ class Config {
         }
     var lyricStartMargins: Int
         get() {
-            return config.opt("lyricStart", 7)
+            return config.opt("lyricStart", 20)
         }
         set(value) {
             config.put("lyricStart", value)
@@ -154,7 +154,7 @@ class Config {
         }
     var lyricEndMargins: Int
         get() {
-            return config.opt("lyricEnd", 0)
+            return config.opt("lyricEnd", 20)
         }
         set(value) {
             config.put("lyricEnd", value)
