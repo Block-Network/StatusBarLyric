@@ -57,19 +57,10 @@ android {
             excludes += "**"
         }
     }
-    buildFeatures {
-        viewBinding = false
-    }
     applicationVariants.all {
         outputs.all {
             (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName-$versionCode-$name-$buildTime.apk"
         }
-    }
-}
-
-kotlin {
-    sourceSets.all {
-        languageSettings { languageVersion = "2.0" }
     }
 }
 
