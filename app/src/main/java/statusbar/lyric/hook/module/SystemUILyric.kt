@@ -22,7 +22,6 @@
 
 package statusbar.lyric.hook.module
 
-
 import android.annotation.SuppressLint
 import android.app.AndroidAppHelper
 import android.content.BroadcastReceiver
@@ -61,6 +60,7 @@ import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
@@ -95,16 +95,27 @@ import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-
 class SystemUILyric : BaseHook() {
 
     private lateinit var hook: XC_MethodHook.Unhook
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
+    private val miuiStubClass = loadClassOrNull("miui.stub.MiuiStub")
+    private val miuiStubInstance = XposedHelpers.getStaticObjectField(miuiStubClass, "INSTANCE")
 
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
         goMainThread {
-            if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) lyricView.textColorAnima(newValue)
-            if (config.iconColor.isEmpty()) iconView.iconColorAnima(lastColor, newValue)
+            if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) {
+                when (config.lyricColorScheme) {
+                    0 -> lyricView.setTextColor(newValue)
+                    1 -> lyricView.textColorAnima(newValue)
+                }
+            }
+            if (config.iconColor.isEmpty()) {
+                when (config.lyricColorScheme) {
+                    0 -> iconView.setColorFilter(newValue)
+                    1 -> iconView.iconColorAnima(lastColor, newValue)
+                }
+            }
         }
         "Change Color".log()
     }
@@ -289,10 +300,8 @@ class SystemUILyric : BaseHook() {
                     it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
                         after { hookParam ->
                             if (!isPlaying) return@after
-                            hookParam.thisObject.objectHelper {
-                                val mIconTint = getObjectOrNullAs<Int>("mIconTint") ?: Color.BLACK
-                                lastColor = mIconTint
-                            }
+                            val mIconTint = hookParam.thisObject.objectHelper().getObjectOrNullAs<Int>("mIconTint")
+                            lastColor = mIconTint ?: Color.BLACK
                         }
                     }
                 }
@@ -300,7 +309,7 @@ class SystemUILyric : BaseHook() {
 
             1 -> {
                 loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-                    it.methodFinder().filterByName("onDarkChanged").filterByParamCount(3).first().createHook {
+                    it.methodFinder().filterByName("onDarkChanged").first().createHook {
                         after { hookParam ->
                             if (!isPlaying) return@after
                             val isDark = (hookParam.args[1] as Float) == 1f
@@ -576,9 +585,12 @@ class SystemUILyric : BaseHook() {
                 setMargins(config.lyricStartMargins, config.lyricTopMargins, config.lyricEndMargins, config.lyricBottomMargins)
                 if (config.lyricGradientColor.isEmpty()) {
                     if (config.lyricColor.isEmpty()) {
-                        textColorAnima(clockView.currentTextColor)
+                        when (config.lyricColorScheme) {
+                            0 -> setTextColor(clockView.currentTextColor)
+                            1 -> textColorAnima(clockView.currentTextColor)
+                        }
                     } else {
-                        textColorAnima(Color.parseColor(config.lyricColor))
+                        setTextColor(Color.parseColor(config.lyricColor))
                     }
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
@@ -644,14 +656,20 @@ class SystemUILyric : BaseHook() {
                         }
                     }
                     if (config.iconColor.isEmpty()) {
-                        iconColorAnima(lastColor, clockView.currentTextColor)
+                        when (config.lyricColorScheme) {
+                            0 -> setColorFilter(clockView.currentTextColor)
+                            1 -> iconColorAnima(lastColor, clockView.currentTextColor)
+                        }
                     } else {
-                        iconColorAnima(lastColor, Color.parseColor(config.iconColor))
+                        when (config.lyricColorScheme) {
+                            0 -> setColorFilter(Color.parseColor(config.iconColor))
+                            1 -> iconColorAnima(lastColor, Color.parseColor(config.iconColor))
+                        }
                     }
-                    if (config.iconBgColor.isNotEmpty()) {
-                        setBackgroundColor(Color.parseColor(config.iconBgColor))
-                    } else {
+                    if (config.iconBgColor.isEmpty()) {
                         setBackgroundColor(Color.TRANSPARENT)
+                    } else {
+                        setBackgroundColor(Color.parseColor(config.iconBgColor))
                     }
                 }
             }
@@ -787,12 +805,18 @@ class SystemUILyric : BaseHook() {
 
     inner class ScreenLockReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            isScreenLock = intent.action == Intent.ACTION_SCREEN_OFF
+            val mSysUIProvider = XposedHelpers.getObjectField(miuiStubInstance, "mSysUIProvider")
+            val mStatusBarStateController = XposedHelpers.getObjectField(mSysUIProvider, "mStatusBarStateController")
+            val getLazyClass = XposedHelpers.callMethod(mStatusBarStateController, "get")
+            val getState = XposedHelpers.callMethod(getLazyClass, "getState")
+            isScreenLock = getState != 0
             if (isScreenLock) {
-                hideLyric()
+                lyricLayout.visibility = View.GONE
+            } else {
+                lyricLayout.showView()
             }
-        }
 
+        }
     }
 
     val isPad get() = Tools.getSystemProperties(context, "ro.build.characteristics") == "tablet"
