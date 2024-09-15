@@ -65,10 +65,10 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
-import statusbar.lyric.tools.Blur.blendModes
-import statusbar.lyric.tools.Blur.blurRadio
-import statusbar.lyric.tools.Blur.cornerRadius
-import statusbar.lyric.tools.Blur.setBackgroundBlur
+import statusbar.lyric.tools.BlurTools.blendModes
+import statusbar.lyric.tools.BlurTools.blurRadio
+import statusbar.lyric.tools.BlurTools.cornerRadius
+import statusbar.lyric.tools.BlurTools.setBackgroundBlur
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.LyricViewTools.hideView

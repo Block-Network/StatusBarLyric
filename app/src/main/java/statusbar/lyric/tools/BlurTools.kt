@@ -2,8 +2,8 @@ package statusbar.lyric.tools
 
 import android.view.View
 
-object Blur {
-    val blurRadio = 50
+object BlurTools {
+    val blurRadio = 25
     val cornerRadius = cornerRadius(32f)
     val blendModes = arrayOf(intArrayOf(0x8f616060.toInt(), 18), intArrayOf(0xa3f2f2f2.toInt(), 3))
 
