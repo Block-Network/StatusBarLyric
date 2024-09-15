@@ -22,6 +22,7 @@
 
 package statusbar.lyric.view
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.graphics.Paint
 import android.graphics.Shader
@@ -55,7 +56,11 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     }
 
     open fun setWidth(i: Int) {
-        setAllView { it.width = i }
+        setAllView {
+            val layoutTransition = LayoutTransition()
+            this@LyricSwitchView.layoutTransition = layoutTransition
+            it.layoutParams.width = i
+        }
     }
 
     //    var textViewColor: Int
