@@ -78,6 +78,7 @@ import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.LyricViewTools.textColorAnima
 import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.goMainThread
+import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNot
@@ -455,8 +456,9 @@ class SystemUILyric : BaseHook() {
             } else {
                 targetView.addView(lyricLayout)
             }
-
-            lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
+            if (isHyperOS()) {
+                lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
+            }
 
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
         }
@@ -819,5 +821,5 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    val isPad get() = Tools.getSystemProperties(context, "ro.build.characteristics") == "tablet"
+    val isPad get() = Tools.getSystemProperties("ro.build.characteristics") == "tablet"
 }
