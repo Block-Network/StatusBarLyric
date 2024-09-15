@@ -11,12 +11,12 @@ if (rootProject.file("local.properties").canRead()) localProperties.load(rootPro
 
 android {
     namespace = "statusbar.lyric"
-    compileSdk = 34
+    compileSdk = 35
     val buildTime = System.currentTimeMillis()
     defaultConfig {
         applicationId = "statusbar.lyric"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 210
         versionName = "6.2.0"
         aaptOptions.cruncherEnabled = false
@@ -76,7 +76,7 @@ kotlin {
 dependencies {
     compileOnly("de.robv.android.xposed:api:82")
     implementation(project(":blockmiui"))
-    implementation("com.github.kyuubiran:EzXHelper:2.1.2")
+    implementation("com.github.kyuubiran:EzXHelper:2.2.0")
     implementation("com.github.xiaowine:Lyric-Getter-Api:6.0.0")
     implementation("com.jaredrummler:ktsh:1.0.0")
     implementation("com.github.xiaowine:XKT:1.0.12")
