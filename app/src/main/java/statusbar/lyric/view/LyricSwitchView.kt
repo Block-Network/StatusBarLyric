@@ -30,7 +30,6 @@ import android.graphics.drawable.Drawable
 import android.text.TextPaint
 import android.widget.TextSwitcher
 import android.widget.TextView
-import statusbar.lyric.tools.LogTools.log
 
 open class LyricSwitchView(context: Context) : TextSwitcher(context) {
 
