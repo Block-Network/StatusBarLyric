@@ -153,6 +153,7 @@
     <string name="system_special_page">System Special Page</string>
     <string name="miui_hide_network_speed">* MIUI Hide Network Speed</string>
     <string name="miui_pad_optimize">* MIUI tablet optimization</string>
+    <string name="hyperos_texture">* Add Advanced texture background</string>
     <string name="lyric_blurred_edges_type_end">Lyric Blurred Edges Type End</string>
     <string name="lyric_blurred_edges_type_start">Lyric Blurred Edges Type Start</string>
     <string name="lyric_blurred_edges_type_all">Lyric Blurred Edges Type All</string>

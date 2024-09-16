@@ -154,7 +154,7 @@ class Config {
         }
     var lyricEndMargins: Int
         get() {
-            return config.opt("lyricEnd", 20)
+            return config.opt("lyricEnd", 12)
         }
         set(value) {
             config.put("lyricEnd", value)
@@ -431,6 +431,13 @@ class Config {
         }
         set(value) {
             config.put("mMiuiPadOptimize", value)
+        }
+    var mHyperOSTexture: Boolean
+        get() {
+            return config.opt("mHyperOSTexture", false)
+        }
+        set(value) {
+            config.put("mHyperOSTexture", value)
         }
     var titleSwitch: Boolean
         get() {
