@@ -26,7 +26,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.view.ViewGroup
 import android.widget.TextView
-import com.github.kyuubiran.ezxhelper.Log
 import statusbar.lyric.config.XposedOwnSP.config
 
 open class LyricTextView(context: Context) : TextView(context) {
@@ -76,11 +75,7 @@ open class LyricTextView(context: Context) : TextView(context) {
     }
 
     private fun updateScrollPosition() {
-        Log.dx("updateScrollPosition: $currentX")
-        Log.dx("viewWidth: $viewWidth")
-        Log.dx("textLength: $textLength")
         val currentViewWidth = viewWidth - config.lyricStartMargins - config.lyricEndMargins
-        Log.dx("currentViewWidth: $currentViewWidth")
         if (viewWidth - config.lyricEndMargins - currentX == textLength) {
             currentX = 0f
             stopScroll()
