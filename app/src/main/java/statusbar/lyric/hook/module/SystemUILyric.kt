@@ -456,7 +456,7 @@ class SystemUILyric : BaseHook() {
             } else {
                 targetView.addView(lyricLayout)
             }
-            if (isHyperOS()) {
+            if (isHyperOS() && config.mHyperOSTexture) {
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
 

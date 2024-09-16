@@ -23,7 +23,10 @@
 package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Handler
@@ -38,7 +41,7 @@ import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
-import java.util.*
+import java.util.Objects
 import java.util.regex.Pattern
 import kotlin.properties.Delegates
 import kotlin.properties.ReadWriteProperty
@@ -57,7 +60,6 @@ object Tools {
         } catch (_: Exception) {
             return false
         }
-
     }
 
     val togglePrompts: Boolean

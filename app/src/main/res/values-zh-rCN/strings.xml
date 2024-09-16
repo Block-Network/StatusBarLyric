@@ -152,6 +152,7 @@
     <string name="system_special_page">系统特供页</string>
     <string name="miui_hide_network_speed">* MIUI隐藏网速</string>
     <string name="miui_pad_optimize">* MIUI平板优化</string>
+    <string name="hyperos_texture">* 添加高级材质背景</string>
     <string name="lyric_blurred_edges_type_end">仅右边</string>
     <string name="lyric_blurred_edges_type_start">仅左边</string>
     <string name="lyric_blurred_edges_type_all">两边</string>

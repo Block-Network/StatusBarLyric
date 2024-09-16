@@ -4,6 +4,7 @@ import android.os.Build
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import statusbar.lyric.R
+import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isMIUI
 
 @BMPage
@@ -12,6 +13,7 @@ class SystemSpecialPage : BasePage() {
         if (isMIUI) {
             TextSw(textId = R.string.miui_hide_network_speed, key = "mMIUIHideNetworkSpeed")
             TextSw(textId = R.string.miui_pad_optimize, key = "mMiuiPadOptimize")
+            if (isHyperOS())TextSw(textId = R.string.hyperos_texture, key = "mHyperOSTexture")
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) TextSw(textId = R.string.hide_carrier, key = "hideCarrier")
         }
         Line()
