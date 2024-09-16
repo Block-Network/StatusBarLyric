@@ -65,8 +65,6 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
-import statusbar.lyric.tools.BlurTools.blendModes
-import statusbar.lyric.tools.BlurTools.blurRadio
 import statusbar.lyric.tools.BlurTools.cornerRadius
 import statusbar.lyric.tools.BlurTools.setBackgroundBlur
 import statusbar.lyric.tools.LogTools.log
@@ -457,6 +455,11 @@ class SystemUILyric : BaseHook() {
                 targetView.addView(lyricLayout)
             }
             if (isHyperOS() && config.mHyperOSTexture) {
+                val blurRadio = config.mHyperOSTextureRadio
+                val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
+                val blendModes = arrayOf(
+                    intArrayOf(106, Color.parseColor(config.mHyperOSTextureBgColor))
+                )
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
 
