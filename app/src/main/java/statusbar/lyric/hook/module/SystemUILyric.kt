@@ -448,6 +448,7 @@ class SystemUILyric : BaseHook() {
             } else {
                 targetView.addView(lyricLayout)
             }
+            lyricView.maxLyricWidth(targetView.width.toFloat())
             if (isHyperOS() && config.mHyperOSTexture) {
                 val blurRadio = config.mHyperOSTextureRadio
                 val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
@@ -582,7 +583,7 @@ class SystemUILyric : BaseHook() {
         goMainThread(delay) {
             lyricView.apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
-                setMargins(config.lyricStartMargins, config.lyricTopMargins, 0, config.lyricBottomMargins)
+                setPadding(config.lyricStartMargins, config.lyricTopMargins, config.lyricEndMargins, config.lyricBottomMargins)
                 if (config.lyricGradientColor.isEmpty()) {
                     if (config.lyricColor.isEmpty()) {
                         when (config.lyricColorScheme) {
@@ -674,10 +675,14 @@ class SystemUILyric : BaseHook() {
         }
     }
 
+    fun targetViewWidget(): Float {
+        return targetView.width.toFloat()
+    }
+
     private fun getLyricWidth(paint: Paint, text: String): Int {
         "Get Lyric Width".log()
         return if (config.lyricWidth == 0) {
-            theoreticalWidth = min(paint.measureText(text).toInt() + config.lyricEndMargins, targetView.width)
+            theoreticalWidth = min(paint.measureText(text).toInt(), targetView.width)
             theoreticalWidth
         } else {
             if (config.fixedLyricWidth) {
