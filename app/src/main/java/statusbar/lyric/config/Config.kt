@@ -140,7 +140,7 @@ class Config {
         }
     var lyricStartMargins: Int
         get() {
-            return config.opt("lyricStart", 20)
+            return config.opt("lyricStart", 0)
         }
         set(value) {
             config.put("lyricStart", value)
@@ -154,7 +154,7 @@ class Config {
         }
     var lyricEndMargins: Int
         get() {
-            return config.opt("lyricEnd", 10)
+            return config.opt("lyricEnd", 0)
         }
         set(value) {
             config.put("lyricEnd", value)
@@ -455,7 +455,7 @@ class Config {
         }
     var mHyperOSTextureBgColor: String
         get() {
-            return config.opt("mHyperOSTextureBgColor", "#10818181")
+            return config.opt("mHyperOSTextureBgColor", "#15818181")
         }
         set(value) {
             config.put("mHyperOSTextureBgColor", value)

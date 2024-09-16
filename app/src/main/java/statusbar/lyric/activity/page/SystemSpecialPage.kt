@@ -80,7 +80,7 @@ class SystemSpecialPage : BasePage() {
                     MIUIDialog(activity) {
                         setTitle(getString(R.string.hyperos_texture_color))
                         setMessage(getString(R.string.lyric_color_and_transparency_tips))
-                        setEditText(ActivityOwnSP.config.mHyperOSTextureBgColor, "#10818181", config = {
+                        setEditText(ActivityOwnSP.config.mHyperOSTextureBgColor, "#15818181", config = {
                             it.inputType = InputType.TYPE_CLASS_TEXT
                             it.filters = arrayOf(InputFilter.LengthFilter(9))
                         })
