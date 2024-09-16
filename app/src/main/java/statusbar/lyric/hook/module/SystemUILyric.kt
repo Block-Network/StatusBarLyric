@@ -676,7 +676,7 @@ class SystemUILyric : BaseHook() {
     private fun getLyricWidth(paint: Paint, text: String): Int {
         "Get Lyric Width".log()
         return if (config.lyricWidth == 0) {
-            theoreticalWidth = min(paint.measureText(text).toInt()+ config.lyricEndMargins, targetView.width)
+            theoreticalWidth = min(paint.measureText(text).toInt() + config.lyricEndMargins, targetView.width)
             theoreticalWidth
         } else {
             if (config.fixedLyricWidth) {
