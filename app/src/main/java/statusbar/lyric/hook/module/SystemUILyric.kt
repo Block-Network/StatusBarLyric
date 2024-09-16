@@ -814,10 +814,7 @@ class SystemUILyric : BaseHook() {
             isScreenLock = getState != 0
             if (isScreenLock) {
                 lyricLayout.visibility = View.GONE
-            } else {
-                lyricLayout.showView()
             }
-
         }
     }
 
