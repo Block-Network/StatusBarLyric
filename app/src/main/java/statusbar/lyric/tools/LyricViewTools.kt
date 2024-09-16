@@ -126,7 +126,7 @@ object LyricViewTools {
 
     @SuppressLint("Recycle", "AnimatorKeep")
     fun LyricSwitchView.textColorAnima(color: Int) {
-        this.setAllView {
+        this.applyToAllViews {
             ObjectAnimator.ofInt(it, "textColor", it.currentTextColor, color).colorAnimator()
         }
     }

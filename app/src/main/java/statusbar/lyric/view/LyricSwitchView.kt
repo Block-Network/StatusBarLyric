@@ -34,13 +34,17 @@ import android.widget.TextView
 
 open class LyricSwitchView(context: Context) : TextSwitcher(context) {
 
-    val text: CharSequence get() = (currentView as TextView).text
+    val text: CharSequence
+        get() = (currentView as TextView).text
 
     val paint: TextPaint
         get() = (currentView as TextView).paint
 
-
     init {
+        initialize()
+    }
+
+    private fun initialize() {
         setFactory {
             LyricTextView(context).apply {
                 layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
@@ -48,81 +52,65 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         }
     }
 
-
-    fun setAllView(unit: (LyricTextView) -> Unit) {
-        IntRange(0, childCount - 1).forEach {
-            unit(getChildAt(it) as LyricTextView)
+    fun applyToAllViews(action: (LyricTextView) -> Unit) {
+        for (i in 0 until childCount) {
+            action(getChildAt(i) as LyricTextView)
         }
     }
 
-    open fun setWidth(i: Int) {
-        setAllView {
-            val layoutTransition = LayoutTransition()
-            this@LyricSwitchView.layoutTransition = layoutTransition
-            it.layoutParams.width = i
+    open fun setWidth(width: Int) {
+        applyToAllViews {
+            layoutTransition = LayoutTransition()
+            it.layoutParams.width = width
         }
     }
 
-    //    var textViewColor: Int
-//        get() = (currentView as TextView).currentTextColor
-//        set(value) {
-//            setAllView { it.setTextColor(value) }
-//        }
-    fun setTextColor(i: Int) {
-        setAllView { it.setTextColor(i) }
+    fun setTextColor(color: Int) {
+        applyToAllViews { it.setTextColor(color) }
     }
 
     fun setLinearGradient(shader: Shader) {
-        setAllView {
-            it.paint.shader = shader
-        }
+        applyToAllViews { it.paint.shader = shader }
     }
 
     override fun setBackground(background: Drawable?) {
-        setAllView { it.background = background }
+        applyToAllViews { it.background = background }
     }
 
-    fun setSourceText(str: CharSequence) {
-        setAllView { it.text = str }
-    }
-
-    fun setSpeed(f: Float) {
-        setAllView { it.setSpeed(f) }
+    fun setScrollSpeed(speed: Float) {
+        applyToAllViews { it.setScrollSpeed(speed) }
     }
 
     fun setLetterSpacings(letterSpacing: Float) {
-        setAllView { it.letterSpacing = letterSpacing }
+        applyToAllViews { it.letterSpacing = letterSpacing }
     }
 
-    fun strokeWidth(i: Float) {
-        setAllView {
+    fun strokeWidth(width: Float) {
+        applyToAllViews {
             it.paint.style = Paint.Style.FILL_AND_STROKE
-            it.paint.strokeWidth = i
+            it.paint.strokeWidth = width
         }
-
     }
 
     fun setTypeface(typeface: Typeface) {
-        setAllView { it.typeface = typeface }
+        applyToAllViews { it.typeface = typeface }
     }
 
-    fun setTextSize(i: Int, f: Float) {
-        setAllView { it.setTextSize(i, f) }
+    fun setTextSize(unit: Int, size: Float) {
+        applyToAllViews { it.setTextSize(unit, size) }
     }
 
     fun setMargins(start: Int, top: Int, end: Int, bottom: Int) {
-        setAllView {
-            val layoutParams = it.layoutParams as MarginLayoutParams
-            layoutParams.setMargins(start, top, end, bottom)
-            it.layoutParams = layoutParams
+        applyToAllViews {
+            it.setMargins(start, top, end, bottom)
         }
     }
 
-    fun setSingleLine(bool: Boolean) {
-        setAllView { it.isSingleLine = bool }
+    fun setSingleLine(singleLine: Boolean) {
+        applyToAllViews { it.isSingleLine = singleLine }
     }
 
-    fun setMaxLines(i: Int) {
-        setAllView { it.maxLines = i }
+    fun setMaxLines(maxLines: Int) {
+        applyToAllViews { it.maxLines = maxLines }
     }
 }

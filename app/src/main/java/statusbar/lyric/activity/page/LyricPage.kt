@@ -352,7 +352,7 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_start_margins))
                 setMessage(getString(R.string.lyric_start_margins_tips))
-                setEditText(config.lyricStartMargins.toString(), "20", config = {
+                setEditText(config.lyricStartMargins.toString(), "0", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })
@@ -377,7 +377,7 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_end_margins))
                 setMessage(getString(R.string.lyric_end_margins_tips))
-                setEditText(config.lyricEndMargins.toString(), "10", config = {
+                setEditText(config.lyricEndMargins.toString(), "0", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })

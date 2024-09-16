@@ -177,28 +177,22 @@ class SystemUILyric : BaseHook() {
             override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
                 super.onSizeChanged(w, h, oldw, oldh)
                 if (config.lyricGradientColor.isNotEmpty()) {
-                    config.lyricGradientColor.trim()
-                        .split(",")
-                        .map { Color.parseColor(it.trim()) }.let { colors ->
-                            if (colors.isEmpty()) {
-                                setTextColor(Color.WHITE)
-                            } else
-                                if (colors.size < 2) {
-                                    setTextColor(colors[0])
-                                } else {
-                                    val textShader = LinearGradient(
-                                        0f, 0f, width.toFloat(), 0f,
-                                        colors.toIntArray(),
-                                        null, Shader.TileMode.CLAMP
-                                    )
-                                    setLinearGradient(textShader)
-                                }
+                    config.lyricGradientColor.trim().split(",").map { Color.parseColor(it.trim()) }.let { colors ->
+                        if (colors.isEmpty()) {
+                            setTextColor(Color.WHITE)
+                        } else if (colors.size < 2) {
+                            setTextColor(colors[0])
+                        } else {
+                            val textShader = LinearGradient(
+                                0f, 0f, width.toFloat(), 0f, colors.toIntArray(), null, Shader.TileMode.CLAMP
+                            )
+                            setLinearGradient(textShader)
                         }
+                    }
                 }
             }
         }.apply {
             setTypeface(clockView.typeface)
-            layoutParams = clockView.layoutParams
             setSingleLine(true)
             setMaxLines(1)
         }
@@ -534,13 +528,13 @@ class SystemUILyric : BaseHook() {
                         "proportion:$proportion".log()
                         val speed = 15 * proportion + 0.7
                         "speed:$speed".log()
-                        setSpeed(speed.toFloat())
+                        setScrollSpeed(speed.toFloat())
                     }
                 }
                 if (delay > 0) {
                     if (i > 0) {
                         val d = delay * 1000.0 / 16.0
-                        setSpeed(((i / d).toFloat()))
+                        setScrollSpeed(((i / d).toFloat()))
                     }
                 }
                 setText(lyric)
@@ -587,7 +581,7 @@ class SystemUILyric : BaseHook() {
         goMainThread(delay) {
             lyricView.apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
-                setMargins(config.lyricStartMargins, config.lyricTopMargins, config.lyricEndMargins, config.lyricBottomMargins)
+                setMargins(config.lyricStartMargins, config.lyricTopMargins, 0, config.lyricBottomMargins)
                 if (config.lyricGradientColor.isEmpty()) {
                     if (config.lyricColor.isEmpty()) {
                         when (config.lyricColorScheme) {
@@ -600,7 +594,7 @@ class SystemUILyric : BaseHook() {
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
-                if (!config.dynamicLyricSpeed) setSpeed(config.lyricSpeed.toFloat())
+                if (!config.dynamicLyricSpeed) setScrollSpeed(config.lyricSpeed.toFloat())
                 if (config.lyricBackgroundColor.isNotEmpty()) {
                     if (config.lyricBackgroundColor.split(",").size < 2) {
                         if (config.lyricBackgroundRadius != 0) {
@@ -613,17 +607,14 @@ class SystemUILyric : BaseHook() {
                             setBackgroundColor(Color.parseColor(config.lyricBackgroundColor))
                         }
                     } else {
-                        config.lyricBackgroundColor.trim()
-                            .split(",")
-                            .map { Color.parseColor(it.trim()) }.let { colors ->
-                                val gradientDrawable = GradientDrawable(
-                                    GradientDrawable.Orientation.LEFT_RIGHT,
-                                    colors.toIntArray()
-                                ).apply {
-                                    if (config.lyricBackgroundRadius != 0) cornerRadius = config.lyricBackgroundRadius.toFloat()
-                                }
-                                background = gradientDrawable
+                        config.lyricBackgroundColor.trim().split(",").map { Color.parseColor(it.trim()) }.let { colors ->
+                            val gradientDrawable = GradientDrawable(
+                                GradientDrawable.Orientation.LEFT_RIGHT, colors.toIntArray()
+                            ).apply {
+                                if (config.lyricBackgroundRadius != 0) cornerRadius = config.lyricBackgroundRadius.toFloat()
                             }
+                            background = gradientDrawable
+                        }
                     }
                 }
 
@@ -685,7 +676,7 @@ class SystemUILyric : BaseHook() {
     private fun getLyricWidth(paint: Paint, text: String): Int {
         "Get Lyric Width".log()
         return if (config.lyricWidth == 0) {
-            theoreticalWidth = min(paint.measureText(text).toInt(), targetView.width)
+            theoreticalWidth = min(paint.measureText(text).toInt()+ config.lyricEndMargins, targetView.width)
             theoreticalWidth
         } else {
             if (config.fixedLyricWidth) {

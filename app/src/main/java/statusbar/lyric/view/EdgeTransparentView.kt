@@ -30,7 +30,6 @@ open class EdgeTransparentView(context: Context, private val drawSize: Float = 5
         mHeight = height
     }
 
-
     private fun initShader() {
         mPaint.setShader(LinearGradient(0f, 0f, 0f, drawSize, intArrayOf(Color.WHITE, Color.TRANSPARENT), floatArrayOf(0f, 1f), Shader.TileMode.CLAMP))
     }
@@ -75,6 +74,4 @@ open class EdgeTransparentView(context: Context, private val drawSize: Float = 5
         canvas.restoreToCount(layerSave)
         return drawChild
     }
-
-
 }
