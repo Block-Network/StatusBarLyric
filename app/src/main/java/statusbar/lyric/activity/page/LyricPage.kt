@@ -377,7 +377,7 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_end_margins))
                 setMessage(getString(R.string.lyric_end_margins_tips))
-                setEditText(config.lyricEndMargins.toString(), "12", config = {
+                setEditText(config.lyricEndMargins.toString(), "10", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })

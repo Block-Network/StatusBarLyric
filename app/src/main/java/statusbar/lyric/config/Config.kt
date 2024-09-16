@@ -154,7 +154,7 @@ class Config {
         }
     var lyricEndMargins: Int
         get() {
-            return config.opt("lyricEnd", 12)
+            return config.opt("lyricEnd", 10)
         }
         set(value) {
             config.put("lyricEnd", value)
@@ -438,6 +438,27 @@ class Config {
         }
         set(value) {
             config.put("mHyperOSTexture", value)
+        }
+    var mHyperOSTextureRadio: Int
+        get() {
+            return config.opt("mHyperOSTextureRadio", 50)
+        }
+        set(value) {
+            config.put("mHyperOSTextureRadio", value)
+        }
+    var mHyperOSTextureCorner: Int
+        get() {
+            return config.opt("mHyperOSTextureCorner", 32)
+        }
+        set(value) {
+            config.put("mHyperOSTextureCorner", value)
+        }
+    var mHyperOSTextureBgColor: String
+        get() {
+            return config.opt("mHyperOSTextureBgColor", "#10818181")
+        }
+        set(value) {
+            config.put("mHyperOSTextureBgColor", value)
         }
     var titleSwitch: Boolean
         get() {
