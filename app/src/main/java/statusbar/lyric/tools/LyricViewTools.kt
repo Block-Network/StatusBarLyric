@@ -84,19 +84,22 @@ object LyricViewTools {
         }
     }
 
-    fun View.hideView() {
+    fun View.hideView(anim: Boolean = true) {
         if (visibility == View.GONE) return
-        val alphaAnimation = getAlphaAnimation(false).apply {
-            setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {}
-                override fun onAnimationEnd(animation: Animation) {
-                    visibility = View.GONE
-                }
-
-                override fun onAnimationRepeat(animation: Animation) {}
-            })
+        if (anim) {
+            val alphaAnimation = getAlphaAnimation(false).apply {
+                setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation) {}
+                    override fun onAnimationEnd(animation: Animation) {
+                        visibility = View.GONE
+                    }
+                    override fun onAnimationRepeat(animation: Animation) {}
+                })
+            }
+            startAnimation(alphaAnimation)
+        } else {
+            visibility = View.GONE
         }
-        startAnimation(alphaAnimation)
     }
 
     fun View.showView() {

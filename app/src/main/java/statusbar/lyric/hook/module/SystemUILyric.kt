@@ -562,7 +562,7 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private fun hideLyric() {
+    private fun hideLyric(anim: Boolean = true) {
         if (isStop) return
         if (!isHiding && isPlaying) {
             isPlaying = false
@@ -571,7 +571,7 @@ class SystemUILyric : BaseHook() {
         "isPlaying:$isPlaying".log()
         "Hide Lyric".log()
         goMainThread {
-            lyricLayout.hideView()
+            lyricLayout.hideView(anim)
             clockView.showView()
             if (config.titleSwitch) titleDialog.hideTitle()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
@@ -815,9 +815,7 @@ class SystemUILyric : BaseHook() {
             val getLazyClass = XposedHelpers.callMethod(mStatusBarStateController, "get")
             val getState = XposedHelpers.callMethod(getLazyClass, "getState")
             isScreenLock = getState != 0
-            if (isScreenLock) {
-                lyricLayout.visibility = View.GONE
-            }
+            if (isScreenLock) hideLyric(false)
         }
     }
 
