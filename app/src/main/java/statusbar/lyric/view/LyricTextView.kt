@@ -27,11 +27,11 @@ import android.graphics.Canvas
 import android.view.ViewGroup
 import android.widget.TextView
 import statusbar.lyric.config.XposedOwnSP.config
-import statusbar.lyric.tools.LogTools.log
 
 open class LyricTextView(context: Context) : TextView(context) {
     private var isScrolling = false
     private var textLength = 0f
+    private var lyricWidth = 0f
     private var viewWidth = 0f
     private var scrollSpeed = 4f
     private var currentX = 0f
@@ -76,13 +76,12 @@ open class LyricTextView(context: Context) : TextView(context) {
     }
 
     private fun updateScrollPosition() {
-        val currentViewWidth = viewWidth - config.lyricStartMargins - config.lyricEndMargins
-        "Lyric Scroll: currentX: $currentX, viewWidth: $viewWidth ,textLength: $textLength, currentViewWidth: $currentViewWidth".log()
-        if (viewWidth - config.lyricEndMargins - currentX == textLength) {
+        val realTextLength = textLength + config.lyricEndMargins + config.lyricStartMargins
+        if (realTextLength <= lyricWidth) {
             currentX = 0f
             stopScroll()
-        } else if (currentViewWidth - currentX >= textLength) {
-            currentX = currentViewWidth - textLength
+        } else if (viewWidth - currentX >= realTextLength) {
+            currentX = viewWidth - realTextLength
             stopScroll()
         } else {
             currentX -= scrollSpeed
@@ -118,6 +117,10 @@ open class LyricTextView(context: Context) : TextView(context) {
         val params = layoutParams as ViewGroup.MarginLayoutParams
         params.setMargins(start, top, end, bottom)
         layoutParams = params
+    }
+
+    fun maxLyricWidth(float: Float) {
+        lyricWidth = float
     }
 
     companion object {
