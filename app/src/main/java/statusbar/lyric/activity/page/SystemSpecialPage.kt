@@ -34,7 +34,7 @@ class SystemSpecialPage : BasePage() {
                         setRButton(getString(R.string.ok)) {
                             try {
                                 val value = getEditText().toInt()
-                                if (value in 0..50) {
+                                if (value in 0..400) {
                                     ActivityOwnSP.config.mHyperOSTextureRadio = value
                                     changeConfig()
                                 } else {
