@@ -71,10 +71,8 @@ import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.LyricViewTools.hideView
 import statusbar.lyric.tools.LyricViewTools.iconColorAnima
-import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.LyricViewTools.textColorAnima
-import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isLandscape
@@ -82,6 +80,7 @@ import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isNull
+import statusbar.lyric.tools.Tools.isPad
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
@@ -183,9 +182,7 @@ class SystemUILyric : BaseHook() {
                         } else if (colors.size < 2) {
                             setTextColor(colors[0])
                         } else {
-                            val textShader = LinearGradient(
-                                0f, 0f, width.toFloat(), 0f, colors.toIntArray(), null, Shader.TileMode.CLAMP
-                            )
+                            val textShader = LinearGradient(0f, 0f, width.toFloat(), 0f, colors.toIntArray(), null, Shader.TileMode.CLAMP)
                             setLinearGradient(textShader)
                         }
                     }
@@ -441,6 +438,7 @@ class SystemUILyric : BaseHook() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
         val firstLoad = lyricLayout.parent.isNull()
+        if (!firstLoad) return
         goMainThread(1) {
             runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
             if (config.viewIndex == 0) {
@@ -461,21 +459,20 @@ class SystemUILyric : BaseHook() {
 
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
         }
-        if (!firstLoad) return
         val lyricReceiver = LyricReceiver(object : LyricListener() {
             override fun onStop(lyricData: LyricData) {
-                if (!(isReally)) return
+                if (!isReally) return
                 if (isHiding) isHiding = false
                 hideLyric()
             }
 
             override fun onUpdate(lyricData: LyricData) {
-                if (!(isReally)) return
+                if (!isReally) return
                 val lyric = lyricData.lyric
                 lastLyric = lyric
                 if (isHiding) return
                 changeIcon(lyricData.extraData)
-                changeLyric(lyric, lyricData.extraData.delay)
+                changeLyric(lastLyric, lyricData.extraData.delay)
             }
         })
         registerLyricListener(context, BuildConfig.API_VERSION, lyricReceiver)
@@ -494,7 +491,6 @@ class SystemUILyric : BaseHook() {
             } else {
                 context.registerReceiver(ScreenLockReceiver(), screenLockFilter)
             }
-
         }
         changeConfig(1)
     }
@@ -502,12 +498,12 @@ class SystemUILyric : BaseHook() {
     private fun changeLyric(lyric: String, delay: Int) {
         if (isHiding || isScreenLock) return
         "lyric:$lyric".log()
+        isStop = false
+        isPlaying = true
         goMainThread {
-            isStop = false
-            if (!isPlaying) {
-                if (config.lyricColor.isEmpty()) lastColor = clockView.currentTextColor
+            if (!isPlaying && config.lyricColor.isEmpty()) {
+                lastColor = clockView.currentTextColor
             }
-            isPlaying = true
             lyricLayout.showView()
             if (config.hideTime) clockView.hideView()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
@@ -515,13 +511,6 @@ class SystemUILyric : BaseHook() {
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
             if (this::mPadClockView.isInitialized) mPadClockView.hideView()
             lyricView.apply {
-                val interpolator = config.interpolator
-                val duration = config.animationDuration
-                if (isRandomAnima) {
-                    val effect = randomAnima
-                    inAnimation = LyricViewTools.switchViewInAnima(effect, interpolator, duration)
-                    outAnimation = LyricViewTools.switchViewOutAnima(effect, duration)
-                }
                 width = getLyricWidth(paint, lyric)
                 val i = width - theoreticalWidth
                 if (config.dynamicLyricSpeed && delay == 0) {
@@ -621,7 +610,6 @@ class SystemUILyric : BaseHook() {
                     }
                 }
 
-
                 val animation = config.animation
                 val interpolator = config.interpolator
                 val duration = config.animationDuration
@@ -674,10 +662,6 @@ class SystemUILyric : BaseHook() {
             }
             if (this::mNotificationIconArea.isInitialized) if (config.hideNotificationIcon) mNotificationIconArea.hideView() else mNotificationIconArea.showView()
         }
-    }
-
-    fun targetViewWidget(): Float {
-        return targetView.width.toFloat()
     }
 
     private fun getLyricWidth(paint: Paint, text: String): Int {
@@ -795,7 +779,7 @@ class SystemUILyric : BaseHook() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("type")) {
                 "normal" -> {
-                    if (!(isReally)) return
+                    if (!isReally) return
                     changeConfig()
                 }
 
@@ -803,7 +787,6 @@ class SystemUILyric : BaseHook() {
                 "reset_font" -> {}
             }
         }
-
     }
 
     inner class ScreenLockReceiver : BroadcastReceiver() {
@@ -816,6 +799,4 @@ class SystemUILyric : BaseHook() {
             if (isScreenLock) hideLyric(false)
         }
     }
-
-    val isPad get() = Tools.getSystemProperties("ro.build.characteristics") == "tablet"
 }
