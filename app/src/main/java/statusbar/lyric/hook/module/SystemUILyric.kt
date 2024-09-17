@@ -545,6 +545,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeIcon(it: ExtraData) {
+        lyricView.iconWidth(iconView.width.toFloat())
         if (!iconSwitch) return
         if (config.changeAllIcons.isNotEmpty()) {
             lastBase64Icon = config.changeAllIcons

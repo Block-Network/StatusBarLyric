@@ -53,7 +53,11 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     }
 
     fun maxLyricWidth(width: Float) {
-        applyToAllViews { it.maxLyricWidth(width) }
+        applyToAllViews { it.maxViewWidth(width) }
+    }
+
+    fun iconWidth(width: Float) {
+        applyToAllViews { it.iconWidth(width) }
     }
 
     fun applyToAllViews(action: (LyricTextView) -> Unit) {

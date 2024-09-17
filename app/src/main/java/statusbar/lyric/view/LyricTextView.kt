@@ -31,8 +31,8 @@ import statusbar.lyric.config.XposedOwnSP.config
 open class LyricTextView(context: Context) : TextView(context) {
     private var isScrolling = false
     private var textLength = 0f
-    private var lyricWidth = 0f
     private var viewWidth = 0f
+    private var iconWidth = 0f
     private var scrollSpeed = 4f
     private var currentX = 0f
     private var displayText: String? = null
@@ -46,7 +46,6 @@ open class LyricTextView(context: Context) : TextView(context) {
     private fun initialize() {
         currentX = 0f
         textLength = getTextLength()
-        viewWidth = width.toFloat()
     }
 
     override fun onDetachedFromWindow() {
@@ -77,11 +76,12 @@ open class LyricTextView(context: Context) : TextView(context) {
 
     private fun updateScrollPosition() {
         val realTextLength = textLength + config.lyricEndMargins + config.lyricStartMargins
-        if (realTextLength <= lyricWidth) {
+        val realLyricWidth = viewWidth - if (config.iconSwitch) iconWidth + config.iconStartMargins else 0f
+        if (realTextLength <= realLyricWidth) {
             currentX = 0f
             stopScroll()
-        } else if (viewWidth - currentX >= realTextLength) {
-            currentX = viewWidth - realTextLength
+        } else if (realLyricWidth - currentX >= realTextLength) {
+            currentX = realLyricWidth - realTextLength
             stopScroll()
         } else {
             currentX -= scrollSpeed
@@ -119,8 +119,12 @@ open class LyricTextView(context: Context) : TextView(context) {
         layoutParams = params
     }
 
-    fun maxLyricWidth(float: Float) {
-        lyricWidth = float
+    fun maxViewWidth(float: Float) {
+        viewWidth = float
+    }
+
+    fun iconWidth(width: Float) {
+        iconWidth = width
     }
 
     companion object {
