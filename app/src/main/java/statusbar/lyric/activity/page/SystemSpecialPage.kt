@@ -28,7 +28,7 @@ class SystemSpecialPage : BasePage() {
                     MIUIDialog(activity) {
                         setTitle(getString(R.string.hyperos_texture_radio))
                         setMessage(getString(R.string.lyric_stroke_width_tips))
-                        setEditText(ActivityOwnSP.config.mHyperOSTextureRadio.toString(), "50", config = {
+                        setEditText(ActivityOwnSP.config.mHyperOSTextureRadio.toString(), "25", config = {
                             it.filters = arrayOf(InputFilter.LengthFilter(3))
                         })
                         setRButton(getString(R.string.ok)) {
