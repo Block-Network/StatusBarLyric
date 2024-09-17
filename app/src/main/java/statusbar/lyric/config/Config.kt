@@ -441,7 +441,7 @@ class Config {
         }
     var mHyperOSTextureRadio: Int
         get() {
-            return config.opt("mHyperOSTextureRadio", 50)
+            return config.opt("mHyperOSTextureRadio", 25)
         }
         set(value) {
             config.put("mHyperOSTextureRadio", value)
