@@ -19,8 +19,6 @@ import android.widget.ImageView
 import statusbar.lyric.view.LyricSwitchView
 
 object LyricViewTools {
-    private var animaList: ArrayList<String> = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY")
-    val randomAnima: String get() = animaList.random()
     fun getAlphaAnimation(into: Boolean, duration: Long = 250): AnimationSet {
         val alphaAnimation = (if (into) AlphaAnimation(0F, 1F) else AlphaAnimation(1F, 0F)).apply {
             this.duration = duration
@@ -93,6 +91,7 @@ object LyricViewTools {
                     override fun onAnimationEnd(animation: Animation) {
                         visibility = View.GONE
                     }
+
                     override fun onAnimationRepeat(animation: Animation) {}
                 })
             }

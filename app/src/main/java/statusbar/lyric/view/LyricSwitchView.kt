@@ -108,12 +108,6 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         applyToAllViews { it.setTextSize(unit, size) }
     }
 
-    fun setMargins(start: Int, top: Int, end: Int, bottom: Int) {
-        applyToAllViews {
-            it.setMargins(start, top, end, bottom)
-        }
-    }
-
     fun setSingleLine(singleLine: Boolean) {
         applyToAllViews { it.isSingleLine = singleLine }
     }

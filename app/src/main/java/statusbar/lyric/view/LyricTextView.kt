@@ -24,9 +24,14 @@ package statusbar.lyric.view
 
 import android.content.Context
 import android.graphics.Canvas
-import android.view.ViewGroup
+import android.graphics.Paint
+import android.util.DisplayMetrics
 import android.widget.TextView
 import statusbar.lyric.config.XposedOwnSP.config
+import statusbar.lyric.tools.LogTools.log
+import statusbar.lyric.tools.Tools.isLandscape
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 open class LyricTextView(context: Context) : TextView(context) {
     private var isScrolling = false
@@ -50,6 +55,7 @@ open class LyricTextView(context: Context) : TextView(context) {
 
     override fun onDetachedFromWindow() {
         removeCallbacks(startScrollRunnable)
+        removeCallbacks(invalidateRunnable)
         super.onDetachedFromWindow()
     }
 
@@ -69,7 +75,7 @@ open class LyricTextView(context: Context) : TextView(context) {
 
     override fun onDraw(canvas: Canvas) {
         val y = (height - (paint.descent() + paint.ascent())) / 2
-        canvas.drawText(displayText!!, currentX, y, paint)
+        displayText?.let { canvas.drawText(it, currentX, y, paint) }
         if (isScrolling) updateScrollPosition()
         invalidateAfter()
     }
@@ -111,12 +117,6 @@ open class LyricTextView(context: Context) : TextView(context) {
 
     fun setScrollSpeed(speed: Float) {
         this.scrollSpeed = speed
-    }
-
-    fun setMargins(start: Int, top: Int, end: Int, bottom: Int) {
-        val params = layoutParams as ViewGroup.MarginLayoutParams
-        params.setMargins(start, top, end, bottom)
-        layoutParams = params
     }
 
     fun maxViewWidth(float: Float) {

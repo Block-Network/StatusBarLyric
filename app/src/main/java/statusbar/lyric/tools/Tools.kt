@@ -53,6 +53,8 @@ object Tools {
 
     val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
 
+    val isPad get() = getSystemProperties("ro.build.characteristics") == "tablet"
+
     fun isHyperOS(): Boolean {
         try {
             getSystemProperties("ro.mi.os.version.incremental")
