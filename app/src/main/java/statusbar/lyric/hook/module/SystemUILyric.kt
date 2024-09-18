@@ -212,7 +212,7 @@ class SystemUILyric : BaseHook() {
             } else {
                 lyricView
             })
-            hideView()
+            visibility = View.GONE
         }
     }
     private lateinit var mMIUINetworkSpeedView: TextView
@@ -512,7 +512,7 @@ class SystemUILyric : BaseHook() {
             if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
             if (this::mPadClockView.isInitialized) mPadClockView.hideView()
             lyricView.apply {
-                width = getLyricWidth(paint, lyric)
+                width = getLyricWidth(getPaint(), lyric)
                 val i = width - theoreticalWidth
                 if (config.dynamicLyricSpeed && delay == 0) {
                     if (i > 0) {
