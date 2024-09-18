@@ -274,7 +274,7 @@ class SystemUILyric : BaseHook() {
                         clazz.methodFinder().filterByName("onMetadataChanged").first().createHook {
                             after { hookParam ->
                                 if (isStop || !isPlaying) return@after
-                                val metadata = hookParam.args[0] as MediaMetadata
+                                val metadata = hookParam.args[0] as? MediaMetadata ?: return@after
                                 title = metadata.getString(if (config.useBlueGetTitle) MediaMetadata.METADATA_KEY_ARTIST else MediaMetadata.METADATA_KEY_TITLE)
                             }
                         }
@@ -438,7 +438,6 @@ class SystemUILyric : BaseHook() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
         val firstLoad = lyricLayout.parent.isNull()
-        if (!firstLoad) return
         goMainThread(1) {
             runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
             if (config.viewIndex == 0) {
@@ -459,6 +458,8 @@ class SystemUILyric : BaseHook() {
 
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
         }
+
+        if (!firstLoad) return
         val lyricReceiver = LyricReceiver(object : LyricListener() {
             override fun onStop(lyricData: LyricData) {
                 if (!isReally) return
