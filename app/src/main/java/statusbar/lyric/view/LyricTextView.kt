@@ -35,27 +35,21 @@ class LyricTextView(context: Context) : TextView(context) {
     private var iconWidth = 0f
     private var scrollSpeed = 4f
     private var currentX = 0f
-    private var displayText: String? = null
+    private val iconSwitch = config.iconSwitch
+    private val lyricStartMargins = config.lyricStartMargins
+    private val lyricEndMargins = config.lyricEndMargins
+    private val iconStartMargins = config.iconStartMargins
     private val weakReference = WeakReference(this)
     private val startScrollRunnable = Runnable { weakReference.get()?.startScroll() }
-    private val invalidateRunnable = Runnable { weakReference.get()?.invalidate() }
-
-    private fun initialize() {
-        currentX = 0f
-        textLength = getTextLength()
-    }
 
     override fun onDetachedFromWindow() {
-        removeCallbacks(startScrollRunnable)
+        stopScroll()
         super.onDetachedFromWindow()
     }
 
     override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
-        stopScroll()
-        displayText = text.toString()
         initialize()
-        postInvalidate()
         postDelayed(startScrollRunnable, START_SCROLL_DELAY)
     }
 
@@ -66,14 +60,14 @@ class LyricTextView(context: Context) : TextView(context) {
 
     override fun onDraw(canvas: Canvas) {
         val y = (height - (paint.descent() + paint.ascent())) / 2
-        displayText?.let { canvas.drawText(it, currentX, y, paint) }
+        text?.let { canvas.drawText(it.toString(), currentX, y, paint) }
         if (isScrolling) updateScrollPosition()
-        invalidateAfter()
+        postInvalidate()
     }
 
     private fun updateScrollPosition() {
-        val realTextLength = textLength + config.lyricEndMargins + config.lyricStartMargins
-        val realLyricWidth = viewWidth - if (config.iconSwitch) iconWidth + config.iconStartMargins else 0f
+        val realTextLength = textLength + lyricEndMargins + lyricStartMargins
+        val realLyricWidth = viewWidth - if (iconSwitch) iconWidth + iconStartMargins else 0f
         if (realTextLength <= realLyricWidth) {
             currentX = 0f
             stopScroll()
@@ -85,16 +79,14 @@ class LyricTextView(context: Context) : TextView(context) {
         }
     }
 
-    private fun invalidateAfter() {
-        removeCallbacks(invalidateRunnable)
-        postDelayed(invalidateRunnable, INVALIDATE_DELAY)
+    private fun initialize() {
+        textLength = getTextLength()
+        currentX = 0f
     }
 
     private fun startScroll() {
         if (!isScrolling) {
-            initialize()
             isScrolling = true
-            postInvalidate()
         }
     }
 
@@ -102,12 +94,11 @@ class LyricTextView(context: Context) : TextView(context) {
         if (isScrolling) {
             isScrolling = false
             removeCallbacks(startScrollRunnable)
-            postInvalidate()
         }
     }
 
     private fun getTextLength(): Float {
-        return displayText?.let { paint.measureText(it) } ?: 0f
+        return text?.let { paint.measureText(it.toString()) } ?: 0f
     }
 
     fun setScrollSpeed(speed: Float) {
@@ -119,11 +110,12 @@ class LyricTextView(context: Context) : TextView(context) {
     }
 
     fun iconWidth(width: Float) {
-        iconWidth = width
+        if (config.iconSwitch) {
+            iconWidth = width
+        }
     }
 
     companion object {
-        const val START_SCROLL_DELAY = 500L
-        const val INVALIDATE_DELAY = 10L
+        const val START_SCROLL_DELAY = 1000L
     }
 }

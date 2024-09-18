@@ -30,15 +30,8 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.text.TextPaint
 import android.widget.TextSwitcher
-import android.widget.TextView
 
 open class LyricSwitchView(context: Context) : TextSwitcher(context) {
-
-    val text: CharSequence
-        get() = (currentView as TextView).text
-
-    val paint: TextPaint
-        get() = (currentView as TextView).paint
 
     init {
         initialize()
@@ -50,6 +43,10 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
                 layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
             }
         }
+    }
+
+    fun getPaint(): TextPaint {
+        return (getChildAt(0) as LyricTextView).paint
     }
 
     fun maxLyricWidth(width: Float) {
