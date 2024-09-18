@@ -20,7 +20,7 @@ import statusbar.lyric.view.LyricSwitchView
 
 object LyricViewTools {
     fun getAlphaAnimation(into: Boolean, duration: Long = 250): AnimationSet {
-        val alphaAnimation = (if (into) AlphaAnimation(0F, 1F) else AlphaAnimation(1F, 0F)).apply {
+        val alphaAnimation = (if (into) AlphaAnimation(0f, 1F) else AlphaAnimation(1F, 0f)).apply {
             this.duration = duration
         }
         return AnimationSet(true).apply {
@@ -31,10 +31,10 @@ object LyricViewTools {
     fun switchViewInAnima(str: String?, interpolator: String?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
         val translateAnimation: Animation? = when (str) {
-            "Top" -> TranslateAnimation(0F, 0F, 100F, 0F)
-            "Bottom" -> TranslateAnimation(0F, 0F, -100F, 0F)
-            "Start" -> TranslateAnimation(100F, 0F, 0F, 0F)
-            "End" -> TranslateAnimation(-100F, 0F, 0F, 0F)
+            "Top" -> TranslateAnimation(0f, 0f, 100f, 0f)
+            "Bottom" -> TranslateAnimation(0f, 0f, -100f, 0f)
+            "Start" -> TranslateAnimation(100f, 0f, 0f, 0f)
+            "End" -> TranslateAnimation(-100f, 0f, 0f, 0f)
             "Fade" -> null
             "ScaleXY" -> ScaleAnimation(0f, 1f, 0f, 1f)
             "ScaleX" -> ScaleAnimation(0f, 1f, 1f, 1f)
@@ -53,10 +53,10 @@ object LyricViewTools {
     fun switchViewOutAnima(str: String?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
         val translateAnimation: Animation? = when (str) {
-            "Top" -> TranslateAnimation(0F, 0F, 0F, -100F)
-            "Bottom" -> TranslateAnimation(0F, 0F, 0F, 100F)
-            "Start" -> TranslateAnimation(0F, -100F, 0F, 0F)
-            "End" -> TranslateAnimation(0F, 100F, 0F, 0F)
+            "Top" -> TranslateAnimation(0f, 0f, 0f, -100f)
+            "Bottom" -> TranslateAnimation(0f, 0f, 0f, +100f)
+            "Start" -> TranslateAnimation(0f, -100f, 0f, 0f)
+            "End" -> TranslateAnimation(0f, 0f + 100f, 0f, 0f)
             "Fade" -> null
             "ScaleXY" -> ScaleAnimation(1f, 0f, 1f, 0f)
             "ScaleX" -> ScaleAnimation(1f, 0f, 1f, 1f)

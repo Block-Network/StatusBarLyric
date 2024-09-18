@@ -1,89 +1,61 @@
 package statusbar.lyric.view
 
 import android.content.Context
-import android.graphics.Canvas
 import android.os.Handler
 import android.os.Looper
+import android.widget.OverScroller
 import android.widget.TextView
 import statusbar.lyric.config.XposedOwnSP.config
-import java.lang.ref.WeakReference
+import kotlin.math.roundToInt
 
-class LyricTextView(context: Context) : TextView(context) {
-    private var isScrolling = false
-    private var textLength = 0f
+open class LyricTextView(context: Context) : TextView(context) {
     private var viewWidth = 0f
     private var iconWidth = 0f
     private var scrollSpeed = 4f
-    private var currentX = 0f
+    private var textLength = 0f
     private val iconSwitch = config.iconSwitch
     private val lyricStartMargins = config.lyricStartMargins
     private val lyricEndMargins = config.lyricEndMargins
     private val iconStartMargins = config.iconStartMargins
-    private val weakReference = WeakReference(this)
-    private val startScrollRunnable = Runnable { weakReference.get()?.startScroll() }
     private val handler = Handler(Looper.getMainLooper())
-    private val invalidateRunnable = Runnable { invalidate() }
-
-    override fun onDetachedFromWindow() {
-        stopScroll()
-        super.onDetachedFromWindow()
-    }
-
-    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter)
-        textLength = getTextLength()
-        currentX = 0f
-        postDelayed(startScrollRunnable, START_SCROLL_DELAY)
-    }
+    private var scrollRunnable: Runnable? = null
+    private val scroller: OverScroller = OverScroller(context)
 
     override fun setTextColor(color: Int) {
+        super.setTextColor(color)
         postInvalidate()
     }
 
-    override fun onDraw(canvas: Canvas) {
-        val y = (height - (paint.descent() + paint.ascent())) / 2
-        text?.let { canvas.drawText(it.toString(), currentX, y, paint) }
-        if (isScrolling) {
-            updateScrollPosition()
-            scheduleInvalidate()
-        }
-    }
+    override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter)
 
-    private fun updateScrollPosition() {
+        scrollRunnable?.let { handler.removeCallbacks(it) }
+        scrollX = 0
+        getTextLength()
+
         val realTextLength = textLength + lyricEndMargins + lyricStartMargins
         val realLyricWidth = viewWidth - if (iconSwitch) iconWidth + iconStartMargins else 0f
-        if (realTextLength <= realLyricWidth) {
-            currentX = 0f
-            stopScroll()
-        } else if (realLyricWidth - currentX >= realTextLength) {
-            currentX = realLyricWidth - realTextLength
-            stopScroll()
-        } else {
-            currentX -= scrollSpeed
+
+        if (text.isNullOrEmpty() || realTextLength <= realLyricWidth) return
+
+        scrollRunnable = Runnable {
+            val duration = (realTextLength * scrollSpeed).toInt()
+            scroller.startScroll(scrollX, scrollY, -(realLyricWidth - realTextLength).roundToInt(), 0, duration)
+            invalidate()
+        }
+        handler.postDelayed(scrollRunnable!!, 1000)
+
+    }
+
+    override fun computeScroll() {
+        if (scroller.computeScrollOffset()) {
+            scrollTo(scroller.currX, scroller.currY)
+            postInvalidate()
         }
     }
 
-    private fun scheduleInvalidate() {
-        handler.removeCallbacks(invalidateRunnable)
-        handler.postDelayed(invalidateRunnable, INVALIDATE_DELAY)
-    }
-
-    private fun startScroll() {
-        if (!isScrolling) {
-            isScrolling = true
-        }
-    }
-
-    private fun stopScroll() {
-        if (isScrolling) {
-            isScrolling = false
-            removeCallbacks(startScrollRunnable)
-            handler.removeCallbacks(invalidateRunnable)
-        }
-    }
-
-    private fun getTextLength(): Float {
-        return text?.let { paint.measureText(it.toString()) } ?: 0f
+    private fun getTextLength() {
+        textLength = text?.let { paint.measureText(it.toString()) } ?: 0f
     }
 
     fun setScrollSpeed(speed: Float) {
@@ -95,13 +67,6 @@ class LyricTextView(context: Context) : TextView(context) {
     }
 
     fun iconWidth(width: Float) {
-        if (config.iconSwitch) {
-            iconWidth = width
-        }
-    }
-
-    companion object {
-        const val START_SCROLL_DELAY = 1000L
-        const val INVALIDATE_DELAY = 16L // Approximately 60 FPS
+        if (config.iconSwitch) iconWidth = width
     }
 }
