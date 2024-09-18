@@ -160,8 +160,7 @@ object Tools {
         }, delayed * 1000)
     }
 
-    fun Context.isLandscape() =
-        resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    fun Context.isLandscape() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     fun String.dispose() = this.regexReplace(" ", "").regexReplace("\n", "")
 
