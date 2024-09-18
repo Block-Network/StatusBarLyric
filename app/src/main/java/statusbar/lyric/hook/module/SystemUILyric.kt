@@ -445,7 +445,11 @@ class SystemUILyric : BaseHook() {
             } else {
                 targetView.addView(lyricLayout)
             }
-            lyricView.maxLyricWidth(targetView.width.toFloat())
+            if (config.lyricWidth == 0) {
+                lyricView.maxLyricWidth(targetView.width.toFloat())
+            } else {
+                lyricView.maxLyricWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
+            }
             if (isHyperOS() && config.mHyperOSTexture) {
                 val blurRadio = config.mHyperOSTextureRadio
                 val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
@@ -584,6 +588,11 @@ class SystemUILyric : BaseHook() {
                     } else {
                         setTextColor(Color.parseColor(config.lyricColor))
                     }
+                }
+                if (config.lyricWidth == 0) {
+                    maxLyricWidth(targetView.width.toFloat())
+                } else {
+                    maxLyricWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
