@@ -24,16 +24,11 @@ package statusbar.lyric.view
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Paint
-import android.util.DisplayMetrics
 import android.widget.TextView
 import statusbar.lyric.config.XposedOwnSP.config
-import statusbar.lyric.tools.LogTools.log
-import statusbar.lyric.tools.Tools.isLandscape
-import kotlin.math.min
-import kotlin.math.roundToInt
+import java.lang.ref.WeakReference
 
-open class LyricTextView(context: Context) : TextView(context) {
+class LyricTextView(context: Context) : TextView(context) {
     private var isScrolling = false
     private var textLength = 0f
     private var viewWidth = 0f
@@ -41,12 +36,9 @@ open class LyricTextView(context: Context) : TextView(context) {
     private var scrollSpeed = 4f
     private var currentX = 0f
     private var displayText: String? = null
-    private val startScrollRunnable = Runnable { startScroll() }
-    private val invalidateRunnable = Runnable { invalidate() }
-
-    init {
-        initialize()
-    }
+    private val weakReference = WeakReference(this)
+    private val startScrollRunnable = Runnable { weakReference.get()?.startScroll() }
+    private val invalidateRunnable = Runnable { weakReference.get()?.invalidate() }
 
     private fun initialize() {
         currentX = 0f
@@ -55,13 +47,12 @@ open class LyricTextView(context: Context) : TextView(context) {
 
     override fun onDetachedFromWindow() {
         removeCallbacks(startScrollRunnable)
-        removeCallbacks(invalidateRunnable)
         super.onDetachedFromWindow()
     }
 
     override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
-        if (isScrolling) stopScroll()
+        stopScroll()
         displayText = text.toString()
         initialize()
         postInvalidate()
@@ -96,19 +87,23 @@ open class LyricTextView(context: Context) : TextView(context) {
 
     private fun invalidateAfter() {
         removeCallbacks(invalidateRunnable)
-        postDelayed(invalidateRunnable, INVALIDATE_DELAY.toLong())
+        postDelayed(invalidateRunnable, INVALIDATE_DELAY)
     }
 
     private fun startScroll() {
-        initialize()
-        isScrolling = true
-        postInvalidate()
+        if (!isScrolling) {
+            initialize()
+            isScrolling = true
+            postInvalidate()
+        }
     }
 
     private fun stopScroll() {
-        isScrolling = false
-        removeCallbacks(startScrollRunnable)
-        postInvalidate()
+        if (isScrolling) {
+            isScrolling = false
+            removeCallbacks(startScrollRunnable)
+            postInvalidate()
+        }
     }
 
     private fun getTextLength(): Float {
@@ -129,6 +124,6 @@ open class LyricTextView(context: Context) : TextView(context) {
 
     companion object {
         const val START_SCROLL_DELAY = 500L
-        const val INVALIDATE_DELAY = 10
+        const val INVALIDATE_DELAY = 10L
     }
 }
