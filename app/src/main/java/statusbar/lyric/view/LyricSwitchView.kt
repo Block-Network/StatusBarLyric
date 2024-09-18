@@ -49,29 +49,29 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         return (getChildAt(0) as LyricTextView).paint
     }
 
-    fun maxLyricWidth(width: Float) {
-        applyToAllViews { it.maxViewWidth(width) }
-    }
-
-    fun iconWidth(width: Float) {
-        applyToAllViews { it.iconWidth(width) }
-    }
-
     fun applyToAllViews(action: (LyricTextView) -> Unit) {
         for (i in 0 until childCount) {
             action(getChildAt(i) as LyricTextView)
         }
     }
 
-    open fun setWidth(width: Int) {
+    fun maxLyricWidth(width: Float) {
+        applyToAllViews { it.maxViewWidth(width) }
+    }
+
+    fun setWidth(width: Int) {
         applyToAllViews {
             layoutTransition = LayoutTransition()
             it.layoutParams.width = width
         }
     }
 
+    fun iconWidth(width: Float) {
+        applyToAllViews { it.iconWidth(width) }
+    }
+
     fun setTextColor(color: Int) {
-        applyToAllViews { it.setTextColor(color) }
+        applyToAllViews { it.paint.color = color }
     }
 
     fun setLinearGradient(shader: Shader) {

@@ -91,7 +91,6 @@ import statusbar.lyric.view.TitleDialog
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.min
-import kotlin.math.roundToInt
 
 class SystemUILyric : BaseHook() {
 
@@ -690,19 +689,13 @@ class SystemUILyric : BaseHook() {
 
     private fun scaleWidth(): Int {
         "Scale Width".log()
-        return (config.lyricWidth / 100.0 * if (context.isLandscape()) {
-            displayHeight
-        } else {
-            displayWidth
-        }).roundToInt()
+        return (config.lyricWidth / 100f * if (context.isLandscape()) displayHeight else displayWidth).toInt()
     }
 
     private fun Class<*>.hasMethod(methodName: String): Boolean {
         val methods = declaredMethods
         for (method in methods) {
-            if (method.name == methodName) {
-                return true
-            }
+            if (method.name == methodName) return true
         }
         return false
     }
