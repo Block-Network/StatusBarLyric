@@ -49,12 +49,12 @@ class LyricTextView(context: Context) : TextView(context) {
 
     override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
-        initialize()
+        textLength = getTextLength()
+        currentX = 0f
         postDelayed(startScrollRunnable, START_SCROLL_DELAY)
     }
 
     override fun setTextColor(color: Int) {
-        paint.color = color
         postInvalidate()
     }
 
@@ -77,11 +77,6 @@ class LyricTextView(context: Context) : TextView(context) {
         } else {
             currentX -= scrollSpeed
         }
-    }
-
-    private fun initialize() {
-        textLength = getTextLength()
-        currentX = 0f
     }
 
     private fun startScroll() {
