@@ -453,8 +453,7 @@ class SystemUILyric : BaseHook() {
                 val blurRadio = config.mHyperOSTextureRadio
                 val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
                 val blendModes = arrayOf(
-                    intArrayOf(106, Color.parseColor(config.mHyperOSTextureBgColor)),
-                    intArrayOf(3, Color.parseColor(config.mHyperOSTextureBgColor))
+                    intArrayOf(106, Color.parseColor(config.mHyperOSTextureBgColor)), intArrayOf(3, Color.parseColor(config.mHyperOSTextureBgColor))
                 )
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
@@ -721,7 +720,6 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-
 
             if (togglePrompts) {
                 loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
