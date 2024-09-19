@@ -36,6 +36,7 @@
     <string name="master_switch">主開關</string>
     <string name="hook_page">錨點頁</string>
     <string name="test_mode">錨點設置模式</string>
+    <string name="test_mode_tips">第一次安裝模組，請先設置錨點，方可使用本模組\n\n開啟錨點設置模式，重啟系統介面，獲取錨定並選擇后關閉錨點模式再次重啟系統介面</string>
     <string name="relax_conditions">寬鬆過濾</string>
     <string name="relax_conditions_tips">允許更多錨點出現</string>
     <string name="lyric_page">歌詞頁</string>
@@ -49,8 +50,6 @@
     <string name="fixed_lyric_width_tips">打開後，歌詞的外部寬度固定，不隨歌詞變化而變化</string>
     <string name="lyric_color_and_transparency">歌詞顏色和透明度</string>
     <string name="lyric_color_and_transparency_tips">請輸入十進制顏色</string>
-    <string name="lyrics_gradient_background_color_and_transparency">歌詞背景漸變顏色和透明度</string>
-    <string name="lyrics_gradient_background_color_and_transparency_tips">請輸入16進制顏色，多個顏色為漸變色橫向排布，使用英文逗號分隔</string>
     <string name="lyric_size">歌詞大小</string>
     <string name="lyric_size_tips">範圍：狀態列高度的0％–100％，0代表跟隨時間</string>
     <string name="lyric_letter_spacing">歌詞字間距</string>
@@ -104,9 +103,9 @@
     <string name="not_found_hook">未找到锚点</string>
     <string name="not_found_hook_tips">請嘗試重新啟動系統UI，如果仍然無法找到，請聯繫開發人員</string>
     <string name="select_hook">是否選擇此锚点</string>
-    <string name="test_mode_tips">第一次安裝模組，請先設置錨點，方可使用本模組\n\n開啟錨點設置模式，重啟系統介面，獲取錨定並選擇后關閉錨點模式再次重啟系統介面</string>
     <string name="restart_app_effect">重啟應用程式生效</string>
     <string name="force_the_icon_to_be_displayed">強制顯示圖示</string>
+    <!--    想不到取啥名字好   -->
     <string name="a_a_a_tips">是否重複：%s；Index：%s；textSize：%s</string>
     <string name="broadcast_receive_timeout">廣播接收超時</string>
     <string name="broadcast_receive_timeout_tips">請先重啟系統UI，如依然超時請聯繫開發者</string>
@@ -140,6 +139,8 @@
     <string name="hide_lyric_when_lock_screen">* 鎖定螢幕時隱藏歌詞</string>
     <string name="choose_page_tips">建議先關閉其他修改狀態列佈局的模組后，再來此頁面選擇錨點\n有效的錨點選擇：狀態列顯示模組名字，並有白色背景\n\n選擇錨點后，返回關閉錨點模式，重啟系統模式即錨點設置完成</string>
     <string name="hide_carrier">* 隱藏運營商</string>
+    <string name="lyrics_gradient_background_color_and_transparency">歌詞背景漸變顏色和透明度</string>
+    <string name="lyrics_gradient_background_color_and_transparency_tips">請輸入16進制顏色，多個顏色為漸變色橫向排布，使用英文逗號分隔</string>
     <string name="lyric_background_radius">歌詞背景半徑</string>
     <string name="lyric_background_radius_tips">範圍：0–100</string>
     <string name="color_scheme1">方案 1</string>
@@ -156,9 +157,9 @@
     <string name="hyperos_texture_radio">* 高級材質模糊半徑</string>
     <string name="hyperos_texture_corner">* 高級材質四邊圓角</string>
     <string name="hyperos_texture_color">* 高級材質背景顏色</string>
-    <string name='lyric_blurred_edges_type_end'>僅右邊</string>
-    <string name='lyric_blurred_edges_type_start'>僅左邊</string>
-    <string name='lyric_blurred_edges_type_all'>兩邊</string>
+    <string name="lyric_blurred_edges_type_end">僅右邊</string>
+    <string name="lyric_blurred_edges_type_start">僅左邊</string>
+    <string name="lyric_blurred_edges_type_all">兩邊</string>
     <string name="lyric_blurred_edges_type">* 歌詞模糊邊緣類型</string>
     <string name="slide_status_bar_cut_songs">* 狀態列滑動切歌</string>
     <string name="slide_status_bar_cut_songs_x_radius">* 滑動切歌X半徑</string>
