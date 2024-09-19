@@ -295,7 +295,7 @@ class Config {
 
     var lyricSpeed: Int
         get() {
-            return config.opt("lyricSpeed", 4)
+            return config.opt("lyricSpeed", 1)
         }
         set(value) {
             config.put("lyricSpeed", value)
