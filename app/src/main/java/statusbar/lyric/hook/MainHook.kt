@@ -7,15 +7,17 @@ import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
-import statusbar.lyric.config.XposedOwnSP
-import statusbar.lyric.hook.app.SystemUILyric
-import statusbar.lyric.hook.app.SystemUITest
+import statusbar.lyric.config.XposedOwnSP.config
+import statusbar.lyric.hook.module.SystemUILyric
+import statusbar.lyric.hook.module.SystemUITest
+import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.LogTools.log
 import java.util.Locale
 
 class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        if (!XposedOwnSP.config.masterSwitch) {
+        LogTools.init(config.outLog)
+        if (!config.masterSwitch) {
             moduleRes.getString(R.string.master_off).log()
             return
         }
@@ -24,7 +26,7 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
         when (lpparam.packageName) {
             "com.android.systemui" -> {
                 "${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})".log()
-                if (XposedOwnSP.config.testMode) {
+                if (config.testMode) {
                     moduleRes.getString(R.string.hook_page).log()
                     initHooks(SystemUITest())
                 } else {
@@ -37,7 +39,7 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {
         EzXHelper.initZygote(startupParam)
-        if (!XposedOwnSP.config.masterSwitch) {
+        if (!config.masterSwitch) {
             moduleRes.getString(R.string.master_off).log()
             return
         }

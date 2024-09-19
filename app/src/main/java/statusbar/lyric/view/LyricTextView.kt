@@ -1,18 +1,23 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
- *               2020 The exTHmUI Open Source Project
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/577fkj/StatusBarLyric
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as published
+ * by 577fkj.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
  */
 
 package statusbar.lyric.view
@@ -20,98 +25,108 @@ package statusbar.lyric.view
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.widget.LinearLayout
+import android.graphics.Shader
+import android.view.Choreographer
 import android.widget.TextView
-import statusbar.lyric.tools.Tools.isNotNull
-import kotlin.math.abs
+import statusbar.lyric.config.XposedOwnSP.config
 
-class LyricTextView(context: Context) : TextView(context) {
-    private var isStop = true
+class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCallback {
+    private var isScrolling = false
     private var textLength = 0f
     private var viewWidth = 0f
-    private var speed = 4f
-    private var xx = 0f
-    private var text: String? = null
-    private val mPaint: Paint?
-    private var mStartScrollRunnable = Runnable { startScroll() }
-    private val invalidateRunnable = Runnable { invalidate() }
+    private var iconWidth = 0f
+    private var scrollSpeed = 4f
+    private var currentX = 0f
+    private val iconSwitch = config.iconSwitch
+    private val lyricStartMargins = config.lyricStartMargins
+    private val lyricEndMargins = config.lyricEndMargins
+    private val iconStartMargins = config.iconStartMargins
+    private val startScrollRunnable = Runnable { Choreographer.getInstance().postFrameCallback(this) }
 
-    private fun init() {
-        xx = 0f
-        textLength = getTextLength()
-        viewWidth = width.toFloat()
-    }
-
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+    init {
+        paint.style = Paint.Style.FILL_AND_STROKE
     }
 
     override fun onDetachedFromWindow() {
-        removeCallbacks(mStartScrollRunnable)
+        stopScroll()
         super.onDetachedFromWindow()
     }
 
     override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
-        if (!isStop)stopScroll()
-        this.text = text.toString()
-        init()
-        postInvalidate()
-        postDelayed(mStartScrollRunnable, startScrollDelay.toLong())
+        textLength = getTextLength()
+        currentX = 0f
+        startScroll()
     }
 
     override fun setTextColor(color: Int) {
-        if (mPaint.isNotNull()) mPaint!!.color = color
+        paint.color = color
+        postInvalidate()
+    }
+
+    fun setLinearGradient(shader: Shader) {
+        paint.shader = shader
+        postInvalidate()
+    }
+
+    fun setStrokeWidth(width: Float) {
+        paint.strokeWidth = width
         postInvalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
-        val y = height / 2 + abs(mPaint!!.ascent() + mPaint.descent()) / 2
-        canvas.drawText(text!!, xx, y, mPaint)
-        invalidateAfter()
-        if (!isStop) {
-            if (viewWidth - xx + speed >= textLength) {
-                xx = if (viewWidth > textLength) 0F else viewWidth - textLength
-                stopScroll()
-            } else {
-                xx -= speed
-            }
-            invalidateAfter()
+        val y = (height - (paint.descent() + paint.ascent())) / 2
+        text?.let { canvas.drawText(it.toString(), currentX, y, paint) }
+    }
+
+    private fun updateScrollPosition() {
+        val realTextLength = textLength + lyricEndMargins + lyricStartMargins
+        val realLyricWidth = viewWidth - if (iconSwitch) iconWidth + iconStartMargins else 0f
+        if (realTextLength <= realLyricWidth) {
+            currentX = 0f
+            stopScroll()
+        } else if (realLyricWidth - currentX >= realTextLength) {
+            currentX = realLyricWidth - realTextLength
+            stopScroll()
+        } else {
+            currentX -= scrollSpeed
         }
     }
 
-    private fun invalidateAfter() {
-        removeCallbacks(invalidateRunnable)
-        postDelayed(invalidateRunnable, invalidateDelay.toLong())
-    }
-
-    init {
-        mPaint = paint
+    override fun doFrame(frameTimeNanos: Long) {
+        if (isScrolling) {
+            updateScrollPosition()
+            postInvalidate()
+            Choreographer.getInstance().postFrameCallback(this)
+        }
     }
 
     private fun startScroll() {
-        init()
-        isStop = false
-        postInvalidate()
+        isScrolling = true
+        postDelayed(startScrollRunnable, 1000)
     }
 
     private fun stopScroll() {
-        isStop = true
-        removeCallbacks(mStartScrollRunnable)
-        postInvalidate()
+        isScrolling = false
+        removeCallbacks(startScrollRunnable)
+        Choreographer.getInstance().removeFrameCallback(this)
     }
 
     private fun getTextLength(): Float {
-        return mPaint?.measureText(text) ?: 0f
+        return text?.let { paint.measureText(it.toString()) } ?: 0f
     }
 
-    fun setSpeed(speed: Float) {
-        this.speed = speed
+    fun setScrollSpeed(speed: Float) {
+        this.scrollSpeed = speed
     }
 
-    companion object {
-        const val startScrollDelay = 500
-        const val invalidateDelay = 10
+    fun maxViewWidth(float: Float) {
+        viewWidth = float
+    }
+
+    fun iconWidth(width: Float) {
+        if (config.iconSwitch) {
+            iconWidth = width
+        }
     }
 }

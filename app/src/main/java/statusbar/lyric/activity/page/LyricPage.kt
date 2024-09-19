@@ -10,6 +10,7 @@ import android.widget.SeekBar
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
+import cn.xiaowine.xkt.AcTool.showToast
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
@@ -55,10 +56,23 @@ class LyricPage : BasePage() {
                 }
             }.show()
         })
-        SeekBarWithText(key = "lyricWidth", min = 0, max = 100, defaultProgress = 0, dataBindingRecv = widthBinding.getRecv(2), dataBindingSend = widthBinding.bindingSend, callBacks = { _, _ ->
-            changeConfig()
-        })
-        TextSSw(textId = R.string.fixed_lyric_width, tipsId = R.string.fixed_lyric_width_tips, key = "fixedLyricWidth", onClickListener = { changeConfig() }, dataBindingRecv = widthBinding.getRecv(1))
+        SeekBarWithText(
+            key = "lyricWidth",
+            min = 0,
+            max = 100,
+            defaultProgress = 0,
+            dataBindingRecv = widthBinding.getRecv(2),
+            dataBindingSend = widthBinding.bindingSend,
+            callBacks = { _, _ ->
+                changeConfig()
+            })
+        TextSSw(
+            textId = R.string.fixed_lyric_width,
+            tipsId = R.string.fixed_lyric_width_tips,
+            key = "fixedLyricWidth",
+            onClickListener = { changeConfig() },
+            dataBindingRecv = widthBinding.getRecv(1)
+        )
         TextSA(textId = R.string.lyric_size, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_size))
@@ -110,21 +124,73 @@ class LyricPage : BasePage() {
                 finally { dismiss() }
             }.show()
         })
-        TextSA(textId = R.string.lyric_background_color_and_transparency, onClickListener = {
+        TextSA(textId = R.string.lyrics_are_gradient_and_transparent, onClickListener = {
             MIUIDialog(activity) {
-                setTitle(getString(R.string.lyric_background_color_and_transparency))
-                setMessage(getString(R.string.lyric_background_color_and_transparency_tips))
-                setEditText(config.lyricBackgroundColor, "#00000000", config = {
-                    it.inputType = InputType.TYPE_CLASS_TEXT
-                    it.filters = arrayOf(InputFilter.LengthFilter(9))
-                })
+                setTitle(getString(R.string.lyrics_are_gradient_and_transparent))
+                setMessage(getString(R.string.lyrics_are_gradient_and_transparent_tips))
+                setEditText(config.lyricGradientColor, "#ff0099,#d508a8,#aa10b8")
                 setRButton(getString(R.string.ok)) {
+                    var hasError = false
                     try {
                         val value = getEditText()
-                        Color.parseColor(value)
-                        config.lyricBackgroundColor = value
+                        if (value.isEmpty()) {
+                            value.split(",").forEach {
+                                if (it.isNotEmpty()) {
+                                    try {
+                                        Color.parseColor(it.trim())
+                                    } catch (e: Exception) {
+                                        context.getString(R.string.input_error).showToast()
+                                        hasError = true
+                                        return@forEach
+                                    }
+                                }
+                            }
+                            config.lyricGradientColor = ""
+                        } else {
+                            config.lyricGradientColor = value
+                        }
                         changeConfig()
                     } catch (_: Exception) {
+                        hasError = true
+                    }
+                    if (hasError) {
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
+                    }
+                }
+                setLButton(getString(R.string.cancel))
+                finally { dismiss() }
+            }.show()
+        })
+        TextSA(textId = R.string.lyrics_gradient_background_color_and_transparency, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.lyrics_gradient_background_color_and_transparency))
+                setMessage(getString(R.string.lyrics_gradient_background_color_and_transparency_tips))
+                setEditText(config.lyricBackgroundColor, "#00000000")
+                setRButton(getString(R.string.ok)) {
+                    var hasError = false
+                    try {
+                        val value = getEditText()
+                        if (value.isEmpty()) {
+                            value.split(",").forEach {
+                                if (it.isNotEmpty()) {
+                                    try {
+                                        Color.parseColor(it.trim())
+                                    } catch (e: Exception) {
+                                        context.getString(R.string.input_error).showToast()
+                                        hasError = true
+                                        return@forEach
+                                    }
+                                }
+                            }
+                            config.lyricBackgroundColor = ""
+                        } else {
+                            config.lyricBackgroundColor = value
+                        }
+                        changeConfig()
+                    } catch (_: Exception) {
+                        hasError = true
+                    }
+                    if (hasError) {
                         ActivityTools.showToastOnLooper(getString(R.string.input_error))
                     }
                 }
@@ -211,14 +277,14 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_speed))
                 setMessage(getString(R.string.lyric_speed_tips))
-                setEditText(config.lyricSpeed.toString(), "4", config = {
+                setEditText(config.lyricSpeed.toString(), "1", config = {
                     it.inputType = InputType.TYPE_CLASS_NUMBER
                     it.filters = arrayOf(InputFilter.LengthFilter(2))
                 })
                 setRButton(getString(R.string.ok)) {
                     try {
                         val value = getEditText().toInt()
-                        if (value in 0..10) {
+                        if (value in 0..20) {
                             config.lyricSpeed = value
                             changeConfig()
                         } else {
@@ -286,7 +352,7 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_start_margins))
                 setMessage(getString(R.string.lyric_start_margins_tips))
-                setEditText(config.lyricStartMargins.toString(), "7", config = {
+                setEditText(config.lyricStartMargins.toString(), "0", config = {
                     it.inputType = InputType.TYPE_NUMBER_FLAG_SIGNED
                     it.filters = arrayOf(InputFilter.LengthFilter(4))
                 })

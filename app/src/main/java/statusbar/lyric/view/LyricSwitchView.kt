@@ -22,78 +22,90 @@
 
 package statusbar.lyric.view
 
+import android.animation.LayoutTransition
 import android.content.Context
-import android.graphics.Paint
+import android.graphics.Shader
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.text.TextPaint
 import android.widget.TextSwitcher
-import android.widget.TextView
 
-class LyricSwitchView(context: Context) : TextSwitcher(context) {
-    private val lyricTextView: LyricTextView = LyricTextView(context)
-    private val lyricTextView2: LyricTextView = LyricTextView(context)
-    val viewArray: Array<TextView> = arrayOf(lyricTextView, lyricTextView2)
-
-    val text: CharSequence get() = (currentView as TextView).text
-
-    val paint: TextPaint
-        get() = (currentView as TextView).paint
+open class LyricSwitchView(context: Context) : TextSwitcher(context) {
 
     init {
-        addView(lyricTextView)
-        addView(lyricTextView2)
+        initialize()
     }
 
-    fun setWidth(i: Int) {
-        viewArray.forEach { view -> view.width = i }
+    private fun initialize() {
+        setFactory {
+            LyricTextView(context).apply {
+                layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
+            }
+        }
     }
 
-    fun setTextColor(i: Int) {
-        viewArray.forEach { view -> view.setTextColor(i) }
+    fun getPaint(): TextPaint {
+        return (getChildAt(0) as LyricTextView).paint
     }
 
-
-    fun setSourceText(str: CharSequence) {
-        viewArray.forEach { view -> view.text = str }
+    fun applyToAllViews(action: (LyricTextView) -> Unit) {
+        for (i in 0 until childCount) {
+            action(getChildAt(i) as LyricTextView)
+        }
     }
 
-    fun setSpeed(f: Float) {
-        lyricTextView.setSpeed(f)
-        lyricTextView2.setSpeed(f)
+    fun maxLyricWidth(width: Float) {
+        applyToAllViews { it.maxViewWidth(width) }
+    }
+
+    fun setWidth(width: Int) {
+        applyToAllViews {
+            layoutTransition = LayoutTransition()
+            it.layoutParams.width = width
+        }
+    }
+
+    fun iconWidth(width: Float) {
+        applyToAllViews { it.iconWidth(width) }
+    }
+
+    fun setTextColor(color: Int) {
+        applyToAllViews { it.setTextColor(color) }
+    }
+
+    fun setLinearGradient(shader: Shader) {
+        applyToAllViews { it.setLinearGradient(shader) }
+    }
+
+    override fun setBackground(background: Drawable?) {
+        applyToAllViews { it.background = background }
+    }
+
+    fun setScrollSpeed(speed: Float) {
+        applyToAllViews { it.setScrollSpeed(speed) }
     }
 
     fun setLetterSpacings(letterSpacing: Float) {
-        viewArray.forEach { view -> view.letterSpacing = letterSpacing }
+        applyToAllViews { it.letterSpacing = letterSpacing }
     }
 
-    fun strokeWidth(i: Float) {
-        viewArray.forEach { view ->
-            view.paint.style = Paint.Style.FILL_AND_STROKE
-            view.paint.strokeWidth = i
-        }
+    fun strokeWidth(width: Float) {
+        applyToAllViews { it.setStrokeWidth(width) }
     }
 
     fun setTypeface(typeface: Typeface) {
-        viewArray.forEach { view -> view.typeface = typeface }
+        applyToAllViews { it.typeface = typeface }
     }
 
-    fun setTextSize(i: Int, f: Float) {
-        viewArray.forEach { view -> view.setTextSize(i, f) }
+    fun setTextSize(unit: Int, size: Float) {
+        applyToAllViews { it.setTextSize(unit, size) }
     }
 
-    fun setMargins(start: Int, top: Int, end: Int, bottom: Int) {
-        viewArray.forEach { view: TextView ->
-            val layoutParams = view.layoutParams as MarginLayoutParams
-            layoutParams.setMargins(start, top, end, bottom)
-            view.layoutParams = layoutParams
-        }
+    fun setSingleLine(singleLine: Boolean) {
+        applyToAllViews { it.isSingleLine = singleLine }
     }
 
-    fun setSingleLine(bool: Boolean) {
-        viewArray.forEach { view -> view.isSingleLine = bool }
-    }
-
-    fun setMaxLines(i: Int) {
-        viewArray.forEach { view -> view.maxLines = i }
+    fun setMaxLines(maxLines: Int) {
+        applyToAllViews { it.maxLines = maxLines }
     }
 }

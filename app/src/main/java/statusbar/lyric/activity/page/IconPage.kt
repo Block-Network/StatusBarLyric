@@ -7,6 +7,7 @@ import android.view.View
 import cn.fkj233.ui.activity.annotation.BMPage
 import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
+import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
@@ -63,6 +64,32 @@ class IconPage : BasePage() {
                         } else {
                             Color.parseColor(value)
                             config.iconColor = value
+                        }
+                        changeConfig()
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
+                    }
+                }
+                setLButton(getString(R.string.cancel))
+                finally { dismiss() }
+            }.show()
+        }, dataBindingRecv = binding.getRecv(1))
+        TextSA(textId = R.string.icon_background_color_and_transparency, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.icon_background_color_and_transparency))
+                setMessage(getString(R.string.icon_background_color_and_transparency_tips))
+                setEditText(config.iconBgColor, "#FFFFFF", config = {
+                    it.inputType = InputType.TYPE_CLASS_TEXT
+                    it.filters = arrayOf(InputFilter.LengthFilter(9))
+                })
+                setRButton(getString(R.string.ok)) {
+                    try {
+                        val value = getEditText()
+                        if (value.isEmpty()) {
+                            config.iconBgColor = ""
+                        } else {
+                            Color.parseColor(value)
+                            config.iconBgColor = value
                         }
                         changeConfig()
                     } catch (_: Exception) {
@@ -149,5 +176,24 @@ class IconPage : BasePage() {
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
         TextSSw(textId = R.string.force_the_icon_to_be_displayed, key = "forceTheIconToBeDisplayed", onClickListener = { changeConfig() }, dataBindingRecv = binding.getRecv(1))
+        TextSA(textId = R.string.change_all_icons, onClickListener = {
+            MIUIDialog(activity) {
+                setTitle(getString(R.string.change_all_icons))
+                setMessage(getString(R.string.change_all_icons_tips))
+                setEditText(config.changeAllIcons, "")
+                setRButton(getString(R.string.ok)) {
+                    try {
+                        val value = getEditText()
+                        base64ToDrawable(value)
+                        config.changeAllIcons = value
+                        changeConfig()
+                    } catch (_: Exception) {
+                        ActivityTools.showToastOnLooper(getString(R.string.input_error))
+                    }
+                }
+                setLButton(getString(R.string.cancel))
+                finally { dismiss() }
+            }.show()
+        }, dataBindingRecv = binding.getRecv(1))
     }
 }

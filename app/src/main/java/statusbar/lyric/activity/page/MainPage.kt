@@ -20,7 +20,11 @@ class MainPage : BasePage() {
         }
         TextSSw(textId = R.string.master_switch, key = "masterSwitch", onClickListener = { masterSwitchBinding.send(it) })
         Line(dataBindingRecv = masterSwitchBinding.getRecv(1))
+        val fullText = getString(R.string.test_mode_tips)
+        val firstPart = fullText.split("\n")[0]
+        TitleText(text = firstPart)
         TextSA(textId = R.string.hook_page, onClickListener = { showPage(HookPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
+        Line()
         TextSA(textId = R.string.lyric_page, onClickListener = { showPage(LyricPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
         TextSA(textId = R.string.icon_page, onClickListener = { showPage(IconPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
         Line(dataBindingRecv = masterSwitchBinding.getRecv(1))

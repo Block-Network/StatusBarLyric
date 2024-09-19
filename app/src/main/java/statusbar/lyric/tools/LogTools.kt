@@ -23,16 +23,16 @@
 package statusbar.lyric.tools
 
 import android.util.Log
-import statusbar.lyric.BuildConfig
 
 object LogTools {
     private const val maxLength = 4000
     private const val TAG = "StatusBarLyric"
     private const val XP_TAG = "LSPosed-Bridge"
+    private var outprint = false
 
 
     fun Any?.log(): Any? {
-        if (!BuildConfig.DEBUG) return this
+        if (!outprint) return this
         val content = if (this is Throwable) Log.getStackTraceString(this) else this.toString()
         if (content.length > maxLength) {
             val chunkCount = content.length / maxLength
@@ -52,5 +52,9 @@ object LogTools {
             Log.d(XP_TAG, "$TAG:$content")
         }
         return this
+    }
+
+    fun init(out: Boolean) {
+        outprint = out
     }
 }

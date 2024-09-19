@@ -34,15 +34,16 @@ import android.os.Build
 import android.os.Bundle
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.dialog.MIUIDialog
+import cn.xiaowine.xkt.AcTool
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.activity.page.ChoosePage
 import statusbar.lyric.activity.page.ExtendPage
+import statusbar.lyric.activity.page.HookPage
 import statusbar.lyric.activity.page.IconPage
 import statusbar.lyric.activity.page.LyricPage
 import statusbar.lyric.activity.page.MainPage
 import statusbar.lyric.activity.page.MenuPage
-import statusbar.lyric.activity.page.HookPage
 import statusbar.lyric.activity.page.SystemSpecialPage
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -54,6 +55,7 @@ import statusbar.lyric.tools.ActivityTools.dataList
 import statusbar.lyric.tools.ActivityTools.getNotice
 import statusbar.lyric.tools.ActivityTools.getUpdate
 import statusbar.lyric.tools.BackupTools
+import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.isNotNull
 
 
@@ -68,8 +70,11 @@ class SettingsActivity : MIUIActivity() {
         registerPage(LyricPage::class.java, activity.getString(R.string.lyric_page))
         registerPage(IconPage::class.java, activity.getString(R.string.icon_page))
         registerPage(ChoosePage::class.java, activity.getString(R.string.choose_page))
-        registerPage(ExtendPage::class.java, activity.getString(R.string.choose_page))
-        registerPage(SystemSpecialPage::class.java, activity.getString(R.string.system_special_page))
+        registerPage(ExtendPage::class.java, activity.getString(R.string.extend_page))
+        registerPage(
+            SystemSpecialPage::class.java,
+            activity.getString(R.string.system_special_page)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,7 +112,6 @@ class SettingsActivity : MIUIActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
             MIUIDialog(this) {
-                setTitle(R.string.first_use_tips)
                 setMessage(R.string.not_support_xposed_framework)
                 setRButton(R.string.re_start_app) {
                     ActivityTools.restartApp()
@@ -125,13 +129,20 @@ class SettingsActivity : MIUIActivity() {
         if (!BuildConfig.DEBUG) {
             if (config.checkUpdate) getUpdate()
             getNotice()
+            LogTools.init(true)
         }
+        LogTools.init(config.outLog)
+        AcTool.init(this)
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"), Context.RECEIVER_EXPORTED)
+            context.registerReceiver(
+                appTestReceiver,
+                IntentFilter("AppTestReceiver"),
+                Context.RECEIVER_EXPORTED
+            )
         } else {
             context.registerReceiver(appTestReceiver, IntentFilter("AppTestReceiver"))
         }

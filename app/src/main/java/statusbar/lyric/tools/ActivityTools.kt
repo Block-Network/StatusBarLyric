@@ -30,7 +30,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
-import app.xiaowine.xtoast.XToast
+import android.widget.Toast
 import cn.fkj233.ui.activity.MIUIActivity.Companion.activity
 import cn.fkj233.ui.activity.MIUIActivity.Companion.context
 import cn.fkj233.ui.dialog.MIUIDialog
@@ -67,7 +67,7 @@ object ActivityTools {
     fun showToastOnLooper(message: Any?) {
         try {
             handler.post {
-                XToast.makeText(context, message.toString(), toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round, context.theme)).show()
+                Toast.makeText(context, message.toString(), Toast.LENGTH_LONG).show()
                 message.log()
             }
         } catch (e: RuntimeException) {
@@ -93,13 +93,24 @@ object ActivityTools {
             getHttp("https://api.github.com/repos/Block-Network/StatusBarLyric/releases/latest") { response ->
                 try {
                     val jsonObject = JSONObject(response)
-                    if (jsonObject.getString("tag_name").split("v").toTypedArray()[1].toInt() > BuildConfig.VERSION_CODE) {
+                    if (jsonObject.getString("tag_name").split("v")
+                            .toTypedArray()[1].toInt() > BuildConfig.VERSION_CODE
+                    ) {
                         MIUIDialog(activity) {
-                            setTitle(String.format("%s [%s]", activity.getString(R.string.have_new_version), jsonObject.getString("name")))
+                            setTitle(
+                                String.format(
+                                    "%s [%s]",
+                                    activity.getString(R.string.have_new_version),
+                                    jsonObject.getString("name")
+                                )
+                            )
                             setMessage(jsonObject.getString("body").replace("#", ""))
                             setRButton(R.string.update) {
                                 try {
-                                    openUrl(jsonObject.getJSONArray("assets").getJSONObject(0).getString("browser_download_url"))
+                                    openUrl(
+                                        jsonObject.getJSONArray("assets").getJSONObject(0)
+                                            .getString("browser_download_url")
+                                    )
                                 } catch (e: JSONException) {
                                     showToastOnLooper(activity.getString(R.string.get_new_version_error) + e)
                                 }

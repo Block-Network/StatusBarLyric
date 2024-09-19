@@ -7,3 +7,4 @@ app/debug
 local.properties
 build
 hs_err_*.log
+/.kotlin

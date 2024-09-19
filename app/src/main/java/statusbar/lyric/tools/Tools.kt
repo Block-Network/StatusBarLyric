@@ -23,8 +23,12 @@
 package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -37,7 +41,7 @@ import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
-import java.util.*
+import java.util.Objects
 import java.util.regex.Pattern
 import kotlin.properties.Delegates
 import kotlin.properties.ReadWriteProperty
@@ -48,6 +52,18 @@ object Tools {
     private var index: Int = 0
 
     val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
+
+    val isPad get() = getSystemProperties("ro.build.characteristics") == "tablet"
+
+    fun isHyperOS(): Boolean {
+        try {
+            getSystemProperties("ro.mi.os.version.incremental")
+            return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+        } catch (_: Exception) {
+            return false
+        }
+    }
+
     val togglePrompts: Boolean
         get() {
             arrayOf("com.lge.adaptive.JavaImageUtil").forEach {
@@ -67,28 +83,30 @@ object Tools {
     }
 
     @SuppressLint("PrivateApi")
-    fun getSystemProperties(context: Context, key: String): String {
-        var ret: String
-        try {
-            val cl = context.classLoader
-            val systemProperties = cl.loadClass("android.os.SystemProperties")
-            //参数类型
-            val paramTypes: Array<Class<*>?> = arrayOfNulls(1)
-            paramTypes[0] = String::class.java
-            val get = systemProperties.getMethod("get", *paramTypes)
-            //参数
-            val params = arrayOfNulls<Any>(1)
-            params[0] = key
-            ret = get.invoke(systemProperties, *params) as String
+    fun getSystemProperties(key: String): String {
+        val ret: String = try {
+            Class.forName("android.os.SystemProperties")
+                .getDeclaredMethod("get", String::class.java)
+                .invoke(null, key) as String
         } catch (iAE: IllegalArgumentException) {
             throw iAE
         } catch (e: Exception) {
-            ret = ""
+            ""
         }
         return ret
     }
 
-    fun <T> observableChange(initialValue: T, onChange: (oldValue: T, newValue: T) -> Unit): ReadWriteProperty<Any?, T> {
+    fun copyToClipboard(context: Context, text: String) {
+        val clipboardManager =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("text", text)
+        clipboardManager.setPrimaryClip(clipData)
+    }
+
+    fun <T> observableChange(
+        initialValue: T,
+        onChange: (oldValue: T, newValue: T) -> Unit
+    ): ReadWriteProperty<Any?, T> {
         return Delegates.observable(initialValue) { _, oldVal, newVal ->
             if (oldVal != newVal) {
                 onChange(oldVal, newVal)
@@ -97,18 +115,18 @@ object Tools {
     }
 
     fun View.isTargetView(): Boolean {
-            val textViewClassName = XposedOwnSP.config.textViewClassName
-            val textViewId = XposedOwnSP.config.textViewId
-            val parentViewClassName = XposedOwnSP.config.parentViewClassName
-            val parentViewId = XposedOwnSP.config.parentViewId
-            val textSize = XposedOwnSP.config.textSize
-            if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0|| textSize == 0f) {
-                EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
-                return false
-            }
-            if (this is TextView) {
-                if (this::class.java.name == textViewClassName) {
-                    if (this.id == textViewId) {
+        val textViewClassName = XposedOwnSP.config.textViewClassName
+        val textViewId = XposedOwnSP.config.textViewId
+        val parentViewClassName = XposedOwnSP.config.parentViewClassName
+        val parentViewId = XposedOwnSP.config.parentViewId
+        val textSize = XposedOwnSP.config.textSize
+        if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0 || textSize == 0f) {
+            EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
+            return false
+        }
+        if (this is TextView) {
+            if (this::class.java.name == textViewClassName) {
+                if (this.id == textViewId) {
                     if (this.textSize == textSize) {
                         if (this.parent is LinearLayout) {
                             val parentView = (this.parent as LinearLayout)
@@ -122,10 +140,10 @@ object Tools {
                                 }
                             }
                         }
-                        }
                     }
                 }
             }
+        }
         return false
     }
 
@@ -158,7 +176,8 @@ object Tools {
 
     @SuppressLint("WorldReadableFiles")
     fun getSP(context: Context, key: String): SharedPreferences? {
-        @Suppress("DEPRECATION") return context.createDeviceProtectedStorageContext().getSharedPreferences(key, Context.MODE_WORLD_READABLE)
+        @Suppress("DEPRECATION") return context.createDeviceProtectedStorageContext()
+            .getSharedPreferences(key, Context.MODE_WORLD_READABLE)
     }
 
 
