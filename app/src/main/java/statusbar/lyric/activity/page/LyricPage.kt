@@ -277,7 +277,7 @@ class LyricPage : BasePage() {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_speed))
                 setMessage(getString(R.string.lyric_speed_tips))
-                setEditText(config.lyricSpeed.toString(), "4", config = {
+                setEditText(config.lyricSpeed.toString(), "1", config = {
                     it.inputType = InputType.TYPE_CLASS_NUMBER
                     it.filters = arrayOf(InputFilter.LengthFilter(2))
                 })

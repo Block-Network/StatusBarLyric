@@ -26,10 +26,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Shader
+import android.view.Choreographer
 import android.widget.TextView
 import statusbar.lyric.config.XposedOwnSP.config
 
-class LyricTextView(context: Context) : TextView(context) {
+class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCallback {
     private var isScrolling = false
     private var textLength = 0f
     private var viewWidth = 0f
@@ -40,7 +41,7 @@ class LyricTextView(context: Context) : TextView(context) {
     private val lyricStartMargins = config.lyricStartMargins
     private val lyricEndMargins = config.lyricEndMargins
     private val iconStartMargins = config.iconStartMargins
-    private val startScrollRunnable = Runnable { updateScrollPosition() }
+    private val startScrollRunnable = Runnable { Choreographer.getInstance().postFrameCallback(this) }
 
     init {
         paint.style = Paint.Style.FILL_AND_STROKE
@@ -92,20 +93,23 @@ class LyricTextView(context: Context) : TextView(context) {
         }
     }
 
-    override fun computeScroll() {
+    override fun doFrame(frameTimeNanos: Long) {
         if (isScrolling) {
-            postDelayed(startScrollRunnable, 1000)
+            updateScrollPosition()
             postInvalidate()
+            Choreographer.getInstance().postFrameCallback(this)
         }
     }
 
     private fun startScroll() {
         isScrolling = true
+        postDelayed(startScrollRunnable, 1000)
     }
 
     private fun stopScroll() {
         isScrolling = false
         removeCallbacks(startScrollRunnable)
+        Choreographer.getInstance().removeFrameCallback(this)
     }
 
     private fun getTextLength(): Float {
