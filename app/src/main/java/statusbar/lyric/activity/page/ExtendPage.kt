@@ -43,7 +43,10 @@ class ExtendPage : BasePage() {
         val lyricBlurredEdgesRadiusBinding = GetDataBinding({ ActivityOwnSP.config.lyricBlurredEdges }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
-        TextSSw(textId = R.string.lyric_blurred_edges, key = "lyricBlurredEdges", defValue = false, onClickListener = { lyricBlurredEdgesRadiusBinding.send(it) })
+        TextSSw(textId = R.string.lyric_blurred_edges,
+            key = "lyricBlurredEdges",
+            defValue = false,
+            onClickListener = { lyricBlurredEdgesRadiusBinding.send(it) })
         TextSA(textId = R.string.lyric_blurred_edges_radius, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.lyric_blurred_edges_radius))
@@ -73,11 +76,13 @@ class ExtendPage : BasePage() {
             this[1] = getString(R.string.lyric_blurred_edges_type_start)
             this[2] = getString(R.string.lyric_blurred_edges_type_end)
         }
-        TextSSp(textId = R.string.lyric_blurred_edges_type, currentValue = lyricBlurredEdgesType[ActivityOwnSP.config.lyricBlurredEdgesType].toString(), data = {
-            lyricBlurredEdgesType.forEach {
-                add(it.value) { ActivityOwnSP.config.lyricBlurredEdgesType = it.key }
-            }
-        }, dataBindingRecv = lyricBlurredEdgesRadiusBinding.binding.getRecv(1))
+        TextSSp(
+            textId = R.string.lyric_blurred_edges_type, currentValue = lyricBlurredEdgesType[ActivityOwnSP.config.lyricBlurredEdgesType].toString(), data = {
+                lyricBlurredEdgesType.forEach {
+                    add(it.value) { ActivityOwnSP.config.lyricBlurredEdgesType = it.key }
+                }
+            }, dataBindingRecv = lyricBlurredEdgesRadiusBinding.binding.getRecv(1)
+        )
         Line()
         val slideStatusBarCutSongsBinding = GetDataBinding({ ActivityOwnSP.config.slideStatusBarCutSongs }) { view, _, data ->
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
@@ -137,7 +142,7 @@ class ExtendPage : BasePage() {
             view.visibility = if (data as Boolean) View.VISIBLE else View.GONE
         }
         TitleText(textId = R.string.title_tip)
-        TextSw(textId = R.string.title_switch, key = "titleSwitch", defValue = true, onClickListener = { titleDelayDurationBinding.send(it) })
+        TextSw(textId = R.string.title_switch, key = "titleSwitch", defValue = false, onClickListener = { titleDelayDurationBinding.send(it) })
         TextSw(textId = R.string.use_blue_get_title, key = "useBlueGetTitle", defValue = false, dataBindingRecv = titleDelayDurationBinding.binding.getRecv(1))
         TextSw(textId = R.string.title_show_with_same_lyric, key = "titleShowWithSameLyric", dataBindingRecv = titleDelayDurationBinding.binding.getRecv(1))
         TextSA(textId = R.string.title_delay_duration, onClickListener = {

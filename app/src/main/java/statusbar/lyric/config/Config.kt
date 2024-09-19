@@ -462,7 +462,7 @@ class Config {
         }
     var titleSwitch: Boolean
         get() {
-            return config.opt("titleSwitch", true)
+            return config.opt("titleSwitch", false)
         }
         set(value) {
             config.put("titleSwitch", value)
