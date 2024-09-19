@@ -71,6 +71,7 @@ import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.LyricViewTools.hideView
 import statusbar.lyric.tools.LyricViewTools.iconColorAnima
+import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.LyricViewTools.textColorAnima
 import statusbar.lyric.tools.Tools.goMainThread
@@ -531,6 +532,13 @@ class SystemUILyric : BaseHook() {
                         setScrollSpeed(((i / d).toFloat()))
                     }
                 }
+                if (isRandomAnima) {
+                    val animation = randomAnima
+                    val interpolator = config.interpolator
+                    val duration = config.animationDuration
+                    inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
+                    outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
+                }
                 setText(lyric)
             }
         }
@@ -619,10 +627,10 @@ class SystemUILyric : BaseHook() {
                 }
 
                 val animation = config.animation
-                val interpolator = config.interpolator
-                val duration = config.animationDuration
-                isRandomAnima = config.animation == "Random"
+                isRandomAnima = animation == "Random"
                 if (!isRandomAnima) {
+                    val interpolator = config.interpolator
+                    val duration = config.animationDuration
                     inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
                     outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
                 }
@@ -797,7 +805,13 @@ class SystemUILyric : BaseHook() {
             val getLazyClass = XposedHelpers.callMethod(mStatusBarStateController, "get")
             val getState = XposedHelpers.callMethod(getLazyClass, "getState")
             isScreenLock = getState != 0
-            if (isScreenLock) hideLyric(false)
+            if (isScreenLock) {
+                hideLyric(false)
+            } else {
+                if (isPlaying) {
+                    lastColor = clockView.currentTextColor
+                }
+            }
         }
     }
 }

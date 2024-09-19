@@ -19,6 +19,9 @@ import android.widget.ImageView
 import statusbar.lyric.view.LyricSwitchView
 
 object LyricViewTools {
+    private var animaList: ArrayList<String> = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY")
+    val randomAnima: String get() = animaList.random()
+
     fun getAlphaAnimation(into: Boolean, duration: Long = 250): AnimationSet {
         val alphaAnimation = (if (into) AlphaAnimation(0f, 1F) else AlphaAnimation(1F, 0f)).apply {
             this.duration = duration
