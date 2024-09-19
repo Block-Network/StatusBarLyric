@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.konan.properties.Properties
 
@@ -17,10 +19,10 @@ android {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 35
-        versionCode = 210
-        versionName = "6.2.0"
+        versionCode = 650
+        versionName = "6.5.0"
         aaptOptions.cruncherEnabled = false
-        aaptOptions.useNewCruncher = false
+        dependenciesInfo.includeInApk = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
         buildConfigField("int", "API_VERSION", "6")
         buildConfigField("int", "CONFIG_VERSION", "10")
@@ -42,15 +44,9 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            vcsInfo.include = false
             setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
     packaging {
         resources {
@@ -62,6 +58,7 @@ android {
             (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName-$versionCode-$name-$buildTime.apk"
         }
     }
+    kotlin.jvmToolchain(17)
 }
 
 dependencies {
