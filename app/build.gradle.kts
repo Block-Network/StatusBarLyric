@@ -58,6 +58,7 @@ android {
             (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName-$versionCode-$name-$buildTime.apk"
         }
     }
+    buildFeatures.buildConfig = true
     kotlin.jvmToolchain(17)
 }
 
