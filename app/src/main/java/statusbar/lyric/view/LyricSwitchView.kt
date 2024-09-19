@@ -54,8 +54,8 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         }
     }
 
-    fun maxLyricWidth(width: Float) {
-        applyToAllViews { it.maxViewWidth(width) }
+    fun setMaxLyricViewWidth(width: Float) {
+        applyToAllViews { it.setMaxViewWidth(width) }
     }
 
     fun setWidth(width: Int) {
@@ -63,10 +63,6 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
             layoutTransition = LayoutTransition()
             it.layoutParams.width = width
         }
-    }
-
-    fun iconWidth(width: Float) {
-        applyToAllViews { it.iconWidth(width) }
     }
 
     fun setTextColor(color: Int) {
