@@ -60,7 +60,6 @@ import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
@@ -96,9 +95,6 @@ class SystemUILyric : BaseHook() {
 
     private lateinit var hook: XC_MethodHook.Unhook
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
-    private val miuiStubClass = loadClassOrNull("miui.stub.MiuiStub")
-    private val miuiStubInstance = XposedHelpers.getStaticObjectField(miuiStubClass, "INSTANCE")
-
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
         goMainThread {
             if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) {
@@ -792,11 +788,7 @@ class SystemUILyric : BaseHook() {
 
     inner class ScreenLockReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val mSysUIProvider = XposedHelpers.getObjectField(miuiStubInstance, "mSysUIProvider")
-            val mStatusBarStateController = XposedHelpers.getObjectField(mSysUIProvider, "mStatusBarStateController")
-            val getLazyClass = XposedHelpers.callMethod(mStatusBarStateController, "get")
-            val getState = XposedHelpers.callMethod(getLazyClass, "getState")
-            isScreenLock = getState != 0
+            isScreenLock = intent.action == Intent.ACTION_SCREEN_OFF
             if (isScreenLock) hideLyric(false)
         }
     }
