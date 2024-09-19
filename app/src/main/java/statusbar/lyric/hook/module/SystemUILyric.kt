@@ -446,9 +446,9 @@ class SystemUILyric : BaseHook() {
                 targetView.addView(lyricLayout)
             }
             if (config.lyricWidth == 0) {
-                lyricView.maxLyricWidth(targetView.width.toFloat())
+                lyricView.setMaxLyricViewWidth(targetView.width.toFloat())
             } else {
-                lyricView.maxLyricWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
+                lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
             }
             if (isHyperOS() && config.mHyperOSTexture) {
                 val blurRadio = config.mHyperOSTextureRadio
@@ -545,7 +545,6 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeIcon(it: ExtraData) {
-        lyricView.iconWidth(iconView.width.toFloat())
         if (!iconSwitch) return
         if (config.changeAllIcons.isNotEmpty()) {
             lastBase64Icon = config.changeAllIcons
@@ -556,6 +555,11 @@ class SystemUILyric : BaseHook() {
             } else {
                 config.getDefaultIcon(it.packageName)
             }
+        }
+        if (config.lyricWidth == 0) {
+            lyricView.setMaxLyricViewWidth(targetView.width.toFloat())
+        } else {
+            lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
         }
     }
 
@@ -596,9 +600,9 @@ class SystemUILyric : BaseHook() {
                     }
                 }
                 if (config.lyricWidth == 0) {
-                    maxLyricWidth(targetView.width.toFloat())
+                    setMaxLyricViewWidth(targetView.width.toFloat())
                 } else {
-                    maxLyricWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
+                    setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
