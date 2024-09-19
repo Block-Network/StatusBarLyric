@@ -24,7 +24,6 @@ package statusbar.lyric.view
 
 import android.animation.LayoutTransition
 import android.content.Context
-import android.graphics.Paint
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -75,7 +74,7 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     }
 
     fun setLinearGradient(shader: Shader) {
-        applyToAllViews { it.paint.shader = shader }
+        applyToAllViews { it.setLinearGradient(shader) }
     }
 
     override fun setBackground(background: Drawable?) {
@@ -91,10 +90,7 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     }
 
     fun strokeWidth(width: Float) {
-        applyToAllViews {
-            it.paint.style = Paint.Style.FILL_AND_STROKE
-            it.paint.strokeWidth = width
-        }
+        applyToAllViews { it.setStrokeWidth(width) }
     }
 
     fun setTypeface(typeface: Typeface) {

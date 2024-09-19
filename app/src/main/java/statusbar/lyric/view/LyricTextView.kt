@@ -1,61 +1,115 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/577fkj/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as published
+ * by 577fkj.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 package statusbar.lyric.view
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
-import android.widget.OverScroller
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Shader
 import android.widget.TextView
 import statusbar.lyric.config.XposedOwnSP.config
-import kotlin.math.roundToInt
 
-open class LyricTextView(context: Context) : TextView(context) {
+class LyricTextView(context: Context) : TextView(context) {
+    private var isScrolling = false
+    private var textLength = 0f
     private var viewWidth = 0f
     private var iconWidth = 0f
     private var scrollSpeed = 4f
-    private var textLength = 0f
+    private var currentX = 0f
     private val iconSwitch = config.iconSwitch
     private val lyricStartMargins = config.lyricStartMargins
     private val lyricEndMargins = config.lyricEndMargins
     private val iconStartMargins = config.iconStartMargins
-    private val handler = Handler(Looper.getMainLooper())
-    private var scrollRunnable: Runnable? = null
-    private val scroller: OverScroller = OverScroller(context)
+    private val startScrollRunnable = Runnable { updateScrollPosition() }
+
+    init {
+        paint.style = Paint.Style.FILL_AND_STROKE
+    }
+
+    override fun onDetachedFromWindow() {
+        stopScroll()
+        super.onDetachedFromWindow()
+    }
+
+    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter)
+        textLength = getTextLength()
+        currentX = 0f
+        startScroll()
+    }
 
     override fun setTextColor(color: Int) {
-        super.setTextColor(color)
+        paint.color = color
         postInvalidate()
     }
 
-    override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter)
+    fun setLinearGradient(shader: Shader) {
+        paint.shader = shader
+        postInvalidate()
+    }
 
-        scrollRunnable?.let { handler.removeCallbacks(it) }
-        scrollX = 0
-        getTextLength()
+    fun setStrokeWidth(width: Float) {
+        paint.strokeWidth = width
+        postInvalidate()
+    }
 
+    override fun onDraw(canvas: Canvas) {
+        val y = (height - (paint.descent() + paint.ascent())) / 2
+        text?.let { canvas.drawText(it.toString(), currentX, y, paint) }
+    }
+
+    private fun updateScrollPosition() {
         val realTextLength = textLength + lyricEndMargins + lyricStartMargins
         val realLyricWidth = viewWidth - if (iconSwitch) iconWidth + iconStartMargins else 0f
-
-        if (text.isNullOrEmpty() || realTextLength <= realLyricWidth) return
-
-        scrollRunnable = Runnable {
-            val duration = (realTextLength * scrollSpeed).toInt()
-            scroller.startScroll(scrollX, scrollY, -(realLyricWidth - realTextLength).roundToInt(), 0, duration)
-            invalidate()
+        if (realTextLength <= realLyricWidth) {
+            currentX = 0f
+            stopScroll()
+        } else if (realLyricWidth - currentX >= realTextLength) {
+            currentX = realLyricWidth - realTextLength
+            stopScroll()
+        } else {
+            currentX -= scrollSpeed
         }
-        handler.postDelayed(scrollRunnable!!, 1000)
-
     }
 
     override fun computeScroll() {
-        if (scroller.computeScrollOffset()) {
-            scrollTo(scroller.currX, scroller.currY)
+        if (isScrolling) {
+            postDelayed(startScrollRunnable, 1000)
             postInvalidate()
         }
     }
 
-    private fun getTextLength() {
-        textLength = text?.let { paint.measureText(it.toString()) } ?: 0f
+    private fun startScroll() {
+        isScrolling = true
+    }
+
+    private fun stopScroll() {
+        isScrolling = false
+        removeCallbacks(startScrollRunnable)
+    }
+
+    private fun getTextLength(): Float {
+        return text?.let { paint.measureText(it.toString()) } ?: 0f
     }
 
     fun setScrollSpeed(speed: Float) {
@@ -67,6 +121,8 @@ open class LyricTextView(context: Context) : TextView(context) {
     }
 
     fun iconWidth(width: Float) {
-        if (config.iconSwitch) iconWidth = width
+        if (config.iconSwitch) {
+            iconWidth = width
+        }
     }
 }
