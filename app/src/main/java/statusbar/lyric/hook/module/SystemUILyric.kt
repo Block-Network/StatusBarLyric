@@ -36,7 +36,6 @@ import android.graphics.Point
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
-import android.media.MediaMetadata
 import android.os.Build
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -265,24 +264,6 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        if (config.titleSwitch) {
-            for (i in 0..10) {
-                val clazz = loadClassOrNull("com.android.systemui.statusbar.NotificationMediaManager$$i")
-                clazz.log()
-                if (clazz.isNotNull()) {
-                    if (clazz!!.hasMethod("onMetadataChanged")) {
-                        clazz.methodFinder().filterByName("onMetadataChanged").first().createHook {
-                            after { hookParam ->
-                                if (isStop || !isPlaying) return@after
-                                val metadata = hookParam.args[0] as? MediaMetadata ?: return@after
-                                title = metadata.getString(if (config.useBlueGetTitle) MediaMetadata.METADATA_KEY_ARTIST else MediaMetadata.METADATA_KEY_TITLE)
-                            }
-                        }
-                        break
-                    }
-                }
-            }
-        }
         "${moduleRes.getString(R.string.lyric_color_scheme)}:${config.lyricColorScheme}".log()
         when (config.lyricColorScheme) {
             0 -> {
@@ -460,6 +441,14 @@ class SystemUILyric : BaseHook() {
             }
 
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
+            if (config.titleSwitch) {
+                object : SystemMediaSessionListener(context) {
+                    override fun onTitleChanged(title: String) {
+                        super.onTitleChanged(title)
+                        this@SystemUILyric.title = title
+                    }
+                }
+            }
         }
 
         if (!firstLoad) return
