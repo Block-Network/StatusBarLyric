@@ -1,4 +1,4 @@
-package statusbar.lyric.hook.module
+package statusbar.lyric.tools
 
 import android.content.ComponentName
 import android.content.Context

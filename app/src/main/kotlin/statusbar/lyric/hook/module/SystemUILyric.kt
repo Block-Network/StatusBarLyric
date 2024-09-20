@@ -73,6 +73,7 @@ import statusbar.lyric.tools.LyricViewTools.iconColorAnima
 import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.LyricViewTools.textColorAnima
+import statusbar.lyric.tools.SystemMediaSessionListener
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isLandscape
