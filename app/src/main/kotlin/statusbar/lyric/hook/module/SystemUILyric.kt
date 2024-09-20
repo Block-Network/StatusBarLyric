@@ -446,6 +446,7 @@ class SystemUILyric : BaseHook() {
                 object : SystemMediaSessionListener(context) {
                     override fun onTitleChanged(title: String) {
                         super.onTitleChanged(title)
+                        "title: $title".log()
                         this@SystemUILyric.title = title
                     }
                 }

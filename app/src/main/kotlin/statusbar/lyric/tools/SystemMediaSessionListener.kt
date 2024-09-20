@@ -16,7 +16,9 @@ open class SystemMediaSessionListener(context: Context) {
     // 监听活跃会话的变化
     private val activeSessionsListener = MediaSessionManager.OnActiveSessionsChangedListener { controllers ->
         "activeSessionsListener: ${controllers?.size}".log()
-
+        if (controllers?.size == 0) {
+            onCleared()
+        }
         // 清理之前的回调
         activeControllers.forEach { it.unregisterCallback(mediaControllerCallback) }
         activeControllers.clear()
@@ -68,7 +70,6 @@ open class SystemMediaSessionListener(context: Context) {
     // 显示媒体元数据
     private fun displayMediaMetadata(metadata: MediaMetadata) {
         val title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE) ?: "Unknown Title"
-        "title: $title".log()
         onTitleChanged(title)
     }
 
@@ -81,8 +82,7 @@ open class SystemMediaSessionListener(context: Context) {
             PlaybackState.STATE_BUFFERING -> "Buffering"
             else -> "Unknown State"
         }
-        "Playback state: $stateString".log()
-        stateCallback(state.state)
+        onStateChanged(state.state)
     }
 
     fun cleanup() {
@@ -93,5 +93,7 @@ open class SystemMediaSessionListener(context: Context) {
 
     open fun onTitleChanged(title: String) {}
 
-    open fun stateCallback(state: Int) {}
+    open fun onStateChanged(state: Int) {}
+
+    open fun onCleared() {}
 }
