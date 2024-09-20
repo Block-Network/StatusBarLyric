@@ -427,7 +427,7 @@ class SystemUILyric : BaseHook() {
                 targetView.addView(lyricLayout)
             }
             if (config.lyricWidth == 0) {
-                lyricView.setMaxLyricViewWidth(targetView.width.toFloat())
+                lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
             } else {
                 lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
             }
@@ -546,7 +546,7 @@ class SystemUILyric : BaseHook() {
             }
         }
         if (config.lyricWidth == 0) {
-            lyricView.setMaxLyricViewWidth(targetView.width.toFloat())
+            lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
         } else {
             lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
         }
@@ -589,7 +589,7 @@ class SystemUILyric : BaseHook() {
                     }
                 }
                 if (config.lyricWidth == 0) {
-                    setMaxLyricViewWidth(targetView.width.toFloat())
+                    setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
                 } else {
                     setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
                 }
