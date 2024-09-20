@@ -7,7 +7,6 @@ import android.media.session.MediaController
 import android.media.session.MediaSessionManager
 import android.media.session.PlaybackState
 import android.service.notification.NotificationListenerService
-import statusbar.lyric.tools.LogTools.log
 
 open class SystemMediaSessionListener(context: Context) {
     private var mediaSessionManager: MediaSessionManager? = null
@@ -15,7 +14,6 @@ open class SystemMediaSessionListener(context: Context) {
 
     // 监听活跃会话的变化
     private val activeSessionsListener = MediaSessionManager.OnActiveSessionsChangedListener { controllers ->
-        "activeSessionsListener: ${controllers?.size}".log()
         if (controllers?.size == 0) {
             onCleared()
         }
@@ -46,7 +44,7 @@ open class SystemMediaSessionListener(context: Context) {
         }
 
         controller.playbackState?.let { state ->
-            displayPlaybackState(state)
+            onStateChanged(state.state)
         }
     }
 
@@ -62,7 +60,7 @@ open class SystemMediaSessionListener(context: Context) {
         override fun onPlaybackStateChanged(state: PlaybackState?) {
             super.onPlaybackStateChanged(state)
             state?.let {
-                displayPlaybackState(it)
+                onStateChanged(state.state)
             }
         }
     }
@@ -71,18 +69,6 @@ open class SystemMediaSessionListener(context: Context) {
     private fun displayMediaMetadata(metadata: MediaMetadata) {
         val title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE) ?: "Unknown Title"
         onTitleChanged(title)
-    }
-
-    // 显示播放状态
-    private fun displayPlaybackState(state: PlaybackState) {
-        val stateString = when (state.state) {
-            PlaybackState.STATE_PLAYING -> "Playing"
-            PlaybackState.STATE_PAUSED -> "Paused"
-            PlaybackState.STATE_STOPPED -> "Stopped"
-            PlaybackState.STATE_BUFFERING -> "Buffering"
-            else -> "Unknown State"
-        }
-        onStateChanged(state.state)
     }
 
     fun cleanup() {
