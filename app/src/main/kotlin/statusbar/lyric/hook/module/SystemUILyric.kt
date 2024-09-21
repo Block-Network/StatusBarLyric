@@ -59,7 +59,6 @@ import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
@@ -97,8 +96,6 @@ class SystemUILyric : BaseHook() {
 
     private lateinit var hook: XC_MethodHook.Unhook
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
-    private val miuiStubClass = loadClassOrNull("miui.stub.MiuiStub")
-    private val miuiStubInstance = XposedHelpers.getStaticObjectField(miuiStubClass, "INSTANCE")
 
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
         goMainThread {
@@ -458,6 +455,7 @@ class SystemUILyric : BaseHook() {
             override fun onStop(lyricData: LyricData) {
                 if (!isReally) return
                 if (isHiding) isHiding = false
+                lastLyric = ""
                 hideLyric()
             }
 
@@ -556,7 +554,7 @@ class SystemUILyric : BaseHook() {
 
     private fun hideLyric(anim: Boolean = true) {
         if (isStop) return
-        if (!isHiding && isPlaying) {
+        if (!isHiding && isPlaying && !anim) {
             isPlaying = false
             isStop = true
         }
@@ -769,9 +767,7 @@ class SystemUILyric : BaseHook() {
                     }
                     it.methodFinder().filterByName("setVisibilityByController").first().createHook {
                         before { hookParam ->
-                            if (isPlaying) {
-                                hookParam.args[0] = false
-                            }
+                            if (isPlaying) hookParam.args[0] = false
                         }
                     }
                 }
@@ -795,15 +791,12 @@ class SystemUILyric : BaseHook() {
 
     inner class ScreenLockReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val mSysUIProvider = XposedHelpers.getObjectField(miuiStubInstance, "mSysUIProvider")
-            val mStatusBarStateController = XposedHelpers.getObjectField(mSysUIProvider, "mStatusBarStateController")
-            val getLazyClass = XposedHelpers.callMethod(mStatusBarStateController, "get")
-            val getState = XposedHelpers.callMethod(getLazyClass, "getState")
-            isScreenLock = getState != 0
+            isScreenLock = intent.action == Intent.ACTION_SCREEN_OFF
             if (isScreenLock) {
                 hideLyric(false)
             } else {
-                if (isPlaying) {
+                if (lastLyric.isNotEmpty()) {
+                    changeLyric(lastLyric, 0)
                     lastColor = clockView.currentTextColor
                 }
             }

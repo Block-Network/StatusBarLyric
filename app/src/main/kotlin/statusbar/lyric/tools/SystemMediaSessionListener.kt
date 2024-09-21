@@ -76,7 +76,6 @@ open class SystemMediaSessionListener(context: Context) {
         activeControllers.forEach { it.unregisterCallback(mediaControllerCallback) }
     }
 
-
     open fun onTitleChanged(title: String) {}
 
     open fun onStateChanged(state: Int) {}
