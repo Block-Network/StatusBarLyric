@@ -51,6 +51,7 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
 
     override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
+        stopScroll()
         textLength = getTextLength()
         currentX = 0f
         startScroll()
