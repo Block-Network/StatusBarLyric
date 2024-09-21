@@ -38,7 +38,8 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
     private var currentX = 0f
     private val lyricStartMargins = config.lyricStartMargins
     private val lyricEndMargins = config.lyricEndMargins
-    private val startScrollRunnable = Runnable { Choreographer.getInstance().postFrameCallback(this) }
+    private val startScrollRunnable =
+        Runnable { Choreographer.getInstance().postFrameCallback(this) }
 
     init {
         paint.style = Paint.Style.FILL_AND_STROKE
@@ -49,11 +50,13 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
         super.onDetachedFromWindow()
     }
 
-    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter)
-        textLength = getTextLength()
+    override fun setText(text: CharSequence?, type: BufferType?) {
+        textLength = getTextLength(text)
         currentX = 0f
         startScroll()
+        postDelayed({
+            super.setText(text, type)
+        }, 20)
     }
 
     override fun setTextColor(color: Int) {
@@ -109,7 +112,7 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
         Choreographer.getInstance().removeFrameCallback(this)
     }
 
-    private fun getTextLength(): Float {
+    private fun getTextLength(text: CharSequence?): Float {
         return text?.let { paint.measureText(it.toString()) } ?: 0f
     }
 
