@@ -494,9 +494,7 @@ class SystemUILyric : BaseHook() {
         isStop = false
         isPlaying = true
         goMainThread {
-            if (!isPlaying && config.lyricColor.isEmpty()) {
-                lastColor = clockView.currentTextColor
-            }
+            if (config.lyricColor.isEmpty()) lastColor = clockView.currentTextColor
             lyricLayout.showView()
             if (config.hideTime) clockView.hideView()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
