@@ -22,7 +22,6 @@ open class EdgeTransparentView(context: Context, private val drawSize: Float = 5
     private var mWidth = 0
     private var mHeight = 0
 
-
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         initShader()
@@ -70,7 +69,7 @@ open class EdgeTransparentView(context: Context, private val drawSize: Float = 5
                 restoreToCount(saveCount)
             }
         }
-        val layerSave = canvas.saveLayer(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), null, Canvas.ALL_SAVE_FLAG)
+        val layerSave = canvas.saveLayer(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), null)
         canvas.restoreToCount(layerSave)
         return drawChild
     }

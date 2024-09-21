@@ -3,7 +3,6 @@ package statusbar.lyric.data
 import android.os.Parcel
 import android.os.Parcelable
 
-
 class Data private constructor(parcel: Parcel) : Parcelable {
     var textViewClassName: String = ""
     var textViewId: Int = 0
@@ -17,7 +16,15 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     }
 
     constructor() : this(Parcel.obtain())
-    constructor(textViewClassName: String, textViewId: Int, parentViewClassName: String, parentViewId: Int, isRepeat: Boolean, index: Int, size: Float) : this() {
+    constructor(
+        textViewClassName: String,
+        textViewId: Int,
+        parentViewClassName: String,
+        parentViewId: Int,
+        isRepeat: Boolean,
+        index: Int,
+        size: Float
+    ) : this() {
         this.textViewClassName = textViewClassName
         this.textViewId = textViewId
         this.parentViewClassName = parentViewClassName

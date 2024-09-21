@@ -22,7 +22,7 @@ class SystemSpecialPage : BasePage() {
             TextSw(textId = R.string.miui_pad_optimize, key = "mMiuiPadOptimize")
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) TextSw(textId = R.string.hide_carrier, key = "hideCarrier")
             Line()
-            if (isHyperOS()) {
+            if (isHyperOS) {
                 TextSw(textId = R.string.hyperos_texture, key = "mHyperOSTexture")
                 TextSA(textId = R.string.hyperos_texture_radio, onClickListener = {
                     MIUIDialog(activity) {

@@ -29,7 +29,11 @@ class MainPage : BasePage() {
         TextSA(textId = R.string.icon_page, onClickListener = { showPage(IconPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
         Line(dataBindingRecv = masterSwitchBinding.getRecv(1))
         TextSA(textId = R.string.extend_page, onClickListener = { showPage(ExtendPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
-        TextSA(textId = R.string.system_special_page, onClickListener = { showPage(SystemSpecialPage::class.java) }, dataBindingRecv = masterSwitchBinding.getRecv(1))
+        TextSA(
+            textId = R.string.system_special_page,
+            onClickListener = { showPage(SystemSpecialPage::class.java) },
+            dataBindingRecv = masterSwitchBinding.getRecv(1)
+        )
         TitleText(textId = R.string.tips1)
     }
 
@@ -38,9 +42,12 @@ class MainPage : BasePage() {
         ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
             val getterVersion = it.metaData.getInt("Getter_Version")
             if (getterVersion != BuildConfig.API_VERSION) {
-                TextSA(text = "${getString(R.string.no_supported_version_lyric_getter)}\nLyric Getter Api Version:${getterVersion}", tipsId = R.string.click_to_install, onClickListener = {
-                    openLyricGetter()
-                })
+                TextSA(
+                    text = "${getString(R.string.no_supported_version_lyric_getter)}\nLyric Getter Api Version:${getterVersion}",
+                    tipsId = R.string.click_to_install,
+                    onClickListener = {
+                        openLyricGetter()
+                    })
             }
         }.isNot {
             TextSA(textId = R.string.no_lyric_getter, tipsId = R.string.click_to_install, onClickListener = {

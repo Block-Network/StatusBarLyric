@@ -34,7 +34,7 @@ object ActivityOwnSP {
     private val ownEditor by lazy { ownSP.edit() }
 
 
-   private fun set(key: String, any: Any) {
+    private fun set(key: String, any: Any) {
         when (any) {
             is Int -> ownEditor.putInt(key, any)
             is Float -> ownEditor.putFloat(key, any)
@@ -44,6 +44,7 @@ object ActivityOwnSP {
         }
         ownEditor.apply()
     }
+
     private fun remove(key: String) {
         ownEditor.remove(key).apply()
     }

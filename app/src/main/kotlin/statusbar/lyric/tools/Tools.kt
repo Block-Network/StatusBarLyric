@@ -46,23 +46,23 @@ import java.util.regex.Pattern
 import kotlin.properties.Delegates
 import kotlin.properties.ReadWriteProperty
 
-
 @SuppressLint("StaticFieldLeak")
 object Tools {
     private var index: Int = 0
 
     val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
 
-    val isPad get() = getSystemProperties("ro.build.characteristics") == "tablet"
+    val isPad by lazy { getSystemProperties("ro.build.characteristics") == "tablet" }
 
-    fun isHyperOS(): Boolean {
+    val isHyperOS by lazy {
         try {
             getSystemProperties("ro.mi.os.version.incremental")
-            return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
         } catch (_: Exception) {
-            return false
+            false
         }
     }
+
 
     val togglePrompts: Boolean
         get() {

@@ -22,7 +22,6 @@
 
 package statusbar.lyric.tools
 
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ApplicationInfo

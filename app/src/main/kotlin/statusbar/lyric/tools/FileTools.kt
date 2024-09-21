@@ -25,22 +25,20 @@
 package statusbar.lyric.tools
 
 import android.content.ContentResolver
-import android.provider.MediaStore
-import android.content.CursorLoader
-import android.os.Build
-import android.provider.DocumentsContract
-import android.os.Environment
 import android.content.ContentUris
 import android.content.Context
+import android.content.CursorLoader
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isNull
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.lang.Exception
-import java.lang.IllegalArgumentException
 
 class FileTools(private val context: Context) {
     /**
@@ -186,9 +184,11 @@ class FileTools(private val context: Context) {
                         "image" -> {
                             contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         }
+
                         "video" -> {
                             contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
                         }
+
                         "audio" -> {
                             contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
                         }
@@ -204,7 +204,7 @@ class FileTools(private val context: Context) {
 
     private fun getFileNameByUri(uri: Uri): String? {
         var relativePath = getFileRelativePathByUriAPI18(uri)
-        if (relativePath .isNull()) relativePath = ""
+        if (relativePath.isNull()) relativePath = ""
         val projection = arrayOf(MediaStore.MediaColumns.DISPLAY_NAME)
         context.contentResolver.query(uri, projection, null, null, null).use { cursor ->
             if (cursor.isNotNull() && cursor!!.moveToFirst()) {

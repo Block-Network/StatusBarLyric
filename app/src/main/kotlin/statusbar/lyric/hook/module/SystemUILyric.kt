@@ -429,7 +429,7 @@ class SystemUILyric : BaseHook() {
             } else {
                 lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
             }
-            if (isHyperOS() && config.mHyperOSTexture) {
+            if (isHyperOS && config.mHyperOSTexture) {
                 val blurRadio = config.mHyperOSTextureRadio
                 val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
                 val blendModes = arrayOf(

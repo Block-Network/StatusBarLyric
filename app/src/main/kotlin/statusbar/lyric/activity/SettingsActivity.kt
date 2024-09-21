@@ -22,7 +22,6 @@
 
 package statusbar.lyric.activity
 
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationManager
@@ -58,10 +57,8 @@ import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.isNotNull
 
-
 class SettingsActivity : MIUIActivity() {
     private val appTestReceiver by lazy { AppTestReceiver() }
-
 
     override fun register() {
         registerPage(MainPage::class.java, activity.getString(R.string.app_name))

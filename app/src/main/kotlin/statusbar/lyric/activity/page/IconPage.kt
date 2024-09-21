@@ -175,7 +175,12 @@ class IconPage : BasePage() {
                 finally { dismiss() }
             }.show()
         }, dataBindingRecv = binding.getRecv(1))
-        TextSSw(textId = R.string.force_the_icon_to_be_displayed, key = "forceTheIconToBeDisplayed", onClickListener = { changeConfig() }, dataBindingRecv = binding.getRecv(1))
+        TextSSw(
+            textId = R.string.force_the_icon_to_be_displayed,
+            key = "forceTheIconToBeDisplayed",
+            onClickListener = { changeConfig() },
+            dataBindingRecv = binding.getRecv(1)
+        )
         TextSA(textId = R.string.change_all_icons, onClickListener = {
             MIUIDialog(activity) {
                 setTitle(getString(R.string.change_all_icons))
