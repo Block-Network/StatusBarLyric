@@ -59,7 +59,7 @@ android {
         }
     }
     buildFeatures.buildConfig = true
-    kotlin.jvmToolchain(17)
+    kotlin.jvmToolchain(21)
 }
 
 dependencies {
