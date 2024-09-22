@@ -49,11 +49,11 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
         super.onDetachedFromWindow()
     }
 
-    override fun onTextChanged(text: CharSequence, start: Int, lengthBefore: Int, lengthAfter: Int) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter)
+    override fun setText(text: CharSequence, type: BufferType) {
         stopScroll()
-        textLength = getTextLength()
         currentX = 0f
+        textLength = getTextLength(text)
+        super.setText(text, type)
         startScroll()
     }
 
@@ -110,8 +110,8 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
         Choreographer.getInstance().removeFrameCallback(this)
     }
 
-    private fun getTextLength(): Float {
-        return text?.let { paint.measureText(it.toString()) } ?: 0f
+    private fun getTextLength(text: CharSequence): Float {
+        return paint.measureText(text.toString())
     }
 
     fun setScrollSpeed(speed: Float) {
