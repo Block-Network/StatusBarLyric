@@ -140,7 +140,7 @@ class Config {
         }
     var lyricStartMargins: Int
         get() {
-            return config.opt("lyricStart", 0)
+            return config.opt("lyricStart", if (XposedOwnSP.config.mHyperOSTexture) 20 else 0)
         }
         set(value) {
             config.put("lyricStart", value)
@@ -154,7 +154,8 @@ class Config {
         }
     var lyricEndMargins: Int
         get() {
-            return config.opt("lyricEnd", 0)
+
+            return config.opt("lyricEnd", if (XposedOwnSP.config.mHyperOSTexture) 20 else 0)
         }
         set(value) {
             config.put("lyricEnd", value)
@@ -466,13 +467,6 @@ class Config {
         }
         set(value) {
             config.put("titleSwitch", value)
-        }
-    var useBlueGetTitle: Boolean
-        get() {
-            return config.opt("useBlueGetTitle", false)
-        }
-        set(value) {
-            config.put("useBlueGetTitle", value)
         }
     var titleDelayDuration: Int
         get() {
