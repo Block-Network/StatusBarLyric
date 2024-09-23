@@ -151,17 +151,17 @@
     <string name="color_scheme1">Color Scheme 1</string>
     <string name="color_scheme2">Color Scheme 2</string>
     <string name="lyric_color_scheme">* Lyric Color Scheme</string>
-    <string name="tips1">Option with <font color="red"> * </font>, <font color="#FFF000">Restart SystemUI</font> to take effect</string>
+    <string name="tips1">Restart SystemUI to take effect</string>
     <string name="dynamic_lyric_speed">Dynamic Lyric Speed(Beta)</string>
     <string name="click_status_bar_to_hide_lyric">* Click Status Bar To Hide Lyric</string>
     <string name="long_click_status_bar_stop">* Long Click Status Bar Stop Music</string>
     <string name="system_special_page">System Special Page</string>
-    <string name="miui_hide_network_speed">* MIUI Hide Network Speed</string>
-    <string name="miui_pad_optimize">* MIUI tablet optimization</string>
-    <string name="hyperos_texture">* Add Advanced texture background</string>
-    <string name="hyperos_texture_radio">* Advanced texture blur radio</string>
-    <string name="hyperos_texture_corner">* Advanced texture rounded corners</string>
-    <string name="hyperos_texture_color">* Advanced texture background corner</string>
+    <string name="miui_hide_network_speed">Hide Network Speed</string>
+    <string name="miui_pad_optimize">tablet optimization</string>
+    <string name="hyperos_texture">Add Advanced texture background</string>
+    <string name="hyperos_texture_radio">Advanced texture blur radio</string>
+    <string name="hyperos_texture_corner">Advanced texture rounded corners</string>
+    <string name="hyperos_texture_color">Advanced texture background corner</string>
     <string name="lyric_blurred_edges_type_end">Lyric Blurred Edges Type End</string>
     <string name="lyric_blurred_edges_type_start">Lyric Blurred Edges Type Start</string>
     <string name="lyric_blurred_edges_type_all">Lyric Blurred Edges Type All</string>
@@ -190,4 +190,6 @@
     <string name="change_all_icons_tips">Please enter Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">Please enter hexadecimal color, multiple colors are gradient colors arranged horizontally, separated by English commas</string>
     <string name="lyrics_are_gradient_and_transparent">* Lyrics gradient and transparent</string>
+    <string name="miui_or_hyper">MIUI/HyperOS</string>
+    <string name="hyperos">HyperOS</string>
 </resources>

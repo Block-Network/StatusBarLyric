@@ -22,14 +22,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import getWindowSize
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.MainActivity.Companion.isLoad
-import statusbar.lyric.MainActivity.Companion.safeSP
 import statusbar.lyric.R
+import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.ui.theme.AppTheme
 import top.yukonga.miuix.kmp.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.MiuixSuperArrow
 import top.yukonga.miuix.kmp.MiuixSuperSwitch
@@ -41,12 +44,21 @@ import top.yukonga.miuix.kmp.basic.MiuixScaffold
 import top.yukonga.miuix.kmp.basic.MiuixSmallTitle
 import top.yukonga.miuix.kmp.rememberMiuixTopAppBarState
 
+
+@Preview(locale = "zh")
+@Composable
+fun HomePagePreview() {
+    AppTheme {
+        HomePage(navController = rememberNavController())
+    }
+}
+
 @Composable
 fun HomePage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberMiuixTopAppBarState())
     val masterSwitchState = remember {
         mutableStateOf(
-            if (isLoad) safeSP.getBoolean("masterSwitch", false) else {
+            if (isLoad) config.masterSwitch else {
                 /** false **/
                 true
             }
@@ -102,7 +114,7 @@ fun HomePage(navController: NavController) {
                                 onCheckedChange = {
                                     if (isLoad) {
                                         masterSwitchState.value = it
-                                        safeSP.putAny("masterSwitch", it)
+                                        config.masterSwitch = it
                                     } else {
                                         Toast.makeText(
                                             context,
@@ -185,9 +197,6 @@ fun HomePage(navController: NavController) {
                                         insideMargin = DpSize(16.dp, 16.dp)
                                     )
                                 }
-                                MiuixSmallTitle(
-                                    text = stringResource(R.string.tips1)
-                                )
                             }
                         }
                     }
