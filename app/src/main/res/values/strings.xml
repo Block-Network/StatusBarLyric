@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">StatusBar lyric</string>
+    <string name="module_activated">Module activated</string>
+    <string name="module_inactivated">Module inactivated</string>
+    <string name="module_first">Precondition</string>
+    <string name="module_second">Basic Settings</string>
+    <string name="module_third">Advanced Settings</string>
     <string name="xposed_tips">If the lyrics cannot be displayed, please try to stop the music software and restart the SystemUI,and check Lyric Getter</string>
     <string name="config_reset_success">The config reset succeeded</string>
     <string name="have_new_version">There is a new version</string>

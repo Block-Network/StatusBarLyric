@@ -31,16 +31,9 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.text.Spanned
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
-import androidx.core.text.HtmlCompat
 import com.github.kyuubiran.ezxhelper.EzXHelper
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
@@ -92,9 +85,7 @@ object Tools {
     @SuppressLint("PrivateApi")
     fun getSystemProperties(key: String): String {
         val ret: String = try {
-            Class.forName("android.os.SystemProperties")
-                .getDeclaredMethod("get", String::class.java)
-                .invoke(null, key) as String
+            Class.forName("android.os.SystemProperties").getDeclaredMethod("get", String::class.java).invoke(null, key) as String
         } catch (iAE: IllegalArgumentException) {
             throw iAE
         } catch (e: Exception) {
@@ -104,15 +95,13 @@ object Tools {
     }
 
     fun copyToClipboard(context: Context, text: String) {
-        val clipboardManager =
-            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText("text", text)
         clipboardManager.setPrimaryClip(clipData)
     }
 
     fun <T> observableChange(
-        initialValue: T,
-        onChange: (oldValue: T, newValue: T) -> Unit
+        initialValue: T, onChange: (oldValue: T, newValue: T) -> Unit
     ): ReadWriteProperty<Any?, T> {
         return Delegates.observable(initialValue) { _, oldVal, newVal ->
             if (oldVal != newVal) {
@@ -154,7 +143,6 @@ object Tools {
         return false
     }
 
-
     private fun String.regexReplace(pattern: String, newString: String): String {
         val p = Pattern.compile("(?i)$pattern")
         val m = p.matcher(this)
@@ -181,12 +169,10 @@ object Tools {
         }
     }
 
-    @SuppressLint("WorldReadableFiles")
     fun getSP(context: Context, key: String): SharedPreferences? {
-        @Suppress("DEPRECATION") return context.createDeviceProtectedStorageContext()
+        @Suppress("DEPRECATION", "WorldReadableFiles") return context.createDeviceProtectedStorageContext()
             .getSharedPreferences(key, Context.MODE_WORLD_READABLE)
     }
-
 
     fun shell(command: String, isSu: Boolean) {
         try {

@@ -1,6 +1,8 @@
 package statusbar.lyric.ui.page
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -18,11 +20,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import getWindowSize
+import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity.Companion.isLoad
 import statusbar.lyric.MainActivity.Companion.safeSP
 import statusbar.lyric.R
 import top.yukonga.miuix.kmp.MiuixScrollBehavior
@@ -39,7 +44,15 @@ import top.yukonga.miuix.kmp.rememberMiuixTopAppBarState
 @Composable
 fun HomePage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberMiuixTopAppBarState())
-    val masterSwitchState = remember { mutableStateOf(safeSP.getBoolean("masterSwitch", false)) }
+    val masterSwitchState = remember {
+        mutableStateOf(
+            if (isLoad) safeSP.getBoolean("masterSwitch", false) else {
+                /** false **/
+                true
+            }
+
+        )
+    }
 
     MiuixScaffold(
         modifier = Modifier
@@ -68,44 +81,68 @@ fun HomePage(navController: NavController) {
                         MiuixCard(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp)
-                                .padding(top = 12.dp, bottom = 6.dp),
+                                .padding(horizontal = 12.dp, vertical = 8.dp),
+                            insideMargin = DpSize(0.dp, 0.dp)
+                        ) {
+                            Image(
+                                modifier = Modifier.fillMaxWidth(),
+                                painter = painterResource(id = R.drawable.ic_home_background),
+                                contentDescription = "Logo",
+                            )
+                        }
+                        MiuixCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
                             insideMargin = DpSize(0.dp, 0.dp)
                         ) {
                             MiuixSuperSwitch(
                                 title = stringResource(R.string.master_switch),
                                 checked = masterSwitchState.value,
                                 onCheckedChange = {
-                                    masterSwitchState.value = it
-                                    safeSP.putAny("masterSwitch", it)
+                                    if (isLoad) {
+                                        masterSwitchState.value = it
+                                        safeSP.putAny("masterSwitch", it)
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            R.string.module_inactivated,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 },
-                                insideMargin = DpSize(15.dp, 15.dp)
+                                insideMargin = DpSize(16.dp, 16.dp)
                             )
                         }
                         AnimatedVisibility(masterSwitchState.value) {
                             Column {
                                 MiuixSmallTitle(
-                                    text = stringResource(R.string.test_mode_tips).split("\n")[0],
-                                    insideMargin = DpSize(24.dp, 8.dp)
+                                    text = stringResource(R.string.module_first)
                                 )
                                 MiuixCard(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                                        .padding(horizontal = 12.dp)
+                                        .padding(bottom = 6.dp),
                                     insideMargin = DpSize(0.dp, 0.dp)
                                 ) {
                                     MiuixSuperArrow(
                                         title = stringResource(R.string.hook_page),
+                                        summary = stringResource(R.string.test_mode_tips).split("\n")[0],
                                         onClick = {
                                             navController.navigate("TestPage")
                                         },
-                                        insideMargin = DpSize(15.dp, 15.dp)
+                                        insideMargin = DpSize(16.dp, 16.dp)
                                     )
                                 }
+                                MiuixSmallTitle(
+                                    text = stringResource(R.string.module_second)
+                                )
                                 MiuixCard(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                                        .padding(horizontal = 12.dp)
+                                        .padding(bottom = 6.dp),
                                     insideMargin = DpSize(0.dp, 0.dp)
                                 ) {
                                     MiuixSuperArrow(
@@ -113,20 +150,24 @@ fun HomePage(navController: NavController) {
                                         onClick = {
                                             navController.navigate("LyricPage")
                                         },
-                                        insideMargin = DpSize(15.dp, 15.dp)
+                                        insideMargin = DpSize(16.dp, 16.dp)
                                     )
                                     MiuixSuperArrow(
                                         title = stringResource(R.string.icon_page),
                                         onClick = {
                                             navController.navigate("IconPage")
                                         },
-                                        insideMargin = DpSize(15.dp, 15.dp)
+                                        insideMargin = DpSize(16.dp, 16.dp)
                                     )
                                 }
+                                MiuixSmallTitle(
+                                    text = stringResource(R.string.module_third)
+                                )
                                 MiuixCard(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                                        .padding(horizontal = 12.dp)
+                                        .padding(bottom = 6.dp),
                                     insideMargin = DpSize(0.dp, 0.dp)
                                 ) {
                                     MiuixSuperArrow(
@@ -134,19 +175,18 @@ fun HomePage(navController: NavController) {
                                         onClick = {
                                             navController.navigate("ExtendPage")
                                         },
-                                        insideMargin = DpSize(15.dp, 15.dp)
+                                        insideMargin = DpSize(16.dp, 16.dp)
                                     )
                                     MiuixSuperArrow(
                                         title = stringResource(R.string.system_special_page),
                                         onClick = {
                                             navController.navigate("SystemSpecialPage")
                                         },
-                                        insideMargin = DpSize(15.dp, 15.dp)
+                                        insideMargin = DpSize(16.dp, 16.dp)
                                     )
                                 }
                                 MiuixSmallTitle(
-                                    text = stringResource(R.string.tips1),
-                                    insideMargin = DpSize(24.dp, 8.dp)
+                                    text = stringResource(R.string.tips1)
                                 )
                             }
                         }

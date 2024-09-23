@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">墨-狀態列歌詞</string>
+    <string name="app_name">墨·狀態欄歌詞</string>
+    <string name="module_activated">模組已啟動</string>
+    <string name="module_inactivated">模組未啟動</string>
+    <string name="module_first">前置條件</string>
+    <string name="module_second">基礎設置</string>
+    <string name="module_third">高級設置</string>
     <string name="xposed_tips">如果無法顯示歌詞，請嘗試停止音樂軟體並重新啟動系統UI，並檢查Lyric Getter</string>
     <string name="config_reset_success">配置重置成功</string>
     <string name="have_new_version">有新版本</string>
@@ -15,10 +20,10 @@
     <string name="ok">確定</string>
     <string name="get_announcement_error">获取公告时出现错误</string>
     <string name="first_use_tips">首次使用</string>
-    <string name="not_support_xposed_framework">不支持Xposed框架</string>
+    <string name="not_support_xposed_framework">不支持的 Xposed 框架</string>
     <string name="re_start_app">重新應用程式</string>
     <string name="no_lyric_getter">沒有Lyric Getter</string>
-    <string name="no_supported_version_lyric_getter">沒有支持的Lyric Getter</string>
+    <string name="no_supported_version_lyric_getter">沒有支持的 Lyric Getter</string>
     <string name="click_to_install">點擊安裝</string>
     <string name="installed">已安裝</string>
     <string name="unsupported_lyric_getter">不支持的歌詞獲取器 </string>
@@ -32,7 +37,7 @@
     <string name="backup_config">備份配置</string>
     <string name="recovery_config">恢復配置</string>
     <string name="module_build_time">模塊構建時間</string>
-    <string name="restart_systemui_tips">確定要重新啟動System UI嗎？</string>
+    <string name="restart_systemui_tips">確定要重新啟動 System UI 嗎？</string>
     <string name="master_switch">主開關</string>
     <string name="hook_page">錨點頁</string>
     <string name="test_mode">錨點設置模式</string>
@@ -50,9 +55,9 @@
     <string name="lyric_color_and_transparency">歌詞顏色和透明度</string>
     <string name="lyric_color_and_transparency_tips">請輸入十進制顏色</string>
     <string name="lyrics_gradient_background_color_and_transparency">歌詞背景漸變顏色和透明度</string>
-    <string name="lyrics_gradient_background_color_and_transparency_tips">請輸入16進制顏色，多個顏色為漸變色橫向排布，使用英文逗號分隔</string>
+    <string name="lyrics_gradient_background_color_and_transparency_tips">請輸入十六進制顏色，多個顏色為漸變色橫向排布，使用英文逗號分隔</string>
     <string name="lyric_size">歌詞大小</string>
-    <string name="lyric_size_tips">範圍：狀態列高度的0％–100％，0代表跟隨時間</string>
+    <string name="lyric_size_tips">範圍：狀態欄高度的 0％–100％，0 代表跟隨時間</string>
     <string name="lyric_letter_spacing">歌詞字間距</string>
     <string name="lyric_letter_spacing_tips">範圍：0–50</string>
     <string name="lyric_stroke_width">歌詞粗細</string>
@@ -72,7 +77,7 @@
     <string name="lyric_bottom_margins_tips">範圍：–100–100</string>
     <string name="icon_switch">圖示開關</string>
     <string name="icon_size">圖示大小</string>
-    <string name="icon_size_tips">範圍：狀態列高度的0％–100％，0代表以下時鐘</string>
+    <string name="icon_size_tips">範圍：狀態欄高度的 0％–100％，0代表以下時鐘</string>
     <string name="icon_top_margins">圖示上邊距</string>
     <string name="icon_top_margins_tips">範圍：–100–100</string>
     <string name="icon_bottom_margins">圖示下邊距</string>
@@ -89,11 +94,11 @@
     <string name="lyric_mode">歌詞模式</string>
     <string name="get_hook">獲取錨點</string>
     <string name="master_off">主開關關閉</string>
-    <string name="hook_succeeded">Hook成功</string>
-    <string name="hook_failed">Hook失敗</string>
-    <string name="start_hooking_text_view">開始Hook所有TextView</string>
-    <string name="first_filter">%s已滿足初步要求，共有%s個符合要求</string>
-    <string name="no_text_view">沒有符合要求的TextView</string>
+    <string name="hook_succeeded">Hook 成功</string>
+    <string name="hook_failed">Hook 失敗</string>
+    <string name="start_hooking_text_view">開始 Hook 所有 TextView</string>
+    <string name="first_filter">%s 已滿足初步要求，共有 %s 個符合要求</string>
+    <string name="no_text_view">沒有符合要求的 TextView</string>
     <string name="send_text_view_class">發送：%s</string>
     <string name="clear_text_view_list">清除TextView列表及其關聯數據</string>
     <string name="understand_time_format">我不理解時間格式</string>
@@ -102,14 +107,14 @@
     <string name="load_class_failed">加載失敗，未找到該Class</string>
     <string name="load_class_succeed">加載成功，Class:%s</string>
     <string name="not_found_hook">未找到锚点</string>
-    <string name="not_found_hook_tips">請嘗試重新啟動系統UI，如果仍然無法找到，請聯繫開發人員</string>
+    <string name="not_found_hook_tips">請嘗試重新啟動系統 UI，如果仍然無法找到，請聯繫開發人員</string>
     <string name="select_hook">是否選擇此锚点</string>
-    <string name="test_mode_tips">第一次安裝模組，請先設置錨點，方可使用本模組\n\n開啟錨點設置模式，重啟系統介面，獲取錨定並選擇后關閉錨點模式再次重啟系統介面</string>
+    <string name="test_mode_tips">第一次安裝模組，請先設置錨點\n\n開啟錨點設置模式，重啟系統介面，獲取錨定並選擇后關閉錨點模式再次重啟系統介面</string>
     <string name="restart_app_effect">重啟應用程式生效</string>
     <string name="force_the_icon_to_be_displayed">強制顯示圖示</string>
     <string name="a_a_a_tips">是否重複：%s；Index：%s；textSize：%s</string>
     <string name="broadcast_receive_timeout">廣播接收超時</string>
-    <string name="broadcast_receive_timeout_tips">請先重啟系統UI，如依然超時請聯繫開發者</string>
+    <string name="broadcast_receive_timeout_tips">請先重啟系統 UI，如依然超時請聯繫開發者</string>
     <string name="hide_time">隱藏時間</string>
     <string name="lyrics_animation">歌詞動畫</string>
     <string name="lyrics_animation_none">無效果</string>
@@ -119,8 +124,8 @@
     <string name="lyrics_animation_end">右劃效果</string>
     <string name="lyrics_animation_fade">淡出淡入</string>
     <string name="lyrics_animation_scale_x_y">吸收效果</string>
-    <string name="lyrics_animation_scale_x">X軸翻頁</string>
-    <string name="lyrics_animation_scale_y">Y軸翻頁</string>
+    <string name="lyrics_animation_scale_x">X 軸翻頁</string>
+    <string name="lyrics_animation_scale_y">Y 軸翻頁</string>
     <string name="lyrics_animation_random">隨機效果</string>
     <string name="lyrics_animation_interpolator">歌詞動畫插值器</string>
     <string name="lyrics_interpolator_linear">线性效果</string>
@@ -138,7 +143,7 @@
     <string name="limit_visibility_change">* 限制可見性更改</string>
     <string name="limit_visibility_change_tips">可以防止部分系統的特性導致有時間會出現</string>
     <string name="hide_lyric_when_lock_screen">* 鎖定螢幕時隱藏歌詞</string>
-    <string name="choose_page_tips">建議先關閉其他修改狀態列佈局的模組后，再來此頁面選擇錨點\n有效的錨點選擇：狀態列顯示模組名字，並有白色背景\n\n選擇錨點后，返回關閉錨點模式，重啟系統模式即錨點設置完成</string>
+    <string name="choose_page_tips">建議先關閉其他修改狀態欄佈局的模組后，再來此頁面選擇錨點\n有效的錨點選擇：狀態欄顯示模組名字，並有白色背景\n\n選擇錨點后，返回關閉錨點模式，重啟系統模式即錨點設置完成</string>
     <string name="hide_carrier">* 隱藏運營商</string>
     <string name="lyric_background_radius">歌詞背景半徑</string>
     <string name="lyric_background_radius_tips">範圍：0–100</string>
@@ -147,8 +152,8 @@
     <string name="lyric_color_scheme">* 歌詞反色方案</string>
     <string name="tips1">帶<font color="red"> * </font>的選項，<font color="#FFF000">重啟系統UI</font>生效</string>
     <string name="dynamic_lyric_speed">動態歌詞速度(Beta)</string>
-    <string name="click_status_bar_to_hide_lyric">* 點擊狀態列隱藏歌詞</string>
-    <string name="long_click_status_bar_stop">* 長按狀態列停止音樂</string>
+    <string name="click_status_bar_to_hide_lyric">* 點擊狀態欄隱藏歌詞</string>
+    <string name="long_click_status_bar_stop">* 長按狀態欄停止音樂</string>
     <string name="system_special_page">系統特供頁</string>
     <string name="miui_hide_network_speed">* MIUI隱藏網速</string>
     <string name="miui_pad_optimize">* MIUI平板優化</string>
@@ -160,7 +165,7 @@
     <string name='lyric_blurred_edges_type_start'>僅左邊</string>
     <string name='lyric_blurred_edges_type_all'>兩邊</string>
     <string name="lyric_blurred_edges_type">* 歌詞模糊邊緣類型</string>
-    <string name="slide_status_bar_cut_songs">* 狀態列滑動切歌</string>
+    <string name="slide_status_bar_cut_songs">* 狀態欄滑動切歌</string>
     <string name="slide_status_bar_cut_songs_x_radius">* 滑動切歌X半徑</string>
     <string name="slide_status_bar_cut_songs_x_radius_tips">範圍：50–2000</string>
     <string name="slide_status_bar_cut_songs_y_radius">* 滑動切歌Y半徑</string>
