@@ -23,8 +23,8 @@
 package statusbar.lyric.config
 
 import android.annotation.SuppressLint
-import cn.fkj233.ui.activity.MIUIActivity.Companion.context
 import statusbar.lyric.BuildConfig
+import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.tools.Tools
 
 @SuppressLint("StaticFieldLeak")
@@ -32,7 +32,6 @@ object ActivityOwnSP {
     val ownSP by lazy { Tools.getSP(context, "Config")!! }
     val config by lazy { Config(ownSP) }
     private val ownEditor by lazy { ownSP.edit() }
-
 
     private fun set(key: String, any: Any) {
         when (any) {

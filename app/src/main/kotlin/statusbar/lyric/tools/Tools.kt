@@ -31,9 +31,16 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.text.Spanned
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.core.text.HtmlCompat
 import com.github.kyuubiran.ezxhelper.EzXHelper
 import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
@@ -48,6 +55,7 @@ import kotlin.properties.ReadWriteProperty
 
 @SuppressLint("StaticFieldLeak")
 object Tools {
+
     private var index: Int = 0
 
     val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
@@ -62,7 +70,6 @@ object Tools {
             false
         }
     }
-
 
     val togglePrompts: Boolean
         get() {

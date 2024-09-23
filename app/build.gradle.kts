@@ -4,8 +4,9 @@ import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.android)
 }
 
 val localProperties = Properties()
@@ -63,11 +64,26 @@ android {
 }
 
 dependencies {
-    compileOnly("de.robv.android.xposed:api:82")
+
+
+    compileOnly(libs.xposed)
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.miuix)
+
+    implementation(libs.ezXHelper)
+    implementation(libs.lyricGetterApi)
+    implementation(libs.ktsh)
+    implementation(libs.xkt)
+    implementation(libs.core)
+
     implementation(project(":blockmiui"))
-    implementation("com.github.kyuubiran:EzXHelper:2.2.0")
-    implementation("com.github.xiaowine:Lyric-Getter-Api:6.0.0")
-    implementation("com.jaredrummler:ktsh:1.0.0")
-    implementation("com.github.xiaowine:XKT:1.0.12")
-    implementation("com.google.zxing:core:3.5.2")
+
+    debugImplementation(libs.androidx.ui.tooling)
 }
