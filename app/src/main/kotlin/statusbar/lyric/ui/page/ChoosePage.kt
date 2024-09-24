@@ -25,49 +25,48 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import getWindowSize
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.ActivityTestTools.showView
 import statusbar.lyric.tools.ActivityTools.dataList
-import top.yukonga.miuix.kmp.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.MiuixSuperArrow
-import top.yukonga.miuix.kmp.MiuixSuperDialog
-import top.yukonga.miuix.kmp.MiuixTopAppBar
-import top.yukonga.miuix.kmp.basic.MiuixBox
-import top.yukonga.miuix.kmp.basic.MiuixButton
-import top.yukonga.miuix.kmp.basic.MiuixCard
-import top.yukonga.miuix.kmp.basic.MiuixLazyColumn
-import top.yukonga.miuix.kmp.basic.MiuixScaffold
-import top.yukonga.miuix.kmp.basic.MiuixSmallTitle
+import top.yukonga.miuix.kmp.basic.Box
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.LazyColumn
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
+import top.yukonga.miuix.kmp.extra.SuperArrow
+import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
-import top.yukonga.miuix.kmp.rememberMiuixTopAppBarState
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
+import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
 fun ChoosePage(navController: NavController) {
-    val scrollBehavior = MiuixScrollBehavior(rememberMiuixTopAppBarState())
+    val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
-    MiuixScaffold(
+    Scaffold(
         modifier = Modifier
             .imePadding()
             .fillMaxSize(),
         topBar = {
-            MiuixTopAppBar(
+            TopAppBar(
                 title = stringResource(R.string.choose_page),
                 color = Color.Transparent,
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 12.dp),
+                        modifier = Modifier.padding(start = 18.dp),
                         onClick = {
                             navController.popBackStack()
                         }
@@ -82,8 +81,8 @@ fun ChoosePage(navController: NavController) {
             )
         }
     ) {
-        MiuixBox {
-            MiuixLazyColumn(
+        Box {
+            LazyColumn(
                 modifier = Modifier
                     .height(getWindowSize().height.dp)
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
@@ -95,25 +94,23 @@ fun ChoosePage(navController: NavController) {
                 item {
                     Column {
                         dataList.forEach { data ->
-                            MiuixCard(
+                            Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                                insideMargin = DpSize(0.dp, 0.dp)
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
-                                MiuixSuperArrow(
+                                SuperArrow(
                                     title = "${data.textViewClassName} ${data.textViewId}",
                                     summary = "${data.parentViewClassName} ${data.parentViewId} textSize:${data.textSize}",
                                     onClick = {
                                         context.showView(data)
                                         showDialog.value = true
-                                    },
-                                    insideMargin = DpSize(16.dp, 16.dp)
+                                    }
                                 )
                                 ChooseDialog(showDialog, data)
                             }
                         }
-                        MiuixSmallTitle(
+                        SmallTitle(
                             text = stringResource(R.string.choose_page_tips)
                         )
                     }
@@ -125,11 +122,12 @@ fun ChoosePage(navController: NavController) {
 
 @Composable
 fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
-    if (!showDialog.value) return
     showDialog(
+        show = showDialog.value,
         content = {
-            MiuixSuperDialog(
+            SuperDialog(
                 title = stringResource(R.string.select_hook),
+                show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
                 },
@@ -137,7 +135,7 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.cancel),
                         onClick = {
@@ -146,7 +144,7 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
                         }
                     )
                     Spacer(Modifier.width(20.dp))
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.ok),
                         submit = true,

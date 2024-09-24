@@ -20,43 +20,42 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import getWindowSize
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
-import top.yukonga.miuix.kmp.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.MiuixSuperSwitch
-import top.yukonga.miuix.kmp.MiuixTopAppBar
-import top.yukonga.miuix.kmp.basic.MiuixBasicComponent
-import top.yukonga.miuix.kmp.basic.MiuixBox
-import top.yukonga.miuix.kmp.basic.MiuixCard
-import top.yukonga.miuix.kmp.basic.MiuixLazyColumn
-import top.yukonga.miuix.kmp.basic.MiuixScaffold
-import top.yukonga.miuix.kmp.basic.MiuixText
+import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.Box
+import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.LazyColumn
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
-import top.yukonga.miuix.kmp.rememberMiuixTopAppBarState
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
 fun ExtendPage(navController: NavController) {
-    val scrollBehavior = MiuixScrollBehavior(rememberMiuixTopAppBarState())
+    val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val titleSwitch = remember { mutableStateOf(config.titleSwitch) }
     val showDialog = remember { mutableStateOf(false) }
-    MiuixScaffold(
+    Scaffold(
         modifier = Modifier
             .imePadding()
             .fillMaxSize(),
         topBar = {
-            MiuixTopAppBar(
+            TopAppBar(
                 title = stringResource(R.string.extend_page),
                 color = Color.Transparent,
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 12.dp),
+                        modifier = Modifier.padding(start = 18.dp),
                         onClick = {
                             navController.popBackStack()
                         }
@@ -71,8 +70,8 @@ fun ExtendPage(navController: NavController) {
             )
         }
     ) {
-        MiuixBox {
-            MiuixLazyColumn(
+        Box {
+            LazyColumn(
                 modifier = Modifier
                     .height(getWindowSize().height.dp)
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
@@ -83,40 +82,36 @@ fun ExtendPage(navController: NavController) {
             ) {
                 item {
                     Column {
-                        MiuixCard(
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                            insideMargin = DpSize(0.dp, 0.dp)
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
-                            MiuixSuperSwitch(
+                            SuperSwitch(
                                 title = stringResource(R.string.title_switch),
                                 checked = titleSwitch.value,
                                 onCheckedChange = {
                                     titleSwitch.value = it
                                     config.titleSwitch = it
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
                             // TODO
                         }
-                        MiuixCard(
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                            insideMargin = DpSize(0.dp, 0.dp)
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
-                            MiuixBasicComponent(
+                            BasicComponent(
                                 leftAction = {
-                                    MiuixText(
+                                    Text(
                                         text = stringResource(R.string.reset_system_ui),
                                         color = Color.Red
                                     )
                                 },
                                 onClick = {
                                     showDialog.value = true
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
                         }
                     }

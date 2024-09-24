@@ -26,54 +26,52 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import getWindowSize
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTestTools.getClass
 import statusbar.lyric.tools.ActivityTestTools.waitResponse
 import statusbar.lyric.tools.Tools
-import top.yukonga.miuix.kmp.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.MiuixSuperArrow
-import top.yukonga.miuix.kmp.MiuixSuperDialog
-import top.yukonga.miuix.kmp.MiuixSuperSwitch
-import top.yukonga.miuix.kmp.MiuixTopAppBar
-import top.yukonga.miuix.kmp.basic.MiuixBasicComponent
-import top.yukonga.miuix.kmp.basic.MiuixBox
-import top.yukonga.miuix.kmp.basic.MiuixButton
-import top.yukonga.miuix.kmp.basic.MiuixCard
-import top.yukonga.miuix.kmp.basic.MiuixLazyColumn
-import top.yukonga.miuix.kmp.basic.MiuixScaffold
-import top.yukonga.miuix.kmp.basic.MiuixSmallTitle
-import top.yukonga.miuix.kmp.basic.MiuixText
+import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.Box
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.LazyColumn
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
+import top.yukonga.miuix.kmp.extra.SuperArrow
+import top.yukonga.miuix.kmp.extra.SuperDialog
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
-import top.yukonga.miuix.kmp.rememberMiuixTopAppBarState
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
+import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
 fun TestPage(navController: NavController) {
-    val scrollBehavior = MiuixScrollBehavior(rememberMiuixTopAppBarState())
+    val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
     val testMode = remember { mutableStateOf(config.testMode) }
     val relaxConditions = remember { mutableStateOf(config.relaxConditions) }
-    MiuixScaffold(
+    Scaffold(
         modifier = Modifier
             .imePadding()
             .fillMaxSize(),
         topBar = {
-            MiuixTopAppBar(
+            TopAppBar(
                 title = stringResource(R.string.hook_page),
                 color = Color.Transparent,
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 12.dp),
+                        modifier = Modifier.padding(start = 18.dp),
                         onClick = {
                             navController.popBackStack()
                         }
@@ -88,8 +86,8 @@ fun TestPage(navController: NavController) {
             )
         }
     ) {
-        MiuixBox {
-            MiuixLazyColumn(
+        Box {
+            LazyColumn(
                 modifier = Modifier
                     .height(getWindowSize().height.dp)
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
@@ -100,64 +98,54 @@ fun TestPage(navController: NavController) {
             ) {
                 item {
                     Column {
-                        MiuixCard(
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                            insideMargin = DpSize(0.dp, 0.dp)
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
-                            MiuixSuperSwitch(
+                            SuperSwitch(
                                 title = stringResource(R.string.test_mode),
                                 checked = testMode.value,
                                 onCheckedChange = {
                                     testMode.value = it
                                     config.testMode = it
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
                             AnimatedVisibility(testMode.value) {
                                 Column {
-                                    MiuixSuperSwitch(
+                                    SuperSwitch(
                                         title = stringResource(R.string.relax_conditions),
                                         summary = stringResource(R.string.relax_conditions_tips),
                                         checked = relaxConditions.value,
                                         onCheckedChange = {
                                             relaxConditions.value = it
                                             config.relaxConditions = it
-                                        },
-                                        insideMargin = DpSize(16.dp, 16.dp)
+                                        }
                                     )
-                                    MiuixSuperArrow(
+                                    SuperArrow(
                                         title = stringResource(R.string.get_hook),
                                         onClick = {
                                             waitResponse()
                                             context.getClass()
-                                        },
-                                        insideMargin = DpSize(16.dp, 16.dp)
+                                        }
                                     )
                                 }
                             }
                         }
-                        MiuixCard(
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                            insideMargin = DpSize(0.dp, 0.dp)
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
-                            MiuixBasicComponent(
-                                leftAction = {
-                                    MiuixText(
-                                        text = stringResource(R.string.reset_system_ui),
-                                        color = Color.Red
-                                    )
-                                },
+                            BasicComponent(
+                                title = stringResource(R.string.reset_system_ui),
+                                titleColor = Color.Red,
                                 onClick = {
                                     showDialog.value = true
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
                         }
-                        MiuixSmallTitle(
+                        SmallTitle(
                             text = stringResource(R.string.test_mode_tips).split("\n")[1]
                         )
                     }
@@ -172,10 +160,12 @@ fun TestPage(navController: NavController) {
 fun RestartDialog(showDialog: MutableState<Boolean>) {
     if (!showDialog.value) return
     showDialog(
+        show = showDialog.value,
         content = {
-            MiuixSuperDialog(
+            SuperDialog(
                 title = stringResource(R.string.reset_system_ui),
                 summary = stringResource(R.string.restart_systemui_tips),
+                show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
                 },
@@ -183,7 +173,7 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.cancel),
                         onClick = {
@@ -192,7 +182,7 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                         }
                     )
                     Spacer(Modifier.width(20.dp))
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.ok),
                         submit = true,

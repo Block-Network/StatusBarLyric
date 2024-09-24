@@ -27,36 +27,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import getWindowSize
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
-import top.yukonga.miuix.kmp.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.MiuixSuperArrow
-import top.yukonga.miuix.kmp.MiuixSuperDialog
-import top.yukonga.miuix.kmp.MiuixSuperSwitch
-import top.yukonga.miuix.kmp.MiuixTopAppBar
-import top.yukonga.miuix.kmp.basic.MiuixBasicComponent
-import top.yukonga.miuix.kmp.basic.MiuixBox
-import top.yukonga.miuix.kmp.basic.MiuixButton
-import top.yukonga.miuix.kmp.basic.MiuixCard
-import top.yukonga.miuix.kmp.basic.MiuixLazyColumn
-import top.yukonga.miuix.kmp.basic.MiuixScaffold
-import top.yukonga.miuix.kmp.basic.MiuixSmallTitle
-import top.yukonga.miuix.kmp.basic.MiuixText
-import top.yukonga.miuix.kmp.basic.MiuixTextField
+import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.Box
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.LazyColumn
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.TextField
+import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
+import top.yukonga.miuix.kmp.extra.SuperArrow
+import top.yukonga.miuix.kmp.extra.SuperDialog
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
-import top.yukonga.miuix.kmp.rememberMiuixTopAppBarState
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
+import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
 fun SystemSpecialPage(navController: NavController) {
-    val scrollBehavior = MiuixScrollBehavior(rememberMiuixTopAppBarState())
+    val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val mMiuiHideNetworkSpeed = remember { mutableStateOf(config.mMiuiHideNetworkSpeed) }
     val mMiuiPadOptimize = remember { mutableStateOf(config.mMiuiPadOptimize) }
     val mHyperOSTexture = remember { mutableStateOf(config.mHyperOSTexture) }
@@ -64,18 +62,18 @@ fun SystemSpecialPage(navController: NavController) {
     val showRadioDialog = remember { mutableStateOf(false) }
     val showCornerDialog = remember { mutableStateOf(false) }
     val showBgColorDialog = remember { mutableStateOf(false) }
-    MiuixScaffold(
+    Scaffold(
         modifier = Modifier
             .imePadding()
             .fillMaxSize(),
         topBar = {
-            MiuixTopAppBar(
+            TopAppBar(
                 title = stringResource(R.string.system_special_page),
                 color = Color.Transparent,
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 12.dp),
+                        modifier = Modifier.padding(start = 18.dp),
                         onClick = {
                             navController.popBackStack()
                         }
@@ -90,8 +88,8 @@ fun SystemSpecialPage(navController: NavController) {
             )
         }
     ) {
-        MiuixBox {
-            MiuixLazyColumn(
+        Box {
+            LazyColumn(
                 modifier = Modifier
                     .height(getWindowSize().height.dp)
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
@@ -102,91 +100,77 @@ fun SystemSpecialPage(navController: NavController) {
             ) {
                 item {
                     Column {
-                        MiuixCard(
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                            insideMargin = DpSize(0.dp, 0.dp)
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
-                            MiuixSuperSwitch(
+                            SuperSwitch(
                                 title = stringResource(R.string.miui_hide_network_speed),
                                 checked = mMiuiHideNetworkSpeed.value,
                                 onCheckedChange = {
                                     mMiuiHideNetworkSpeed.value = it
                                     config.mMiuiHideNetworkSpeed = it
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
-                            MiuixSuperSwitch(
+                            SuperSwitch(
                                 title = stringResource(R.string.miui_pad_optimize),
 
                                 checked = mMiuiPadOptimize.value,
                                 onCheckedChange = {
                                     mMiuiPadOptimize.value = it
                                     config.mMiuiPadOptimize = it
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
                         }
-                        MiuixSmallTitle(
+                        SmallTitle(
                             text = stringResource(R.string.hyperos)
                         )
-                        MiuixCard(
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 12.dp)
-                                .padding(bottom = 6.dp),
-                            insideMargin = DpSize(0.dp, 0.dp)
+                                .padding(bottom = 6.dp)
                         ) {
-                            MiuixSuperSwitch(
+                            SuperSwitch(
                                 title = stringResource(R.string.hyperos_texture),
                                 checked = mHyperOSTexture.value,
                                 onCheckedChange = {
                                     mHyperOSTexture.value = it
                                     config.mHyperOSTexture = it
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
-                            MiuixSuperArrow(
+                            SuperArrow(
                                 title = stringResource(R.string.hyperos_texture_radio),
                                 onClick = {
                                     showRadioDialog.value = true
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
-                            MiuixSuperArrow(
+                            SuperArrow(
                                 title = stringResource(R.string.hyperos_texture_corner),
                                 onClick = {
                                     showCornerDialog.value = true
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
-                            MiuixSuperArrow(
+                            SuperArrow(
                                 title = stringResource(R.string.hyperos_texture_color),
                                 onClick = {
                                     showBgColorDialog.value = true
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
+                                }
                             )
                         }
                     }
-                    MiuixCard(
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
-                        insideMargin = DpSize(0.dp, 0.dp)
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
                     ) {
-                        MiuixBasicComponent(
-                            leftAction = {
-                                MiuixText(
-                                    text = stringResource(R.string.reset_system_ui),
-                                    color = Color.Red
-                                )
-                            },
+                        BasicComponent(
+                            title = stringResource(R.string.reset_system_ui),
+                            titleColor = Color.Red,
                             onClick = {
                                 showDialog.value = true
-                            },
-                            insideMargin = DpSize(16.dp, 16.dp)
+                            }
                         )
                     }
                     RestartDialog(showDialog)
@@ -204,14 +188,16 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
     if (!showDialog.value) return
     val value = remember { mutableStateOf(config.mHyperOSTextureRadio.toString()) }
     showDialog(
+        show = showDialog.value,
         content = {
-            MiuixSuperDialog(
+            SuperDialog(
                 title = stringResource(R.string.hyperos_texture_radio),
+                show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
                 },
             ) {
-                MiuixTextField(
+                TextField(
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
@@ -226,7 +212,7 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.cancel),
                         onClick = {
@@ -235,7 +221,7 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                         }
                     )
                     Spacer(Modifier.width(20.dp))
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.ok),
                         submit = true,
@@ -256,14 +242,16 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
     if (!showDialog.value) return
     val value = remember { mutableStateOf(config.mHyperOSTextureCorner.toString()) }
     showDialog(
+        show = showDialog.value,
         content = {
-            MiuixSuperDialog(
+            SuperDialog(
                 title = stringResource(R.string.hyperos_texture_corner),
+                show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
                 },
             ) {
-                MiuixTextField(
+                TextField(
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
@@ -278,7 +266,7 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.cancel),
                         onClick = {
@@ -287,7 +275,7 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                         }
                     )
                     Spacer(Modifier.width(20.dp))
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.ok),
                         submit = true,
@@ -308,14 +296,16 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
     if (!showDialog.value) return
     val value = remember { mutableStateOf(config.mHyperOSTextureBgColor) }
     showDialog(
+        show = showDialog.value,
         content = {
-            MiuixSuperDialog(
+            SuperDialog(
                 title = stringResource(R.string.hyperos_texture_color),
+                show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
                 },
             ) {
-                MiuixTextField(
+                TextField(
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
@@ -328,7 +318,7 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.cancel),
                         onClick = {
@@ -337,7 +327,7 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
                         }
                     )
                     Spacer(Modifier.width(20.dp))
-                    MiuixButton(
+                    Button(
                         modifier = Modifier.weight(1f),
                         text = stringResource(R.string.ok),
                         submit = true,

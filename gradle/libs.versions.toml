@@ -9,7 +9,7 @@ ezXHelper = "2.2.0"
 kotlin = "2.0.20"
 ktsh = "1.0.0"
 lyricGetterApi = "6.0.0"
-miuix = "0.1.6"
+miuix = "0.2.0"
 xkt = "1.0.12"
 xposed = "82"
 
