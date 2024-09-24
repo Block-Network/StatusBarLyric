@@ -51,8 +51,6 @@ import statusbar.lyric.data.Data
 import statusbar.lyric.tools.ActivityTestTools.stopResponse
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.dataList
-import statusbar.lyric.tools.ActivityTools.getNotice
-import statusbar.lyric.tools.ActivityTools.getUpdate
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.Tools.isNotNull
@@ -124,8 +122,6 @@ class SettingsActivity : MIUIActivity() {
         requestPermission()
         registerReceiver()
         if (!BuildConfig.DEBUG) {
-            if (config.checkUpdate) getUpdate()
-            getNotice()
             LogTools.init(true)
         }
         LogTools.init(config.outLog)

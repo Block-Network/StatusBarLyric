@@ -3,10 +3,12 @@ package statusbar.lyric
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import getWindowSize
+import statusbar.lyric.ui.page.ChoosePage
 import statusbar.lyric.ui.page.ExtendPage
 import statusbar.lyric.ui.page.HomePage
 import statusbar.lyric.ui.page.IconPage
@@ -17,26 +19,18 @@ import statusbar.lyric.ui.theme.AppTheme
 
 @Composable
 fun App(
+    navController: NavHostController
 ) {
-    val navController = rememberNavController()
     val windowWidth = getWindowSize().width
 
     AppTheme {
         NavHost(
             navController = navController,
-            startDestination = "homePage",
-            enterTransition = {
-                slideInHorizontally(initialOffsetX = { windowWidth })
-            },
-            exitTransition = {
-                slideOutHorizontally(targetOffsetX = { -windowWidth })
-            },
-            popEnterTransition = {
-                slideInHorizontally(initialOffsetX = { -windowWidth })
-            },
-            popExitTransition = {
-                slideOutHorizontally(targetOffsetX = { windowWidth })
-            }
+            startDestination = "HomePage",
+            enterTransition = { slideInHorizontally(initialOffsetX = { windowWidth }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -windowWidth / 5 }) },
+            popEnterTransition = { slideInHorizontally(initialOffsetX = { -windowWidth / 5 }) },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { windowWidth }) }
         ) {
             composable("HomePage") { HomePage(navController) }
             composable("TestPage") { TestPage(navController) }
@@ -44,6 +38,7 @@ fun App(
             composable("IconPage") { IconPage(navController) }
             composable("ExtendPage") { ExtendPage(navController) }
             composable("SystemSpecialPage") { SystemSpecialPage(navController) }
+            composable("ChoosePage") { ChoosePage(navController) }
         }
     }
 }

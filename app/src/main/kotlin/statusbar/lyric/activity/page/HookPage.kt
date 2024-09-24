@@ -6,7 +6,6 @@ import cn.fkj233.ui.activity.data.BasePage
 import cn.fkj233.ui.dialog.MIUIDialog
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
-import statusbar.lyric.tools.ActivityTestTools.getClass
 import statusbar.lyric.tools.ActivityTestTools.waitResponse
 import statusbar.lyric.tools.Tools
 
@@ -30,7 +29,7 @@ class HookPage : BasePage() {
         )
         TextSA(textId = R.string.get_hook, onClickListener = {
             waitResponse()
-            activity.getClass()
+            //activity.getClass()
         }, dataBindingRecv = testModeBinding.getRecv(1))
         Line()
         TextSA(textId = R.string.reset_system_ui, onClickListener = {

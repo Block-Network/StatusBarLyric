@@ -44,7 +44,6 @@ import top.yukonga.miuix.kmp.basic.MiuixScaffold
 import top.yukonga.miuix.kmp.basic.MiuixSmallTitle
 import top.yukonga.miuix.kmp.rememberMiuixTopAppBarState
 
-
 @Preview(locale = "zh")
 @Composable
 fun HomePagePreview() {
@@ -56,15 +55,7 @@ fun HomePagePreview() {
 @Composable
 fun HomePage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberMiuixTopAppBarState())
-    val masterSwitchState = remember {
-        mutableStateOf(
-            if (isLoad) config.masterSwitch else {
-                /** false **/
-                true
-            }
-
-        )
-    }
+    val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
 
     MiuixScaffold(
         modifier = Modifier

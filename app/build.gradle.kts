@@ -17,7 +17,7 @@ android {
     compileSdk = 35
     val buildTime = System.currentTimeMillis()
     defaultConfig {
-        applicationId = "statusbar.lyric"
+        applicationId = "statusbar.lyric.compose"
         minSdk = 26
         targetSdk = 35
         versionCode = 650

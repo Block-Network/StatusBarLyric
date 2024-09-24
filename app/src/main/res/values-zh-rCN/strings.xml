@@ -40,7 +40,7 @@
     <string name="restart_systemui_tips">确定要重新启动系统界面吗？</string>
     <string name="master_switch">主开关</string>
     <string name="hook_page">锚点选择</string>
-    <string name="test_mode">锚点设置模式</string>
+    <string name="test_mode">锚点选择模式</string>
     <string name="relax_conditions">宽松过滤</string>
     <string name="relax_conditions_tips">允许更多锚点出现</string>
     <string name="lyric_page">歌词样式</string>
@@ -142,9 +142,9 @@
     <string name="limit_visibility_change">* 限制可见性更改</string>
     <string name="limit_visibility_change_tips">可以防止部分系统的特性导致有时间会出现</string>
     <string name="hide_lyric_when_lock_screen">* 锁定屏幕时隐藏歌词</string>
-    <string name="choose_page_tips">建议先关闭其他修改状态栏布局的模块后，再来此页面选择锚点\n有效的锚点选择：状态栏显示模块名字，并有白色背景\n\n选择锚点后，返回关闭锚点模式，重启系统模式即锚点设置完成</string>
+    <string name="choose_page_tips">建议先关闭其他修改状态栏布局的模块后，再来此页面选择锚点\n\n有效的锚点选择：状态栏显示模块名字，并有白色背景\n\n选择锚点后，返回关闭锚点模式，重启系统模式即锚点设置完成</string>
     <string name="hide_carrier">* 隐藏运营商</string>
-    <string name="test_mode_tips">第一次安装模块，请先设置锚点\n\n开启锚点设置模式，重启系统界面，获取锚定并选择后关闭锚点模式再次重启系统界面</string>
+    <string name="test_mode_tips">第一次安装模块，请先设置锚点\n开启锚点设置模式，重启系统界面，获取锚定并选择后关闭锚点模式再次重启系统界面</string>
     <string name="lyric_background_radius">歌词背景半径</string>
     <string name="lyric_background_radius_tips">范围：0–100</string>
     <string name="color_scheme1">方案 1</string>

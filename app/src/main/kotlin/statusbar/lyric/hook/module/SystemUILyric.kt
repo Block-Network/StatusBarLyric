@@ -755,7 +755,7 @@ class SystemUILyric : BaseHook() {
                 }
             }
 
-            if (isMIUI && config.mMIUIHideNetworkSpeed) {
+            if (isMIUI && config.mMiuiHideNetworkSpeed) {
                 moduleRes.getString(R.string.miui_hide_network_speed).log()
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
                     it.constructorFinder().first().createHook {

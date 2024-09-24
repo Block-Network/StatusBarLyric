@@ -32,7 +32,6 @@ class ChoosePage : BasePage() {
                         setLButton(activity.getString(R.string.cancel))
                         finally { dismiss() }
                     }.show()
-
                 })
             TitleText(activity.getString(R.string.a_a_a_tips).format(data.isRepeat, data.index, data.textSize))
             Line()

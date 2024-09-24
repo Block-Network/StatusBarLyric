@@ -109,7 +109,7 @@
     <string name="not_found_hook">未找到锚点</string>
     <string name="not_found_hook_tips">請嘗試重新啟動系統 UI，如果仍然無法找到，請聯繫開發人員</string>
     <string name="select_hook">是否選擇此锚点</string>
-    <string name="test_mode_tips">第一次安裝模組，請先設置錨點\n\n開啟錨點設置模式，重啟系統介面，獲取錨定並選擇后關閉錨點模式再次重啟系統介面</string>
+    <string name="test_mode_tips">第一次安裝模組，請先設置錨點\n開啟錨點設置模式，重啟系統介面，獲取錨定並選擇后關閉錨點模式再次重啟系統介面</string>
     <string name="restart_app_effect">重啟應用程式生效</string>
     <string name="force_the_icon_to_be_displayed">強制顯示圖示</string>
     <string name="a_a_a_tips">是否重複：%s；Index：%s；textSize：%s</string>
@@ -143,7 +143,7 @@
     <string name="limit_visibility_change">* 限制可見性更改</string>
     <string name="limit_visibility_change_tips">可以防止部分系統的特性導致有時間會出現</string>
     <string name="hide_lyric_when_lock_screen">* 鎖定螢幕時隱藏歌詞</string>
-    <string name="choose_page_tips">建議先關閉其他修改狀態欄佈局的模組后，再來此頁面選擇錨點\n有效的錨點選擇：狀態欄顯示模組名字，並有白色背景\n\n選擇錨點后，返回關閉錨點模式，重啟系統模式即錨點設置完成</string>
+    <string name="choose_page_tips">建議先關閉其他修改狀態欄佈局的模組后，再來此頁面選擇錨點\n\n有效的錨點選擇：狀態欄顯示模組名字，並有白色背景\n\n選擇錨點后，返回關閉錨點模式，重啟系統模式即錨點設置完成</string>
     <string name="hide_carrier">* 隱藏運營商</string>
     <string name="lyric_background_radius">歌詞背景半徑</string>
     <string name="lyric_background_radius_tips">範圍：0–100</string>

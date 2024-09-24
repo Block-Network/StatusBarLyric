@@ -18,7 +18,7 @@ import statusbar.lyric.tools.Tools.isMIUI
 class SystemSpecialPage : BasePage() {
     override fun onCreate() {
         if (isMIUI) {
-            TextSw(textId = R.string.miui_hide_network_speed, key = "mMIUIHideNetworkSpeed")
+            TextSw(textId = R.string.miui_hide_network_speed, key = "mMiuiHideNetworkSpeed")
             TextSw(textId = R.string.miui_pad_optimize, key = "mMiuiPadOptimize")
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) TextSw(textId = R.string.hide_carrier, key = "hideCarrier")
             Line()

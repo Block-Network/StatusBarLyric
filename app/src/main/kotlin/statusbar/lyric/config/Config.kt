@@ -325,14 +325,14 @@ class Config {
         }
     var animation: String
         get() {
-            return config.opt("animation", "ScaleXY")
+            return config.opt("animation", "Top")
         }
         set(value) {
             config.put("animation", value)
         }
     var interpolator: String
         get() {
-            return config.opt("interpolator", "Linear")
+            return config.opt("interpolator", "Accelerate&Decelerate")
         }
         set(value) {
             config.put("interpolator", value)
@@ -397,12 +397,12 @@ class Config {
             config.put("clickStatusBarToHideLyric", value)
         }
 
-    var mMIUIHideNetworkSpeed: Boolean
+    var mMiuiHideNetworkSpeed: Boolean
         get() {
-            return config.opt("mMIUIHideNetworkSpeed", false)
+            return config.opt("mMiuiHideNetworkSpeed", false)
         }
         set(value) {
-            config.put("mMIUIHideNetworkSpeed", value)
+            config.put("mMiuiHideNetworkSpeed", value)
         }
     var slideStatusBarCutSongs: Boolean
         get() {

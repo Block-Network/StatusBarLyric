@@ -1,6 +1,5 @@
 package statusbar.lyric.ui.page
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,22 +32,19 @@ import getWindowSize
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
-import statusbar.lyric.tools.ActivityTestTools.getClass
-import statusbar.lyric.tools.ActivityTestTools.waitResponse
-import statusbar.lyric.tools.Tools
+import statusbar.lyric.data.Data
+import statusbar.lyric.tools.ActivityTestTools.showView
+import statusbar.lyric.tools.ActivityTools.dataList
 import top.yukonga.miuix.kmp.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.MiuixSuperArrow
 import top.yukonga.miuix.kmp.MiuixSuperDialog
-import top.yukonga.miuix.kmp.MiuixSuperSwitch
 import top.yukonga.miuix.kmp.MiuixTopAppBar
-import top.yukonga.miuix.kmp.basic.MiuixBasicComponent
 import top.yukonga.miuix.kmp.basic.MiuixBox
 import top.yukonga.miuix.kmp.basic.MiuixButton
 import top.yukonga.miuix.kmp.basic.MiuixCard
 import top.yukonga.miuix.kmp.basic.MiuixLazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScaffold
 import top.yukonga.miuix.kmp.basic.MiuixSmallTitle
-import top.yukonga.miuix.kmp.basic.MiuixText
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.rememberMiuixTopAppBarState
@@ -57,18 +53,16 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 
 @Composable
-fun TestPage(navController: NavController) {
+fun ChoosePage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberMiuixTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
-    val testMode = remember { mutableStateOf(config.testMode) }
-    val relaxConditions = remember { mutableStateOf(config.relaxConditions) }
     MiuixScaffold(
         modifier = Modifier
             .imePadding()
             .fillMaxSize(),
         topBar = {
             MiuixTopAppBar(
-                title = stringResource(R.string.hook_page),
+                title = stringResource(R.string.choose_page),
                 color = Color.Transparent,
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
@@ -100,68 +94,29 @@ fun TestPage(navController: NavController) {
             ) {
                 item {
                     Column {
-                        MiuixCard(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                            insideMargin = DpSize(0.dp, 0.dp)
-                        ) {
-                            MiuixSuperSwitch(
-                                title = stringResource(R.string.test_mode),
-                                checked = testMode.value,
-                                onCheckedChange = {
-                                    testMode.value = it
-                                    config.testMode = it
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
-                            )
-                            AnimatedVisibility(testMode.value) {
-                                Column {
-                                    MiuixSuperSwitch(
-                                        title = stringResource(R.string.relax_conditions),
-                                        summary = stringResource(R.string.relax_conditions_tips),
-                                        checked = relaxConditions.value,
-                                        onCheckedChange = {
-                                            relaxConditions.value = it
-                                            config.relaxConditions = it
-                                        },
-                                        insideMargin = DpSize(16.dp, 16.dp)
-                                    )
-                                    MiuixSuperArrow(
-                                        title = stringResource(R.string.get_hook),
-                                        onClick = {
-                                            waitResponse()
-                                            context.getClass()
-                                        },
-                                        insideMargin = DpSize(16.dp, 16.dp)
-                                    )
-                                }
+                        dataList.forEach { data ->
+                            MiuixCard(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                                insideMargin = DpSize(0.dp, 0.dp)
+                            ) {
+                                MiuixSuperArrow(
+                                    title = "${data.textViewClassName} ${data.textViewId}",
+                                    summary = "${data.parentViewClassName} ${data.parentViewId} textSize:${data.textSize}",
+                                    onClick = {
+                                        context.showView(data)
+                                        showDialog.value = true
+                                    },
+                                    insideMargin = DpSize(16.dp, 16.dp)
+                                )
+                                ChooseDialog(showDialog, data)
                             }
                         }
-                        MiuixCard(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp),
-                            insideMargin = DpSize(0.dp, 0.dp)
-                        ) {
-                            MiuixBasicComponent(
-                                leftAction = {
-                                    MiuixText(
-                                        text = stringResource(R.string.reset_system_ui),
-                                        color = Color.Red
-                                    )
-                                },
-                                onClick = {
-                                    showDialog.value = true
-                                },
-                                insideMargin = DpSize(16.dp, 16.dp)
-                            )
-                        }
                         MiuixSmallTitle(
-                            text = stringResource(R.string.test_mode_tips).split("\n")[1]
+                            text = stringResource(R.string.choose_page_tips)
                         )
                     }
-                    RestartDialog(showDialog)
                 }
             }
         }
@@ -169,13 +124,12 @@ fun TestPage(navController: NavController) {
 }
 
 @Composable
-fun RestartDialog(showDialog: MutableState<Boolean>) {
+fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
     if (!showDialog.value) return
     showDialog(
         content = {
             MiuixSuperDialog(
-                title = stringResource(R.string.reset_system_ui),
-                summary = stringResource(R.string.restart_systemui_tips),
+                title = stringResource(R.string.select_hook),
                 onDismissRequest = {
                     showDialog.value = false
                 },
@@ -197,7 +151,12 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            Tools.shell("killall com.android.systemui", true)
+                            config.textViewClassName = data.textViewClassName
+                            config.textViewId = data.textViewId
+                            config.parentViewClassName = data.parentViewClassName
+                            config.parentViewId = data.parentViewId
+                            config.index = data.index
+                            config.textSize = data.textSize
                             dismissDialog()
                             showDialog.value = false
                         }
