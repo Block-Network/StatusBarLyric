@@ -137,6 +137,7 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>) {
         content = {
             SuperDialog(
                 title = stringResource(R.string.hyperos_texture_radio),
+                summary = stringResource(R.string.lyric_width_tips),
                 show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
@@ -147,7 +148,6 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    label = stringResource(R.string.lyric_width_tips),
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                             value.value = it

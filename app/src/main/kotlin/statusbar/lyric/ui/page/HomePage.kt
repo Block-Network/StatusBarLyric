@@ -2,14 +2,6 @@ package statusbar.lyric.ui.page
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -38,6 +30,7 @@ import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.MainActivity.Companion.isLoad
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.AnimTools
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
@@ -121,99 +114,87 @@ fun HomePage(navController: NavController) {
                         Column {
                             AnimatedVisibility(
                                 visible = masterSwitchState.value,
-                                enter = enterTransition(0),
-                                exit = exitTransition(100)
+                                enter = AnimTools().enterTransition(0),
+                                exit = AnimTools().exitTransition(100)
                             ) {
-                                SmallTitle(
-                                    text = stringResource(R.string.module_first)
-                                )
-                            }
-                            AnimatedVisibility(
-                                visible = masterSwitchState.value,
-                                enter = enterTransition(20),
-                                exit = exitTransition(80)
-                            ) {
-                                Card(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 12.dp)
-                                        .padding(bottom = 6.dp)
-                                ) {
-                                    SuperArrow(
-                                        title = stringResource(R.string.hook_page),
-                                        summary = stringResource(R.string.test_mode_tips).split("\n")[0],
-                                        onClick = {
-                                            navController.navigate("TestPage")
-                                        }
+                                Column {
+                                    SmallTitle(
+                                        text = stringResource(R.string.module_first)
                                     )
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 12.dp)
+                                            .padding(bottom = 6.dp)
+                                    ) {
+                                        SuperArrow(
+                                            title = stringResource(R.string.hook_page),
+                                            summary = stringResource(R.string.test_mode_tips).split("\n")[0],
+                                            onClick = {
+                                                navController.navigate("TestPage")
+                                            }
+                                        )
+                                    }
                                 }
                             }
                             AnimatedVisibility(
                                 visible = masterSwitchState.value,
-                                enter = enterTransition(40),
-                                exit = exitTransition(60)
+                                enter = AnimTools().enterTransition(40),
+                                exit = AnimTools().exitTransition(60)
                             ) {
-                                SmallTitle(
-                                    text = stringResource(R.string.module_second)
-                                )
-                            }
-                            AnimatedVisibility(
-                                visible = masterSwitchState.value,
-                                enter = enterTransition(60),
-                                exit = exitTransition(40)
-                            ) {
-                                Card(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 12.dp)
-                                        .padding(bottom = 6.dp)
-                                ) {
-                                    SuperArrow(
-                                        title = stringResource(R.string.lyric_page),
-                                        onClick = {
-                                            navController.navigate("LyricPage")
-                                        }
+                                Column {
+                                    SmallTitle(
+                                        text = stringResource(R.string.module_second)
                                     )
-                                    SuperArrow(
-                                        title = stringResource(R.string.icon_page),
-                                        onClick = {
-                                            navController.navigate("IconPage")
-                                        }
-                                    )
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 12.dp)
+                                            .padding(bottom = 6.dp)
+                                    ) {
+                                        SuperArrow(
+                                            title = stringResource(R.string.lyric_page),
+                                            onClick = {
+                                                navController.navigate("LyricPage")
+                                            }
+                                        )
+                                        SuperArrow(
+                                            title = stringResource(R.string.icon_page),
+                                            onClick = {
+                                                navController.navigate("IconPage")
+                                            }
+                                        )
+                                    }
                                 }
                             }
                             AnimatedVisibility(
                                 visible = masterSwitchState.value,
-                                enter = enterTransition(80),
-                                exit = exitTransition(20)
+                                enter = AnimTools().enterTransition(80),
+                                exit = AnimTools().exitTransition(20)
                             ) {
-                                SmallTitle(
-                                    text = stringResource(R.string.module_third)
-                                )
-                            }
-                            AnimatedVisibility(
-                                visible = masterSwitchState.value,
-                                enter = enterTransition(100),
-                                exit = exitTransition(0)
-                            ) {
-                                Card(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 12.dp)
-                                        .padding(bottom = 6.dp)
-                                ) {
-                                    SuperArrow(
-                                        title = stringResource(R.string.extend_page),
-                                        onClick = {
-                                            navController.navigate("ExtendPage")
-                                        }
+                                Column {
+                                    SmallTitle(
+                                        text = stringResource(R.string.module_third)
                                     )
-                                    SuperArrow(
-                                        title = stringResource(R.string.system_special_page),
-                                        onClick = {
-                                            navController.navigate("SystemSpecialPage")
-                                        }
-                                    )
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 12.dp)
+                                            .padding(bottom = 6.dp)
+                                    ) {
+                                        SuperArrow(
+                                            title = stringResource(R.string.extend_page),
+                                            onClick = {
+                                                navController.navigate("ExtendPage")
+                                            }
+                                        )
+                                        SuperArrow(
+                                            title = stringResource(R.string.system_special_page),
+                                            onClick = {
+                                                navController.navigate("SystemSpecialPage")
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -222,14 +203,4 @@ fun HomePage(navController: NavController) {
             }
         }
     }
-}
-
-fun enterTransition(delayMillis: Int = 0): EnterTransition {
-    val easing = CubicBezierEasing(0.36f, 1.44f, 0.48f, 1f)
-    return fadeIn(animationSpec = tween(400, delayMillis, easing)) + scaleIn(initialScale = 0.95f, animationSpec = tween(400, delayMillis, easing))
-}
-
-fun exitTransition(delayMillis: Int = 0): ExitTransition {
-    val easing = CubicBezierEasing(0.36f, 1.44f, 0.48f, 1f)
-    return fadeOut(animationSpec = tween(300, delayMillis, easing)) + scaleOut(targetScale = 0.95f, animationSpec = tween(300, delayMillis, easing))
 }

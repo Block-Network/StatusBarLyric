@@ -201,6 +201,7 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
         content = {
             SuperDialog(
                 title = stringResource(R.string.hyperos_texture_radio),
+                summary = stringResource(R.string.lyric_stroke_width_tips),
                 show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
@@ -211,7 +212,6 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    label = stringResource(R.string.lyric_stroke_width_tips),
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..400)) {
                             value.value = it
@@ -255,6 +255,7 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
         content = {
             SuperDialog(
                 title = stringResource(R.string.hyperos_texture_corner),
+                summary = stringResource(R.string.lyric_letter_spacing_tips),
                 show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
@@ -265,7 +266,6 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    label = stringResource(R.string.lyric_letter_spacing_tips),
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..50)) {
                             value.value = it
@@ -309,6 +309,7 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
         content = {
             SuperDialog(
                 title = stringResource(R.string.hyperos_texture_color),
+                summary = stringResource(R.string.lyric_color_and_transparency_tips),
                 show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
@@ -319,7 +320,6 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    label = stringResource(R.string.lyric_color_and_transparency_tips),
                     onValueChange = {
                         value.value = it
                     }
