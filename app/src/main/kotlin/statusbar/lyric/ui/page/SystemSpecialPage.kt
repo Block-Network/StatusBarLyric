@@ -105,8 +105,7 @@ fun SystemSpecialPage(navController: NavController) {
                         MiuixCard(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp)
-                                .padding(bottom = 6.dp),
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
                             insideMargin = DpSize(0.dp, 0.dp)
                         ) {
                             MiuixSuperSwitch(
@@ -199,7 +198,6 @@ fun SystemSpecialPage(navController: NavController) {
         }
     }
 }
-
 
 @Composable
 fun RadioDialog(showDialog: MutableState<Boolean>) {

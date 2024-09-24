@@ -49,7 +49,7 @@
     <string name="extend_page">扩展选项</string>
     <string name="choose_page">锚点选择页</string>
     <string name="lyric_width">歌词宽度</string>
-    <string name="lyric_width_tips">范围：0％–100％，0 代表自适应宽度</string>
+    <string name="lyric_width_tips">范围：0–100，0 代表自适应宽度</string>
     <string name="fixed_lyric_width">固定歌词宽度</string>
     <string name="fixed_lyric_width_tips">打开后，歌词的外部宽度固定，不随歌词变化而变化</string>
     <string name="lyric_color_and_transparency">歌词颜色和透明度</string>

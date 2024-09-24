@@ -84,7 +84,7 @@ fun HomePage(navController: NavController) {
                         MiuixCard(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
                             insideMargin = DpSize(0.dp, 0.dp)
                         ) {
                             Image(

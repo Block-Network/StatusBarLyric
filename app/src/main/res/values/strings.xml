@@ -50,7 +50,7 @@
     <string name="extend_page">Extend Page</string>
     <string name="choose_page">Choose Page</string>
     <string name="lyric_width">Lyric Width</string>
-    <string name="lyric_width_tips">Range: 0%–100% , 0 is Adaptive width</string>
+    <string name="lyric_width_tips">Range: 0–100, 0 is Adaptive width</string>
     <string name="fixed_lyric_width">Fixed lyric width</string>
     <string name="fixed_lyric_width_tips">When turned on, the outer width of the lyrics is fixed and does not change with the lyrics</string>
     <string name="lyric_color_and_transparency">Lyric Color And Transparency</string>
