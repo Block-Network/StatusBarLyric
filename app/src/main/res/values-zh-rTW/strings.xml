@@ -189,6 +189,4 @@
     <string name="change_all_icons_tips">請輸入Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">請輸入16進制顏色，多個顏色為漸變色橫向排布，使用英文逗號分隔</string>
     <string name="lyrics_are_gradient_and_transparent">* 歌詞漸變色和透明</string>
-    <string name="miui_or_hyper">MIUI/HyperOS</string>
-    <string name="hyperos">HyperOS</string>
 </resources>

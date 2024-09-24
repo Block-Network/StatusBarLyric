@@ -1,5 +1,7 @@
 package statusbar.lyric
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -21,15 +23,46 @@ fun App(
     navController: NavHostController
 ) {
     val windowWidth = getWindowSize().width
-
     AppTheme {
         NavHost(
             navController = navController,
             startDestination = "HomePage",
-            enterTransition = { slideInHorizontally(initialOffsetX = { windowWidth }) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { -windowWidth / 5 }) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { -windowWidth / 5 }) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { windowWidth }) }
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { windowWidth },
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -windowWidth / 5 },
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -windowWidth / 5 },
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { windowWidth },
+                    animationSpec = tween(
+                        durationMillis = 500,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            }
         ) {
             composable("HomePage") { HomePage(navController) }
             composable("TestPage") { TestPage(navController) }

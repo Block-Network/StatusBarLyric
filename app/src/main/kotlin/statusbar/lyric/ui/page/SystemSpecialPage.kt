@@ -1,5 +1,6 @@
 package statusbar.lyric.ui.page
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -100,10 +101,14 @@ fun SystemSpecialPage(navController: NavController) {
             ) {
                 item {
                     Column {
+                        SmallTitle(
+                            text = stringResource(R.string.miui_and_hyperos)
+                        )
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                                .padding(horizontal = 12.dp)
+                                .padding(bottom = 6.dp)
                         ) {
                             SuperSwitch(
                                 title = stringResource(R.string.miui_hide_network_speed),
@@ -140,24 +145,28 @@ fun SystemSpecialPage(navController: NavController) {
                                     config.mHyperOSTexture = it
                                 }
                             )
-                            SuperArrow(
-                                title = stringResource(R.string.hyperos_texture_radio),
-                                onClick = {
-                                    showRadioDialog.value = true
+                            AnimatedVisibility(mHyperOSTexture.value) {
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.hyperos_texture_radio),
+                                        onClick = {
+                                            showRadioDialog.value = true
+                                        }
+                                    )
+                                    SuperArrow(
+                                        title = stringResource(R.string.hyperos_texture_corner),
+                                        onClick = {
+                                            showCornerDialog.value = true
+                                        }
+                                    )
+                                    SuperArrow(
+                                        title = stringResource(R.string.hyperos_texture_color),
+                                        onClick = {
+                                            showBgColorDialog.value = true
+                                        }
+                                    )
                                 }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.hyperos_texture_corner),
-                                onClick = {
-                                    showCornerDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.hyperos_texture_color),
-                                onClick = {
-                                    showBgColorDialog.value = true
-                                }
-                            )
+                            }
                         }
                     }
                     Card(

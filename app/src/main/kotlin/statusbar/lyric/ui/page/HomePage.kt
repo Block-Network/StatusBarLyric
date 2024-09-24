@@ -2,6 +2,14 @@ package statusbar.lyric.ui.page
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -110,11 +118,21 @@ fun HomePage(navController: NavController) {
                                 }
                             )
                         }
-                        AnimatedVisibility(masterSwitchState.value) {
-                            Column {
+                        Column {
+                            AnimatedVisibility(
+                                visible = masterSwitchState.value,
+                                enter = enterTransition(0),
+                                exit = exitTransition(100)
+                            ) {
                                 SmallTitle(
                                     text = stringResource(R.string.module_first)
                                 )
+                            }
+                            AnimatedVisibility(
+                                visible = masterSwitchState.value,
+                                enter = enterTransition(20),
+                                exit = exitTransition(80)
+                            ) {
                                 Card(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -129,9 +147,21 @@ fun HomePage(navController: NavController) {
                                         }
                                     )
                                 }
+                            }
+                            AnimatedVisibility(
+                                visible = masterSwitchState.value,
+                                enter = enterTransition(40),
+                                exit = exitTransition(60)
+                            ) {
                                 SmallTitle(
                                     text = stringResource(R.string.module_second)
                                 )
+                            }
+                            AnimatedVisibility(
+                                visible = masterSwitchState.value,
+                                enter = enterTransition(60),
+                                exit = exitTransition(40)
+                            ) {
                                 Card(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -151,9 +181,21 @@ fun HomePage(navController: NavController) {
                                         }
                                     )
                                 }
+                            }
+                            AnimatedVisibility(
+                                visible = masterSwitchState.value,
+                                enter = enterTransition(80),
+                                exit = exitTransition(20)
+                            ) {
                                 SmallTitle(
                                     text = stringResource(R.string.module_third)
                                 )
+                            }
+                            AnimatedVisibility(
+                                visible = masterSwitchState.value,
+                                enter = enterTransition(100),
+                                exit = exitTransition(0)
+                            ) {
                                 Card(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -180,4 +222,14 @@ fun HomePage(navController: NavController) {
             }
         }
     }
+}
+
+fun enterTransition(delayMillis: Int = 0): EnterTransition {
+    val easing = CubicBezierEasing(0.36f, 1.44f, 0.48f, 1f)
+    return fadeIn(animationSpec = tween(400, delayMillis, easing)) + scaleIn(initialScale = 0.95f, animationSpec = tween(400, delayMillis, easing))
+}
+
+fun exitTransition(delayMillis: Int = 0): ExitTransition {
+    val easing = CubicBezierEasing(0.36f, 1.44f, 0.48f, 1f)
+    return fadeOut(animationSpec = tween(300, delayMillis, easing)) + scaleOut(targetScale = 0.95f, animationSpec = tween(300, delayMillis, easing))
 }

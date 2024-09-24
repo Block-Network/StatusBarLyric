@@ -190,6 +190,6 @@
     <string name="change_all_icons_tips">Please enter Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">Please enter hexadecimal color, multiple colors are gradient colors arranged horizontally, separated by English commas</string>
     <string name="lyrics_are_gradient_and_transparent">* Lyrics gradient and transparent</string>
-    <string name="miui_or_hyper">MIUI/HyperOS</string>
-    <string name="hyperos">HyperOS</string>
+    <string name="miui_and_hyperos" translatable="false">MIUI &amp; HyperOS</string>
+    <string name="hyperos" translatable="false">HyperOS</string>
 </resources>
