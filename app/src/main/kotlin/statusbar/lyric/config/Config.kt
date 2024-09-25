@@ -27,7 +27,6 @@ import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.tools.ConfigTools
 
-
 class Config {
     var config: ConfigTools
 

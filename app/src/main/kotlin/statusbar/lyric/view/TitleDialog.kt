@@ -22,11 +22,11 @@ import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import cn.fkj233.ui.activity.dp2px
 import com.github.kyuubiran.ezxhelper.EzXHelper
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.tools.LyricViewTools
+import statusbar.lyric.tools.Tools.dp2px
 
 @SuppressLint("InternalInsetResource", "DiscouragedApi")
 class TitleDialog(context: Context) : Dialog(context) {

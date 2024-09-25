@@ -18,7 +18,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.DisposableEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import cn.xiaowine.xkt.AcTool
 import statusbar.lyric.MainActivity.Companion.safeSP
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -88,7 +87,6 @@ class MainActivity : ComponentActivity() {
             LogTools.init(true)
         }
         LogTools.init(config.outLog)
-        AcTool.init(context)
     }
 
     private fun requestPermission() {

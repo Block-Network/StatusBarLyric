@@ -3,7 +3,6 @@ package statusbar.lyric.tools
 import android.view.View
 
 object BlurTools {
-
     private val setBackgroundBlur by lazy {
         View::class.java.getDeclaredMethod("setBackgroundBlur", Integer.TYPE, FloatArray::class.java, Array<IntArray>::class.java)
     }

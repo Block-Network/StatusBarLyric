@@ -13,7 +13,6 @@ import statusbar.lyric.ui.page.ExtendPage
 import statusbar.lyric.ui.page.HomePage
 import statusbar.lyric.ui.page.IconPage
 import statusbar.lyric.ui.page.LyricPage
-import statusbar.lyric.ui.page.MenuPage
 import statusbar.lyric.ui.page.SystemSpecialPage
 import statusbar.lyric.ui.page.TestPage
 import statusbar.lyric.ui.theme.AppTheme
@@ -66,7 +65,6 @@ fun App(
             }
         ) {
             composable("HomePage") { HomePage(navController) }
-            composable("MenuPage") { MenuPage(navController) }
             composable("ChoosePage") { ChoosePage(navController) }
             composable("TestPage") { TestPage(navController) }
             composable("LyricPage") { LyricPage(navController) }

@@ -20,8 +20,8 @@ android {
         applicationId = "statusbar.lyric.compose"
         minSdk = 26
         targetSdk = 35
-        versionCode = 650
-        versionName = "6.5.0"
+        versionCode = 699
+        versionName = "7.0.0-beta"
         aaptOptions.cruncherEnabled = false
         dependenciesInfo.includeInApk = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
@@ -79,11 +79,6 @@ dependencies {
 
     implementation(libs.ezXHelper)
     implementation(libs.lyricGetterApi)
-    implementation(libs.ktsh)
-    implementation(libs.xkt)
-    implementation(libs.core)
-
-    implementation(project(":blockmiui"))
 
     debugImplementation(libs.androidx.ui.tooling)
 }
