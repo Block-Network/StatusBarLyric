@@ -38,6 +38,7 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
@@ -56,14 +57,15 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 @Composable
 fun ExtendPage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
+    val hideTime = remember { mutableStateOf(config.hideTime) }
     val titleSwitch = remember { mutableStateOf(config.titleSwitch) }
     val titleShowWithSameLyric = remember { mutableStateOf(config.titleShowWithSameLyric) }
-    val dropdownOptions = listOf(
+    val titleGravityOptions = listOf(
         stringResource(R.string.title_gravity_start),
         stringResource(R.string.title_gravity_center),
         stringResource(R.string.title_gravity_end)
     )
-    val dropdownSelectedOption = remember { mutableIntStateOf(config.titleGravity) }
+    val titleGravitySelectedOption = remember { mutableIntStateOf(config.titleGravity) }
     val showDialog = remember { mutableStateOf(false) }
     val showTitleDelayDialog = remember { mutableStateOf(false) }
     val showTitleBgColorDialog = remember { mutableStateOf(false) }
@@ -112,6 +114,24 @@ fun ExtendPage(navController: NavController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
+                        ) {
+                            SuperSwitch(
+                                title = stringResource(R.string.hide_time),
+                                checked = hideTime.value,
+                                onCheckedChange = {
+                                    hideTime.value = it
+                                    config.hideTime = it
+                                }
+                            )
+                        }
+                        SmallTitle(
+                            text = stringResource(R.string.module_fifth)
+                        )
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp)
+                                .padding(bottom = 6.dp)
                         ) {
                             SuperSwitch(
                                 title = stringResource(R.string.title_switch),
@@ -163,10 +183,10 @@ fun ExtendPage(navController: NavController) {
                                     )
                                     SuperDropdown(
                                         title = stringResource(R.string.title_gravity),
-                                        items = dropdownOptions,
-                                        selectedIndex = dropdownSelectedOption.intValue,
+                                        items = titleGravityOptions,
+                                        selectedIndex = titleGravitySelectedOption.intValue,
                                         onSelectedIndexChange = { newOption ->
-                                            dropdownSelectedOption.intValue = newOption
+                                            titleGravitySelectedOption.intValue = newOption
                                             config.titleGravity = newOption
                                         },
                                     )
@@ -193,6 +213,8 @@ fun ExtendPage(navController: NavController) {
                         }
                     }
                     RestartDialog(showDialog)
+                }
+                item {
                     TitleDelayDialog(showTitleDelayDialog)
                     TitleBgColorDialog(showTitleBgColorDialog)
                     TitleRadiusDialog(showTitleRadiusDialog)

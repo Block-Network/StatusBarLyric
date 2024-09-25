@@ -521,7 +521,7 @@ class SystemUILyric : BaseHook() {
                 }
                 if (isRandomAnima) {
                     val animation = randomAnima
-                    val interpolator = config.interpolator
+                    val interpolator = config.lyricInterpolator
                     val duration = config.animationDuration
                     inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
                     outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
@@ -617,10 +617,10 @@ class SystemUILyric : BaseHook() {
                     }
                 }
 
-                val animation = config.animation
-                isRandomAnima = animation == "Random"
+                val animation = config.lyricAnimation
+                isRandomAnima = animation == 9
                 if (!isRandomAnima) {
-                    val interpolator = config.interpolator
+                    val interpolator = config.lyricInterpolator
                     val duration = config.animationDuration
                     inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
                     outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)

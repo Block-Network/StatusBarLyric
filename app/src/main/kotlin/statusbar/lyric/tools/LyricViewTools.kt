@@ -19,8 +19,8 @@ import android.widget.ImageView
 import statusbar.lyric.view.LyricSwitchView
 
 object LyricViewTools {
-    private var animaList: ArrayList<String> = arrayListOf("Top", "Bottom", "Start", "End", "Fade", "ScaleXY", "ScaleX", "ScaleY")
-    val randomAnima: String get() = animaList.random()
+    private var animaList: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8)
+    val randomAnima: Int get() = animaList.random()
 
     fun getAlphaAnimation(into: Boolean, duration: Long = 250): AnimationSet {
         val alphaAnimation = (if (into) AlphaAnimation(0f, 1F) else AlphaAnimation(1F, 0f)).apply {
@@ -31,17 +31,17 @@ object LyricViewTools {
         }
     }
 
-    fun switchViewInAnima(str: String?, interpolator: String?, time: Int?): Animation? {
+    fun switchViewInAnima(int: Int?, interpolator: Int?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
-        val translateAnimation: Animation? = when (str) {
-            "Top" -> TranslateAnimation(0f, 0f, 100f, 0f)
-            "Bottom" -> TranslateAnimation(0f, 0f, -100f, 0f)
-            "Start" -> TranslateAnimation(100f, 0f, 0f, 0f)
-            "End" -> TranslateAnimation(-100f, 0f, 0f, 0f)
-            "Fade" -> null
-            "ScaleXY" -> ScaleAnimation(0f, 1f, 0f, 1f)
-            "ScaleX" -> ScaleAnimation(0f, 1f, 1f, 1f)
-            "ScaleY" -> ScaleAnimation(1f, 1f, 0f, 1f)
+        val translateAnimation: Animation? = when (int) {
+            1 -> TranslateAnimation(0f, 0f, 100f, 0f)
+            2 -> TranslateAnimation(0f, 0f, -100f, 0f)
+            3 -> TranslateAnimation(100f, 0f, 0f, 0f)
+            4 -> TranslateAnimation(-100f, 0f, 0f, 0f)
+            5 -> null
+            6 -> ScaleAnimation(0f, 1f, 0f, 1f)
+            7 -> ScaleAnimation(0f, 1f, 1f, 1f)
+            8 -> ScaleAnimation(1f, 1f, 0f, 1f)
             else -> return null
         }?.apply {
             duration = t
@@ -53,17 +53,17 @@ object LyricViewTools {
     }
 
 
-    fun switchViewOutAnima(str: String?, time: Int?): Animation? {
+    fun switchViewOutAnima(str: Int?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
         val translateAnimation: Animation? = when (str) {
-            "Top" -> TranslateAnimation(0f, 0f, 0f, -100f)
-            "Bottom" -> TranslateAnimation(0f, 0f, 0f, +100f)
-            "Start" -> TranslateAnimation(0f, -100f, 0f, 0f)
-            "End" -> TranslateAnimation(0f, 0f + 100f, 0f, 0f)
-            "Fade" -> null
-            "ScaleXY" -> ScaleAnimation(1f, 0f, 1f, 0f)
-            "ScaleX" -> ScaleAnimation(1f, 0f, 1f, 1f)
-            "ScaleY" -> ScaleAnimation(1f, 1f, 1f, 0f)
+            1 -> TranslateAnimation(0f, 0f, 0f, -100f)
+            2 -> TranslateAnimation(0f, 0f, 0f, +100f)
+            3 -> TranslateAnimation(0f, -100f, 0f, 0f)
+            4 -> TranslateAnimation(0f, 0f + 100f, 0f, 0f)
+            5 -> null
+            6 -> ScaleAnimation(1f, 0f, 1f, 0f)
+            7 -> ScaleAnimation(1f, 0f, 1f, 1f)
+            8 -> ScaleAnimation(1f, 1f, 1f, 0f)
             else -> return null
         }?.apply {
             duration = t
@@ -73,14 +73,13 @@ object LyricViewTools {
         }
     }
 
-    private fun Animation.switchInterpolator(str: String?) {
-        interpolator = when (str) {
-            "Linear" -> LinearInterpolator()
-            "Accelerate" -> AccelerateInterpolator()
-            "Decelerate" -> DecelerateInterpolator()
-            "Accelerate&Decelerate" -> AccelerateDecelerateInterpolator()
-            "Overshoot" -> OvershootInterpolator()
-            "Bounce" -> BounceInterpolator()
+    private fun Animation.switchInterpolator(int: Int?) {
+        interpolator = when (int) {
+            1 -> AccelerateInterpolator()
+            2 -> DecelerateInterpolator()
+            3 -> AccelerateDecelerateInterpolator()
+            4 -> OvershootInterpolator()
+            5 -> BounceInterpolator()
             else -> LinearInterpolator()
         }
     }

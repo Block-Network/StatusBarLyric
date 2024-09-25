@@ -267,7 +267,7 @@ class Config {
         }
     var lyricStrokeWidth: Int
         get() {
-            return config.opt("lyricStrokeWidth", 130)
+            return config.opt("lyricStrokeWidth", 100)
         }
         set(value) {
             config.put("lyricStrokeWidth", value)
@@ -330,12 +330,26 @@ class Config {
         set(value) {
             config.put("animation", value)
         }
+    var lyricAnimation: Int
+        get() {
+            return config.opt("lyricAnimation", 1)
+        }
+        set(value) {
+            config.put("lyricAnimation", value)
+        }
     var interpolator: String
         get() {
             return config.opt("interpolator", "Accelerate&Decelerate")
         }
         set(value) {
             config.put("interpolator", value)
+        }
+    var lyricInterpolator: Int
+        get() {
+            return config.opt("lyricInterpolator", 3)
+        }
+        set(value) {
+            config.put("lyricInterpolator", value)
         }
     var animationDuration: Int
         get() {
