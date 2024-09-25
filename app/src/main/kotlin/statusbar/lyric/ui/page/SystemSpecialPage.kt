@@ -194,7 +194,6 @@ fun SystemSpecialPage(navController: NavController) {
 
 @Composable
 fun RadioDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.mHyperOSTextureRadio.toString()) }
     showDialog(
         show = showDialog.value,
@@ -248,7 +247,6 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun CornerDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.mHyperOSTextureCorner.toString()) }
     showDialog(
         show = showDialog.value,
@@ -302,7 +300,6 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun BgColorDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.mHyperOSTextureBgColor) }
     showDialog(
         show = showDialog.value,

@@ -130,7 +130,6 @@ fun LyricPage(navController: NavController) {
 
 @Composable
 fun LyricWidthDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.lyricWidth.toString()) }
     showDialog(
         show = showDialog.value,

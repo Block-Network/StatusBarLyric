@@ -251,7 +251,6 @@ fun IconPage(navController: NavController) {
 
 @Composable
 fun IconSizeDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconSize.toString()) }
     showDialog(
         show = showDialog.value,
@@ -304,7 +303,6 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconColorDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconColor) }
     showDialog(
         show = showDialog.value,
@@ -357,7 +355,6 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconBgColor) }
     showDialog(
         show = showDialog.value,
@@ -410,7 +407,6 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconTopMargins.toString()) }
     showDialog(
         show = showDialog.value,
@@ -463,7 +459,6 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconBottomMargins.toString()) }
     showDialog(
         show = showDialog.value,
@@ -516,7 +511,6 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconStartMargins.toString()) }
     showDialog(
         show = showDialog.value,
@@ -570,7 +564,6 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.changeAllIcons) }
     showDialog(
         show = showDialog.value,

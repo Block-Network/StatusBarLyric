@@ -158,7 +158,6 @@ fun TestPage(navController: NavController) {
 
 @Composable
 fun RestartDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     showDialog(
         show = showDialog.value,
         content = {

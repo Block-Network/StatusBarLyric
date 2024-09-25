@@ -206,7 +206,6 @@ fun ExtendPage(navController: NavController) {
 
 @Composable
 fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleDelayDuration.toString()) }
     showDialog(
         show = showDialog.value,
@@ -259,7 +258,6 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleColorAndTransparency) }
     showDialog(
         show = showDialog.value,
@@ -312,7 +310,6 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleBackgroundRadius.toString()) }
     showDialog(
         show = showDialog.value,
@@ -365,7 +362,6 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleBackgroundStrokeWidth.toString()) }
     showDialog(
         show = showDialog.value,
@@ -418,7 +414,6 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleBackgroundStrokeColorAndTransparency) }
     showDialog(
         show = showDialog.value,

@@ -53,7 +53,6 @@ fun HomePagePreview() {
 fun HomePage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
-
     Scaffold(
         modifier = Modifier
             .imePadding()
