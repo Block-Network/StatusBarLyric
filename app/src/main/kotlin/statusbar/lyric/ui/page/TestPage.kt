@@ -124,6 +124,8 @@ fun TestPage(navController: NavController) {
                                     )
                                     SuperArrow(
                                         title = stringResource(R.string.get_hook),
+                                        titleColor = MiuixTheme.colorScheme.primary,
+                                        summary = stringResource(R.string.tips1),
                                         onClick = {
                                             waitResponse()
                                             context.getClass()

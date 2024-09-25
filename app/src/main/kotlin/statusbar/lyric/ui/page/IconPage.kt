@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTools.changeConfig
 import statusbar.lyric.tools.AnimTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
@@ -114,6 +115,7 @@ fun IconPage(navController: NavController) {
                                 onCheckedChange = {
                                     iconSwitch.value = it
                                     config.iconSwitch = it
+                                    changeConfig()
                                 }
                             )
                         }
@@ -182,6 +184,8 @@ fun IconPage(navController: NavController) {
                                     )
                                     SuperArrow(
                                         title = stringResource(R.string.icon_start_margins),
+                                        titleColor = MiuixTheme.colorScheme.primary,
+                                        rightText = stringResource(R.string.tips1),
                                         onClick = {
                                             showIconStartMarginsDialog.value = true
                                         }
@@ -210,6 +214,7 @@ fun IconPage(navController: NavController) {
                                         onCheckedChange = {
                                             forceTheIconToBeDisplayed.value = it
                                             config.forceTheIconToBeDisplayed = it
+                                            changeConfig()
                                         }
                                     )
                                     SuperArrow(
@@ -293,6 +298,7 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
                             config.iconSize = if (value.value.isEmpty()) 0 else value.value.toInt()
                             dismissDialog()
                             showDialog.value = false
+                            changeConfig()
                         }
                     )
                 }
@@ -345,6 +351,7 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
                             config.iconColor = value.value.ifEmpty { "" }
                             dismissDialog()
                             showDialog.value = false
+                            changeConfig()
                         }
                     )
                 }
@@ -397,6 +404,7 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
                             config.iconBgColor = value.value.ifEmpty { "" }
                             dismissDialog()
                             showDialog.value = false
+                            changeConfig()
                         }
                     )
                 }
@@ -449,6 +457,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                             dismissDialog()
                             showDialog.value = false
                             config.iconBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else return@Button
+                            changeConfig()
                         }
                     )
                 }
@@ -501,6 +510,7 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                             dismissDialog()
                             showDialog.value = false
                             config.iconBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else return@Button
+                            changeConfig()
                         }
                     )
                 }
@@ -553,6 +563,7 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
                             dismissDialog()
                             showDialog.value = false
                             config.iconStartMargins = if (value.value.isNotEmpty()) value.value.toInt() else return@Button
+                            changeConfig()
                         }
                     )
                 }
@@ -606,6 +617,7 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
                             config.changeAllIcons = value.value.ifEmpty { "" }
                             dismissDialog()
                             showDialog.value = false
+                            changeConfig()
                         }
                     )
                 }
