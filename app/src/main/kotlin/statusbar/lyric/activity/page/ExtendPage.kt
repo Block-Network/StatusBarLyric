@@ -147,7 +147,7 @@ class ExtendPage : BasePage() {
         }
         TitleText(textId = R.string.title_tip)
         TextSw(textId = R.string.title_switch, key = "titleSwitch", defValue = true, onClickListener = { titleDelayDurationBinding.send(it) })
-        TextSw(textId = R.string.use_blue_get_title, key = "useBlueGetTitle", defValue = false, dataBindingRecv = titleDelayDurationBinding.binding.getRecv(1))
+        //TextSw(textId = R.string.use_blue_get_title, key = "useBlueGetTitle", defValue = false, dataBindingRecv = titleDelayDurationBinding.binding.getRecv(1))
         TextSw(textId = R.string.title_show_with_same_lyric, key = "titleShowWithSameLyric", dataBindingRecv = titleDelayDurationBinding.binding.getRecv(1))
         TextSA(textId = R.string.title_delay_duration, onClickListener = {
             MIUIDialog(activity) {

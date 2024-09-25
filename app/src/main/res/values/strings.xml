@@ -185,7 +185,7 @@
     <string name="title_gravity_start">Start</string>
     <string name="title_gravity_center">Center</string>
     <string name="title_gravity_end">End</string>
-    <string name="title_gravity">Title hint gravity</string>
+    <string name="title_gravity">Title hint alignment</string>
     <string name="change_all_icons">Change all icons</string>
     <string name="change_all_icons_tips">Please enter Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">Please enter hexadecimal color, multiple colors are gradient colors arranged horizontally, separated by English commas</string>

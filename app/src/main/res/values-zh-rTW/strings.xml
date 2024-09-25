@@ -170,7 +170,7 @@
     <string name="slide_status_bar_cut_songs_x_radius_tips">範圍：50–2000</string>
     <string name="slide_status_bar_cut_songs_y_radius">* 滑動切歌Y半徑</string>
     <string name="slide_status_bar_cut_songs_y_radius_tips">範圍：10–100</string>
-    <string name="title_delay_duration">標題提示隱藏延遲隱藏時間</string>
+    <string name="title_delay_duration">標題提示隱藏延遲時間</string>
     <string name="title_delay_duration_tips">範圍：0–10000，單位：毫秒</string>
     <string name="title_switch">標題提示開關</string>
     <string name="use_blue_get_title">使用藍牙獲取標題方案</string>
@@ -184,7 +184,7 @@
     <string name="title_gravity_start">開始</string>
     <string name="title_gravity_center">中心</string>
     <string name="title_gravity_end">結束</string>
-    <string name="title_gravity">標題提示重力</string>
+    <string name="title_gravity">標題提示對齊方式</string>
     <string name="change_all_icons">更改所有圖標</string>
     <string name="change_all_icons_tips">請輸入Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">請輸入16進制顏色，多個顏色為漸變色橫向排布，使用英文逗號分隔</string>

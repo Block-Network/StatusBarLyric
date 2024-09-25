@@ -170,7 +170,7 @@
     <string name="slide_status_bar_cut_songs_x_radius_tips">范围：50–2000</string>
     <string name="slide_status_bar_cut_songs_y_radius">* 滑动切歌 Y 半径</string>
     <string name="slide_status_bar_cut_songs_y_radius_tips">范围：10–100</string>
-    <string name="title_delay_duration">标题提示隐藏延迟隐藏时间</string>
+    <string name="title_delay_duration">标题提示隐藏延迟时间</string>
     <string name="title_delay_duration_tips">范围：0–10000，单位：毫秒</string>
     <string name="title_switch">标题提示开关</string>
     <string name="use_blue_get_title">使用蓝牙获取标题方案</string>
@@ -184,7 +184,7 @@
     <string name="title_gravity_start">开始</string>
     <string name="title_gravity_center">中心</string>
     <string name="title_gravity_end">结束</string>
-    <string name="title_gravity">标题提示居中</string>
+    <string name="title_gravity">标题提示对齐方式</string>
     <string name="change_all_icons">更改所有图标</string>
     <string name="change_all_icons_tips">请输入 Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">请输入 16 进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
