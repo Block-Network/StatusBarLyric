@@ -114,6 +114,7 @@ fun ChoosePage(navController: NavController) {
                             text = stringResource(R.string.choose_page_tips)
                         )
                     }
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
         }

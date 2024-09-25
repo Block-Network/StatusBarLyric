@@ -249,18 +249,17 @@ fun ExtendPage(navController: NavController) {
                             )
                         }
                     }
-                    RestartDialog(showDialog)
-                }
-                item {
-                    TitleDelayDialog(showTitleDelayDialog)
-                    TitleBgColorDialog(showTitleBgColorDialog)
-                    TitleRadiusDialog(showTitleRadiusDialog)
-                    TitleStrokeWidthDialog(showTitleStrokeWidthDialog)
-                    TitleStrokeColorDialog(showTitleStrokeColorDialog)
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
         }
     }
+    RestartDialog(showDialog)
+    TitleDelayDialog(showTitleDelayDialog)
+    TitleBgColorDialog(showTitleBgColorDialog)
+    TitleRadiusDialog(showTitleRadiusDialog)
+    TitleStrokeWidthDialog(showTitleStrokeWidthDialog)
+    TitleStrokeColorDialog(showTitleStrokeColorDialog)
 }
 
 @Composable

@@ -182,14 +182,15 @@ fun SystemSpecialPage(navController: NavController) {
                             }
                         )
                     }
-                    RestartDialog(showDialog)
-                    RadioDialog(showRadioDialog)
-                    CornerDialog(showCornerDialog)
-                    BgColorDialog(showBgColorDialog)
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
         }
     }
+    RestartDialog(showDialog)
+    RadioDialog(showRadioDialog)
+    CornerDialog(showCornerDialog)
+    BgColorDialog(showBgColorDialog)
 }
 
 @Composable

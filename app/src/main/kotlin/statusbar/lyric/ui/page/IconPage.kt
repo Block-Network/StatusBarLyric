@@ -240,18 +240,19 @@ fun IconPage(navController: NavController) {
                             )
                         }
                     }
-                    RestartDialog(showDialog)
-                    IconSizeDialog(showIconSizeDialog)
-                    IconColorDialog(showIconColorDialog)
-                    IconBgColorDialog(showIconBgColorDialog)
-                    IconTopMarginsDialog(showIconTopMarginsDialog)
-                    IconBottomMarginsDialog(showIconBottomMarginsDialog)
-                    IconStartMarginsDialog(showIconStartMarginsDialog)
-                    IconChangeAllIconsDialog(showIconChangeAllIconsDialog)
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
         }
     }
+    RestartDialog(showDialog)
+    IconSizeDialog(showIconSizeDialog)
+    IconColorDialog(showIconColorDialog)
+    IconBgColorDialog(showIconBgColorDialog)
+    IconTopMarginsDialog(showIconTopMarginsDialog)
+    IconBottomMarginsDialog(showIconBottomMarginsDialog)
+    IconStartMarginsDialog(showIconStartMarginsDialog)
+    IconChangeAllIconsDialog(showIconChangeAllIconsDialog)
 }
 
 @Composable

@@ -151,11 +151,12 @@ fun TestPage(navController: NavController) {
                             text = stringResource(R.string.test_mode_tips).split("\n")[1]
                         )
                     }
-                    RestartDialog(showDialog)
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
         }
     }
+    RestartDialog(showDialog)
 }
 
 @Composable

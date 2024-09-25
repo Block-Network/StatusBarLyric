@@ -124,6 +124,7 @@ fun LyricPage(navController: NavController) {
             )
         }
     ) {
+        LyricAnimDurationDialog(showLyricAnimDurationDialog)
         Box {
             LazyColumn(
                 modifier = Modifier
@@ -304,25 +305,25 @@ fun LyricPage(navController: NavController) {
                             )
                         }
                     }
-                    RestartDialog(showDialog)
-                    LyricWidthDialog(showLyricWidthDialog, lyricWidth)
-                    LyricSizeDialog(showLyricSizeDialog)
-                    LyricColorDialog(showLyricColorDialog)
-                    LyricGradientDialog(showLyricGradientDialog)
-                    LyricGradientBgColorDialog(showLyricGradientBgColorDialog)
-                    LyricBgRadiusDialog(showLyricBgRadiusDialog)
-                    LyricLetterSpacingDialog(showLyricLetterSpacingDialog)
-                    LyricStrokeWidthDialog(showLyricStrokeWidthDialog)
-                    LyricSpeedDialog(showLyricSpeedDialog)
-                    LyricTopMarginsDialog(showLyricTopMarginsDialog)
-                    LyricBottomMarginsDialog(showLyricBottomMarginsDialog)
-                    LyricStartMarginsDialog(showLyricStartMarginsDialog)
-                    LyricEndMarginsDialog(showLyricEndMarginsDialog)
-                    LyricAnimDurationDialog(showLyricAnimDurationDialog)
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
         }
     }
+    RestartDialog(showDialog)
+    LyricWidthDialog(showLyricWidthDialog, lyricWidth)
+    LyricSizeDialog(showLyricSizeDialog)
+    LyricColorDialog(showLyricColorDialog)
+    LyricGradientDialog(showLyricGradientDialog)
+    LyricGradientBgColorDialog(showLyricGradientBgColorDialog)
+    LyricBgRadiusDialog(showLyricBgRadiusDialog)
+    LyricLetterSpacingDialog(showLyricLetterSpacingDialog)
+    LyricStrokeWidthDialog(showLyricStrokeWidthDialog)
+    LyricSpeedDialog(showLyricSpeedDialog)
+    LyricTopMarginsDialog(showLyricTopMarginsDialog)
+    LyricBottomMarginsDialog(showLyricBottomMarginsDialog)
+    LyricStartMarginsDialog(showLyricStartMarginsDialog)
+    LyricEndMarginsDialog(showLyricEndMarginsDialog)
 }
 
 @Composable
