@@ -176,7 +176,7 @@ class Config {
         }
     var iconStartMargins: Int
         get() {
-            return config.opt("iconStart", 0)
+            return config.opt("iconStart", if (XposedOwnSP.config.mHyperOSTexture) 20 else 0)
         }
         set(value) {
             config.put("iconStart", value)
@@ -316,7 +316,7 @@ class Config {
             config.put("iconSize", value)
         }
 
-    private var forceTheIconToBeDisplayed: Boolean
+    var forceTheIconToBeDisplayed: Boolean
         get() {
             return config.opt("forceTheIconToBeDisplayed", false)
         }

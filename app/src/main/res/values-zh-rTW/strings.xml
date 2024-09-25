@@ -6,6 +6,7 @@
     <string name="module_first">前置條件</string>
     <string name="module_second">基礎設置</string>
     <string name="module_third">高級設置</string>
+    <string name="module_fourth">邊距設置</string>
     <string name="xposed_tips">如果無法顯示歌詞，請嘗試停止音樂軟體並重新啟動系統UI，並檢查Lyric Getter</string>
     <string name="config_reset_success">配置重置成功</string>
     <string name="have_new_version">有新版本</string>
@@ -77,7 +78,7 @@
     <string name="lyric_bottom_margins_tips">範圍：–100–100</string>
     <string name="icon_switch">圖示開關</string>
     <string name="icon_size">圖示大小</string>
-    <string name="icon_size_tips">範圍：狀態欄高度的 0％–100％，0代表以下時鐘</string>
+    <string name="icon_size_tips">範圍：狀態欄高度的 0％–100％，0 代表跟隨時間大小</string>
     <string name="icon_top_margins">圖示上邊距</string>
     <string name="icon_top_margins_tips">範圍：–100–100</string>
     <string name="icon_bottom_margins">圖示下邊距</string>

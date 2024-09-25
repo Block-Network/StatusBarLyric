@@ -6,6 +6,7 @@
     <string name="module_first">前置条件</string>
     <string name="module_second">基础设置</string>
     <string name="module_third">高级设置</string>
+    <string name="module_fourth">边距设置</string>
     <string name="xposed_tips">如果无法显示歌词，请尝试停止音乐软件并重新启动系统界面，并检查 Lyric Getter</string>
     <string name="config_reset_success">配置重置成功</string>
     <string name="have_new_version">有新版本</string>
@@ -77,7 +78,7 @@
     <string name="lyric_bottom_margins_tips">范围：–100–100</string>
     <string name="icon_switch">图标开关</string>
     <string name="icon_size">图标大小</string>
-    <string name="icon_size_tips">范围：状态栏高度的 0％–100％，0 代表以下时钟</string>
+    <string name="icon_size_tips">范围：状态栏高度的 0％–100％，0 代表跟随时间大小</string>
     <string name="icon_top_margins">图标上边距</string>
     <string name="icon_top_margins_tips">范围：–100–100</string>
     <string name="icon_bottom_margins">图标下边距</string>
