@@ -246,7 +246,7 @@ class Config {
         }
     var limitVisibilityChange: Boolean
         get() {
-            return config.opt("limitVisibilityChange", false)
+            return config.opt("limitVisibilityChange", true)
         }
         set(value) {
             config.put("limitVisibilityChange", value)

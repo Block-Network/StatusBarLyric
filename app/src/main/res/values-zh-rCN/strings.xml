@@ -141,7 +141,7 @@
     <string name="lyric_add_location">歌词添加位置</string>
     <string name="add_location_start">靠左</string>
     <string name="add_location_end">靠右</string>
-    <string name="hide_notification_icon">有歌词时自动隐藏通知图标</string>
+    <string name="hide_notification_icon">隐藏通知图标</string>
     <string name="limit_visibility_change">限制可见性更改</string>
     <string name="limit_visibility_change_tips">可以防止部分系统的特性导致有时间会出现</string>
     <string name="hide_lyric_when_lock_screen">锁定屏幕时隐藏歌词</string>

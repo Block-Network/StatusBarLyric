@@ -66,8 +66,8 @@
     <string name="lyric_stroke_width_tips">Range 0–400</string>
     <string name="lyric_speed">Lyric Speed</string>
     <string name="lyric_speed_tips">Range 0–20</string>
-    <string name="lyric_blurred_edges">* Lyric Blurred Edges</string>
-    <string name="lyric_blurred_edges_radius">* Lyric Blurred Edges Radius</string>
+    <string name="lyric_blurred_edges">Lyric Blurred Edges</string>
+    <string name="lyric_blurred_edges_radius">Lyric Blurred Edges Radius</string>
     <string name="lyric_blurred_edges_radius_tips">Range 0–100</string>
     <string name="lyric_top_margins">Lyric Top Margins</string>
     <string name="lyric_top_margins_tips">Range –100–100</string>
@@ -138,26 +138,26 @@
     <string name="lyrics_interpolator_bounce">Bounce</string>
     <string name="lyrics_animation_duration">Lyric Animation Duration</string>
     <string name="lyric_animation_duration_tips">Range 300~1000</string>
-    <string name="lyric_add_location">* Lyric Add Location</string>
+    <string name="lyric_add_location">Lyric Add Location</string>
     <string name="add_location_start">Start</string>
     <string name="add_location_end">End</string>
-    <string name="hide_notification_icon">Automatically hide notification icons when there are lyrics</string>
-    <string name="limit_visibility_change">* Limit Visibility Change</string>
+    <string name="hide_notification_icon">Automatically hide notification icons</string>
+    <string name="limit_visibility_change">Limit Visibility Change</string>
     <string name="limit_visibility_change_tips">It can prevent the characteristics of some systems from causing time to appear</string>
-    <string name="hide_lyric_when_lock_screen">* Hide Lyric When Lock Screen</string>
+    <string name="hide_lyric_when_lock_screen">Hide Lyric When Lock Screen</string>
     <string name="choose_page_tips">It is recommended to close other modules that modify the layout of the status bar first, and then come to this page to select Hook Points\nEffective Hook Point Selection: The status bar displays the module name, and the time is hidden</string>
-    <string name="hide_carrier">* Hide Carrier</string>
+    <string name="hide_carrier">Hide Carrier</string>
     <string name="lyrics_gradient_background_color_and_transparency">Lyric background gradient color and transparency</string>
     <string name="lyrics_gradient_background_color_and_transparency_tips">Please enter hexadecimal color, multiple colors are gradient colors arranged horizontally, separated by English commas</string>
     <string name="lyric_background_radius">Lyric Background Radius</string>
     <string name="lyric_background_radius_tips">Range 0–100</string>
     <string name="color_scheme1">Color Scheme 1</string>
     <string name="color_scheme2">Color Scheme 2</string>
-    <string name="lyric_color_scheme">* Lyric Color Scheme</string>
+    <string name="lyric_color_scheme">Lyric Color Scheme</string>
     <string name="tips1">Restart needed</string>
     <string name="dynamic_lyric_speed">Dynamic Lyric Speed(Beta)</string>
-    <string name="click_status_bar_to_hide_lyric">* Click Status Bar To Hide Lyric</string>
-    <string name="long_click_status_bar_stop">* Long Click Status Bar Stop Music</string>
+    <string name="click_status_bar_to_hide_lyric">Click Status Bar To Hide Lyric</string>
+    <string name="long_click_status_bar_stop">Long Click Status Bar Stop Music</string>
     <string name="system_special_page">System Special Page</string>
     <string name="miui_hide_network_speed">Hide Network Speed</string>
     <string name="miui_pad_optimize">tablet optimization</string>
@@ -168,11 +168,11 @@
     <string name="lyric_blurred_edges_type_end">Lyric Blurred Edges Type End</string>
     <string name="lyric_blurred_edges_type_start">Lyric Blurred Edges Type Start</string>
     <string name="lyric_blurred_edges_type_all">Lyric Blurred Edges Type All</string>
-    <string name="lyric_blurred_edges_type">* Lyric Blurred Edges Type</string>
-    <string name="slide_status_bar_cut_songs">* Slide Status Bar Cut Songs</string>
-    <string name="slide_status_bar_cut_songs_x_radius">* Slide Status Bar Cut Songs X Radius</string>
+    <string name="lyric_blurred_edges_type">Lyric Blurred Edges Type</string>
+    <string name="slide_status_bar_cut_songs">Slide Status Bar Cut Songs</string>
+    <string name="slide_status_bar_cut_songs_x_radius">Slide Status Bar Cut Songs X Radius</string>
     <string name="slide_status_bar_cut_songs_x_radius_tips">Range 50–2000</string>
-    <string name="slide_status_bar_cut_songs_y_radius">* Slide Status Bar Cut Songs Y Radius</string>
+    <string name="slide_status_bar_cut_songs_y_radius">Slide Status Bar Cut Songs Y Radius</string>
     <string name="slide_status_bar_cut_songs_y_radius_tips">Range 10–100</string>
     <string name="title_delay_duration">Floating title hint hides the delay</string>
     <string name="title_delay_duration_tips">Range: 0–10000,Unit: milliseconds</string>
@@ -192,7 +192,7 @@
     <string name="change_all_icons">Change all icons</string>
     <string name="change_all_icons_tips">Please enter Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">Please enter hexadecimal color, multiple colors are gradient colors arranged horizontally, separated by English commas</string>
-    <string name="lyrics_are_gradient_and_transparent">* Lyrics gradient and transparent</string>
+    <string name="lyrics_are_gradient_and_transparent">Lyrics gradient and transparent</string>
     <string name="miui_and_hyperos" translatable="false">MIUI &amp; HyperOS</string>
     <string name="hyperos" translatable="false">HyperOS</string>
 </resources>

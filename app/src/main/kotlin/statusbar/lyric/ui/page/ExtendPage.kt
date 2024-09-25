@@ -27,10 +27,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTools.changeConfig
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
@@ -58,6 +61,8 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 fun ExtendPage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val hideTime = remember { mutableStateOf(config.hideTime) }
+    val hideNotificationIcon = remember { mutableStateOf(config.hideNotificationIcon) }
+    val limitVisibilityChange = remember { mutableStateOf(config.limitVisibilityChange) }
     val titleSwitch = remember { mutableStateOf(config.titleSwitch) }
     val titleShowWithSameLyric = remember { mutableStateOf(config.titleShowWithSameLyric) }
     val titleGravityOptions = listOf(
@@ -121,6 +126,22 @@ fun ExtendPage(navController: NavController) {
                                 onCheckedChange = {
                                     hideTime.value = it
                                     config.hideTime = it
+                                }
+                            )
+                            SuperSwitch(
+                                title = stringResource(R.string.hide_notification_icon),
+                                checked = hideNotificationIcon.value,
+                                onCheckedChange = {
+                                    hideNotificationIcon.value = it
+                                    config.hideNotificationIcon = it
+                                }
+                            )
+                            SuperSwitch(
+                                title = stringResource(R.string.limit_visibility_change),
+                                checked = limitVisibilityChange.value,
+                                onCheckedChange = {
+                                    limitVisibilityChange.value = it
+                                    config.limitVisibilityChange = it
                                 }
                             )
                         }

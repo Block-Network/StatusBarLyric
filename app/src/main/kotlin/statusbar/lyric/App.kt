@@ -13,6 +13,7 @@ import statusbar.lyric.ui.page.ExtendPage
 import statusbar.lyric.ui.page.HomePage
 import statusbar.lyric.ui.page.IconPage
 import statusbar.lyric.ui.page.LyricPage
+import statusbar.lyric.ui.page.MenuPage
 import statusbar.lyric.ui.page.SystemSpecialPage
 import statusbar.lyric.ui.page.TestPage
 import statusbar.lyric.ui.theme.AppTheme
@@ -31,7 +32,7 @@ fun App(
                 slideInHorizontally(
                     initialOffsetX = { windowWidth },
                     animationSpec = tween(
-                        durationMillis = 500,
+                        durationMillis = 400,
                         easing = FastOutSlowInEasing
                     )
                 )
@@ -40,7 +41,7 @@ fun App(
                 slideOutHorizontally(
                     targetOffsetX = { -windowWidth / 5 },
                     animationSpec = tween(
-                        durationMillis = 500,
+                        durationMillis = 400,
                         easing = FastOutSlowInEasing
                     )
                 )
@@ -49,7 +50,7 @@ fun App(
                 slideInHorizontally(
                     initialOffsetX = { -windowWidth / 5 },
                     animationSpec = tween(
-                        durationMillis = 500,
+                        durationMillis = 400,
                         easing = FastOutSlowInEasing
                     )
                 )
@@ -58,19 +59,20 @@ fun App(
                 slideOutHorizontally(
                     targetOffsetX = { windowWidth },
                     animationSpec = tween(
-                        durationMillis = 500,
+                        durationMillis = 400,
                         easing = FastOutSlowInEasing
                     )
                 )
             }
         ) {
             composable("HomePage") { HomePage(navController) }
+            composable("MenuPage") { MenuPage(navController) }
+            composable("ChoosePage") { ChoosePage(navController) }
             composable("TestPage") { TestPage(navController) }
             composable("LyricPage") { LyricPage(navController) }
             composable("IconPage") { IconPage(navController) }
             composable("ExtendPage") { ExtendPage(navController) }
             composable("SystemSpecialPage") { SystemSpecialPage(navController) }
-            composable("ChoosePage") { ChoosePage(navController) }
         }
     }
 }

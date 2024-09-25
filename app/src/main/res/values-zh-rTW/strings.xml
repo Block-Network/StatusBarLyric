@@ -142,7 +142,7 @@
     <string name="lyric_add_location">歌詞添加位置</string>
     <string name="add_location_start">靠左</string>
     <string name="add_location_end">靠右</string>
-    <string name="hide_notification_icon">有歌詞時自動隱藏通知圖示</string>
+    <string name="hide_notification_icon">通知圖示</string>
     <string name="limit_visibility_change">限制可見性更改</string>
     <string name="limit_visibility_change_tips">可以防止部分系統的特性導致有時間會出現</string>
     <string name="hide_lyric_when_lock_screen">鎖定螢幕時隱藏歌詞</string>
