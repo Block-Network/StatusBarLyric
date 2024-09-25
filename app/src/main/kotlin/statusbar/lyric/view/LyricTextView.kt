@@ -36,8 +36,6 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
     private var viewWidth = 0f
     private var scrollSpeed = 4f
     private var currentX = 0f
-    private val lyricStartMargins = config.lyricStartMargins
-    private val lyricEndMargins = config.lyricEndMargins
     private val startScrollRunnable = Runnable { Choreographer.getInstance().postFrameCallback(this) }
 
     init {
@@ -78,7 +76,7 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
     }
 
     private fun updateScrollPosition() {
-        val realTextLength = textLength + lyricEndMargins + lyricStartMargins
+        val realTextLength = textLength + config.lyricStartMargins + config.lyricEndMargins
         val realLyricWidth = viewWidth
         if (realTextLength <= realLyricWidth) {
             currentX = 0f
@@ -101,7 +99,7 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
 
     private fun startScroll() {
         isScrolling = true
-        postDelayed(startScrollRunnable, 1000)
+        postDelayed(startScrollRunnable, config.animationDuration + if (config.dynamicLyricSpeed) 200L else 500L)
     }
 
     private fun stopScroll() {

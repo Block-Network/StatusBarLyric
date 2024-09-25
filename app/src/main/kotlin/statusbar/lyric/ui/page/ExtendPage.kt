@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTools.changeConfig
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
@@ -60,6 +61,8 @@ fun ExtendPage(navController: NavController) {
     val hideTime = remember { mutableStateOf(config.hideTime) }
     val hideNotificationIcon = remember { mutableStateOf(config.hideNotificationIcon) }
     val limitVisibilityChange = remember { mutableStateOf(config.limitVisibilityChange) }
+    val dynamicLyricSpeed = remember { mutableStateOf(config.dynamicLyricSpeed) }
+    val clickStatusBarToHideLyric = remember { mutableStateOf(config.clickStatusBarToHideLyric) }
     val titleSwitch = remember { mutableStateOf(config.titleSwitch) }
     val titleShowWithSameLyric = remember { mutableStateOf(config.titleShowWithSameLyric) }
     val titleGravityOptions = listOf(
@@ -139,6 +142,22 @@ fun ExtendPage(navController: NavController) {
                                 onCheckedChange = {
                                     limitVisibilityChange.value = it
                                     config.limitVisibilityChange = it
+                                }
+                            )
+                            SuperSwitch(
+                                title = stringResource(R.string.dynamic_lyric_speed),
+                                checked = dynamicLyricSpeed.value,
+                                onCheckedChange = {
+                                    dynamicLyricSpeed.value = it
+                                    config.dynamicLyricSpeed = it
+                                }
+                            )
+                            SuperSwitch(
+                                title = stringResource(R.string.click_status_bar_to_hide_lyric),
+                                checked = clickStatusBarToHideLyric.value,
+                                onCheckedChange = {
+                                    clickStatusBarToHideLyric.value = it
+                                    config.clickStatusBarToHideLyric = it
                                 }
                             )
                         }

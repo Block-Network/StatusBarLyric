@@ -737,7 +737,7 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            config.lyricStrokeWidth = if (value.value.isEmpty() || value.value.toInt() < 100) 100 else value.value.toInt()
+                            config.lyricStrokeWidth = value.value.toInt()
                             dismissDialog()
                             showDialog.value = false
                             changeConfig()
@@ -968,8 +968,8 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
         show = showDialog.value,
         content = {
             SuperDialog(
-                title = stringResource(R.string.lyric_start_margins),
-                summary = stringResource(R.string.lyric_start_margins_tips),
+                title = stringResource(R.string.lyric_end_margins),
+                summary = stringResource(R.string.lyric_end_margins_tips),
                 show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false

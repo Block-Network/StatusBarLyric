@@ -508,7 +508,7 @@ class SystemUILyric : BaseHook() {
                     if (i > 0) {
                         val proportion = i * 1.0 / displayWidth
                         "proportion:$proportion".log()
-                        val speed = 15 * proportion + 0.7
+                        val speed = 2 * proportion + 0.4
                         "speed:$speed".log()
                         setScrollSpeed(speed.toFloat())
                     }

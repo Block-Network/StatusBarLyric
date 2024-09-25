@@ -1,5 +1,6 @@
 package statusbar.lyric
 
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -23,6 +24,7 @@ fun App(
     navController: NavHostController
 ) {
     val windowWidth = getWindowSize().width
+    val easing = CubicBezierEasing(0.12f, 0.88f, 0.2f, 1f)
     AppTheme {
         NavHost(
             navController = navController,
@@ -31,8 +33,8 @@ fun App(
                 slideInHorizontally(
                     initialOffsetX = { windowWidth },
                     animationSpec = tween(
-                        durationMillis = 400,
-                        easing = FastOutSlowInEasing
+                        durationMillis = 500,
+                        easing = easing
                     )
                 )
             },
@@ -40,8 +42,8 @@ fun App(
                 slideOutHorizontally(
                     targetOffsetX = { -windowWidth / 5 },
                     animationSpec = tween(
-                        durationMillis = 400,
-                        easing = FastOutSlowInEasing
+                        durationMillis = 500,
+                        easing = easing
                     )
                 )
             },
@@ -49,8 +51,8 @@ fun App(
                 slideInHorizontally(
                     initialOffsetX = { -windowWidth / 5 },
                     animationSpec = tween(
-                        durationMillis = 400,
-                        easing = FastOutSlowInEasing
+                        durationMillis = 500,
+                        easing = easing
                     )
                 )
             },
@@ -58,8 +60,8 @@ fun App(
                 slideOutHorizontally(
                     targetOffsetX = { windowWidth },
                     animationSpec = tween(
-                        durationMillis = 400,
-                        easing = FastOutSlowInEasing
+                        durationMillis = 500,
+                        easing = easing
                     )
                 )
             }
