@@ -33,7 +33,6 @@ import android.os.Looper
 import android.widget.Toast
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
-import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.LogTools.log
 import kotlin.system.exitProcess

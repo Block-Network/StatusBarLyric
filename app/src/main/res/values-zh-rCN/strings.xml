@@ -143,4 +143,5 @@
     <string name="lyrics_are_gradient_and_transparent_tips">请输入 16 进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
     <string name="lyrics_are_gradient_and_transparent">歌词渐变色和透明度</string>
     <string name="color_error">输入的颜色错误，请检查</string>
+    <string name="restart_app">重启软件</string>
 </resources>

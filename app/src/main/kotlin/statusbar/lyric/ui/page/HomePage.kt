@@ -32,6 +32,7 @@ import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.MainActivity.Companion.isLoad
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.AnimTools
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
@@ -136,6 +137,25 @@ fun HomePage(navController: NavController) {
                                         onCheckedChange = {
                                             outLog.value = it
                                             config.outLog = it
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                        AnimatedVisibility(
+                            visible = !masterSwitchState.value,
+                        ) {
+                            Column {
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 12.dp)
+                                        .padding(bottom = 6.dp)
+                                ) {
+                                    SuperArrow(
+                                        title = stringResource(R.string.restart_app),
+                                        onClick = {
+                                            ActivityTools.restartApp()
                                         }
                                     )
                                 }
