@@ -142,4 +142,5 @@
     <string name="change_all_icons_tips">請輸入 Base64</string>
     <string name="lyrics_are_gradient_and_transparent_tips">請輸入 16 進位制顏色，多個顏色為漸變色橫向排布，使用英文逗號分隔</string>
     <string name="lyrics_are_gradient_and_transparent">歌詞漸變色和透明度</string>
+    <string name="color_error">输入的颜色错误，请检查</string>
 </resources>

@@ -144,4 +144,6 @@
     <string name="lyrics_are_gradient_and_transparent">Lyrics gradient and transparent</string>
     <string name="miui_and_hyperos" translatable="false">MIUI &amp; HyperOS</string>
     <string name="hyperos" translatable="false">HyperOS</string>
+    <string name="color_error">The color entered is incorrect, please check</string>
+
 </resources>

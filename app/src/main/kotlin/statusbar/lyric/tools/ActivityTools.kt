@@ -26,11 +26,14 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.R
+import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.LogTools.log
 import kotlin.system.exitProcess
@@ -64,6 +67,20 @@ object ActivityTools {
         } catch (e: RuntimeException) {
             e.printStackTrace()
         }
+    }
+
+    fun colorCheck(value: String, unit: (String) -> Unit, default: String = "") {
+        if (value.isEmpty()) {
+            unit(default)
+        } else {
+            try {
+                Color.parseColor(value)
+            } catch (e: Exception) {
+                showToastOnLooper(context.getString(R.string.color_error))
+                return
+            }
+        }
+        unit(value)
     }
 
     fun checkInstalled(pkgName: String): ApplicationInfo? {

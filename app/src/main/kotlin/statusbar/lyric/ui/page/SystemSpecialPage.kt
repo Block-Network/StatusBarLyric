@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
@@ -351,7 +352,12 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            config.mHyperOSTextureBgColor = value.value.ifEmpty { "#15818181" }
+                            ActivityTools.colorCheck(
+                                value.value,
+                                unit = {
+                                    config.mHyperOSTextureBgColor = it
+                                }, "#15818181"
+                            )
                             dismissDialog()
                             showDialog.value = false
                         }

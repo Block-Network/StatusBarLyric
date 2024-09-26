@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
@@ -451,7 +452,7 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
                     backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
@@ -474,7 +475,11 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            config.lyricColor = value.value.ifEmpty { "" }
+                            ActivityTools.colorCheck(
+                                value.value,
+                                unit = {
+                                    config.lyricColor = it
+                                })
                             dismissDialog()
                             showDialog.value = false
                             changeConfig()
@@ -505,7 +510,7 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
                     backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
@@ -528,7 +533,11 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            config.lyricGradientColor = value.value.ifEmpty { "" }
+                            ActivityTools.colorCheck(
+                                value.value,
+                                unit = {
+                                    config.lyricGradientColor = it
+                                })
                             dismissDialog()
                             showDialog.value = false
                         }
@@ -558,7 +567,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
                     backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
@@ -581,7 +590,11 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            config.lyricBackgroundColor = value.value.ifEmpty { "" }
+                            ActivityTools.colorCheck(
+                                value.value,
+                                unit = {
+                                    config.lyricBackgroundColor = it
+                                })
                             dismissDialog()
                             showDialog.value = false
                             changeConfig()

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
 import statusbar.lyric.tools.AnimTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
@@ -348,7 +349,11 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            config.iconColor = value.value.ifEmpty { "" }
+                            ActivityTools.colorCheck(
+                                value.value,
+                                unit = {
+                                    config.iconColor = it
+                                })
                             dismissDialog()
                             showDialog.value = false
                             changeConfig()
@@ -402,7 +407,11 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            config.iconBgColor = value.value.ifEmpty { "" }
+                            ActivityTools.colorCheck(
+                                value.value,
+                                unit = {
+                                    config.iconBgColor = it
+                                })
                             dismissDialog()
                             showDialog.value = false
                             changeConfig()

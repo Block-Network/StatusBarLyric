@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
@@ -533,6 +534,12 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
+                            ActivityTools.colorCheck(
+                                value.value,
+                                unit = {
+                                    config.lyricColor = it
+                                }, "#000000"
+                            )
                             config.titleColorAndTransparency = value.value.ifEmpty { "#000000" }
                             dismissDialog()
                             showDialog.value = false
@@ -692,7 +699,12 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            config.titleBackgroundStrokeColorAndTransparency = value.value.ifEmpty { "#FFFFFF" }
+                            ActivityTools.colorCheck(
+                                value.value,
+                                unit = {
+                                    config.titleBackgroundStrokeColorAndTransparency = it
+                                }, "#FFFFFF"
+                            )
                             dismissDialog()
                             showDialog.value = false
                         }

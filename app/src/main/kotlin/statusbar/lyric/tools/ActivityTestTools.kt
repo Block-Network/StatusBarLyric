@@ -29,6 +29,7 @@ import android.widget.Toast
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.data.Data
+import statusbar.lyric.tools.ActivityTools.showToastOnLooper
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.Tools.goMainThread
 import java.util.Timer
@@ -70,7 +71,7 @@ object ActivityTestTools {
             override fun run() {
                 stopResponse()
                 goMainThread {
-                    Toast.makeText(context, R.string.broadcast_receive_timeout, Toast.LENGTH_LONG).show()
+                    showToastOnLooper(context.getString(R.string.broadcast_receive_timeout))
                 }
             }
         }, 3000)
