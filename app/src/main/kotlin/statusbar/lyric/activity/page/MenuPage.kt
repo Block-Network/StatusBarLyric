@@ -1,4 +1,4 @@
-package statusbar.lyric.activity.page
+//package statusbar.lyric.activity.page
 //
 //import android.content.ComponentName
 //import android.content.pm.PackageManager

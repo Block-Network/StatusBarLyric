@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -61,9 +60,7 @@ fun TestPage(navController: NavController) {
     val testMode = remember { mutableStateOf(config.testMode) }
     val relaxConditions = remember { mutableStateOf(config.relaxConditions) }
     Scaffold(
-        modifier = Modifier
-            .imePadding()
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = stringResource(R.string.hook_page),
@@ -125,7 +122,7 @@ fun TestPage(navController: NavController) {
                                     SuperArrow(
                                         title = stringResource(R.string.get_hook),
                                         titleColor = MiuixTheme.colorScheme.primary,
-                                        summary = stringResource(R.string.tips1),
+                                        rightText = stringResource(R.string.tips1),
                                         onClick = {
                                             waitResponse()
                                             context.getClass()

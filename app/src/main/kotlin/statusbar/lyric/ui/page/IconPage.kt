@@ -67,9 +67,7 @@ fun IconPage(navController: NavController) {
     val showIconStartMarginsDialog = remember { mutableStateOf(false) }
     val showIconChangeAllIconsDialog = remember { mutableStateOf(false) }
     Scaffold(
-        modifier = Modifier
-            .imePadding()
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = stringResource(R.string.icon_page),

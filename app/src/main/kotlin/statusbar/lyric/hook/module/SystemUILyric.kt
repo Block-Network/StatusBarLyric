@@ -212,7 +212,7 @@ class SystemUILyric : BaseHook() {
             visibility = View.GONE
         }
     }
-    private lateinit var mMIUINetworkSpeedView: TextView
+    private lateinit var mMiuiNetworkSpeedView: TextView
     private val titleDialog by lazy {
         TitleDialog(context).apply {
 //            val location = IntArray(2)
@@ -254,7 +254,7 @@ class SystemUILyric : BaseHook() {
                     if (isPlaying && !isHiding) {
                         if (hookParam.args[0] == View.VISIBLE) {
                             val view = hookParam.thisObject as View
-                            if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMIUINetworkSpeedView.isInitialized && mMIUINetworkSpeedView == view) || (this@SystemUILyric::mPadClockView.isInitialized && mPadClockView == view)) {
+                            if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMiuiNetworkSpeedView.isInitialized && mMiuiNetworkSpeedView == view) || (this@SystemUILyric::mPadClockView.isInitialized && mPadClockView == view)) {
                                 hookParam.args[0] = View.GONE
                             }
                         }
@@ -382,7 +382,7 @@ class SystemUILyric : BaseHook() {
                                                     if (isClick && isPlaying) {
                                                         moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
                                                         isHiding.log()
-                                                        if (isHiding) {
+                                                        if (isHiding && lastLyric.isNotEmpty()) {
                                                             isHiding = false
                                                             hookParam.result = true
                                                             changeLyric(lastLyric, 0)
@@ -499,7 +499,7 @@ class SystemUILyric : BaseHook() {
             if (config.hideTime) clockView.hideView()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.hideView()
-            if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
+            if (this::mMiuiNetworkSpeedView.isInitialized) mMiuiNetworkSpeedView.hideView()
             if (this::mPadClockView.isInitialized) mPadClockView.hideView()
             lyricView.apply {
                 width = getLyricWidth(getPaint(), lyric)
@@ -552,7 +552,7 @@ class SystemUILyric : BaseHook() {
 
     private fun hideLyric(anim: Boolean = true) {
         if (isStop) return
-        if (!isHiding && isPlaying && !anim) {
+        if (!isHiding && isPlaying && anim) {
             isPlaying = false
             isStop = true
         }
@@ -564,7 +564,7 @@ class SystemUILyric : BaseHook() {
             if (config.titleSwitch) titleDialog.hideTitle()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
-            if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.showView()
+            if (this::mMiuiNetworkSpeedView.isInitialized) mMiuiNetworkSpeedView.showView()
             if (this::mPadClockView.isInitialized) mPadClockView.showView()
         }
     }
@@ -760,7 +760,7 @@ class SystemUILyric : BaseHook() {
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
                     it.constructorFinder().first().createHook {
                         after { hookParam ->
-                            mMIUINetworkSpeedView = hookParam.thisObject as TextView
+                            mMiuiNetworkSpeedView = hookParam.thisObject as TextView
                         }
                     }
                     it.methodFinder().filterByName("setVisibilityByController").first().createHook {

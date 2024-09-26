@@ -99,9 +99,7 @@ fun LyricPage(navController: NavController) {
     val showLyricEndMarginsDialog = remember { mutableStateOf(false) }
     val showLyricAnimDurationDialog = remember { mutableStateOf(false) }
     Scaffold(
-        modifier = Modifier
-            .imePadding()
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = stringResource(R.string.lyric_page),

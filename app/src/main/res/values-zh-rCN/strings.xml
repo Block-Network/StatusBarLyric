@@ -9,6 +9,7 @@
     <string name="module_fourth">边距设置</string>
     <string name="module_fifth">悬浮标题</string>
     <string name="module_sixth">动效设置</string>
+    <string name="module_extend">修改本页面后请重启系统界面及播放器</string>
     <string name="xposed_tips">如果无法显示歌词，请尝试停止音乐软件并重新启动系统界面，并检查 Lyric Getter</string>
     <string name="config_reset_success">配置重置成功</string>
     <string name="have_new_version">有新版本</string>
@@ -169,7 +170,7 @@
     <string name="lyric_blurred_edges_type_all">两边</string>
     <string name="lyric_blurred_edges_type">歌词模糊边缘类型</string>
     <string name="slide_status_bar_cut_songs">状态栏滑动切歌</string>
-    <string name="slide_status_bar_cut_songs_x_radius">滑动切歌X半径</string>
+    <string name="slide_status_bar_cut_songs_x_radius">滑动切歌 X 半径</string>
     <string name="slide_status_bar_cut_songs_x_radius_tips">范围：50–2000</string>
     <string name="slide_status_bar_cut_songs_y_radius">滑动切歌 Y 半径</string>
     <string name="slide_status_bar_cut_songs_y_radius_tips">范围：10–100</string>

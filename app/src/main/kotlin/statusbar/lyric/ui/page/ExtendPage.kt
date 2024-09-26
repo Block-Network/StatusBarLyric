@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -27,11 +26,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
-import statusbar.lyric.tools.ActivityTools.changeConfig
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
@@ -60,9 +60,17 @@ fun ExtendPage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val hideTime = remember { mutableStateOf(config.hideTime) }
     val hideNotificationIcon = remember { mutableStateOf(config.hideNotificationIcon) }
+    val hideLyricWhenLockScreen = remember { mutableStateOf(config.hideLyricWhenLockScreen) }
+    val lyricColorSchemeOptions = listOf(
+        stringResource(R.string.color_scheme1),
+        stringResource(R.string.color_scheme2)
+    )
+    val lyricColorSchemeSelectedOption = remember { mutableIntStateOf(config.lyricColorScheme) }
+    val longClickStatusBarStop = remember { mutableStateOf(config.longClickStatusBarStop) }
+    val clickStatusBarToHideLyric = remember { mutableStateOf(config.clickStatusBarToHideLyric) }
+    val slideStatusBarCutSongs = remember { mutableStateOf(config.slideStatusBarCutSongs) }
     val limitVisibilityChange = remember { mutableStateOf(config.limitVisibilityChange) }
     val dynamicLyricSpeed = remember { mutableStateOf(config.dynamicLyricSpeed) }
-    val clickStatusBarToHideLyric = remember { mutableStateOf(config.clickStatusBarToHideLyric) }
     val titleSwitch = remember { mutableStateOf(config.titleSwitch) }
     val titleShowWithSameLyric = remember { mutableStateOf(config.titleShowWithSameLyric) }
     val titleGravityOptions = listOf(
@@ -72,15 +80,15 @@ fun ExtendPage(navController: NavController) {
     )
     val titleGravitySelectedOption = remember { mutableIntStateOf(config.titleGravity) }
     val showDialog = remember { mutableStateOf(false) }
+    val showCutSongsXRadiusDialog = remember { mutableStateOf(false) }
+    val showCutSongsYRadiusDialog = remember { mutableStateOf(false) }
     val showTitleDelayDialog = remember { mutableStateOf(false) }
     val showTitleBgColorDialog = remember { mutableStateOf(false) }
     val showTitleRadiusDialog = remember { mutableStateOf(false) }
     val showTitleStrokeWidthDialog = remember { mutableStateOf(false) }
     val showTitleStrokeColorDialog = remember { mutableStateOf(false) }
     Scaffold(
-        modifier = Modifier
-            .imePadding()
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = stringResource(R.string.extend_page),
@@ -115,10 +123,18 @@ fun ExtendPage(navController: NavController) {
             ) {
                 item {
                     Column {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp),
+                            text = stringResource(R.string.module_extend),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.Red
+                        )
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                                .padding(horizontal = 12.dp)
+                                .padding(bottom = 6.dp)
                         ) {
                             SuperSwitch(
                                 title = stringResource(R.string.hide_time),
@@ -137,7 +153,67 @@ fun ExtendPage(navController: NavController) {
                                 }
                             )
                             SuperSwitch(
+                                title = stringResource(R.string.hide_lyric_when_lock_screen),
+                                checked = hideLyricWhenLockScreen.value,
+                                onCheckedChange = {
+                                    hideLyricWhenLockScreen.value = it
+                                    config.hideLyricWhenLockScreen = it
+                                }
+                            )
+                            SuperDropdown(
+                                title = stringResource(R.string.lyric_color_scheme),
+                                items = lyricColorSchemeOptions,
+                                selectedIndex = lyricColorSchemeSelectedOption.intValue,
+                                onSelectedIndexChange = { newOption ->
+                                    lyricColorSchemeSelectedOption.intValue = newOption
+                                    config.lyricColorScheme = newOption
+                                },
+                            )
+                            SuperSwitch(
+                                title = stringResource(R.string.long_click_status_bar_stop),
+                                checked = longClickStatusBarStop.value,
+                                onCheckedChange = {
+                                    longClickStatusBarStop.value = it
+                                    config.longClickStatusBarStop = it
+                                }
+                            )
+                            SuperSwitch(
+                                title = stringResource(R.string.click_status_bar_to_hide_lyric),
+                                checked = clickStatusBarToHideLyric.value,
+                                onCheckedChange = {
+                                    clickStatusBarToHideLyric.value = it
+                                    config.clickStatusBarToHideLyric = it
+                                }
+                            )
+                            SuperSwitch(
+                                title = stringResource(R.string.slide_status_bar_cut_songs),
+                                checked = slideStatusBarCutSongs.value,
+                                onCheckedChange = {
+                                    slideStatusBarCutSongs.value = it
+                                    config.slideStatusBarCutSongs = it
+                                }
+                            )
+                            AnimatedVisibility(
+                                visible = slideStatusBarCutSongs.value,
+                            ) {
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
+                                        onClick = {
+                                            showCutSongsXRadiusDialog.value = true
+                                        }
+                                    )
+                                    SuperArrow(
+                                        title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
+                                        onClick = {
+                                            showCutSongsYRadiusDialog.value = true
+                                        }
+                                    )
+                                }
+                            }
+                            SuperSwitch(
                                 title = stringResource(R.string.limit_visibility_change),
+                                summary = stringResource(R.string.limit_visibility_change_tips),
                                 checked = limitVisibilityChange.value,
                                 onCheckedChange = {
                                     limitVisibilityChange.value = it
@@ -150,14 +226,6 @@ fun ExtendPage(navController: NavController) {
                                 onCheckedChange = {
                                     dynamicLyricSpeed.value = it
                                     config.dynamicLyricSpeed = it
-                                }
-                            )
-                            SuperSwitch(
-                                title = stringResource(R.string.click_status_bar_to_hide_lyric),
-                                checked = clickStatusBarToHideLyric.value,
-                                onCheckedChange = {
-                                    clickStatusBarToHideLyric.value = it
-                                    config.clickStatusBarToHideLyric = it
                                 }
                             )
                         }
@@ -255,11 +323,117 @@ fun ExtendPage(navController: NavController) {
         }
     }
     RestartDialog(showDialog)
+    CutSongsXRadiusDialog(showCutSongsXRadiusDialog)
+    CutSongsYRadiusDialog(showCutSongsYRadiusDialog)
     TitleDelayDialog(showTitleDelayDialog)
     TitleBgColorDialog(showTitleBgColorDialog)
     TitleRadiusDialog(showTitleRadiusDialog)
     TitleStrokeWidthDialog(showTitleStrokeWidthDialog)
     TitleStrokeColorDialog(showTitleStrokeColorDialog)
+}
+
+@Composable
+fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
+    val value = remember { mutableStateOf(config.slideStatusBarCutSongsXRadius.toString()) }
+    showDialog(
+        show = showDialog.value,
+        content = {
+            SuperDialog(
+                title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
+                summary = stringResource(R.string.slide_status_bar_cut_songs_x_radius_tips),
+                show = showDialog,
+                onDismissRequest = {
+                    showDialog.value = false
+                },
+            ) {
+                TextField(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    value = value.value,
+                    maxLines = 1,
+                    onValueChange = {
+                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..2000)) {
+                            value.value = it
+                        }
+                    }
+                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.cancel),
+                        onClick = {
+                            dismissDialog()
+                            showDialog.value = false
+                        }
+                    )
+                    Spacer(Modifier.width(20.dp))
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.ok),
+                        submit = true,
+                        onClick = {
+                            config.slideStatusBarCutSongsXRadius = if (value.value.isEmpty() || value.value.toInt() < 50) 50 else value.value.toInt()
+                            dismissDialog()
+                            showDialog.value = false
+                        }
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
+    val value = remember { mutableStateOf(config.slideStatusBarCutSongsYRadius.toString()) }
+    showDialog(
+        show = showDialog.value,
+        content = {
+            SuperDialog(
+                title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
+                summary = stringResource(R.string.slide_status_bar_cut_songs_y_radius_tips),
+                show = showDialog,
+                onDismissRequest = {
+                    showDialog.value = false
+                },
+            ) {
+                TextField(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    value = value.value,
+                    maxLines = 1,
+                    onValueChange = {
+                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
+                            value.value = it
+                        }
+                    }
+                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.cancel),
+                        onClick = {
+                            dismissDialog()
+                            showDialog.value = false
+                        }
+                    )
+                    Spacer(Modifier.width(20.dp))
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.ok),
+                        submit = true,
+                        onClick = {
+                            config.slideStatusBarCutSongsYRadius = if (value.value.isEmpty() || value.value.toInt() < 10) 10 else value.value.toInt()
+                            dismissDialog()
+                            showDialog.value = false
+                        }
+                    )
+                }
+            }
+        }
+    )
 }
 
 @Composable

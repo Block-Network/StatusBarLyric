@@ -9,6 +9,7 @@
     <string name="module_fourth">邊距設置</string>
     <string name="module_fifth">懸浮標題</string>
     <string name="module_sixth">動效設置</string>
+    <string name="module_extend">修改本頁面後請重啟系統界面及播放器</string>
     <string name="xposed_tips">如果無法顯示歌詞，請嘗試停止音樂軟體並重新啟動系統UI，並檢查Lyric Getter</string>
     <string name="config_reset_success">配置重置成功</string>
     <string name="have_new_version">有新版本</string>
@@ -169,9 +170,9 @@
     <string name='lyric_blurred_edges_type_all'>兩邊</string>
     <string name="lyric_blurred_edges_type">歌詞模糊邊緣類型</string>
     <string name="slide_status_bar_cut_songs">狀態欄滑動切歌</string>
-    <string name="slide_status_bar_cut_songs_x_radius">滑動切歌X半徑</string>
+    <string name="slide_status_bar_cut_songs_x_radius">滑動切歌 X 半徑</string>
     <string name="slide_status_bar_cut_songs_x_radius_tips">範圍：50–2000</string>
-    <string name="slide_status_bar_cut_songs_y_radius">滑動切歌Y半徑</string>
+    <string name="slide_status_bar_cut_songs_y_radius">滑動切歌 Y 半徑</string>
     <string name="slide_status_bar_cut_songs_y_radius_tips">範圍：10–100</string>
     <string name="title_delay_duration">懸浮標題隱藏延遲時間</string>
     <string name="title_delay_duration_tips">範圍：0–10000，單位：毫秒</string>
