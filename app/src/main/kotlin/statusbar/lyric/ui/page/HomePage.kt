@@ -1,5 +1,7 @@
 package statusbar.lyric.ui.page
 
+import android.content.ComponentName
+import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -11,7 +13,6 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -54,6 +55,8 @@ fun HomePagePreview() {
 fun HomePage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
+    val outLog = remember { mutableStateOf(config.outLog) }
+    val showLauncherIcon = remember { mutableStateOf(config.showLauncherIcon) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -108,6 +111,35 @@ fun HomePage(navController: NavController) {
                                     }
                                 }
                             )
+                            AnimatedVisibility(
+                                visible = masterSwitchState.value,
+                            ) {
+                                Column {
+                                    SuperSwitch(
+                                        title = stringResource(R.string.show_launcher_icon),
+                                        checked = showLauncherIcon.value,
+                                        onCheckedChange = {
+                                            showLauncherIcon.value = it
+                                            config.showLauncherIcon = it
+                                            context.packageManager.setComponentEnabledSetting(
+                                                ComponentName(context, "statusbar.lyric.AliasActivity"), if (it) {
+                                                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                                                } else {
+                                                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                                                }, PackageManager.DONT_KILL_APP
+                                            )
+                                        }
+                                    )
+                                    SuperSwitch(
+                                        title = stringResource(R.string.show_logcat),
+                                        checked = outLog.value,
+                                        onCheckedChange = {
+                                            outLog.value = it
+                                            config.outLog = it
+                                        }
+                                    )
+                                }
+                            }
                         }
                         Column {
                             AnimatedVisibility(

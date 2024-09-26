@@ -22,12 +22,11 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
             </intent-filter>
         </activity>
         <activity-alias
-            android:name=".launcher"
-            android:enabled="true"
+            android:name=".AliasActivity"
             android:exported="true"
             android:targetActivity=".MainActivity"
             android:windowSoftInputMode="adjustResize">

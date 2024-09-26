@@ -9,6 +9,8 @@
     <string name="module_fourth">Margin settings</string>
     <string name="module_fifth">Floating title</string>
     <string name="module_sixth">Animation settings</string>
+    <string name="show_logcat">Show logcat</string>
+    <string name="show_launcher_icon">Show icon</string>
     <string name="module_extend">Please restart the system interface and player after modifying this page</string>
     <string name="xposed_tips">If the lyrics cannot be displayed, please try to stop the music software and restart the SystemUI,and check Lyric Getter</string>
     <string name="config_reset_success">The config reset succeeded</string>
@@ -32,7 +34,6 @@
     <string name="installed">Installed</string>
     <string name="unsupported_lyric_getter">Unsupported LyricGetter</string>
     <string name="menu">Menu</string>
-    <string name="hide_desk_icon">Hide desktop icons</string>
     <string name="print_xp_log">Print Xposed Log</string>
     <string name="check_update">Check for updates</string>
     <string name="reset_config">Reset the config</string>

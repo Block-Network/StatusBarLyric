@@ -9,6 +9,8 @@
     <string name="module_fourth">边距设置</string>
     <string name="module_fifth">悬浮标题</string>
     <string name="module_sixth">动效设置</string>
+    <string name="show_logcat">输出日志</string>
+    <string name="show_launcher_icon">显示图标</string>
     <string name="module_extend">修改本页面后请重启系统界面及播放器</string>
     <string name="xposed_tips">如果无法显示歌词，请尝试停止音乐软件并重新启动系统界面，并检查 Lyric Getter</string>
     <string name="config_reset_success">配置重置成功</string>
@@ -32,7 +34,6 @@
     <string name="installed">已安装</string>
     <string name="unsupported_lyric_getter">不支持的 Lyric Getter</string>
     <string name="menu">菜单</string>
-    <string name="hide_desk_icon">隐藏桌面图标</string>
     <string name="print_xp_log">打印 Xposed 日志</string>
     <string name="check_update">检查更新</string>
     <string name="reset_config">重置配置</string>
