@@ -28,6 +28,9 @@ import statusbar.lyric.BuildConfig
 import statusbar.lyric.tools.ConfigTools
 
 class Config {
+    companion object{
+        const val CONFIG_NAME = "COMPOSE_CONFIG"
+    }
     var config: ConfigTools
 
     constructor(xSharedPreferences: XSharedPreferences?) {

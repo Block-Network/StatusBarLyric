@@ -25,11 +25,12 @@ package statusbar.lyric.config
 import android.annotation.SuppressLint
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.config.Config.Companion.CONFIG_NAME
 import statusbar.lyric.tools.Tools
 
 @SuppressLint("StaticFieldLeak")
 object ActivityOwnSP {
-    val ownSP by lazy { Tools.getSP(context, "CONFIG_NAME")!! }
+    val ownSP by lazy { Tools.getSP(context, CONFIG_NAME)!! }
     val config by lazy { Config(ownSP) }
     private val ownEditor by lazy { ownSP.edit() }
 
