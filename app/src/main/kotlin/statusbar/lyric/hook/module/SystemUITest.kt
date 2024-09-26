@@ -207,11 +207,7 @@ class SystemUITest : BaseHook() {
                                 }
                                 textview.hideView()
                                 val parentLinearLayout = textview.parent as LinearLayout
-                                if (config.viewIndex == 0) {
-                                    parentLinearLayout.addView(testTextView, 0)
-                                } else {
-                                    parentLinearLayout.addView(testTextView)
-                                }
+                                parentLinearLayout.addView(testTextView, 0)
                                 lastView = textview
                                 return@forEach
                             }

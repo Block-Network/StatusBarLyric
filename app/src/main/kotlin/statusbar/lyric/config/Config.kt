@@ -277,28 +277,6 @@ class Config {
         set(value) {
             config.put("lyricStrokeWidth", value)
         }
-    var lyricBlurredEdges: Boolean
-        get() {
-            return config.opt("lyricBlurredEdges", false)
-        }
-        set(value) {
-            config.put("lyricBlurredEdges", value)
-        }
-    var lyricBlurredEdgesRadius: Int
-        get() {
-            return config.opt("lyricBlurredEdgesRadius", 40)
-        }
-        set(value) {
-            config.put("lyricBlurredEdgesRadius", value)
-        }
-    var lyricBlurredEdgesType: Int
-        get() {
-            return config.opt("lyricBlurredEdgesType", 0)
-        }
-        set(value) {
-            config.put("lyricBlurredEdgesType", value)
-        }
-
     var lyricSpeed: Int
         get() {
             return config.opt("lyricSpeed", 1)
@@ -320,7 +298,6 @@ class Config {
         set(value) {
             config.put("iconSize", value)
         }
-
     var forceTheIconToBeDisplayed: Boolean
         get() {
             return config.opt("forceTheIconToBeDisplayed", false)
@@ -328,26 +305,12 @@ class Config {
         set(value) {
             config.put("forceTheIconToBeDisplayed", value)
         }
-    var animation: String
-        get() {
-            return config.opt("animation", "Top")
-        }
-        set(value) {
-            config.put("animation", value)
-        }
     var lyricAnimation: Int
         get() {
             return config.opt("lyricAnimation", 1)
         }
         set(value) {
             config.put("lyricAnimation", value)
-        }
-    var interpolator: String
-        get() {
-            return config.opt("interpolator", "Accelerate&Decelerate")
-        }
-        set(value) {
-            config.put("interpolator", value)
         }
     var lyricInterpolator: Int
         get() {
@@ -363,14 +326,6 @@ class Config {
         set(value) {
             config.put("animationDuration", value)
         }
-    var viewIndex: Int
-        get() {
-            return config.opt("viewIndex", 0)
-        }
-        set(value) {
-            config.put("viewIndex", value)
-        }
-
     var hideLyricWhenLockScreen: Boolean
         get() {
             return config.opt("hideLyricWhenLockScreen", true)
@@ -378,21 +333,12 @@ class Config {
         set(value) {
             config.put("hideLyricWhenLockScreen", value)
         }
-
     var hideCarrier: Boolean
         get() {
             return config.opt("hideCarrier", false)
         }
         set(value) {
             config.put("hideCarrier", value)
-        }
-    var checkUpdate: Boolean
-        get() {
-//            return config.opt("checkUpdate", true)
-            return false
-        }
-        set(value) {
-            config.put("checkUpdate", value)
         }
     var lyricColorScheme: Int
         get() {
@@ -444,7 +390,6 @@ class Config {
         set(value) {
             config.put("slideStatusBarCutSongsYRadius", value)
         }
-
     var mMiuiPadOptimize: Boolean
         get() {
             return config.opt("mMiuiPadOptimize", false)
@@ -536,7 +481,6 @@ class Config {
         set(value) {
             config.put("titleGravity", value)
         }
-
     var changeAllIcons: String
         get() {
             return config.opt("changeAllIcons", "")
@@ -544,6 +488,28 @@ class Config {
         set(value) {
             config.put("changeAllIcons", value)
         }
+    var lyricBlurredEdges: Boolean
+        get() {
+            return config.opt("lyricBlurredEdges", false)
+        }
+        set(value) {
+            config.put("lyricBlurredEdges", value)
+        }
+    var lyricBlurredEdgesRadius: Int
+        get() {
+            return config.opt("lyricBlurredEdgesRadius", 40)
+        }
+        set(value) {
+            config.put("lyricBlurredEdgesRadius", value)
+        }
+    var lyricBlurredEdgesType: Int
+        get() {
+            return config.opt("lyricBlurredEdgesType", 0)
+        }
+        set(value) {
+            config.put("lyricBlurredEdgesType", value)
+        }
+
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon
@@ -567,7 +533,6 @@ class Config {
     fun getDefaultIcon(packageName: String): String {
         return if (defIconHashMap.containsKey(packageName)) defIconHashMap[packageName]!! else if (forceTheIconToBeDisplayed) defaultIcon else ""
     }
-
 
     private val defaultIcon by lazy {
         @Suppress("SpellCheckingInspection") "iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAMoSURBVGiB7Zo7aBRBGMd/n1gpgkWiUaIIgo8IMSKCEosQEUFFBREFEaxSxFNsYiXkLH0QW2MhNqKdGjSYQrRREXygBB+QQkUQQfEBEbT5W9xt2Gw22b2d2b1D/FVzO7PffL+Z3ZvZvYP/NBbmO6CkdmAtsApYCLQAv4EPwE0zu++7T4DZrgEkrQe2Ad3AloTmNyPndgEbgSEze+WaSyYkrZc0qNroioqE6m5I6ixSoEnS6RoF0ogEnJY0P2+JA5LeZJRIKyJJzyXtyUui5CBQq0hAf9r8Ut3sku4BXYkN/VOWhJmdSmo4K6mBpGvURyKgLKmc1GhGkWqA/d5Syk5/ksy0ItXrOfU1WgD9kkrTVc40I40kEdAnaUlcRayIpBPU976YjqXAibiKKSKSVgJ9eWfkQEmVbdEk4mbkGNCUfz5O9EQPTBKR1AzsKyyd7PRUr5wJojOyD2guLh8ndoc/RFd2nzf4I+AhcAtYDCzwGBtgF3AmtkbSTw/7qa+SdqXJJMVeK4llQaxZ4aDAPMdRGgO2m9mQY5y0tAWF8D3S7iHwUTN77CFOWtYEBZ8it83sjmOMWmkNCmGR5Y5Bzzmen4WFQSFxG9/gNIzIIl+BwiJ/HGMtznBOh2OfE4RFPjvG6s1wzsrkJjPyKyj4FOmUtDNtY0mHiGwzMvA2KIRFnjkGBTgvaVNSI0nrgAse+nsdF7zVcbsQ8F3S3hkkSpLee+prQxDXIp08BBJHNCVjVN71jlDZMLZQeUe81VP8YTPbEVsjqc/TSBXB4XDu0RlZBowCcz2NWl58Alab2Y/gwKQF0czeAVeKzioDQ2EJiF/ZLxaUjAtTHhOmiJjZUxpb5pKZDUcPxv70JqkVuAusyDurGvkCbDazt9GK2E2jmX0ETuadVQZ64yQSkXS2zl+xYQ46DYGkkXobSBpwkgjJXK2jxFkvEiGZcsECfyQd8SoRkjku6VsBEs8kdeciEZLpkHQ9J4FxVWZ+Tq4SEaFuSZc9Sgyq8pxSHyS1VUdxNEPyTyQNKOb3jlrx+qcaSW1U3v61UXkGaWby2/1x4AXwEnhQXXj/80/yFxO3SSfTTsqKAAAAAElFTkSuQmCC"

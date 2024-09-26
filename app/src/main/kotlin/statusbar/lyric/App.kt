@@ -1,7 +1,6 @@
 package statusbar.lyric
 
 import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -32,37 +31,25 @@ fun App(
             enterTransition = {
                 slideInHorizontally(
                     initialOffsetX = { windowWidth },
-                    animationSpec = tween(
-                        durationMillis = 500,
-                        easing = easing
-                    )
+                    animationSpec = tween(durationMillis = 500, easing = easing)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
                     targetOffsetX = { -windowWidth / 5 },
-                    animationSpec = tween(
-                        durationMillis = 500,
-                        easing = easing
-                    )
+                    animationSpec = tween(durationMillis = 500, easing = easing)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
                     initialOffsetX = { -windowWidth / 5 },
-                    animationSpec = tween(
-                        durationMillis = 500,
-                        easing = easing
-                    )
+                    animationSpec = tween(durationMillis = 500, easing = easing)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
                     targetOffsetX = { windowWidth },
-                    animationSpec = tween(
-                        durationMillis = 500,
-                        easing = easing
-                    )
+                    animationSpec = tween(durationMillis = 500, easing = easing)
                 )
             }
         ) {

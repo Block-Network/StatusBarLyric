@@ -214,13 +214,8 @@ class SystemUILyric : BaseHook() {
     }
     private lateinit var mMiuiNetworkSpeedView: TextView
     private val titleDialog by lazy {
-        TitleDialog(context).apply {
-//            val location = IntArray(2)
-//            clockView.getLocationOnScreen(location)
-//            setX(location[0])
-        }
+        TitleDialog(context)
     }
-
 
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
@@ -419,11 +414,7 @@ class SystemUILyric : BaseHook() {
         val firstLoad = lyricLayout.parent.isNull()
         goMainThread(1) {
             runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
-            if (config.viewIndex == 0) {
-                targetView.addView(lyricLayout, 0)
-            } else {
-                targetView.addView(lyricLayout)
-            }
+            targetView.addView(lyricLayout, 0)
             if (config.lyricWidth == 0) {
                 lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
             } else {

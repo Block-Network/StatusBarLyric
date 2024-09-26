@@ -1,5 +1,6 @@
 package statusbar.lyric.ui.page
 
+import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,10 +27,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -41,7 +40,6 @@ import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
-import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -60,6 +58,7 @@ fun SystemSpecialPage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val mMiuiHideNetworkSpeed = remember { mutableStateOf(config.mMiuiHideNetworkSpeed) }
     val mMiuiPadOptimize = remember { mutableStateOf(config.mMiuiPadOptimize) }
+    val hideCarrier = remember { mutableStateOf(config.hideCarrier) }
     val mHyperOSTexture = remember { mutableStateOf(config.mHyperOSTexture) }
     val showDialog = remember { mutableStateOf(false) }
     val showRadioDialog = remember { mutableStateOf(false) }
@@ -127,6 +126,16 @@ fun SystemSpecialPage(navController: NavController) {
                                     config.mMiuiPadOptimize = it
                                 }
                             )
+                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
+                                SuperSwitch(
+                                    title = stringResource(R.string.hide_carrier),
+                                    checked = hideCarrier.value,
+                                    onCheckedChange = {
+                                        hideCarrier.value = it
+                                        config.hideCarrier = it
+                                    }
+                                )
+                            }
                         }
                         SmallTitle(
                             text = stringResource(R.string.hyperos)
