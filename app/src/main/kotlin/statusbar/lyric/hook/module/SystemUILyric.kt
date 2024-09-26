@@ -85,7 +85,6 @@ import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.Tools.togglePrompts
-import statusbar.lyric.view.EdgeTransparentView
 import statusbar.lyric.view.LyricSwitchView
 import statusbar.lyric.view.TitleDialog
 import java.io.File
@@ -202,13 +201,7 @@ class SystemUILyric : BaseHook() {
             gravity = Gravity.CENTER
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
             addView(iconView)
-            addView(if (config.lyricBlurredEdges) {
-                EdgeTransparentView(context, config.lyricBlurredEdgesRadius.toFloat()).apply {
-                    addView(lyricView)
-                }
-            } else {
-                lyricView
-            })
+            addView(lyricView)
             visibility = View.GONE
         }
     }

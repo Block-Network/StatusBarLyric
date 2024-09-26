@@ -26,7 +26,7 @@ android {
         dependenciesInfo.includeInApk = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
         buildConfigField("int", "API_VERSION", "6")
-        buildConfigField("int", "CONFIG_VERSION", "10")
+        buildConfigField("int", "COMPOSE_CONFIG_VERSION", "1")
     }
     val config = localProperties.getProperty("androidStoreFile")?.let {
         signingConfigs.create("config") {

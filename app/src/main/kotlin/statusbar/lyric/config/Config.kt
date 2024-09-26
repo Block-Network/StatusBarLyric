@@ -488,27 +488,6 @@ class Config {
         set(value) {
             config.put("changeAllIcons", value)
         }
-    var lyricBlurredEdges: Boolean
-        get() {
-            return config.opt("lyricBlurredEdges", false)
-        }
-        set(value) {
-            config.put("lyricBlurredEdges", value)
-        }
-    var lyricBlurredEdgesRadius: Int
-        get() {
-            return config.opt("lyricBlurredEdgesRadius", 40)
-        }
-        set(value) {
-            config.put("lyricBlurredEdgesRadius", value)
-        }
-    var lyricBlurredEdgesType: Int
-        get() {
-            return config.opt("lyricBlurredEdgesType", 0)
-        }
-        set(value) {
-            config.put("lyricBlurredEdgesType", value)
-        }
 
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {

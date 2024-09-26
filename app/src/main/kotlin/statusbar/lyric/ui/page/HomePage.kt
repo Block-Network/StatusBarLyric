@@ -65,7 +65,7 @@ fun HomePage(navController: NavController) {
                 color = Color.Transparent,
                 scrollBehavior = scrollBehavior
             )
-        }
+        },
     ) {
         Box {
             LazyColumn(
@@ -159,7 +159,7 @@ fun HomePage(navController: NavController) {
                                     ) {
                                         SuperArrow(
                                             title = stringResource(R.string.hook_page),
-                                            summary = stringResource(R.string.test_mode_tips).split("\n")[0],
+                                            summary = if (config.textViewId == 0) stringResource(R.string.test_mode_tips).split("\n")[0] else null,
                                             onClick = {
                                                 navController.navigate("TestPage")
                                             }

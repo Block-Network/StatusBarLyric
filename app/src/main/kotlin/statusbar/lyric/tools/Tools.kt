@@ -40,6 +40,7 @@ import de.robv.android.xposed.XSharedPreferences
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
+import statusbar.lyric.tools.ActivityTools.isHook
 import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
 import java.util.Objects
@@ -174,7 +175,7 @@ object Tools {
 
     fun getSP(context: Context, key: String): SharedPreferences? {
         @Suppress("DEPRECATION", "WorldReadableFiles") return context.createDeviceProtectedStorageContext()
-            .getSharedPreferences(key, Context.MODE_WORLD_READABLE)
+            .getSharedPreferences(key, if (isHook()) Context.MODE_WORLD_READABLE else Context.MODE_PRIVATE)
     }
 
     fun shell(command: String, isSu: Boolean) {

@@ -29,7 +29,7 @@ import statusbar.lyric.tools.Tools
 
 @SuppressLint("StaticFieldLeak")
 object ActivityOwnSP {
-    val ownSP by lazy { Tools.getSP(context, "Config")!! }
+    val ownSP by lazy { Tools.getSP(context, "CONFIG_NAME")!! }
     val config by lazy { Config(ownSP) }
     private val ownEditor by lazy { ownSP.edit() }
 
@@ -49,11 +49,8 @@ object ActivityOwnSP {
     }
 
     fun updateConfigVer() {
-        if (ownSP.getInt("ver", 0) < BuildConfig.CONFIG_VERSION) {
-            set("ver", BuildConfig.CONFIG_VERSION)
-            runCatching { set("LyricViewPosition", ownSP.getString("LyricViewPosition", "first") == "first") }
-            runCatching { set("CustomizeViewPosition", ownSP.getString("CustomizeViewPosition", "first") == "first") }
-            runCatching { remove("timeFormat") }
+        if (ownSP.getInt("ver", 0) < BuildConfig.COMPOSE_CONFIG_VERSION) {
+
         }
     }
 }

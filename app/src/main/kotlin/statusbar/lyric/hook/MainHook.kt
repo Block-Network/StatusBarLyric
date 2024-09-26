@@ -8,6 +8,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
+import statusbar.lyric.hook.module.Self
 import statusbar.lyric.hook.module.SystemUILyric
 import statusbar.lyric.hook.module.SystemUITest
 import statusbar.lyric.tools.LogTools
@@ -17,14 +18,14 @@ import java.util.Locale
 class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         LogTools.init(config.outLog)
-        if (!config.masterSwitch) {
-            moduleRes.getString(R.string.master_off).log()
-            return
-        }
 
         EzXHelper.initHandleLoadPackage(lpparam)
         when (lpparam.packageName) {
             "com.android.systemui" -> {
+                if (!config.masterSwitch) {
+                    moduleRes.getString(R.string.master_off).log()
+                    return
+                }
                 "${BuildConfig.APPLICATION_ID} - ${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE}[${Locale.getDefault().language}] *${BuildConfig.BUILD_TYPE})".log()
                 if (config.testMode) {
                     moduleRes.getString(R.string.hook_page).log()
@@ -33,6 +34,10 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
                     moduleRes.getString(R.string.lyric_mode).log()
                     initHooks(SystemUILyric())
                 }
+            }
+
+            BuildConfig.APPLICATION_ID -> {
+                initHooks(Self())
             }
         }
     }

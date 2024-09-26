@@ -25,5 +25,5 @@ package statusbar.lyric.config
 import statusbar.lyric.tools.Tools
 
 object XposedOwnSP {
-    val config: Config by lazy { Config(Tools.getPref("Config")) }
+    val config: Config by lazy { Config(Tools.getPref("CONFIG_NAME")) }
 }

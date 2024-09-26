@@ -25,6 +25,7 @@ import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.ActivityTestTools.stopResponse
 import statusbar.lyric.tools.ActivityTools.dataList
+import statusbar.lyric.tools.ActivityTools.isHook
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.SafeSharedPreferences
@@ -46,8 +47,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         context = this
-
-        if (checkLSPosed()) isLoad = true
+        isLoad = isHook()
+        init()
 
         setContent {
             navController = rememberNavController()
@@ -68,19 +69,10 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
     }
 
-    private fun checkLSPosed(): Boolean {
-        return try {
-            setSP(ActivityOwnSP.ownSP)
-            updateConfigVer()
-            init()
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
-    }
 
     private fun init() {
+        setSP(ActivityOwnSP.ownSP)
+        updateConfigVer()
         requestPermission()
         registerReceiver()
         if (!BuildConfig.DEBUG) {

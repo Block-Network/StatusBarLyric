@@ -41,6 +41,10 @@ object ActivityTools {
 
     lateinit var dataList: ArrayList<Data>
 
+    fun isHook(): Boolean {
+        return false
+    }
+
     fun changeConfig(type: String = "normal", path: String = "") {
         Thread {
             Thread.sleep(200)
