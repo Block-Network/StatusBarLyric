@@ -96,7 +96,7 @@ class SystemUILyric : BaseHook() {
     private lateinit var hook: XC_MethodHook.Unhook
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
-    private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
+    private var lastColor: Int by observableChange(Color.WHITE) { oldValue, newValue ->
         goMainThread {
             if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) {
                 when (config.lyricColorScheme) {
@@ -107,7 +107,7 @@ class SystemUILyric : BaseHook() {
             if (config.iconColor.isEmpty()) {
                 when (config.lyricColorScheme) {
                     0 -> iconView.setColorFilter(newValue)
-                    1 -> iconView.iconColorAnima(lastColor, newValue)
+                    1 -> iconView.iconColorAnima(oldValue, newValue)
                 }
             }
         }
