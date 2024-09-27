@@ -120,8 +120,8 @@ fun ChoosePage(navController: NavController) {
 
 @Composable
 fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.select_hook),

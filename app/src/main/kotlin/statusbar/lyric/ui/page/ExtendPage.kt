@@ -335,9 +335,9 @@ fun ExtendPage(navController: NavController) {
 
 @Composable
 fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.slideStatusBarCutSongsXRadius.toString()) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
@@ -351,7 +351,6 @@ fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..2000)) {
                             value.value = it
@@ -388,9 +387,9 @@ fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.slideStatusBarCutSongsYRadius.toString()) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
@@ -404,7 +403,6 @@ fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                             value.value = it
@@ -441,9 +439,9 @@ fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleDelayDuration.toString()) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.title_delay_duration),
@@ -457,7 +455,6 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..10000)) {
                             value.value = it
@@ -494,9 +491,9 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleColorAndTransparency) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.title_color_and_transparency),
@@ -510,7 +507,6 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty()) {
                             value.value = it
@@ -553,9 +549,9 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleBackgroundRadius.toString()) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.title_background_radius),
@@ -569,7 +565,6 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                             value.value = it
@@ -606,9 +601,9 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleBackgroundStrokeWidth.toString()) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.title_background_stroke_width),
@@ -622,7 +617,6 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..30)) {
                             value.value = it
@@ -659,9 +653,9 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleBackgroundStrokeColorAndTransparency) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.title_background_stroke_color),
@@ -675,7 +669,6 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
                     }

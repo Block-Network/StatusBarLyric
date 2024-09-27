@@ -206,8 +206,8 @@ fun SystemSpecialPage(navController: NavController) {
 @Composable
 fun RadioDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.mHyperOSTextureRadio.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.hyperos_texture_radio),
@@ -222,7 +222,6 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..400)) {
                             value.value = it
@@ -260,8 +259,8 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun CornerDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.mHyperOSTextureCorner.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.hyperos_texture_corner),
@@ -276,7 +275,6 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..50)) {
                             value.value = it
@@ -314,8 +312,8 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun BgColorDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.mHyperOSTextureBgColor) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.hyperos_texture_color),
@@ -330,7 +328,6 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
                     }

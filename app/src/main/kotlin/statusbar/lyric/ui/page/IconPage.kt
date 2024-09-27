@@ -255,9 +255,9 @@ fun IconPage(navController: NavController) {
 
 @Composable
 fun IconSizeDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconSize.toString()) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.icon_size),
@@ -271,7 +271,6 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                             value.value = it
@@ -309,9 +308,9 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconColorDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconColor) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.icon_color_and_transparency),
@@ -325,7 +324,6 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
                     }
@@ -365,9 +363,9 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconBgColor) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.icon_background_color_and_transparency),
@@ -381,7 +379,6 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
                     }
@@ -421,9 +418,9 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconTopMargins.toString()) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.icon_top_margins),
@@ -437,7 +434,6 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
                             value.value = it
@@ -475,9 +471,9 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconBottomMargins.toString()) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.icon_bottom_margins),
@@ -491,7 +487,6 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
                             value.value = it
@@ -529,9 +524,9 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconStartMargins.toString()) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.icon_start_margins),
@@ -545,7 +540,6 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -500..500)) {
                             value.value = it
@@ -584,9 +578,9 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
 
 @Composable
 fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.changeAllIcons) }
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.change_all_icons),
@@ -600,7 +594,6 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
                     }

@@ -326,8 +326,8 @@ fun LyricPage(navController: NavController) {
 
 @Composable
 fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState<String>) {
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_width),
@@ -342,7 +342,6 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
                     value = lyricWidth.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                             lyricWidth.value = it
@@ -381,8 +380,8 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
 @Composable
 fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricSize.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_size),
@@ -397,7 +396,6 @@ fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                             value.value = it
@@ -436,8 +434,8 @@ fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricColorDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricColor) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_color_and_transparency),
@@ -453,7 +451,6 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
                     }
@@ -494,8 +491,8 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricGradientColor) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyrics_are_gradient_and_transparent),
@@ -511,7 +508,6 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
                     }
@@ -551,8 +547,8 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricBackgroundColor) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyrics_gradient_background_color_and_transparency),
@@ -568,7 +564,6 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         value.value = it
                     }
@@ -609,8 +604,8 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricBackgroundRadius.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_background_radius),
@@ -624,7 +619,6 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                             value.value = it
@@ -663,8 +657,8 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricLetterSpacing.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_letter_spacing),
@@ -678,7 +672,6 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..50)) {
                             value.value = it
@@ -717,8 +710,8 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricStrokeWidth.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_stroke_width),
@@ -732,7 +725,6 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..400)) {
                             value.value = it
@@ -771,8 +763,8 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricSpeed.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_speed),
@@ -786,7 +778,6 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..20)) {
                             value.value = it
@@ -825,8 +816,8 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricTopMargins.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_top_margins),
@@ -840,7 +831,6 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
                             value.value = it
@@ -879,8 +869,8 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricBottomMargins.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_bottom_margins),
@@ -894,7 +884,6 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
                             value.value = it
@@ -933,8 +922,8 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricStartMargins.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_start_margins),
@@ -948,7 +937,6 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -2000..2000)) {
                             value.value = it
@@ -987,8 +975,8 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.lyricEndMargins.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyric_end_margins),
@@ -1002,7 +990,6 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -2000..2000)) {
                             value.value = it
@@ -1041,8 +1028,8 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
 @Composable
 fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
     val value = remember { mutableStateOf(config.animationDuration.toString()) }
+    if (!showDialog.value) return
     showDialog(
-        show = showDialog.value,
         content = {
             SuperDialog(
                 title = stringResource(R.string.lyrics_animation_duration),
@@ -1056,7 +1043,6 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
                     modifier = Modifier.padding(bottom = 16.dp),
                     value = value.value,
                     maxLines = 1,
-                    backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
                         if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..1000)) {
                             value.value = it
