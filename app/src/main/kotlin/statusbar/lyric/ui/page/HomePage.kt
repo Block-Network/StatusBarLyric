@@ -34,6 +34,7 @@ import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.AnimTools
+import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
@@ -143,7 +144,7 @@ fun HomePage(navController: NavController) {
                             }
                         }
                         AnimatedVisibility(
-                            visible = !masterSwitchState.value,
+                            visible = !masterSwitchState.value
                         ) {
                             Column {
                                 Card(
@@ -152,8 +153,9 @@ fun HomePage(navController: NavController) {
                                         .padding(horizontal = 12.dp)
                                         .padding(bottom = 6.dp)
                                 ) {
-                                    SuperArrow(
+                                    BasicComponent(
                                         title = stringResource(R.string.restart_app),
+                                        titleColor = Color.Red,
                                         onClick = {
                                             ActivityTools.restartApp()
                                         }

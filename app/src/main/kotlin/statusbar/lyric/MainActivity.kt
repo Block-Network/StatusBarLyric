@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -18,7 +17,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.DisposableEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import statusbar.lyric.MainActivity.Companion.safeSP
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
@@ -26,17 +24,15 @@ import statusbar.lyric.data.Data
 import statusbar.lyric.tools.ActivityTestTools.stopResponse
 import statusbar.lyric.tools.ActivityTools.dataList
 import statusbar.lyric.tools.ActivityTools.isHook
+import statusbar.lyric.tools.ConfigTools
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.LogTools.log
-import statusbar.lyric.tools.SafeSharedPreferences
 
 class MainActivity : ComponentActivity() {
     private val appTestReceiver by lazy { AppTestReceiver() }
     private lateinit var navController: NavHostController
 
     companion object {
-        var safeSP: SafeSharedPreferences = SafeSharedPreferences()
-
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
 
@@ -71,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
 
     private fun init() {
-        setSP(ActivityOwnSP.ownSP)
+        ConfigTools(ActivityOwnSP.ownSP)
         updateConfigVer()
         requestPermission()
         registerReceiver()
@@ -129,8 +125,4 @@ class MainActivity : ComponentActivity() {
             )
         }
     }
-}
-
-fun setSP(sharedPreferences: SharedPreferences) {
-    safeSP.mSP = sharedPreferences
 }
