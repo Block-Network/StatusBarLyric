@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -62,6 +63,15 @@ fun HomePage(navController: NavController) {
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
     val outLog = remember { mutableStateOf(config.outLog) }
     val showLauncherIcon = remember { mutableStateOf(config.showLauncherIcon) }
+    val lyricGetterApi = checkLyricGetterApi()
+
+    LaunchedEffect(Unit) {
+        if (checkLyricGetterApi() != 0 || !isLoad) {
+            masterSwitchState.value = false
+            config.masterSwitch = false
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -95,12 +105,14 @@ fun HomePage(navController: NavController) {
                                 contentDescription = "Logo",
                             )
                         }
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            CheckLyricGetterApi()
+                        if (lyricGetterApi != 0) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                ShowLyricGetter(lyricGetterApi)
+                            }
                         }
                         Card(
                             modifier = Modifier
@@ -111,7 +123,19 @@ fun HomePage(navController: NavController) {
                                 title = stringResource(R.string.master_switch),
                                 checked = masterSwitchState.value,
                                 onCheckedChange = {
-                                    if (isLoad) {
+                                    if (lyricGetterApi == 1) {
+                                        Toast.makeText(
+                                            context,
+                                            R.string.no_supported_version_lyric_getter,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else if (lyricGetterApi == 2) {
+                                        Toast.makeText(
+                                            context,
+                                            R.string.no_lyric_getter,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else if (isLoad) {
                                         masterSwitchState.value = it
                                         config.masterSwitch = it
                                     } else {
@@ -267,13 +291,12 @@ fun HomePage(navController: NavController) {
     }
 }
 
-
 @Composable
-private fun CheckLyricGetterApi() {
+fun ShowLyricGetter(int: Int) {
     val openLyricGetterUrl = { ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/") }
-    ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
-        val getterVersion = it.metaData.getInt("Getter_Version")
-        if (getterVersion != BuildConfig.API_VERSION) {
+    when (int) {
+        0 -> return
+        1 -> {
             SuperArrow(
                 leftAction = {
                     Image(
@@ -289,20 +312,34 @@ private fun CheckLyricGetterApi() {
                 }
             )
         }
-    }.isNot {
-        SuperArrow(
-            leftAction = {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_warning),
-                    contentDescription = "Warning"
-                )
-            },
-            title = stringResource(R.string.no_lyric_getter),
-            titleColor = Color.Red,
-            summary = stringResource(R.string.click_to_install),
-            onClick = {
-                openLyricGetterUrl()
-            }
-        )
+
+        2 -> {
+            SuperArrow(
+                leftAction = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_warning),
+                        contentDescription = "Warning"
+                    )
+                },
+                title = stringResource(R.string.no_lyric_getter),
+                titleColor = Color.Red,
+                summary = stringResource(R.string.click_to_install),
+                onClick = {
+                    openLyricGetterUrl()
+                }
+            )
+        }
     }
+}
+
+private fun checkLyricGetterApi(): Int {
+    ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
+        val getterVersion = it.metaData.getInt("Getter_Version")
+        if (getterVersion != BuildConfig.API_VERSION) {
+            return 1
+        }
+    }.isNot {
+        return 2
+    }
+    return 0
 }
