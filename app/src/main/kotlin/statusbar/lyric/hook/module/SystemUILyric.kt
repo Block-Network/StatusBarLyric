@@ -33,6 +33,7 @@ import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Point
+import android.graphics.PorterDuff
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -106,7 +107,7 @@ class SystemUILyric : BaseHook() {
             }
             if (config.iconColor.isEmpty()) {
                 when (config.lyricColorScheme) {
-                    0 -> iconView.setColorFilter(newValue)
+                    0 -> iconView.setColorFilter(newValue, PorterDuff.Mode.SRC_IN)
                     1 -> iconView.iconColorAnima(oldValue, newValue)
                 }
             }
@@ -635,12 +636,12 @@ class SystemUILyric : BaseHook() {
                     }
                     if (config.iconColor.isEmpty()) {
                         when (config.lyricColorScheme) {
-                            0 -> setColorFilter(clockView.currentTextColor)
+                            0 -> setColorFilter(clockView.currentTextColor, PorterDuff.Mode.SRC_IN)
                             1 -> iconColorAnima(lastColor, clockView.currentTextColor)
                         }
                     } else {
                         when (config.lyricColorScheme) {
-                            0 -> setColorFilter(Color.parseColor(config.iconColor))
+                            0 -> setColorFilter(Color.parseColor(config.iconColor), PorterDuff.Mode.SRC_IN)
                             1 -> iconColorAnima(lastColor, Color.parseColor(config.iconColor))
                         }
                     }
