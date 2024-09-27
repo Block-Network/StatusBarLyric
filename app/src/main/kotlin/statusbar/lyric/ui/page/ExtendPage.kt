@@ -677,9 +677,7 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
                     maxLines = 1,
                     backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
-                        if (it.isEmpty()) {
-                            value.value = it
-                        }
+                        value.value = it
                     }
                 )
                 Row(

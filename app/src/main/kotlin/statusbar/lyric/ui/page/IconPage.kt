@@ -327,9 +327,7 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
                     maxLines = 1,
                     backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
-                        if (it.isEmpty()) {
-                            value.value = it
-                        }
+                        value.value = it
                     }
                 )
                 Row(
@@ -385,9 +383,7 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
                     maxLines = 1,
                     backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
-                        if (it.isEmpty()) {
-                            value.value = it
-                        }
+                        value.value = it
                     }
                 )
                 Row(
@@ -606,9 +602,7 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
                     maxLines = 1,
                     backgroundColor = MiuixTheme.colorScheme.secondary,
                     onValueChange = {
-                        if (it.isEmpty()) {
-                            value.value = it
-                        }
+                        value.value = it
                     }
                 )
                 Row(
