@@ -28,12 +28,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.MainActivity.Companion.isLoad
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.AnimTools
+import statusbar.lyric.tools.Tools.isNot
+import statusbar.lyric.tools.Tools.isNotNull
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
@@ -97,6 +100,13 @@ fun HomePage(navController: NavController) {
                                 .fillMaxWidth()
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
+                            CheckLyricGetterApi()
+                        }
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                        ) {
                             SuperSwitch(
                                 title = stringResource(R.string.master_switch),
                                 checked = masterSwitchState.value,
@@ -150,8 +160,7 @@ fun HomePage(navController: NavController) {
                                 Card(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = 12.dp)
-                                        .padding(bottom = 6.dp)
+                                        .padding(horizontal = 12.dp, vertical = 6.dp)
                                 ) {
                                     BasicComponent(
                                         title = stringResource(R.string.restart_app),
@@ -255,5 +264,45 @@ fun HomePage(navController: NavController) {
                 }
             }
         }
+    }
+}
+
+
+@Composable
+private fun CheckLyricGetterApi() {
+    val openLyricGetterUrl = { ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/") }
+    ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
+        val getterVersion = it.metaData.getInt("Getter_Version")
+        if (getterVersion != BuildConfig.API_VERSION) {
+            SuperArrow(
+                leftAction = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_warning),
+                        contentDescription = "Warning"
+                    )
+                },
+                title = stringResource(R.string.no_supported_version_lyric_getter),
+                titleColor = Color.Red,
+                summary = stringResource(R.string.click_to_install),
+                onClick = {
+                    openLyricGetterUrl()
+                }
+            )
+        }
+    }.isNot {
+        SuperArrow(
+            leftAction = {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_warning),
+                    contentDescription = "Warning"
+                )
+            },
+            title = stringResource(R.string.no_lyric_getter),
+            titleColor = Color.Red,
+            summary = stringResource(R.string.click_to_install),
+            onClick = {
+                openLyricGetterUrl()
+            }
+        )
     }
 }

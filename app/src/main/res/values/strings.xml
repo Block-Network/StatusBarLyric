@@ -8,6 +8,9 @@
     <string name="module_fourth">Margin settings</string>
     <string name="module_fifth">Floating title</string>
     <string name="module_sixth">Animation settings</string>
+    <string name="no_supported_version_lyric_getter">Unsupported LyricGetter</string>
+    <string name="no_lyric_getter">LyricGetter not found</string>
+    <string name="click_to_install">Click to install the latest version</string>
     <string name="show_logcat">Show logcat</string>
     <string name="show_launcher_icon">Show icon</string>
     <string name="module_extend">Please restart the system interface and player after modifying this page</string>

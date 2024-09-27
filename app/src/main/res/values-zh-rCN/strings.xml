@@ -8,6 +8,9 @@
     <string name="module_fourth">边距设置</string>
     <string name="module_fifth">悬浮标题</string>
     <string name="module_sixth">动效设置</string>
+    <string name="no_supported_version_lyric_getter">不支持的 Lyric Getter</string>
+    <string name="no_lyric_getter">未安装 Lyric Getter</string>
+    <string name="click_to_install">点击安装最新版本</string>
     <string name="show_logcat">输出日志</string>
     <string name="show_launcher_icon">显示图标</string>
     <string name="module_extend">修改本页面后请重启系统界面及播放器</string>
