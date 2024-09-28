@@ -475,7 +475,7 @@ class Config {
         }
     var titleShowWithSameLyric: Boolean
         get() {
-            return config.opt("titleShowWithSameLyric", false)
+            return config.opt("titleShowWithSameLyric", true)
         }
         set(value) {
             config.put("titleShowWithSameLyric", value)
