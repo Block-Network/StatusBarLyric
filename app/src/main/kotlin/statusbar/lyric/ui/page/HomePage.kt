@@ -81,7 +81,7 @@ fun HomePage(navController: NavController) {
                 scrollBehavior = scrollBehavior,
                 actions = {
                     IconButton(
-                        modifier = Modifier.padding(end = 18.dp),
+                        modifier = Modifier.padding(end = 15.dp),
                         onClick = {
                             navController.navigate("MenuPage")
                         }

@@ -3,6 +3,7 @@ package statusbar.lyric.ui.page
 import android.app.Activity
 import android.content.ComponentName
 import android.content.pm.PackageManager
+import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import statusbar.lyric.BuildConfig
@@ -59,6 +61,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
+import java.util.Locale
 
 @Composable
 fun MenuPage(navController: NavController) {
@@ -185,17 +188,42 @@ fun MenuPage(navController: NavController) {
                             .padding(bottom = 6.dp)
                     ) {
                         Column {
+                            val buildTime = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(BuildConfig.BUILD_TIME)
                             Text(
-                                text = "CODE:\n  ${BuildConfig.APPLICATION_ID}-${BuildConfig.BUILD_TYPE}-${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}",
+                                text = "Version Code:",
                                 modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                             )
                             Text(
-                                text = "Phone:\n  ${Build.BRAND}-${Build.DEVICE}-${Build.MODEL}-${Build.PRODUCT}-${Build.VERSION.SDK_INT}",
+                                text = "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE} (${BuildConfig.BUILD_TYPE})",
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(horizontal = 12.dp)
+                            )
+                            Text(
+                                text = "Build Time",
                                 modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                             )
                             Text(
-                                text = "LG API Version:\n  ${BuildConfig.API_VERSION} \uD83D\uDE0A",
-                                modifier = Modifier.padding(12.dp)
+                                text = buildTime,
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(horizontal = 12.dp)
+                            )
+                            Text(
+                                text = "Current Device:",
+                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                            )
+                            Text(
+                                text = "${Build.BRAND} ${Build.MODEL} (${Build.DEVICE}) SDK${Build.VERSION.SDK_INT}",
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(horizontal = 12.dp)
+                            )
+                            Text(
+                                text = "Lyric Getter:",
+                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                            )
+                            Text(
+                                text = "API${BuildConfig.API_VERSION} \uD83D\uDE0A",
+                                fontWeight = FontWeight.Medium,
+                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
                             )
                         }
                     }
