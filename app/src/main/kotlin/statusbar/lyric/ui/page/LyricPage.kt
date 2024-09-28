@@ -832,7 +832,7 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
+                        if (it.isEmpty() || it == "-" || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
                             value.value = it
                         }
                     }
@@ -856,7 +856,7 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
                         onClick = {
                             dismissDialog()
                             showDialog.value = false
-                            config.lyricTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else return@Button
+                            config.lyricTopMargins = if (value.value.isNotEmpty() && value.value != "-") value.value.toInt() else 0
                             changeConfig()
                         }
                     )
@@ -885,7 +885,7 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
+                        if (it.isEmpty() || it == "-" || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
                             value.value = it
                         }
                     }
@@ -909,7 +909,7 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                         onClick = {
                             dismissDialog()
                             showDialog.value = false
-                            config.lyricBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else return@Button
+                            config.lyricBottomMargins = if (value.value.isNotEmpty() && value.value != "-") value.value.toInt() else 0
                             changeConfig()
                         }
                     )
@@ -938,7 +938,7 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -2000..2000)) {
+                        if (it.isEmpty() || it == "-" || (it.toIntOrNull() != null && it.toInt() in -2000..2000)) {
                             value.value = it
                         }
                     }
@@ -962,7 +962,7 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                         onClick = {
                             dismissDialog()
                             showDialog.value = false
-                            config.lyricStartMargins = if (value.value.isNotEmpty()) value.value.toInt() else return@Button
+                            config.lyricStartMargins = if (value.value.isNotEmpty() && value.value != "-") value.value.toInt() else 0
                             changeConfig()
                         }
                     )
@@ -991,7 +991,7 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in -2000..2000)) {
+                        if (it.isEmpty() || it == "-" || (it.toIntOrNull() != null && it.toInt() in -2000..2000)) {
                             value.value = it
                         }
                     }
@@ -1015,7 +1015,7 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                         onClick = {
                             dismissDialog()
                             showDialog.value = false
-                            config.lyricEndMargins = if (value.value.isNotEmpty()) value.value.toInt() else return@Button
+                            config.lyricEndMargins = if (value.value.isNotEmpty() && value.value != "-") value.value.toInt() else 0
                             changeConfig()
                         }
                     )
