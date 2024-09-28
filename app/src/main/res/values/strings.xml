@@ -8,6 +8,7 @@
     <string name="module_fourth">Margin settings</string>
     <string name="module_fifth">Floating title</string>
     <string name="module_sixth">Animation settings</string>
+    <string name="menu_page">Menu</string>
     <string name="no_supported_version_lyric_getter">Unsupported LyricGetter</string>
     <string name="no_lyric_getter">LyricGetter not found</string>
     <string name="click_to_install">Click to install the latest version</string>

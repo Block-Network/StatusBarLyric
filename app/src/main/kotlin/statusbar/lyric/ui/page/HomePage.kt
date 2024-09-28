@@ -1,7 +1,5 @@
 package statusbar.lyric.ui.page
 
-import android.content.ComponentName
-import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -16,7 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +50,7 @@ import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperSwitch
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Preview(locale = "zh")
@@ -61,8 +63,6 @@ fun HomePagePreview() {
 fun HomePage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
-    val outLog = remember { mutableStateOf(config.outLog) }
-    val showLauncherIcon = remember { mutableStateOf(config.showLauncherIcon) }
     val lyricGetterApi = checkLyricGetterApi()
 
     LaunchedEffect(Unit) {
@@ -78,7 +78,22 @@ fun HomePage(navController: NavController) {
             TopAppBar(
                 title = stringResource(R.string.app_name),
                 color = Color.Transparent,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                actions = {
+                    IconButton(
+                        modifier = Modifier.padding(end = 18.dp),
+                        onClick = {
+                            navController.navigate("MenuPage")
+                        }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(28.dp),
+                            painter = painterResource(id = R.drawable.ic_menu),
+                            contentDescription = "Menu",
+                            tint = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                        )
+                    }
+                }
             )
         },
     ) {
@@ -147,35 +162,6 @@ fun HomePage(navController: NavController) {
                                     }
                                 }
                             )
-                            AnimatedVisibility(
-                                visible = masterSwitchState.value,
-                            ) {
-                                Column {
-                                    SuperSwitch(
-                                        title = stringResource(R.string.show_launcher_icon),
-                                        checked = showLauncherIcon.value,
-                                        onCheckedChange = {
-                                            showLauncherIcon.value = it
-                                            config.showLauncherIcon = it
-                                            context.packageManager.setComponentEnabledSetting(
-                                                ComponentName(context, "statusbar.lyric.AliasActivity"), if (it) {
-                                                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                                                } else {
-                                                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-                                                }, PackageManager.DONT_KILL_APP
-                                            )
-                                        }
-                                    )
-                                    SuperSwitch(
-                                        title = stringResource(R.string.show_logcat),
-                                        checked = outLog.value,
-                                        onCheckedChange = {
-                                            outLog.value = it
-                                            config.outLog = it
-                                        }
-                                    )
-                                }
-                            }
                         }
                         AnimatedVisibility(
                             visible = !masterSwitchState.value
