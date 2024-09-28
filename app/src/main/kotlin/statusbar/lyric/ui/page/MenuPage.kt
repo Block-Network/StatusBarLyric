@@ -199,7 +199,7 @@ fun MenuPage(navController: NavController) {
                                 modifier = Modifier.padding(horizontal = 12.dp)
                             )
                             Text(
-                                text = "Build Time",
+                                text = "Build Time:",
                                 modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                             )
                             Text(
