@@ -153,5 +153,5 @@
     <string name="backup_config">Backup Config</string>
     <string name="recovery_config">Recovery Config</string>
     <string name="clear_config">Clear Config</string>
-
+    <string name="clear_config_tips">Are you sure you want to clear the configuration?</string>
 </resources>

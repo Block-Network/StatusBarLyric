@@ -150,5 +150,6 @@
     <string name="restart_app">重啟軟體</string>
     <string name="backup_config">備份配置</string>
     <string name="recovery_config">恢復配置</string>
-    <string name="clear_config">清除配置</string>
+    <string name="clear_config">重設配置</string>
+    <string name="clear_config_tips">確定要重設配置嗎？</string>
 </resources>

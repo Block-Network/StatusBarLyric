@@ -151,4 +151,5 @@
     <string name="backup_config">备份配置</string>
     <string name="recovery_config">恢复配置</string>
     <string name="clear_config">重置配置</string>
+    <string name="clear_config_tips">确定要重置配置吗？</string>
 </resources>

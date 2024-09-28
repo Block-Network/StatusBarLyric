@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -15,10 +17,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -34,8 +38,10 @@ import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
+import statusbar.lyric.tools.Tools
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
+import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -45,19 +51,23 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
+import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
 fun MenuPage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
+    val ac = LocalContext.current as Activity
     val outLog = remember { mutableStateOf(config.outLog) }
     val showLauncherIcon = remember { mutableStateOf(config.showLauncherIcon) }
     val showDialog = remember { mutableStateOf(false) }
-    val ac = LocalContext.current as Activity
+    val showResetDialog = remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -147,11 +157,7 @@ fun MenuPage(navController: NavController) {
                             SuperArrow(
                                 title = stringResource(R.string.clear_config),
                                 onClick = {
-                                    config.clear()
-                                    Thread {
-                                        Thread.sleep(500)
-                                        ActivityTools.restartApp()
-                                    }.start()
+                                    showResetDialog.value = true
                                 }
                             )
                         }
@@ -198,5 +204,94 @@ fun MenuPage(navController: NavController) {
             }
         }
         RestartDialog(showDialog = showDialog)
+        ResetDialog(showDialog = showResetDialog)
     }
+}
+
+
+@Composable
+fun ResetDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
+    showDialog(
+        content = {
+            SuperDialog(
+                title = stringResource(R.string.reset_system_ui),
+                summary = stringResource(R.string.restart_systemui_tips),
+                show = showDialog,
+                onDismissRequest = {
+                    showDialog.value = false
+                },
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.cancel),
+                        onClick = {
+                            dismissDialog()
+                            showDialog.value = false
+                        }
+                    )
+                    Spacer(Modifier.width(20.dp))
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.ok),
+                        submit = true,
+                        onClick = {
+                            config.clear()
+                            dismissDialog()
+                            showDialog.value = false
+                            Thread {
+                                Thread.sleep(500)
+                                ActivityTools.restartApp()
+                            }.start()
+                        }
+                    )
+                }
+            }
+        }
+    )
+}
+
+
+@Composable
+fun RestartDialog(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
+    showDialog(
+        content = {
+            SuperDialog(
+                title = stringResource(R.string.reset_system_ui),
+                summary = stringResource(R.string.restart_systemui_tips),
+                show = showDialog,
+                onDismissRequest = {
+                    showDialog.value = false
+                },
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.cancel),
+                        onClick = {
+                            dismissDialog()
+                            showDialog.value = false
+                        }
+                    )
+                    Spacer(Modifier.width(20.dp))
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.ok),
+                        submit = true,
+                        onClick = {
+                            Tools.shell("killall com.android.systemui", true)
+                            dismissDialog()
+                            showDialog.value = false
+                        }
+                    )
+                }
+            }
+        }
+    )
 }
