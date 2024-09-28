@@ -176,7 +176,10 @@ fun HomePage(navController: NavController) {
                                         title = stringResource(R.string.restart_app),
                                         titleColor = Color.Red,
                                         onClick = {
-                                            ActivityTools.restartApp()
+                                            Thread {
+                                                Thread.sleep(500)
+                                                ActivityTools.restartApp()
+                                            }.start()
                                         }
                                     )
                                 }

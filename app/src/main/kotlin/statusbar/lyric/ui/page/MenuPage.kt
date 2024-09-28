@@ -94,7 +94,6 @@ fun MenuPage(navController: NavController) {
             ) {
                 item {
                     Column {
-
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -145,11 +144,14 @@ fun MenuPage(navController: NavController) {
                                     BackupTools.recovery(ac, ActivityOwnSP.ownSP)
                                 }
                             )
-                            BasicComponent(
+                            SuperArrow(
                                 title = stringResource(R.string.clear_config),
                                 onClick = {
                                     config.clear()
-                                    ActivityTools.restartApp()
+                                    Thread {
+                                        Thread.sleep(500)
+                                        ActivityTools.restartApp()
+                                    }.start()
                                 }
                             )
                         }
@@ -173,7 +175,8 @@ fun MenuPage(navController: NavController) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
                     ) {
                         Column {
                             Text(

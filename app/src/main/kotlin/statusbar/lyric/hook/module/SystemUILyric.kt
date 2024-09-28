@@ -77,7 +77,7 @@ import statusbar.lyric.tools.SystemMediaSessionListener
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isLandscape
-import statusbar.lyric.tools.Tools.isMIUI
+import statusbar.lyric.tools.Tools.isMiui
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isNull
@@ -685,7 +685,7 @@ class SystemUILyric : BaseHook() {
 
     inner class SystemUISpecial {
         init {
-            if (isMIUI) {
+            if (isMiui) {
                 for (i in 0..10) {
                     val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$$i")
                     if (clazz.isNotNull()) {
@@ -714,7 +714,7 @@ class SystemUILyric : BaseHook() {
                             themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         }
                     }
-                    if (isMIUI && config.mMiuiPadOptimize) {
+                    if (isMiui && config.mMiuiPadOptimize) {
                         clazz.methodFinder().filterByName("onCreate").first().createHook {
                             after {
                                 if (isPad) {
@@ -740,7 +740,7 @@ class SystemUILyric : BaseHook() {
                 }
             }
 
-            if (isMIUI && config.mMiuiHideNetworkSpeed) {
+            if (isMiui && config.mMiuiHideNetworkSpeed) {
                 moduleRes.getString(R.string.miui_hide_network_speed).log()
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
                     it.constructorFinder().first().createHook {

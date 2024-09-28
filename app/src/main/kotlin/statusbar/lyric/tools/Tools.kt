@@ -53,7 +53,7 @@ object Tools {
 
     private var index: Int = 0
 
-    val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
+    val isMiui by lazy { isPresent("android.provider.MiuiSettings") }
 
     val isPad by lazy { getSystemProperties("ro.build.characteristics") == "tablet" }
 
@@ -72,7 +72,7 @@ object Tools {
         get() {
             arrayOf("com.lge.adaptive.JavaImageUtil").forEach {
                 if (isPresent(it)) return true
-                if (isMIUI) return true
+                if (isMiui) return true
             }
             return false
         }
