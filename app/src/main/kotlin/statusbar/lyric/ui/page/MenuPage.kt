@@ -1,7 +1,9 @@
 package statusbar.lyric.ui.page
 
+import android.app.Activity
 import android.content.ComponentName
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -21,20 +23,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
+import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTools
+import statusbar.lyric.tools.BackupTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
+import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
@@ -47,6 +57,7 @@ fun MenuPage(navController: NavController) {
     val outLog = remember { mutableStateOf(config.outLog) }
     val showLauncherIcon = remember { mutableStateOf(config.showLauncherIcon) }
     val showDialog = remember { mutableStateOf(false) }
+    val ac = LocalContext.current as Activity
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -121,6 +132,33 @@ fun MenuPage(navController: NavController) {
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 6.dp)
                     ) {
+                        Column {
+                            SuperArrow(
+                                title = stringResource(R.string.backup_config),
+                                onClick = {
+                                    BackupTools.backup(ac, ActivityOwnSP.ownSP)
+                                }
+                            )
+                            SuperArrow(
+                                title = stringResource(R.string.recovery_config),
+                                onClick = {
+                                    BackupTools.recovery(ac, ActivityOwnSP.ownSP)
+                                }
+                            )
+                            BasicComponent(
+                                title = stringResource(R.string.clear_config),
+                                onClick = {
+                                    config.clear()
+                                    ActivityTools.restartApp()
+                                }
+                            )
+                        }
+                    }
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
                         BasicComponent(
                             title = stringResource(R.string.reset_system_ui),
                             titleColor = Color.Red,
@@ -128,6 +166,29 @@ fun MenuPage(navController: NavController) {
                                 showDialog.value = true
                             }
                         )
+                    }
+                    SmallTitle(
+                        text = "Info"
+                    )
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Column {
+                            Text(
+                                text = "CODE:\n  ${BuildConfig.APPLICATION_ID}-${BuildConfig.BUILD_TYPE}-${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE}",
+                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                            )
+                            Text(
+                                text = "Phone:\n  ${Build.BRAND}-${Build.DEVICE}-${Build.MODEL}-${Build.PRODUCT}-${Build.VERSION.SDK_INT}",
+                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                            )
+                            Text(
+                                text = "LG API Version:\n  ${BuildConfig.API_VERSION} \uD83D\uDE0A",
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.height(32.dp))
                 }

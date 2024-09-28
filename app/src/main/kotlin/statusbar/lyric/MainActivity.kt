@@ -22,11 +22,14 @@ import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.ActivityTestTools.stopResponse
+import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.dataList
 import statusbar.lyric.tools.ActivityTools.isHook
+import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.ConfigTools
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.LogTools.log
+import statusbar.lyric.tools.Tools.isNotNull
 
 class MainActivity : ComponentActivity() {
     private val appTestReceiver by lazy { AppTestReceiver() }
@@ -123,6 +126,25 @@ class MainActivity : ComponentActivity() {
                 appTestReceiver,
                 IntentFilter("AppTestReceiver")
             )
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data.isNotNull() && resultCode == RESULT_OK) {
+            when (requestCode) {
+                BackupTools.CREATE_DOCUMENT_CODE -> {
+                    BackupTools.handleCreateDocument(this, data!!.data)
+                }
+
+                BackupTools.OPEN_DOCUMENT_CODE -> {
+                    BackupTools.handleReadDocument(this, data!!.data)
+                    Thread {
+                        Thread.sleep(500)
+                        ActivityTools.restartApp()
+                    }.start()
+                }
+            }
         }
     }
 }

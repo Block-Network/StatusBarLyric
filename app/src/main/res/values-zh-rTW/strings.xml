@@ -148,4 +148,7 @@
     <string name="lyrics_are_gradient_and_transparent">歌詞漸變色和透明度</string>
     <string name="color_error">輸入的顏色錯誤，請檢查</string>
     <string name="restart_app">重啟軟體</string>
+    <string name="backup_config">備份配置</string>
+    <string name="recovery_config">恢復配置</string>
+    <string name="clear_config">清除配置</string>
 </resources>

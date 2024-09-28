@@ -150,5 +150,8 @@
     <string name="hyperos" translatable="false">HyperOS</string>
     <string name="color_error">The color entered is incorrect, please check</string>
     <string name="restart_app">Restart App</string>
+    <string name="backup_config">Backup Config</string>
+    <string name="recovery_config">Recovery Config</string>
+    <string name="clear_config">Clear Config</string>
 
 </resources>
