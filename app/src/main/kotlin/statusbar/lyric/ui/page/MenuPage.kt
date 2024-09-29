@@ -301,8 +301,9 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                 ) {
                     Button(
                         modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
+                        text = stringResource(R.string.ok),
                         onClick = {
+                            Tools.shell("killall com.android.systemui", true)
                             dismissDialog()
                             showDialog.value = false
                         }
@@ -310,10 +311,9 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                     Spacer(Modifier.width(20.dp))
                     Button(
                         modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
+                        text = stringResource(R.string.cancel),
                         submit = true,
                         onClick = {
-                            Tools.shell("killall com.android.systemui", true)
                             dismissDialog()
                             showDialog.value = false
                         }
