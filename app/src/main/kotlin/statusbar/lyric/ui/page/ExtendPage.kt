@@ -1,14 +1,15 @@
 package statusbar.lyric.ui.page
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -34,12 +35,10 @@ import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextField
@@ -88,238 +87,232 @@ fun ExtendPage(navController: NavController) {
     val showTitleRadiusDialog = remember { mutableStateOf(false) }
     val showTitleStrokeWidthDialog = remember { mutableStateOf(false) }
     val showTitleStrokeColorDialog = remember { mutableStateOf(false) }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = stringResource(R.string.extend_page),
-                color = Color.Transparent,
-                scrollBehavior = scrollBehavior,
-                navigationIcon = {
-                    IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
-                        onClick = {
-                            navController.popBackStack()
-                        }
+
+    Column {
+        TopAppBar(
+            title = stringResource(R.string.extend_page),
+            scrollBehavior = scrollBehavior,
+            navigationIcon = {
+                IconButton(
+                    modifier = Modifier.padding(start = 18.dp),
+                    onClick = {
+                        navController.popBackStack()
+                    }
+                ) {
+                    Icon(
+                        imageVector = MiuixIcons.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MiuixTheme.colorScheme.onBackground
+                    )
+                }
+            }
+        )
+        LazyColumn(
+            modifier = Modifier
+                .height(getWindowSize().height.dp)
+                .background(MiuixTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
+            enableOverScroll = true,
+            topAppBarScrollBehavior = scrollBehavior
+        ) {
+            item {
+                Column {
+                    Text(
+                        modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp),
+                        text = stringResource(R.string.module_extend),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.Red
+                    )
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
                     ) {
-                        Icon(
-                            imageVector = MiuixIcons.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MiuixTheme.colorScheme.onBackground
+                        SuperSwitch(
+                            title = stringResource(R.string.hide_time),
+                            checked = hideTime.value,
+                            onCheckedChange = {
+                                hideTime.value = it
+                                config.hideTime = it
+                            }
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.hide_notification_icon),
+                            checked = hideNotificationIcon.value,
+                            onCheckedChange = {
+                                hideNotificationIcon.value = it
+                                config.hideNotificationIcon = it
+                            }
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.hide_lyric_when_lock_screen),
+                            checked = hideLyricWhenLockScreen.value,
+                            onCheckedChange = {
+                                hideLyricWhenLockScreen.value = it
+                                config.hideLyricWhenLockScreen = it
+                            }
+                        )
+                        SuperDropdown(
+                            title = stringResource(R.string.lyric_color_scheme),
+                            items = lyricColorSchemeOptions,
+                            selectedIndex = lyricColorSchemeSelectedOption.intValue,
+                            onSelectedIndexChange = { newOption ->
+                                lyricColorSchemeSelectedOption.intValue = newOption
+                                config.lyricColorScheme = newOption
+                            },
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.long_click_status_bar_stop),
+                            checked = longClickStatusBarStop.value,
+                            onCheckedChange = {
+                                longClickStatusBarStop.value = it
+                                config.longClickStatusBarStop = it
+                            }
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.click_status_bar_to_hide_lyric),
+                            checked = clickStatusBarToHideLyric.value,
+                            onCheckedChange = {
+                                clickStatusBarToHideLyric.value = it
+                                config.clickStatusBarToHideLyric = it
+                            }
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.slide_status_bar_cut_songs),
+                            checked = slideStatusBarCutSongs.value,
+                            onCheckedChange = {
+                                slideStatusBarCutSongs.value = it
+                                config.slideStatusBarCutSongs = it
+                            }
+                        )
+                        AnimatedVisibility(
+                            visible = slideStatusBarCutSongs.value,
+                        ) {
+                            Column {
+                                SuperArrow(
+                                    title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
+                                    onClick = {
+                                        showCutSongsXRadiusDialog.value = true
+                                    }
+                                )
+                                SuperArrow(
+                                    title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
+                                    onClick = {
+                                        showCutSongsYRadiusDialog.value = true
+                                    }
+                                )
+                            }
+                        }
+                        SuperSwitch(
+                            title = stringResource(R.string.limit_visibility_change),
+                            summary = stringResource(R.string.limit_visibility_change_tips),
+                            checked = limitVisibilityChange.value,
+                            onCheckedChange = {
+                                limitVisibilityChange.value = it
+                                config.limitVisibilityChange = it
+                            }
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.dynamic_lyric_speed),
+                            checked = dynamicLyricSpeed.value,
+                            onCheckedChange = {
+                                dynamicLyricSpeed.value = it
+                                config.dynamicLyricSpeed = it
+                            }
+                        )
+                    }
+                    SmallTitle(
+                        text = stringResource(R.string.module_fifth)
+                    )
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
+                    ) {
+                        SuperSwitch(
+                            title = stringResource(R.string.title_switch),
+                            checked = titleSwitch.value,
+                            onCheckedChange = {
+                                titleSwitch.value = it
+                                config.titleSwitch = it
+                            }
+                        )
+                        AnimatedVisibility(titleSwitch.value) {
+                            Column {
+                                SuperSwitch(
+                                    title = stringResource(R.string.title_show_with_same_lyric),
+                                    checked = titleShowWithSameLyric.value,
+                                    onCheckedChange = {
+                                        titleShowWithSameLyric.value = it
+                                        config.titleShowWithSameLyric = it
+                                    }
+                                )
+                                SuperArrow(
+                                    title = stringResource(R.string.title_delay_duration),
+                                    onClick = {
+                                        showTitleDelayDialog.value = true
+                                    }
+                                )
+                                SuperArrow(
+                                    title = stringResource(R.string.title_color_and_transparency),
+                                    onClick = {
+                                        showTitleBgColorDialog.value = true
+                                    }
+                                )
+                                SuperArrow(
+                                    title = stringResource(R.string.title_background_radius),
+                                    onClick = {
+                                        showTitleRadiusDialog.value = true
+                                    }
+                                )
+                                SuperArrow(
+                                    title = stringResource(R.string.title_background_stroke_width),
+                                    onClick = {
+                                        showTitleStrokeWidthDialog.value = true
+                                    }
+                                )
+                                SuperArrow(
+                                    title = stringResource(R.string.title_background_stroke_color),
+                                    onClick = {
+                                        showTitleStrokeColorDialog.value = true
+                                    }
+                                )
+                                SuperDropdown(
+                                    title = stringResource(R.string.title_gravity),
+                                    items = titleGravityOptions,
+                                    selectedIndex = titleGravitySelectedOption.intValue,
+                                    onSelectedIndexChange = { newOption ->
+                                        titleGravitySelectedOption.intValue = newOption
+                                        config.titleGravity = newOption
+                                    },
+                                )
+                            }
+                        }
+                    }
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(top = 6.dp, bottom = 12.dp)
+                    ) {
+                        BasicComponent(
+                            leftAction = {
+                                Text(
+                                    text = stringResource(R.string.reset_system_ui),
+                                    color = Color.Red
+                                )
+                            },
+                            onClick = {
+                                showDialog.value = true
+                            }
                         )
                     }
                 }
-            )
-        }
-    ) {
-        Box {
-            LazyColumn(
-                modifier = Modifier
-                    .height(getWindowSize().height.dp)
-                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-                contentPadding = it,
-                enableOverScroll = true,
-                topAppBarScrollBehavior = scrollBehavior
-            ) {
-                item {
-                    Column {
-                        Text(
-                            modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp),
-                            text = stringResource(R.string.module_extend),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.Red
-                        )
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp)
-                                .padding(bottom = 6.dp)
-                        ) {
-                            SuperSwitch(
-                                title = stringResource(R.string.hide_time),
-                                checked = hideTime.value,
-                                onCheckedChange = {
-                                    hideTime.value = it
-                                    config.hideTime = it
-                                }
-                            )
-                            SuperSwitch(
-                                title = stringResource(R.string.hide_notification_icon),
-                                checked = hideNotificationIcon.value,
-                                onCheckedChange = {
-                                    hideNotificationIcon.value = it
-                                    config.hideNotificationIcon = it
-                                }
-                            )
-                            SuperSwitch(
-                                title = stringResource(R.string.hide_lyric_when_lock_screen),
-                                checked = hideLyricWhenLockScreen.value,
-                                onCheckedChange = {
-                                    hideLyricWhenLockScreen.value = it
-                                    config.hideLyricWhenLockScreen = it
-                                }
-                            )
-                            SuperDropdown(
-                                title = stringResource(R.string.lyric_color_scheme),
-                                items = lyricColorSchemeOptions,
-                                selectedIndex = lyricColorSchemeSelectedOption.intValue,
-                                onSelectedIndexChange = { newOption ->
-                                    lyricColorSchemeSelectedOption.intValue = newOption
-                                    config.lyricColorScheme = newOption
-                                },
-                            )
-                            SuperSwitch(
-                                title = stringResource(R.string.long_click_status_bar_stop),
-                                checked = longClickStatusBarStop.value,
-                                onCheckedChange = {
-                                    longClickStatusBarStop.value = it
-                                    config.longClickStatusBarStop = it
-                                }
-                            )
-                            SuperSwitch(
-                                title = stringResource(R.string.click_status_bar_to_hide_lyric),
-                                checked = clickStatusBarToHideLyric.value,
-                                onCheckedChange = {
-                                    clickStatusBarToHideLyric.value = it
-                                    config.clickStatusBarToHideLyric = it
-                                }
-                            )
-                            SuperSwitch(
-                                title = stringResource(R.string.slide_status_bar_cut_songs),
-                                checked = slideStatusBarCutSongs.value,
-                                onCheckedChange = {
-                                    slideStatusBarCutSongs.value = it
-                                    config.slideStatusBarCutSongs = it
-                                }
-                            )
-                            AnimatedVisibility(
-                                visible = slideStatusBarCutSongs.value,
-                            ) {
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
-                                        onClick = {
-                                            showCutSongsXRadiusDialog.value = true
-                                        }
-                                    )
-                                    SuperArrow(
-                                        title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
-                                        onClick = {
-                                            showCutSongsYRadiusDialog.value = true
-                                        }
-                                    )
-                                }
-                            }
-                            SuperSwitch(
-                                title = stringResource(R.string.limit_visibility_change),
-                                summary = stringResource(R.string.limit_visibility_change_tips),
-                                checked = limitVisibilityChange.value,
-                                onCheckedChange = {
-                                    limitVisibilityChange.value = it
-                                    config.limitVisibilityChange = it
-                                }
-                            )
-                            SuperSwitch(
-                                title = stringResource(R.string.dynamic_lyric_speed),
-                                checked = dynamicLyricSpeed.value,
-                                onCheckedChange = {
-                                    dynamicLyricSpeed.value = it
-                                    config.dynamicLyricSpeed = it
-                                }
-                            )
-                        }
-                        SmallTitle(
-                            text = stringResource(R.string.module_fifth)
-                        )
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp)
-                                .padding(bottom = 6.dp)
-                        ) {
-                            SuperSwitch(
-                                title = stringResource(R.string.title_switch),
-                                checked = titleSwitch.value,
-                                onCheckedChange = {
-                                    titleSwitch.value = it
-                                    config.titleSwitch = it
-                                }
-                            )
-                            AnimatedVisibility(titleSwitch.value) {
-                                Column {
-                                    SuperSwitch(
-                                        title = stringResource(R.string.title_show_with_same_lyric),
-                                        checked = titleShowWithSameLyric.value,
-                                        onCheckedChange = {
-                                            titleShowWithSameLyric.value = it
-                                            config.titleShowWithSameLyric = it
-                                        }
-                                    )
-                                    SuperArrow(
-                                        title = stringResource(R.string.title_delay_duration),
-                                        onClick = {
-                                            showTitleDelayDialog.value = true
-                                        }
-                                    )
-                                    SuperArrow(
-                                        title = stringResource(R.string.title_color_and_transparency),
-                                        onClick = {
-                                            showTitleBgColorDialog.value = true
-                                        }
-                                    )
-                                    SuperArrow(
-                                        title = stringResource(R.string.title_background_radius),
-                                        onClick = {
-                                            showTitleRadiusDialog.value = true
-                                        }
-                                    )
-                                    SuperArrow(
-                                        title = stringResource(R.string.title_background_stroke_width),
-                                        onClick = {
-                                            showTitleStrokeWidthDialog.value = true
-                                        }
-                                    )
-                                    SuperArrow(
-                                        title = stringResource(R.string.title_background_stroke_color),
-                                        onClick = {
-                                            showTitleStrokeColorDialog.value = true
-                                        }
-                                    )
-                                    SuperDropdown(
-                                        title = stringResource(R.string.title_gravity),
-                                        items = titleGravityOptions,
-                                        selectedIndex = titleGravitySelectedOption.intValue,
-                                        onSelectedIndexChange = { newOption ->
-                                            titleGravitySelectedOption.intValue = newOption
-                                            config.titleGravity = newOption
-                                        },
-                                    )
-                                }
-                            }
-                        }
-                        // TODO
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            BasicComponent(
-                                leftAction = {
-                                    Text(
-                                        text = stringResource(R.string.reset_system_ui),
-                                        color = Color.Red
-                                    )
-                                },
-                                onClick = {
-                                    showDialog.value = true
-                                }
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
+                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
             }
         }
     }

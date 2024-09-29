@@ -1,12 +1,13 @@
 package statusbar.lyric.ui.page
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -24,16 +25,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity.Companion.testReceiver
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTestTools.getClass
-import statusbar.lyric.tools.ActivityTestTools.waitResponse
+import statusbar.lyric.tools.ActivityTools.showToastOnLooper
+import statusbar.lyric.tools.Tools.goMainThread
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -50,97 +51,104 @@ fun TestPage(navController: NavController) {
     val showDialog = remember { mutableStateOf(false) }
     val testMode = remember { mutableStateOf(config.testMode) }
     val relaxConditions = remember { mutableStateOf(config.relaxConditions) }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = stringResource(R.string.hook_page),
-                color = Color.Transparent,
-                scrollBehavior = scrollBehavior,
-                navigationIcon = {
-                    IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
-                        onClick = {
-                            navController.popBackStack()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = MiuixIcons.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MiuixTheme.colorScheme.onBackground
-                        )
+
+    Column {
+        TopAppBar(
+            title = stringResource(R.string.hook_page),
+            scrollBehavior = scrollBehavior,
+            navigationIcon = {
+                IconButton(
+                    modifier = Modifier.padding(start = 18.dp),
+                    onClick = {
+                        navController.popBackStack()
                     }
+                ) {
+                    Icon(
+                        imageVector = MiuixIcons.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MiuixTheme.colorScheme.onBackground
+                    )
                 }
-            )
-        }
-    ) {
-        Box {
-            LazyColumn(
-                modifier = Modifier
-                    .height(getWindowSize().height.dp)
-                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-                contentPadding = it,
-                enableOverScroll = true,
-                topAppBarScrollBehavior = scrollBehavior
-            ) {
-                item {
-                    Column {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            SuperSwitch(
-                                title = stringResource(R.string.test_mode),
-                                checked = testMode.value,
-                                onCheckedChange = {
-                                    testMode.value = it
-                                    config.testMode = it
-                                }
-                            )
-                            AnimatedVisibility(testMode.value) {
-                                Column {
-                                    SuperSwitch(
-                                        title = stringResource(R.string.relax_conditions),
-                                        summary = stringResource(R.string.relax_conditions_tips),
-                                        checked = relaxConditions.value,
-                                        onCheckedChange = {
-                                            relaxConditions.value = it
-                                            config.relaxConditions = it
+            }
+        )
+        LazyColumn(
+            modifier = Modifier
+                .height(getWindowSize().height.dp)
+                .background(MiuixTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
+            enableOverScroll = true,
+            topAppBarScrollBehavior = scrollBehavior
+        ) {
+            item {
+                Column {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        SuperSwitch(
+                            title = stringResource(R.string.test_mode),
+                            checked = testMode.value,
+                            onCheckedChange = {
+                                testMode.value = it
+                                config.testMode = it
+                            }
+                        )
+                        AnimatedVisibility(testMode.value) {
+                            Column {
+                                SuperSwitch(
+                                    title = stringResource(R.string.relax_conditions),
+                                    summary = stringResource(R.string.relax_conditions_tips),
+                                    checked = relaxConditions.value,
+                                    onCheckedChange = {
+                                        relaxConditions.value = it
+                                        config.relaxConditions = it
+                                    }
+                                )
+                                SuperArrow(
+                                    title = stringResource(R.string.get_hook),
+                                    titleColor = MiuixTheme.colorScheme.primary,
+                                    rightText = stringResource(R.string.tips1),
+                                    onClick = {
+                                        context.getClass()
+                                        when (testReceiver) {
+                                            true -> navController.navigate("ChoosePage")
+                                            else -> {
+                                                Thread {
+                                                    Thread.sleep(500)
+                                                    goMainThread {
+                                                        if (testReceiver) navController.navigate("ChoosePage") else {
+                                                            showToastOnLooper(context.getString(R.string.broadcast_receive_timeout))
+                                                        }
+                                                    }
+                                                }.start()
+                                            }
                                         }
-                                    )
-                                    SuperArrow(
-                                        title = stringResource(R.string.get_hook),
-                                        titleColor = MiuixTheme.colorScheme.primary,
-                                        rightText = stringResource(R.string.tips1),
-                                        onClick = {
-                                            waitResponse()
-                                            context.getClass()
-                                        }
-                                    )
-                                }
+                                    }
+                                )
                             }
                         }
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            BasicComponent(
-                                title = stringResource(R.string.reset_system_ui),
-                                titleColor = Color.Red,
-                                onClick = {
-                                    showDialog.value = true
-                                }
-                            )
-                        }
-                        SmallTitle(
-                            text = stringResource(R.string.test_mode_tips).split("\n")[1]
+                    }
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        BasicComponent(
+                            title = stringResource(R.string.reset_system_ui),
+                            titleColor = Color.Red,
+                            onClick = {
+                                showDialog.value = true
+                            }
                         )
                     }
-                    Spacer(modifier = Modifier.height(32.dp))
+                    SmallTitle(
+                        modifier = Modifier.padding(bottom = 12.dp),
+                        text = stringResource(R.string.test_mode_tips).split("\n")[1]
+                    )
                 }
+                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
             }
         }
     }

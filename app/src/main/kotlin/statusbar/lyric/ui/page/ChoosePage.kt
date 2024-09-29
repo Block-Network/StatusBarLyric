@@ -1,13 +1,14 @@
 package statusbar.lyric.ui.page
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -22,7 +23,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -32,12 +32,10 @@ import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.ActivityTestTools.showView
 import statusbar.lyric.tools.ActivityTools.dataList
-import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -54,65 +52,59 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 fun ChoosePage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = stringResource(R.string.choose_page),
-                color = Color.Transparent,
-                scrollBehavior = scrollBehavior,
-                navigationIcon = {
-                    IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
-                        onClick = {
-                            navController.popBackStack()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = MiuixIcons.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MiuixTheme.colorScheme.onBackground
-                        )
+
+    Column {
+        TopAppBar(
+            title = stringResource(R.string.choose_page),
+            scrollBehavior = scrollBehavior,
+            navigationIcon = {
+                IconButton(
+                    modifier = Modifier.padding(start = 18.dp),
+                    onClick = {
+                        navController.popBackStack()
                     }
+                ) {
+                    Icon(
+                        imageVector = MiuixIcons.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MiuixTheme.colorScheme.onBackground
+                    )
                 }
-            )
-        }
-    ) {
-        Box {
-            LazyColumn(
-                modifier = Modifier
-                    .height(getWindowSize().height.dp)
-                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-                contentPadding = it,
-                enableOverScroll = true,
-                topAppBarScrollBehavior = scrollBehavior
-            ) {
-                item {
-                    Column {
-                        dataList.forEach { data ->
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 6.dp)
-                            ) {
-                                SuperArrow(
-                                    title = "${data.textViewClassName} ${data.textViewId}",
-                                    summary = "${data.parentViewClassName} ${data.parentViewId} textSize:${data.textSize}",
-                                    onClick = {
-                                        context.showView(data)
-                                        showDialog.value = true
-                                    }
-                                )
-                                ChooseDialog(showDialog, data)
-                            }
+            }
+        )
+        LazyColumn(
+            modifier = Modifier
+                .height(getWindowSize().height.dp)
+                .background(MiuixTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
+            enableOverScroll = true,
+            topAppBarScrollBehavior = scrollBehavior
+        ) {
+            item {
+                Column {
+                    dataList.forEach { data ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                        ) {
+                            SuperArrow(
+                                title = "${data.textViewClassName} ${data.textViewId}",
+                                summary = "${data.parentViewClassName} ${data.parentViewId} textSize:${data.textSize}",
+                                onClick = {
+                                    context.showView(data)
+                                    showDialog.value = true
+                                }
+                            )
+                            ChooseDialog(showDialog, data)
                         }
-                        SmallTitle(
-                            text = stringResource(R.string.choose_page_tips)
-                        )
                     }
-                    Spacer(modifier = Modifier.height(32.dp))
+                    SmallTitle(
+                        text = stringResource(R.string.choose_page_tips)
+                    )
                 }
+                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
             }
         }
     }

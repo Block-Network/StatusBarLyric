@@ -15,13 +15,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.DisposableEffect
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
 import statusbar.lyric.data.Data
-import statusbar.lyric.tools.ActivityTestTools.stopResponse
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.dataList
 import statusbar.lyric.tools.ActivityTools.isHook
@@ -33,13 +30,14 @@ import statusbar.lyric.tools.Tools.isNotNull
 
 class MainActivity : ComponentActivity() {
     private val appTestReceiver by lazy { AppTestReceiver() }
-    private lateinit var navController: NavHostController
 
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
 
         var isLoad: Boolean = false
+
+        var testReceiver = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +48,6 @@ class MainActivity : ComponentActivity() {
         init()
 
         setContent {
-            navController = rememberNavController()
 
             DisposableEffect(isSystemInDarkTheme()) {
                 enableEdgeToEdge()
@@ -59,7 +56,7 @@ class MainActivity : ComponentActivity() {
                 }
                 onDispose {}
             }
-            App(navController)
+            App()
         }
     }
 
@@ -94,7 +91,6 @@ class MainActivity : ComponentActivity() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
                 "ReceiveClass" -> {
-                    stopResponse()
                     dataList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         intent.getSerializableExtra("DataList", ArrayList<Data>()::class.java)
                     } else {
@@ -103,10 +99,10 @@ class MainActivity : ComponentActivity() {
                     if (dataList.size == 0) {
                         "DataList is empty".log()
                         Toast.makeText(context, context.getString(R.string.not_found_hook), Toast.LENGTH_SHORT).show()
-                        return
+                        testReceiver = false
                     } else {
                         "DataList size: ${dataList.size}".log()
-                        navController.navigate("ChoosePage")
+                        testReceiver = true
                     }
                 }
             }

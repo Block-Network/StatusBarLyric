@@ -38,16 +38,12 @@ import java.util.TimerTask
 @SuppressLint("StaticFieldLeak")
 object ActivityTestTools {
 
-    private lateinit var timer: Timer
-    private var isTimer = false
-
     fun Context.getClass() {
         this.sendBroadcast(Intent("TestReceiver").apply {
             putExtra("Type", "GetClass")
             "GetClass".log()
         })
     }
-
 
     fun Context.receiveClass(dataList: ArrayList<Data>) {
         sendBroadcast(Intent("AppTestReceiver").apply {
@@ -62,26 +58,4 @@ object ActivityTestTools {
             putExtra("Data", data)
         })
     }
-
-    fun waitResponse() {
-        if (isTimer) return
-        isTimer = true
-        timer = Timer()
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                stopResponse()
-                goMainThread {
-                    showToastOnLooper(context.getString(R.string.broadcast_receive_timeout))
-                }
-            }
-        }, 3000)
-    }
-
-    fun stopResponse() {
-        runCatching {
-            timer.cancel()
-        }
-        isTimer = false
-    }
-
 }

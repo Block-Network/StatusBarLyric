@@ -5,14 +5,15 @@ import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.icu.text.SimpleDateFormat
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -42,12 +43,10 @@ import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.Tools
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TopAppBar
@@ -71,169 +70,164 @@ fun MenuPage(navController: NavController) {
     val showLauncherIcon = remember { mutableStateOf(config.showLauncherIcon) }
     val showDialog = remember { mutableStateOf(false) }
     val showResetDialog = remember { mutableStateOf(false) }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = stringResource(R.string.menu_page),
-                color = Color.Transparent,
-                scrollBehavior = scrollBehavior,
-                navigationIcon = {
-                    IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
-                        onClick = {
-                            navController.popBackStack()
-                        }
-                    ) {
-                        Icon(
-                            imageVector = MiuixIcons.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MiuixTheme.colorScheme.onBackground
-                        )
+
+    Column {
+        TopAppBar(
+            title = stringResource(R.string.menu_page),
+            scrollBehavior = scrollBehavior,
+            navigationIcon = {
+                IconButton(
+                    modifier = Modifier.padding(start = 18.dp),
+                    onClick = {
+                        navController.popBackStack()
                     }
-                }
-            )
-        }
-    ) {
-        Box {
-            LazyColumn(
-                modifier = Modifier
-                    .height(getWindowSize().height.dp)
-                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-                contentPadding = it,
-                enableOverScroll = true,
-                topAppBarScrollBehavior = scrollBehavior
-            ) {
-                item {
-                    Column {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            Column {
-                                SuperSwitch(
-                                    title = stringResource(R.string.show_launcher_icon),
-                                    checked = showLauncherIcon.value,
-                                    onCheckedChange = {
-                                        showLauncherIcon.value = it
-                                        config.showLauncherIcon = it
-                                        context.packageManager.setComponentEnabledSetting(
-                                            ComponentName(context, "statusbar.lyric.AliasActivity"), if (it) {
-                                                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                                            } else {
-                                                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-                                            }, PackageManager.DONT_KILL_APP
-                                        )
-                                    }
-                                )
-                                SuperSwitch(
-                                    title = stringResource(R.string.show_logcat),
-                                    checked = outLog.value,
-                                    onCheckedChange = {
-                                        outLog.value = it
-                                        config.outLog = it
-                                    }
-                                )
-                            }
-                        }
-                    }
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        Column {
-                            SuperArrow(
-                                title = stringResource(R.string.backup_config),
-                                onClick = {
-                                    BackupTools.backup(ac, ActivityOwnSP.ownSP)
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.recovery_config),
-                                onClick = {
-                                    BackupTools.recovery(ac, ActivityOwnSP.ownSP)
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.clear_config),
-                                onClick = {
-                                    showResetDialog.value = true
-                                }
-                            )
-                        }
-                    }
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        BasicComponent(
-                            title = stringResource(R.string.reset_system_ui),
-                            titleColor = Color.Red,
-                            onClick = {
-                                showDialog.value = true
-                            }
-                        )
-                    }
-                    SmallTitle(
-                        text = "Info"
+                ) {
+                    Icon(
+                        imageVector = MiuixIcons.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MiuixTheme.colorScheme.onBackground
                     )
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp)
-                    ) {
-                        Column {
-                            val buildTime = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(BuildConfig.BUILD_TIME)
-                            Text(
-                                text = "Version Code:",
-                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
-                            )
-                            Text(
-                                text = "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE} (${BuildConfig.BUILD_TYPE})",
-                                fontWeight = FontWeight.Medium,
-                                modifier = Modifier.padding(horizontal = 12.dp)
-                            )
-                            Text(
-                                text = "Build Time:",
-                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
-                            )
-                            Text(
-                                text = buildTime,
-                                fontWeight = FontWeight.Medium,
-                                modifier = Modifier.padding(horizontal = 12.dp)
-                            )
-                            Text(
-                                text = "Current Device:",
-                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
-                            )
-                            Text(
-                                text = "${Build.BRAND} ${Build.MODEL} (${Build.DEVICE}) SDK${Build.VERSION.SDK_INT}",
-                                fontWeight = FontWeight.Medium,
-                                modifier = Modifier.padding(horizontal = 12.dp)
-                            )
-                            Text(
-                                text = "Lyric Getter:",
-                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
-                            )
-                            Text(
-                                text = "API${BuildConfig.API_VERSION} \uD83D\uDE0A",
-                                fontWeight = FontWeight.Medium,
-                                modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(32.dp))
                 }
             }
+        )
+        LazyColumn(
+            modifier = Modifier
+                .height(getWindowSize().height.dp)
+                .background(MiuixTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
+            enableOverScroll = true,
+            topAppBarScrollBehavior = scrollBehavior
+        ) {
+            item {
+                Column {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Column {
+                            SuperSwitch(
+                                title = stringResource(R.string.show_launcher_icon),
+                                checked = showLauncherIcon.value,
+                                onCheckedChange = {
+                                    showLauncherIcon.value = it
+                                    config.showLauncherIcon = it
+                                    context.packageManager.setComponentEnabledSetting(
+                                        ComponentName(context, "statusbar.lyric.AliasActivity"), if (it) {
+                                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                                        } else {
+                                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                                        }, PackageManager.DONT_KILL_APP
+                                    )
+                                }
+                            )
+                            SuperSwitch(
+                                title = stringResource(R.string.show_logcat),
+                                checked = outLog.value,
+                                onCheckedChange = {
+                                    outLog.value = it
+                                    config.outLog = it
+                                }
+                            )
+                        }
+                    }
+                }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Column {
+                        SuperArrow(
+                            title = stringResource(R.string.backup_config),
+                            onClick = {
+                                BackupTools.backup(ac, ActivityOwnSP.ownSP)
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.recovery_config),
+                            onClick = {
+                                BackupTools.recovery(ac, ActivityOwnSP.ownSP)
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.clear_config),
+                            onClick = {
+                                showResetDialog.value = true
+                            }
+                        )
+                    }
+                }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(top = 6.dp, bottom = 12.dp)
+                ) {
+                    BasicComponent(
+                        title = stringResource(R.string.reset_system_ui),
+                        titleColor = Color.Red,
+                        onClick = {
+                            showDialog.value = true
+                        }
+                    )
+                }
+                SmallTitle(
+                    text = "Info"
+                )
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 6.dp)
+                ) {
+                    Column {
+                        val buildTime = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(BuildConfig.BUILD_TIME)
+                        Text(
+                            text = "Version Code:",
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                        )
+                        Text(
+                            text = "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE} (${BuildConfig.BUILD_TYPE})",
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
+                        Text(
+                            text = "Build Time:",
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                        )
+                        Text(
+                            text = buildTime,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
+                        Text(
+                            text = "Current Device:",
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                        )
+                        Text(
+                            text = "${Build.BRAND} ${Build.MODEL} (${Build.DEVICE}) SDK${Build.VERSION.SDK_INT}",
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
+                        Text(
+                            text = "Lyric Getter:",
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
+                        )
+                        Text(
+                            text = "API${BuildConfig.API_VERSION} \uD83D\uDE0A",
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
+                        )
+                    }
+                }
+                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
+            }
         }
-        RestartDialog(showDialog = showDialog)
-        ResetDialog(showDialog = showResetDialog)
     }
+    RestartDialog(showDialog = showDialog)
+    ResetDialog(showDialog = showResetDialog)
 }
 
 

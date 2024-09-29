@@ -1,14 +1,15 @@
 package statusbar.lyric.ui.page
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
@@ -35,12 +36,10 @@ import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
@@ -98,213 +97,207 @@ fun LyricPage(navController: NavController) {
     val showLyricStartMarginsDialog = remember { mutableStateOf(false) }
     val showLyricEndMarginsDialog = remember { mutableStateOf(false) }
     val showLyricAnimDurationDialog = remember { mutableStateOf(false) }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                title = stringResource(R.string.lyric_page),
-                color = Color.Transparent,
-                scrollBehavior = scrollBehavior,
-                navigationIcon = {
-                    IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
-                        onClick = {
-                            navController.popBackStack()
-                        }
+
+    Column {
+        TopAppBar(
+            title = stringResource(R.string.lyric_page),
+            scrollBehavior = scrollBehavior,
+            navigationIcon = {
+                IconButton(
+                    modifier = Modifier.padding(start = 18.dp),
+                    onClick = {
+                        navController.popBackStack()
+                    }
+                ) {
+                    Icon(
+                        imageVector = MiuixIcons.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MiuixTheme.colorScheme.onBackground
+                    )
+                }
+            }
+        )
+        LazyColumn(
+            modifier = Modifier
+                .height(getWindowSize().height.dp)
+                .background(MiuixTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
+            enableOverScroll = true,
+            topAppBarScrollBehavior = scrollBehavior
+        ) {
+            item {
+                Column {
+                    SmallTitle(
+                        text = stringResource(R.string.module_second)
+                    )
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
                     ) {
-                        Icon(
-                            imageVector = MiuixIcons.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MiuixTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-            )
-        }
-    ) {
-        LyricAnimDurationDialog(showLyricAnimDurationDialog)
-        Box {
-            LazyColumn(
-                modifier = Modifier
-                    .height(getWindowSize().height.dp)
-                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-                contentPadding = it,
-                enableOverScroll = true,
-                topAppBarScrollBehavior = scrollBehavior
-            ) {
-                item {
-                    Column {
-                        SmallTitle(
-                            text = stringResource(R.string.module_second)
-                        )
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp)
-                                .padding(bottom = 6.dp)
-                        ) {
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_width),
-                                onClick = {
-                                    showLyricWidthDialog.value = true
-                                }
-                            )
-                            AnimatedVisibility(
-                                visible = lyricWidth.value != "0",
-                            ) {
-                                SuperSwitch(
-                                    title = stringResource(R.string.fixed_lyric_width),
-                                    summary = stringResource(R.string.fixed_lyric_width_tips),
-                                    checked = fixedLyricWidth.value,
-                                    onCheckedChange = {
-                                        fixedLyricWidth.value = it
-                                        config.fixedLyricWidth = it
-                                        changeConfig()
-                                    }
-                                )
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_width),
+                            onClick = {
+                                showLyricWidthDialog.value = true
                             }
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_size),
-                                onClick = {
-                                    showLyricSizeDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_color_and_transparency),
-                                onClick = {
-                                    showLyricColorDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyrics_are_gradient_and_transparent),
-                                titleColor = MiuixTheme.colorScheme.primary,
-                                rightText = stringResource(R.string.tips1),
-                                onClick = {
-                                    showLyricGradientDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyrics_gradient_background_color_and_transparency),
-                                onClick = {
-                                    showLyricGradientBgColorDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_background_radius),
-                                onClick = {
-                                    showLyricBgRadiusDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_letter_spacing),
-                                onClick = {
-                                    showLyricLetterSpacingDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_stroke_width),
-                                onClick = {
-                                    showLyricStrokeWidthDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_speed),
-                                onClick = {
-                                    showLyricSpeedDialog.value = true
-                                }
-                            )
-                        }
-                        SmallTitle(
-                            text = stringResource(R.string.module_fourth)
                         )
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp)
-                                .padding(bottom = 6.dp)
+                        AnimatedVisibility(
+                            visible = lyricWidth.value != "0",
                         ) {
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_top_margins),
-                                onClick = {
-                                    showLyricTopMarginsDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_bottom_margins),
-                                onClick = {
-                                    showLyricBottomMarginsDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_start_margins),
-                                titleColor = MiuixTheme.colorScheme.primary,
-                                rightText = stringResource(R.string.tips1),
-                                onClick = {
-                                    showLyricStartMarginsDialog.value = true
-                                }
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyric_end_margins),
-                                titleColor = MiuixTheme.colorScheme.primary,
-                                rightText = stringResource(R.string.tips1),
-                                onClick = {
-                                    showLyricEndMarginsDialog.value = true
+                            SuperSwitch(
+                                title = stringResource(R.string.fixed_lyric_width),
+                                summary = stringResource(R.string.fixed_lyric_width_tips),
+                                checked = fixedLyricWidth.value,
+                                onCheckedChange = {
+                                    fixedLyricWidth.value = it
+                                    config.fixedLyricWidth = it
+                                    changeConfig()
                                 }
                             )
                         }
-                        SmallTitle(
-                            text = stringResource(R.string.module_sixth)
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_size),
+                            onClick = {
+                                showLyricSizeDialog.value = true
+                            }
                         )
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp)
-                                .padding(bottom = 6.dp)
-                        ) {
-                            SuperDropdown(
-                                title = stringResource(R.string.lyrics_animation),
-                                items = lyricAnimOptions,
-                                selectedIndex = lyricAnimSelectedOption.intValue,
-                                onSelectedIndexChange = { newOption ->
-                                    lyricAnimSelectedOption.intValue = newOption
-                                    config.lyricAnimation = newOption
-                                    changeConfig()
-                                },
-                            )
-                            SuperDropdown(
-                                title = stringResource(R.string.lyrics_animation_interpolator),
-                                items = lyricInterpolatorOptions,
-                                selectedIndex = lyricInterpolatorSelectedOption.intValue,
-                                onSelectedIndexChange = { newOption ->
-                                    lyricInterpolatorSelectedOption.intValue = newOption
-                                    config.lyricInterpolator = newOption
-                                    changeConfig()
-                                },
-                            )
-                            SuperArrow(
-                                title = stringResource(R.string.lyrics_animation_duration),
-                                onClick = {
-                                    showLyricAnimDurationDialog.value = true
-                                }
-                            )
-                        }
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            BasicComponent(
-                                title = stringResource(R.string.reset_system_ui),
-                                titleColor = Color.Red,
-                                onClick = {
-                                    showDialog.value = true
-                                }
-                            )
-                        }
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_color_and_transparency),
+                            onClick = {
+                                showLyricColorDialog.value = true
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyrics_are_gradient_and_transparent),
+                            titleColor = MiuixTheme.colorScheme.primary,
+                            rightText = stringResource(R.string.tips1),
+                            onClick = {
+                                showLyricGradientDialog.value = true
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyrics_gradient_background_color_and_transparency),
+                            onClick = {
+                                showLyricGradientBgColorDialog.value = true
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_background_radius),
+                            onClick = {
+                                showLyricBgRadiusDialog.value = true
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_letter_spacing),
+                            onClick = {
+                                showLyricLetterSpacingDialog.value = true
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_stroke_width),
+                            onClick = {
+                                showLyricStrokeWidthDialog.value = true
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_speed),
+                            onClick = {
+                                showLyricSpeedDialog.value = true
+                            }
+                        )
                     }
-                    Spacer(modifier = Modifier.height(32.dp))
+                    SmallTitle(
+                        text = stringResource(R.string.module_fourth)
+                    )
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
+                    ) {
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_top_margins),
+                            onClick = {
+                                showLyricTopMarginsDialog.value = true
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_bottom_margins),
+                            onClick = {
+                                showLyricBottomMarginsDialog.value = true
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_start_margins),
+                            titleColor = MiuixTheme.colorScheme.primary,
+                            rightText = stringResource(R.string.tips1),
+                            onClick = {
+                                showLyricStartMarginsDialog.value = true
+                            }
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyric_end_margins),
+                            titleColor = MiuixTheme.colorScheme.primary,
+                            rightText = stringResource(R.string.tips1),
+                            onClick = {
+                                showLyricEndMarginsDialog.value = true
+                            }
+                        )
+                    }
+                    SmallTitle(
+                        text = stringResource(R.string.module_sixth)
+                    )
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
+                    ) {
+                        SuperDropdown(
+                            title = stringResource(R.string.lyrics_animation),
+                            items = lyricAnimOptions,
+                            selectedIndex = lyricAnimSelectedOption.intValue,
+                            onSelectedIndexChange = { newOption ->
+                                lyricAnimSelectedOption.intValue = newOption
+                                config.lyricAnimation = newOption
+                                changeConfig()
+                            },
+                        )
+                        SuperDropdown(
+                            title = stringResource(R.string.lyrics_animation_interpolator),
+                            items = lyricInterpolatorOptions,
+                            selectedIndex = lyricInterpolatorSelectedOption.intValue,
+                            onSelectedIndexChange = { newOption ->
+                                lyricInterpolatorSelectedOption.intValue = newOption
+                                config.lyricInterpolator = newOption
+                                changeConfig()
+                            },
+                        )
+                        SuperArrow(
+                            title = stringResource(R.string.lyrics_animation_duration),
+                            onClick = {
+                                showLyricAnimDurationDialog.value = true
+                            }
+                        )
+                    }
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(top = 6.dp, bottom = 12.dp)
+                    ) {
+                        BasicComponent(
+                            title = stringResource(R.string.reset_system_ui),
+                            titleColor = Color.Red,
+                            onClick = {
+                                showDialog.value = true
+                            }
+                        )
+                    }
                 }
+                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
             }
         }
     }
@@ -322,6 +315,7 @@ fun LyricPage(navController: NavController) {
     LyricBottomMarginsDialog(showLyricBottomMarginsDialog)
     LyricStartMarginsDialog(showLyricStartMarginsDialog)
     LyricEndMarginsDialog(showLyricEndMarginsDialog)
+    LyricAnimDurationDialog(showLyricAnimDurationDialog)
 }
 
 @Composable
