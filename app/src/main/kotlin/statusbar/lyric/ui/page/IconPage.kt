@@ -435,7 +435,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     onValueChange = {
-                        if (it.isEmpty() || it == "-"  || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
+                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                             value.value = it
                         }
                     }
@@ -459,7 +459,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                         onClick = {
                             dismissDialog()
                             showDialog.value = false
-                            config.iconBottomMargins = if (value.value.isNotEmpty() && value.value != "-") value.value.toInt() else 0
+                            config.iconBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                             changeConfig()
                         }
                     )
@@ -488,7 +488,7 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     onValueChange = {
-                        if (it.isEmpty() || it == "-"  || (it.toIntOrNull() != null && it.toInt() in -100..100)) {
+                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                             value.value = it
                         }
                     }
@@ -512,7 +512,7 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                         onClick = {
                             dismissDialog()
                             showDialog.value = false
-                            config.iconBottomMargins = if (value.value.isNotEmpty() && value.value != "-") value.value.toInt() else 0
+                            config.iconBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                             changeConfig()
                         }
                     )
@@ -541,7 +541,7 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     onValueChange = {
-                        if (it.isEmpty() || it == "-"  || (it.toIntOrNull() != null && it.toInt() in -500..500)) {
+                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..500)) {
                             value.value = it
                         }
                     }
@@ -565,7 +565,7 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
                         onClick = {
                             dismissDialog()
                             showDialog.value = false
-                            config.iconStartMargins = if (value.value.isNotEmpty() && value.value != "-") value.value.toInt() else 0
+                            config.iconStartMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                             changeConfig()
                         }
                     )
