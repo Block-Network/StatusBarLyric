@@ -501,9 +501,7 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     onValueChange = {
-                        if (it.isEmpty()) {
-                            value.value = it
-                        }
+                        value.value = it
                     }
                 )
                 Row(
