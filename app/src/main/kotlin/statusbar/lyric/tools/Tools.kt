@@ -53,7 +53,6 @@ object Tools {
 
     private var index: Int = 0
 
-<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/tools/Tools.kt
     val isMiui by lazy { isPresent("android.provider.MiuiSettings") }
 
     val isPad by lazy { getSystemProperties("ro.build.characteristics") == "tablet" }
@@ -69,21 +68,6 @@ object Tools {
 
     fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 
-=======
-    val isMIUI by lazy { isPresent("android.provider.MiuiSettings") }
-
-    val isPad get() = getSystemProperties("ro.build.characteristics") == "tablet"
-
-    fun isHyperOS(): Boolean {
-        try {
-            getSystemProperties("ro.mi.os.version.incremental")
-            return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
-        } catch (_: Exception) {
-            return false
-        }
-    }
-
->>>>>>> main:app/src/main/java/statusbar/lyric/tools/Tools.kt
     val togglePrompts: Boolean
         get() {
             arrayOf("com.lge.adaptive.JavaImageUtil").forEach {
@@ -105,13 +89,7 @@ object Tools {
     @SuppressLint("PrivateApi")
     fun getSystemProperties(key: String): String {
         val ret: String = try {
-<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/tools/Tools.kt
             Class.forName("android.os.SystemProperties").getDeclaredMethod("get", String::class.java).invoke(null, key) as String
-=======
-            Class.forName("android.os.SystemProperties")
-                .getDeclaredMethod("get", String::class.java)
-                .invoke(null, key) as String
->>>>>>> main:app/src/main/java/statusbar/lyric/tools/Tools.kt
         } catch (iAE: IllegalArgumentException) {
             throw iAE
         } catch (e: Exception) {
@@ -121,23 +99,13 @@ object Tools {
     }
 
     fun copyToClipboard(context: Context, text: String) {
-<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/tools/Tools.kt
         val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-=======
-        val clipboardManager =
-            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
->>>>>>> main:app/src/main/java/statusbar/lyric/tools/Tools.kt
         val clipData = ClipData.newPlainText("text", text)
         clipboardManager.setPrimaryClip(clipData)
     }
 
     fun <T> observableChange(
-<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/tools/Tools.kt
         initialValue: T, onChange: (oldValue: T, newValue: T) -> Unit
-=======
-        initialValue: T,
-        onChange: (oldValue: T, newValue: T) -> Unit
->>>>>>> main:app/src/main/java/statusbar/lyric/tools/Tools.kt
     ): ReadWriteProperty<Any?, T> {
         return Delegates.observable(initialValue) { _, oldVal, newVal ->
             if (oldVal != newVal) {
@@ -206,13 +174,8 @@ object Tools {
     }
 
     fun getSP(context: Context, key: String): SharedPreferences? {
-<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/tools/Tools.kt
         @Suppress("DEPRECATION", "WorldReadableFiles") return context.createDeviceProtectedStorageContext()
             .getSharedPreferences(key, if (isHook()) Context.MODE_WORLD_READABLE else Context.MODE_PRIVATE)
-=======
-        @Suppress("DEPRECATION") return context.createDeviceProtectedStorageContext()
-            .getSharedPreferences(key, Context.MODE_WORLD_READABLE)
->>>>>>> main:app/src/main/java/statusbar/lyric/tools/Tools.kt
     }
 
     fun shell(command: String, isSu: Boolean) {
