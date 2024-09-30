@@ -408,7 +408,11 @@ class SystemUILyric : BaseHook() {
         val firstLoad = lyricLayout.parent.isNull()
         goMainThread(1) {
             runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
-            targetView.addView(lyricLayout, 0)
+            if (config.viewLocation == 0) {
+                targetView.addView(lyricLayout, 0)
+            } else {
+                targetView.addView(lyricLayout)
+            }
             if (config.lyricWidth == 0) {
                 lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
             } else {
