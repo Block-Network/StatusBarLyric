@@ -64,8 +64,6 @@ android {
 }
 
 dependencies {
-
-
     compileOnly(libs.xposed)
 
     implementation(libs.androidx.core.ktx)
