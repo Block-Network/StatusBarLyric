@@ -58,6 +58,12 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 @Composable
 fun ExtendPage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
+    val viewLocationOptions = listOf(
+        stringResource(R.string.title_gravity_start),
+        stringResource(R.string.title_gravity_end)
+    )
+
+    val viewLocationSelectedOption = remember { mutableIntStateOf(config.viewLocation) }
     val hideTime = remember { mutableStateOf(config.hideTime) }
     val hideNotificationIcon = remember { mutableStateOf(config.hideNotificationIcon) }
     val hideLyricWhenLockScreen = remember { mutableStateOf(config.hideLyricWhenLockScreen) }
@@ -131,6 +137,16 @@ fun ExtendPage(navController: NavController) {
                             .padding(horizontal = 12.dp)
                             .padding(bottom = 6.dp)
                     ) {
+                        SuperDropdown(
+                            title = stringResource(R.string.view_location),
+                            items = viewLocationOptions,
+                            titleColor = MiuixTheme.colorScheme.primary,
+                            selectedIndex = viewLocationSelectedOption.intValue,
+                            onSelectedIndexChange = { newOption ->
+                                viewLocationSelectedOption.intValue = newOption
+                                config.viewLocation = newOption
+                            },
+                        )
                         SuperSwitch(
                             title = stringResource(R.string.hide_time),
                             checked = hideTime.value,

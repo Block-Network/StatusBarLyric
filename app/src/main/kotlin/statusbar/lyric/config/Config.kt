@@ -494,6 +494,13 @@ class Config {
         set(value) {
             config.put("changeAllIcons", value)
         }
+    var viewLocation: Int
+        get() {
+            return config.opt("viewLocation", 0)
+        }
+        set(value) {
+            config.put("viewLocation", value)
+        }
 
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
