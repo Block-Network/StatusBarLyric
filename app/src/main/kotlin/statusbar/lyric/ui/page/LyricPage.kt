@@ -127,7 +127,7 @@ fun LyricPage(navController: NavController) {
             topAppBarScrollBehavior = scrollBehavior
         ) {
             item {
-                Column {
+                Column(Modifier.padding(top = 16.dp)) {
                     SmallTitle(
                         text = stringResource(R.string.module_second)
                     )
@@ -209,7 +209,8 @@ fun LyricPage(navController: NavController) {
                         )
                     }
                     SmallTitle(
-                        text = stringResource(R.string.module_fourth)
+                        text = stringResource(R.string.module_fourth),
+                        modifier = Modifier.padding(top = 6.dp)
                     )
                     Card(
                         modifier = Modifier
@@ -247,7 +248,8 @@ fun LyricPage(navController: NavController) {
                         )
                     }
                     SmallTitle(
-                        text = stringResource(R.string.module_sixth)
+                        text = stringResource(R.string.module_sixth),
+                        modifier = Modifier.padding(top = 6.dp)
                     )
                     Card(
                         modifier = Modifier

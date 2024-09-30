@@ -100,7 +100,7 @@ fun MenuPage(navController: NavController) {
             topAppBarScrollBehavior = scrollBehavior
         ) {
             item {
-                Column {
+                Column(Modifier.padding(top = 18.dp)) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -162,8 +162,7 @@ fun MenuPage(navController: NavController) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .padding(top = 6.dp, bottom = 12.dp)
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     BasicComponent(
                         title = stringResource(R.string.reset_system_ui),
@@ -174,7 +173,8 @@ fun MenuPage(navController: NavController) {
                     )
                 }
                 SmallTitle(
-                    text = "Info"
+                    text = "Info",
+                    modifier = Modifier.padding(top = 6.dp)
                 )
                 Card(
                     modifier = Modifier
@@ -237,8 +237,8 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
     showDialog(
         content = {
             SuperDialog(
-                title = stringResource(R.string.reset_system_ui),
-                summary = stringResource(R.string.restart_systemui_tips),
+                title = stringResource(R.string.clear_config),
+                summary = stringResource(R.string.clear_config_tips),
                 show = showDialog,
                 onDismissRequest = {
                     showDialog.value = false
