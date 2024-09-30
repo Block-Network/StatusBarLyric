@@ -523,7 +523,7 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            ActivityTools.colorCheck(
+                            ActivityTools.colorSCheck(
                                 value.value,
                                 unit = {
                                     config.lyricGradientColor = it
@@ -579,7 +579,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
                         text = stringResource(R.string.ok),
                         submit = true,
                         onClick = {
-                            ActivityTools.colorCheck(
+                            ActivityTools.colorSCheck(
                                 value.value,
                                 unit = {
                                     config.lyricBackgroundColor = it
