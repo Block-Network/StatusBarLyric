@@ -4,8 +4,9 @@ import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.android)
 }
 
 val localProperties = Properties()
@@ -19,13 +20,13 @@ android {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 35
-        versionCode = 650
-        versionName = "6.5.0"
+        versionCode = 700
+        versionName = "7.0.0"
         aaptOptions.cruncherEnabled = false
         dependenciesInfo.includeInApk = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
         buildConfigField("int", "API_VERSION", "6")
-        buildConfigField("int", "CONFIG_VERSION", "10")
+        buildConfigField("int", "COMPOSE_CONFIG_VERSION", "1")
     }
     val config = localProperties.getProperty("androidStoreFile")?.let {
         signingConfigs.create("config") {
@@ -58,15 +59,24 @@ android {
             (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName-$versionCode-$name-$buildTime.apk"
         }
     }
-    kotlin.jvmToolchain(17)
+    buildFeatures.buildConfig = true
+    kotlin.jvmToolchain(21)
 }
 
 dependencies {
-    compileOnly("de.robv.android.xposed:api:82")
-    implementation(project(":blockmiui"))
-    implementation("com.github.kyuubiran:EzXHelper:2.2.0")
-    implementation("com.github.xiaowine:Lyric-Getter-Api:6.0.0")
-    implementation("com.jaredrummler:ktsh:1.0.0")
-    implementation("com.github.xiaowine:XKT:1.0.12")
-    implementation("com.google.zxing:core:3.5.2")
+    compileOnly(libs.xposed)
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.miuix)
+
+    implementation(libs.ezXHelper)
+    implementation(libs.lyricGetterApi)
+
+    debugImplementation(libs.androidx.ui.tooling)
 }

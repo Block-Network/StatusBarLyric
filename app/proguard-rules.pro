@@ -20,14 +20,13 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -optimizationpasses 5
--keep class statusbar.lyric.hook.MainHook
--keep class statusbar.lyric.activity.page.*
--keep class cn.lyric.getter.api.data.*{*;}
+-keep class statusbar.lyric.hook.MainHook { <init>(); }
+-keep class statusbar.lyric.tools.ActivityTools{ isHook(); }
+-keep class cn.lyric.getter.api.data.* { *; }
 -dontskipnonpubliclibraryclassmembers
--useuniqueclassmembernames
 -allowaccessmodification
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable
--repackageclasses sdwew
+-repackageclasses ztlgc
 -obfuscationdictionary proguard-dic-6.txt
 -classobfuscationdictionary proguard-dic-6.txt
 -packageobfuscationdictionary proguard-dic-6.txt

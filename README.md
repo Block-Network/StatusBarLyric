@@ -1,33 +1,25 @@
-<h1 align="center">墨-状态栏歌词</h1>
+![ic_home_background.webp](ic_home_background.webp)
 
 <div align="center">
 
-[![Icon](/icon.png)]()  
 ![Release Download](https://img.shields.io/github/downloads/577fkj/StatusBarLyric/total?style=flat-square)
 ![Release Download](https://img.shields.io/github/downloads/Xposed-Modules-Repo/statusbar.lyric/total?style=flat-square)
-[![Release Version](https://img.shields.io/github/v/release/577fkj/StatusBarLyric?style=flat-square)](https://github.com/577fkj/StatusBarLyric/releases/latest)
-[![GitHub license](https://img.shields.io/github/license/577fkj/StatusBarLyric?style=flat-square)](LICENSE)
+[![Release Version](https://img.shields.io/github/v/release/577fkj/StatusBarLyric?style=flat-square)](https://github.com/577fkj/StatusBarLyric/releases/latest)  
 [![GitHub Star](https://img.shields.io/github/stars/577fkj/StatusBarLyric?style=flat-square)](https://github.com/577fkj/StatusBarLyric/stargazers)
 [![GitHub Fork](https://img.shields.io/github/forks/577fkj/StatusBarLyric?style=flat-square)](https://github.com/577fkj/StatusBarLyric/network/members)
 ![GitHub Repo size](https://img.shields.io/github/repo-size/577fkj/StatusBarLyric?style=flat-square&color=3cb371)
-[![GitHub Repo Languages](https://img.shields.io/github/languages/top/577fkj/StatusBarLyric?style=flat-square)](https://github.com/577fkj/StatusBarLyric/search?l=java)
-
+[![GitHub license](https://img.shields.io/github/license/577fkj/StatusBarLyric?style=flat-square)](LICENSE)
+[![GitHub Repo Languages](https://img.shields.io/github/languages/top/577fkj/StatusBarLyric?style=flat-square)](https://github.com/577fkj/StatusBarLyric/search?l=java)  
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2F577fkj%2FStatusBarLyric%2Fbadge%3Fref%3Dmain&style=flat)](https://actions-badge.atrox.dev/577fkj/StatusBarLyric/goto?ref=main)
-[![GitHub Star](https://img.shields.io/github/stars/577fkj/StatusBarLyric.svg?style=social)](https://github.com/577fkj/StatusBarLyric)
-[![电报群](https://img.shields.io/badge/电报群-StatusBatLyric-blue.svg?style=flat-square&color=12b7f5)](https://t.me/StatusBatLyric)
+[![Telegram](https://img.shields.io/badge/电报群-StatusBatLyric-blue.svg?style=flat-square&color=12b7f5)](https://t.me/StatusBatLyric)
+
 </div>
 
-### 理论支持 __所有__ 官方以及部分修改系统
+### 这是什么软件？
 
-### 奉献者
-
-[奉献者](https://github.com/Block-Network/StatusBarLyric/graphs/contributors)
-
-## 帮助翻译
-
-[![Crowdin](https://badges.crowdin.net/statusbarlyric/localized.svg)](https://crowdin.com/project/statusbarlyric)
-
-[点击进入Crowdin](https://crowdin.com/project/statusbarlyric)
+- 这是一个Xposed模块，仅支持LSPosed框架
+- 用于在状态栏显示歌词，支持各式各样的自定义样式
+- 理论支持 __所有__ 官方以及部分修改系统
 
 ### 下载
 
@@ -35,20 +27,19 @@
 - [Beta](https://github.com/577fkj/StatusBarLyric/actions/workflows/Android.yml)
 - [Canary](https://github.com/577fkj/StatusBarLyric/actions/workflows/Android_Dev.yml)
 
-[//]: # (### 使用教程)
+---
 
-[//]: # ([HELP]&#40;doc/HELP.md&#41;)
+## 帮助翻译
 
-### 联系我们
-- [电报](https://t.me/StatusBatLyric)
-- [BUG反馈(Github)](https://github.com/577fkj/StatusBarLyric/issues/new)
+[![Crowdin](https://badges.crowdin.net/statusbarlyric/localized.svg)](https://crowdin.com/project/statusbarlyric)
 
+---
 
-## 贡献
+[使用教程](https://blog.xiaowine.cc/posts/8e64/)
 
-[想做贡献？](doc/CONTRIBUTING.md)  
+[想做贡献？](doc/CONTRIBUTING.md)
 
-## EULA & License
+[奉献者](https://github.com/Block-Network/StatusBarLyric/graphs/contributors)
 
 [EULA](doc/EULA.md)
 
