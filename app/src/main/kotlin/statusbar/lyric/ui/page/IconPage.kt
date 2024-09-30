@@ -453,7 +453,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                         onClick = {
                             dismissDialog()
                             showDialog.value = false
-                            config.iconBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                            config.iconTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                             changeConfig()
                         }
                     )
