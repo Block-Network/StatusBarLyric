@@ -81,7 +81,7 @@ fun TestPage(navController: NavController) {
             topAppBarScrollBehavior = scrollBehavior
         ) {
             item {
-                Column {
+                Column(Modifier.padding(top = 18.dp)) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()

@@ -82,7 +82,7 @@ fun ChoosePage(navController: NavController) {
             topAppBarScrollBehavior = scrollBehavior
         ) {
             item {
-                Column {
+                Column(Modifier.padding(top = 18.dp)) {
                     dataList.forEach { data ->
                         Card(
                             modifier = Modifier

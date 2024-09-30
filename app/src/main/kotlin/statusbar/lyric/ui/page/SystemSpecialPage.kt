@@ -94,7 +94,7 @@ fun SystemSpecialPage(navController: NavController) {
             topAppBarScrollBehavior = scrollBehavior
         ) {
             item {
-                Column {
+                Column(Modifier.padding(top = 16.dp)) {
                     SmallTitle(
                         text = stringResource(R.string.miui_and_hyperos)
                     )
@@ -133,7 +133,8 @@ fun SystemSpecialPage(navController: NavController) {
                         }
                     }
                     SmallTitle(
-                        text = stringResource(R.string.hyperos)
+                        text = stringResource(R.string.hyperos),
+                        modifier = Modifier.padding(top = 6.dp)
                     )
                     Card(
                         modifier = Modifier

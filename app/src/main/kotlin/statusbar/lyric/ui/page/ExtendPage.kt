@@ -123,7 +123,7 @@ fun ExtendPage(navController: NavController) {
             topAppBarScrollBehavior = scrollBehavior
         ) {
             item {
-                Column {
+                Column(Modifier.padding(top = 16.dp)) {
                     Text(
                         modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp),
                         text = stringResource(R.string.module_extend),
@@ -135,7 +135,7 @@ fun ExtendPage(navController: NavController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp)
+                            .padding(bottom = 12.dp)
                     ) {
                         SuperDropdown(
                             title = stringResource(R.string.view_location),
@@ -241,7 +241,8 @@ fun ExtendPage(navController: NavController) {
                         )
                     }
                     SmallTitle(
-                        text = stringResource(R.string.module_fifth)
+                        text = stringResource(R.string.module_fifth),
+                        modifier = Modifier.padding(top = 6.dp)
                     )
                     Card(
                         modifier = Modifier
@@ -316,12 +317,8 @@ fun ExtendPage(navController: NavController) {
                             .padding(top = 6.dp, bottom = 12.dp)
                     ) {
                         BasicComponent(
-                            leftAction = {
-                                Text(
-                                    text = stringResource(R.string.reset_system_ui),
-                                    color = Color.Red
-                                )
-                            },
+                            title = stringResource(R.string.reset_system_ui),
+                            titleColor = Color.Red,
                             onClick = {
                                 showDialog.value = true
                             }
