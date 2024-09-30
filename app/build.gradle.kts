@@ -17,11 +17,11 @@ android {
     compileSdk = 35
     val buildTime = System.currentTimeMillis()
     defaultConfig {
-        applicationId = "statusbar.lyric.compose"
+        applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 35
-        versionCode = 699
-        versionName = "7.0.0-beta"
+        versionCode = 700
+        versionName = "7.0.0"
         aaptOptions.cruncherEnabled = false
         dependenciesInfo.includeInApk = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
