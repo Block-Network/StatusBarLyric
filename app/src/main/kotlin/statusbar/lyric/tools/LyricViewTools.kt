@@ -19,9 +19,12 @@ import android.widget.ImageView
 import statusbar.lyric.view.LyricSwitchView
 
 object LyricViewTools {
+<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/tools/LyricViewTools.kt
     private var animaList: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8)
     val randomAnima: Int get() = animaList.random()
 
+=======
+>>>>>>> main:app/src/main/java/statusbar/lyric/tools/LyricViewTools.kt
     fun getAlphaAnimation(into: Boolean, duration: Long = 250): AnimationSet {
         val alphaAnimation = (if (into) AlphaAnimation(0f, 1F) else AlphaAnimation(1F, 0f)).apply {
             this.duration = duration
@@ -33,6 +36,7 @@ object LyricViewTools {
 
     fun switchViewInAnima(int: Int?, interpolator: Int?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
+<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/tools/LyricViewTools.kt
         val translateAnimation: Animation? = when (int) {
             1 -> TranslateAnimation(0f, 0f, 100f, 0f)
             2 -> TranslateAnimation(0f, 0f, -100f, 0f)
@@ -42,6 +46,17 @@ object LyricViewTools {
             6 -> ScaleAnimation(0f, 1f, 0f, 1f)
             7 -> ScaleAnimation(0f, 1f, 1f, 1f)
             8 -> ScaleAnimation(1f, 1f, 0f, 1f)
+=======
+        val translateAnimation: Animation? = when (str) {
+            "Top" -> TranslateAnimation(0f, 0f, 100f, 0f)
+            "Bottom" -> TranslateAnimation(0f, 0f, -100f, 0f)
+            "Start" -> TranslateAnimation(100f, 0f, 0f, 0f)
+            "End" -> TranslateAnimation(-100f, 0f, 0f, 0f)
+            "Fade" -> null
+            "ScaleXY" -> ScaleAnimation(0f, 1f, 0f, 1f)
+            "ScaleX" -> ScaleAnimation(0f, 1f, 1f, 1f)
+            "ScaleY" -> ScaleAnimation(1f, 1f, 0f, 1f)
+>>>>>>> main:app/src/main/java/statusbar/lyric/tools/LyricViewTools.kt
             else -> return null
         }?.apply {
             duration = t
@@ -56,6 +71,7 @@ object LyricViewTools {
     fun switchViewOutAnima(str: Int?, time: Int?): Animation? {
         val t = time?.toLong() ?: 500L
         val translateAnimation: Animation? = when (str) {
+<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/tools/LyricViewTools.kt
             1 -> TranslateAnimation(0f, 0f, 0f, -100f)
             2 -> TranslateAnimation(0f, 0f, 0f, +100f)
             3 -> TranslateAnimation(0f, -100f, 0f, 0f)
@@ -64,6 +80,16 @@ object LyricViewTools {
             6 -> ScaleAnimation(1f, 0f, 1f, 0f)
             7 -> ScaleAnimation(1f, 0f, 1f, 1f)
             8 -> ScaleAnimation(1f, 1f, 1f, 0f)
+=======
+            "Top" -> TranslateAnimation(0f, 0f, 0f, -100f)
+            "Bottom" -> TranslateAnimation(0f, 0f, 0f, +100f)
+            "Start" -> TranslateAnimation(0f, -100f, 0f, 0f)
+            "End" -> TranslateAnimation(0f, 0f + 100f, 0f, 0f)
+            "Fade" -> null
+            "ScaleXY" -> ScaleAnimation(1f, 0f, 1f, 0f)
+            "ScaleX" -> ScaleAnimation(1f, 0f, 1f, 1f)
+            "ScaleY" -> ScaleAnimation(1f, 1f, 1f, 0f)
+>>>>>>> main:app/src/main/java/statusbar/lyric/tools/LyricViewTools.kt
             else -> return null
         }?.apply {
             duration = t

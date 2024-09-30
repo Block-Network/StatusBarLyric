@@ -65,6 +65,12 @@
     <string name="icon_color_and_transparency_tips">Please enter a decimal Color</string>
     <string name="icon_background_color_and_transparency">Icon background Color And Transparency</string>
     <string name="icon_background_color_and_transparency_tips">Please enter a decimal Color</string>
+<<<<<<< HEAD
+=======
+    <string name="color_error">Color Error</string>
+    <string name="input_error">Input Error</string>
+    <string name="time_format">TimeFormat</string>
+>>>>>>> main
     <string name="lyric_mode">Lyric Mode</string>
     <string name="get_hook">Get the Hook point</string>
     <string name="master_off">Master switch is off</string>
@@ -105,7 +111,11 @@
     <string name="limit_visibility_change_tips">It can prevent the characteristics of some systems from causing time to appear</string>
     <string name="hide_lyric_when_lock_screen">Hide Lyric When Lock Screen</string>
     <string name="choose_page_tips">It is recommended to close other modules that modify the layout of the status bar first, and then come to this page to select Hook Points\nEffective Hook Point Selection: The status bar displays the module name, and the time is hidden</string>
+<<<<<<< HEAD
     <string name="hide_carrier">Hide Carrier</string>
+=======
+    <string name="hide_carrier">* Hide Carrier</string>
+>>>>>>> main
     <string name="lyrics_gradient_background_color_and_transparency">Lyric background gradient color and transparency</string>
     <string name="lyrics_gradient_background_color_and_transparency_tips">Please enter hexadecimal color, multiple colors are gradient colors arranged horizontally, separated by English commas</string>
     <string name="lyric_background_radius">Lyric Background Radius</string>
@@ -118,6 +128,7 @@
     <string name="click_status_bar_to_hide_lyric">Click Status Bar To Hide Lyric</string>
     <string name="long_click_status_bar_stop">Long Click Status Bar Stop Music</string>
     <string name="system_special_page">System Special Page</string>
+<<<<<<< HEAD
     <string name="miui_hide_network_speed">Hide Network Speed</string>
     <string name="miui_pad_optimize">tablet optimization</string>
     <string name="hyperos_texture">Add Advanced texture background</string>
@@ -154,4 +165,40 @@
     <string name="recovery_config">Recovery Config</string>
     <string name="clear_config">Clear Config</string>
     <string name="clear_config_tips">Are you sure you want to clear the configuration?</string>
+=======
+    <string name="miui_hide_network_speed">* MIUI Hide Network Speed</string>
+    <string name="miui_pad_optimize">* MIUI tablet optimization</string>
+    <string name="hyperos_texture">* Add Advanced texture background</string>
+    <string name="hyperos_texture_radio">* Advanced texture blur radio</string>
+    <string name="hyperos_texture_corner">* Advanced texture rounded corners</string>
+    <string name="hyperos_texture_color">* Advanced texture background corner</string>
+    <string name="lyric_blurred_edges_type_end">Lyric Blurred Edges Type End</string>
+    <string name="lyric_blurred_edges_type_start">Lyric Blurred Edges Type Start</string>
+    <string name="lyric_blurred_edges_type_all">Lyric Blurred Edges Type All</string>
+    <string name="lyric_blurred_edges_type">* Lyric Blurred Edges Type</string>
+    <string name="slide_status_bar_cut_songs">* Slide Status Bar Cut Songs</string>
+    <string name="slide_status_bar_cut_songs_x_radius">* Slide Status Bar Cut Songs X Radius</string>
+    <string name="slide_status_bar_cut_songs_x_radius_tips">Range 50–2000</string>
+    <string name="slide_status_bar_cut_songs_y_radius">* Slide Status Bar Cut Songs Y Radius</string>
+    <string name="slide_status_bar_cut_songs_y_radius_tips">Range 10–100</string>
+    <string name="title_delay_duration">Title hint hides the delay</string>
+    <string name="title_delay_duration_tips">Range: 0–10000,Unit: milliseconds</string>
+    <string name="title_switch">Title hint switch</string>
+    <string name="use_blue_get_title">Use Bluetooth to get the title scheme</string>
+    <string name="title_tip">All the following adjustment options take effect after restart</string>
+    <string name="title_color_and_transparency">Title hint background color</string>
+    <string name="title_background_radius">Title hint background corner radius</string>
+    <string name="title_background_stroke_width">Title hint background stroke width</string>
+    <string name="title_background_stroke_width_tips">Range 0–30</string>
+    <string name="title_background_stroke_color">Title hint background stroke color</string>
+    <string name="title_show_with_same_lyric">Title hint show with same Lyric</string>
+    <string name="title_gravity_start">Start</string>
+    <string name="title_gravity_center">Center</string>
+    <string name="title_gravity_end">End</string>
+    <string name="title_gravity">Title hint gravity</string>
+    <string name="change_all_icons">Change all icons</string>
+    <string name="change_all_icons_tips">Please enter Base64</string>
+    <string name="lyrics_are_gradient_and_transparent_tips">Please enter hexadecimal color, multiple colors are gradient colors arranged horizontally, separated by English commas</string>
+    <string name="lyrics_are_gradient_and_transparent">* Lyrics gradient and transparent</string>
+>>>>>>> main
 </resources>

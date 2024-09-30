@@ -21,6 +21,7 @@
     <string name="reset_system_ui">重启系统界面</string>
     <string name="restart_systemui_tips">确定要重新启动系统界面吗？</string>
     <string name="master_switch">主开关</string>
+<<<<<<< HEAD
     <string name="hook_page">锚点选择</string>
     <string name="test_mode">锚点选择模式</string>
     <string name="relax_conditions">宽松过滤</string>
@@ -28,15 +29,31 @@
     <string name="lyric_page">歌词样式</string>
     <string name="icon_page">图标样式</string>
     <string name="extend_page">扩展选项</string>
+=======
+    <string name="hook_page">锚点页</string>>
+    <string name="test_mode">锚点设置模式</string>
+    <string name="relax_conditions">宽松过滤</string>
+    <string name="relax_conditions_tips">允许更多锚点出现</string>
+    <string name="lyric_page">歌词页</string>
+    <string name="icon_page">图标页</string>
+    <string name="customize_icon_page">自定义图标页</string>
+    <string name="extend_page">扩展页</string>
+>>>>>>> main
     <string name="choose_page">锚点选择页</string>
     <string name="lyric_width">歌词宽度</string>
     <string name="lyric_width_tips">范围: 0~100，0 代表自适应宽度</string>
     <string name="fixed_lyric_width">固定歌词宽度</string>
     <string name="fixed_lyric_width_tips">打开后，显示宽度固定，不随歌词实际长度变化</string>
     <string name="lyric_color_and_transparency">歌词颜色和透明度</string>
+<<<<<<< HEAD
     <string name="lyric_color_and_transparency_tips">请输入 16 进制颜色值</string>
     <string name="lyrics_gradient_background_color_and_transparency">歌词背景渐变颜色和透明度</string>
     <string name="lyrics_gradient_background_color_and_transparency_tips">请输入 16 进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
+=======
+    <string name="lyric_color_and_transparency_tips">请输入16进制颜色</string>
+    <string name="lyrics_gradient_background_color_and_transparency">歌词背景渐变颜色和透明度</string>
+    <string name="lyrics_gradient_background_color_and_transparency_tips">请输入16进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
+>>>>>>> main
     <string name="lyric_size">歌词大小</string>
     <string name="lyric_size_tips">范围: 0~100，0 代表自适应</string>
     <string name="lyric_letter_spacing">歌词字间距</string>
@@ -63,6 +80,7 @@
     <string name="icon_start_margins">图标左边距</string>
     <string name="icon_start_margins_tips">范围: 0~500</string>
     <string name="icon_color_and_transparency">图标颜色和透明度</string>
+<<<<<<< HEAD
     <string name="icon_color_and_transparency_tips">请输入 16 进制颜色值</string>
     <string name="icon_background_color_and_transparency">图标背景颜色和透明度</string>
     <string name="icon_background_color_and_transparency_tips">请输入 16 进制颜色值</string>
@@ -78,6 +96,33 @@
     <string name="load_class_empty">请先打开锚点设置模式配置</string>
     <string name="not_found_hook">未找到锚点</string>
     <string name="select_hook">是否选择此锚点</string>
+=======
+    <string name="icon_color_and_transparency_tips">请输入十六进制颜色值</string>
+    <string name="icon_background_color_and_transparency">图标背景颜色和透明度</string>
+    <string name="icon_background_color_and_transparency_tips">请输入十六进制颜色值</string>
+    <string name="color_error">颜色错误</string>
+    <string name="input_error">输入错误</string>
+    <string name="time_format">时间格式</string>
+    <string name="lyric_mode">歌词模式</string>
+    <string name="get_hook">获取锚点</string>
+    <string name="master_off">主开关关闭</string>
+    <string name="hook_succeeded">Hook成功</string>
+    <string name="hook_failed">Hook失败</string>
+    <string name="start_hooking_text_view">开始Hook所有TextView</string>
+    <string name="first_filter">%s已满足初步要求，共有%s个符合要求</string>
+    <string name="no_text_view">没有符合要求的TextView</string>
+    <string name="send_text_view_class">发送：%s</string>
+    <string name="clear_text_view_list">清除TextView列表及其关联数据</string>
+    <string name="understand_time_format">我不理解时间格式</string>
+    <string name="load_class">加载Class：%s</string>
+    <string name="load_class_empty">请先打开锚点设置模式配置</string>
+    <string name="load_class_failed">加载失败，未找到该Class</string>
+    <string name="load_class_succeed">加载成功，Class:%s</string>
+    <string name="not_found_hook">未找到锚点</string>
+    <string name="not_found_hook_tips">请尝试重新启动系统界面，如果仍然无法找到，请联系开发人员</string>
+    <string name="select_hook">是否选择此锚点</string>
+    <string name="restart_app_effect">重启应用程序生效</string>
+>>>>>>> main
     <string name="force_the_icon_to_be_displayed">强制显示图标</string>
     <string name="broadcast_receive_timeout">广播接收超时</string>
     <string name="hide_time">隐藏时间</string>
@@ -104,14 +149,22 @@
     <string name="hide_notification_icon">隐藏通知图标</string>
     <string name="limit_visibility_change">限制可见性更改</string>
     <string name="limit_visibility_change_tips">可以防止部分系统的特性导致有时间会出现</string>
+<<<<<<< HEAD
     <string name="hide_lyric_when_lock_screen">锁定屏幕时隐藏歌词</string>
     <string name="choose_page_tips">建议先关闭其他修改状态栏布局的模块后，再来此页面选择锚点\n\n有效的锚点选择: 状态栏显示模块名字，并有白色背景\n\n选择锚点后，返回关闭锚点模式，重启系统模式即锚点设置完成</string>
     <string name="hide_carrier">隐藏运营商</string>
     <string name="test_mode_tips">第一次安装模块，请先设置锚点\n开启锚点设置模式，重启系统界面，获取锚定并选择后关闭锚点模式再次重启系统界面</string>
+=======
+    <string name="hide_lyric_when_lock_screen">* 锁定屏幕时隐藏歌词</string>
+    <string name="choose_page_tips">建议先关闭其他修改状态栏布局的模块后，再来此页面选择锚点\n有效的锚点选择：状态栏显示模块名字，并有白色背景\n\n选择锚点后，返回关闭锚点模式，重启系统模式即锚点设置完成</string>
+    <string name="hide_carrier">* 隐藏运营商</string>
+    <string name="test_mode_tips">第一次安装模块，请先设置锚点，方可使用本模块\n\n开启锚点设置模式，重启系统界面，获取锚定并选择后关闭锚点模式再次重启系统界面</string>
+>>>>>>> main
     <string name="lyric_background_radius">歌词背景半径</string>
     <string name="lyric_background_radius_tips">范围: 0~100</string>
     <string name="color_scheme1">方案 1</string>
     <string name="color_scheme2">方案 2</string>
+<<<<<<< HEAD
     <string name="lyric_color_scheme">歌词反色方案</string>
     <string name="tips1">需重启</string>
     <string name="dynamic_lyric_speed">动态歌词速度 (Beta)</string>
@@ -152,4 +205,46 @@
     <string name="recovery_config">恢复配置</string>
     <string name="clear_config">重置配置</string>
     <string name="clear_config_tips">确定要重置配置吗？</string>
+=======
+    <string name="lyric_color_scheme">* 歌词反色方案</string>
+    <string name="tips1">带<font color="red"> * </font>的选项，<font color="#FFF000">重启系统界面</font>生效</string>
+    <string name="dynamic_lyric_speed">动态歌词速度(Beta)</string>
+    <string name="click_status_bar_to_hide_lyric">* 点击状态栏隐藏歌词</string>
+    <string name="long_click_status_bar_stop">* 长按状态栏停止音乐</string>
+    <string name="system_special_page">系统特供页</string>
+    <string name="miui_hide_network_speed">* MIUI隐藏网速</string>
+    <string name="miui_pad_optimize">* MIUI平板优化</string>
+    <string name="hyperos_texture">* 添加高级材质背景</string>
+    <string name="hyperos_texture_radio">* 高级材质模糊半径</string>
+    <string name="hyperos_texture_corner">* 高级材质四边圆角</string>
+    <string name="hyperos_texture_color">* 高级材质背景颜色</string>
+    <string name="lyric_blurred_edges_type_end">仅右边</string>
+    <string name="lyric_blurred_edges_type_start">仅左边</string>
+    <string name="lyric_blurred_edges_type_all">两边</string>
+    <string name="lyric_blurred_edges_type">* 歌词模糊边缘类型</string>
+    <string name="slide_status_bar_cut_songs">* 状态栏滑动切歌</string>
+    <string name="slide_status_bar_cut_songs_x_radius">* 滑动切歌X半径</string>
+    <string name="slide_status_bar_cut_songs_x_radius_tips">范围：50–2000</string>
+    <string name="slide_status_bar_cut_songs_y_radius">* 滑动切歌Y半径</string>
+    <string name="slide_status_bar_cut_songs_y_radius_tips">范围：10–100</string>
+    <string name="title_delay_duration">标题提示隐藏延迟隐藏时间</string>
+    <string name="title_delay_duration_tips">范围：0–10000，单位：毫秒</string>
+    <string name="title_switch">标题提示开关</string>
+    <string name="use_blue_get_title">使用蓝牙获取标题方案</string>
+    <string name="title_tip">下列所有调节选项重启生效</string>
+    <string name="title_color_and_transparency">标题提示背景颜色</string>
+    <string name="title_background_radius">标题提示背景圆角</string>
+    <string name="title_background_stroke_width">标题提示背景描边宽度</string>
+    <string name="title_background_stroke_width_tips">范围 0–30</string>
+    <string name="title_background_stroke_color">标题提示背景描边颜色</string>
+    <string name="title_show_with_same_lyric">标题提示显示相同的歌词</string>
+    <string name="title_gravity_start">开始</string>
+    <string name="title_gravity_center">中心</string>
+    <string name="title_gravity_end">结束</string>
+    <string name="title_gravity">标题提示居中</string>
+    <string name="change_all_icons">更改所有图标</string>
+    <string name="change_all_icons_tips">请输入Base64</string>
+    <string name="lyrics_are_gradient_and_transparent_tips">请输入16进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
+    <string name="lyrics_are_gradient_and_transparent">* 歌词渐变色和透明</string>
+>>>>>>> main
 </resources>

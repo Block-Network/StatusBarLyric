@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-      - 'README.md'
+      - "README.md"
   pull_request:     
 
 jobs:
@@ -27,14 +27,14 @@ jobs:
             echo ${{ secrets.SIGNING_KEY }} | base64 --decode > key.jks
           fi
 
-      - name: Setup JDK
+      - name: set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 21
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v3
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/new' }}
 

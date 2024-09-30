@@ -33,10 +33,6 @@ import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Point
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-import android.graphics.PorterDuff
-========
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -74,19 +70,12 @@ import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.LyricViewTools.hideView
 import statusbar.lyric.tools.LyricViewTools.iconColorAnima
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.LyricViewTools.textColorAnima
-import statusbar.lyric.tools.SystemMediaSessionListener
-========
-import statusbar.lyric.tools.LyricViewTools.showView
-import statusbar.lyric.tools.LyricViewTools.textColorAnima
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isLandscape
-import statusbar.lyric.tools.Tools.isMiui
+import statusbar.lyric.tools.Tools.isMIUI
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isNull
@@ -95,10 +84,7 @@ import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.Tools.togglePrompts
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-========
 import statusbar.lyric.view.EdgeTransparentView
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
 import statusbar.lyric.view.LyricSwitchView
 import statusbar.lyric.view.TitleDialog
 import java.io.File
@@ -109,12 +95,7 @@ class SystemUILyric : BaseHook() {
 
     private lateinit var hook: XC_MethodHook.Unhook
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-
-    private var lastColor: Int by observableChange(Color.WHITE) { oldValue, newValue ->
-========
     private var lastColor: Int by observableChange(Color.WHITE) { _, newValue ->
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
         goMainThread {
             if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) {
                 when (config.lyricColorScheme) {
@@ -124,13 +105,8 @@ class SystemUILyric : BaseHook() {
             }
             if (config.iconColor.isEmpty()) {
                 when (config.lyricColorScheme) {
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-                    0 -> iconView.setColorFilter(newValue, PorterDuff.Mode.SRC_IN)
-                    1 -> iconView.iconColorAnima(oldValue, newValue)
-========
                     0 -> iconView.setColorFilter(newValue)
                     1 -> iconView.iconColorAnima(lastColor, newValue)
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
                 }
             }
         }
@@ -224,16 +200,6 @@ class SystemUILyric : BaseHook() {
             gravity = Gravity.CENTER
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
             addView(iconView)
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-            addView(lyricView)
-            visibility = View.GONE
-        }
-    }
-    private lateinit var mMiuiNetworkSpeedView: TextView
-    private val titleDialog by lazy {
-        TitleDialog(context)
-    }
-========
             addView(if (config.lyricBlurredEdges) {
                 EdgeTransparentView(context, config.lyricBlurredEdgesRadius.toFloat()).apply {
                     addView(lyricView)
@@ -253,7 +219,6 @@ class SystemUILyric : BaseHook() {
         }
     }
 
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
 
     //////////////////////////////Hook//////////////////////////////////////
     @SuppressLint("DiscouragedApi")
@@ -287,7 +252,7 @@ class SystemUILyric : BaseHook() {
                     if (isPlaying && !isHiding) {
                         if (hookParam.args[0] == View.VISIBLE) {
                             val view = hookParam.thisObject as View
-                            if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMiuiNetworkSpeedView.isInitialized && mMiuiNetworkSpeedView == view) || (this@SystemUILyric::mPadClockView.isInitialized && mPadClockView == view)) {
+                            if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMIUINetworkSpeedView.isInitialized && mMIUINetworkSpeedView == view) || (this@SystemUILyric::mPadClockView.isInitialized && mPadClockView == view)) {
                                 hookParam.args[0] = View.GONE
                             }
                         }
@@ -295,8 +260,6 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-========
         if (config.titleSwitch) {
             for (i in 0..10) {
                 val clazz = loadClassOrNull("com.android.systemui.statusbar.NotificationMediaManager$$i")
@@ -315,7 +278,6 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
         "${moduleRes.getString(R.string.lyric_color_scheme)}:${config.lyricColorScheme}".log()
         when (config.lyricColorScheme) {
             0 -> {
@@ -436,7 +398,7 @@ class SystemUILyric : BaseHook() {
                                                     if (isClick && isPlaying) {
                                                         moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
                                                         isHiding.log()
-                                                        if (isHiding && lastLyric.isNotEmpty()) {
+                                                        if (isHiding) {
                                                             isHiding = false
                                                             hookParam.result = true
                                                             changeLyric(lastLyric, 0)
@@ -473,22 +435,17 @@ class SystemUILyric : BaseHook() {
         val firstLoad = lyricLayout.parent.isNull()
         goMainThread(1) {
             runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
-            targetView.addView(lyricLayout, 0)
-            if (config.lyricWidth == 0) {
-                lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
+            if (config.viewIndex == 0) {
+                targetView.addView(lyricLayout, 0)
             } else {
-                lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
+                targetView.addView(lyricLayout)
             }
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-            if (isHyperOS && config.mHyperOSTexture) {
-========
             if (config.lyricWidth == 0) {
                 lyricView.maxLyricWidth(targetView.width.toFloat())
             } else {
                 lyricView.maxLyricWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
             }
             if (isHyperOS() && config.mHyperOSTexture) {
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
                 val blurRadio = config.mHyperOSTextureRadio
                 val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
                 val blendModes = arrayOf(
@@ -498,15 +455,6 @@ class SystemUILyric : BaseHook() {
             }
 
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
-            if (config.titleSwitch) {
-                object : SystemMediaSessionListener(context) {
-                    override fun onTitleChanged(title: String) {
-                        super.onTitleChanged(title)
-                        "title: $title".log()
-                        this@SystemUILyric.title = title
-                    }
-                }
-            }
         }
 
         if (!firstLoad) return
@@ -514,7 +462,6 @@ class SystemUILyric : BaseHook() {
             override fun onStop(lyricData: LyricData) {
                 if (!isReally) return
                 if (isHiding) isHiding = false
-                lastLyric = ""
                 hideLyric()
             }
 
@@ -553,18 +500,14 @@ class SystemUILyric : BaseHook() {
         isStop = false
         isPlaying = true
         goMainThread {
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-            if (config.lyricColor.isEmpty()) lastColor = clockView.currentTextColor
-========
             if (!isPlaying && config.lyricColor.isEmpty()) {
                 lastColor = clockView.currentTextColor
             }
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
             lyricLayout.showView()
             if (config.hideTime) clockView.hideView()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.hideView()
-            if (this::mMiuiNetworkSpeedView.isInitialized) mMiuiNetworkSpeedView.hideView()
+            if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.hideView()
             if (this::mPadClockView.isInitialized) mPadClockView.hideView()
             lyricView.apply {
                 width = getLyricWidth(getPaint(), lyric)
@@ -573,7 +516,7 @@ class SystemUILyric : BaseHook() {
                     if (i > 0) {
                         val proportion = i * 1.0 / displayWidth
                         "proportion:$proportion".log()
-                        val speed = 2 * proportion + 0.4
+                        val speed = 15 * proportion + 0.7
                         "speed:$speed".log()
                         setScrollSpeed(speed.toFloat())
                     }
@@ -583,13 +526,6 @@ class SystemUILyric : BaseHook() {
                         val d = delay * 1000.0 / 16.0
                         setScrollSpeed(((i / d).toFloat()))
                     }
-                }
-                if (isRandomAnima) {
-                    val animation = randomAnima
-                    val interpolator = config.lyricInterpolator
-                    val duration = config.animationDuration
-                    inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
-                    outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
                 }
                 setText(lyric)
             }
@@ -608,24 +544,12 @@ class SystemUILyric : BaseHook() {
             } else {
                 config.getDefaultIcon(it.packageName)
             }
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-        }
-        if (config.lyricWidth == 0) {
-            lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
-        } else {
-            lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
-========
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
         }
     }
 
     private fun hideLyric(anim: Boolean = true) {
         if (isStop) return
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-        if (!isHiding && isPlaying && anim) {
-========
         if (!isHiding && isPlaying) {
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
             isPlaying = false
             isStop = true
         }
@@ -637,7 +561,7 @@ class SystemUILyric : BaseHook() {
             if (config.titleSwitch) titleDialog.hideTitle()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
-            if (this::mMiuiNetworkSpeedView.isInitialized) mMiuiNetworkSpeedView.showView()
+            if (this::mMIUINetworkSpeedView.isInitialized) mMIUINetworkSpeedView.showView()
             if (this::mPadClockView.isInitialized) mPadClockView.showView()
         }
     }
@@ -660,15 +584,9 @@ class SystemUILyric : BaseHook() {
                     }
                 }
                 if (config.lyricWidth == 0) {
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-                    setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
-                } else {
-                    setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
-========
                     maxLyricWidth(targetView.width.toFloat())
                 } else {
                     maxLyricWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
@@ -696,19 +614,11 @@ class SystemUILyric : BaseHook() {
                     }
                 }
 
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-                val animation = config.lyricAnimation
-                isRandomAnima = animation == 9
-                if (!isRandomAnima) {
-                    val interpolator = config.lyricInterpolator
-                    val duration = config.animationDuration
-========
                 val animation = config.animation
                 val interpolator = config.interpolator
                 val duration = config.animationDuration
                 isRandomAnima = config.animation == "Random"
                 if (!isRandomAnima) {
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
                     inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
                     outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
                 }
@@ -738,20 +648,12 @@ class SystemUILyric : BaseHook() {
                     }
                     if (config.iconColor.isEmpty()) {
                         when (config.lyricColorScheme) {
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-                            0 -> setColorFilter(clockView.currentTextColor, PorterDuff.Mode.SRC_IN)
-========
                             0 -> setColorFilter(clockView.currentTextColor)
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
                             1 -> iconColorAnima(lastColor, clockView.currentTextColor)
                         }
                     } else {
                         when (config.lyricColorScheme) {
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-                            0 -> setColorFilter(Color.parseColor(config.iconColor), PorterDuff.Mode.SRC_IN)
-========
                             0 -> setColorFilter(Color.parseColor(config.iconColor))
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
                             1 -> iconColorAnima(lastColor, Color.parseColor(config.iconColor))
                         }
                     }
@@ -795,11 +697,7 @@ class SystemUILyric : BaseHook() {
 
     inner class SystemUISpecial {
         init {
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-            if (isMiui) {
-========
             if (isMIUI) {
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
                 for (i in 0..10) {
                     val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$$i")
                     if (clazz.isNotNull()) {
@@ -828,7 +726,7 @@ class SystemUILyric : BaseHook() {
                             themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         }
                     }
-                    if (isMiui && config.mMiuiPadOptimize) {
+                    if (isMIUI && config.mMiuiPadOptimize) {
                         clazz.methodFinder().filterByName("onCreate").first().createHook {
                             after {
                                 if (isPad) {
@@ -854,17 +752,19 @@ class SystemUILyric : BaseHook() {
                 }
             }
 
-            if (isMiui && config.mMiuiHideNetworkSpeed) {
+            if (isMIUI && config.mMIUIHideNetworkSpeed) {
                 moduleRes.getString(R.string.miui_hide_network_speed).log()
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
                     it.constructorFinder().first().createHook {
                         after { hookParam ->
-                            mMiuiNetworkSpeedView = hookParam.thisObject as TextView
+                            mMIUINetworkSpeedView = hookParam.thisObject as TextView
                         }
                     }
                     it.methodFinder().filterByName("setVisibilityByController").first().createHook {
                         before { hookParam ->
-                            if (isPlaying) hookParam.args[0] = false
+                            if (isPlaying) {
+                                hookParam.args[0] = false
+                            }
                         }
                     }
                 }
@@ -889,18 +789,7 @@ class SystemUILyric : BaseHook() {
     inner class ScreenLockReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             isScreenLock = intent.action == Intent.ACTION_SCREEN_OFF
-<<<<<<<< HEAD:app/src/main/kotlin/statusbar/lyric/hook/module/SystemUILyric.kt
-            if (isScreenLock) {
-                hideLyric(false)
-            } else {
-                if (lastLyric.isNotEmpty()) {
-                    changeLyric(lastLyric, 0)
-                    lastColor = clockView.currentTextColor
-                }
-            }
-========
             if (isScreenLock) hideLyric(false)
->>>>>>>> main:app/src/main/java/statusbar/lyric/hook/module/SystemUILyric.kt
         }
     }
 }
