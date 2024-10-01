@@ -43,19 +43,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+          enableEdgeToEdge()
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+              window.isNavigationBarContrastEnforced = false
+          }
+
         context = this
         isLoad = isHook()
         init()
 
         setContent {
-
-            DisposableEffect(isSystemInDarkTheme()) {
-                enableEdgeToEdge()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    window.isNavigationBarContrastEnforced = false
-                }
-                onDispose {}
-            }
             App()
         }
     }
