@@ -93,7 +93,7 @@ fun HomePage(navController: NavController) {
             topAppBarScrollBehavior = scrollBehavior
         ) {
             item {
-                Column {
+                Column(Modifier.padding(top = 18.dp)) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -178,7 +178,8 @@ fun HomePage(navController: NavController) {
                         ) {
                             Column {
                                 SmallTitle(
-                                    text = stringResource(R.string.module_first)
+                                    text = stringResource(R.string.module_first),
+                                    modifier = Modifier.padding(top = 6.dp)
                                 )
                                 Card(
                                     modifier = Modifier
@@ -203,7 +204,8 @@ fun HomePage(navController: NavController) {
                         ) {
                             Column {
                                 SmallTitle(
-                                    text = stringResource(R.string.module_second)
+                                    text = stringResource(R.string.module_second),
+                                    modifier = Modifier.padding(top = 6.dp)
                                 )
                                 Card(
                                     modifier = Modifier
@@ -233,7 +235,8 @@ fun HomePage(navController: NavController) {
                         ) {
                             Column {
                                 SmallTitle(
-                                    text = stringResource(R.string.module_third)
+                                    text = stringResource(R.string.module_third),
+                                    modifier = Modifier.padding(top = 6.dp)
                                 )
                                 Card(
                                     modifier = Modifier
