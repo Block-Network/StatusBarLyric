@@ -413,11 +413,6 @@ class SystemUILyric : BaseHook() {
             } else {
                 targetView.addView(lyricLayout)
             }
-            if (config.lyricWidth == 0) {
-                lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
-            } else {
-                lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
-            }
             if (isHyperOS && config.mHyperOSTexture) {
                 val blurRadio = config.mHyperOSTextureRadio
                 val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
@@ -534,8 +529,6 @@ class SystemUILyric : BaseHook() {
         }
         if (config.lyricWidth == 0) {
             lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
-        } else {
-            lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
         }
     }
 
@@ -576,9 +569,13 @@ class SystemUILyric : BaseHook() {
                     }
                 }
                 if (config.lyricWidth == 0) {
-                    setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
+                    lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
                 } else {
-                    setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
+                    var width = scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins
+                    if (width > targetView.width) {
+                        width = targetView.width.toFloat()
+                    }
+                    lyricView.setMaxLyricViewWidth(width)
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
