@@ -9,6 +9,7 @@ import android.media.session.PlaybackState
 import android.service.notification.NotificationListenerService
 
 open class SystemMediaSessionListener(context: Context) {
+    private var artist: String? = null
     private var mediaSessionManager: MediaSessionManager? = null
     private val activeControllers = mutableListOf<MediaController>()
 
@@ -68,7 +69,11 @@ open class SystemMediaSessionListener(context: Context) {
     // 显示媒体元数据
     private fun displayMediaMetadata(metadata: MediaMetadata) {
         val title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE) ?: "Unknown Title"
-        onTitleChanged(title)
+        val artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: "Unknown Artist"
+        if (this.artist != artist) {
+            this.artist = artist
+            onTitleChanged(title)
+        }
     }
 
     fun cleanup() {
