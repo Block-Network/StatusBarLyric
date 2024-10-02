@@ -55,6 +55,7 @@ import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import cn.lyric.getter.api.tools.Tools.registerLyricListener
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
+import com.github.kyuubiran.ezxhelper.HookFactory
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
@@ -279,27 +280,26 @@ class SystemUILyric : BaseHook() {
         }
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.hide_notification_icon).log()
+            fun HookFactory.hideNoticeIcon() {
+                after { hookParam ->
+                    val clazz = hookParam.thisObject::class.java
+                    if (clazz.simpleName == "NotificationIconAreaController") {
+                        hookParam.thisObject.objectHelper {
+                            mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                        }
+                    } else {
+                        mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
+                    }
+                }
+            }
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     it.constructorFinder().first().createHook {
-                        after { hookParam ->
-                            hookParam.thisObject.objectHelper {
-                                mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
-                            }
-                        }
+                        hideNoticeIcon()
                     }
                 } else {
                     it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
-                        after { hookParam ->
-                            val clazz = hookParam.thisObject::class.java
-                            if (clazz.simpleName == "NotificationIconAreaController") {
-                                hookParam.thisObject.objectHelper {
-                                    mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
-                                }
-                            } else {
-                                mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
-                            }
-                        }
+                        hideNoticeIcon()
                     }
                 }
             }
@@ -408,11 +408,10 @@ class SystemUILyric : BaseHook() {
         val firstLoad = lyricLayout.parent.isNull()
         goMainThread(1) {
             runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
-            targetView.addView(lyricLayout, 0)
-            if (config.lyricWidth == 0) {
-                lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
+            if (config.viewLocation == 0) {
+                targetView.addView(lyricLayout, 0)
             } else {
-                lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
+                targetView.addView(lyricLayout)
             }
             if (isHyperOS && config.mHyperOSTexture) {
                 val blurRadio = config.mHyperOSTextureRadio
@@ -530,8 +529,6 @@ class SystemUILyric : BaseHook() {
         }
         if (config.lyricWidth == 0) {
             lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
-        } else {
-            lyricView.setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
         }
     }
 
@@ -572,9 +569,13 @@ class SystemUILyric : BaseHook() {
                     }
                 }
                 if (config.lyricWidth == 0) {
-                    setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
+                    lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
                 } else {
-                    setMaxLyricViewWidth(scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins)
+                    var width = scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins
+                    if (width > targetView.width) {
+                        width = targetView.width.toFloat()
+                    }
+                    lyricView.setMaxLyricViewWidth(width)
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)

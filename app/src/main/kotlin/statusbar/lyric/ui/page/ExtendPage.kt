@@ -58,6 +58,12 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 @Composable
 fun ExtendPage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
+    val viewLocationOptions = listOf(
+        stringResource(R.string.title_gravity_start),
+        stringResource(R.string.title_gravity_end)
+    )
+
+    val viewLocationSelectedOption = remember { mutableIntStateOf(config.viewLocation) }
     val hideTime = remember { mutableStateOf(config.hideTime) }
     val hideNotificationIcon = remember { mutableStateOf(config.hideNotificationIcon) }
     val hideLyricWhenLockScreen = remember { mutableStateOf(config.hideLyricWhenLockScreen) }
@@ -117,7 +123,7 @@ fun ExtendPage(navController: NavController) {
             topAppBarScrollBehavior = scrollBehavior
         ) {
             item {
-                Column {
+                Column(Modifier.padding(top = 16.dp)) {
                     Text(
                         modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp),
                         text = stringResource(R.string.module_extend),
@@ -129,8 +135,18 @@ fun ExtendPage(navController: NavController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp)
+                            .padding(bottom = 12.dp)
                     ) {
+                        SuperDropdown(
+                            title = stringResource(R.string.view_location),
+                            items = viewLocationOptions,
+                            titleColor = MiuixTheme.colorScheme.primary,
+                            selectedIndex = viewLocationSelectedOption.intValue,
+                            onSelectedIndexChange = { newOption ->
+                                viewLocationSelectedOption.intValue = newOption
+                                config.viewLocation = newOption
+                            },
+                        )
                         SuperSwitch(
                             title = stringResource(R.string.hide_time),
                             checked = hideTime.value,
@@ -225,7 +241,8 @@ fun ExtendPage(navController: NavController) {
                         )
                     }
                     SmallTitle(
-                        text = stringResource(R.string.module_fifth)
+                        text = stringResource(R.string.module_fifth),
+                        modifier = Modifier.padding(top = 6.dp)
                     )
                     Card(
                         modifier = Modifier
@@ -300,12 +317,8 @@ fun ExtendPage(navController: NavController) {
                             .padding(top = 6.dp, bottom = 12.dp)
                     ) {
                         BasicComponent(
-                            leftAction = {
-                                Text(
-                                    text = stringResource(R.string.reset_system_ui),
-                                    color = Color.Red
-                                )
-                            },
+                            title = stringResource(R.string.reset_system_ui),
+                            titleColor = Color.Red,
                             onClick = {
                                 showDialog.value = true
                             }
@@ -501,9 +514,7 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
                     value = value.value,
                     maxLines = 1,
                     onValueChange = {
-                        if (it.isEmpty()) {
-                            value.value = it
-                        }
+                        value.value = it
                     }
                 )
                 Row(

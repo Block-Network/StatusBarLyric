@@ -3,6 +3,7 @@ package statusbar.lyric
 import android.content.res.Configuration
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -11,10 +12,13 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -54,7 +58,7 @@ fun App() {
 @Composable
 fun PortraitLayout() {
     val windowWidth = getWindowSize().width
-    val easing = CubicBezierEasing(0.12f, 0.88f, 0.2f, 1f)
+    val easing = CubicBezierEasing(0.12f, 0.38f, 0.2f, 1f)
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -130,7 +134,7 @@ fun LandscapeLayout() {
                 )
             },
         ) {
-            composable("EmptyPage") { EmptyPage() }
+            composable("EmptyPage", exitTransition = { fadeOut() }, popEnterTransition = { fadeIn()}) { EmptyPage() }
             composable("MenuPage") { MenuPage(navController) }
             composable("ChoosePage") { ChoosePage(navController) }
             composable("TestPage") { TestPage(navController) }
@@ -148,6 +152,11 @@ fun EmptyPage() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        // Empty page
+        Icon(
+            painter = painterResource(R.drawable.ic_launcher_foreground),
+            contentDescription = null,
+            tint = MiuixTheme.colorScheme.secondary,
+            modifier = Modifier.size(256.dp)
+        )
     }
 }

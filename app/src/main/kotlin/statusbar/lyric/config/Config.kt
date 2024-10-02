@@ -166,7 +166,7 @@ class Config {
     var lyricEndMargins: Int
         get() {
 
-            return config.opt("lyricEnd", if (XposedOwnSP.config.mHyperOSTexture) 20 else 0)
+            return config.opt("lyricEnd", if (XposedOwnSP.config.mHyperOSTexture) 20 else 7)
         }
         set(value) {
             config.put("lyricEnd", value)
@@ -493,6 +493,13 @@ class Config {
         }
         set(value) {
             config.put("changeAllIcons", value)
+        }
+    var viewLocation: Int
+        get() {
+            return config.opt("viewLocation", 0)
+        }
+        set(value) {
+            config.put("viewLocation", value)
         }
 
     private val defIconHashMap by lazy {

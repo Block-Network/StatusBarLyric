@@ -95,7 +95,7 @@ fun IconPage(navController: NavController) {
             topAppBarScrollBehavior = scrollBehavior
         ) {
             item {
-                Column {
+                Column(Modifier.padding(top = 18.dp)) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -112,13 +112,32 @@ fun IconPage(navController: NavController) {
                         )
                     }
                     AnimatedVisibility(
+                        visible = !iconSwitch.value
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp)
+                                .padding(top = 6.dp, bottom = 12.dp)
+                        ) {
+                            BasicComponent(
+                                title = stringResource(R.string.reset_system_ui),
+                                titleColor = Color.Red,
+                                onClick = {
+                                    showDialog.value = true
+                                }
+                            )
+                        }
+                    }
+                    AnimatedVisibility(
                         visible = iconSwitch.value,
                         enter = AnimTools().enterTransition(0),
-                        exit = AnimTools().exitTransition(40)
+                        exit = AnimTools().exitTransition(100)
                     ) {
                         Column {
                             SmallTitle(
-                                text = stringResource(R.string.module_second)
+                                text = stringResource(R.string.module_second),
+                                modifier = Modifier.padding(top = 6.dp)
                             )
                             Card(
                                 modifier = Modifier
@@ -150,11 +169,12 @@ fun IconPage(navController: NavController) {
                     AnimatedVisibility(
                         visible = iconSwitch.value,
                         enter = AnimTools().enterTransition(20),
-                        exit = AnimTools().exitTransition(20)
+                        exit = AnimTools().exitTransition(80)
                     ) {
                         Column {
                             SmallTitle(
-                                text = stringResource(R.string.module_fourth)
+                                text = stringResource(R.string.module_fourth),
+                                modifier = Modifier.padding(top = 6.dp)
                             )
                             Card(
                                 modifier = Modifier
@@ -188,11 +208,12 @@ fun IconPage(navController: NavController) {
                     AnimatedVisibility(
                         visible = iconSwitch.value,
                         enter = AnimTools().enterTransition(40),
-                        exit = AnimTools().exitTransition(0)
+                        exit = AnimTools().exitTransition(60)
                     ) {
                         Column {
                             SmallTitle(
-                                text = stringResource(R.string.module_third)
+                                text = stringResource(R.string.module_third),
+                                modifier = Modifier.padding(top = 6.dp)
                             )
                             Card(
                                 modifier = Modifier
@@ -218,19 +239,25 @@ fun IconPage(navController: NavController) {
                             }
                         }
                     }
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp)
-                            .padding(top = 6.dp, bottom = 12.dp)
+                    AnimatedVisibility(
+                        visible = iconSwitch.value,
+                        enter = AnimTools().enterTransition(60),
+                        exit = AnimTools().exitTransition(40)
                     ) {
-                        BasicComponent(
-                            title = stringResource(R.string.reset_system_ui),
-                            titleColor = Color.Red,
-                            onClick = {
-                                showDialog.value = true
-                            }
-                        )
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp)
+                                .padding(top = 6.dp, bottom = 12.dp)
+                        ) {
+                            BasicComponent(
+                                title = stringResource(R.string.reset_system_ui),
+                                titleColor = Color.Red,
+                                onClick = {
+                                    showDialog.value = true
+                                }
+                            )
+                        }
                     }
                 }
                 Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
@@ -453,7 +480,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                         onClick = {
                             dismissDialog()
                             showDialog.value = false
-                            config.iconBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                            config.iconTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                             changeConfig()
                         }
                     )
