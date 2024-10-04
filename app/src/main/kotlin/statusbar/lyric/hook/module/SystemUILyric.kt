@@ -653,7 +653,6 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-            if (this::mNotificationIconArea.isInitialized) if (config.hideNotificationIcon) mNotificationIconArea.hideView() else mNotificationIconArea.showView()
         }
     }
 
