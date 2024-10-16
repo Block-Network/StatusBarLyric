@@ -421,7 +421,15 @@ class SystemUILyric : BaseHook() {
                 )
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
-
+            if (config.lyricWidth == 0) {
+                lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
+            } else {
+                var width = scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins
+                if (width > targetView.width) {
+                    width = targetView.width.toFloat()
+                }
+                lyricView.setMaxLyricViewWidth(width)
+            }
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
             if (config.titleSwitch) {
                 object : SystemMediaSessionListener(context) {

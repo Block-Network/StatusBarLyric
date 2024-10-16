@@ -52,7 +52,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
@@ -341,371 +340,322 @@ fun ExtendPage(navController: NavController) {
 
 @Composable
 fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.slideStatusBarCutSongsXRadius.toString()) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
-                summary = stringResource(R.string.slide_status_bar_cut_songs_x_radius_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..2000)) {
-                            value.value = it
-                        }
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            config.slideStatusBarCutSongsXRadius = if (value.value.isEmpty() || value.value.toInt() < 50) 50 else value.value.toInt()
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
+        summary = stringResource(R.string.slide_status_bar_cut_songs_x_radius_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..2000)) {
+                    value.value = it
                 }
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.slideStatusBarCutSongsXRadius = if (value.value.isEmpty() || value.value.toInt() < 50) 50 else value.value.toInt()
+                    dismissDialog(showDialog)
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.slideStatusBarCutSongsYRadius.toString()) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
-                summary = stringResource(R.string.slide_status_bar_cut_songs_y_radius_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                            value.value = it
-                        }
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            config.slideStatusBarCutSongsYRadius = if (value.value.isEmpty() || value.value.toInt() < 10) 10 else value.value.toInt()
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
+        summary = stringResource(R.string.slide_status_bar_cut_songs_y_radius_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
+                    value.value = it
                 }
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.slideStatusBarCutSongsYRadius = if (value.value.isEmpty() || value.value.toInt() < 10) 10 else value.value.toInt()
+                    dismissDialog(showDialog)
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleDelayDuration.toString()) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.title_delay_duration),
-                summary = stringResource(R.string.title_delay_duration_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..10000)) {
-                            value.value = it
-                        }
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            config.titleDelayDuration = if (value.value.isEmpty()) 3000 else value.value.toInt()
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.title_delay_duration),
+        summary = stringResource(R.string.title_delay_duration_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..10000)) {
+                    value.value = it
                 }
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.titleDelayDuration = if (value.value.isEmpty()) 3000 else value.value.toInt()
+                    dismissDialog(showDialog)
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleColorAndTransparency) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.title_color_and_transparency),
-                summary = stringResource(R.string.lyric_color_and_transparency_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        value.value = it
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            ActivityTools.colorCheck(
-                                value.value,
-                                unit = {
-                                    config.lyricColor = it
-                                }, "#000000"
-                            )
-                            config.titleColorAndTransparency = value.value.ifEmpty { "#000000" }
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                }
+    SuperDialog(
+        title = stringResource(R.string.title_color_and_transparency),
+        summary = stringResource(R.string.lyric_color_and_transparency_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                value.value = it
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    ActivityTools.colorCheck(
+                        value.value,
+                        unit = {
+                            config.lyricColor = it
+                        }, "#000000"
+                    )
+                    config.titleColorAndTransparency = value.value.ifEmpty { "#000000" }
+                    dismissDialog(showDialog)
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleBackgroundRadius.toString()) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.title_background_radius),
-                summary = stringResource(R.string.lyric_background_radius_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                            value.value = it
-                        }
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            config.titleBackgroundRadius = if (value.value.isEmpty()) 50 else value.value.toInt()
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.title_background_radius),
+        summary = stringResource(R.string.lyric_background_radius_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
+                    value.value = it
                 }
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.titleBackgroundRadius = if (value.value.isEmpty()) 50 else value.value.toInt()
+                    dismissDialog(showDialog)
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleBackgroundStrokeWidth.toString()) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.title_background_stroke_width),
-                summary = stringResource(R.string.title_background_stroke_width_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..30)) {
-                            value.value = it
-                        }
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            config.titleBackgroundStrokeWidth = if (value.value.isEmpty()) 10 else value.value.toInt()
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.title_background_stroke_width),
+        summary = stringResource(R.string.title_background_stroke_width_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..30)) {
+                    value.value = it
                 }
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.titleBackgroundStrokeWidth = if (value.value.isEmpty()) 10 else value.value.toInt()
+                    dismissDialog(showDialog)
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.titleBackgroundStrokeColorAndTransparency) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.title_background_stroke_color),
-                summary = stringResource(R.string.lyric_color_and_transparency_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        value.value = it
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            ActivityTools.colorCheck(
-                                value.value,
-                                unit = {
-                                    config.titleBackgroundStrokeColorAndTransparency = it
-                                }, "#FFFFFF"
-                            )
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                }
+    SuperDialog(
+        title = stringResource(R.string.title_background_stroke_color),
+        summary = stringResource(R.string.lyric_color_and_transparency_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                value.value = it
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    ActivityTools.colorCheck(
+                        value.value,
+                        unit = {
+                            config.titleBackgroundStrokeColorAndTransparency = it
+                        }, "#FFFFFF"
+                    )
+                    dismissDialog(showDialog)
+                }
+            )
         }
-    )
+    }
 }
