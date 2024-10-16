@@ -58,7 +58,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import java.util.Locale
 
@@ -233,87 +232,73 @@ fun MenuPage(navController: NavController) {
 
 @Composable
 fun ResetDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.clear_config),
-                summary = stringResource(R.string.clear_config_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            config.clear()
-                            dismissDialog()
-                            showDialog.value = false
-                            Thread {
-                                Thread.sleep(500)
-                                ActivityTools.restartApp()
-                            }.start()
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.clear_config),
+        summary = stringResource(R.string.clear_config_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
                 }
-            }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.clear()
+                    dismissDialog(showDialog)
+                    Thread {
+                        Thread.sleep(500)
+                        ActivityTools.restartApp()
+                    }.start()
+                }
+            )
         }
-    )
+    }
 }
 
 
 @Composable
 fun RestartDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.reset_system_ui),
-                summary = stringResource(R.string.restart_systemui_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        onClick = {
-                            Tools.shell("killall com.android.systemui", true)
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        submit = true,
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.reset_system_ui),
+        summary = stringResource(R.string.restart_systemui_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                onClick = {
+                    Tools.shell("killall com.android.systemui", true)
+                    dismissDialog(showDialog)
                 }
-            }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                submit = true,
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
         }
-    )
+    }
 }

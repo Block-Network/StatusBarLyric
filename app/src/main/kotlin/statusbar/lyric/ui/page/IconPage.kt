@@ -49,7 +49,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
@@ -276,374 +275,316 @@ fun IconPage(navController: NavController) {
 
 @Composable
 fun IconSizeDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconSize.toString()) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.icon_size),
-                summary = stringResource(R.string.icon_size_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                            value.value = it
-                        }
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            config.iconSize = if (value.value.isEmpty()) 0 else value.value.toInt()
-                            dismissDialog()
-                            showDialog.value = false
-                            changeConfig()
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.icon_size),
+        summary = stringResource(R.string.icon_size_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
+                    value.value = it
                 }
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.iconSize = if (value.value.isEmpty()) 0 else value.value.toInt()
+                    dismissDialog(showDialog)
+                    changeConfig()
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun IconColorDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconColor) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.icon_color_and_transparency),
-                summary = stringResource(R.string.icon_color_and_transparency_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        value.value = it
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            ActivityTools.colorCheck(
-                                value.value,
-                                unit = {
-                                    config.iconColor = it
-                                })
-                            dismissDialog()
-                            showDialog.value = false
-                            changeConfig()
-                        }
-                    )
-                }
+    SuperDialog(
+        title = stringResource(R.string.icon_color_and_transparency),
+        summary = stringResource(R.string.icon_color_and_transparency_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                value.value = it
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    ActivityTools.colorCheck(value.value, unit = { config.iconColor = it })
+                    dismissDialog(showDialog)
+                    changeConfig()
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconBgColor) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.icon_background_color_and_transparency),
-                summary = stringResource(R.string.icon_background_color_and_transparency_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        value.value = it
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            ActivityTools.colorCheck(
-                                value.value,
-                                unit = {
-                                    config.iconBgColor = it
-                                })
-                            dismissDialog()
-                            showDialog.value = false
-                            changeConfig()
-                        }
-                    )
-                }
+    SuperDialog(
+        title = stringResource(R.string.icon_background_color_and_transparency),
+        summary = stringResource(R.string.icon_background_color_and_transparency_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                value.value = it
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    ActivityTools.colorCheck(value.value, unit = { config.iconBgColor = it })
+                    dismissDialog(showDialog)
+                    changeConfig()
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconTopMargins.toString()) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.icon_top_margins),
-                summary = stringResource(R.string.icon_top_margins_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                            value.value = it
-                        }
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                            config.iconTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
-                            changeConfig()
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.icon_top_margins),
+        summary = stringResource(R.string.icon_top_margins_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
+                    value.value = it
                 }
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.iconTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    dismissDialog(showDialog)
+                    changeConfig()
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconBottomMargins.toString()) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.icon_bottom_margins),
-                summary = stringResource(R.string.icon_bottom_margins_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                            value.value = it
-                        }
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                            config.iconBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
-                            changeConfig()
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.icon_bottom_margins),
+        summary = stringResource(R.string.icon_bottom_margins_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
+                    value.value = it
                 }
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.iconBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    dismissDialog(showDialog)
+                    changeConfig()
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.iconStartMargins.toString()) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.icon_start_margins),
-                summary = stringResource(R.string.icon_start_margins_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..500)) {
-                            value.value = it
-                        }
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                            config.iconStartMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
-                            changeConfig()
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.icon_start_margins),
+        summary = stringResource(R.string.icon_start_margins_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..500)) {
+                    value.value = it
                 }
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.iconStartMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    dismissDialog(showDialog)
+                    changeConfig()
+                }
+            )
         }
-    )
+    }
 }
-
 
 @Composable
 fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
-    if (!showDialog.value) return
     val value = remember { mutableStateOf(config.changeAllIcons) }
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.change_all_icons),
-                summary = stringResource(R.string.change_all_icons_tips),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                TextField(
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    value = value.value,
-                    maxLines = 1,
-                    onValueChange = {
-                        value.value = it
-                    }
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            config.changeAllIcons = value.value.ifEmpty { "" }
-                            dismissDialog()
-                            showDialog.value = false
-                            changeConfig()
-                        }
-                    )
-                }
+    SuperDialog(
+        title = stringResource(R.string.change_all_icons),
+        summary = stringResource(R.string.change_all_icons_tips),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        TextField(
+            modifier = Modifier.padding(bottom = 16.dp),
+            value = value.value,
+            maxLines = 1,
+            onValueChange = {
+                value.value = it
             }
+        )
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
+                }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.changeAllIcons = value.value.ifEmpty { "" }
+                    dismissDialog(showDialog)
+                    changeConfig()
+                }
+            )
         }
-    )
+    }
 }

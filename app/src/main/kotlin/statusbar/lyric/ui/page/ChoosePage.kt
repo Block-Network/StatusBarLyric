@@ -45,7 +45,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
@@ -112,45 +111,38 @@ fun ChoosePage(navController: NavController) {
 
 @Composable
 fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
-    if (!showDialog.value) return
-    showDialog(
-        content = {
-            SuperDialog(
-                title = stringResource(R.string.select_hook),
-                show = showDialog,
-                onDismissRequest = {
-                    showDialog.value = false
-                },
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
-                    Spacer(Modifier.width(20.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            config.textViewClassName = data.textViewClassName
-                            config.textViewId = data.textViewId
-                            config.parentViewClassName = data.parentViewClassName
-                            config.parentViewId = data.parentViewId
-                            config.index = data.index
-                            config.textSize = data.textSize
-                            dismissDialog()
-                            showDialog.value = false
-                        }
-                    )
+    SuperDialog(
+        title = stringResource(R.string.select_hook),
+        show = showDialog,
+        onDismissRequest = {
+            dismissDialog(showDialog)
+        },
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDialog)
                 }
-            }
+            )
+            Spacer(Modifier.width(20.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    config.textViewClassName = data.textViewClassName
+                    config.textViewId = data.textViewId
+                    config.parentViewClassName = data.parentViewClassName
+                    config.parentViewId = data.parentViewId
+                    config.index = data.index
+                    config.textSize = data.textSize
+                    dismissDialog(showDialog)
+                }
+            )
         }
-    )
+    }
 }
