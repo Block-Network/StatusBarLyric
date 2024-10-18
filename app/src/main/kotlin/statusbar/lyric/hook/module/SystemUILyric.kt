@@ -408,6 +408,7 @@ class SystemUILyric : BaseHook() {
     private val handler: Handler = Handler(Looper.getMainLooper())
     private var titleShowRunnable: Runnable? = null
     private var nowPlayingApp: String = ""
+    private var artist: String? = null
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
@@ -439,14 +440,19 @@ class SystemUILyric : BaseHook() {
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
             if (config.titleSwitch) {
                 object : SystemMediaSessionListener(context) {
-                    override fun onTitleChanged(changedApp: String, title: String) {
-                        super.onTitleChanged(changedApp, title)
+                    override fun onTitleChanged(changedApp: String, title: String, artist: String) {
+                        super.onTitleChanged(changedApp, title, artist)
+                        val currentTitle = title
+                        val currentArtist = artist
                         titleShowRunnable = Runnable {
                             if (nowPlayingApp.isNotEmpty()) {
                                 if (changedApp.isNotEmpty() && nowPlayingApp != changedApp) return@Runnable
                             } else return@Runnable // 为空代表尚且没有播放的应用
-                            "title: $title".log()
-                            this@SystemUILyric.title = title
+                            if (this@SystemUILyric.artist != currentArtist) {
+                                "title: $title".log()
+                                this@SystemUILyric.artist = currentArtist
+                                this@SystemUILyric.title = currentTitle
+                            }
                         }
                     }
                 }

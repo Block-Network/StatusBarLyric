@@ -9,7 +9,6 @@ import android.media.session.PlaybackState
 import android.service.notification.NotificationListenerService
 
 open class SystemMediaSessionListener(context: Context) {
-    private var artist: String? = null
     private var mediaSessionManager: MediaSessionManager? = null
     private val activeControllers = mutableMapOf<MediaController, MediaControllerCallback>()
 
@@ -72,10 +71,7 @@ open class SystemMediaSessionListener(context: Context) {
     private fun displayMediaMetadata(changedApp: String, metadata: MediaMetadata) {
         val title = metadata.getString(MediaMetadata.METADATA_KEY_TITLE) ?: "Unknown Title"
         val artist = metadata.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: "Unknown Artist"
-        if (this.artist != artist) {
-            this.artist = artist
-            onTitleChanged(changedApp, title)
-        }
+        onTitleChanged(changedApp, title, artist)
     }
 
     fun cleanup() {
@@ -83,7 +79,7 @@ open class SystemMediaSessionListener(context: Context) {
         activeControllers.entries.forEach { it.key.unregisterCallback(it.value) }
     }
 
-    open fun onTitleChanged(changedApp: String, title: String) {}
+    open fun onTitleChanged(changedApp: String, title: String, artist: String) {}
 
     open fun onStateChanged(changedApp: String, state: Int) {}
 
