@@ -38,6 +38,8 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
@@ -403,6 +405,10 @@ class SystemUILyric : BaseHook() {
         SystemUISpecial()
     }
 
+    private val handler: Handler = Handler(Looper.getMainLooper())
+    private var titleShowRunnable: Runnable? = null
+    private var nowPlayingApp: String = ""
+
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
         val firstLoad = lyricLayout.parent.isNull()
@@ -433,10 +439,15 @@ class SystemUILyric : BaseHook() {
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
             if (config.titleSwitch) {
                 object : SystemMediaSessionListener(context) {
-                    override fun onTitleChanged(title: String) {
-                        super.onTitleChanged(title)
-                        "title: $title".log()
-                        this@SystemUILyric.title = title
+                    override fun onTitleChanged(changedApp: String, title: String) {
+                        super.onTitleChanged(changedApp, title)
+                        titleShowRunnable = Runnable {
+                            if (nowPlayingApp.isNotEmpty()) {
+                                if (changedApp.isNotEmpty() && nowPlayingApp != changedApp) return@Runnable
+                            } else return@Runnable // 为空代表尚且没有播放的应用
+                            "title: $title".log()
+                            this@SystemUILyric.title = title
+                        }
                     }
                 }
             }
@@ -446,18 +457,28 @@ class SystemUILyric : BaseHook() {
         val lyricReceiver = LyricReceiver(object : LyricListener() {
             override fun onStop(lyricData: LyricData) {
                 if (!isReally) return
+                if (nowPlayingApp.isNotEmpty())
+                    if (lyricData.extraData.packageName.isNotEmpty() &&
+                        nowPlayingApp != lyricData.extraData.packageName
+                    ) return
                 if (isHiding) isHiding = false
+                nowPlayingApp = ""
                 lastLyric = ""
                 hideLyric()
             }
 
             override fun onUpdate(lyricData: LyricData) {
                 if (!isReally) return
+                nowPlayingApp = lyricData.extraData.packageName
                 val lyric = lyricData.lyric
                 lastLyric = lyric
                 if (isHiding) return
                 changeIcon(lyricData.extraData)
                 changeLyric(lastLyric, lyricData.extraData.delay)
+                titleShowRunnable?.let {
+                    handler.post(it)
+                    titleShowRunnable = null
+                }
             }
         })
         registerLyricListener(context, BuildConfig.API_VERSION, lyricReceiver)
