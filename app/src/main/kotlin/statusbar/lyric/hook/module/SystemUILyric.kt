@@ -38,6 +38,9 @@ import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
@@ -403,6 +406,45 @@ class SystemUILyric : BaseHook() {
         SystemUISpecial()
     }
 
+    var playingApp: String = ""
+    val TITLE_SHOW_READY: Int = 0
+    val TITLE_SHOW_WAITING: Int = 1
+    val TITLE_SHOWING: Int = 2
+    val titleShowHandler: Handler by lazy {
+        object : Handler(Looper.getMainLooper()) {
+            var titleData: TitleData = TitleData("", "")
+
+            override fun handleMessage(msg: Message) {
+                when (msg.what) {
+                    TITLE_SHOW_READY -> {
+                        if (titleShowHandler.hasMessages(TITLE_SHOW_WAITING))
+                            titleShowHandler.removeMessages(TITLE_SHOW_WAITING)
+                        titleShowHandler.sendEmptyMessageDelayed(TITLE_SHOW_WAITING, 800)
+                        titleData = msg.obj as TitleData
+                    }
+
+                    TITLE_SHOW_WAITING -> {
+                    }
+
+                    TITLE_SHOWING -> {
+                        if (titleShowHandler.hasMessages(TITLE_SHOW_WAITING)
+                            || titleData.title.isEmpty() || titleData.caller.isEmpty()
+                        ) return
+
+                        if (playingApp.isNotEmpty() && titleData.caller == playingApp) {
+                            "title: ${titleData.title}".log()
+                            this@SystemUILyric.title = titleData.title
+                        }
+
+                        titleData = TitleData("", "")
+                    }
+                }
+            }
+        }
+    }
+
+    data class TitleData(val caller: String, val title: String)
+
     @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
         val firstLoad = lyricLayout.parent.isNull()
@@ -433,10 +475,13 @@ class SystemUILyric : BaseHook() {
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
             if (config.titleSwitch) {
                 object : SystemMediaSessionListener(context) {
-                    override fun onTitleChanged(title: String) {
-                        super.onTitleChanged(title)
-                        "title: $title".log()
-                        this@SystemUILyric.title = title
+                    override fun onTitleChanged(caller: String, title: String) {
+                        super.onTitleChanged(caller, title)
+
+                        val message = Message.obtain()
+                        message.what = TITLE_SHOW_READY
+                        message.obj = TitleData(caller, title);
+                        titleShowHandler.sendMessage(message)
                     }
                 }
             }
@@ -444,20 +489,28 @@ class SystemUILyric : BaseHook() {
 
         if (!firstLoad) return
         val lyricReceiver = LyricReceiver(object : LyricListener() {
-            override fun onStop(lyricData: LyricData) {
-                if (!isReally) return
-                if (isHiding) isHiding = false
-                lastLyric = ""
-                hideLyric()
-            }
-
             override fun onUpdate(lyricData: LyricData) {
                 if (!isReally) return
                 val lyric = lyricData.lyric
                 lastLyric = lyric
+                playingApp = lyricData.extraData.packageName
                 if (isHiding) return
                 changeIcon(lyricData.extraData)
                 changeLyric(lastLyric, lyricData.extraData.delay)
+                titleShowHandler.sendEmptyMessage(TITLE_SHOWING)
+            }
+
+            override fun onStop(lyricData: LyricData) {
+                if (!isReally) return
+                if (playingApp.isNotEmpty()) {
+                    if (lyricData.extraData.packageName.isNotEmpty() &&
+                        playingApp != lyricData.extraData.packageName
+                    ) return
+                }
+                if (isHiding) isHiding = false
+                playingApp = ""
+                lastLyric = ""
+                hideLyric()
             }
         })
         registerLyricListener(context, BuildConfig.API_VERSION, lyricReceiver)
