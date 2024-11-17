@@ -410,7 +410,7 @@ class SystemUILyric : BaseHook() {
                 after { hook ->
                     val mode = hook.result as Int
                     val mIsFullscreen = XposedHelpers.getObjectField(hook.thisObject, "mIsFullscreen") as Boolean
-                    if (mIsFullscreen && mode == 0) {
+                    if (mIsFullscreen && (mode == 0 || mode == 6)) {
                         isFullScreenMode = true
                         if (isPlaying)
                             hideLyric()
