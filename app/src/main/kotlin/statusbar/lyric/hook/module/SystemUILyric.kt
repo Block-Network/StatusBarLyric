@@ -41,6 +41,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
@@ -64,7 +65,6 @@ import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
@@ -79,6 +79,7 @@ import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.LyricViewTools.textColorAnima
 import statusbar.lyric.tools.SystemMediaSessionListener
+import statusbar.lyric.tools.Tools.getObjectField
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isLandscape
@@ -152,6 +153,7 @@ class SystemUILyric : BaseHook() {
     private var isHiding: Boolean = false
     private var isRandomAnima: Boolean = false
     private var isFullScreenMode: Boolean = false
+    private var isFocusNotify: Boolean = false
     val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
 
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
@@ -409,7 +411,7 @@ class SystemUILyric : BaseHook() {
             it.methodFinder().filterByName("barMode").first().createHook {
                 after { hook ->
                     val mode = hook.result as Int
-                    val mIsFullscreen = XposedHelpers.getObjectField(hook.thisObject, "mIsFullscreen") as Boolean
+                    val mIsFullscreen = hook.thisObject.getObjectField("mIsFullscreen") as Boolean
                     if (mIsFullscreen && (mode == 0 || mode == 6)) {
                         isFullScreenMode = true
                         if (isPlaying)
@@ -417,6 +419,32 @@ class SystemUILyric : BaseHook() {
                     } else if ((!mIsFullscreen && mode == 0) || (mIsFullscreen && mode == 1))
                         isFullScreenMode = false
                     "statusBar state: $mode, fullscreen: $mIsFullscreen, in fullscreen mode: $isFullScreenMode".log()
+                }
+            }
+        }
+        loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController\$2").isNotNull {
+            it.methodFinder().filterByName("handleMessage").first().createHook {
+                before { hook ->
+                    val message = hook.args[0] as Message
+                    if (message.what == 1003) {
+                        val focusedNotifyPromptController = hook.thisObject.getObjectField("this\$0")
+                        val focusedNotifyBean = focusedNotifyPromptController.getObjectField("mCurrentNotifBean");
+                        val show = !(focusedNotifyPromptController.getObjectField("mIsHeadsUpShowing") as Boolean
+                            || focusedNotifyBean == null || focusedNotifyBean.getObjectField("headsUp") as Boolean ||
+                            (TextUtils.equals(
+                                focusedNotifyBean.getObjectField("packageName") as CharSequence,
+                                focusedNotifyPromptController.getObjectField("mTopActivityPackageName") as CharSequence
+                            ) && !(focusedNotifyPromptController.getObjectField("mRequestHide") as Boolean)))
+
+                        if (show) {
+                            isFocusNotify = true
+                            if (isPlaying)
+                                hideLyric()
+                        } else {
+                            isFocusNotify = false
+                        }
+                        "focus notify is ${if (show) "show" else "hide"}".log()
+                    }
                 }
             }
         }
@@ -551,7 +579,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeLyric(lyric: String, delay: Int) {
-        if (isHiding || isScreenLock || isFullScreenMode) return
+        if (isHiding || isScreenLock || isFullScreenMode || isFocusNotify) return
         "lyric:$lyric".log()
         isStop = false
         isPlaying = true

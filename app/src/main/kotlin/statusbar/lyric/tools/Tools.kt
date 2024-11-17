@@ -37,6 +37,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.github.kyuubiran.ezxhelper.EzXHelper
 import de.robv.android.xposed.XSharedPreferences
+import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
@@ -66,7 +67,8 @@ object Tools {
         }
     }
 
-    fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
+    fun dp2px(context: Context, dpValue: Float): Int =
+        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 
     val togglePrompts: Boolean
         get() {
@@ -159,7 +161,8 @@ object Tools {
         }, delayed * 1000)
     }
 
-    fun Context.isLandscape() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    fun Context.isLandscape() =
+        resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     fun String.dispose() = this.regexReplace(" ", "").regexReplace("\n", "")
 
@@ -217,6 +220,10 @@ object Tools {
             return true
         }
         return false
+    }
+
+    fun Any.getObjectField(fieldName: String): Any {
+        return XposedHelpers.getObjectField(this, fieldName)
     }
 
     fun Any?.isNull() = this == null
