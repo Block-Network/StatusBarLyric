@@ -61,6 +61,7 @@ import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
@@ -147,6 +148,7 @@ class SystemUILyric : BaseHook() {
     private var isStop: Boolean = false
     private var isHiding: Boolean = false
     private var isRandomAnima: Boolean = false
+    private var isFullScreenMode: Boolean = false
     val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
 
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
@@ -400,6 +402,21 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
+        loadClassOrNull("com.android.systemui.statusbar.phone.CentralSurfacesImpl").isNotNull {
+            it.methodFinder().filterByName("barMode").first().createHook {
+                after { hook ->
+                    val mode = hook.result as Int
+                    val mIsFullscreen = XposedHelpers.getObjectField(hook.thisObject, "mIsFullscreen") as Boolean
+                    if (mIsFullscreen && mode == 0) {
+                        isFullScreenMode = true
+                        if (isPlaying)
+                            hideLyric()
+                    } else if ((!mIsFullscreen && mode == 0) || (mIsFullscreen && mode == 1))
+                        isFullScreenMode = false
+                    "statusBar state: $mode, fullscreen: $mIsFullscreen, in fullscreen mode: $isFullScreenMode".log()
+                }
+            }
+        }
         SystemUISpecial()
     }
 
@@ -481,7 +498,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeLyric(lyric: String, delay: Int) {
-        if (isHiding || isScreenLock) return
+        if (isHiding || isScreenLock || isFullScreenMode) return
         "lyric:$lyric".log()
         isStop = false
         isPlaying = true
