@@ -423,20 +423,22 @@ class SystemUILyric : BaseHook() {
             }
         }
         loadClassOrNull("com.android.systemui.statusbar.phone.CentralSurfacesImpl").isNotNull {
-            it.methodFinder().filterByName("barMode").first().createHook {
-                after { hook ->
-                    val mode = hook.result as Int
-                    val mIsFullscreen = hook.thisObject.getObjectField("mIsFullscreen") as Boolean
-                    if (mIsFullscreen && (mode == 0 || mode == 6)) {
-                        if (!isHiding) {
-                            if (isPlaying) {
-                                shouldHiding(true)
-                                hideLyric()
+            it.methodFinder().filterByName("barMode").firstOrNull().ifNotNull { method ->
+                method.createHook {
+                    after { hook ->
+                        val mode = hook.result as Int
+                        val mIsFullscreen = hook.thisObject.getObjectField("mIsFullscreen") as Boolean
+                        if (mIsFullscreen && (mode == 0 || mode == 6)) {
+                            if (!isHiding) {
+                                if (isPlaying) {
+                                    shouldHiding(true)
+                                    hideLyric()
+                                }
                             }
-                        }
-                    } else if ((!mIsFullscreen && mode == 0) || (mIsFullscreen && mode == 1))
-                        shouldHiding(false)
-                    "statusBar state: $mode, fullscreen: $mIsFullscreen".log()
+                        } else if ((!mIsFullscreen && mode == 0) || (mIsFullscreen && mode == 1))
+                            shouldHiding(false)
+                        "statusBar state: $mode, fullscreen: $mIsFullscreen".log()
+                    }
                 }
             }
         }
