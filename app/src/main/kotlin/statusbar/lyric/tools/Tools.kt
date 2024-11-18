@@ -222,8 +222,19 @@ object Tools {
         return false
     }
 
-    fun Any.getObjectField(fieldName: String): Any {
+    inline fun <T> T?.ifNotNull(callback: (T) -> Any?): Any? {
+        if (this != null) {
+            return callback(this)
+        }
+        return null
+    }
+
+    fun Any.getObjectField(fieldName: String): Any? {
         return XposedHelpers.getObjectField(this, fieldName)
+    }
+
+    fun Any?.callMethod(methodName: String, vararg args: Any): Any? {
+        return XposedHelpers.callMethod(this, methodName, *args)
     }
 
     fun Any?.isNull() = this == null
