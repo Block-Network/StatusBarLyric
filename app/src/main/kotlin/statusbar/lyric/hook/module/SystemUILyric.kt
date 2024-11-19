@@ -161,6 +161,7 @@ class SystemUILyric : BaseHook() {
     private var isRandomAnima: Boolean = false
     private var focusedNotify: Any? = null
     private var canHideFocusNotify = false
+    private var isOS1FocusNotifyShowing = false // OS1 不要支持隐藏焦点通知
     val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
 
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
@@ -381,8 +382,9 @@ class SystemUILyric : BaseHook() {
 
                                             false -> {
                                                 if (config.clickStatusBarToHideLyric) {
+                                                    if (isOS1FocusNotifyShowing) return@before
                                                     if (shouldControlFocusNotify()) {
-                                                        if (isHiding && shouldOpenFocusNotify(motionEvent)) {
+                                                        if (!isHideFocusNotify && shouldOpenFocusNotify(motionEvent)) {
                                                             "should open focus notify".log()
                                                             return@before
                                                         }
@@ -390,7 +392,6 @@ class SystemUILyric : BaseHook() {
                                                     val isClick = motionEvent.eventTime - motionEvent.downTime < 200
                                                     if (isClick && isPlaying) {
                                                         moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
-                                                        isHiding.log()
                                                         if (isHiding && lastLyric.isNotEmpty()) {
                                                             isHiding = false
                                                             hookParam.result = true
@@ -410,6 +411,7 @@ class SystemUILyric : BaseHook() {
                                                                 showFocusNotifyIfNeed()
                                                             }
                                                         }
+                                                        "change to hide: $isHiding".log()
                                                     }
                                                 }
                                             }
@@ -429,11 +431,9 @@ class SystemUILyric : BaseHook() {
                         val mode = hook.result as Int
                         val mIsFullscreen = hook.thisObject.getObjectField("mIsFullscreen") as Boolean
                         if (mIsFullscreen && (mode == 0 || mode == 6)) {
-                            if (!isHiding) {
-                                if (isPlaying) {
-                                    shouldHiding(true)
-                                    hideLyric()
-                                }
+                            if (isPlaying) {
+                                shouldHiding(true)
+                                hideLyric()
                             }
                         } else if ((!mIsFullscreen && mode == 0) || (mIsFullscreen && mode == 1))
                             shouldHiding(false)
@@ -450,33 +450,35 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
-        }
-        loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").isNotNull {
-            it.methodFinder().filterByName("updateVisibility\$1").firstOrNull().ifNotNull { method ->
-                method.createHook {
-                    before { hook ->
-                        if (isHideFocusNotify && canHideFocusNotify) {
-                            hook.result = null
-                            "update visibility isHiding!".log()
+
+            it.declaredMethods.filter { method ->
+                (method.name == "updateVisibility\$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
+                    method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
+            }
+                .forEach { method ->
+                    method.createHook {
+                        before { hook ->
+                            if (isHideFocusNotify) {
+                                hook.result = null
+                                "update focus notify visibility is hiding!".log()
+                            }
                         }
                     }
                 }
-            }
         }
 
         val shouldShowMethod = loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").ifNotNull {
             it.declaredMethods.firstOrNull { method -> method.name == "shouldShow" }
         }
         if (shouldShowMethod != null) {
+            canHideFocusNotify = true
             (shouldShowMethod as Method).createHook {
                 after { hook ->
                     val show = hook.result as Boolean
                     if (show) {
-                        if (!isHiding) {
-                            if (isPlaying) {
-                                shouldHiding(true)
-                                hideLyric()
-                            }
+                        if (isPlaying && !isHideFocusNotify) {
+                            shouldHiding(true)
+                            hideLyric()
                         }
                     } else
                         shouldHiding(false)
@@ -484,6 +486,7 @@ class SystemUILyric : BaseHook() {
                 }
             }
         } else {
+            canHideFocusNotify = false
             loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController\$2").isNotNull {
                 it.methodFinder().filterByName("handleMessage").first().createHook {
                     before { hook ->
@@ -491,13 +494,13 @@ class SystemUILyric : BaseHook() {
                         if (message.what == 1003) {
                             val show = shouldShow()
                             if (show) {
-                                if (!isHiding) {
-                                    if (isPlaying) {
-                                        shouldHiding(true)
-                                        hideLyric()
-                                    }
+                                if (isPlaying) {
+                                    isOS1FocusNotifyShowing = true
+                                    shouldHiding(true)
+                                    hideLyric()
                                 }
                             } else {
+                                isOS1FocusNotifyShowing = false
                                 shouldHiding(false)
                             }
                             "focus notify is ${if (show) "show" else "hide"}".log()
@@ -528,11 +531,11 @@ class SystemUILyric : BaseHook() {
         val mIcon = focusedNotify!!.getObjectField("mIcon")
         val mContent = focusedNotify!!.getObjectField("mContent")
         if (mIcon == null || mContent == null) return
+        isHideFocusNotify = false
         focusedNotify!!.callMethod("cancelFolme")
         focusedNotify!!.callMethod("showImmediately", mIcon)
         focusedNotify!!.callMethod("showImmediately", mContent)
         focusedNotify!!.callMethod("setIsFocusedNotifPromptShowing", true)
-        isHideFocusNotify = false
         "show focus notify!".log()
     }
 
@@ -544,10 +547,8 @@ class SystemUILyric : BaseHook() {
         val mCurrentNotifyBean = focusedNotify!!.getObjectField("mCurrentNotifBean") ?: return false
         val mIsHeadsUpShowing = focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean
         return if (focusedNotify!!.javaClass.declaredMethods.firstOrNull { it.name == "shouldShow" } != null) {
-            canHideFocusNotify = true
             focusedNotify!!.callMethod("shouldShow", mCurrentNotifyBean, mIsHeadsUpShowing) as Boolean
         } else {
-            canHideFocusNotify = false
             !(focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean
                 || mCurrentNotifyBean == null || mCurrentNotifyBean.getObjectField("headsUp") as Boolean ||
                 (TextUtils.equals(
@@ -559,6 +560,7 @@ class SystemUILyric : BaseHook() {
 
     private fun shouldOpenFocusNotify(motionEvent: MotionEvent): Boolean {
         if (!shouldControlFocusNotify()) return false
+        if (!shouldShow()) return false
         val focusedNotifyPromptView = focusedNotify!!.getObjectField("mView") ?: return false
 
         val x = motionEvent.rawX

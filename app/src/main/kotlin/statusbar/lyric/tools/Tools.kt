@@ -233,7 +233,11 @@ object Tools {
         return XposedHelpers.getObjectField(this, fieldName)
     }
 
-    fun Any?.callMethod(methodName: String, vararg args: Any): Any? {
+    fun Any.setObjectField(fieldName: String, value: Any?) {
+        XposedHelpers.setObjectField(this, fieldName, value)
+    }
+
+    fun Any.callMethod(methodName: String, vararg args: Any): Any? {
         return XposedHelpers.callMethod(this, methodName, *args)
     }
 
