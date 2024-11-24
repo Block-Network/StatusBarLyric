@@ -42,6 +42,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.os.SystemClock
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -49,7 +50,6 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsets
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -83,7 +83,9 @@ import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.LyricViewTools.textColorAnima
 import statusbar.lyric.tools.SystemMediaSessionListener
 import statusbar.lyric.tools.Tools.callMethod
+import statusbar.lyric.tools.Tools.existField
 import statusbar.lyric.tools.Tools.getObjectField
+import statusbar.lyric.tools.Tools.getObjectFieldIfExist
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.ifNotNull
 import statusbar.lyric.tools.Tools.isHyperOS
@@ -231,6 +233,9 @@ class SystemUILyric : BaseHook() {
     }
 
     //////////////////////////////Hook//////////////////////////////////////
+    private var defaultDisplay: Any? = null
+    private var mCentralSurfacesImpl: Any? = null
+
     @SuppressLint("DiscouragedApi", "NewApi")
     override fun init() {
         "Init Hook".log()
@@ -429,63 +434,51 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
+
         loadClassOrNull("com.android.systemui.statusbar.phone.CentralSurfacesImpl").isNotNull {
             it.constructorFinder().firstOrNull().ifNotNull { constructor ->
                 constructor.createHook {
                     after { hook ->
+                        mCentralSurfacesImpl = hook.thisObject
                         mAutoHideController = hook.thisObject.getObjectField("mAutoHideController")
-                    }
-                }
-            }
-            it.methodFinder().filterByName("barMode").firstOrNull().ifNotNull { method ->
-                method.createHook {
-                    after { hook ->
-                        val mode = hook.result as Int
-                        val mIsFullscreen = hook.thisObject.getObjectField("mIsFullscreen") as Boolean
-                        isInFullScreenMode = mIsFullscreen
-                        if (mIsFullscreen && (mode == 0 || mode == 6)) {
-                            if (isPlaying) {
-                                isHiding = true
-                                hideLyric()
-                            }
-                        } else if ((!mIsFullscreen && mode == 0) || (mIsFullscreen && mode == 1))
-                            if (!isOS1FocusNotifyShowing) isHiding = false
-                        "statusBar state: $mode, fullscreen: $mIsFullscreen".log()
+                        val mStatusBarModeRepository = hook.thisObject.getObjectFieldIfExist("mStatusBarModeRepository")
+                        defaultDisplay = mStatusBarModeRepository?.getObjectFieldIfExist("defaultDisplay")
                     }
                 }
             }
         }
-        loadClassOrNull("com.android.systemui.statusbar.data.repository.StatusBarModePerDisplayRepositoryImpl").isNotNull {
-            var i: Int = -1
-            it.constructorFinder().first().createHook {
-                after { hook ->
-                    i = hook.args[1] as Int
-                }
-            }
-            loadClassOrNull("com.android.systemui.statusbar.data.repository.StatusBarModePerDisplayRepositoryImpl\$commandQueueCallback\$1").isNotNull { clazz ->
-                val isInFullScreenMode = { i2: Int, i3: Int ->
-                    isInFullScreenMode = (i2 == i && (WindowInsets.Type.systemBars() and i3) != 0)
-                    isInFullScreenMode
-                }
-
-                clazz.methodFinder().filterByName("showTransient").first().createHook {
+        loadClassOrNull("com.android.wm.shell.miuimultiwinswitch.miuiwindowdecor.TransientObserver").isNotNull {
+            it.methodFinder().filterByName("setTransientShowing").firstOrNull().ifNotNull { method ->
+                method.createHook {
                     before { hook ->
-                        if (isInFullScreenMode(hook.args[0] as Int, hook.args[1] as Int)) {
-                            isHiding = false
-                            hideFocusNotifyIfNeed()
-                            "statusBar state: show".log()
-                        }
+                        val isShow = hook.args[0] as Boolean
+                        ifiIsInFullScreenMode(if (isShow) 1 else 0)
                     }
                 }
-
-                clazz.methodFinder().filterByName("abortTransient").first().createHook {
+            }
+        }
+        loadClassOrNull("com.android.wm.shell.multitasking.miuimultiwinswitch.miuiwindowdecor.MulWinSwitchTransientObserver").isNotNull {
+            it.methodFinder().filterByName("setTransientShowing").firstOrNull().ifNotNull { method ->
+                method.createHook {
                     before { hook ->
-                        if (isInFullScreenMode(hook.args[0] as Int, hook.args[1] as Int)) {
-                            if (isPlaying) {
-                                isHiding = true
-                                hideLyric()
+                        val isShow = hook.args[0] as Boolean
+                        ifiIsInFullScreenMode(if (isShow) 1 else 0)
+                    }
+                }
+            }
+        }
+        loadClassOrNull("com.android.systemui.statusbar.phone.AutoHideController").ifNotNull {
+            it.constructorFinder().firstOrNull().ifNotNull { constructor ->
+                constructor.createHook {
+                    before { hook ->
+                        hook.args[1] = object : Handler(Looper.getMainLooper()) {
+                            override fun sendMessageAtTime(msg: Message, uptimeMillis: Long): Boolean {
+                                if (msg.callback != null && isPlaying) {
+                                    delayMillis = uptimeMillis
+                                    "statusBar hide callback: ${msg.callback}, delayed time: ${uptimeMillis - SystemClock.uptimeMillis()}".log()
+                                }
+                                return super.sendMessageAtTime(msg, uptimeMillis)
                             }
-                            "statusBar state: hide".log()
                         }
                     }
                 }
@@ -503,7 +496,7 @@ class SystemUILyric : BaseHook() {
 
             it.declaredMethods.filter { method ->
                 (method.name == "updateVisibility\$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
-                    method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
+                        method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
             }
                 .forEach { method ->
                     method.createHook {
@@ -562,6 +555,47 @@ class SystemUILyric : BaseHook() {
         SystemUISpecial()
     }
 
+    var delayMillis: Long = -1L
+    private fun shouldShowLyricIfStatusBarIsShowingTime(): Boolean {
+        if (delayMillis == -1L) return true
+        val remainingTime = delayMillis - SystemClock.uptimeMillis()
+        return if (remainingTime > 800L) {
+            "delay time > 800L, should show lyric!".log()
+            hideFocusNotifyIfNeed()
+            true
+        } else {
+            "delay time < 800L, should skip show lyric!".log()
+            false
+        }
+    }
+
+    private fun ifiIsInFullScreenMode(mode: Int = -1) {
+        val isInFullScreen: Boolean
+        if (mCentralSurfacesImpl.existField("mIsFullscreen")) {
+            isInFullScreen = mCentralSurfacesImpl?.getObjectField("mIsFullscreen") as Boolean
+        } else {
+            val isInFullscreenMode = defaultDisplay?.getObjectField("isInFullscreenMode")
+            val delegate_0 = isInFullscreenMode?.getObjectField("\$\$delegate_0")
+            isInFullScreen = delegate_0?.callMethod("getValue") as Boolean
+        }
+        isInFullScreenMode = isInFullScreen
+        if (isInFullScreen) {
+            if ((mode == 0 || mode == -1) && isPlaying) {
+                delayMillis = -1L
+                isHiding = true
+                hideLyric()
+                showFocusNotifyIfNeed()
+            } else if (mode == 1 || mode == -1) {
+                isHiding = false
+            }
+        } else if (!isInFullScreen && mode == -1) {
+            isHiding = false
+            delayMillis = -1L
+            hideFocusNotifyIfNeed()
+        }
+        "statusBar state is ${if (mode == 1 || !isInFullScreen) "show" else "hide"}".log()
+    }
+
     private fun autoHideStatusBarInFullScreenModeIfNeed() {
         if (mAutoHideController == null) return
         if (!isInFullScreenMode) return
@@ -607,11 +641,11 @@ class SystemUILyric : BaseHook() {
             focusedNotify!!.callMethod("shouldShow", mCurrentNotifyBean, mIsHeadsUpShowing) as Boolean
         } else {
             !(focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean
-                || mCurrentNotifyBean == null || mCurrentNotifyBean.getObjectField("headsUp") as Boolean ||
-                (TextUtils.equals(
-                    mCurrentNotifyBean.getObjectField("packageName") as CharSequence,
-                    focusedNotify!!.getObjectField("mTopActivityPackageName") as CharSequence
-                ) && !(focusedNotify!!.getObjectField("mRequestHide") as Boolean)))
+                    || mCurrentNotifyBean == null || mCurrentNotifyBean.getObjectField("headsUp") as Boolean ||
+                    (TextUtils.equals(
+                        mCurrentNotifyBean.getObjectField("packageName") as CharSequence,
+                        focusedNotify!!.getObjectField("mTopActivityPackageName") as CharSequence
+                    ) && !(focusedNotify!!.getObjectField("mRequestHide") as Boolean)))
         }
     }
 
@@ -759,6 +793,7 @@ class SystemUILyric : BaseHook() {
 
     private fun changeLyric(lyric: String, delay: Int) {
         if (isHiding || isScreenLock) return
+        if (!shouldShowLyricIfStatusBarIsShowingTime()) return
         "lyric:$lyric".log()
         isStop = false
         isPlaying = true
@@ -997,6 +1032,9 @@ class SystemUILyric : BaseHook() {
                             "onConfigurationChanged".log()
                             val newConfig = hookParam.args[0] as Configuration
                             themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE || newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                ifiIsInFullScreenMode()
+                            }
                         }
                     }
                     if (isMiui && config.mMiuiPadOptimize) {
