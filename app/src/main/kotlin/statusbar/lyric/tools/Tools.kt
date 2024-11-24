@@ -233,6 +233,18 @@ object Tools {
         return XposedHelpers.getObjectField(this, fieldName)
     }
 
+    fun Any?.existField(fieldName: String): Boolean {
+        return this?.javaClass?.declaredFields?.any { it.name == fieldName } ?: false
+    }
+
+    fun Any.getObjectFieldIfExist(fieldName: String): Any? {
+        return try {
+            XposedHelpers.getObjectField(this, fieldName)
+        } catch (t: Throwable) {
+            null
+        }
+    }
+
     fun Any.setObjectField(fieldName: String, value: Any?) {
         XposedHelpers.setObjectField(this, fieldName, value)
     }
