@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,7 +30,10 @@ import statusbar.lyric.tools.ActivityTestTools.getClass
 import statusbar.lyric.tools.ActivityTools.showToastOnLooper
 import statusbar.lyric.tools.Tools.goMainThread
 import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -108,7 +109,10 @@ fun TestPage(navController: NavController) {
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.get_hook),
-                                    titleColor = MiuixTheme.colorScheme.primary,
+                                    titleColor = BasicComponentColors(
+                                        color = MiuixTheme.colorScheme.primary,
+                                        disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                                    ),
                                     rightText = stringResource(R.string.tips1),
                                     onClick = {
                                         context.getClass()
@@ -137,7 +141,10 @@ fun TestPage(navController: NavController) {
                     ) {
                         BasicComponent(
                             title = stringResource(R.string.reset_system_ui),
-                            titleColor = Color.Red,
+                            titleColor = BasicComponentColors(
+                                color = Color.Red,
+                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            ),
                             onClick = {
                                 showDialog.value = true
                             }

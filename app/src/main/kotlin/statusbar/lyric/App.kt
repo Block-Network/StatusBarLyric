@@ -134,7 +134,7 @@ fun LandscapeLayout() {
                 )
             },
         ) {
-            composable("EmptyPage", exitTransition = { fadeOut() }, popEnterTransition = { fadeIn()}) { EmptyPage() }
+            composable("EmptyPage", exitTransition = { fadeOut() }, popEnterTransition = { fadeIn() }) { EmptyPage() }
             composable("MenuPage") { MenuPage(navController) }
             composable("ChoosePage") { ChoosePage(navController) }
             composable("TestPage") { TestPage(navController) }

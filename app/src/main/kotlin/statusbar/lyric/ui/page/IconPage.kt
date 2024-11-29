@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -34,11 +32,15 @@ import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
 import statusbar.lyric.tools.AnimTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -121,7 +123,10 @@ fun IconPage(navController: NavController) {
                         ) {
                             BasicComponent(
                                 title = stringResource(R.string.reset_system_ui),
-                                titleColor = Color.Red,
+                                titleColor = BasicComponentColors(
+                                    color = Color.Red,
+                                    disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                                ),
                                 onClick = {
                                     showDialog.value = true
                                 }
@@ -195,7 +200,10 @@ fun IconPage(navController: NavController) {
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.icon_start_margins),
-                                    titleColor = MiuixTheme.colorScheme.primary,
+                                    titleColor = BasicComponentColors(
+                                        color = MiuixTheme.colorScheme.primary,
+                                        disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                                    ),
                                     rightText = stringResource(R.string.tips1),
                                     onClick = {
                                         showIconStartMarginsDialog.value = true
@@ -251,7 +259,10 @@ fun IconPage(navController: NavController) {
                         ) {
                             BasicComponent(
                                 title = stringResource(R.string.reset_system_ui),
-                                titleColor = Color.Red,
+                                titleColor = BasicComponentColors(
+                                    color = Color.Red,
+                                    disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                                ),
                                 onClick = {
                                     showDialog.value = true
                                 }
@@ -297,7 +308,7 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -305,10 +316,10 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.iconSize = if (value.value.isEmpty()) 0 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -341,7 +352,7 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -349,10 +360,10 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.iconColor = it })
                     dismissDialog(showDialog)
@@ -385,7 +396,7 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -393,10 +404,10 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.iconBgColor = it })
                     dismissDialog(showDialog)
@@ -431,7 +442,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -439,10 +450,10 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.iconTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
@@ -477,7 +488,7 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -485,10 +496,10 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.iconBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
@@ -523,7 +534,7 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -531,10 +542,10 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.iconStartMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
@@ -567,7 +578,7 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -575,10 +586,10 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.changeAllIcons = value.value.ifEmpty { "" }
                     dismissDialog(showDialog)

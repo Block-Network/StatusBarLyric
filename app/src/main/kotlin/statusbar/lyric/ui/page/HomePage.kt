@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +37,10 @@ import statusbar.lyric.tools.AnimTools
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -159,7 +160,10 @@ fun HomePage(navController: NavController) {
                             ) {
                                 BasicComponent(
                                     title = stringResource(R.string.restart_app),
-                                    titleColor = Color.Red,
+                                    titleColor = BasicComponentColors(
+                                        color = Color.Red,
+                                        disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                                    ),
                                     onClick = {
                                         Thread {
                                             Thread.sleep(500)
@@ -276,12 +280,16 @@ fun ShowLyricGetter(int: Int) {
             SuperArrow(
                 leftAction = {
                     Image(
+                        modifier = Modifier.padding(end = 12.dp),
                         painter = painterResource(id = R.drawable.ic_warning),
                         contentDescription = "Warning"
                     )
                 },
                 title = stringResource(R.string.no_supported_version_lyric_getter),
-                titleColor = Color.Red,
+                titleColor = BasicComponentColors(
+                    color = Color.Red,
+                    disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                ),
                 summary = stringResource(R.string.click_to_install),
                 onClick = {
                     openLyricGetterUrl()
@@ -293,12 +301,16 @@ fun ShowLyricGetter(int: Int) {
             SuperArrow(
                 leftAction = {
                     Image(
+                        modifier = Modifier.padding(end = 12.dp),
                         painter = painterResource(id = R.drawable.ic_warning),
                         contentDescription = "Warning"
                     )
                 },
                 title = stringResource(R.string.no_lyric_getter),
-                titleColor = Color.Red,
+                titleColor = BasicComponentColors(
+                    color = Color.Red,
+                    disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                ),
                 summary = stringResource(R.string.click_to_install),
                 onClick = {
                     openLyricGetterUrl()
