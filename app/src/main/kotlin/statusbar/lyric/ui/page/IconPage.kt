@@ -80,7 +80,7 @@ fun IconPage(navController: NavController) {
                     }
                 ) {
                     Icon(
-                        modifier = Modifier.size(34.dp),
+                        modifier = Modifier.size(40.dp),
                         imageVector = MiuixIcons.ArrowBack,
                         contentDescription = "Back",
                         tint = MiuixTheme.colorScheme.onBackground
