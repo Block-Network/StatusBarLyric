@@ -112,7 +112,7 @@ fun LyricPage(navController: NavController) {
                     }
                 ) {
                     Icon(
-                        modifier = Modifier.size(34.dp),
+                        modifier = Modifier.size(40.dp),
                         imageVector = MiuixIcons.ArrowBack,
                         contentDescription = "Back",
                         tint = MiuixTheme.colorScheme.onBackground
@@ -353,6 +353,7 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
             onValueChange = {
                 if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
                     lyricWidth.value = it
+                    changeConfig()
                 }
             }
         )
