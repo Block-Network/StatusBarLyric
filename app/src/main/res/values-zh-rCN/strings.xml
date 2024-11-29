@@ -23,6 +23,7 @@
     <string name="master_switch">主开关</string>
     <string name="hook_page">锚点选择</string>
     <string name="test_mode">锚点选择模式</string>
+    <string name="test_mode_tips">第一次安装模块，请先设置锚点\n开启锚点设置模式，重启系统界面，获取锚点并选择后关闭锚点模式再次重启系统界面</string>
     <string name="relax_conditions">宽松过滤</string>
     <string name="relax_conditions_tips">允许更多锚点出现</string>
     <string name="lyric_page">歌词样式</string>
@@ -35,8 +36,6 @@
     <string name="fixed_lyric_width_tips">打开后，显示宽度固定，不随歌词实际长度变化</string>
     <string name="lyric_color_and_transparency">歌词颜色和透明度</string>
     <string name="lyric_color_and_transparency_tips">请输入 16 进制颜色值</string>
-    <string name="lyrics_gradient_background_color_and_transparency">歌词背景渐变颜色和透明度</string>
-    <string name="lyrics_gradient_background_color_and_transparency_tips">请输入 16 进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
     <string name="lyric_size">歌词大小</string>
     <string name="lyric_size_tips">范围: 0~100，0 代表自适应</string>
     <string name="lyric_letter_spacing">歌词字间距</string>
@@ -107,7 +106,8 @@
     <string name="hide_lyric_when_lock_screen">锁定屏幕时隐藏歌词</string>
     <string name="choose_page_tips">建议先关闭其他修改状态栏布局的模块后，再来此页面选择锚点\n\n有效的锚点选择: 状态栏显示模块名字，并有白色背景\n\n选择锚点后，返回关闭锚点模式，重启系统模式即锚点设置完成</string>
     <string name="hide_carrier">隐藏运营商</string>
-    <string name="test_mode_tips">第一次安装模块，请先设置锚点\n开启锚点设置模式，重启系统界面，获取锚点并选择后关闭锚点模式再次重启系统界面</string>
+    <string name="lyrics_gradient_background_color_and_transparency">歌词背景渐变颜色和透明度</string>
+    <string name="lyrics_gradient_background_color_and_transparency_tips">请输入 16 进制颜色，多个颜色为渐变色横向排布，使用英文逗号分隔</string>
     <string name="lyric_background_radius">歌词背景半径</string>
     <string name="lyric_background_radius_tips">范围: 0~100</string>
     <string name="color_scheme1">方案 1</string>
