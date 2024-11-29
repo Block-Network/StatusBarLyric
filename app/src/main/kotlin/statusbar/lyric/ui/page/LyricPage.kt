@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
@@ -36,11 +34,15 @@ import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -170,7 +172,10 @@ fun LyricPage(navController: NavController) {
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyrics_are_gradient_and_transparent),
-                            titleColor = MiuixTheme.colorScheme.primary,
+                            titleColor = BasicComponentColors(
+                                color = MiuixTheme.colorScheme.primary,
+                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            ),
                             rightText = stringResource(R.string.tips1),
                             onClick = {
                                 showLyricGradientDialog.value = true
@@ -231,7 +236,10 @@ fun LyricPage(navController: NavController) {
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_start_margins),
-                            titleColor = MiuixTheme.colorScheme.primary,
+                            titleColor = BasicComponentColors(
+                                color = MiuixTheme.colorScheme.primary,
+                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            ),
                             rightText = stringResource(R.string.tips1),
                             onClick = {
                                 showLyricStartMarginsDialog.value = true
@@ -239,7 +247,10 @@ fun LyricPage(navController: NavController) {
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_end_margins),
-                            titleColor = MiuixTheme.colorScheme.primary,
+                            titleColor = BasicComponentColors(
+                                color = MiuixTheme.colorScheme.primary,
+                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            ),
                             rightText = stringResource(R.string.tips1),
                             onClick = {
                                 showLyricEndMarginsDialog.value = true
@@ -291,7 +302,10 @@ fun LyricPage(navController: NavController) {
                     ) {
                         BasicComponent(
                             title = stringResource(R.string.reset_system_ui),
-                            titleColor = Color.Red,
+                            titleColor = BasicComponentColors(
+                                color = Color.Red,
+                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            ),
                             onClick = {
                                 showDialog.value = true
                             }
@@ -343,7 +357,7 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -351,10 +365,10 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.lyricWidth = if (lyricWidth.value.isEmpty()) 0 else lyricWidth.value.toInt()
                     dismissDialog(showDialog)
@@ -390,7 +404,7 @@ fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -398,10 +412,10 @@ fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.lyricSize = if (value.value.isEmpty()) 0 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -436,7 +450,7 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -444,10 +458,10 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.lyricColor = it })
                     dismissDialog(showDialog)
@@ -482,7 +496,7 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -490,10 +504,10 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorSCheck(value.value, unit = { config.lyricGradientColor = it })
                     dismissDialog(showDialog)
@@ -527,7 +541,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -535,10 +549,10 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorSCheck(value.value, unit = { config.lyricBackgroundColor = it })
                     dismissDialog(showDialog)
@@ -573,7 +587,7 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -581,10 +595,10 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.lyricBackgroundRadius = if (value.value.isEmpty()) 0 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -619,7 +633,7 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -627,10 +641,10 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.lyricLetterSpacing = if (value.value.isEmpty()) 0 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -665,7 +679,7 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -673,10 +687,10 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.lyricStrokeWidth = value.value.toInt()
                     dismissDialog(showDialog)
@@ -711,7 +725,7 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -719,10 +733,10 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.lyricSpeed = if (value.value.isEmpty()) 1 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -757,7 +771,7 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -765,10 +779,10 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.lyricTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
@@ -803,7 +817,7 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -811,10 +825,10 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
 
                     config.lyricBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
@@ -850,7 +864,7 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -858,10 +872,10 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.lyricStartMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
@@ -896,7 +910,7 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -904,10 +918,10 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.lyricEndMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
@@ -942,7 +956,7 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -950,10 +964,10 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.animationDuration = if (value.value.isEmpty() || value.value.toInt() < 300) 300 else value.value.toInt()
                     dismissDialog(showDialog)

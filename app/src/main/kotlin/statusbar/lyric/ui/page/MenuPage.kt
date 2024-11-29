@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -43,12 +41,16 @@ import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.Tools
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
@@ -165,7 +167,10 @@ fun MenuPage(navController: NavController) {
                 ) {
                     BasicComponent(
                         title = stringResource(R.string.reset_system_ui),
-                        titleColor = Color.Red,
+                        titleColor = BasicComponentColors(
+                            color = Color.Red,
+                            disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                        ),
                         onClick = {
                             showDialog.value = true
                         }
@@ -243,7 +248,7 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -251,10 +256,10 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.clear()
                     dismissDialog(showDialog)
@@ -282,7 +287,7 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
                 onClick = {
@@ -291,10 +296,10 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     dismissDialog(showDialog)
                 }

@@ -13,8 +13,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.DisposableEffect
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
@@ -43,10 +41,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-          enableEdgeToEdge()
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-              window.isNavigationBarContrastEnforced = false
-          }
+        enableEdgeToEdge()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
 
         context = this
         isLoad = isHook()

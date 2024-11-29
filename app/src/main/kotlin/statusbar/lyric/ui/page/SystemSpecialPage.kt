@@ -19,8 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -35,11 +33,15 @@ import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -181,7 +183,10 @@ fun SystemSpecialPage(navController: NavController) {
                 ) {
                     BasicComponent(
                         title = stringResource(R.string.reset_system_ui),
-                        titleColor = Color.Red,
+                        titleColor = BasicComponentColors(
+                            color = Color.Red,
+                            disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                        ),
                         onClick = {
                             showDialog.value = true
                         }
@@ -222,7 +227,7 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -230,10 +235,10 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.mHyperOSTextureRadio = if (value.value.isEmpty()) 25 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -268,7 +273,7 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -276,10 +281,10 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.mHyperOSTextureCorner = if (value.value.isEmpty()) 25 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -312,7 +317,7 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -320,10 +325,10 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.mHyperOSTextureBgColor = it }, "#15818181")
                     dismissDialog(showDialog)

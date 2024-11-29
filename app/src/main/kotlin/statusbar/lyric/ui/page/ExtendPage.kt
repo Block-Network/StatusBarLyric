@@ -17,8 +17,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
@@ -35,12 +33,16 @@ import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -139,7 +141,10 @@ fun ExtendPage(navController: NavController) {
                         SuperDropdown(
                             title = stringResource(R.string.view_location),
                             items = viewLocationOptions,
-                            titleColor = MiuixTheme.colorScheme.primary,
+                            titleColor = BasicComponentColors(
+                                color = MiuixTheme.colorScheme.primary,
+                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            ),
                             selectedIndex = viewLocationSelectedOption.intValue,
                             onSelectedIndexChange = { newOption ->
                                 viewLocationSelectedOption.intValue = newOption
@@ -317,7 +322,10 @@ fun ExtendPage(navController: NavController) {
                     ) {
                         BasicComponent(
                             title = stringResource(R.string.reset_system_ui),
-                            titleColor = Color.Red,
+                            titleColor = BasicComponentColors(
+                                color = Color.Red,
+                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            ),
                             onClick = {
                                 showDialog.value = true
                             }
@@ -362,7 +370,7 @@ fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -370,10 +378,10 @@ fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.slideStatusBarCutSongsXRadius = if (value.value.isEmpty() || value.value.toInt() < 50) 50 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -407,7 +415,7 @@ fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -415,10 +423,10 @@ fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.slideStatusBarCutSongsYRadius = if (value.value.isEmpty() || value.value.toInt() < 10) 10 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -452,7 +460,7 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -460,10 +468,10 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.titleDelayDuration = if (value.value.isEmpty()) 3000 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -495,7 +503,7 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -503,10 +511,10 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(
                         value.value,
@@ -546,7 +554,7 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -554,10 +562,10 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.titleBackgroundRadius = if (value.value.isEmpty()) 50 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -591,7 +599,7 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -599,10 +607,10 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.titleBackgroundStrokeWidth = if (value.value.isEmpty()) 10 else value.value.toInt()
                     dismissDialog(showDialog)
@@ -634,7 +642,7 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -642,10 +650,10 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(20.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(
                         value.value,
