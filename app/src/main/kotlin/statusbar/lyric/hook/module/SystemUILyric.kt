@@ -316,6 +316,17 @@ class SystemUILyric : BaseHook() {
                 }
             }
             loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
+                if (it.isInterface) {
+                    loadClassOrNull("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView").isNotNull { clazz ->
+                        clazz.methodFinder().filterByName("setNotificationIconAreaInnner").first().createHook {
+                            after { hook ->
+                                mNotificationIconArea = hook.args[0] as View
+                                "notify icon view: $mNotificationIconArea".log()
+                            }
+                        }
+                    }
+                    return@isNotNull
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     it.constructorFinder().first().createHook {
                         hideNoticeIcon()
