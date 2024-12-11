@@ -1,5 +1,6 @@
 package statusbar.lyric
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
@@ -7,13 +8,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,10 +32,12 @@ import statusbar.lyric.ui.page.SystemSpecialPage
 import statusbar.lyric.ui.page.TestPage
 import statusbar.lyric.ui.theme.AppTheme
 import top.yukonga.miuix.kmp.basic.Box
+import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun App() {
     val configuration = LocalConfiguration.current
@@ -107,7 +108,6 @@ fun LandscapeLayout() {
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .background(MiuixTheme.colorScheme.background)
             .padding(horizontal = 12.dp)
     ) {
         Box(

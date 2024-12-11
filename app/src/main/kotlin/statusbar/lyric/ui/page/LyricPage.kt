@@ -1,7 +1,6 @@
 package statusbar.lyric.ui.page
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,18 +29,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
@@ -100,34 +105,54 @@ fun LyricPage(navController: NavController) {
     val showLyricEndMarginsDialog = remember { mutableStateOf(false) }
     val showLyricAnimDurationDialog = remember { mutableStateOf(false) }
 
-    Column {
-        TopAppBar(
-            title = stringResource(R.string.lyric_page),
-            scrollBehavior = scrollBehavior,
-            navigationIcon = {
-                IconButton(
-                    modifier = Modifier.padding(start = 18.dp),
-                    onClick = {
-                        navController.popBackStack()
+    val hazeState = remember { HazeState() }
+    val hazeStyle = HazeStyle(
+        backgroundColor = MiuixTheme.colorScheme.background,
+        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+    )
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                color = Color.Transparent,
+                modifier = Modifier
+                    .hazeChild(hazeState) {
+                        style = hazeStyle
+                        blurRadius = 25.dp
+                        noiseFactor = 0f
                     }
-                ) {
-                    Icon(
-                        modifier = Modifier.size(40.dp),
-                        imageVector = MiuixIcons.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MiuixTheme.colorScheme.onBackground
-                    )
-                }
-            }
-        )
+                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                title = stringResource(R.string.lyric_page),
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    IconButton(
+                        modifier = Modifier.padding(start = 18.dp),
+                        onClick = {
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(40.dp),
+                            imageVector = MiuixIcons.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MiuixTheme.colorScheme.onBackground
+                        )
+                    }
+                },
+                defaultWindowInsetsPadding = false
+            )
+        },
+        popupHost = { null }
+    ) {
         LazyColumn(
             modifier = Modifier
+                .haze(state = hazeState)
                 .height(getWindowSize().height.dp)
-                .background(MiuixTheme.colorScheme.background)
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-            enableOverScroll = true,
-            topAppBarScrollBehavior = scrollBehavior
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+            topAppBarScrollBehavior = scrollBehavior,
+            contentPadding = it,
         ) {
             item {
                 Column(Modifier.padding(top = 16.dp)) {
@@ -174,9 +199,8 @@ fun LyricPage(navController: NavController) {
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyrics_are_gradient_and_transparent),
-                            titleColor = BasicComponentColors(
-                                color = MiuixTheme.colorScheme.primary,
-                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            titleColor = BasicComponentDefaults.titleColor(
+                                color = MiuixTheme.colorScheme.primary
                             ),
                             rightText = stringResource(R.string.tips1),
                             onClick = {
@@ -238,9 +262,8 @@ fun LyricPage(navController: NavController) {
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_start_margins),
-                            titleColor = BasicComponentColors(
-                                color = MiuixTheme.colorScheme.primary,
-                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            titleColor = BasicComponentDefaults.titleColor(
+                                color = MiuixTheme.colorScheme.primary
                             ),
                             rightText = stringResource(R.string.tips1),
                             onClick = {
@@ -249,9 +272,8 @@ fun LyricPage(navController: NavController) {
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_end_margins),
-                            titleColor = BasicComponentColors(
-                                color = MiuixTheme.colorScheme.primary,
-                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            titleColor = BasicComponentDefaults.titleColor(
+                                color = MiuixTheme.colorScheme.primary
                             ),
                             rightText = stringResource(R.string.tips1),
                             onClick = {
@@ -304,9 +326,8 @@ fun LyricPage(navController: NavController) {
                     ) {
                         BasicComponent(
                             title = stringResource(R.string.reset_system_ui),
-                            titleColor = BasicComponentColors(
-                                color = Color.Red,
-                                disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                            titleColor = BasicComponentDefaults.titleColor(
+                                color = Color.Red
                             ),
                             onClick = {
                                 showDialog.value = true
@@ -314,7 +335,11 @@ fun LyricPage(navController: NavController) {
                         )
                     }
                 }
-                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
+                Spacer(
+                    Modifier.height(
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                    )
+                )
             }
         }
     }
@@ -373,7 +398,8 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricWidth = if (lyricWidth.value.isEmpty()) 0 else lyricWidth.value.toInt()
+                    config.lyricWidth =
+                        if (lyricWidth.value.isEmpty()) 0 else lyricWidth.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -512,7 +538,9 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    ActivityTools.colorSCheck(value.value, unit = { config.lyricGradientColor = it })
+                    ActivityTools.colorSCheck(
+                        value.value,
+                        unit = { config.lyricGradientColor = it })
                     dismissDialog(showDialog)
                 }
             )
@@ -557,7 +585,9 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    ActivityTools.colorSCheck(value.value, unit = { config.lyricBackgroundColor = it })
+                    ActivityTools.colorSCheck(
+                        value.value,
+                        unit = { config.lyricBackgroundColor = it })
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -603,7 +633,8 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricBackgroundRadius = if (value.value.isEmpty()) 0 else value.value.toInt()
+                    config.lyricBackgroundRadius =
+                        if (value.value.isEmpty()) 0 else value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -649,7 +680,8 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricLetterSpacing = if (value.value.isEmpty()) 0 else value.value.toInt()
+                    config.lyricLetterSpacing =
+                        if (value.value.isEmpty()) 0 else value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -787,7 +819,8 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    config.lyricTopMargins =
+                        if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -834,7 +867,8 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
 
-                    config.lyricBottomMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    config.lyricBottomMargins =
+                        if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -880,7 +914,8 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricStartMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    config.lyricStartMargins =
+                        if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -926,7 +961,8 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricEndMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    config.lyricEndMargins =
+                        if (value.value.isNotEmpty()) value.value.toInt() else 0
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -972,7 +1008,8 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.animationDuration = if (value.value.isEmpty() || value.value.toInt() < 300) 300 else value.value.toInt()
+                    config.animationDuration =
+                        if (value.value.isEmpty() || value.value.toInt() < 300) 300 else value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }

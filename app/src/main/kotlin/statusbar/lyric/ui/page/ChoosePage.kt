@@ -1,6 +1,5 @@
 package statusbar.lyric.ui.page
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,9 +21,15 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -37,6 +42,7 @@ import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
@@ -54,34 +60,54 @@ fun ChoosePage(navController: NavController) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
 
-    Column {
-        TopAppBar(
-            title = stringResource(R.string.choose_page),
-            scrollBehavior = scrollBehavior,
-            navigationIcon = {
-                IconButton(
-                    modifier = Modifier.padding(start = 18.dp),
-                    onClick = {
-                        navController.popBackStack()
+    val hazeState = remember { HazeState() }
+    val hazeStyle = HazeStyle(
+        backgroundColor = MiuixTheme.colorScheme.background,
+        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+    )
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                color = Color.Transparent,
+                modifier = Modifier
+                    .hazeChild(hazeState) {
+                        style = hazeStyle
+                        blurRadius = 25.dp
+                        noiseFactor = 0f
                     }
-                ) {
-                    Icon(
-                        modifier = Modifier.size(40.dp),
-                        imageVector = MiuixIcons.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MiuixTheme.colorScheme.onBackground
-                    )
-                }
-            }
-        )
+                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                title = stringResource(R.string.choose_page),
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    IconButton(
+                        modifier = Modifier.padding(start = 18.dp),
+                        onClick = {
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(40.dp),
+                            imageVector = MiuixIcons.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MiuixTheme.colorScheme.onBackground
+                        )
+                    }
+                },
+                defaultWindowInsetsPadding = false
+            )
+        },
+        popupHost = { null }
+    ) {
         LazyColumn(
             modifier = Modifier
+                .haze(state = hazeState)
                 .height(getWindowSize().height.dp)
-                .background(MiuixTheme.colorScheme.background)
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-            enableOverScroll = true,
-            topAppBarScrollBehavior = scrollBehavior
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+            topAppBarScrollBehavior = scrollBehavior,
+            contentPadding = it
         ) {
             item {
                 Column(Modifier.padding(top = 18.dp)) {
@@ -106,7 +132,11 @@ fun ChoosePage(navController: NavController) {
                         text = stringResource(R.string.choose_page_tips)
                     )
                 }
-                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
+                Spacer(
+                    Modifier.height(
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                    )
+                )
             }
         }
     }
