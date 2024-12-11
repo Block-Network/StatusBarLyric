@@ -45,6 +45,7 @@ import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.Tools
+import statusbar.lyric.tools.Tools.getPhoneName
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -242,7 +243,7 @@ fun MenuPage(navController: NavController) {
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                         )
                         Text(
-                            text = "${Build.BRAND} ${Build.MODEL} (${Build.DEVICE}) SDK${Build.VERSION.SDK_INT}",
+                            text = "$getPhoneName (${Build.DEVICE}) SDK${Build.VERSION.SDK_INT}",
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
