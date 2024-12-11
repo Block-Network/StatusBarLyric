@@ -567,6 +567,27 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
+
+        loadClassOrNull("com.android.systemui.controlcenter.shade.NotificationHeaderExpandController\$notificationCallback\$1").isNotNull {
+            it.methodFinder().filterByName("onExpansionChanged").first().createHook {
+                before { hook ->
+                    if (isPlaying && !isHiding) {
+                        val notificationHeaderExpandController = hook.thisObject.getObjectField("this\$0")
+                        val headerController = notificationHeaderExpandController?.getObjectField("headerController")
+                        val combinedHeaderController = headerController?.callMethod("get")
+                        val notificationBigTime = combinedHeaderController?.getObjectField("notificationBigTime") as View
+                        val notificationDateTime = combinedHeaderController.getObjectField("notificationDateTime") as View
+
+                        val f = hook.args[0] as Float
+                        if (f < 0.8)
+                            notificationBigTime.visibility = View.GONE
+                        else
+                            notificationBigTime.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+
         SystemUISpecial()
     }
 
