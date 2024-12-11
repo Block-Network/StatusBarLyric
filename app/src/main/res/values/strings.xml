@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">StatusBar lyric</string>
+    <string name="app_name">StatusBar Lyric</string>
     <string name="module_inactivated">Module inactivated</string>
     <string name="module_first">Precondition</string>
     <string name="module_second">Basic settings</string>
@@ -10,15 +10,15 @@
     <string name="module_sixth">Animation settings</string>
     <string name="menu_page">Menu</string>
     <string name="no_supported_version_lyric_getter">Unsupported LyricGetter</string>
-    <string name="no_lyric_getter">LyricGetter not found</string>
+    <string name="no_lyric_getter">LyricGetter Not Found!</string>
     <string name="click_to_install">Click to install the latest version</string>
-    <string name="show_logcat">Show logcat</string>
-    <string name="show_launcher_icon">Show icon</string>
+    <string name="show_logcat">Show Logcat</string>
+    <string name="show_launcher_icon">Show Icon</string>
     <string name="module_extend">Please restart the system interface and player after modifying this page</string>
     <string name="xposed_tips">If the lyrics cannot be displayed, please try to stop the music software and restart the SystemUI,and check Lyric Getter</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-    <string name="reset_system_ui">Restart SystemUi</string>
+    <string name="reset_system_ui">Restart SystemUI</string>
     <string name="restart_systemui_tips">Are you sure you want to restart the System UI?</string>
     <string name="master_switch">Master Switch</string>
     <string name="hook_page">Hook Page</string>
@@ -149,7 +149,7 @@
     <string name="miui_and_hyperos" translatable="false">MIUI &amp; HyperOS</string>
     <string name="hyperos" translatable="false">HyperOS</string>
     <string name="color_error">The color entered is incorrect, please check</string>
-    <string name="restart_app">Restart App</string>
+    <string name="restart_app">Restart APP</string>
     <string name="backup_config">Backup Config</string>
     <string name="recovery_config">Recovery Config</string>
     <string name="clear_config">Clear Config</string>
