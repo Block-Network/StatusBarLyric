@@ -164,6 +164,7 @@ class SystemUILyric : BaseHook() {
     private var isInFullScreenMode: Boolean = false
     private var mAutoHideController: Any? = null
     private var focusedNotify: Any? = null
+    private var shouldIgnore: Boolean = false
     private var isHideFocusNotify: Boolean = false
     private var canHideFocusNotify = false
     private var isOS1FocusNotifyShowing = false // OS1 不要支持隐藏焦点通知
@@ -402,16 +403,17 @@ class SystemUILyric : BaseHook() {
                                             false -> {
                                                 if (config.clickStatusBarToHideLyric) {
                                                     if (isOS1FocusNotifyShowing) return@before
-                                                    if (shouldControlFocusNotify()) {
-                                                        if (!isHideFocusNotify && shouldOpenFocusNotify(motionEvent)) {
-                                                            "should open focus notify".log()
-                                                            return@before
-                                                        }
-                                                    }
-                                                    val isClick = motionEvent.eventTime - motionEvent.downTime < 200
-                                                    if (isClick && isPlaying) {
+
+                                                    if (isPlaying) {
                                                         moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
-                                                        if (isHiding && lastLyric.isNotEmpty()) {
+                                                        if (isHiding) {
+                                                            if (shouldControlFocusNotify()) {
+                                                                if (!isHideFocusNotify && shouldOpenFocusNotify(motionEvent)) {
+                                                                    "should open focus notify".log()
+                                                                    return@before
+                                                                }
+                                                            }
+
                                                             isHiding = false
                                                             hookParam.result = true
                                                             hideFocusNotifyIfNeed()
@@ -463,7 +465,7 @@ class SystemUILyric : BaseHook() {
                 method.createHook {
                     before { hook ->
                         val isShow = hook.args[0] as Boolean
-                        ifiIsInFullScreenMode(if (isShow) 1 else 0)
+                        ifIsInFullScreenMode(if (isShow) 1 else 0)
                     }
                 }
             }
@@ -473,7 +475,7 @@ class SystemUILyric : BaseHook() {
                 method.createHook {
                     before { hook ->
                         val isShow = hook.args[0] as Boolean
-                        ifiIsInFullScreenMode(if (isShow) 1 else 0)
+                        ifIsInFullScreenMode(if (isShow) 1 else 0)
                     }
                 }
             }
@@ -528,6 +530,8 @@ class SystemUILyric : BaseHook() {
             canHideFocusNotify = true
             (shouldShowMethod as Method).createHook {
                 after { hook ->
+                    if (shouldIgnore) return@after
+
                     val show = hook.result as Boolean
                     if (show) {
                         if (isPlaying && !isHideFocusNotify) {
@@ -580,7 +584,7 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private fun ifiIsInFullScreenMode(mode: Int = -1) {
+    private fun ifIsInFullScreenMode(mode: Int = -1) {
         val isInFullScreen: Boolean
         if (mCentralSurfacesImpl.existField("mIsFullscreen")) {
             isInFullScreen = mCentralSurfacesImpl?.getObjectField("mIsFullscreen") as Boolean
@@ -649,7 +653,10 @@ class SystemUILyric : BaseHook() {
         val mCurrentNotifyBean = focusedNotify!!.getObjectField("mCurrentNotifBean") ?: return false
         val mIsHeadsUpShowing = focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean
         return if (canHideFocusNotify) {
-            focusedNotify!!.callMethod("shouldShow", mCurrentNotifyBean, mIsHeadsUpShowing) as Boolean
+            shouldIgnore = true
+            (focusedNotify!!.callMethod("shouldShow", mCurrentNotifyBean, mIsHeadsUpShowing) as Boolean).apply {
+                shouldIgnore = false
+            }
         } else {
             !(focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean
                     || mCurrentNotifyBean == null || mCurrentNotifyBean.getObjectField("headsUp") as Boolean ||
@@ -765,6 +772,7 @@ class SystemUILyric : BaseHook() {
                 lastLyric = lyric
                 playingApp = lyricData.extraData.packageName
                 if (isHiding) return
+                hideFocusNotifyIfNeed()
                 changeIcon(lyricData.extraData)
                 changeLyric(lastLyric, lyricData.extraData.delay)
                 titleShowHandler.sendEmptyMessage(TITLE_SHOWING)
@@ -780,6 +788,7 @@ class SystemUILyric : BaseHook() {
                 playingApp = ""
                 lastLyric = ""
                 hideLyric()
+                showFocusNotifyIfNeed()
             }
         })
         registerLyricListener(context, BuildConfig.API_VERSION, lyricReceiver)
@@ -803,6 +812,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeLyric(lyric: String, delay: Int) {
+        if (lyric.isEmpty()) return
         if (isHiding || isScreenLock) return
         if (!shouldShowLyricIfStatusBarIsShowingTime()) return
         "lyric:$lyric".log()
@@ -1044,7 +1054,7 @@ class SystemUILyric : BaseHook() {
                             val newConfig = hookParam.args[0] as Configuration
                             themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                             if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE || newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                                ifiIsInFullScreenMode()
+                                ifIsInFullScreenMode()
                             }
                         }
                     }
