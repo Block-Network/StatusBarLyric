@@ -236,6 +236,7 @@ class SystemUILyric : BaseHook() {
     //////////////////////////////Hook//////////////////////////////////////
     private var defaultDisplay: Any? = null
     private var mCentralSurfacesImpl: Any? = null
+    private var notificationBigTime: View? = null
 
     @SuppressLint("DiscouragedApi", "NewApi")
     override fun init() {
@@ -579,10 +580,12 @@ class SystemUILyric : BaseHook() {
                         val notificationDateTime = combinedHeaderController.getObjectField("notificationDateTime") as View
 
                         val f = hook.args[0] as Float
-                        if (f < 0.8)
+                        if (f < 0.8f)
                             notificationBigTime.visibility = View.GONE
                         else
                             notificationBigTime.visibility = View.VISIBLE
+
+                        this@SystemUILyric.notificationBigTime = notificationBigTime
                     }
                 }
             }
@@ -905,6 +908,7 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             lyricLayout.hideView(anim)
             clockView.showView()
+            notificationBigTime?.visibility = View.VISIBLE
             if (config.titleSwitch) titleDialog.hideTitle()
             if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.showView()
             if (this::mCarrierLabel.isInitialized) mCarrierLabel.showView()
