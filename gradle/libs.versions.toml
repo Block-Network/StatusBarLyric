@@ -1,26 +1,28 @@
 [versions]
-androidGradlePlugin = "8.7.2"
+androidGradlePlugin = "8.7.3"
 androidx-coreKtx = "1.15.0"
 androidx-activity-compose = "1.9.3"
-androidx-compose-material3 = "1.3.1"
+androidx-compose-foundation = "1.7.5"
 androidx-navigation-compose = "2.8.4"
 ezXHelper = "2.2.0"
+haze = "1.1.1"
 kotlin = "2.1.0"
 lyricGetterApi = "6.0.0"
-miuix = "0.3.0"
+miuix = "0.3.2"
 xposed = "82"
 
 
 [libraries]
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "androidx-compose-foundation" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-coreKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity-compose" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "androidx-compose-material3" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation-compose" }
 ezXHelper = { module = "com.github.kyuubiran:EzXHelper", version.ref = "ezXHelper" }
+haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 lyricGetterApi = { module = "com.github.xiaowine:Lyric-Getter-Api", version.ref = "lyricGetterApi" }
 miuix = { module = "top.yukonga.miuix.kmp:miuix", version.ref = "miuix" }
 xposed = { module = "de.robv.android.xposed:api", version.ref = "xposed" }

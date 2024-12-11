@@ -2,7 +2,6 @@ package statusbar.lyric.ui.page
 
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,17 +29,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
@@ -67,34 +72,54 @@ fun SystemSpecialPage(navController: NavController) {
     val showCornerDialog = remember { mutableStateOf(false) }
     val showBgColorDialog = remember { mutableStateOf(false) }
 
-    Column {
-        TopAppBar(
-            title = stringResource(R.string.system_special_page),
-            scrollBehavior = scrollBehavior,
-            navigationIcon = {
-                IconButton(
-                    modifier = Modifier.padding(start = 18.dp),
-                    onClick = {
-                        navController.popBackStack()
+    val hazeState = remember { HazeState() }
+    val hazeStyle = HazeStyle(
+        backgroundColor = MiuixTheme.colorScheme.background,
+        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+    )
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                color = Color.Transparent,
+                modifier = Modifier
+                    .hazeChild(hazeState) {
+                        style = hazeStyle
+                        blurRadius = 25.dp
+                        noiseFactor = 0f
                     }
-                ) {
-                    Icon(
-                        modifier = Modifier.size(40.dp),
-                        imageVector = MiuixIcons.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MiuixTheme.colorScheme.onBackground
-                    )
-                }
-            }
-        )
+                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                title = stringResource(R.string.system_special_page),
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    IconButton(
+                        modifier = Modifier.padding(start = 18.dp),
+                        onClick = {
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(40.dp),
+                            imageVector = MiuixIcons.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MiuixTheme.colorScheme.onBackground
+                        )
+                    }
+                },
+                defaultWindowInsetsPadding = false
+            )
+        },
+        popupHost = { null }
+    ) {
         LazyColumn(
             modifier = Modifier
+                .haze(state = hazeState)
                 .height(getWindowSize().height.dp)
-                .background(MiuixTheme.colorScheme.background)
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-            enableOverScroll = true,
-            topAppBarScrollBehavior = scrollBehavior
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+            topAppBarScrollBehavior = scrollBehavior,
+            contentPadding = it,
         ) {
             item {
                 Column(Modifier.padding(top = 16.dp)) {
@@ -185,16 +210,19 @@ fun SystemSpecialPage(navController: NavController) {
                 ) {
                     BasicComponent(
                         title = stringResource(R.string.reset_system_ui),
-                        titleColor = BasicComponentColors(
-                            color = Color.Red,
-                            disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                        titleColor = BasicComponentDefaults.titleColor(
+                            color = Color.Red
                         ),
                         onClick = {
                             showDialog.value = true
                         }
                     )
                 }
-                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
+                Spacer(
+                    Modifier.height(
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                    )
+                )
             }
         }
     }
@@ -242,7 +270,8 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.mHyperOSTextureRadio = if (value.value.isEmpty()) 25 else value.value.toInt()
+                    config.mHyperOSTextureRadio =
+                        if (value.value.isEmpty()) 25 else value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -288,7 +317,8 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.mHyperOSTextureCorner = if (value.value.isEmpty()) 25 else value.value.toInt()
+                    config.mHyperOSTextureCorner =
+                        if (value.value.isEmpty()) 25 else value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -332,7 +362,11 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    ActivityTools.colorCheck(value.value, unit = { config.mHyperOSTextureBgColor = it }, "#15818181")
+                    ActivityTools.colorCheck(
+                        value.value,
+                        unit = { config.mHyperOSTextureBgColor = it },
+                        "#15818181"
+                    )
                     dismissDialog(showDialog)
                 }
             )

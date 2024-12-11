@@ -3,7 +3,6 @@ package statusbar.lyric.ui.page
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -27,6 +26,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.MainActivity.Companion.isLoad
@@ -38,11 +42,13 @@ import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -57,6 +63,12 @@ fun HomePage(navController: NavController) {
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
     val lyricGetterApi = checkLyricGetterApi()
 
+    val hazeState = remember { HazeState() }
+    val hazeStyle = HazeStyle(
+        backgroundColor = MiuixTheme.colorScheme.background,
+        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+    )
+
     LaunchedEffect(Unit) {
         if (checkLyricGetterApi() != 0 || !isLoad) {
             masterSwitchState.value = false
@@ -64,34 +76,45 @@ fun HomePage(navController: NavController) {
         }
     }
 
-    Column {
-        TopAppBar(
-            title = stringResource(R.string.app_name),
-            scrollBehavior = scrollBehavior,
-            actions = {
-                IconButton(
-                    modifier = Modifier.padding(end = 15.dp),
-                    onClick = {
-                        navController.navigate("MenuPage")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                color = Color.Transparent,
+                modifier = Modifier
+                    .hazeChild(hazeState) {
+                        style = hazeStyle
+                        blurRadius = 25.dp
+                        noiseFactor = 0f
+                    },
+                title = stringResource(R.string.app_name),
+                scrollBehavior = scrollBehavior,
+                actions = {
+                    IconButton(
+                        modifier = Modifier.padding(end = 15.dp),
+                        onClick = {
+                            navController.navigate("MenuPage")
+                        }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(28.dp),
+                            painter = painterResource(id = R.drawable.ic_menu),
+                            contentDescription = "Menu",
+                            tint = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                        )
                     }
-                ) {
-                    Icon(
-                        modifier = Modifier.size(28.dp),
-                        painter = painterResource(id = R.drawable.ic_menu),
-                        contentDescription = "Menu",
-                        tint = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-                    )
                 }
-            }
-        )
+            )
+        },
+        popupHost = { null }
+    ) {
         LazyColumn(
             modifier = Modifier
+                .haze(state = hazeState)
                 .height(getWindowSize().height.dp)
-                .background(MiuixTheme.colorScheme.background)
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-            enableOverScroll = true,
-            topAppBarScrollBehavior = scrollBehavior
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Left))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Left)),
+            topAppBarScrollBehavior = scrollBehavior,
+            contentPadding = it,
         ) {
             item {
                 Column(Modifier.padding(top = 18.dp)) {
@@ -160,9 +183,8 @@ fun HomePage(navController: NavController) {
                             ) {
                                 BasicComponent(
                                     title = stringResource(R.string.restart_app),
-                                    titleColor = BasicComponentColors(
-                                        color = Color.Red,
-                                        disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                                    titleColor = BasicComponentDefaults.titleColor(
+                                        color = Color.Red
                                     ),
                                     onClick = {
                                         Thread {
@@ -193,7 +215,9 @@ fun HomePage(navController: NavController) {
                                 ) {
                                     SuperArrow(
                                         title = stringResource(R.string.hook_page),
-                                        summary = if (config.textViewId == 0) stringResource(R.string.test_mode_tips).split("\n")[0] else null,
+                                        summary = if (config.textViewId == 0) stringResource(R.string.test_mode_tips).split(
+                                            "\n"
+                                        )[0] else null,
                                         onClick = {
                                             navController.navigate("TestPage")
                                         }
@@ -265,7 +289,11 @@ fun HomePage(navController: NavController) {
                         }
                     }
                 }
-                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
+                Spacer(
+                    Modifier.height(
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                    )
+                )
             }
         }
     }
@@ -286,9 +314,8 @@ fun ShowLyricGetter(int: Int) {
                     )
                 },
                 title = stringResource(R.string.no_supported_version_lyric_getter),
-                titleColor = BasicComponentColors(
-                    color = Color.Red,
-                    disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                titleColor = BasicComponentDefaults.titleColor(
+                    color = Color.Red
                 ),
                 summary = stringResource(R.string.click_to_install),
                 onClick = {
