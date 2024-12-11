@@ -67,6 +67,11 @@ object Tools {
         }
     }
 
+    val getPhoneName by lazy {
+        val marketName = getSystemProperties("ro.product.marketname")
+        if (marketName.isNotEmpty()) marketName else Build.BRAND + Build.MODEL
+    }
+
     fun dp2px(context: Context, dpValue: Float): Int =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 
