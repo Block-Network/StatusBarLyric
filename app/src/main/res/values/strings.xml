@@ -60,7 +60,7 @@
     <string name="icon_bottom_margins">Icon Bottom Margins</string>
     <string name="icon_bottom_margins_tips">Range: 0~100</string>
     <string name="icon_start_margins">Icon Left Margins</string>
-    <string name="icon_start_margins_tips">Range: 0~500</string>
+    <string name="icon_start_margins_tips">Range: -2000~2000</string>
     <string name="icon_color_and_transparency">Icon Color And Transparency</string>
     <string name="icon_color_and_transparency_tips">Please enter a decimal Color</string>
     <string name="icon_background_color_and_transparency">Icon background Color And Transparency</string>
@@ -155,4 +155,5 @@
     <string name="clear_config">Clear Config</string>
     <string name="clear_config_tips">Are you sure you want to clear the configuration?</string>
     <string name="view_location">Lyrics add location</string>
+    <string name="hide_focused_notice">Hide focus notifications</string>
 </resources>
