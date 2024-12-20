@@ -153,4 +153,5 @@
     <string name="clear_config">重置配置</string>
     <string name="clear_config_tips">确定要重置配置吗？</string>
     <string name="view_location">歌词添加位置</string>
+    <string name="hide_focused_notice">隐藏焦点通知</string>
 </resources>

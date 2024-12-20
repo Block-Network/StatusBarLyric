@@ -67,6 +67,7 @@ fun SystemSpecialPage(navController: NavController) {
     val mMiuiPadOptimize = remember { mutableStateOf(config.mMiuiPadOptimize) }
     val hideCarrier = remember { mutableStateOf(config.hideCarrier) }
     val mHyperOSTexture = remember { mutableStateOf(config.mHyperOSTexture) }
+    val mHideFocusedNotice = remember { mutableStateOf(config.hideFocusedNotice) }
     val showDialog = remember { mutableStateOf(false) }
     val showRadioDialog = remember { mutableStateOf(false) }
     val showCornerDialog = remember { mutableStateOf(false) }
@@ -200,6 +201,14 @@ fun SystemSpecialPage(navController: NavController) {
                                 )
                             }
                         }
+                        SuperSwitch(
+                            title = stringResource(R.string.hide_focused_notice),
+                            checked = mHideFocusedNotice.value,
+                            onCheckedChange = {
+                                mHideFocusedNotice.value = it
+                                config.hideFocusedNotice = it
+                            }
+                        )
                     }
                 }
                 Card(
