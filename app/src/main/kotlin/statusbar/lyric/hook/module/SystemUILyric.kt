@@ -305,37 +305,37 @@ class SystemUILyric : BaseHook() {
         }
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.hide_notification_icon).log()
-            fun HookFactory.hideNoticeIcon() {
+            fun HookFactory.hideNoticeIcon(scheme: Int) {
                 after { hookParam ->
                     val clazz = hookParam.thisObject::class.java
-                    if (clazz.simpleName == "NotificationIconAreaController") {
+                    val name = if (scheme == 0) "NotificationIconAreaController" else "CollapsedStatusBarFragment"
+                    val method = if (scheme == 0) "mNotificationIconArea" else "mNotificationIconAreaInner"
+                    if (clazz.simpleName == name) {
                         hookParam.thisObject.objectHelper {
-                            mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                            mNotificationIconArea = this.getObjectOrNullAs<View>(method)!!
                         }
                     } else {
-                        mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
+                        mNotificationIconArea = clazz.superclass.getField(method).get(hookParam.thisObject) as View
                     }
                 }
             }
-            loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-                if (it.isInterface) {
-                    loadClassOrNull("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView").isNotNull { clazz ->
-                        clazz.methodFinder().filterByName("setNotificationIconAreaInnner").first().createHook {
-                            after { hook ->
-                                mNotificationIconArea = hook.args[0] as View
-                                "notify icon view: $mNotificationIconArea".log()
-                            }
-                        }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                loadClassOrNull("com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment").isNotNull {
+                    it.methodFinder().filterByName("onViewCreated").first().createHook {
+                        hideNoticeIcon(1)
                     }
-                    return@isNotNull
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    it.constructorFinder().first().createHook {
-                        hideNoticeIcon()
-                    }
-                } else {
-                    it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
-                        hideNoticeIcon()
+            } else {
+                loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        it.constructorFinder().first().createHook {
+                            hideNoticeIcon(0)
+                        }
+                    } else {
+                        it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
+                            hideNoticeIcon(0)
+                        }
                     }
                 }
             }
