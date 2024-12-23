@@ -31,6 +31,7 @@ import android.content.res.Configuration
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
@@ -69,7 +70,14 @@ object Tools {
 
     val getPhoneName by lazy {
         val marketName = getSystemProperties("ro.product.marketname")
-        if (marketName.isNotEmpty()) marketName else Build.BRAND + Build.MODEL
+        if (marketName.isNotEmpty()) bigtextone(marketName) else bigtextone(Build.BRAND) + " " + Build.MODEL
+    }
+
+    fun bigtextone(st:String): String {
+        val formattedBrand = st.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase() else it.toString()
+        }
+        return formattedBrand
     }
 
     fun dp2px(context: Context, dpValue: Float): Int =
