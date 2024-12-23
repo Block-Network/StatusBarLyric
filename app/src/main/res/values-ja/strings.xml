@@ -60,7 +60,7 @@
     <string name="icon_bottom_margins">アイコン下部の余白</string>
     <string name="icon_bottom_margins_tips">範囲: 0~100</string>
     <string name="icon_start_margins">アイコン左側の余白</string>
-    <string name="icon_start_margins_tips">範囲: 0~500</string>
+    <string name="icon_start_margins_tips">範囲: -2000~2000</string>
     <string name="icon_color_and_transparency">アイコンの色と透過</string>
     <string name="icon_color_and_transparency_tips">10 進数のカラーコードを入力してください</string>
     <string name="icon_background_color_and_transparency">アイコンの背景色と透過</string>
@@ -153,4 +153,5 @@
     <string name="clear_config">設定を消去</string>
     <string name="clear_config_tips">設定を消去してもよろしいですか？</string>
     <string name="view_location">歌詞の場所を追加</string>
+    <string name="hide_focused_notice">フォーカス通知を非表示にする</string>
 </resources>

@@ -70,6 +70,7 @@ import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinde
 import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
+import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.BlurTools.cornerRadius
@@ -305,37 +306,37 @@ class SystemUILyric : BaseHook() {
         }
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.hide_notification_icon).log()
-            fun HookFactory.hideNoticeIcon() {
+            fun HookFactory.hideNoticeIcon(scheme: Int) {
                 after { hookParam ->
                     val clazz = hookParam.thisObject::class.java
-                    if (clazz.simpleName == "NotificationIconAreaController") {
+                    val name = if (scheme == 0) "NotificationIconAreaController" else "CollapsedStatusBarFragment"
+                    val method = if (scheme == 0) "mNotificationIconArea" else "mNotificationIconAreaInner"
+                    if (clazz.simpleName == name) {
                         hookParam.thisObject.objectHelper {
-                            mNotificationIconArea = this.getObjectOrNullAs<View>("mNotificationIconArea")!!
+                            mNotificationIconArea = this.getObjectOrNullAs<View>(method)!!
                         }
                     } else {
-                        mNotificationIconArea = clazz.superclass.getField("mNotificationIconArea").get(hookParam.thisObject) as View
+                        mNotificationIconArea = clazz.superclass.getField(method).get(hookParam.thisObject) as View
                     }
                 }
             }
-            loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-                if (it.isInterface) {
-                    loadClassOrNull("com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView").isNotNull { clazz ->
-                        clazz.methodFinder().filterByName("setNotificationIconAreaInnner").first().createHook {
-                            after { hook ->
-                                mNotificationIconArea = hook.args[0] as View
-                                "notify icon view: $mNotificationIconArea".log()
-                            }
-                        }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                loadClassOrNull("com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment").isNotNull {
+                    it.methodFinder().filterByName("onViewCreated").first().createHook {
+                        hideNoticeIcon(1)
                     }
-                    return@isNotNull
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    it.constructorFinder().first().createHook {
-                        hideNoticeIcon()
-                    }
-                } else {
-                    it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
-                        hideNoticeIcon()
+            } else {
+                loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        it.constructorFinder().first().createHook {
+                            hideNoticeIcon(0)
+                        }
+                    } else {
+                        it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
+                            hideNoticeIcon(0)
+                        }
                     }
                 }
             }
@@ -461,131 +462,134 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        loadClassOrNull("com.android.wm.shell.miuimultiwinswitch.miuiwindowdecor.TransientObserver").isNotNull {
-            it.methodFinder().filterByName("setTransientShowing").firstOrNull().ifNotNull { method ->
-                method.createHook {
-                    before { hook ->
-                        val isShow = hook.args[0] as Boolean
-                        ifIsInFullScreenMode(if (isShow) 1 else 0)
-                    }
-                }
-            }
-        }
-        loadClassOrNull("com.android.wm.shell.multitasking.miuimultiwinswitch.miuiwindowdecor.MulWinSwitchTransientObserver").isNotNull {
-            it.methodFinder().filterByName("setTransientShowing").firstOrNull().ifNotNull { method ->
-                method.createHook {
-                    before { hook ->
-                        val isShow = hook.args[0] as Boolean
-                        ifIsInFullScreenMode(if (isShow) 1 else 0)
-                    }
-                }
-            }
-        }
-        loadClassOrNull("com.android.systemui.statusbar.phone.AutoHideController").ifNotNull {
-            it.constructorFinder().firstOrNull().ifNotNull { constructor ->
-                constructor.createHook {
-                    before { hook ->
-                        hook.args[1] = object : Handler(Looper.getMainLooper()) {
-                            override fun sendMessageAtTime(msg: Message, uptimeMillis: Long): Boolean {
-                                if (msg.callback != null && isPlaying) {
-                                    delayMillis = uptimeMillis
-                                    "statusBar hide callback: ${msg.callback}, delayed time: ${uptimeMillis - SystemClock.uptimeMillis()}".log()
-                                }
-                                return super.sendMessageAtTime(msg, uptimeMillis)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").isNotNull {
-            it.constructorFinder().firstOrNull().ifNotNull { constructor ->
-                constructor.createHook {
-                    after { hook ->
-                        focusedNotify = hook.thisObject
-                    }
-                }
-            }
-
-            it.declaredMethods.filter { method ->
-                (method.name == "updateVisibility\$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
-                        method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
-            }
-                .forEach { method ->
+        if (config.hideFocusedNotice) {
+            moduleRes.getString(R.string.hide_focused_notice).log()
+            loadClassOrNull("com.android.wm.shell.miuimultiwinswitch.miuiwindowdecor.TransientObserver").isNotNull {
+                it.methodFinder().filterByName("setTransientShowing").firstOrNull().ifNotNull { method ->
                     method.createHook {
                         before { hook ->
-                            if (isHideFocusNotify) {
-                                hook.result = null
-                                "update focus notify visibility is hiding!".log()
-                            }
+                            val isShow = hook.args[0] as Boolean
+                            ifIsInFullScreenMode(if (isShow) 1 else 0)
                         }
                     }
                 }
-        }
-
-        val shouldShowMethod = loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").ifNotNull {
-            it.declaredMethods.firstOrNull { method -> method.name == "shouldShow" }
-        }
-        if (shouldShowMethod != null) {
-            canHideFocusNotify = true
-            (shouldShowMethod as Method).createHook {
-                after { hook ->
-                    if (shouldIgnore) return@after
-
-                    val show = hook.result as Boolean
-                    if (show) {
-                        if (isPlaying && !isHideFocusNotify) {
-                            isHiding = true
-                            hideLyric()
+            }
+            loadClassOrNull("com.android.wm.shell.multitasking.miuimultiwinswitch.miuiwindowdecor.MulWinSwitchTransientObserver").isNotNull {
+                it.methodFinder().filterByName("setTransientShowing").firstOrNull().ifNotNull { method ->
+                    method.createHook {
+                        before { hook ->
+                            val isShow = hook.args[0] as Boolean
+                            ifIsInFullScreenMode(if (isShow) 1 else 0)
                         }
-                    } else
-                        isHiding = false
-                    "new focus notify is ${if (show) "show" else "hide"}".log()
+                    }
                 }
             }
-        } else {
-            canHideFocusNotify = false
-            loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController\$2").isNotNull {
-                it.methodFinder().filterByName("handleMessage").first().createHook {
-                    before { hook ->
-                        val message = hook.args[0] as Message
-                        if (message.what == 1003) {
-                            val show = shouldShow()
-                            if (show) {
-                                if (isPlaying) {
-                                    isOS1FocusNotifyShowing = true
-                                    isHiding = true
-                                    hideLyric()
+            loadClassOrNull("com.android.systemui.statusbar.phone.AutoHideController").ifNotNull {
+                it.constructorFinder().firstOrNull().ifNotNull { constructor ->
+                    constructor.createHook {
+                        before { hook ->
+                            hook.args[1] = object : Handler(Looper.getMainLooper()) {
+                                override fun sendMessageAtTime(msg: Message, uptimeMillis: Long): Boolean {
+                                    if (msg.callback != null && isPlaying) {
+                                        delayMillis = uptimeMillis
+                                        "statusBar hide callback: ${msg.callback}, delayed time: ${uptimeMillis - SystemClock.uptimeMillis()}".log()
+                                    }
+                                    return super.sendMessageAtTime(msg, uptimeMillis)
                                 }
-                            } else {
-                                isOS1FocusNotifyShowing = false
-                                isHiding = false
                             }
-                            "focus notify is ${if (show) "show" else "hide"}".log()
                         }
                     }
                 }
             }
-        }
 
-        loadClassOrNull("com.android.systemui.controlcenter.shade.NotificationHeaderExpandController\$notificationCallback\$1").isNotNull {
-            it.methodFinder().filterByName("onExpansionChanged").first().createHook {
-                before { hook ->
-                    if (isPlaying && !isHiding) {
-                        val notificationHeaderExpandController = hook.thisObject.getObjectField("this\$0")
-                        val headerController = notificationHeaderExpandController?.getObjectField("headerController")
-                        val combinedHeaderController = headerController?.callMethod("get")
-                        val notificationBigTime = combinedHeaderController?.getObjectField("notificationBigTime") as View
-                        val notificationDateTime = combinedHeaderController.getObjectField("notificationDateTime") as View
+            loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").isNotNull {
+                it.constructorFinder().firstOrNull().ifNotNull { constructor ->
+                    constructor.createHook {
+                        after { hook ->
+                            focusedNotify = hook.thisObject
+                        }
+                    }
+                }
 
-                        val f = hook.args[0] as Float
-                        if (f < 0.8f)
-                            notificationBigTime.visibility = View.GONE
-                        else
-                            notificationBigTime.visibility = View.VISIBLE
+                it.declaredMethods.filter { method ->
+                    (method.name == "updateVisibility\$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
+                            method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
+                }
+                    .forEach { method ->
+                        method.createHook {
+                            before { hook ->
+                                if (isHideFocusNotify) {
+                                    hook.result = null
+                                    "update focus notify visibility is hiding!".log()
+                                }
+                            }
+                        }
+                    }
+            }
 
-                        this@SystemUILyric.notificationBigTime = notificationBigTime
+            val shouldShowMethod = loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").ifNotNull {
+                it.declaredMethods.firstOrNull { method -> method.name == "shouldShow" }
+            }
+            if (shouldShowMethod != null) {
+                canHideFocusNotify = true
+                (shouldShowMethod as Method).createHook {
+                    after { hook ->
+                        if (shouldIgnore) return@after
+
+                        val show = hook.result as Boolean
+                        if (show) {
+                            if (isPlaying && !isHideFocusNotify) {
+                                isHiding = true
+                                hideLyric()
+                            }
+                        } else
+                            isHiding = false
+                        "new focus notify is ${if (show) "show" else "hide"}".log()
+                    }
+                }
+            } else {
+                canHideFocusNotify = false
+                loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController\$2").isNotNull {
+                    it.methodFinder().filterByName("handleMessage").first().createHook {
+                        before { hook ->
+                            val message = hook.args[0] as Message
+                            if (message.what == 1003) {
+                                val show = shouldShow()
+                                if (show) {
+                                    if (isPlaying) {
+                                        isOS1FocusNotifyShowing = true
+                                        isHiding = true
+                                        hideLyric()
+                                    }
+                                } else {
+                                    isOS1FocusNotifyShowing = false
+                                    isHiding = false
+                                }
+                                "focus notify is ${if (show) "show" else "hide"}".log()
+                            }
+                        }
+                    }
+                }
+            }
+
+            loadClassOrNull("com.android.systemui.controlcenter.shade.NotificationHeaderExpandController\$notificationCallback\$1").isNotNull {
+                it.methodFinder().filterByName("onExpansionChanged").first().createHook {
+                    before { hook ->
+                        if (isPlaying && !isHiding) {
+                            val notificationHeaderExpandController = hook.thisObject.getObjectField("this\$0")
+                            val headerController = notificationHeaderExpandController?.getObjectField("headerController")
+                            val combinedHeaderController = headerController?.callMethod("get")
+                            val notificationBigTime = combinedHeaderController?.getObjectField("notificationBigTime") as View
+//                            val notificationDateTime = combinedHeaderController.getObjectField("notificationDateTime") as View
+
+                            val f = hook.args[0] as Float
+                            if (f < 0.8f)
+                                notificationBigTime.visibility = View.GONE
+                            else
+                                notificationBigTime.visibility = View.VISIBLE
+
+                            this@SystemUILyric.notificationBigTime = notificationBigTime
+                        }
                     }
                 }
             }
