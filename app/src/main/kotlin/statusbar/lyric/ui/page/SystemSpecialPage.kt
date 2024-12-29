@@ -67,7 +67,7 @@ fun SystemSpecialPage(navController: NavController) {
     val mMiuiPadOptimize = remember { mutableStateOf(config.mMiuiPadOptimize) }
     val hideCarrier = remember { mutableStateOf(config.hideCarrier) }
     val mHyperOSTexture = remember { mutableStateOf(config.mHyperOSTexture) }
-    val mHideFocusedNotice = remember { mutableStateOf(config.hideFocusedNotice) }
+    val mHideFocusedNotice = remember { mutableStateOf(config.automateFocusedNotice) }
     val showDialog = remember { mutableStateOf(false) }
     val showRadioDialog = remember { mutableStateOf(false) }
     val showCornerDialog = remember { mutableStateOf(false) }
@@ -172,6 +172,14 @@ fun SystemSpecialPage(navController: NavController) {
                             .padding(bottom = 6.dp)
                     ) {
                         SuperSwitch(
+                            title = stringResource(R.string.automate_focused_notice),
+                            checked = mHideFocusedNotice.value,
+                            onCheckedChange = {
+                                mHideFocusedNotice.value = it
+                                config.automateFocusedNotice = it
+                            }
+                        )
+                        SuperSwitch(
                             title = stringResource(R.string.hyperos_texture),
                             checked = mHyperOSTexture.value,
                             onCheckedChange = {
@@ -201,14 +209,6 @@ fun SystemSpecialPage(navController: NavController) {
                                 )
                             }
                         }
-                        SuperSwitch(
-                            title = stringResource(R.string.hide_focused_notice),
-                            checked = mHideFocusedNotice.value,
-                            onCheckedChange = {
-                                mHideFocusedNotice.value = it
-                                config.hideFocusedNotice = it
-                            }
-                        )
                     }
                 }
                 Card(

@@ -501,12 +501,12 @@ class Config {
         set(value) {
             config.put("viewLocation", value)
         }
-    var hideFocusedNotice: Boolean
+    var automateFocusedNotice: Boolean
         get() {
-            return config.opt("hideFocusedNotice", false)
+            return config.opt("automateFocusedNotice", true)
         }
         set(value) {
-            config.put("hideFocusedNotice", value)
+            config.put("automateFocusedNotice", value)
         }
 
     private val defIconHashMap by lazy {
