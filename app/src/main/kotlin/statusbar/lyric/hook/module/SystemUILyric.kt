@@ -83,6 +83,7 @@ import statusbar.lyric.tools.LyricViewTools.textColorAnima
 import statusbar.lyric.tools.SystemMediaSessionListener
 import statusbar.lyric.tools.Tools.callMethod
 import statusbar.lyric.tools.Tools.existField
+import statusbar.lyric.tools.Tools.existMethod
 import statusbar.lyric.tools.Tools.getObjectField
 import statusbar.lyric.tools.Tools.getObjectFieldIfExist
 import statusbar.lyric.tools.Tools.goMainThread
@@ -260,6 +261,17 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
+
+            View::class.java.methodFinder().filterByName("onDetachedFromWindow").first().createHook {
+                after { hookParam ->
+                    val view = (hookParam.thisObject as View)
+                    if (view.isTargetView()) {
+                        "onDetachedFromWindow".log()
+                        canLoad = true
+                        hideLyric()
+                    }
+                }
+            }
         }.isNot {
             moduleRes.getString(R.string.load_class_empty).log()
             return
@@ -272,7 +284,7 @@ class SystemUILyric : BaseHook() {
                         if (hookParam.args[0] == View.VISIBLE) {
                             val view = hookParam.thisObject as View
                             if (
-                                (clockView == view && config.hideTime) ||
+                                (this@SystemUILyric::clockView.isInitialized && clockView == view && config.hideTime) ||
                                 (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view && config.hideNotificationIcon) ||
                                 (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view && config.hideCarrier) ||
                                 (this@SystemUILyric::mMiuiNetworkSpeedView.isInitialized && mMiuiNetworkSpeedView == view && config.mMiuiHideNetworkSpeed) ||
@@ -1013,21 +1025,13 @@ class SystemUILyric : BaseHook() {
         return (config.lyricWidth / 100f * if (context.isLandscape()) displayHeight else displayWidth).toInt()
     }
 
-    private fun Class<*>.hasMethod(methodName: String): Boolean {
-        val methods = declaredMethods
-        for (method in methods) {
-            if (method.name == methodName) return true
-        }
-        return false
-    }
-
     inner class SystemUISpecial {
         init {
             if (isMiui) {
                 for (i in 0..10) {
                     val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$$i")
                     if (clazz.isNotNull()) {
-                        if (clazz!!.hasMethod("onWallpaperChanged")) {
+                        if (clazz!!.existMethod("onWallpaperChanged")) {
                             clazz.methodFinder().filterByName("onWallpaperChanged").first().createHook {
                                 after {
                                     if (this@SystemUILyric::clockView.isInitialized) {
@@ -1037,8 +1041,8 @@ class SystemUILyric : BaseHook() {
                                     }
                                 }
                             }
+                            break
                         }
-                        break
                     }
                 }
             }
@@ -1060,7 +1064,7 @@ class SystemUILyric : BaseHook() {
                             after {
                                 if (isPad) {
                                     loadClassOrNull("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment").isNotNull {
-                                        if (it.hasMethod("initMiuiViewsOnViewCreated")) {
+                                        if (it.existMethod("initMiuiViewsOnViewCreated")) {
                                             it.methodFinder().filterByName("initMiuiViewsOnViewCreated").first()
                                         } else {
                                             it.methodFinder().filterByName("onViewCreated").first()
