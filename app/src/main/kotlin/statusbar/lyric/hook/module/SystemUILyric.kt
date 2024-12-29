@@ -461,8 +461,8 @@ class SystemUILyric : BaseHook() {
             }
         }
 
-        if (config.hideFocusedNotice) {
-            moduleRes.getString(R.string.hide_focused_notice).log()
+        if (config.automateFocusedNotice) {
+            moduleRes.getString(R.string.automate_focused_notice).log()
             loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").isNotNull {
                 it.constructorFinder().firstOrNull().ifNotNull { constructor ->
                     constructor.createHook {
@@ -567,7 +567,7 @@ class SystemUILyric : BaseHook() {
             val isInFullscreenMode = defaultDisplay?.getObjectField("isInFullscreenMode")
             isInFullScreenMode = isInFullscreenMode?.getObjectField("\$\$delegate_0")?.callMethod("getValue") as Boolean
 
-            val isTransientShown = defaultDisplay?.getObjectField("isTransientShown");
+            val isTransientShown = defaultDisplay?.getObjectField("isTransientShown")
             statusbarShowing = isTransientShown?.getObjectField("\$\$delegate_0")?.callMethod("getValue") as Boolean
         }
         if (isInFullScreenMode) {

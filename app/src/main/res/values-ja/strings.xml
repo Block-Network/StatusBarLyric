@@ -153,5 +153,5 @@
     <string name="clear_config">設定を消去</string>
     <string name="clear_config_tips">設定を消去してもよろしいですか？</string>
     <string name="view_location">歌詞の場所を追加</string>
-    <string name="hide_focused_notice">フォーカス通知を非表示にする</string>
+    <string name="automate_focused_notice">フォーカス通知の自動処理</string>
 </resources>
