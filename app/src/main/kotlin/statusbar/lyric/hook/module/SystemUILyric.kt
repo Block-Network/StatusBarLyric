@@ -96,6 +96,7 @@ import statusbar.lyric.tools.Tools.isNull
 import statusbar.lyric.tools.Tools.isPad
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
+import statusbar.lyric.tools.Tools.setObjectField
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.Tools.togglePrompts
 import statusbar.lyric.view.LyricSwitchView
@@ -531,25 +532,27 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
+        }
 
-            loadClassOrNull("com.android.systemui.controlcenter.shade.NotificationHeaderExpandController\$notificationCallback\$1").isNotNull {
-                it.methodFinder().filterByName("onExpansionChanged").first().createHook {
-                    before { hook ->
-                        if (isPlaying && !isHiding) {
-                            val notificationHeaderExpandController = hook.thisObject.getObjectField("this\$0")
-                            val headerController = notificationHeaderExpandController?.getObjectField("headerController")
-                            val combinedHeaderController = headerController?.callMethod("get")
-                            val notificationBigTime = combinedHeaderController?.getObjectField("notificationBigTime") as View
-                            // val notificationDateTime = combinedHeaderController.getObjectField("notificationDateTime") as View
+        loadClassOrNull("com.android.systemui.controlcenter.shade.NotificationHeaderExpandController\$notificationCallback\$1").isNotNull {
+            it.methodFinder().filterByName("onExpansionChanged").first().createHook {
+                before { hook ->
+                    if (isPlaying && !isHiding) {
+                        val notificationHeaderExpandController = hook.thisObject.getObjectField("this\$0")
+                        notificationHeaderExpandController?.setObjectField("bigTimeTranslationY", 0)
+                        notificationHeaderExpandController?.setObjectField("notificationTranslationX", 0)
+                        // notificationHeaderExpandController?.setObjectField("notificationTranslationY", 0)
 
-                            val f = hook.args[0] as Float
-                            if (f < 0.8f)
-                                notificationBigTime.visibility = View.GONE
-                            else
-                                notificationBigTime.visibility = View.VISIBLE
+                        val notificationBigTime = notificationHeaderExpandController?.getObjectField("headerController")
+                            ?.callMethod("get")?.getObjectField("notificationBigTime") as View
 
-                            this@SystemUILyric.notificationBigTime = notificationBigTime
-                        }
+                        val f = hook.args[0] as Float
+                        if (f < 0.75f)
+                            notificationBigTime.visibility = View.GONE
+                        else
+                            notificationBigTime.visibility = View.VISIBLE
+
+                        this@SystemUILyric.notificationBigTime = notificationBigTime
                     }
                 }
             }
