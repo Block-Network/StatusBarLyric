@@ -167,6 +167,7 @@ class SystemUILyric : BaseHook() {
     private var shouldIgnore: Boolean = false
     private var isHideFocusNotify: Boolean = false
     private var canHideFocusNotify = false
+    private var isOS2FocusNotifyShowing = false
     private var isOS1FocusNotifyShowing = false // OS1 不要支持隐藏焦点通知
     val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
 
@@ -269,7 +270,13 @@ class SystemUILyric : BaseHook() {
                     if (isPlaying && !isHiding) {
                         if (hookParam.args[0] == View.VISIBLE) {
                             val view = hookParam.thisObject as View
-                            if (view.isTargetView() || (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view) || (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view) || (this@SystemUILyric::mMiuiNetworkSpeedView.isInitialized && mMiuiNetworkSpeedView == view) || (this@SystemUILyric::mPadClockView.isInitialized && mPadClockView == view)) {
+                            if (
+                                (clockView == view && config.hideTime) ||
+                                (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view && config.hideNotificationIcon) ||
+                                (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view && config.hideCarrier) ||
+                                (this@SystemUILyric::mMiuiNetworkSpeedView.isInitialized && mMiuiNetworkSpeedView == view && config.mMiuiHideNetworkSpeed) ||
+                                (this@SystemUILyric::mPadClockView.isInitialized && mPadClockView == view && config.hideTime)
+                            ) {
                                 hookParam.args[0] = View.GONE
                             }
                         }
@@ -497,15 +504,15 @@ class SystemUILyric : BaseHook() {
                     after { hook ->
                         if (shouldIgnore) return@after
 
-                        val show = hook.result as Boolean
-                        if (show) {
+                        isOS2FocusNotifyShowing = hook.result as Boolean
+                        if (isOS2FocusNotifyShowing) {
                             if (isPlaying && !isHideFocusNotify) {
                                 isHiding = true
                                 hideLyric()
                             }
                         } else
                             isHiding = false
-                        "new focus notify is ${if (show) "show" else "hide"}".log()
+                        "new focus notify is ${if (isOS2FocusNotifyShowing) "show" else "hide"}".log()
                     }
                 }
             } else {
@@ -515,7 +522,7 @@ class SystemUILyric : BaseHook() {
                         before { hook ->
                             val message = hook.args[0] as Message
                             if (message.what == 1003) {
-                                val show = shouldShow()
+                                val show = focusNotifyShowing()
                                 if (show) {
                                     if (isPlaying) {
                                         isOS1FocusNotifyShowing = true
@@ -537,7 +544,7 @@ class SystemUILyric : BaseHook() {
         loadClassOrNull("com.android.systemui.controlcenter.shade.NotificationHeaderExpandController\$notificationCallback\$1").isNotNull {
             it.methodFinder().filterByName("onExpansionChanged").first().createHook {
                 before { hook ->
-                    if (isPlaying && !isHiding) {
+                    if (isPlaying && !isHiding && config.hideTime) {
                         val notificationHeaderExpandController = hook.thisObject.getObjectField("this\$0")
                         notificationHeaderExpandController?.setObjectField("bigTimeTranslationY", 0)
                         notificationHeaderExpandController?.setObjectField("notificationTranslationX", 0)
@@ -575,16 +582,20 @@ class SystemUILyric : BaseHook() {
         }
         if (isInFullScreenMode) {
             if (statusbarShowing && isPlaying) {
-                isHiding = false
-                hideFocusNotifyIfNeed()
+                if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing)) {
+                    isHiding = false
+                    hideFocusNotifyIfNeed()
+                }
             } else if (!statusbarShowing) {
                 isHiding = true
                 hideLyric()
                 showFocusNotifyIfNeed()
             }
         } else {
-            isHiding = false
-            hideFocusNotifyIfNeed()
+            if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing)) {
+                isHiding = false
+                hideFocusNotifyIfNeed()
+            }
         }
         "statusBar state is ${if (statusbarShowing) "show" else "hide"}".log()
     }
@@ -597,7 +608,7 @@ class SystemUILyric : BaseHook() {
 
     private fun hideFocusNotifyIfNeed() {
         if (!shouldControlFocusNotify()) return
-        if (!shouldShow()) return
+        if (!focusNotifyShowing()) return
         val mIcon = focusedNotify!!.getObjectField("mIcon")
         val mContent = focusedNotify!!.getObjectField("mContent")
         if (mIcon == null || mContent == null) return
@@ -611,7 +622,7 @@ class SystemUILyric : BaseHook() {
 
     private fun showFocusNotifyIfNeed() {
         if (!shouldControlFocusNotify()) return
-        if (!shouldShow()) return
+        if (!focusNotifyShowing()) return
         val mIcon = focusedNotify!!.getObjectField("mIcon")
         val mContent = focusedNotify!!.getObjectField("mContent")
         if (mIcon == null || mContent == null) return
@@ -627,7 +638,7 @@ class SystemUILyric : BaseHook() {
         return focusedNotify != null && canHideFocusNotify
     }
 
-    private fun shouldShow(): Boolean {
+    private fun focusNotifyShowing(): Boolean {
         val mCurrentNotifyBean = focusedNotify!!.getObjectField("mCurrentNotifBean") ?: return false
         val mIsHeadsUpShowing = focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean
         return if (canHideFocusNotify) {
@@ -647,7 +658,7 @@ class SystemUILyric : BaseHook() {
 
     private fun shouldOpenFocusNotify(motionEvent: MotionEvent): Boolean {
         if (!shouldControlFocusNotify()) return false
-        if (!shouldShow()) return false
+        if (!focusNotifyShowing()) return false
         val focusedNotifyPromptView = focusedNotify!!.getObjectField("mView") ?: return false
 
         val x = motionEvent.rawX
@@ -800,11 +811,13 @@ class SystemUILyric : BaseHook() {
         goMainThread {
             if (config.lyricColor.isEmpty()) lastColor = clockView.currentTextColor
             lyricLayout.showView()
-            if (config.hideTime) clockView.hideView()
-            if (this::mNotificationIconArea.isInitialized) mNotificationIconArea.hideView()
-            if (this::mCarrierLabel.isInitialized) mCarrierLabel.hideView()
-            if (this::mMiuiNetworkSpeedView.isInitialized) mMiuiNetworkSpeedView.hideView()
-            if (this::mPadClockView.isInitialized) mPadClockView.hideView()
+            if (config.hideTime) {
+                clockView.hideView()
+                if (this::mPadClockView.isInitialized) mPadClockView.hideView()
+            }
+            if (this::mNotificationIconArea.isInitialized && config.hideNotificationIcon) mNotificationIconArea.hideView()
+            if (this::mCarrierLabel.isInitialized && config.hideCarrier) mCarrierLabel.hideView()
+            if (this::mMiuiNetworkSpeedView.isInitialized && config.mMiuiHideNetworkSpeed) mMiuiNetworkSpeedView.hideView()
             lyricView.apply {
                 width = getLyricWidth(getPaint(), lyric)
                 val i = width - theoreticalWidth
