@@ -160,6 +160,7 @@ class SystemUILyric : BaseHook() {
     private var isPlaying: Boolean = false
     private var isStop: Boolean = false
     private var isHiding: Boolean = false
+    private var isClickHide: Boolean = false
     private var isRandomAnima: Boolean = false
     private var isInFullScreenMode: Boolean = false
     private var mAutoHideController: Any? = null
@@ -364,25 +365,26 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        if (config.clickStatusBarToHideLyric || config.slideStatusBarCutSongs) {
-            loadClassOrNull("com.android.systemui.statusbar.phone.PhoneStatusBarView").isNotNull {
-                it.methodFinder().filterByName("onTouchEvent").first().createHook {
-                    before { hookParam ->
-                        val motionEvent = hookParam.args[0] as MotionEvent
-                        when (motionEvent.action) {
-                            MotionEvent.ACTION_DOWN -> {
-                                point = Point(motionEvent.rawX.toInt(), motionEvent.rawY.toInt())
-                            }
 
-                            MotionEvent.ACTION_MOVE -> {
-                            }
+        loadClassOrNull("com.android.systemui.statusbar.phone.PhoneStatusBarView").isNotNull {
+            it.methodFinder().filterByName("onTouchEvent").first().createHook {
+                before { hookParam ->
+                    val motionEvent = hookParam.args[0] as MotionEvent
+                    when (motionEvent.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            point = Point(motionEvent.rawX.toInt(), motionEvent.rawY.toInt())
+                        }
 
-                            MotionEvent.ACTION_UP -> {
-                                val isMove = abs(point.y - motionEvent.rawY.toInt()) > 50 || abs(point.x - motionEvent.rawX.toInt()) > 50
-                                val isLongChick = motionEvent.eventTime - motionEvent.downTime > 500
-                                when (isMove) {
-                                    true -> {
-                                        if (config.slideStatusBarCutSongs && isPlaying) {
+                        MotionEvent.ACTION_MOVE -> {
+                        }
+
+                        MotionEvent.ACTION_UP -> {
+                            val isMove = abs(point.y - motionEvent.rawY.toInt()) > 50 || abs(point.x - motionEvent.rawX.toInt()) > 50
+                            val isLongChick = motionEvent.eventTime - motionEvent.downTime > 500
+                            when (isMove) {
+                                true -> {
+                                    if (config.slideStatusBarCutSongs) {
+                                        if (isPlaying) {
                                             if (abs(point.y - motionEvent.rawY.toInt()) <= config.slideStatusBarCutSongsYRadius) {
                                                 val i = point.x - motionEvent.rawX.toInt()
                                                 if (abs(i) > config.slideStatusBarCutSongsXRadius) {
@@ -397,53 +399,55 @@ class SystemUILyric : BaseHook() {
                                             }
                                         }
                                     }
+                                }
 
-                                    false -> {
-                                        when (isLongChick) {
-                                            true -> {
-                                                if (config.longClickStatusBarStop) {
-                                                    moduleRes.getString(R.string.long_click_status_bar_stop).log()
-                                                    shell("input keyevent 85", false)
-                                                    hookParam.result = true
-                                                }
+                                false -> {
+                                    when (isLongChick) {
+                                        true -> {
+                                            if (config.longClickStatusBarStop) {
+                                                moduleRes.getString(R.string.long_click_status_bar_stop).log()
+                                                shell("input keyevent 85", false)
+                                                hookParam.result = true
                                             }
+                                        }
 
-                                            false -> {
-                                                if (config.clickStatusBarToHideLyric) {
-                                                    if (isOS1FocusNotifyShowing) return@before
+                                        false -> {
+                                            if (config.clickStatusBarToHideLyric || isOS2FocusNotifyShowing) {
+                                                if (isOS1FocusNotifyShowing) return@before
 
-                                                    if (isPlaying) {
-                                                        moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
-                                                        if (isHiding) {
-                                                            if (shouldControlFocusNotify()) {
-                                                                if (!isHideFocusNotify && shouldOpenFocusNotify(motionEvent)) {
-                                                                    "should open focus notify".log()
-                                                                    return@before
-                                                                }
-                                                            }
-
-                                                            isHiding = false
-                                                            hookParam.result = true
-                                                            hideFocusNotifyIfNeed()
-                                                            changeLyric(lastLyric, 0)
-                                                            autoHideStatusBarInFullScreenModeIfNeed()
-                                                        } else {
-                                                            val x = motionEvent.x.toInt()
-                                                            val y = motionEvent.y.toInt()
-                                                            val left = lyricLayout.left
-                                                            val top = lyricLayout.top
-                                                            val right = lyricLayout.right
-                                                            val bottom = lyricLayout.bottom
-                                                            if (x in left..right && y in top..bottom) {
-                                                                isHiding = true
-                                                                hookParam.result = true
-                                                                hideLyric()
-                                                                showFocusNotifyIfNeed()
-                                                                autoHideStatusBarInFullScreenModeIfNeed()
+                                                if (isPlaying) {
+                                                    moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
+                                                    if (isHiding) {
+                                                        if (shouldControlFocusNotify()) {
+                                                            if (!isHideFocusNotify && shouldOpenFocusNotify(motionEvent)) {
+                                                                "should open focus notify".log()
+                                                                return@before
                                                             }
                                                         }
-                                                        "change to hide: $isHiding".log()
+
+                                                        isClickHide = false
+                                                        isHiding = false
+                                                        hookParam.result = true
+                                                        hideFocusNotifyIfNeed()
+                                                        changeLyric(lastLyric, 0)
+                                                        autoHideStatusBarInFullScreenModeIfNeed()
+                                                    } else {
+                                                        val x = motionEvent.x.toInt()
+                                                        val y = motionEvent.y.toInt()
+                                                        val left = lyricLayout.left
+                                                        val top = lyricLayout.top
+                                                        val right = lyricLayout.right
+                                                        val bottom = lyricLayout.bottom
+                                                        if (x in left..right && y in top..bottom) {
+                                                            isClickHide = true
+                                                            isHiding = true
+                                                            hookParam.result = true
+                                                            hideLyric()
+                                                            showFocusNotifyIfNeed()
+                                                            autoHideStatusBarInFullScreenModeIfNeed()
+                                                        }
                                                     }
+                                                    "change to hide: $isHiding".log()
                                                 }
                                             }
                                         }
@@ -582,7 +586,7 @@ class SystemUILyric : BaseHook() {
         }
         if (isInFullScreenMode) {
             if (statusbarShowing && isPlaying) {
-                if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing)) {
+                if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing || isClickHide)) {
                     isHiding = false
                     hideFocusNotifyIfNeed()
                 }
@@ -592,7 +596,7 @@ class SystemUILyric : BaseHook() {
                 showFocusNotifyIfNeed()
             }
         } else {
-            if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing)) {
+            if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing || isClickHide)) {
                 isHiding = false
                 hideFocusNotifyIfNeed()
             }
