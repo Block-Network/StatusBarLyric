@@ -43,6 +43,7 @@ import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.ActivityTools.isHook
 import statusbar.lyric.tools.LogTools.log
+import statusbar.lyric.tools.Tools.existField
 import java.io.DataOutputStream
 import java.util.Objects
 import java.util.regex.Pattern
@@ -69,7 +70,14 @@ object Tools {
 
     val getPhoneName by lazy {
         val marketName = getSystemProperties("ro.product.marketname")
-        if (marketName.isNotEmpty()) marketName else Build.BRAND + Build.MODEL
+        if (marketName.isNotEmpty()) bigtextone(marketName) else bigtextone(Build.BRAND) + " " + Build.MODEL
+    }
+
+    fun bigtextone(st: String): String {
+        val formattedBrand = st.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase() else it.toString()
+        }
+        return formattedBrand
     }
 
     fun dp2px(context: Context, dpValue: Float): Int =
@@ -240,6 +248,10 @@ object Tools {
 
     fun Any?.existField(fieldName: String): Boolean {
         return this?.javaClass?.declaredFields?.any { it.name == fieldName } ?: false
+    }
+
+    fun Any?.existMethod(methodName: String): Boolean {
+        return this?.javaClass?.declaredMethods?.any { it.name == methodName } ?: false
     }
 
     fun Any.getObjectFieldIfExist(fieldName: String): Any? {

@@ -60,7 +60,7 @@
     <string name="icon_bottom_margins">圖示下邊距</string>
     <string name="icon_bottom_margins_tips">範圍：0~100</string>
     <string name="icon_start_margins">圖示左邊距</string>
-    <string name="icon_start_margins_tips">範圍：0~500</string>
+    <string name="icon_start_margins_tips">範圍：-2000~2000</string>
     <string name="icon_color_and_transparency">圖示顏色和透明度</string>
     <string name="icon_color_and_transparency_tips">請輸入 16 進制顏色值</string>
     <string name="icon_background_color_and_transparency">圖示背景顏色和透明度</string>
@@ -153,4 +153,5 @@
     <string name="clear_config">重設配置</string>
     <string name="clear_config_tips">確定要重設配置嗎？</string>
     <string name="view_location">歌詞添加位置</string>
+    <string name="automate_focused_notice">自動處理焦點通知</string>
 </resources>

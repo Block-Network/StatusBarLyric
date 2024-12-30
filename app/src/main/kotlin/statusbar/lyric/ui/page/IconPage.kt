@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
@@ -31,11 +33,14 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
+import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
+import statusbar.lyric.tools.ActivityTools.showToastOnLooper
 import statusbar.lyric.tools.AnimTools
+import statusbar.lyric.tools.LogTools.log
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -554,10 +559,9 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..500)) {
-                    value.value = it
-                }
+                value.value = it
             }
         )
         Row(
@@ -576,8 +580,12 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.iconStartMargins =
-                        if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    if (value.value.toIntOrNull() != null && value.value.toInt() in -2000..2000) {
+                        config.iconStartMargins = value.value.toInt()
+                    } else {
+                        config.iconStartMargins = 0
+                        value.value = "0"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
