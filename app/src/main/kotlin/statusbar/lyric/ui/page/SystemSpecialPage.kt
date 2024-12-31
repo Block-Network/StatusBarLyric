@@ -298,8 +298,8 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.mHyperOSTextureRadio =
-                        if (value.value.isEmpty()) 25 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "25"
+                    config.mHyperOSTextureRadio = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -345,8 +345,8 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.mHyperOSTextureCorner =
-                        if (value.value.isEmpty()) 25 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "25"
+                    config.mHyperOSTextureCorner = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )

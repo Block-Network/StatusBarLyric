@@ -431,8 +431,8 @@ fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.slideStatusBarCutSongsXRadius =
-                        if (value.value.isEmpty() || value.value.toInt() < 50) 50 else value.value.toInt()
+                    if (value.value.isEmpty() || value.value.toInt() < 50) value.value = "50"
+                    config.slideStatusBarCutSongsXRadius = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -477,8 +477,8 @@ fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.slideStatusBarCutSongsYRadius =
-                        if (value.value.isEmpty() || value.value.toInt() < 10) 10 else value.value.toInt()
+                    if (value.value.isEmpty() || value.value.toInt() < 10) value.value = "10"
+                    config.slideStatusBarCutSongsYRadius = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -523,8 +523,8 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.titleDelayDuration =
-                        if (value.value.isEmpty()) 3000 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "3000"
+                    config.titleDelayDuration = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -569,9 +569,8 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
                 onClick = {
                     ActivityTools.colorCheck(
                         value.value,
-                        unit = {
-                            config.lyricColor = it
-                        }, "#000000"
+                        unit = { config.lyricColor = it },
+                        "#000000"
                     )
                     config.titleColorAndTransparency = value.value.ifEmpty { "#000000" }
                     dismissDialog(showDialog)
@@ -618,8 +617,8 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.titleBackgroundRadius =
-                        if (value.value.isEmpty()) 50 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "50"
+                    config.titleBackgroundRadius = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -664,8 +663,8 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.titleBackgroundStrokeWidth =
-                        if (value.value.isEmpty()) 10 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "10"
+                    config.titleBackgroundStrokeWidth = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -710,9 +709,8 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
                 onClick = {
                     ActivityTools.colorCheck(
                         value.value,
-                        unit = {
-                            config.titleBackgroundStrokeColorAndTransparency = it
-                        }, "#FFFFFF"
+                        unit = { config.titleBackgroundStrokeColorAndTransparency = it },
+                        "#FFFFFF"
                     )
                     dismissDialog(showDialog)
                 }

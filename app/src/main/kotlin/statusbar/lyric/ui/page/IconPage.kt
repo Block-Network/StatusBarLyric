@@ -504,7 +504,8 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.iconTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.iconTopMargins = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -550,8 +551,8 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.iconBottomMargins =
-                        if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.iconBottomMargins = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -645,7 +646,8 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.changeAllIcons = value.value.ifEmpty { "" }
+                    if (value.value.isEmpty()) value.value = ""
+                    config.changeAllIcons = value.value
                     dismissDialog(showDialog)
                     changeConfig()
                 }
