@@ -66,7 +66,7 @@ class Config {
         }
     var outLog: Boolean
         get() {
-            return if (BuildConfig.DEBUG) true else config.opt("outlog", true)
+            return if (BuildConfig.DEBUG) true else config.opt("outlog", false)
         }
         set(value) {
             config.put("outlog", value)
