@@ -1,5 +1,6 @@
 package statusbar.lyric.ui.page
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,14 +34,11 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
-import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
-import statusbar.lyric.tools.ActivityTools.showToastOnLooper
 import statusbar.lyric.tools.AnimTools
-import statusbar.lyric.tools.LogTools.log
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -65,7 +63,7 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun IconPage(navController: NavController) {
+fun IconPage(navController: NavController, currentStartDestination: MutableState<String>) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val iconSwitch = remember { mutableStateOf(config.iconSwitch) }
     val forceTheIconToBeDisplayed = remember { mutableStateOf(config.forceTheIconToBeDisplayed) }
@@ -102,7 +100,14 @@ fun IconPage(navController: NavController) {
                     IconButton(
                         modifier = Modifier.padding(start = 18.dp),
                         onClick = {
-                            navController.popBackStack("HomePage", inclusive = false)
+                            navController.navigate(currentStartDestination.value) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                            navController.popBackStack(currentStartDestination.value, inclusive = false)
                         }
                     ) {
                         Icon(
@@ -118,6 +123,17 @@ fun IconPage(navController: NavController) {
         },
         popupHost = { null }
     ) {
+        BackHandler(true) {
+            navController.navigate(currentStartDestination.value) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            navController.popBackStack(currentStartDestination.value, inclusive = false)
+        }
+
         LazyColumn(
             modifier = Modifier
                 .haze(state = hazeState)
