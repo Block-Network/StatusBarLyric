@@ -1,5 +1,6 @@
 package statusbar.lyric.ui.page
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -63,7 +64,7 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun LyricPage(navController: NavController) {
+fun LyricPage(navController: NavController, currentStartDestination: MutableState<String>) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val lyricWidth = remember { mutableStateOf(config.lyricWidth.toString()) }
     val fixedLyricWidth = remember { mutableStateOf(config.fixedLyricWidth) }
@@ -129,7 +130,14 @@ fun LyricPage(navController: NavController) {
                     IconButton(
                         modifier = Modifier.padding(start = 18.dp),
                         onClick = {
-                            navController.popBackStack()
+                            navController.navigate(currentStartDestination.value) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                            navController.popBackStack(currentStartDestination.value, inclusive = false)
                         }
                     ) {
                         Icon(
@@ -145,6 +153,17 @@ fun LyricPage(navController: NavController) {
         },
         popupHost = { null }
     ) {
+        BackHandler(true) {
+            navController.navigate(currentStartDestination.value) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            navController.popBackStack(currentStartDestination.value, inclusive = false)
+        }
+
         LazyColumn(
             modifier = Modifier
                 .haze(state = hazeState)
@@ -633,8 +652,8 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricBackgroundRadius =
-                        if (value.value.isEmpty()) 0 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.lyricBackgroundRadius = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -680,8 +699,8 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricLetterSpacing =
-                        if (value.value.isEmpty()) 0 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.lyricLetterSpacing = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -727,6 +746,7 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
+                    if (value.value.isEmpty()) value.value = "100"
                     config.lyricStrokeWidth = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
@@ -773,7 +793,8 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricSpeed = if (value.value.isEmpty()) 1 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "1"
+                    config.lyricSpeed = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -819,8 +840,8 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricTopMargins =
-                        if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.lyricTopMargins = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -866,9 +887,8 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-
-                    config.lyricBottomMargins =
-                        if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.lyricBottomMargins = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -914,8 +934,8 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricStartMargins =
-                        if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.lyricStartMargins = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -961,8 +981,8 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricEndMargins =
-                        if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.lyricEndMargins = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -1008,8 +1028,8 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.animationDuration =
-                        if (value.value.isEmpty() || value.value.toInt() < 300) 300 else value.value.toInt()
+                    if (value.value.isEmpty() || value.value.toInt() < 300) value.value = "300"
+                    config.animationDuration = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
