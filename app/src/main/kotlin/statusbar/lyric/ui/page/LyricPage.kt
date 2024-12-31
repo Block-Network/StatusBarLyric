@@ -129,7 +129,7 @@ fun LyricPage(navController: NavController) {
                     IconButton(
                         modifier = Modifier.padding(start = 18.dp),
                         onClick = {
-                            navController.popBackStack()
+                            navController.popBackStack("HomePage", inclusive = false)
                         }
                     ) {
                         Icon(
