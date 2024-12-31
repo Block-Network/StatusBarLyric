@@ -181,6 +181,7 @@ class SystemUILyric : BaseHook() {
     }
     private var theoreticalWidth: Int = 0
     private lateinit var point: Point
+    private var lyricwidthmax : Float = 0f
 
 
     private val displayMetrics: DisplayMetrics by lazy { context.resources.displayMetrics }
@@ -247,6 +248,7 @@ class SystemUILyric : BaseHook() {
     private var defaultDisplay: Any? = null
     private var mCentralSurfacesImpl: Any? = null
     private var notificationBigTime: View? = null
+    private var status_barLayout: LinearLayout? = null
 
     @SuppressLint("DiscouragedApi", "NewApi")
     override fun init() {
@@ -827,6 +829,14 @@ class SystemUILyric : BaseHook() {
         if (lyric.isEmpty()) return
         if (isHiding || isScreenLock) return
 
+        /** 左状态栏ViewGroup 获取*/
+        val rootView = clockView.parent.parentForAccessibility as ViewGroup
+        val container = context.resources.getIdentifier("status_bar_contents", "id", context.packageName)
+        status_barLayout = rootView.findViewById<LinearLayout>(container)
+        targetView = (clockView.parent as LinearLayout).apply {
+            gravity = Gravity.CENTER
+        }
+
         "lyric:$lyric".log()
         isStop = false
         isPlaying = true
@@ -866,6 +876,36 @@ class SystemUILyric : BaseHook() {
                     outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
                 }
                 setText(lyric)
+
+                if (status_barLayout != null){
+                    val lywidth = status_barLayout!!.width.toFloat()
+                    val maxtest = ((lywidth / 2 ) - 90f )
+                    if (maxtest <= targetView.width.toFloat()){
+                        lyricwidthmax = maxtest
+                    } else {
+                        lyricwidthmax = targetView.width.toFloat() + 9f
+                    }
+                    "lyricwidthmax: ${lyricwidthmax} abc${lywidth} ccc $maxtest,".log()
+                    if (config.lyricWidth == 0) {
+                        lyricView.setMaxLyricViewWidth(lyricwidthmax - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
+                    } else {
+                        var width = scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins
+                        if (width > lyricwidthmax ) {
+                            width = lyricwidthmax
+                        }
+                        lyricView.setMaxLyricViewWidth(width)
+                    }
+                } else {
+                    if (config.lyricWidth == 0) {
+                        lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
+                    } else {
+                        var width = scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins
+                        if (width > targetView.width) {
+                            width = targetView.width.toFloat()
+                        }
+                        lyricView.setMaxLyricViewWidth(width)
+                    }
+                }
             }
         }
     }
