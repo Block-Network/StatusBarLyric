@@ -55,6 +55,7 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     }
 
     fun setWidth(width: Int) {
+        layoutTransition = LayoutTransition()
         applyToAllViews {
             it.width = width
         }
