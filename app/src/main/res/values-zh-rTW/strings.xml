@@ -47,9 +47,9 @@
     <string name="lyric_top_margins">歌詞上邊距</string>
     <string name="lyric_top_margins_tips">範圍：0~100</string>
     <string name="lyric_end_margins">歌詞右邊距</string>
-    <string name="lyric_end_margins_tips">範圍：0~2000</string>
+    <string name="lyric_end_margins_tips">範圍：-2000~2000</string>
     <string name="lyric_start_margins">歌詞左邊距</string>
-    <string name="lyric_start_margins_tips">範圍：0~2000</string>
+    <string name="lyric_start_margins_tips">範圍：-2000~2000</string>
     <string name="lyric_bottom_margins">歌詞下邊距</string>
     <string name="lyric_bottom_margins_tips">範圍：0~100</string>
     <string name="icon_switch">圖示開關</string>

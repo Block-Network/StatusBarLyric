@@ -281,20 +281,12 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_start_margins),
-                            titleColor = BasicComponentDefaults.titleColor(
-                                color = MiuixTheme.colorScheme.primary
-                            ),
-                            rightText = stringResource(R.string.tips1),
                             onClick = {
                                 showLyricStartMarginsDialog.value = true
                             }
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_end_margins),
-                            titleColor = BasicComponentDefaults.titleColor(
-                                color = MiuixTheme.colorScheme.primary
-                            ),
-                            rightText = stringResource(R.string.tips1),
                             onClick = {
                                 showLyricEndMarginsDialog.value = true
                             }
@@ -913,9 +905,7 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
             value = value.value,
             maxLines = 1,
             onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..2000)) {
-                    value.value = it
-                }
+                value.value = it
             }
         )
         Row(
@@ -934,8 +924,12 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "0"
-                    config.lyricStartMargins = value.value.toInt()
+                    if (value.value.toIntOrNull() != null && value.value.toInt() in -2000..2000) {
+                        config.lyricStartMargins = value.value.toInt()
+                    } else {
+                        config.lyricStartMargins = 0
+                        value.value = "0"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -960,9 +954,7 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
             value = value.value,
             maxLines = 1,
             onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..2000)) {
-                    value.value = it
-                }
+                value.value = it
             }
         )
         Row(
@@ -981,8 +973,12 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "0"
-                    config.lyricEndMargins = value.value.toInt()
+                    if (value.value.toIntOrNull() != null && value.value.toInt() in -2000..2000) {
+                        config.lyricEndMargins = value.value.toInt()
+                    } else {
+                        config.lyricEndMargins = 0
+                        value.value = "0"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }

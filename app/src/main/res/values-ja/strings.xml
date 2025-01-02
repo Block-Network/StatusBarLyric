@@ -31,7 +31,7 @@
     <string name="extend_page">拡張のページ</string>
     <string name="choose_page">ページを選択</string>
     <string name="lyric_width">歌詞の幅</string>
-    <string name="lyric_width_tips">範囲: 0~100 - 0 は適応幅です</string>
+    <string name="lyric_width_tips">範囲: 0~100 – 0 は適応幅です</string>
     <string name="fixed_lyric_width">歌詞の幅を固定</string>
     <string name="fixed_lyric_width_tips">ON にすると歌詞の外側の幅が固定され、歌詞に合わせて変化しません</string>
     <string name="lyric_color_and_transparency">歌詞の色と透過</string>
@@ -47,9 +47,9 @@
     <string name="lyric_top_margins">歌詞の上部の余白</string>
     <string name="lyric_top_margins_tips">範囲: 0~100</string>
     <string name="lyric_end_margins">歌詞の終了の余白</string>
-    <string name="lyric_end_margins_tips">範囲: 0~2000</string>
+    <string name="lyric_end_margins_tips">範囲: -2000~2000</string>
     <string name="lyric_start_margins">歌詞の開始の余白</string>
-    <string name="lyric_start_margins_tips">範囲: 0~2000</string>
+    <string name="lyric_start_margins_tips">範囲: -2000~2000</string>
     <string name="lyric_bottom_margins">歌詞の下部の余白</string>
     <string name="lyric_bottom_margins_tips">範囲: 0~100</string>
     <string name="icon_switch">アイコンの切り替え</string>

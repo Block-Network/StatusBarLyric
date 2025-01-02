@@ -193,7 +193,6 @@ class SystemUILyric : BaseHook() {
     private lateinit var mNotificationIconArea: View
     private lateinit var mCarrierLabel: View
     private lateinit var mPadClockView: View
-    private val realTargetWidth by lazy { targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f }
     private val lyricView: LyricSwitchView by lazy {
         object : LyricSwitchView(context) {
             override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -753,13 +752,6 @@ class SystemUILyric : BaseHook() {
                 )
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
-            if (config.lyricWidth == 0) {
-                lyricView.setMaxLyricViewWidth(realTargetWidth)
-            } else {
-                var width = scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins
-                if (width > realTargetWidth) width = realTargetWidth
-                lyricView.setMaxLyricViewWidth(width)
-            }
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
             if (config.titleSwitch) {
                 object : SystemMediaSessionListener(context) {
@@ -913,7 +905,7 @@ class SystemUILyric : BaseHook() {
                     TypedValue.COMPLEX_UNIT_SHIFT,
                     if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat()
                 )
-                setPadding(
+                setMargins(
                     config.lyricStartMargins,
                     config.lyricTopMargins,
                     config.lyricEndMargins,
@@ -928,13 +920,6 @@ class SystemUILyric : BaseHook() {
                     } else {
                         setTextColor(Color.parseColor(config.lyricColor))
                     }
-                }
-                if (config.lyricWidth == 0) {
-                    lyricView.setMaxLyricViewWidth(realTargetWidth)
-                } else {
-                    var width = scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins
-                    if (width > realTargetWidth) width = realTargetWidth
-                    lyricView.setMaxLyricViewWidth(width)
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)

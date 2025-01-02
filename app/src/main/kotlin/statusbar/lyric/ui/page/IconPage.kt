@@ -247,10 +247,6 @@ fun IconPage(navController: NavController, currentStartDestination: MutableState
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.icon_start_margins),
-                                    titleColor = BasicComponentDefaults.titleColor(
-                                        color = MiuixTheme.colorScheme.primary
-                                    ),
-                                    rightText = stringResource(R.string.tips1),
                                     onClick = {
                                         showIconStartMarginsDialog.value = true
                                     }

@@ -165,8 +165,7 @@ class Config {
         }
     var lyricEndMargins: Int
         get() {
-
-            return config.opt("lyricEnd", if (XposedOwnSP.config.mHyperOSTexture) 20 else 7)
+            return config.opt("lyricEnd", if (XposedOwnSP.config.mHyperOSTexture) 20 else 10)
         }
         set(value) {
             config.put("lyricEnd", value)
