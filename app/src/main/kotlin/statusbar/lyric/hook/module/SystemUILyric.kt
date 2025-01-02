@@ -604,7 +604,7 @@ class SystemUILyric : BaseHook() {
             val isTransientShown = defaultDisplay?.getObjectField("isTransientShown")
             statusbarShowing = isTransientShown?.getObjectField("\$\$delegate_0")?.callMethod("getValue") as Boolean
         }
-        if (isInFullScreenMode) {
+        if (isInFullScreenMode && context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (statusbarShowing && isPlaying) {
                 if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing || isClickHide)) {
                     isHiding = false
