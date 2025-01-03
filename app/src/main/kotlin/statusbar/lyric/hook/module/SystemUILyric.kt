@@ -597,7 +597,7 @@ class SystemUILyric : BaseHook() {
         if (mCentralSurfacesImpl.existField("mIsFullscreen")) {
             isInFullScreenMode = mCentralSurfacesImpl?.getObjectField("mIsFullscreen") as Boolean
             statusbarShowing = mCentralSurfacesImpl?.getObjectField("mTransientShown") as Boolean
-        } else {
+        } else if (defaultDisplay.existField("isInFullscreenMode")) {
             val isInFullscreenMode = defaultDisplay?.getObjectField("isInFullscreenMode")
             isInFullScreenMode = isInFullscreenMode?.getObjectField("\$\$delegate_0")?.callMethod("getValue") as Boolean
 
