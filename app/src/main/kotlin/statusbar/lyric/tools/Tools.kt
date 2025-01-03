@@ -43,7 +43,6 @@ import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.ActivityTools.isHook
 import statusbar.lyric.tools.LogTools.log
-import statusbar.lyric.tools.Tools.existField
 import java.io.DataOutputStream
 import java.util.Objects
 import java.util.regex.Pattern
@@ -247,7 +246,8 @@ object Tools {
     }
 
     fun Any?.existField(fieldName: String): Boolean {
-        return this?.javaClass?.declaredFields?.any { it.name == fieldName } ?: false
+        if (this == null) return false
+        return XposedHelpers.findFieldIfExists(this.javaClass, fieldName) != null
     }
 
     fun Any?.existMethod(methodName: String): Boolean {
