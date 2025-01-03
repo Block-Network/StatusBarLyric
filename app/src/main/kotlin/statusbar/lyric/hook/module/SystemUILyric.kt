@@ -204,7 +204,10 @@ class SystemUILyric : BaseHook() {
                         } else if (colors.size < 2) {
                             setTextColor(colors[0])
                         } else {
-                            val textShader = LinearGradient(0f, 0f, width.toFloat(), 0f, colors.toIntArray(), null, Shader.TileMode.CLAMP)
+                            val textShader = LinearGradient(
+                                0f, 0f, width.toFloat(),
+                                0f, colors.toIntArray(), null, Shader.TileMode.CLAMP
+                            )
                             setLinearGradient(textShader)
                         }
                     }
@@ -225,7 +228,10 @@ class SystemUILyric : BaseHook() {
         LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
             addView(iconView)
             addView(lyricView)
             visibility = View.GONE
@@ -391,7 +397,8 @@ class SystemUILyric : BaseHook() {
                         }
 
                         MotionEvent.ACTION_UP -> {
-                            val isMove = abs(point.y - motionEvent.rawY.toInt()) > 50 || abs(point.x - motionEvent.rawX.toInt()) > 50
+                            val isMove =
+                                abs(point.y - motionEvent.rawY.toInt()) > 50 || abs(point.x - motionEvent.rawX.toInt()) > 50
                             val isLongChick = motionEvent.eventTime - motionEvent.downTime > 500
                             when (isMove) {
                                 true -> {
@@ -511,9 +518,10 @@ class SystemUILyric : BaseHook() {
                 }
             }
 
-            val shouldShowMethod = loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").ifNotNull {
-                it.declaredMethods.firstOrNull { method -> method.name == "shouldShow" }
-            }
+            val shouldShowMethod =
+                loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").ifNotNull {
+                    it.declaredMethods.firstOrNull { method -> method.name == "shouldShow" }
+                }
             if (shouldShowMethod != null) {
                 canHideFocusNotify = true
                 (shouldShowMethod as Method).createHook {
@@ -596,7 +604,7 @@ class SystemUILyric : BaseHook() {
             val isTransientShown = defaultDisplay?.getObjectField("isTransientShown")
             statusbarShowing = isTransientShown?.getObjectField("\$\$delegate_0")?.callMethod("getValue") as Boolean
         }
-        if (isInFullScreenMode) {
+        if (isInFullScreenMode && context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (statusbarShowing && isPlaying) {
                 if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing || isClickHide)) {
                     isHiding = false
@@ -663,12 +671,10 @@ class SystemUILyric : BaseHook() {
                 shouldIgnore = false
             }
         } else {
-            !(focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean
-                    || mCurrentNotifyBean == null || mCurrentNotifyBean.getObjectField("headsUp") as Boolean ||
-                    (TextUtils.equals(
-                        mCurrentNotifyBean.getObjectField("packageName") as CharSequence,
-                        focusedNotify!!.getObjectField("mTopActivityPackageName") as CharSequence
-                    ) && !(focusedNotify!!.getObjectField("mRequestHide") as Boolean)))
+            !(focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean || mCurrentNotifyBean.getObjectField("headsUp") as Boolean || (TextUtils.equals(
+                mCurrentNotifyBean.getObjectField("packageName") as CharSequence,
+                focusedNotify!!.getObjectField("mTopActivityPackageName") as CharSequence
+            ) && !(focusedNotify!!.getObjectField("mRequestHide") as Boolean)))
         }
     }
 
@@ -741,18 +747,10 @@ class SystemUILyric : BaseHook() {
                 val blurRadio = config.mHyperOSTextureRadio
                 val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
                 val blendModes = arrayOf(
-                    intArrayOf(106, Color.parseColor(config.mHyperOSTextureBgColor)), intArrayOf(3, Color.parseColor(config.mHyperOSTextureBgColor))
+                    intArrayOf(106, Color.parseColor(config.mHyperOSTextureBgColor)),
+                    intArrayOf(3, Color.parseColor(config.mHyperOSTextureBgColor))
                 )
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
-            }
-            if (config.lyricWidth == 0) {
-                lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
-            } else {
-                var width = scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins
-                if (width > targetView.width) {
-                    width = targetView.width.toFloat()
-                }
-                lyricView.setMaxLyricViewWidth(width)
             }
             themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
             if (config.titleSwitch) {
@@ -876,9 +874,6 @@ class SystemUILyric : BaseHook() {
                 config.getDefaultIcon(it.packageName)
             }
         }
-        if (config.lyricWidth == 0) {
-            lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
-        }
     }
 
     private fun hideLyric(anim: Boolean = true) {
@@ -906,8 +901,16 @@ class SystemUILyric : BaseHook() {
         config.update()
         goMainThread(delay) {
             lyricView.apply {
-                setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
-                setPadding(config.lyricStartMargins, config.lyricTopMargins, config.lyricEndMargins, config.lyricBottomMargins)
+                setTextSize(
+                    TypedValue.COMPLEX_UNIT_SHIFT,
+                    if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat()
+                )
+                setMargins(
+                    config.lyricStartMargins,
+                    config.lyricTopMargins,
+                    config.lyricEndMargins,
+                    config.lyricBottomMargins
+                )
                 if (config.lyricGradientColor.isEmpty()) {
                     if (config.lyricColor.isEmpty()) {
                         when (config.lyricColorScheme) {
@@ -917,15 +920,6 @@ class SystemUILyric : BaseHook() {
                     } else {
                         setTextColor(Color.parseColor(config.lyricColor))
                     }
-                }
-                if (config.lyricWidth == 0) {
-                    lyricView.setMaxLyricViewWidth(targetView.width.toFloat() - if (config.iconSwitch) config.iconStartMargins.toFloat() + iconView.width else 0f)
-                } else {
-                    var width = scaleWidth().toFloat() + config.lyricEndMargins + config.lyricStartMargins
-                    if (width > targetView.width) {
-                        width = targetView.width.toFloat()
-                    }
-                    lyricView.setMaxLyricViewWidth(width)
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
                 strokeWidth(config.lyricStrokeWidth / 100f)
@@ -942,14 +936,17 @@ class SystemUILyric : BaseHook() {
                             setBackgroundColor(Color.parseColor(config.lyricBackgroundColor))
                         }
                     } else {
-                        config.lyricBackgroundColor.trim().split(",").map { Color.parseColor(it.trim()) }.let { colors ->
-                            val gradientDrawable = GradientDrawable(
-                                GradientDrawable.Orientation.LEFT_RIGHT, colors.toIntArray()
-                            ).apply {
-                                if (config.lyricBackgroundRadius != 0) cornerRadius = config.lyricBackgroundRadius.toFloat()
+                        config.lyricBackgroundColor.trim().split(",").map { Color.parseColor(it.trim()) }
+                            .let { colors ->
+                                val gradientDrawable = GradientDrawable(
+                                    GradientDrawable.Orientation.LEFT_RIGHT, colors.toIntArray()
+                                ).apply {
+                                    if (config.lyricBackgroundRadius != 0) {
+                                        cornerRadius = config.lyricBackgroundRadius.toFloat()
+                                    }
+                                }
+                                background = gradientDrawable
                             }
-                            background = gradientDrawable
-                        }
                     }
                 }
 
@@ -975,7 +972,10 @@ class SystemUILyric : BaseHook() {
                 iconView.showView()
                 iconSwitch = true
                 iconView.apply {
-                    layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                    ).apply {
                         setMargins(config.iconStartMargins, config.iconTopMargins, 0, config.iconBottomMargins)
                         if (config.iconSize == 0) {
                             width = clockView.height / 2

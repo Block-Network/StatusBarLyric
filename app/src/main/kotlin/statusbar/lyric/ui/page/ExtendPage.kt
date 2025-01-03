@@ -1,5 +1,6 @@
 package statusbar.lyric.ui.page
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -63,7 +64,7 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun ExtendPage(navController: NavController) {
+fun ExtendPage(navController: NavController, currentStartDestination: MutableState<String>) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val viewLocationOptions = listOf(
         stringResource(R.string.title_gravity_start),
@@ -125,7 +126,14 @@ fun ExtendPage(navController: NavController) {
                     IconButton(
                         modifier = Modifier.padding(start = 18.dp),
                         onClick = {
-                            navController.popBackStack()
+                            navController.navigate(currentStartDestination.value) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                            navController.popBackStack(currentStartDestination.value, inclusive = false)
                         }
                     ) {
                         Icon(
@@ -141,6 +149,17 @@ fun ExtendPage(navController: NavController) {
         },
         popupHost = { null }
     ) {
+        BackHandler(true) {
+            navController.navigate(currentStartDestination.value) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            navController.popBackStack(currentStartDestination.value, inclusive = false)
+        }
+
         LazyColumn(
             modifier = Modifier
                 .haze(state = hazeState)
@@ -412,8 +431,8 @@ fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.slideStatusBarCutSongsXRadius =
-                        if (value.value.isEmpty() || value.value.toInt() < 50) 50 else value.value.toInt()
+                    if (value.value.isEmpty() || value.value.toInt() < 50) value.value = "50"
+                    config.slideStatusBarCutSongsXRadius = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -458,8 +477,8 @@ fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.slideStatusBarCutSongsYRadius =
-                        if (value.value.isEmpty() || value.value.toInt() < 10) 10 else value.value.toInt()
+                    if (value.value.isEmpty() || value.value.toInt() < 10) value.value = "10"
+                    config.slideStatusBarCutSongsYRadius = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -504,8 +523,8 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.titleDelayDuration =
-                        if (value.value.isEmpty()) 3000 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "3000"
+                    config.titleDelayDuration = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -550,9 +569,8 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
                 onClick = {
                     ActivityTools.colorCheck(
                         value.value,
-                        unit = {
-                            config.lyricColor = it
-                        }, "#000000"
+                        unit = { config.lyricColor = it },
+                        "#000000"
                     )
                     config.titleColorAndTransparency = value.value.ifEmpty { "#000000" }
                     dismissDialog(showDialog)
@@ -599,8 +617,8 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.titleBackgroundRadius =
-                        if (value.value.isEmpty()) 50 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "50"
+                    config.titleBackgroundRadius = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -645,8 +663,8 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.titleBackgroundStrokeWidth =
-                        if (value.value.isEmpty()) 10 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "10"
+                    config.titleBackgroundStrokeWidth = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -691,9 +709,8 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
                 onClick = {
                     ActivityTools.colorCheck(
                         value.value,
-                        unit = {
-                            config.titleBackgroundStrokeColorAndTransparency = it
-                        }, "#FFFFFF"
+                        unit = { config.titleBackgroundStrokeColorAndTransparency = it },
+                        "#FFFFFF"
                     )
                     dismissDialog(showDialog)
                 }

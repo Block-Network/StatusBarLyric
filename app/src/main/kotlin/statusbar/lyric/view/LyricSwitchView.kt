@@ -54,14 +54,10 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         }
     }
 
-    fun setMaxLyricViewWidth(width: Float) {
-        applyToAllViews { it.maxViewWidth(width) }
-    }
-
     fun setWidth(width: Int) {
+        layoutTransition = LayoutTransition()
         applyToAllViews {
-            layoutTransition = LayoutTransition()
-            it.layoutParams.width = width
+            it.width = width
         }
     }
 
@@ -95,6 +91,14 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
 
     fun setTextSize(unit: Int, size: Float) {
         applyToAllViews { it.setTextSize(unit, size) }
+    }
+
+    fun setMargins(start: Int, top: Int, end: Int, bottom: Int) {
+        applyToAllViews {
+            val layoutParams = it.layoutParams as MarginLayoutParams
+            layoutParams.setMargins(start, top, end, bottom)
+            it.layoutParams = layoutParams
+        }
     }
 
     fun setSingleLine(singleLine: Boolean) {

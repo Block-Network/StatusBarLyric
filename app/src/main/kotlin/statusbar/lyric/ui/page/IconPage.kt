@@ -1,5 +1,6 @@
 package statusbar.lyric.ui.page
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,14 +34,11 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
-import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
-import statusbar.lyric.tools.ActivityTools.showToastOnLooper
 import statusbar.lyric.tools.AnimTools
-import statusbar.lyric.tools.LogTools.log
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -65,7 +63,7 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun IconPage(navController: NavController) {
+fun IconPage(navController: NavController, currentStartDestination: MutableState<String>) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val iconSwitch = remember { mutableStateOf(config.iconSwitch) }
     val forceTheIconToBeDisplayed = remember { mutableStateOf(config.forceTheIconToBeDisplayed) }
@@ -102,7 +100,14 @@ fun IconPage(navController: NavController) {
                     IconButton(
                         modifier = Modifier.padding(start = 18.dp),
                         onClick = {
-                            navController.popBackStack()
+                            navController.navigate(currentStartDestination.value) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                            navController.popBackStack(currentStartDestination.value, inclusive = false)
                         }
                     ) {
                         Icon(
@@ -118,6 +123,17 @@ fun IconPage(navController: NavController) {
         },
         popupHost = { null }
     ) {
+        BackHandler(true) {
+            navController.navigate(currentStartDestination.value) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            navController.popBackStack(currentStartDestination.value, inclusive = false)
+        }
+
         LazyColumn(
             modifier = Modifier
                 .haze(state = hazeState)
@@ -231,10 +247,6 @@ fun IconPage(navController: NavController) {
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.icon_start_margins),
-                                    titleColor = BasicComponentDefaults.titleColor(
-                                        color = MiuixTheme.colorScheme.primary
-                                    ),
-                                    rightText = stringResource(R.string.tips1),
                                     onClick = {
                                         showIconStartMarginsDialog.value = true
                                     }
@@ -488,7 +500,8 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.iconTopMargins = if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.iconTopMargins = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -534,8 +547,8 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.iconBottomMargins =
-                        if (value.value.isNotEmpty()) value.value.toInt() else 0
+                    if (value.value.isEmpty()) value.value = "0"
+                    config.iconBottomMargins = value.value.toInt()
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -629,7 +642,8 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.changeAllIcons = value.value.ifEmpty { "" }
+                    if (value.value.isEmpty()) value.value = ""
+                    config.changeAllIcons = value.value
                     dismissDialog(showDialog)
                     changeConfig()
                 }

@@ -71,12 +71,13 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
     }
 
     override fun onDraw(canvas: Canvas) {
+        viewWidth = width.toFloat()
         val y = (height - (paint.descent() + paint.ascent())) / 2
         text?.let { canvas.drawText(it.toString(), currentX, y, paint) }
     }
 
     private fun updateScrollPosition() {
-        val realTextLength = textLength + config.lyricStartMargins + config.lyricEndMargins
+        val realTextLength = textLength
         val realLyricWidth = viewWidth
         if (realTextLength <= realLyricWidth) {
             currentX = 0f
@@ -114,9 +115,5 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
 
     fun setScrollSpeed(speed: Float) {
         this.scrollSpeed = speed
-    }
-
-    fun maxViewWidth(float: Float) {
-        viewWidth = float
     }
 }

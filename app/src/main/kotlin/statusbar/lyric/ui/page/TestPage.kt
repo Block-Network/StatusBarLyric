@@ -1,5 +1,6 @@
 package statusbar.lyric.ui.page
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -54,7 +56,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun TestPage(navController: NavController) {
+fun TestPage(navController: NavController, currentStartDestination: MutableState<String>) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
     val testMode = remember { mutableStateOf(config.testMode) }
@@ -84,7 +86,14 @@ fun TestPage(navController: NavController) {
                     IconButton(
                         modifier = Modifier.padding(start = 18.dp),
                         onClick = {
-                            navController.popBackStack()
+                            navController.navigate(currentStartDestination.value) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                            navController.popBackStack(currentStartDestination.value, inclusive = false)
                         }
                     ) {
                         Icon(
@@ -100,6 +109,17 @@ fun TestPage(navController: NavController) {
         },
         popupHost = { null }
     ) {
+        BackHandler(true) {
+            navController.navigate(currentStartDestination.value) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            navController.popBackStack(currentStartDestination.value, inclusive = false)
+        }
+
         LazyColumn(
             modifier = Modifier
                 .haze(state = hazeState)

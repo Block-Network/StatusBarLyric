@@ -1,6 +1,7 @@
 package statusbar.lyric.ui.page
 
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -61,7 +62,7 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun SystemSpecialPage(navController: NavController) {
+fun SystemSpecialPage(navController: NavController, currentStartDestination: MutableState<String>) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val mMiuiHideNetworkSpeed = remember { mutableStateOf(config.mMiuiHideNetworkSpeed) }
     val mMiuiPadOptimize = remember { mutableStateOf(config.mMiuiPadOptimize) }
@@ -97,7 +98,14 @@ fun SystemSpecialPage(navController: NavController) {
                     IconButton(
                         modifier = Modifier.padding(start = 18.dp),
                         onClick = {
-                            navController.popBackStack()
+                            navController.navigate(currentStartDestination.value) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                            navController.popBackStack(currentStartDestination.value, inclusive = false)
                         }
                     ) {
                         Icon(
@@ -113,6 +121,17 @@ fun SystemSpecialPage(navController: NavController) {
         },
         popupHost = { null }
     ) {
+        BackHandler(true) {
+            navController.navigate(currentStartDestination.value) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            navController.popBackStack(currentStartDestination.value, inclusive = false)
+        }
+
         LazyColumn(
             modifier = Modifier
                 .haze(state = hazeState)
@@ -279,8 +298,8 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.mHyperOSTextureRadio =
-                        if (value.value.isEmpty()) 25 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "25"
+                    config.mHyperOSTextureRadio = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
@@ -326,8 +345,8 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.mHyperOSTextureCorner =
-                        if (value.value.isEmpty()) 25 else value.value.toInt()
+                    if (value.value.isEmpty()) value.value = "25"
+                    config.mHyperOSTextureCorner = value.value.toInt()
                     dismissDialog(showDialog)
                 }
             )
