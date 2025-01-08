@@ -101,15 +101,15 @@ class SystemUITest : BaseHook() {
                             view.filterView {
                                 val parentView = (view.parent as LinearLayout)
                                 val data = if (dataHashMap.size == 0) {
-                                    Data(className, view.id, parentView::class.java.name, parentView.id, false, 0, view.textSize)
+                                    Data(className, view.id, parentView::class.java.name, parentView.id, false, 0, view.textSize,context.resources.getResourceEntryName(view.id))
                                 } else {
                                     var index = 0
                                     dataHashMap.values.forEach { data ->
-                                        if (data.textViewClassName == className && data.textViewId == view.id && data.parentViewClassName == parentView::class.java.name && data.parentViewId == parentView.id && data.textSize == view.textSize) {
+                                        if (data.textViewClassName == className && data.textViewId == view.id && data.parentViewClassName == parentView::class.java.name && data.parentViewId == parentView.id && data.textSize == view.textSize && data.idname == context.resources.getResourceEntryName(view.id) ) {
                                             index += 1
                                         }
                                     }
-                                    Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index, view.textSize)
+                                    Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index, view.textSize,context.resources.getResourceEntryName(view.id))
                                 }
                                 dataHashMap[view] = data
                                 moduleRes.getString(R.string.first_filter).format(data, dataHashMap.size).log()

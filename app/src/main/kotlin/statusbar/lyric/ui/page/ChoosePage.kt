@@ -119,7 +119,7 @@ fun ChoosePage(navController: NavController) {
                         ) {
                             SuperArrow(
                                 title = "${data.textViewClassName} ${data.textViewId}",
-                                summary = "${data.parentViewClassName} ${data.parentViewId} textSize:${data.textSize}",
+                                summary = "${data.parentViewClassName} ${data.parentViewId} textSize:${data.textSize} idname:${data.idname}",
                                 onClick = {
                                     context.showView(data)
                                     showDialog.value = true
