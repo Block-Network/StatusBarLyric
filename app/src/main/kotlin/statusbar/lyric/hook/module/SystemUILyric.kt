@@ -951,7 +951,7 @@ class SystemUILyric : BaseHook() {
                 }
 
                 val animation = config.lyricAnimation
-                isRandomAnima = animation == 9
+                isRandomAnima = animation == 11
                 if (!isRandomAnima) {
                     val interpolator = config.lyricInterpolator
                     val duration = config.animationDuration

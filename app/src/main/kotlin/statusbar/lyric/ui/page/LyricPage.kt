@@ -78,6 +78,8 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
         stringResource(R.string.lyrics_animation_scale_x_y),
         stringResource(R.string.lyrics_animation_scale_x),
         stringResource(R.string.lyrics_animation_scale_y),
+        stringResource(R.string.lyrics_animation_horizontalflip),
+        stringResource(R.string.lyrics_animation_verticalflip),
         stringResource(R.string.lyrics_animation_random),
     )
     val lyricAnimSelectedOption = remember { mutableIntStateOf(config.lyricAnimation) }
