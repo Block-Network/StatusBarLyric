@@ -173,6 +173,7 @@ class SystemUILyric : BaseHook() {
     private var isOS1FocusNotifyShowing = false // OS1 不要支持隐藏焦点通知
     val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
 
+    @Deprecated(message = "Not Need.")
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
         if (oldValue == 0) return@observableChange
         "onConfigurationChanged".log()
@@ -752,7 +753,7 @@ class SystemUILyric : BaseHook() {
                 )
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
-            themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
+            // themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
             if (config.titleSwitch) {
                 object : SystemMediaSessionListener(context) {
                     override fun onTitleChanged(caller: String, title: String) {
@@ -1053,7 +1054,7 @@ class SystemUILyric : BaseHook() {
                     after { hookParam ->
                         "onConfigurationChanged".log()
                         val newConfig = hookParam.args[0] as Configuration
-                        themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                        // themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE || newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
                             changeLyricStateIfInFullScreenMode()
                         }
