@@ -103,6 +103,7 @@
     <string name="hide_notification_icon">Automatically hide notification icons</string>
     <string name="limit_visibility_change">Limit Visibility Change</string>
     <string name="limit_visibility_change_tips">It can prevent the characteristics of some systems from causing time to appear</string>
+    <string name="timeout_restore">Timeout closure status bar lyrics</string>
     <string name="hide_lyric_when_lock_screen">Hide Lyric When Lock Screen</string>
     <string name="choose_page_tips">It is recommended to close other modules that modify the layout of the status bar first, and then come to this page to select Hook Points\nEffective Hook Point Selection: The status bar displays the module name, and the time is hidden</string>
     <string name="hide_carrier">Hide Carrier</string>
