@@ -103,6 +103,7 @@
     <string name="hide_notification_icon">自動で通知アイコンを隠す</string>
     <string name="limit_visibility_change">可視性の変更を制限</string>
     <string name="limit_visibility_change_tips">一部のシステムの特性で時計が表示される問題は防ぐことができます</string>
+    <string name="timeout_restore">タイムアウト時にステータスバーを閉じる歌詞</string>
     <string name="hide_lyric_when_lock_screen">ロック画面で歌詞を隠す</string>
     <string name="choose_page_tips">ステータスバーのレイアウトを変更する他のモジュールを先に閉じた後に、このページでフックポイントを選択することを推奨します。\n効果的なフックポイントの選択: ステータスバーにはモジュール名が表示され、時間は非表示になります。</string>
     <string name="hide_carrier">キャリアを隠す</string>

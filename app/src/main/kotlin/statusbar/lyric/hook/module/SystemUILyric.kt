@@ -611,10 +611,12 @@ class SystemUILyric : BaseHook() {
                     isHiding = false
                     hideFocusNotifyIfNeed()
                 }
+                "statusBar state is showing.".log()
             } else if (!statusbarShowing) {
                 isHiding = true
                 hideLyric()
                 showFocusNotifyIfNeed()
+                "statusBar state is hiding".log()
             }
         } else {
             if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing || isClickHide)) {
@@ -622,7 +624,6 @@ class SystemUILyric : BaseHook() {
                 hideFocusNotifyIfNeed()
             }
         }
-        "statusBar state is ${if (statusbarShowing) "show" else "hide"}".log()
     }
 
     private fun autoHideStatusBarInFullScreenModeIfNeed() {
@@ -699,6 +700,19 @@ class SystemUILyric : BaseHook() {
     val TITLE_SHOW_READY: Int = 0
     val TITLE_SHOW_WAITING: Int = 1
     val TITLE_SHOWING: Int = 2
+    val TIMEOUT_RESTORE: Int = 3
+    val timeoutRestoreHandler: Handler by lazy {
+        object : Handler(Looper.getMainLooper()) {
+            override fun handleMessage(msg: Message) {
+                if (msg.what == TIMEOUT_RESTORE && isPlaying && config.timeoutRestore) {
+                    hideLyric()
+                    playingApp = ""
+                    lastLyric = ""
+                    "timeout restore!!".log()
+                }
+            }
+        }
+    }
     val titleShowHandler: Handler by lazy {
         object : Handler(Looper.getMainLooper()) {
             var titleData: TitleData = TitleData("", "")
@@ -776,7 +790,12 @@ class SystemUILyric : BaseHook() {
                 lastLyric = lyric
                 playingApp = lyricData.extraData.packageName
                 changeLyricStateIfInFullScreenMode()
+
                 if (isHiding) return
+                if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
+                    timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
+                    timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
+                } else timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
                 hideFocusNotifyIfNeed()
                 changeIcon(lyricData.extraData)
                 changeLyric(lastLyric, lyricData.extraData.delay)
@@ -794,6 +813,9 @@ class SystemUILyric : BaseHook() {
                 lastLyric = ""
                 hideLyric()
                 showFocusNotifyIfNeed()
+                if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
+                    timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
+                }
             }
         })
         registerLyricListener(context, BuildConfig.API_VERSION, lyricReceiver)
