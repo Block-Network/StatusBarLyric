@@ -90,7 +90,7 @@ import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.ifNotNull
 import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isLandscape
-import statusbar.lyric.tools.Tools.isMiui
+import statusbar.lyric.tools.Tools.isXiaoMi
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isNull
@@ -263,7 +263,7 @@ class SystemUILyric : BaseHook() {
                         }
                         canLoad = false
                         lyricInit()
-                        if (!togglePrompts) hook.unhook()
+                        // if (!togglePrompts) hook.unhook()
                     }
                 }
             }
@@ -1027,7 +1027,7 @@ class SystemUILyric : BaseHook() {
 
     inner class SystemUISpecial {
         init {
-            if (isMiui) {
+            if (isXiaoMi) {
                 for (i in 0..10) {
                     val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$$i")
                     if (clazz.isNotNull()) {
@@ -1047,33 +1047,32 @@ class SystemUILyric : BaseHook() {
                 }
             }
 
-            if (togglePrompts) {
-                loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
-                    clazz.methodFinder().filterByName("onConfigurationChanged").first().createHook {
-                        after { hookParam ->
-                            "onConfigurationChanged".log()
-                            val newConfig = hookParam.args[0] as Configuration
-                            themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
-                            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE || newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                                changeLyricStateIfInFullScreenMode()
-                            }
+            // if (togglePrompts) {
+            loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
+                clazz.methodFinder().filterByName("onConfigurationChanged").first().createHook {
+                    after { hookParam ->
+                        "onConfigurationChanged".log()
+                        val newConfig = hookParam.args[0] as Configuration
+                        themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE || newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            changeLyricStateIfInFullScreenMode()
                         }
                     }
-                    if (isMiui && config.mMiuiPadOptimize) {
-                        clazz.methodFinder().filterByName("onCreate").first().createHook {
-                            after {
-                                if (isPad) {
-                                    loadClassOrNull("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment").isNotNull {
-                                        if (it.existMethod("initMiuiViewsOnViewCreated")) {
-                                            it.methodFinder().filterByName("initMiuiViewsOnViewCreated").first()
-                                        } else {
-                                            it.methodFinder().filterByName("onViewCreated").first()
-                                        }.let { method ->
-                                            method.createHook {
-                                                after { hookParam ->
-                                                    hookParam.thisObject.objectHelper {
-                                                        mPadClockView = this.getObjectOrNullAs<View>("mPadClockView")!!
-                                                    }
+                }
+                if (isXiaoMi && config.mMiuiPadOptimize) {
+                    clazz.methodFinder().filterByName("onCreate").first().createHook {
+                        after {
+                            if (isPad) {
+                                loadClassOrNull("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment").isNotNull {
+                                    if (it.existMethod("initMiuiViewsOnViewCreated")) {
+                                        it.methodFinder().filterByName("initMiuiViewsOnViewCreated").first()
+                                    } else {
+                                        it.methodFinder().filterByName("onViewCreated").first()
+                                    }.let { method ->
+                                        method.createHook {
+                                            after { hookParam ->
+                                                hookParam.thisObject.objectHelper {
+                                                    mPadClockView = this.getObjectOrNullAs<View>("mPadClockView")!!
                                                 }
                                             }
                                         }
@@ -1084,8 +1083,9 @@ class SystemUILyric : BaseHook() {
                     }
                 }
             }
+            // }
 
-            if (isMiui && config.mMiuiHideNetworkSpeed) {
+            if (isXiaoMi && config.mMiuiHideNetworkSpeed) {
                 moduleRes.getString(R.string.miui_hide_network_speed).log()
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
                     it.constructorFinder().first().createHook {

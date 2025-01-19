@@ -54,7 +54,7 @@ object Tools {
 
     private var index: Int = 0
 
-    val isMiui by lazy { isPresent("android.provider.MiuiSettings") }
+    val isXiaoMi by lazy { isPresent("android.provider.MiuiSettings") }
 
     val isPad by lazy { getSystemProperties("ro.build.characteristics") == "tablet" }
 
@@ -70,7 +70,7 @@ object Tools {
     val getPhoneName by lazy {
         val marketName = getSystemProperties("ro.product.marketname")
         val vivomarketName = getSystemProperties("ro.vivo.market.name")
-        if (bigtextone(Build.BRAND) =="Vivo" ){
+        if (bigtextone(Build.BRAND) == "Vivo") {
             bigtextone(vivomarketName)
         } else {
             if (marketName.isNotEmpty()) bigtextone(marketName) else bigtextone(Build.BRAND) + " " + Build.MODEL
@@ -87,11 +87,12 @@ object Tools {
     fun dp2px(context: Context, dpValue: Float): Int =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 
+    @Deprecated(message = "")
     val togglePrompts: Boolean
         get() {
             arrayOf("com.lge.adaptive.JavaImageUtil").forEach {
                 if (isPresent(it)) return true
-                if (isMiui) return true
+                if (isXiaoMi) return true
             }
             return false
         }
