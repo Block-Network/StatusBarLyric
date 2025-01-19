@@ -261,6 +261,13 @@ class Config {
         set(value) {
             config.put("limitVisibilityChange", value)
         }
+    var timeoutRestore: Boolean
+        get() {
+            return config.opt("timeoutRestore", true)
+        }
+        set(value) {
+            config.put("timeoutRestore", value)
+        }
     var longClickStatusBarStop: Boolean
         get() {
             return config.opt("longClickStatusBarStop", false)

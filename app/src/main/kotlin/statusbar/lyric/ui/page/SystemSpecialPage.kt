@@ -68,7 +68,7 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
     val mMiuiPadOptimize = remember { mutableStateOf(config.mMiuiPadOptimize) }
     val hideCarrier = remember { mutableStateOf(config.hideCarrier) }
     val mHyperOSTexture = remember { mutableStateOf(config.mHyperOSTexture) }
-    val mHideFocusedNotice = remember { mutableStateOf(config.automateFocusedNotice) }
+    val mAutomateFocusedNotice = remember { mutableStateOf(config.automateFocusedNotice) }
     val showDialog = remember { mutableStateOf(false) }
     val showRadioDialog = remember { mutableStateOf(false) }
     val showCornerDialog = remember { mutableStateOf(false) }
@@ -192,9 +192,9 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
                     ) {
                         SuperSwitch(
                             title = stringResource(R.string.automate_focused_notice),
-                            checked = mHideFocusedNotice.value,
+                            checked = mAutomateFocusedNotice.value,
                             onCheckedChange = {
-                                mHideFocusedNotice.value = it
+                                mAutomateFocusedNotice.value = it
                                 config.automateFocusedNotice = it
                             }
                         )

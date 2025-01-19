@@ -84,6 +84,7 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
     val clickStatusBarToHideLyric = remember { mutableStateOf(config.clickStatusBarToHideLyric) }
     val slideStatusBarCutSongs = remember { mutableStateOf(config.slideStatusBarCutSongs) }
     val limitVisibilityChange = remember { mutableStateOf(config.limitVisibilityChange) }
+    val timeoutRestore = remember { mutableStateOf(config.timeoutRestore) }
     val dynamicLyricSpeed = remember { mutableStateOf(config.dynamicLyricSpeed) }
     val titleSwitch = remember { mutableStateOf(config.titleSwitch) }
     val titleShowWithSameLyric = remember { mutableStateOf(config.titleShowWithSameLyric) }
@@ -278,6 +279,14 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                             onCheckedChange = {
                                 limitVisibilityChange.value = it
                                 config.limitVisibilityChange = it
+                            }
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.timeout_restore),
+                            checked = timeoutRestore.value,
+                            onCheckedChange = {
+                                timeoutRestore.value = it
+                                config.timeoutRestore = it
                             }
                         )
                         SuperSwitch(
