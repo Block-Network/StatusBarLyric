@@ -158,4 +158,8 @@
     <string name="automate_focused_notice">Automate focus notifications</string>
     <string name="lyrics_animation_horizontalflip">Horizontal Flip</string>
     <string name="lyrics_animation_verticalflip">Vertical Flip</string>
+    <string name="version_code">Version Code:</string>
+    <string name="buildtime">Build Time:</string>
+    <string name="currentdevice">Current Device:</string>
+    <string name="info">Info</string>
 </resources>
