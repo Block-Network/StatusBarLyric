@@ -225,7 +225,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                     )
                 }
                 SmallTitle(
-                    text = "Info",
+                    text =  stringResource(R.string.info),
                     modifier = Modifier.padding(top = 6.dp)
                 )
                 Card(
@@ -240,7 +240,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                                 BuildConfig.BUILD_TIME
                             )
                         Text(
-                            text = "Version Code:",
+                            text = stringResource(R.string.version_code),
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                         )
                         Text(
@@ -249,7 +249,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
                         Text(
-                            text = "Build Time:",
+                            text = stringResource(R.string.buildtime),
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                         )
                         Text(
@@ -258,7 +258,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
                         Text(
-                            text = "Current Device:",
+                            text = stringResource(R.string.currentdevice),
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                         )
                         Text(
