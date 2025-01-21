@@ -176,7 +176,7 @@ class SystemUILyric : BaseHook() {
     @Deprecated(message = "Not Need.")
     private var themeMode: Int by observableChange(0) { oldValue, _ ->
         if (oldValue == 0) return@observableChange
-        "onConfigurationChanged".log()
+        "on theme mode changed".log()
         canLoad = true
         hideLyric()
     }
@@ -1078,7 +1078,8 @@ class SystemUILyric : BaseHook() {
                         val newConfig = hookParam.args[0] as Configuration
                         // themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE || newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            changeLyricStateIfInFullScreenMode()
+                            if (isReally)
+                                changeLyricStateIfInFullScreenMode()
                         }
                     }
                 }

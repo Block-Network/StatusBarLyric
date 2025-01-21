@@ -32,7 +32,11 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
                     initHooks(SystemUITest())
                 } else {
                     moduleRes.getString(R.string.lyric_mode).log()
-                    initHooks(SystemUILyric())
+                    try {
+                        initHooks(SystemUILyric())
+                    } catch (t: Throwable) {
+                        t.log()
+                    }
                 }
             }
 
