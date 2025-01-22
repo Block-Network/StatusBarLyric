@@ -33,8 +33,8 @@ import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
@@ -119,7 +119,7 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
             TopAppBar(
                 color = Color.Transparent,
                 modifier = Modifier
-                    .hazeChild(hazeState) {
+                    .hazeEffect(hazeState) {
                         style = hazeStyle
                         blurRadius = 25.dp
                         noiseFactor = 0f
@@ -168,7 +168,7 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
 
         LazyColumn(
             modifier = Modifier
-                .haze(state = hazeState)
+                .hazeSource(state = hazeState)
                 .height(getWindowSize().height.dp)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),

@@ -76,10 +76,8 @@ import statusbar.lyric.tools.BlurTools.setBackgroundBlur
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.LyricViewTools.hideView
-import statusbar.lyric.tools.LyricViewTools.iconColorAnima
 import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
-import statusbar.lyric.tools.LyricViewTools.textColorAnima
 import statusbar.lyric.tools.SystemMediaSessionListener
 import statusbar.lyric.tools.Tools.callMethod
 import statusbar.lyric.tools.Tools.existField
@@ -90,16 +88,15 @@ import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.ifNotNull
 import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isLandscape
-import statusbar.lyric.tools.Tools.isXiaoMi
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isNull
 import statusbar.lyric.tools.Tools.isPad
 import statusbar.lyric.tools.Tools.isTargetView
+import statusbar.lyric.tools.Tools.isXiaomi
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.setObjectField
 import statusbar.lyric.tools.Tools.shell
-import statusbar.lyric.tools.Tools.togglePrompts
 import statusbar.lyric.view.LyricSwitchView
 import statusbar.lyric.view.TitleDialog
 import java.io.File
@@ -116,16 +113,10 @@ class SystemUILyric : BaseHook() {
     private var lastColor: Int by observableChange(Color.WHITE) { oldValue, newValue ->
         goMainThread {
             if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) {
-                when (config.lyricColorScheme) {
-                    0 -> lyricView.setTextColor(newValue)
-                    1 -> lyricView.textColorAnima(newValue)
-                }
+                lyricView.setTextColor(newValue)
             }
             if (config.iconColor.isEmpty()) {
-                when (config.lyricColorScheme) {
-                    0 -> iconView.setColorFilter(newValue, PorterDuff.Mode.SRC_IN)
-                    1 -> iconView.iconColorAnima(oldValue, newValue)
-                }
+                iconView.setColorFilter(newValue, PorterDuff.Mode.SRC_IN)
             }
         }
         "Change Color".log()
@@ -173,13 +164,6 @@ class SystemUILyric : BaseHook() {
     private var isOS1FocusNotifyShowing = false // OS1 不要支持隐藏焦点通知
     val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
 
-    @Deprecated(message = "Not Need.")
-    private var themeMode: Int by observableChange(0) { oldValue, _ ->
-        if (oldValue == 0) return@observableChange
-        "on theme mode changed".log()
-        canLoad = true
-        hideLyric()
-    }
     private var theoreticalWidth: Int = 0
     private lateinit var point: Point
 
@@ -304,32 +288,17 @@ class SystemUILyric : BaseHook() {
                 }
             }
         }
-        "${moduleRes.getString(R.string.lyric_color_scheme)}:${config.lyricColorScheme}".log()
-        when (config.lyricColorScheme) {
-            0 -> {
-                loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
-                    it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
-                        after { hookParam ->
-                            if (!isPlaying) return@after
-                            val mIconTint = hookParam.thisObject.objectHelper().getObjectOrNullAs<Int>("mIconTint")
-                            lastColor = mIconTint ?: Color.BLACK
-                        }
-                    }
-                }
-            }
 
-            1 -> {
-                loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconAreaController").isNotNull {
-                    it.methodFinder().filterByName("onDarkChanged").first().createHook {
-                        after { hookParam ->
-                            if (!isPlaying) return@after
-                            val isDark = (hookParam.args[1] as Float) == 1f
-                            lastColor = if (isDark) Color.BLACK else Color.WHITE
-                        }
-                    }
+        loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
+            it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
+                after { hookParam ->
+                    if (!isPlaying) return@after
+                    val mIconTint = hookParam.thisObject.objectHelper().getObjectOrNullAs<Int>("mIconTint")
+                    lastColor = mIconTint ?: Color.BLACK
                 }
             }
         }
+
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.hide_notification_icon).log()
             fun HookFactory.hideNoticeIcon(scheme: Int) {
@@ -936,10 +905,7 @@ class SystemUILyric : BaseHook() {
                 )
                 if (config.lyricGradientColor.isEmpty()) {
                     if (config.lyricColor.isEmpty()) {
-                        when (config.lyricColorScheme) {
-                            0 -> setTextColor(clockView.currentTextColor)
-                            1 -> textColorAnima(clockView.currentTextColor)
-                        }
+                        setTextColor(clockView.currentTextColor)
                     } else {
                         setTextColor(Color.parseColor(config.lyricColor))
                     }
@@ -1009,15 +975,9 @@ class SystemUILyric : BaseHook() {
                         }
                     }
                     if (config.iconColor.isEmpty()) {
-                        when (config.lyricColorScheme) {
-                            0 -> setColorFilter(clockView.currentTextColor, PorterDuff.Mode.SRC_IN)
-                            1 -> iconColorAnima(lastColor, clockView.currentTextColor)
-                        }
+                        setColorFilter(clockView.currentTextColor, PorterDuff.Mode.SRC_IN)
                     } else {
-                        when (config.lyricColorScheme) {
-                            0 -> setColorFilter(Color.parseColor(config.iconColor), PorterDuff.Mode.SRC_IN)
-                            1 -> iconColorAnima(lastColor, Color.parseColor(config.iconColor))
-                        }
+                        setColorFilter(Color.parseColor(config.iconColor), PorterDuff.Mode.SRC_IN)
                     }
                     if (config.iconBgColor.isEmpty()) {
                         setBackgroundColor(Color.TRANSPARENT)
@@ -1050,7 +1010,7 @@ class SystemUILyric : BaseHook() {
 
     inner class SystemUISpecial {
         init {
-            if (isXiaoMi) {
+            if (isXiaomi) {
                 for (i in 0..10) {
                     val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$$i")
                     if (clazz.isNotNull()) {
@@ -1083,7 +1043,7 @@ class SystemUILyric : BaseHook() {
                         }
                     }
                 }
-                if (isXiaoMi && config.mMiuiPadOptimize) {
+                if (isXiaomi && config.mMiuiPadOptimize) {
                     clazz.methodFinder().filterByName("onCreate").first().createHook {
                         after {
                             if (isPad) {
@@ -1109,7 +1069,7 @@ class SystemUILyric : BaseHook() {
             }
             // }
 
-            if (isXiaoMi && config.mMiuiHideNetworkSpeed) {
+            if (isXiaomi && config.mMiuiHideNetworkSpeed) {
                 moduleRes.getString(R.string.miui_hide_network_speed).log()
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
                     it.constructorFinder().first().createHook {

@@ -155,4 +155,10 @@
     <string name="clear_config_tips">設定を消去してもよろしいですか？</string>
     <string name="view_location">歌詞の場所を追加</string>
     <string name="automate_focused_notice">フォーカス通知の自動処理</string>
+    <string name="lyrics_animation_horizontalflip">水平フリップ</string>
+    <string name="lyrics_animation_verticalflip">垂直フリップ</string>
+    <string name="version_code">バージョン番号</string>
+    <string name="buildtime">コンパイル時</string>
+    <string name="currentdevice">現在のデバイス</string>
+    <string name="info">情報</string>
 </resources>

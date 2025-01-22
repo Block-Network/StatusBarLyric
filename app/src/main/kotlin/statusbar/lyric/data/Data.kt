@@ -11,7 +11,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     var isRepeat: Boolean = false
     var index: Int = 0
     var textSize: Float = 0f
-    var idname: String = ""
+    var idName: String = ""
     override fun describeContents(): Int {
         return 0
     }
@@ -25,7 +25,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         isRepeat: Boolean,
         index: Int,
         size: Float,
-        idname:String
+        idName: String
     ) : this() {
         this.textViewClassName = textViewClassName
         this.textViewId = textViewId
@@ -34,7 +34,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         this.isRepeat = isRepeat
         this.index = index
         this.textSize = size
-        this.idname = idname
+        this.idName = idName
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -46,7 +46,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
             writeInt(if (isRepeat) 1 else 0)
             writeInt(index)
             writeFloat(textSize)
-            writeString(idname)
+            writeString(idName)
         }
     }
 
@@ -58,7 +58,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         isRepeat = parcel.readInt() == 1
         index = parcel.readInt()
         textSize = parcel.readFloat()
-        idname = parcel.readString().toString()
+        idName = parcel.readString().toString()
     }
 
     companion object CREATOR : Parcelable.Creator<Data> {
@@ -72,6 +72,6 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     }
 
     override fun toString(): String {
-        return "Data(textViewClassName='$textViewClassName', textViewId=$textViewId, parentViewClassName='$parentViewClassName', parentViewId=$parentViewId, isRepeat=$isRepeat, index=$index, textSize=$textSize idname=$idname)"
+        return "Data(textViewClassName='$textViewClassName', textViewId=$textViewId, parentViewClassName='$parentViewClassName', parentViewId=$parentViewId, isRepeat=$isRepeat, index=$index, textSize=$textSize idName=$idName)"
     }
 }

@@ -155,10 +155,10 @@
     <string name="clear_config_tips">确定要重置配置吗？</string>
     <string name="view_location">歌词添加位置</string>
     <string name="automate_focused_notice">自动处理焦点通知</string>
-    <string name="lyrics_animation_horizontalflip">"水平翻转"</string>
+    <string name="lyrics_animation_horizontalflip">水平翻转</string>
     <string name="lyrics_animation_verticalflip">垂直翻转</string>
-    <string name="version_code">版本号 ：</string>
-    <string name="buildtime">编译时间 ：</string>
-    <string name="currentdevice">当前设备 ：</string>
+    <string name="version_code">版本号</string>
+    <string name="buildtime">编译时间</string>
+    <string name="currentdevice">当前设备</string>
     <string name="info">信息</string>
 </resources>

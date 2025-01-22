@@ -13,6 +13,8 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.config.ActivityOwnSP.updateConfigVer
@@ -24,10 +26,12 @@ import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.ConfigTools
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.LogTools.log
-import statusbar.lyric.tools.Tools.isNotNull
 
 class MainActivity : ComponentActivity() {
     private val appTestReceiver by lazy { AppTestReceiver() }
+    lateinit var createDocumentLauncher: ActivityResultLauncher<Intent>
+    lateinit var openDocumentLauncher: ActivityResultLauncher<Intent>
+
 
     companion object {
         @SuppressLint("StaticFieldLeak")
@@ -41,12 +45,29 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        context = this
         enableEdgeToEdge()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            window.isNavigationBarContrastEnforced = false
+
+        createDocumentLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                BackupTools.handleCreateDocument(this, result.data!!.data)
+            }
         }
 
-        context = this
+        openDocumentLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK && result.data != null) {
+                BackupTools.handleReadDocument(this, result.data!!.data)
+                Thread {
+                    Thread.sleep(500)
+                    ActivityTools.restartApp()
+                }.start()
+            }
+        }
+
         isLoad = isHook()
         init()
 
@@ -59,7 +80,6 @@ class MainActivity : ComponentActivity() {
         unregisterReceiver(appTestReceiver)
         super.onDestroy()
     }
-
 
     private fun init() {
         ConfigTools(ActivityOwnSP.ownSP)
@@ -80,7 +100,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     inner class AppTestReceiver : BroadcastReceiver() {
         @Suppress("DEPRECATION", "UNCHECKED_CAST")
         override fun onReceive(context: Context, intent: Intent) {
@@ -90,8 +109,8 @@ class MainActivity : ComponentActivity() {
                         intent.getSerializableExtra("DataList", ArrayList<Data>()::class.java)
                     } else {
                         intent.getSerializableExtra("DataList") as ArrayList<Data>
-                    }!!
-                    if (dataList.size == 0) {
+                    } ?: arrayListOf()
+                    if (dataList.isEmpty()) {
                         "DataList is empty".log()
                         Toast.makeText(context, context.getString(R.string.not_found_hook), Toast.LENGTH_SHORT).show()
                         testReceiver = false
@@ -105,37 +124,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun registerReceiver() {
+        val filter = IntentFilter("AppTestReceiver")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(
-                appTestReceiver,
-                IntentFilter("AppTestReceiver"),
-                Context.RECEIVER_EXPORTED
-            )
+            context.registerReceiver(appTestReceiver, filter, RECEIVER_EXPORTED)
         } else {
             @Suppress("UnspecifiedRegisterReceiverFlag")
-            context.registerReceiver(
-                appTestReceiver,
-                IntentFilter("AppTestReceiver")
-            )
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (data.isNotNull() && resultCode == RESULT_OK) {
-            when (requestCode) {
-                BackupTools.CREATE_DOCUMENT_CODE -> {
-                    BackupTools.handleCreateDocument(this, data!!.data)
-                }
-
-                BackupTools.OPEN_DOCUMENT_CODE -> {
-                    BackupTools.handleReadDocument(this, data!!.data)
-                    Thread {
-                        Thread.sleep(500)
-                        ActivityTools.restartApp()
-                    }.start()
-                }
-            }
+            context.registerReceiver(appTestReceiver, filter)
         }
     }
 }

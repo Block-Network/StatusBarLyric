@@ -155,4 +155,10 @@
     <string name="clear_config_tips">確定要重設配置嗎？</string>
     <string name="view_location">歌詞添加位置</string>
     <string name="automate_focused_notice">自動處理焦點通知</string>
+    <string name="lyrics_animation_horizontalflip">水平翻轉</string>
+    <string name="lyrics_animation_verticalflip">垂直翻轉</string>
+    <string name="version_code">版本號</string>
+    <string name="buildtime">編譯時間</string>
+    <string name="currentdevice">當前設備</string>
+    <string name="info">資訊</string>
 </resources>

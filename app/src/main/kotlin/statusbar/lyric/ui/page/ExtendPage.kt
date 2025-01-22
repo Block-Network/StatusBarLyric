@@ -33,8 +33,8 @@ import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
@@ -75,11 +75,6 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
     val hideTime = remember { mutableStateOf(config.hideTime) }
     val hideNotificationIcon = remember { mutableStateOf(config.hideNotificationIcon) }
     val hideLyricWhenLockScreen = remember { mutableStateOf(config.hideLyricWhenLockScreen) }
-    val lyricColorSchemeOptions = listOf(
-        stringResource(R.string.color_scheme1),
-        stringResource(R.string.color_scheme2)
-    )
-    val lyricColorSchemeSelectedOption = remember { mutableIntStateOf(config.lyricColorScheme) }
     val longClickStatusBarStop = remember { mutableStateOf(config.longClickStatusBarStop) }
     val clickStatusBarToHideLyric = remember { mutableStateOf(config.clickStatusBarToHideLyric) }
     val slideStatusBarCutSongs = remember { mutableStateOf(config.slideStatusBarCutSongs) }
@@ -114,7 +109,7 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
             TopAppBar(
                 color = Color.Transparent,
                 modifier = Modifier
-                    .hazeChild(hazeState) {
+                    .hazeEffect(hazeState) {
                         style = hazeStyle
                         blurRadius = 25.dp
                         noiseFactor = 0f
@@ -163,7 +158,7 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
 
         LazyColumn(
             modifier = Modifier
-                .haze(state = hazeState)
+                .hazeSource(state = hazeState)
                 .height(getWindowSize().height.dp)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
@@ -220,15 +215,6 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                                 hideLyricWhenLockScreen.value = it
                                 config.hideLyricWhenLockScreen = it
                             }
-                        )
-                        SuperDropdown(
-                            title = stringResource(R.string.lyric_color_scheme),
-                            items = lyricColorSchemeOptions,
-                            selectedIndex = lyricColorSchemeSelectedOption.intValue,
-                            onSelectedIndexChange = { newOption ->
-                                lyricColorSchemeSelectedOption.intValue = newOption
-                                config.lyricColorScheme = newOption
-                            },
                         )
                         SuperSwitch(
                             title = stringResource(R.string.long_click_status_bar_stop),

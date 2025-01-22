@@ -23,11 +23,11 @@
 package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.icu.text.SimpleDateFormat
+import android.icu.util.TimeZone
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -44,6 +44,7 @@ import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.ActivityTools.isHook
 import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
+import java.util.Locale
 import java.util.Objects
 import java.util.regex.Pattern
 import kotlin.properties.Delegates
@@ -54,7 +55,11 @@ object Tools {
 
     private var index: Int = 0
 
-    val isXiaoMi by lazy { isPresent("android.provider.MiuiSettings") }
+    val buildTime = SimpleDateFormat("yyyy/M/d HH:mm:ss", Locale.CHINA).apply {
+        timeZone = TimeZone.getTimeZone("UTC+8")
+    }.format(BuildConfig.BUILD_TIME)
+
+    val isXiaomi by lazy { isPresent("android.provider.MiuiSettings") }
 
     val isPad by lazy { getSystemProperties("ro.build.characteristics") == "tablet" }
 
@@ -68,16 +73,16 @@ object Tools {
     }
 
     val getPhoneName by lazy {
-        val marketName = getSystemProperties("ro.product.marketname")
-        val vivomarketName = getSystemProperties("ro.vivo.market.name")
-        if (bigtextone(Build.BRAND) == "Vivo") {
-            bigtextone(vivomarketName)
-        } else {
-            if (marketName.isNotEmpty()) bigtextone(marketName) else bigtextone(Build.BRAND) + " " + Build.MODEL
+        val xiaomiMarketName = getSystemProperties("ro.product.marketname")
+        val vivoMarketName = getSystemProperties("ro.vivo.market.name")
+        when {
+            bigTextOne(Build.BRAND) == "Vivo" -> bigTextOne(vivoMarketName)
+            xiaomiMarketName.isNotEmpty() -> bigTextOne(xiaomiMarketName)
+            else -> "${bigTextOne(Build.BRAND)} ${Build.MODEL}"
         }
     }
 
-    fun bigtextone(st: String): String {
+    fun bigTextOne(st: String): String {
         val formattedBrand = st.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase() else it.toString()
         }
@@ -87,21 +92,11 @@ object Tools {
     fun dp2px(context: Context, dpValue: Float): Int =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 
-    @Deprecated(message = "")
-    val togglePrompts: Boolean
-        get() {
-            arrayOf("com.lge.adaptive.JavaImageUtil").forEach {
-                if (isPresent(it)) return true
-                if (isXiaoMi) return true
-            }
-            return false
-        }
-
     private fun isPresent(name: String): Boolean {
         return try {
             Objects.requireNonNull(Thread.currentThread().contextClassLoader).loadClass(name)
             true
-        } catch (e: ClassNotFoundException) {
+        } catch (_: ClassNotFoundException) {
             false
         }
     }
@@ -112,16 +107,10 @@ object Tools {
             Class.forName("android.os.SystemProperties").getDeclaredMethod("get", String::class.java).invoke(null, key) as String
         } catch (iAE: IllegalArgumentException) {
             throw iAE
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             ""
         }
         return ret
-    }
-
-    fun copyToClipboard(context: Context, text: String) {
-        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = ClipData.newPlainText("text", text)
-        clipboardManager.setPrimaryClip(clipData)
     }
 
     fun <T> observableChange(
@@ -213,7 +202,7 @@ object Tools {
             } else {
                 Runtime.getRuntime().exec(command)
             }
-        } catch (ignored: Throwable) {
+        } catch (_: Throwable) {
         }
     }
 
@@ -257,13 +246,13 @@ object Tools {
     }
 
     fun Any?.existMethod(methodName: String): Boolean {
-        return this?.javaClass?.declaredMethods?.any { it.name == methodName } ?: false
+        return this?.javaClass?.declaredMethods?.any { it.name == methodName } == true
     }
 
     fun Any.getObjectFieldIfExist(fieldName: String): Any? {
         return try {
             XposedHelpers.getObjectField(this, fieldName)
-        } catch (t: Throwable) {
+        } catch (_: Throwable) {
             null
         }
     }
