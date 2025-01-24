@@ -33,7 +33,6 @@ import android.os.Looper
 import android.widget.Toast
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
-import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.LogTools.log
 import kotlin.system.exitProcess
@@ -75,7 +74,7 @@ object ActivityTools {
         } else {
             try {
                 Color.parseColor(value)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 showToastOnLooper(context.getString(R.string.color_error))
                 return
             }
@@ -93,7 +92,7 @@ object ActivityTools {
                         Color.parseColor(it.trim())
                     }
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 showToastOnLooper(context.getString(R.string.color_error))
                 return
             }

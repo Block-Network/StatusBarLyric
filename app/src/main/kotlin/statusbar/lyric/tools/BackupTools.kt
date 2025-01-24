@@ -27,18 +27,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import org.json.JSONObject
-import statusbar.lyric.tools.Tools.isNotNull
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
+import statusbar.lyric.MainActivity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 object BackupTools {
-    const val CREATE_DOCUMENT_CODE = 255774
-    const val OPEN_DOCUMENT_CODE = 277451
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -63,9 +57,8 @@ object BackupTools {
             type = "application/json"
             putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
         }
-        activity.startActivityForResult(intent, OPEN_DOCUMENT_CODE)
+        (activity as? MainActivity)?.openDocumentLauncher?.launch(intent)
     }
-
 
     private fun saveFile(activity: Activity, fileName: String) {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -73,69 +66,59 @@ object BackupTools {
             type = "application/json"
             putExtra(Intent.EXTRA_TITLE, fileName)
         }
-        activity.startActivityForResult(intent, CREATE_DOCUMENT_CODE)
+        (activity as? MainActivity)?.createDocumentLauncher?.launch(intent)
     }
 
     fun handleReadDocument(activity: Activity, data: Uri?) {
         val edit = sharedPreferences.edit()
         val uri = data ?: return
         try {
-            activity.contentResolver.openInputStream(uri)?.let { loadFile ->
-                BufferedReader(InputStreamReader(loadFile)).apply {
-                    val sb = StringBuffer()
-                    var line = readLine()
-                    while (line.isNotNull()) {
-                        sb.append(line)
-                        line = readLine()
-                    }
-                    val read = sb.toString()
+            activity.contentResolver.openInputStream(uri)?.bufferedReader().use { reader ->
+                val read = reader?.readText().orEmpty()
+                if (read.isNotEmpty()) {
                     JSONObject(read).apply {
-                        val key = keys()
-                        while (key.hasNext()) {
-                            val keys = key.next()
-                            when (val value = get(keys)) {
+                        keys().forEach { key ->
+                            when (val value = get(key)) {
                                 is String -> {
                                     if (value.startsWith("Float:")) {
-                                        edit.putFloat(keys, value.substring(value.indexOf("Float:")).toFloat() / 1000)
+                                        edit.putFloat(key, value.substring(6).toFloat() / 1000)
                                     } else {
-                                        edit.putString(keys, value)
+                                        edit.putString(key, value)
                                     }
                                 }
 
-                                is Boolean -> edit.putBoolean(keys, value)
-                                is Int -> edit.putInt(keys, value)
+                                is Boolean -> edit.putBoolean(key, value)
+                                is Int -> edit.putInt(key, value)
                             }
                         }
                     }
-                    close()
+                    edit.apply()
+                    ActivityTools.showToastOnLooper("Load successfully")
+                } else {
+                    ActivityTools.showToastOnLooper("Load failed: Empty file")
                 }
             }
-            edit.apply()
-            ActivityTools.showToastOnLooper("Load ok")
         } catch (e: Throwable) {
-            ActivityTools.showToastOnLooper("Load fail\n$e")
+            ActivityTools.showToastOnLooper("Load failed\n$e")
         }
     }
 
     fun handleCreateDocument(activity: Activity, data: Uri?) {
         val uri = data ?: return
         try {
-            activity.contentResolver.openOutputStream(uri)?.let { saveFile ->
-                BufferedWriter(OutputStreamWriter(saveFile)).apply {
-                    write(JSONObject().also {
-                        for (entry: Map.Entry<String, *> in sharedPreferences.all) {
-                            when (entry.value) {
-                                Float -> it.put(entry.key, "Float:" + (entry.value as Float * 1000).toInt().toString())
-                                else -> it.put(entry.key, entry.value)
-                            }
+            activity.contentResolver.openOutputStream(uri)?.bufferedWriter().use { writer ->
+                writer?.write(JSONObject().apply {
+                    sharedPreferences.all.forEach { (key, value) ->
+                        when (value) {
+                            is Float -> put(key, "Float:${(value * 1000).toInt()}")
+                            else -> put(key, value)
                         }
-                    }.toString())
-                    close()
-                }
+                    }
+                }.toString())
             }
-            ActivityTools.showToastOnLooper("Save ok")
+            ActivityTools.showToastOnLooper("Save successfully")
         } catch (e: Throwable) {
-            ActivityTools.showToastOnLooper("Save fail\n$e")
+            ActivityTools.showToastOnLooper("Save failed\n$e")
         }
     }
 }

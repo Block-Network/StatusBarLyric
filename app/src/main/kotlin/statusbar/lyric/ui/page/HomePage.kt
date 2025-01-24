@@ -30,8 +30,8 @@ import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.MainActivity
 import statusbar.lyric.MainActivity.Companion.context
@@ -84,7 +84,7 @@ fun HomePage(navController: NavController) {
             TopAppBar(
                 color = Color.Transparent,
                 modifier = Modifier
-                    .hazeChild(hazeState) {
+                    .hazeEffect(hazeState) {
                         style = hazeStyle
                         blurRadius = 25.dp
                         noiseFactor = 0f
@@ -115,7 +115,7 @@ fun HomePage(navController: NavController) {
         }
         LazyColumn(
             modifier = Modifier
-                .haze(state = hazeState)
+                .hazeSource(state = hazeState)
                 .height(getWindowSize().height.dp)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Left))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Left)),

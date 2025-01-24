@@ -261,6 +261,13 @@ class Config {
         set(value) {
             config.put("limitVisibilityChange", value)
         }
+    var timeoutRestore: Boolean
+        get() {
+            return config.opt("timeoutRestore", true)
+        }
+        set(value) {
+            config.put("timeoutRestore", value)
+        }
     var longClickStatusBarStop: Boolean
         get() {
             return config.opt("longClickStatusBarStop", false)
@@ -344,13 +351,6 @@ class Config {
         }
         set(value) {
             config.put("hideCarrier", value)
-        }
-    var lyricColorScheme: Int
-        get() {
-            return config.opt("lyricColorScheme", 0)
-        }
-        set(value) {
-            config.put("lyricColorScheme", value)
         }
     var dynamicLyricSpeed: Boolean
         get() {

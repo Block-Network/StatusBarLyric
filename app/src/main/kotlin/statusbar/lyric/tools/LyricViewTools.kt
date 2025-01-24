@@ -19,7 +19,7 @@ import android.widget.ImageView
 import statusbar.lyric.view.LyricSwitchView
 
 object LyricViewTools {
-    private var animaList: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8)
+    private var animaList: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     val randomAnima: Int get() = animaList.random()
 
     fun getAlphaAnimation(into: Boolean, duration: Long = 250): AnimationSet {
@@ -42,6 +42,20 @@ object LyricViewTools {
             6 -> ScaleAnimation(0f, 1f, 0f, 1f)
             7 -> ScaleAnimation(0f, 1f, 1f, 1f)
             8 -> ScaleAnimation(1f, 1f, 0f, 1f)
+            9 -> ScaleAnimation(
+                -1f, 1f, // X 方向从正常比例翻转到反向
+                1f, 1f,  // Y 方向保持不变
+                Animation.RELATIVE_TO_SELF, 0.5f, // X 轴中心点：视图的中间
+                Animation.RELATIVE_TO_SELF, 0.5f  // Y 轴中心点：视图的中间
+            )
+
+            10 -> ScaleAnimation(
+                1f, 1f, // X 方向保持不变
+                -1f, 1f,  // Y 方向从正常比例翻转到反向
+                Animation.RELATIVE_TO_SELF, 0.5f, // X 轴中心点：视图的中间
+                Animation.RELATIVE_TO_SELF, 0.5f  // Y 轴中心点：视图的中间
+            )
+
             else -> return null
         }?.apply {
             duration = t
@@ -64,6 +78,20 @@ object LyricViewTools {
             6 -> ScaleAnimation(1f, 0f, 1f, 0f)
             7 -> ScaleAnimation(1f, 0f, 1f, 1f)
             8 -> ScaleAnimation(1f, 1f, 1f, 0f)
+            9 -> ScaleAnimation(
+                1f, -1f, // X 方向从正常比例翻转到反向
+                1f, 1f,  // Y 方向保持不变
+                Animation.RELATIVE_TO_SELF, 0.5f, // X 轴中心点：视图的中间
+                Animation.RELATIVE_TO_SELF, 0.5f  // Y 轴中心点：视图的中间
+            )
+
+            10 -> ScaleAnimation(
+                1f, 1f, // X 方向保持不变
+                1f, -1f,  // Y 方向从正常比例翻转到反向
+                Animation.RELATIVE_TO_SELF, 0.5f, // X 轴中心点：视图的中间
+                Animation.RELATIVE_TO_SELF, 0.5f  // Y 轴中心点：视图的中间
+            )
+
             else -> return null
         }?.apply {
             duration = t
@@ -117,24 +145,4 @@ object LyricViewTools {
         }
         startAnimation(alphaAnimation)
     }
-
-    private fun ObjectAnimator.colorAnimator() {
-        this.apply {
-            setEvaluator(ArgbEvaluator())
-            duration = 200L
-        }.start()
-    }
-
-    @SuppressLint("Recycle", "AnimatorKeep")
-    fun LyricSwitchView.textColorAnima(color: Int) {
-        this.applyToAllViews {
-            ObjectAnimator.ofInt(it, "textColor", it.currentTextColor, color).colorAnimator()
-        }
-    }
-
-    @SuppressLint("Recycle")
-    fun ImageView.iconColorAnima(startColor: Int, endColor: Int) {
-        ObjectAnimator.ofInt(this, "colorFilter", startColor, endColor).colorAnimator()
-    }
-
 }

@@ -14,8 +14,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.StatusbarLyric"
-        tools:ignore="AllowBackup">
+        android:theme="@style/Theme.StatusbarLyric">
         <activity
             android:name=".MainActivity"
             android:enableOnBackInvokedCallback="false"
@@ -41,9 +40,6 @@
         </activity-alias>
 
         <meta-data
-            android:name="EasyGoClient"
-            android:value="true" />
-        <meta-data
             android:name="xposeddescription"
             android:value="@string/xposed_tips" />
         <meta-data
@@ -54,6 +50,6 @@
             android:value="true" />
         <meta-data
             android:name="xposedscope"
-            android:resource="@array/need_module" />
+            android:resource="@array/xposed_scope" />
     </application>
 </manifest>

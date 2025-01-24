@@ -25,15 +25,8 @@ package statusbar.lyric.tools
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
-import statusbar.lyric.MainActivity.Companion.context
-import statusbar.lyric.R
 import statusbar.lyric.data.Data
-import statusbar.lyric.tools.ActivityTools.showToastOnLooper
 import statusbar.lyric.tools.LogTools.log
-import statusbar.lyric.tools.Tools.goMainThread
-import java.util.Timer
-import java.util.TimerTask
 
 @SuppressLint("StaticFieldLeak")
 object ActivityTestTools {

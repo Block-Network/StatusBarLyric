@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -9,7 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
-val localProperties = Properties()
+val localProperties = org.jetbrains.kotlin.konan.properties.Properties()
 if (rootProject.file("local.properties").canRead()) localProperties.load(rootProject.file("local.properties").inputStream())
 
 android {
@@ -56,7 +55,7 @@ android {
     }
     applicationVariants.all {
         outputs.all {
-            (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName-$versionCode-$name-$buildTime.apk"
+            (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName($versionCode)-$name-$buildTime.apk"
         }
     }
     buildFeatures.buildConfig = true
@@ -66,17 +65,16 @@ android {
 dependencies {
     compileOnly(libs.xposed)
 
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.miuix)
-    implementation(libs.haze)
-
     implementation(libs.ezXHelper)
-    implementation(libs.lyricGetterApi)
+    implementation(libs.haze)
+    implementation(libs.lyric.getter.api)
+    implementation(libs.miuix)
 
     debugImplementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)

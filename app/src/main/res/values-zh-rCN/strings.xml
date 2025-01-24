@@ -103,6 +103,7 @@
     <string name="hide_notification_icon">隐藏通知图标</string>
     <string name="limit_visibility_change">限制可见性更改</string>
     <string name="limit_visibility_change_tips">可以防止部分系统的特性导致有时间会出现</string>
+    <string name="timeout_restore">超时关闭状态栏歌词</string>
     <string name="hide_lyric_when_lock_screen">锁定屏幕时隐藏歌词</string>
     <string name="choose_page_tips">建议先关闭其他修改状态栏布局的模块后，再来此页面选择锚点\n\n有效的锚点选择：状态栏显示模块名字，并有白色背景\n\n选择锚点后，返回关闭锚点模式，重启系统模式即锚点设置完成</string>
     <string name="hide_carrier">隐藏运营商</string>
@@ -154,4 +155,10 @@
     <string name="clear_config_tips">确定要重置配置吗？</string>
     <string name="view_location">歌词添加位置</string>
     <string name="automate_focused_notice">自动处理焦点通知</string>
+    <string name="lyrics_animation_horizontalflip">水平翻转</string>
+    <string name="lyrics_animation_verticalflip">垂直翻转</string>
+    <string name="version_code">版本号</string>
+    <string name="buildtime">编译时间</string>
+    <string name="currentdevice">当前设备</string>
+    <string name="info">信息</string>
 </resources>

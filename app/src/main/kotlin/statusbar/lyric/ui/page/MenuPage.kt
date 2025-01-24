@@ -1,9 +1,9 @@
 package statusbar.lyric.ui.page
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ComponentName
 import android.content.pm.PackageManager
-import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -36,8 +36,8 @@ import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
@@ -46,6 +46,8 @@ import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.Tools
+import statusbar.lyric.tools.Tools.bigTextOne
+import statusbar.lyric.tools.Tools.buildTime
 import statusbar.lyric.tools.Tools.getPhoneName
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
@@ -69,8 +71,8 @@ import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
-import java.util.Locale
 
+@SuppressLint("ContextCastToActivity")
 @Composable
 fun MenuPage(navController: NavController, currentStartDestination: MutableState<String>) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
@@ -91,7 +93,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
             TopAppBar(
                 color = Color.Transparent,
                 modifier = Modifier
-                    .hazeChild(hazeState) {
+                    .hazeEffect(hazeState) {
                         style = hazeStyle
                         blurRadius = 25.dp
                         noiseFactor = 0f
@@ -140,7 +142,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
 
         LazyColumn(
             modifier = Modifier
-                .haze(state = hazeState)
+                .hazeSource(state = hazeState)
                 .height(getWindowSize().height.dp)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
@@ -225,7 +227,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                     )
                 }
                 SmallTitle(
-                    text = "Info",
+                    text = stringResource(R.string.info),
                     modifier = Modifier.padding(top = 6.dp)
                 )
                 Card(
@@ -235,21 +237,17 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                         .padding(bottom = 6.dp)
                 ) {
                     Column {
-                        val buildTime =
-                            SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(
-                                BuildConfig.BUILD_TIME
-                            )
                         Text(
-                            text = "Version Code:",
+                            text = stringResource(R.string.version_code),
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                         )
                         Text(
-                            text = "${BuildConfig.VERSION_NAME}-${BuildConfig.VERSION_CODE} (${BuildConfig.BUILD_TYPE})",
+                            text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) ${bigTextOne(BuildConfig.BUILD_TYPE)}",
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
                         Text(
-                            text = "Build Time:",
+                            text = stringResource(R.string.buildtime),
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                         )
                         Text(
@@ -258,7 +256,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
                         Text(
-                            text = "Current Device:",
+                            text = stringResource(R.string.currentdevice),
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                         )
                         Text(
@@ -267,7 +265,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
                         Text(
-                            text = "Lyric Getter:",
+                            text = "Lyric Getter",
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                         )
                         Text(

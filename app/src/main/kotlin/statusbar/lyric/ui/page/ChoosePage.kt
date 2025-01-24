@@ -28,8 +28,8 @@ import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -71,7 +71,7 @@ fun ChoosePage(navController: NavController) {
             TopAppBar(
                 color = Color.Transparent,
                 modifier = Modifier
-                    .hazeChild(hazeState) {
+                    .hazeEffect(hazeState) {
                         style = hazeStyle
                         blurRadius = 25.dp
                         noiseFactor = 0f
@@ -102,7 +102,7 @@ fun ChoosePage(navController: NavController) {
     ) {
         LazyColumn(
             modifier = Modifier
-                .haze(state = hazeState)
+                .hazeSource(state = hazeState)
                 .height(getWindowSize().height.dp)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
@@ -119,7 +119,7 @@ fun ChoosePage(navController: NavController) {
                         ) {
                             SuperArrow(
                                 title = "${data.textViewClassName} ${data.textViewId}",
-                                summary = "${data.parentViewClassName} ${data.parentViewId} textSize:${data.textSize}",
+                                summary = "idName: ${data.idName}; textSize: ${data.textSize}f\n${data.parentViewClassName} ${data.parentViewId}",
                                 onClick = {
                                     context.showView(data)
                                     showDialog.value = true

@@ -33,8 +33,8 @@ import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
@@ -68,7 +68,7 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
     val mMiuiPadOptimize = remember { mutableStateOf(config.mMiuiPadOptimize) }
     val hideCarrier = remember { mutableStateOf(config.hideCarrier) }
     val mHyperOSTexture = remember { mutableStateOf(config.mHyperOSTexture) }
-    val mHideFocusedNotice = remember { mutableStateOf(config.automateFocusedNotice) }
+    val mAutomateFocusedNotice = remember { mutableStateOf(config.automateFocusedNotice) }
     val showDialog = remember { mutableStateOf(false) }
     val showRadioDialog = remember { mutableStateOf(false) }
     val showCornerDialog = remember { mutableStateOf(false) }
@@ -85,7 +85,7 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
             TopAppBar(
                 color = Color.Transparent,
                 modifier = Modifier
-                    .hazeChild(hazeState) {
+                    .hazeEffect(hazeState) {
                         style = hazeStyle
                         blurRadius = 25.dp
                         noiseFactor = 0f
@@ -134,7 +134,7 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
 
         LazyColumn(
             modifier = Modifier
-                .haze(state = hazeState)
+                .hazeSource(state = hazeState)
                 .height(getWindowSize().height.dp)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
@@ -192,9 +192,9 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
                     ) {
                         SuperSwitch(
                             title = stringResource(R.string.automate_focused_notice),
-                            checked = mHideFocusedNotice.value,
+                            checked = mAutomateFocusedNotice.value,
                             onCheckedChange = {
-                                mHideFocusedNotice.value = it
+                                mAutomateFocusedNotice.value = it
                                 config.automateFocusedNotice = it
                             }
                         )

@@ -11,6 +11,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     var isRepeat: Boolean = false
     var index: Int = 0
     var textSize: Float = 0f
+    var idName: String = ""
     override fun describeContents(): Int {
         return 0
     }
@@ -23,7 +24,8 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         parentViewId: Int,
         isRepeat: Boolean,
         index: Int,
-        size: Float
+        size: Float,
+        idName: String
     ) : this() {
         this.textViewClassName = textViewClassName
         this.textViewId = textViewId
@@ -32,6 +34,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         this.isRepeat = isRepeat
         this.index = index
         this.textSize = size
+        this.idName = idName
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -43,6 +46,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
             writeInt(if (isRepeat) 1 else 0)
             writeInt(index)
             writeFloat(textSize)
+            writeString(idName)
         }
     }
 
@@ -54,6 +58,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         isRepeat = parcel.readInt() == 1
         index = parcel.readInt()
         textSize = parcel.readFloat()
+        idName = parcel.readString().toString()
     }
 
     companion object CREATOR : Parcelable.Creator<Data> {
@@ -67,6 +72,6 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     }
 
     override fun toString(): String {
-        return "Data(textViewClassName='$textViewClassName', textViewId=$textViewId, parentViewClassName='$parentViewClassName', parentViewId=$parentViewId, isRepeat=$isRepeat, index=$index, textSize=$textSize)"
+        return "Data(textViewClassName='$textViewClassName', textViewId=$textViewId, parentViewClassName='$parentViewClassName', parentViewId=$parentViewId, isRepeat=$isRepeat, index=$index, textSize=$textSize idName=$idName)"
     }
 }

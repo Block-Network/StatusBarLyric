@@ -100,16 +100,39 @@ class SystemUITest : BaseHook() {
                         if (className.filterClassName()) {
                             view.filterView {
                                 val parentView = (view.parent as LinearLayout)
-                                val data = if (dataHashMap.size == 0) {
-                                    Data(className, view.id, parentView::class.java.name, parentView.id, false, 0, view.textSize)
+                                val data = if (dataHashMap.isEmpty()) {
+                                    Data(
+                                        className,
+                                        view.id,
+                                        parentView::class.java.name,
+                                        parentView.id,
+                                        false,
+                                        0,
+                                        view.textSize,
+                                        context.resources.getResourceEntryName(view.id)
+                                    )
                                 } else {
                                     var index = 0
                                     dataHashMap.values.forEach { data ->
-                                        if (data.textViewClassName == className && data.textViewId == view.id && data.parentViewClassName == parentView::class.java.name && data.parentViewId == parentView.id && data.textSize == view.textSize) {
+                                        if (data.textViewClassName == className
+                                            && data.textViewId == view.id
+                                            && data.parentViewClassName == parentView::class.java.name
+                                            && data.parentViewId == parentView.id && data.textSize == view.textSize
+                                            && data.idName == context.resources.getResourceEntryName(view.id)
+                                        ) {
                                             index += 1
                                         }
                                     }
-                                    Data(className, view.id, parentView::class.java.name, parentView.id, index != 0, index, view.textSize)
+                                    Data(
+                                        className,
+                                        view.id,
+                                        parentView::class.java.name,
+                                        parentView.id,
+                                        index != 0,
+                                        index,
+                                        view.textSize,
+                                        context.resources.getResourceEntryName(view.id)
+                                    )
                                 }
                                 dataHashMap[view] = data
                                 moduleRes.getString(R.string.first_filter).format(data, dataHashMap.size).log()
@@ -182,7 +205,7 @@ class SystemUITest : BaseHook() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("Type")) {
                 "GetClass" -> {
-                    if (dataHashMap.size == 0) {
+                    if (dataHashMap.isEmpty()) {
                         moduleRes.getString(R.string.no_text_view).log()
                         context.receiveClass(arrayListOf())
                         return
@@ -200,7 +223,13 @@ class SystemUITest : BaseHook() {
                     }!!
                     goMainThread {
                         dataHashMap.forEach { (textview, da) ->
-                            if (da.textViewClassName == data.textViewClassName && da.textViewId == data.textViewId && da.parentViewClassName == data.parentViewClassName && da.parentViewId == data.parentViewId && da.textSize == data.textSize && da.index == data.index) {
+                            if (da.textViewClassName == data.textViewClassName
+                                && da.textViewId == data.textViewId
+                                && da.parentViewClassName == data.parentViewClassName
+                                && da.parentViewId == data.parentViewId
+                                && da.textSize == data.textSize
+                                && da.index == data.index
+                            ) {
                                 if (this@SystemUITest::lastView.isInitialized) {
                                     (lastView.parent as LinearLayout).removeView(testTextView)
                                     lastView.showView()
