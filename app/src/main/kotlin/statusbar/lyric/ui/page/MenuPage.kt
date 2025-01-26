@@ -49,6 +49,9 @@ import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.bigTextOne
 import statusbar.lyric.tools.Tools.buildTime
 import statusbar.lyric.tools.Tools.getPhoneName
+import statusbar.lyric.tools.XiaomiUtils
+import statusbar.lyric.tools.XiaomiUtils.isHyperOS
+import statusbar.lyric.tools.XiaomiUtils.isXiaomi
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -287,7 +290,6 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
     ResetDialog(showDialog = showResetDialog)
 }
 
-
 @Composable
 fun ResetDialog(showDialog: MutableState<Boolean>) {
     SuperDialog(
@@ -326,7 +328,6 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
     }
 }
 
-
 @Composable
 fun RestartDialog(showDialog: MutableState<Boolean>) {
     SuperDialog(
@@ -344,7 +345,11 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
                 onClick = {
-                    Tools.shell("killall com.android.systemui", true)
+                    if (isXiaomi && isHyperOS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        XiaomiUtils.restartXiaomiSystemUI(context)
+                    } else {
+                        Tools.shell("killall com.android.systemui", true)
+                    }
                     dismissDialog(showDialog)
                 }
             )

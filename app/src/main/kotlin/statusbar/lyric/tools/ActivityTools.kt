@@ -36,6 +36,8 @@ import statusbar.lyric.R
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.LogTools.log
 import kotlin.system.exitProcess
+import androidx.core.graphics.toColorInt
+import androidx.core.net.toUri
 
 @SuppressLint("StaticFieldLeak")
 object ActivityTools {
@@ -73,7 +75,7 @@ object ActivityTools {
             unit(default)
         } else {
             try {
-                Color.parseColor(value)
+                value.toColorInt()
             } catch (_: Exception) {
                 showToastOnLooper(context.getString(R.string.color_error))
                 return
@@ -89,7 +91,7 @@ object ActivityTools {
             try {
                 value.split(",").forEach {
                     if (it.isNotEmpty()) {
-                        Color.parseColor(it.trim())
+                        it.trim().toColorInt()
                     }
                 }
             } catch (_: Exception) {
@@ -109,7 +111,7 @@ object ActivityTools {
     }
 
     fun openUrl(url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     }
 
     fun restartApp() {

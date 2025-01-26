@@ -27,6 +27,8 @@ import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.Tools.dp2px
+import androidx.core.graphics.toColorInt
+import androidx.core.view.isVisible
 
 @SuppressLint("InternalInsetResource", "DiscouragedApi")
 class TitleDialog(context: Context) : Dialog(context) {
@@ -86,8 +88,8 @@ class TitleDialog(context: Context) : Dialog(context) {
         gravity = Gravity.CENTER
         background = GradientDrawable().apply {
             cornerRadius = config.titleBackgroundRadius.toFloat()
-            setColor(Color.parseColor(config.titleColorAndTransparency))
-            setStroke(config.titleBackgroundStrokeWidth, Color.parseColor(config.titleBackgroundStrokeColorAndTransparency))
+            setColor(config.titleColorAndTransparency.toColorInt())
+            setStroke(config.titleBackgroundStrokeWidth, config.titleBackgroundStrokeColorAndTransparency.toColorInt())
         }
         setPadding(40, 5, 40, 5)
     }
@@ -136,7 +138,7 @@ class TitleDialog(context: Context) : Dialog(context) {
 
     fun showTitle(title: String) {
         setTitle(title)
-        if (root.visibility == View.VISIBLE) {
+        if (root.isVisible) {
             delayedHide()
             return
         }

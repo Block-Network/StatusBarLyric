@@ -17,6 +17,8 @@ import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import statusbar.lyric.view.LyricSwitchView
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 
 object LyricViewTools {
     private var animaList: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -113,7 +115,7 @@ object LyricViewTools {
     }
 
     fun View.hideView(anim: Boolean = true) {
-        if (visibility == View.GONE) return
+        if (isGone) return
         if (anim) {
             val alphaAnimation = getAlphaAnimation(false).apply {
                 setAnimationListener(object : Animation.AnimationListener {
@@ -132,7 +134,7 @@ object LyricViewTools {
     }
 
     fun View.showView() {
-        if (visibility == View.VISIBLE) return
+        if (isVisible) return
         val alphaAnimation = getAlphaAnimation(true).apply {
             setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {}

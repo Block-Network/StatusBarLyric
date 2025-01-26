@@ -27,7 +27,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.icu.text.SimpleDateFormat
-import android.icu.util.TimeZone
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -55,22 +54,9 @@ object Tools {
 
     private var index: Int = 0
 
-    val buildTime = SimpleDateFormat("yyyy/M/d HH:mm:ss", Locale.CHINA).apply {
-        timeZone = TimeZone.getTimeZone("UTC+8")
-    }.format(BuildConfig.BUILD_TIME)
-
-    val isXiaomi by lazy { isPresent("android.provider.MiuiSettings") }
+    val buildTime: String = SimpleDateFormat("yyyy/M/d H:m:s", Locale.CHINA).format(BuildConfig.BUILD_TIME)
 
     val isPad by lazy { getSystemProperties("ro.build.characteristics") == "tablet" }
-
-    val isHyperOS by lazy {
-        try {
-            getSystemProperties("ro.mi.os.version.incremental")
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
-        } catch (_: Exception) {
-            false
-        }
-    }
 
     val getPhoneName by lazy {
         val xiaomiMarketName = getSystemProperties("ro.product.marketname")
@@ -92,7 +78,7 @@ object Tools {
     fun dp2px(context: Context, dpValue: Float): Int =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 
-    private fun isPresent(name: String): Boolean {
+    internal fun isPresent(name: String): Boolean {
         return try {
             Objects.requireNonNull(Thread.currentThread().contextClassLoader).loadClass(name)
             true

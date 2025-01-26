@@ -53,6 +53,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import cn.lyric.getter.api.data.ExtraData
 import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.listener.LyricListener
@@ -86,17 +87,17 @@ import statusbar.lyric.tools.Tools.getObjectField
 import statusbar.lyric.tools.Tools.getObjectFieldIfExist
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.ifNotNull
-import statusbar.lyric.tools.Tools.isHyperOS
 import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isNull
 import statusbar.lyric.tools.Tools.isPad
 import statusbar.lyric.tools.Tools.isTargetView
-import statusbar.lyric.tools.Tools.isXiaomi
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.setObjectField
 import statusbar.lyric.tools.Tools.shell
+import statusbar.lyric.tools.XiaomiUtils.isHyperOS
+import statusbar.lyric.tools.XiaomiUtils.isXiaomi
 import statusbar.lyric.view.LyricSwitchView
 import statusbar.lyric.view.TitleDialog
 import java.io.File
@@ -183,7 +184,7 @@ class SystemUILyric : BaseHook() {
             override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
                 super.onSizeChanged(w, h, oldw, oldh)
                 if (config.lyricGradientColor.isNotEmpty()) {
-                    config.lyricGradientColor.trim().split(",").map { Color.parseColor(it.trim()) }.let { colors ->
+                    config.lyricGradientColor.trim().split(",").map { it.trim().toColorInt() }.let { colors ->
                         if (colors.isEmpty()) {
                             setTextColor(Color.WHITE)
                         } else if (colors.size < 2) {
@@ -731,8 +732,8 @@ class SystemUILyric : BaseHook() {
                 val blurRadio = config.mHyperOSTextureRadio
                 val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
                 val blendModes = arrayOf(
-                    intArrayOf(106, Color.parseColor(config.mHyperOSTextureBgColor)),
-                    intArrayOf(3, Color.parseColor(config.mHyperOSTextureBgColor))
+                    intArrayOf(106, config.mHyperOSTextureBgColor.toColorInt()),
+                    intArrayOf(3, config.mHyperOSTextureBgColor.toColorInt())
                 )
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
@@ -907,7 +908,7 @@ class SystemUILyric : BaseHook() {
                     if (config.lyricColor.isEmpty()) {
                         setTextColor(clockView.currentTextColor)
                     } else {
-                        setTextColor(Color.parseColor(config.lyricColor))
+                        setTextColor(config.lyricColor.toColorInt())
                     }
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
@@ -919,13 +920,13 @@ class SystemUILyric : BaseHook() {
                             setBackgroundColor(Color.TRANSPARENT)
                             background = GradientDrawable().apply {
                                 cornerRadius = config.lyricBackgroundRadius.toFloat()
-                                setColor(Color.parseColor(config.lyricBackgroundColor))
+                                setColor(config.lyricBackgroundColor.toColorInt())
                             }
                         } else {
-                            setBackgroundColor(Color.parseColor(config.lyricBackgroundColor))
+                            setBackgroundColor(config.lyricBackgroundColor.toColorInt())
                         }
                     } else {
-                        config.lyricBackgroundColor.trim().split(",").map { Color.parseColor(it.trim()) }
+                        config.lyricBackgroundColor.trim().split(",").map { it.trim().toColorInt() }
                             .let { colors ->
                                 val gradientDrawable = GradientDrawable(
                                     GradientDrawable.Orientation.LEFT_RIGHT, colors.toIntArray()
@@ -977,12 +978,12 @@ class SystemUILyric : BaseHook() {
                     if (config.iconColor.isEmpty()) {
                         setColorFilter(clockView.currentTextColor, PorterDuff.Mode.SRC_IN)
                     } else {
-                        setColorFilter(Color.parseColor(config.iconColor), PorterDuff.Mode.SRC_IN)
+                        setColorFilter(config.iconColor.toColorInt(), PorterDuff.Mode.SRC_IN)
                     }
                     if (config.iconBgColor.isEmpty()) {
                         setBackgroundColor(Color.TRANSPARENT)
                     } else {
-                        setBackgroundColor(Color.parseColor(config.iconBgColor))
+                        setBackgroundColor(config.iconBgColor.toColorInt())
                     }
                 }
             }
