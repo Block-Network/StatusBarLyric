@@ -99,12 +99,18 @@ fun PortraitLayout(navController: NavHostController, currentStartDestination: Mu
             slideOutHorizontally(
                 targetOffsetX = { -windowWidth / 5 },
                 animationSpec = tween(durationMillis = 500, easing = easing)
+            ) + fadeOut(
+                animationSpec = tween(durationMillis = 500),
+                targetAlpha = 0.5f
             )
         },
         popEnterTransition = {
             slideInHorizontally(
                 initialOffsetX = { -windowWidth / 5 },
                 animationSpec = tween(durationMillis = 500, easing = easing)
+            ) + fadeIn(
+                animationSpec = tween(durationMillis = 500),
+                initialAlpha = 0.5f
             )
         },
         popExitTransition = {
