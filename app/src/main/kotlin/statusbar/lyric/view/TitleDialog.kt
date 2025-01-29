@@ -22,13 +22,13 @@ import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
+import androidx.core.view.isVisible
 import com.github.kyuubiran.ezxhelper.EzXHelper
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.Tools.dp2px
-import androidx.core.graphics.toColorInt
-import androidx.core.view.isVisible
 
 @SuppressLint("InternalInsetResource", "DiscouragedApi")
 class TitleDialog(context: Context) : Dialog(context) {
@@ -73,11 +73,12 @@ class TitleDialog(context: Context) : Dialog(context) {
     }
     private val iconView: ImageView by lazy {
         ImageView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                width = dp2px(context, 15f)
-                height = dp2px(context, 15f)
-                setMargins(0, 0, 15, 0)
-            }
+            layoutParams =
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    width = dp2px(context, 15f)
+                    height = dp2px(context, 15f)
+                    setMargins(0, 0, 15, 0)
+                }
             setImageDrawable(EzXHelper.moduleRes.getDrawable(R.drawable.ic_song, null))
         }
     }

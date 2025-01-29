@@ -26,18 +26,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.core.graphics.toColorInt
+import androidx.core.net.toUri
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.LogTools.log
 import kotlin.system.exitProcess
-import androidx.core.graphics.toColorInt
-import androidx.core.net.toUri
 
 @SuppressLint("StaticFieldLeak")
 object ActivityTools {

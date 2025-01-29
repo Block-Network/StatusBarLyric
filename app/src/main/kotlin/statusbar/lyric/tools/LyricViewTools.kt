@@ -1,8 +1,5 @@
 package statusbar.lyric.tools
 
-import android.animation.ArgbEvaluator
-import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
@@ -15,8 +12,6 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
-import android.widget.ImageView
-import statusbar.lyric.view.LyricSwitchView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 
