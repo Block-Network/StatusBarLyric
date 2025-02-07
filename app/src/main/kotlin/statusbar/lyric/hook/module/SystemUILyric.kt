@@ -82,7 +82,6 @@ import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.SystemMediaSessionListener
 import statusbar.lyric.tools.Tools.callMethod
-import statusbar.lyric.tools.Tools.checkBroadcastReceiverState
 import statusbar.lyric.tools.Tools.existField
 import statusbar.lyric.tools.Tools.existMethod
 import statusbar.lyric.tools.Tools.getObjectField
@@ -164,7 +163,8 @@ class SystemUILyric : BaseHook() {
     private var canHideFocusNotify = false
     private var isOS2FocusNotifyShowing = false
     private var isOS1FocusNotifyShowing = false // OS1 不要支持隐藏焦点通知
-    val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
+    val isReady: Boolean get() = this@SystemUILyric::clockView.isInitialized
+    // val isReally by lazy { this@SystemUILyric::clockView.isInitialized }
 
     private var theoreticalWidth: Int = 0
     private lateinit var point: Point
@@ -239,7 +239,7 @@ class SystemUILyric : BaseHook() {
         "Init Hook".log()
         Application::class.java.methodFinder().filterByName("attach").first().createHook {
             after { hook ->
-                registerReceiverIfNeed(hook.args[0] as Context)
+                registerReceiver(hook.args[0] as Context)
             }
         }
 
@@ -762,70 +762,67 @@ class SystemUILyric : BaseHook() {
         updateConfig(1)
     }
 
-    private var mLyricReceiver: LyricReceiver? = null
     private var mUpdateConfig: UpdateConfig = UpdateConfig()
     private var mScreenLockReceiver: ScreenLockReceiver = ScreenLockReceiver()
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    private fun registerReceiverIfNeed(context: Context) {
-        "Register Receiver".log()
-        if (mLyricReceiver == null || !checkBroadcastReceiverState(context, mLyricReceiver)) {
-            mLyricReceiver = LyricReceiver(object : LyricListener() {
-                override fun onUpdate(lyricData: LyricData) {
-                    if (!isReally) return
-                    val lyric = lyricData.lyric
-                    lastLyric = lyric
-                    playingApp = lyricData.extraData.packageName
-                    changeLyricStateIfInFullScreenMode()
+    private fun registerReceiver(context: Context) {
+        val mLyricReceiver = LyricReceiver(object : LyricListener() {
+            override fun onUpdate(lyricData: LyricData) {
+                if (!isReady) return
+                val lyric = lyricData.lyric
+                lastLyric = lyric
+                playingApp = lyricData.extraData.packageName
+                changeLyricStateIfInFullScreenMode()
 
-                    if (isHiding) return
-                    if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
-                        timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
-                        timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
-                    } else timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
-                    hideFocusNotifyIfNeed()
-                    changeIcon(lyricData.extraData)
-                    changeLyric(lastLyric, lyricData.extraData.delay)
-                    titleShowHandler.sendEmptyMessage(TITLE_SHOWING)
-                }
-
-                override fun onStop(lyricData: LyricData) {
-                    if (!isReally) return
-                    if (playingApp.isNotEmpty()) {
-                        if (lyricData.extraData.packageName.isNotEmpty() &&
-                            playingApp != lyricData.extraData.packageName
-                        ) return
-                    }
-                    playingApp = ""
-                    lastLyric = ""
-                    hideLyric()
-                    showFocusNotifyIfNeed()
-                    if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
-                        timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
-                    }
-                }
-            })
-            registerLyricListener(context, BuildConfig.API_VERSION, mLyricReceiver!!)
-        }
-
-        if (!checkBroadcastReceiverState(context, mUpdateConfig))
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
-            } else {
-                context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"))
+                if (isHiding) return
+                if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
+                    timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
+                    timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
+                } else timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
+                hideFocusNotifyIfNeed()
+                changeIcon(lyricData.extraData)
+                changeLyric(lastLyric, lyricData.extraData.delay)
+                titleShowHandler.sendEmptyMessage(TITLE_SHOWING)
             }
 
-        if (config.hideLyricWhenLockScreen && !checkBroadcastReceiverState(context, mScreenLockReceiver)) {
+            override fun onStop(lyricData: LyricData) {
+                if (!isReady) return
+                if (playingApp.isNotEmpty()) {
+                    if (lyricData.extraData.packageName.isNotEmpty() &&
+                        playingApp != lyricData.extraData.packageName
+                    ) return
+                }
+                playingApp = ""
+                lastLyric = ""
+                hideLyric()
+                showFocusNotifyIfNeed()
+                if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
+                    timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
+                }
+            }
+        })
+        registerLyricListener(context, BuildConfig.API_VERSION, mLyricReceiver)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(mUpdateConfig, IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
+        } else {
+            context.registerReceiver(mUpdateConfig, IntentFilter("updateConfig"))
+        }
+
+        if (config.hideLyricWhenLockScreen) {
             val screenLockFilter = IntentFilter().apply {
                 addAction(Intent.ACTION_SCREEN_OFF)
                 addAction(Intent.ACTION_USER_PRESENT)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                context.registerReceiver(ScreenLockReceiver(), screenLockFilter, Context.RECEIVER_EXPORTED)
+                context.registerReceiver(mScreenLockReceiver, screenLockFilter, Context.RECEIVER_EXPORTED)
             } else {
-                context.registerReceiver(ScreenLockReceiver(), screenLockFilter)
+                context.registerReceiver(mScreenLockReceiver, screenLockFilter)
             }
         }
+
+        "Register Receiver".log()
     }
 
     private fun changeLyric(lyric: String, delay: Int) {
@@ -1059,7 +1056,7 @@ class SystemUILyric : BaseHook() {
                         val newConfig = hookParam.args[0] as Configuration
                         // themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE || newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            if (isReally)
+                            if (isReady)
                                 changeLyricStateIfInFullScreenMode()
                         }
                     }
@@ -1112,7 +1109,7 @@ class SystemUILyric : BaseHook() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.getStringExtra("type")) {
                 "normal" -> {
-                    if (!isReally) return
+                    if (!isReady) return
                     updateConfig()
                 }
 
