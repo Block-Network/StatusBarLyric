@@ -23,6 +23,7 @@
 package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -30,6 +31,7 @@ import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.util.ArrayMap
 import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
@@ -43,6 +45,7 @@ import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.ActivityTools.isHook
 import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
+import java.lang.reflect.Field
 import java.util.Locale
 import java.util.Objects
 import java.util.regex.Pattern
@@ -192,6 +195,22 @@ object Tools {
         }
     }
 
+    fun checkBroadcastReceiverState(context: Context, broadcastReceiver: BroadcastReceiver?): Boolean {
+        context.isNull { return false }
+        broadcastReceiver.isNull { return false }
+
+        val contextImpl: Context = context.getSuperObjectField("mBase") as Context
+        contextImpl.getObjectField("mPackageInfo").isNotNull {
+            it.getObjectField("mReceivers").isNotNull {
+                (it as ArrayMap<*, *>)[context].isNotNull {
+                    (it as ArrayMap<*, *>)[broadcastReceiver].isNotNull {
+                        return true
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     inline fun <T> T?.isNotNull(callback: (T) -> Unit): Boolean {
         if (this != null) {
@@ -224,6 +243,28 @@ object Tools {
 
     fun Any.getObjectField(fieldName: String): Any? {
         return XposedHelpers.getObjectField(this, fieldName)
+    }
+
+    fun Any.getSuperObjectField(fieldName: String): Any? {
+        var clazz: Class<*>? = this.javaClass
+        var field: Field? = null
+
+        do {
+            try {
+                field = clazz?.getDeclaredField(fieldName)
+                break
+            } catch (_: Throwable) {
+            }
+
+            clazz = clazz?.superclass
+            if (clazz == null) break
+        } while (true)
+
+        field.isNotNull {
+            it.isAccessible = true
+            return it.get(this)
+        }
+        return null
     }
 
     fun Any?.existField(fieldName: String): Boolean {
