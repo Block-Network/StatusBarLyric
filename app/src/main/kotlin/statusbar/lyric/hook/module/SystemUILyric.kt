@@ -24,6 +24,7 @@ package statusbar.lyric.hook.module
 
 import android.annotation.SuppressLint
 import android.app.AndroidAppHelper
+import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -81,6 +82,7 @@ import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.SystemMediaSessionListener
 import statusbar.lyric.tools.Tools.callMethod
+import statusbar.lyric.tools.Tools.checkBroadcastReceiverState
 import statusbar.lyric.tools.Tools.existField
 import statusbar.lyric.tools.Tools.existMethod
 import statusbar.lyric.tools.Tools.getObjectField
@@ -90,7 +92,6 @@ import statusbar.lyric.tools.Tools.ifNotNull
 import statusbar.lyric.tools.Tools.isLandscape
 import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
-import statusbar.lyric.tools.Tools.isNull
 import statusbar.lyric.tools.Tools.isPad
 import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
@@ -236,6 +237,12 @@ class SystemUILyric : BaseHook() {
     @SuppressLint("DiscouragedApi", "NewApi")
     override fun init() {
         "Init Hook".log()
+        Application::class.java.methodFinder().filterByName("attach").first().createHook {
+            after { hook ->
+                registerReceiverIfNeed(hook.args[0] as Context)
+            }
+        }
+
         loadClassOrNull(config.textViewClassName).isNotNull {
             hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
                 after { hookParam ->
@@ -718,9 +725,8 @@ class SystemUILyric : BaseHook() {
 
     data class TitleData(val caller: String, val title: String)
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag", "MissingPermission")
     private fun lyricInit() {
-        val firstLoad = lyricLayout.parent.isNull()
+        // val firstLoad = lyricLayout.parent.isNull()
         goMainThread(1) {
             runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
             if (config.viewLocation == 0) {
@@ -752,49 +758,64 @@ class SystemUILyric : BaseHook() {
             }
         }
 
-        if (!firstLoad) return
-        val lyricReceiver = LyricReceiver(object : LyricListener() {
-            override fun onUpdate(lyricData: LyricData) {
-                if (!isReally) return
-                val lyric = lyricData.lyric
-                lastLyric = lyric
-                playingApp = lyricData.extraData.packageName
-                changeLyricStateIfInFullScreenMode()
+        // if (!firstLoad) return
+        updateConfig(1)
+    }
 
-                if (isHiding) return
-                if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
-                    timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
-                    timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
-                } else timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
-                hideFocusNotifyIfNeed()
-                changeIcon(lyricData.extraData)
-                changeLyric(lastLyric, lyricData.extraData.delay)
-                titleShowHandler.sendEmptyMessage(TITLE_SHOWING)
-            }
+    private var mLyricReceiver: LyricReceiver? = null
+    private var mUpdateConfig: UpdateConfig = UpdateConfig()
+    private var mScreenLockReceiver: ScreenLockReceiver = ScreenLockReceiver()
 
-            override fun onStop(lyricData: LyricData) {
-                if (!isReally) return
-                if (playingApp.isNotEmpty()) {
-                    if (lyricData.extraData.packageName.isNotEmpty() &&
-                        playingApp != lyricData.extraData.packageName
-                    ) return
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private fun registerReceiverIfNeed(context: Context) {
+        "Register Receiver".log()
+        if (mLyricReceiver == null || !checkBroadcastReceiverState(context, mLyricReceiver)) {
+            mLyricReceiver = LyricReceiver(object : LyricListener() {
+                override fun onUpdate(lyricData: LyricData) {
+                    if (!isReally) return
+                    val lyric = lyricData.lyric
+                    lastLyric = lyric
+                    playingApp = lyricData.extraData.packageName
+                    changeLyricStateIfInFullScreenMode()
+
+                    if (isHiding) return
+                    if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
+                        timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
+                        timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
+                    } else timeoutRestoreHandler.sendEmptyMessageDelayed(TIMEOUT_RESTORE, 10000L)
+                    hideFocusNotifyIfNeed()
+                    changeIcon(lyricData.extraData)
+                    changeLyric(lastLyric, lyricData.extraData.delay)
+                    titleShowHandler.sendEmptyMessage(TITLE_SHOWING)
                 }
-                playingApp = ""
-                lastLyric = ""
-                hideLyric()
-                showFocusNotifyIfNeed()
-                if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
-                    timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
+
+                override fun onStop(lyricData: LyricData) {
+                    if (!isReally) return
+                    if (playingApp.isNotEmpty()) {
+                        if (lyricData.extraData.packageName.isNotEmpty() &&
+                            playingApp != lyricData.extraData.packageName
+                        ) return
+                    }
+                    playingApp = ""
+                    lastLyric = ""
+                    hideLyric()
+                    showFocusNotifyIfNeed()
+                    if (timeoutRestoreHandler.hasMessages(TIMEOUT_RESTORE)) {
+                        timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
+                    }
                 }
-            }
-        })
-        registerLyricListener(context, BuildConfig.API_VERSION, lyricReceiver)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
-        } else {
-            context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"))
+            })
+            registerLyricListener(context, BuildConfig.API_VERSION, mLyricReceiver!!)
         }
-        if (config.hideLyricWhenLockScreen) {
+
+        if (!checkBroadcastReceiverState(context, mUpdateConfig))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
+            } else {
+                context.registerReceiver(UpdateConfig(), IntentFilter("updateConfig"))
+            }
+
+        if (config.hideLyricWhenLockScreen && !checkBroadcastReceiverState(context, mScreenLockReceiver)) {
             val screenLockFilter = IntentFilter().apply {
                 addAction(Intent.ACTION_SCREEN_OFF)
                 addAction(Intent.ACTION_USER_PRESENT)
@@ -805,7 +826,6 @@ class SystemUILyric : BaseHook() {
                 context.registerReceiver(ScreenLockReceiver(), screenLockFilter)
             }
         }
-        changeConfig(1)
     }
 
     private fun changeLyric(lyric: String, delay: Int) {
@@ -889,8 +909,8 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private fun changeConfig(delay: Long = 0L) {
-        "Change Config".log()
+    private fun updateConfig(delay: Long = 0L) {
+        "Update Config".log()
         config.update()
         goMainThread(delay) {
             lyricView.apply {
@@ -1093,7 +1113,7 @@ class SystemUILyric : BaseHook() {
             when (intent.getStringExtra("type")) {
                 "normal" -> {
                     if (!isReally) return
-                    changeConfig()
+                    updateConfig()
                 }
 
                 "change_font" -> {}
