@@ -122,9 +122,9 @@ fun PortraitLayout(navController: NavHostController, currentStartDestination: Mu
     ) {
         composable("HomePage") { HomePage(navController) }
         composable("EmptyPage") { EmptyPage() }
-        composable("MenuPage") { MenuPage(navController, currentStartDestination) }
         composable("ChoosePage") { ChoosePage(navController) }
         composable("TestPage") { TestPage(navController, currentStartDestination) }
+        composable("MenuPage") { MenuPage(navController, currentStartDestination) }
         composable("LyricPage") { LyricPage(navController, currentStartDestination) }
         composable("IconPage") { IconPage(navController, currentStartDestination) }
         composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }
@@ -195,9 +195,9 @@ fun LandscapeLayout(navController: NavHostController, currentStartDestination: M
         ) {
             composable("HomePage") { HomePage(navController) }
             composable("EmptyPage") { EmptyPage() }
-            composable("MenuPage") { MenuPage(navController, currentStartDestination) }
             composable("ChoosePage") { ChoosePage(navController) }
             composable("TestPage") { TestPage(navController, currentStartDestination) }
+            composable("MenuPage") { MenuPage(navController, currentStartDestination) }
             composable("LyricPage") { LyricPage(navController, currentStartDestination) }
             composable("IconPage") { IconPage(navController, currentStartDestination) }
             composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }

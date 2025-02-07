@@ -209,7 +209,7 @@ object Tools {
                 }
             }
         }
-        return false;
+        return false
     }
 
     inline fun <T> T?.isNotNull(callback: (T) -> Unit): Boolean {
