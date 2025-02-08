@@ -283,7 +283,7 @@ class SystemUILyric : BaseHook() {
                         if (hookParam.args[0] == View.VISIBLE) {
                             val view = hookParam.thisObject as View
                             if (
-                                (this@SystemUILyric::clockView.isInitialized && clockView == view && config.hideTime) ||
+                                (isReady && clockView == view && config.hideTime) ||
                                 (this@SystemUILyric::mNotificationIconArea.isInitialized && mNotificationIconArea == view && config.hideNotificationIcon) ||
                                 (this@SystemUILyric::mCarrierLabel.isInitialized && mCarrierLabel == view && config.hideCarrier) ||
                                 (this@SystemUILyric::mMiuiNetworkSpeedView.isInitialized && mMiuiNetworkSpeedView == view && config.mMiuiHideNetworkSpeed) ||
@@ -349,13 +349,15 @@ class SystemUILyric : BaseHook() {
             loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
                 it.methodFinder().filterByName("onFinishInflate").first().createHook {
                     after { hookParam ->
-                        val clazz = hookParam.thisObject::class.java
-                        if (clazz.simpleName == "KeyguardStatusBarView") {
-                            hookParam.thisObject.objectHelper {
-                                mCarrierLabel = this.getObjectOrNullAs<View>("mCarrierLabel")!!
+                        kotlin.runCatching {
+                            val clazz = hookParam.thisObject::class.java
+                            if (clazz.simpleName == "KeyguardStatusBarView") {
+                                hookParam.thisObject.objectHelper {
+                                    mCarrierLabel = this.getObjectOrNullAs<View>("mCarrierLabel")!!
+                                }
+                            } else {
+                                mCarrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as View
                             }
-                        } else {
-                            mCarrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as View
                         }
                     }
                 }
@@ -826,6 +828,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun changeLyric(lyric: String, delay: Int) {
+        if (!isReady) return
         if (lyric.isEmpty()) return
         if (isHiding || isScreenLock) return
 
@@ -887,6 +890,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun hideLyric(anim: Boolean = true) {
+        if (!isReady) return
         if (isStop) return
         if (!isHiding && isPlaying && anim) {
             isPlaying = false
@@ -1035,11 +1039,9 @@ class SystemUILyric : BaseHook() {
                         if (clazz!!.existMethod("onWallpaperChanged")) {
                             clazz.methodFinder().filterByName("onWallpaperChanged").first().createHook {
                                 after {
-                                    if (this@SystemUILyric::clockView.isInitialized) {
-                                        "onWallpaperChanged".log()
-                                        canLoad = true
-                                        hideLyric()
-                                    }
+                                    "onWallpaperChanged".log()
+                                    canLoad = true
+                                    hideLyric()
                                 }
                             }
                             break
@@ -1056,8 +1058,8 @@ class SystemUILyric : BaseHook() {
                         val newConfig = hookParam.args[0] as Configuration
                         // themeMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
                         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE || newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                            if (isReady)
-                                changeLyricStateIfInFullScreenMode()
+                            if (!isReady) return@after
+                            changeLyricStateIfInFullScreenMode()
                         }
                     }
                 }
