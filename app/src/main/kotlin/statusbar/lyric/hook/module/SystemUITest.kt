@@ -57,6 +57,7 @@ class SystemUITest : BaseHook() {
     private var lastTime: Int = 0
     lateinit var context: Context
     lateinit var lastView: TextView
+    var lastViewId = 0
     val testTextView by lazy {
         TextView(context).apply {
             text = moduleRes.getString(R.string.app_name)
@@ -100,42 +101,36 @@ class SystemUITest : BaseHook() {
                         if (className.filterClassName()) {
                             view.filterView {
                                 val parentView = (view.parent as LinearLayout)
-                                val data = if (dataHashMap.isEmpty()) {
-                                    Data(
-                                        className,
-                                        view.id,
-                                        parentView::class.java.name,
-                                        parentView.id,
-                                        false,
-                                        0,
-                                        view.textSize,
-                                        context.resources.getResourceEntryName(view.id)
-                                    )
-                                } else {
-                                    var index = 0
-                                    dataHashMap.values.forEach { data ->
-                                        if (data.textViewClassName == className
-                                            && data.textViewId == view.id
-                                            && data.parentViewClassName == parentView::class.java.name
-                                            && data.parentViewId == parentView.id && data.textSize == view.textSize
-                                            && data.idName == context.resources.getResourceEntryName(view.id)
-                                        ) {
-                                            index += 1
-                                        }
+                                val newData = Data(
+                                    className,
+                                    view.id,
+                                    parentView::class.java.name,
+                                    parentView.id,
+                                    false,
+                                    0,
+                                    view.textSize,
+                                    context.resources.getResourceEntryName(view.id)
+                                )
+                                var index = 0
+                                val exists = dataHashMap.values.any { data ->
+                                    if (data.textViewClassName == className
+                                        && data.textViewId == view.id
+                                        && data.parentViewClassName == parentView::class.java.name
+                                        && data.parentViewId == parentView.id
+                                        && data.textSize == view.textSize
+                                        && data.idName == context.resources.getResourceEntryName(view.id)
+                                    ) {
+                                        index += 1
+                                        true
+                                    } else {
+                                        false
                                     }
-                                    Data(
-                                        className,
-                                        view.id,
-                                        parentView::class.java.name,
-                                        parentView.id,
-                                        index != 0,
-                                        index,
-                                        view.textSize,
-                                        context.resources.getResourceEntryName(view.id)
-                                    )
                                 }
-                                dataHashMap[view] = data
-                                moduleRes.getString(R.string.first_filter).format(data, dataHashMap.size).log()
+                                if (!exists) {
+                                    newData.index = index
+                                    dataHashMap[view] = newData
+                                    moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
+                                }
                             }
                         }
                     }
@@ -230,14 +225,17 @@ class SystemUITest : BaseHook() {
                                 && da.textSize == data.textSize
                                 && da.index == data.index
                             ) {
-                                if (this@SystemUITest::lastView.isInitialized) {
-                                    (lastView.parent as LinearLayout).removeView(testTextView)
-                                    lastView.showView()
+                                if (lastViewId != textview.id) {
+                                    if (this@SystemUITest::lastView.isInitialized) {
+                                        (lastView.parent as LinearLayout).removeView(testTextView)
+                                        lastView.showView()
+                                    }
+                                    textview.hideView()
+                                    val parentLinearLayout = textview.parent as LinearLayout
+                                    parentLinearLayout.addView(testTextView, 0)
+                                    lastViewId = textview.id
+                                    lastView = textview
                                 }
-                                textview.hideView()
-                                val parentLinearLayout = textview.parent as LinearLayout
-                                parentLinearLayout.addView(testTextView, 0)
-                                lastView = textview
                                 return@forEach
                             }
                         }

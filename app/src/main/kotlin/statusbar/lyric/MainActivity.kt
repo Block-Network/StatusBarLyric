@@ -32,7 +32,6 @@ class MainActivity : ComponentActivity() {
     lateinit var createDocumentLauncher: ActivityResultLauncher<Intent>
     lateinit var openDocumentLauncher: ActivityResultLauncher<Intent>
 
-
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context

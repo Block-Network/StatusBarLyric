@@ -22,6 +22,8 @@ import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
+import androidx.core.view.isVisible
 import com.github.kyuubiran.ezxhelper.EzXHelper
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
@@ -71,11 +73,12 @@ class TitleDialog(context: Context) : Dialog(context) {
     }
     private val iconView: ImageView by lazy {
         ImageView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                width = dp2px(context, 15f)
-                height = dp2px(context, 15f)
-                setMargins(0, 0, 15, 0)
-            }
+            layoutParams =
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    width = dp2px(context, 15f)
+                    height = dp2px(context, 15f)
+                    setMargins(0, 0, 15, 0)
+                }
             setImageDrawable(EzXHelper.moduleRes.getDrawable(R.drawable.ic_song, null))
         }
     }
@@ -86,8 +89,8 @@ class TitleDialog(context: Context) : Dialog(context) {
         gravity = Gravity.CENTER
         background = GradientDrawable().apply {
             cornerRadius = config.titleBackgroundRadius.toFloat()
-            setColor(Color.parseColor(config.titleColorAndTransparency))
-            setStroke(config.titleBackgroundStrokeWidth, Color.parseColor(config.titleBackgroundStrokeColorAndTransparency))
+            setColor(config.titleColorAndTransparency.toColorInt())
+            setStroke(config.titleBackgroundStrokeWidth, config.titleBackgroundStrokeColorAndTransparency.toColorInt())
         }
         setPadding(40, 5, 40, 5)
     }
@@ -136,7 +139,7 @@ class TitleDialog(context: Context) : Dialog(context) {
 
     fun showTitle(title: String) {
         setTitle(title)
-        if (root.visibility == View.VISIBLE) {
+        if (root.isVisible) {
             delayedHide()
             return
         }

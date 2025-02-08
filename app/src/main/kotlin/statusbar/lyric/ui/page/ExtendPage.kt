@@ -183,9 +183,6 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                         SuperDropdown(
                             title = stringResource(R.string.view_location),
                             items = viewLocationOptions,
-                            titleColor = BasicComponentDefaults.titleColor(
-                                color = MiuixTheme.colorScheme.primary
-                            ),
                             selectedIndex = viewLocationSelectedOption.intValue,
                             onSelectedIndexChange = { newOption ->
                                 viewLocationSelectedOption.intValue = newOption

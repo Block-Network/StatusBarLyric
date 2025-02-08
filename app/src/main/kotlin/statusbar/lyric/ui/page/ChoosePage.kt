@@ -1,5 +1,6 @@
 package statusbar.lyric.ui.page
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -100,6 +101,10 @@ fun ChoosePage(navController: NavController) {
         },
         popupHost = { null }
     ) {
+        BackHandler(true) {
+            navController.popBackStack("TestPage", inclusive = false)
+        }
+
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)

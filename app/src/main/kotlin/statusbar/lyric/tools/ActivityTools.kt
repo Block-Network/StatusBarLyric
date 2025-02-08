@@ -26,11 +26,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.core.graphics.toColorInt
+import androidx.core.net.toUri
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.data.Data
@@ -73,7 +73,7 @@ object ActivityTools {
             unit(default)
         } else {
             try {
-                Color.parseColor(value)
+                value.toColorInt()
             } catch (_: Exception) {
                 showToastOnLooper(context.getString(R.string.color_error))
                 return
@@ -89,7 +89,7 @@ object ActivityTools {
             try {
                 value.split(",").forEach {
                     if (it.isNotEmpty()) {
-                        Color.parseColor(it.trim())
+                        it.trim().toColorInt()
                     }
                 }
             } catch (_: Exception) {
@@ -109,7 +109,7 @@ object ActivityTools {
     }
 
     fun openUrl(url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     }
 
     fun restartApp() {
