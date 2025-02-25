@@ -112,6 +112,8 @@ class SystemUILyric : BaseHook() {
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private var lastColor: Int by observableChange(Color.WHITE) { oldValue, newValue ->
+        if (oldValue == newValue) return@observableChange
+        "Change Color: $newValue".log()
         goMainThread {
             if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) {
                 lyricView.setTextColor(newValue)
@@ -120,7 +122,6 @@ class SystemUILyric : BaseHook() {
                 iconView.setColorFilter(newValue, PorterDuff.Mode.SRC_IN)
             }
         }
-        "Change Color".log()
     }
     private var lastLyric: String = ""
     private var title: String by observableChange("") { _, newValue ->
@@ -584,7 +585,9 @@ class SystemUILyric : BaseHook() {
             val isTransientShown = defaultDisplay?.getObjectField("isTransientShown")
             statusbarShowing = isTransientShown?.getObjectField("\$\$delegate_0")?.callMethod("getValue") as Boolean
         }
-        if (isInFullScreenMode && context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (isInFullScreenMode &&
+            (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE ||
+                    context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)) {
             if (statusbarShowing && isPlaying) {
                 if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing || isClickHide)) {
                     isHiding = false
@@ -836,7 +839,7 @@ class SystemUILyric : BaseHook() {
         isStop = false
         isPlaying = true
         goMainThread {
-            if (config.lyricColor.isEmpty()) lastColor = clockView.currentTextColor
+            lastColor = clockView.currentTextColor
             lyricLayout.showView()
             if (config.hideTime) {
                 clockView.hideView()
