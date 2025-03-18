@@ -46,6 +46,9 @@ class MainActivity : ComponentActivity() {
 
         context = this
         enableEdgeToEdge()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false // Xiaomi moment, this code must be here
+        }
 
         createDocumentLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()

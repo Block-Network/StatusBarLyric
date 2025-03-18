@@ -131,12 +131,7 @@ fun PortraitLayout(
         composable("LyricPage") { LyricPage(navController, currentStartDestination) }
         composable("IconPage") { IconPage(navController, currentStartDestination) }
         composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }
-        composable("SystemSpecialPage") {
-            SystemSpecialPage(
-                navController,
-                currentStartDestination
-            )
-        }
+        composable("SystemSpecialPage") { SystemSpecialPage(navController, currentStartDestination) }
     }
 }
 
@@ -212,12 +207,7 @@ fun LandscapeLayout(
             composable("LyricPage") { LyricPage(navController, currentStartDestination) }
             composable("IconPage") { IconPage(navController, currentStartDestination) }
             composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }
-            composable("SystemSpecialPage") {
-                SystemSpecialPage(
-                    navController,
-                    currentStartDestination
-                )
-            }
+            composable("SystemSpecialPage") { SystemSpecialPage(navController, currentStartDestination) }
         }
     }
 }
