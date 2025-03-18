@@ -32,7 +32,12 @@ object XiaomiUtils {
             putString("status_bar_strong_toast", "show_custom_strong_toast")
         }
         val service = context.getSystemService(Context.STATUS_BAR_SERVICE)
-        service.javaClass.getMethod("setStatus", Int::class.javaPrimitiveType, String::class.java, Bundle::class.java)
+        service.javaClass.getMethod(
+            "setStatus",
+            Int::class.javaPrimitiveType,
+            String::class.java,
+            Bundle::class.java
+        )
             .invoke(service, 1, "strong_toast_action", bundle)
     }
 

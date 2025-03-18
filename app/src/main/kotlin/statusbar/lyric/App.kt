@@ -71,7 +71,10 @@ fun App() {
 }
 
 @Composable
-fun PortraitLayout(navController: NavHostController, currentStartDestination: MutableState<String>) {
+fun PortraitLayout(
+    navController: NavHostController,
+    currentStartDestination: MutableState<String>
+) {
     val windowWidth = getWindowSize().width
     val easing = CubicBezierEasing(0.12f, 0.38f, 0.2f, 1f)
 
@@ -128,12 +131,20 @@ fun PortraitLayout(navController: NavHostController, currentStartDestination: Mu
         composable("LyricPage") { LyricPage(navController, currentStartDestination) }
         composable("IconPage") { IconPage(navController, currentStartDestination) }
         composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }
-        composable("SystemSpecialPage") { SystemSpecialPage(navController, currentStartDestination) }
+        composable("SystemSpecialPage") {
+            SystemSpecialPage(
+                navController,
+                currentStartDestination
+            )
+        }
     }
 }
 
 @Composable
-fun LandscapeLayout(navController: NavHostController, currentStartDestination: MutableState<String>) {
+fun LandscapeLayout(
+    navController: NavHostController,
+    currentStartDestination: MutableState<String>
+) {
     val windowWidth = getWindowSize().width
     val easing = CubicBezierEasing(0.12f, 0.88f, 0.2f, 1f)
     val dividerLineColor = MiuixTheme.colorScheme.dividerLine
@@ -201,7 +212,12 @@ fun LandscapeLayout(navController: NavHostController, currentStartDestination: M
             composable("LyricPage") { LyricPage(navController, currentStartDestination) }
             composable("IconPage") { IconPage(navController, currentStartDestination) }
             composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }
-            composable("SystemSpecialPage") { SystemSpecialPage(navController, currentStartDestination) }
+            composable("SystemSpecialPage") {
+                SystemSpecialPage(
+                    navController,
+                    currentStartDestination
+                )
+            }
         }
     }
 }

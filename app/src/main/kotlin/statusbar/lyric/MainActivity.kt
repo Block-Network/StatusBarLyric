@@ -111,7 +111,11 @@ class MainActivity : ComponentActivity() {
                     } ?: arrayListOf()
                     if (dataList.isEmpty()) {
                         "DataList is empty".log()
-                        Toast.makeText(context, context.getString(R.string.not_found_hook), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.not_found_hook),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         testReceiver = false
                     } else {
                         "DataList size: ${dataList.size}".log()

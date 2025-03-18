@@ -36,7 +36,8 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
     private var viewWidth = 0f
     private var scrollSpeed = 4f
     private var currentX = 0f
-    private val startScrollRunnable = Runnable { Choreographer.getInstance().postFrameCallback(this) }
+    private val startScrollRunnable =
+        Runnable { Choreographer.getInstance().postFrameCallback(this) }
 
     init {
         paint.style = Paint.Style.FILL_AND_STROKE
@@ -100,7 +101,10 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
 
     private fun startScroll() {
         isScrolling = true
-        postDelayed(startScrollRunnable, config.animationDuration + if (config.dynamicLyricSpeed) 200L else 500L)
+        postDelayed(
+            startScrollRunnable,
+            config.animationDuration + if (config.dynamicLyricSpeed) 200L else 500L
+        )
     }
 
     private fun stopScroll() {

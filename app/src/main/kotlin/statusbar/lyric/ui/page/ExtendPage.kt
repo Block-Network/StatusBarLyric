@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -58,9 +57,9 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
@@ -129,12 +128,14 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                            navController.popBackStack(currentStartDestination.value, inclusive = false)
+                            navController.popBackStack(
+                                currentStartDestination.value,
+                                inclusive = false
+                            )
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(40.dp),
-                            imageVector = MiuixIcons.ArrowBack,
+                            imageVector = MiuixIcons.Useful.Back,
                             contentDescription = "Back",
                             tint = MiuixTheme.colorScheme.onBackground
                         )

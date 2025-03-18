@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -51,7 +50,7 @@ import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
@@ -93,12 +92,14 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                            navController.popBackStack(currentStartDestination.value, inclusive = false)
+                            navController.popBackStack(
+                                currentStartDestination.value,
+                                inclusive = false
+                            )
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(40.dp),
-                            imageVector = MiuixIcons.ArrowBack,
+                            imageVector = MiuixIcons.Useful.Back,
                             contentDescription = "Back",
                             tint = MiuixTheme.colorScheme.onBackground
                         )

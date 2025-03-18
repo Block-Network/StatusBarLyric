@@ -79,7 +79,11 @@ class SystemUITest : BaseHook() {
                 isLoad = true
                 context = it.args[0] as Context
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"), Context.RECEIVER_EXPORTED)
+                    context.registerReceiver(
+                        TestReceiver(),
+                        IntentFilter("TestReceiver"),
+                        Context.RECEIVER_EXPORTED
+                    )
                 } else {
                     context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"))
                 }
@@ -118,7 +122,9 @@ class SystemUITest : BaseHook() {
                                         && data.parentViewClassName == parentView::class.java.name
                                         && data.parentViewId == parentView.id
                                         && data.textSize == view.textSize
-                                        && data.idName == context.resources.getResourceEntryName(view.id)
+                                        && data.idName == context.resources.getResourceEntryName(
+                                            view.id
+                                        )
                                     ) {
                                         index += 1
                                         true
@@ -129,7 +135,8 @@ class SystemUITest : BaseHook() {
                                 if (!exists) {
                                     newData.index = index
                                     dataHashMap[view] = newData
-                                    moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
+                                    moduleRes.getString(R.string.first_filter)
+                                        .format(newData, dataHashMap.size).log()
                                 }
                             }
                         }
@@ -140,7 +147,10 @@ class SystemUITest : BaseHook() {
     }
 
     private fun String.isTimeSame(callback: () -> Unit) {
-        val timeFormat = arrayOf(SimpleDateFormat("H:mm", Locale.getDefault()), SimpleDateFormat("h:mm", Locale.getDefault()))
+        val timeFormat = arrayOf(
+            SimpleDateFormat("H:mm", Locale.getDefault()),
+            SimpleDateFormat("h:mm", Locale.getDefault())
+        )
         val nowTime = System.currentTimeMillis()
         timeFormat.forEach {
             if (it.format(nowTime).toRegex().containsMatchIn(this)) {

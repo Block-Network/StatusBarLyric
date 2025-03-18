@@ -57,7 +57,8 @@ object Tools {
 
     private var index: Int = 0
 
-    val buildTime: String = SimpleDateFormat("yyyy/M/d H:m:s", Locale.CHINA).format(BuildConfig.BUILD_TIME)
+    val buildTime: String =
+        SimpleDateFormat("yyyy/M/d H:m:s", Locale.CHINA).format(BuildConfig.BUILD_TIME)
 
     val isPad by lazy { getSystemProperties("ro.build.characteristics") == "tablet" }
 
@@ -79,7 +80,11 @@ object Tools {
     }
 
     fun dp2px(context: Context, dpValue: Float): Int =
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
+        TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dpValue,
+            context.resources.displayMetrics
+        ).toInt()
 
     internal fun isPresent(name: String): Boolean {
         return try {
@@ -93,7 +98,8 @@ object Tools {
     @SuppressLint("PrivateApi")
     fun getSystemProperties(key: String): String {
         val ret: String = try {
-            Class.forName("android.os.SystemProperties").getDeclaredMethod("get", String::class.java).invoke(null, key) as String
+            Class.forName("android.os.SystemProperties")
+                .getDeclaredMethod("get", String::class.java).invoke(null, key) as String
         } catch (iAE: IllegalArgumentException) {
             throw iAE
         } catch (_: Exception) {
@@ -173,8 +179,14 @@ object Tools {
     }
 
     fun getSP(context: Context, key: String): SharedPreferences? {
-        @Suppress("DEPRECATION", "WorldReadableFiles") return context.createDeviceProtectedStorageContext()
-            .getSharedPreferences(key, if (isHook()) Context.MODE_WORLD_READABLE else Context.MODE_PRIVATE)
+        @Suppress(
+            "DEPRECATION",
+            "WorldReadableFiles"
+        ) return context.createDeviceProtectedStorageContext()
+            .getSharedPreferences(
+                key,
+                if (isHook()) Context.MODE_WORLD_READABLE else Context.MODE_PRIVATE
+            )
     }
 
     fun shell(command: String, isSu: Boolean) {
@@ -195,7 +207,10 @@ object Tools {
         }
     }
 
-    fun checkBroadcastReceiverState(context: Context, broadcastReceiver: BroadcastReceiver?): Boolean {
+    fun checkBroadcastReceiverState(
+        context: Context,
+        broadcastReceiver: BroadcastReceiver?
+    ): Boolean {
         context.isNull { return false }
         broadcastReceiver.isNull { return false }
 

@@ -33,10 +33,13 @@ import statusbar.lyric.tools.Tools.dp2px
 @SuppressLint("InternalInsetResource", "DiscouragedApi")
 class TitleDialog(context: Context) : Dialog(context) {
 
-    private val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
-    private val statusBarHeight = if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId) + 10 else 0
+    private val resourceId =
+        context.resources.getIdentifier("status_bar_height", "dimen", "android")
+    private val statusBarHeight =
+        if (resourceId > 0) context.resources.getDimensionPixelSize(resourceId) + 10 else 0
     private val h2 = statusBarHeight / 2
-    private val maxWidth = context.resources.displayMetrics.widthPixels / 2 - 80 - statusBarHeight / 2
+    private val maxWidth =
+        context.resources.displayMetrics.widthPixels / 2 - 80 - statusBarHeight / 2
     var showIng: Boolean = false
     var hiding: Boolean = false
     private var isStop: Boolean = false
@@ -74,7 +77,10 @@ class TitleDialog(context: Context) : Dialog(context) {
     private val iconView: ImageView by lazy {
         ImageView(context).apply {
             layoutParams =
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
                     width = dp2px(context, 15f)
                     height = dp2px(context, 15f)
                     setMargins(0, 0, 15, 0)
@@ -90,7 +96,10 @@ class TitleDialog(context: Context) : Dialog(context) {
         background = GradientDrawable().apply {
             cornerRadius = config.titleBackgroundRadius.toFloat()
             setColor(config.titleColorAndTransparency.toColorInt())
-            setStroke(config.titleBackgroundStrokeWidth, config.titleBackgroundStrokeColorAndTransparency.toColorInt())
+            setStroke(
+                config.titleBackgroundStrokeWidth,
+                config.titleBackgroundStrokeColorAndTransparency.toColorInt()
+            )
         }
         setPadding(40, 5, 40, 5)
     }

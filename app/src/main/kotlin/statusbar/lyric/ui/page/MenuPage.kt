@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -70,9 +69,9 @@ import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @SuppressLint("ContextCastToActivity")
@@ -116,12 +115,14 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                            navController.popBackStack(currentStartDestination.value, inclusive = false)
+                            navController.popBackStack(
+                                currentStartDestination.value,
+                                inclusive = false
+                            )
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(40.dp),
-                            imageVector = MiuixIcons.ArrowBack,
+                            imageVector = MiuixIcons.Useful.Back,
                             contentDescription = "Back",
                             tint = MiuixTheme.colorScheme.onBackground
                         )
@@ -245,7 +246,11 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
                         )
                         Text(
-                            text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) ${bigTextOne(BuildConfig.BUILD_TYPE)}",
+                            text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) ${
+                                bigTextOne(
+                                    BuildConfig.BUILD_TYPE
+                                )
+                            }",
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
