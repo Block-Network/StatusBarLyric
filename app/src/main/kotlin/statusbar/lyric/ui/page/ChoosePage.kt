@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -63,7 +64,12 @@ fun ChoosePage(navController: NavController) {
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
         backgroundColor = MiuixTheme.colorScheme.background,
-        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+        tint = HazeTint(
+            MiuixTheme.colorScheme.background.copy(
+                if (scrollBehavior.state.collapsedFraction <= 0f) 1f
+                else lerp(1f, 0.67f, (scrollBehavior.state.collapsedFraction))
+            )
+        )
     )
 
     Scaffold(
@@ -82,7 +88,7 @@ fun ChoosePage(navController: NavController) {
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
+                        modifier = Modifier.padding(start = 20.dp),
                         onClick = {
                             navController.popBackStack("TestPage", inclusive = false)
                         }
@@ -94,6 +100,7 @@ fun ChoosePage(navController: NavController) {
                         )
                     }
                 },
+                horizontalPadding = 26.dp,
                 defaultWindowInsetsPadding = false
             )
         },

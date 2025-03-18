@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
@@ -56,6 +56,8 @@ import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperSwitch
+import top.yukonga.miuix.kmp.icon.MiuixIcons
+import top.yukonga.miuix.kmp.icon.icons.useful.Settings
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.BackHandler
 import top.yukonga.miuix.kmp.utils.getWindowSize
@@ -69,7 +71,12 @@ fun HomePage(navController: NavController) {
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
         backgroundColor = MiuixTheme.colorScheme.background,
-        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+        tint = HazeTint(
+            MiuixTheme.colorScheme.background.copy(
+                if (scrollBehavior.state.collapsedFraction <= 0f) 1f
+                else lerp(1f, 0.67f, (scrollBehavior.state.collapsedFraction))
+            )
+        )
     )
 
     LaunchedEffect(Unit) {
@@ -93,19 +100,19 @@ fun HomePage(navController: NavController) {
                 scrollBehavior = scrollBehavior,
                 actions = {
                     IconButton(
-                        modifier = Modifier.padding(end = 15.dp),
+                        modifier = Modifier.padding(end = 20.dp),
                         onClick = {
                             navController.navigate("MenuPage")
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(28.dp),
-                            painter = painterResource(id = R.drawable.ic_menu),
+                            imageVector = MiuixIcons.Useful.Settings,
                             contentDescription = "Menu",
                             tint = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.8f)
                         )
                     }
-                }
+                },
+                horizontalPadding = 26.dp,
             )
         },
         popupHost = { null }
