@@ -129,8 +129,6 @@ fun LandscapeLayout(
     val windowWidth = getWindowSize().width
     val easing = CubicBezierEasing(0.12f, 0.88f, 0.2f, 1f)
     val dividerLineColor = MiuixTheme.colorScheme.dividerLine
-    val cf = remember { mutableStateOf(false) }
-    val scaleAnim = animateFloatAsState(if (cf.value) 0.9f else 1f)
 
     Row(
         modifier = Modifier
@@ -158,9 +156,7 @@ fun LandscapeLayout(
         NavHost(
             navController = navController,
             startDestination = "HomePage",
-            modifier = Modifier
-                .weight(1f)
-                .scale(scaleAnim.value),
+            modifier = Modifier.weight(1f),
             enterTransition = {
                 slideInHorizontally(
                     initialOffsetX = { windowWidth },
