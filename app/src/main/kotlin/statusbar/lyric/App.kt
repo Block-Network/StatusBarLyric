@@ -2,7 +2,9 @@ package statusbar.lyric
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -24,11 +26,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.finishAffinity
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -55,7 +59,7 @@ fun App() {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val navController = rememberNavController()
-    val currentStartDestination = remember { mutableStateOf("") }
+    val currentStartDestination = remember { mutableStateOf("HomePage") }
 
     AppTheme {
         Scaffold {
@@ -77,17 +81,6 @@ fun PortraitLayout(
 ) {
     val windowWidth = getWindowSize().width
     val easing = CubicBezierEasing(0.12f, 0.38f, 0.2f, 1f)
-
-    LaunchedEffect(navController) {
-        currentStartDestination.value = "HomePage"
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.route == "EmptyPage") {
-                navController.navigate("HomePage") {
-                    popUpTo("HomePage") { inclusive = true }
-                }
-            }
-        }
-    }
 
     NavHost(
         navController = navController,
@@ -124,14 +117,7 @@ fun PortraitLayout(
         }
     ) {
         composable("HomePage") { HomePage(navController) }
-        composable("EmptyPage") { EmptyPage() }
-        composable("ChoosePage") { ChoosePage(navController) }
-        composable("TestPage") { TestPage(navController, currentStartDestination) }
-        composable("MenuPage") { MenuPage(navController, currentStartDestination) }
-        composable("LyricPage") { LyricPage(navController, currentStartDestination) }
-        composable("IconPage") { IconPage(navController, currentStartDestination) }
-        composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }
-        composable("SystemSpecialPage") { SystemSpecialPage(navController, currentStartDestination) }
+        pageDestinations(navController, currentStartDestination)
     }
 }
 
@@ -143,17 +129,8 @@ fun LandscapeLayout(
     val windowWidth = getWindowSize().width
     val easing = CubicBezierEasing(0.12f, 0.88f, 0.2f, 1f)
     val dividerLineColor = MiuixTheme.colorScheme.dividerLine
-
-    LaunchedEffect(navController) {
-        currentStartDestination.value = "EmptyPage"
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.route == "HomePage") {
-                navController.navigate("EmptyPage") {
-                    popUpTo("EmptyPage") { inclusive = true }
-                }
-            }
-        }
-    }
+    val cf = remember { mutableStateOf(false) }
+    val scaleAnim = animateFloatAsState(if (cf.value) 0.9f else 1f)
 
     Row(
         modifier = Modifier
@@ -180,8 +157,10 @@ fun LandscapeLayout(
         }
         NavHost(
             navController = navController,
-            startDestination = "EmptyPage",
-            modifier = Modifier.weight(1f),
+            startDestination = "HomePage",
+            modifier = Modifier
+                .weight(1f)
+                .scale(scaleAnim.value),
             enterTransition = {
                 slideInHorizontally(
                     initialOffsetX = { windowWidth },
@@ -199,17 +178,25 @@ fun LandscapeLayout(
                 )
             },
         ) {
-            composable("HomePage") { HomePage(navController) }
-            composable("EmptyPage") { EmptyPage() }
-            composable("ChoosePage") { ChoosePage(navController) }
-            composable("TestPage") { TestPage(navController, currentStartDestination) }
-            composable("MenuPage") { MenuPage(navController, currentStartDestination) }
-            composable("LyricPage") { LyricPage(navController, currentStartDestination) }
-            composable("IconPage") { IconPage(navController, currentStartDestination) }
-            composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }
-            composable("SystemSpecialPage") { SystemSpecialPage(navController, currentStartDestination) }
+            composable("HomePage") { EmptyPage() }
+            pageDestinations(navController, currentStartDestination)
         }
     }
+}
+
+
+fun  NavGraphBuilder.pageDestinations(
+    navController: NavHostController,
+    currentStartDestination: MutableState<String>
+) {
+    composable("ChoosePage") { ChoosePage(navController) }
+    composable("TestPage") { TestPage(navController, currentStartDestination) }
+    composable("MenuPage") { MenuPage(navController, currentStartDestination) }
+    composable("LyricPage") { LyricPage(navController, currentStartDestination) }
+    composable("IconPage") { IconPage(navController, currentStartDestination) }
+    composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }
+    composable("SystemSpecialPage") { SystemSpecialPage(navController, currentStartDestination) }
+
 }
 
 @Composable
