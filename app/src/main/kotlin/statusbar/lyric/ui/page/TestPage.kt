@@ -95,7 +95,7 @@ fun TestPage(
                     IconButton(
                         modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.popBackStack("HomePage", inclusive = false)
+                            navController.popBackStack()
                         }
                     ) {
                         Icon(
@@ -111,9 +111,6 @@ fun TestPage(
         },
         popupHost = { null }
     ) {
-        BackHandler {
-            navController.popBackStack("HomePage", inclusive = false)
-        }
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -160,6 +157,9 @@ fun TestPage(
                                         when (testReceiver) {
                                             true -> if (currentRoute.value != "ChoosePage") {
                                                 navController.navigate("ChoosePage") {
+                                                    popUpTo("TestPage") {
+                                                        inclusive = false
+                                                    }
                                                     launchSingleTop = true
                                                     restoreState = true
                                                 }
@@ -172,6 +172,9 @@ fun TestPage(
                                                         if (testReceiver) {
                                                             if (currentRoute.value != "ChoosePage") {
                                                                 navController.navigate("ChoosePage") {
+                                                                    popUpTo("TestPage") {
+                                                                        inclusive = false
+                                                                    }
                                                                     launchSingleTop = true
                                                                     restoreState = true
                                                                 }

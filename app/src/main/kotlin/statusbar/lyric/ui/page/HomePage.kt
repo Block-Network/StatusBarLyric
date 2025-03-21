@@ -106,6 +106,9 @@ fun HomePage(
                         onClick = {
                             if (currentRoute.value != "MenuPage") {
                                 navController.navigate("MenuPage") {
+                                    popUpTo("HomePage") {
+                                        saveState = true
+                                    }
                                     launchSingleTop = true
                                     restoreState = true
                                 }
@@ -239,6 +242,9 @@ fun HomePage(
                                         onClick = {
                                             if (currentRoute.value != "TestPage") {
                                                 navController.navigate("TestPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
                                                     launchSingleTop = true
                                                     restoreState = true
                                                 }
@@ -270,6 +276,9 @@ fun HomePage(
                                         onClick = {
                                             if (currentRoute.value != "LyricPage") {
                                                 navController.navigate("LyricPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
                                                     launchSingleTop = true
                                                     restoreState = true
                                                 }
@@ -282,6 +291,9 @@ fun HomePage(
                                         onClick = {
                                             if (currentRoute.value != "IconPage") {
                                                 navController.navigate("IconPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
                                                     launchSingleTop = true
                                                     restoreState = true
                                                 }
@@ -313,6 +325,9 @@ fun HomePage(
                                         onClick = {
                                             if (currentRoute.value != "ExtendPage") {
                                                 navController.navigate("ExtendPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
                                                     launchSingleTop = true
                                                     restoreState = true
                                                 }
@@ -326,6 +341,9 @@ fun HomePage(
                                         onClick = {
                                             if (currentRoute.value != "SystemSpecialPage") {
                                                 navController.navigate("SystemSpecialPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
                                                     launchSingleTop = true
                                                     restoreState = true
                                                 }

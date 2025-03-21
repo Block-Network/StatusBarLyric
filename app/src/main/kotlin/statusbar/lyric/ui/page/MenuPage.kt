@@ -114,7 +114,7 @@ fun MenuPage(
                     IconButton(
                         modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.popBackStack("HomePage", inclusive = false)
+                            navController.popBackStack()
                         }
                     ) {
                         Icon(
@@ -130,9 +130,6 @@ fun MenuPage(
         },
         popupHost = { null }
     ) {
-        BackHandler {
-            navController.popBackStack("HomePage", inclusive = false)
-        }
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)

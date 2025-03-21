@@ -93,7 +93,7 @@ fun ChoosePage(
                     IconButton(
                         modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.popBackStack("TestPage", inclusive = false)
+                            navController.popBackStack()
                         }
                     ) {
                         Icon(
@@ -109,9 +109,6 @@ fun ChoosePage(
         },
         popupHost = { null }
     ) {
-        BackHandler {
-            navController.popBackStack("TestPage", inclusive = false)
-        }
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
