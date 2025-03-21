@@ -36,10 +36,12 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.github.kyuubiran.ezxhelper.EzXHelper
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
+import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.ActivityTools.isHook
@@ -179,31 +181,38 @@ object Tools {
     }
 
     fun getSP(context: Context, key: String): SharedPreferences? {
-        @Suppress(
-            "DEPRECATION",
-            "WorldReadableFiles"
-        ) return context.createDeviceProtectedStorageContext()
+        @Suppress("DEPRECATION", "WorldReadableFiles")
+        return context.createDeviceProtectedStorageContext()
             .getSharedPreferences(
-                key,
-                if (isHook()) Context.MODE_WORLD_READABLE else Context.MODE_PRIVATE
+                key, if (isHook()) Context.MODE_WORLD_READABLE else Context.MODE_PRIVATE
             )
     }
 
     fun shell(command: String, isSu: Boolean) {
         try {
             if (isSu) {
-                val p = Runtime.getRuntime().exec("su")
-                val outputStream = p.outputStream
-                DataOutputStream(outputStream).apply {
-                    writeBytes(command)
-                    flush()
-                    close()
+                try {
+                    val p = Runtime.getRuntime().exec("su")
+                    val outputStream = p.outputStream
+                    DataOutputStream(outputStream).apply {
+                        writeBytes(command)
+                        flush()
+                        close()
+                    }
+                    outputStream.close()
+                } catch (_: Exception) {
+                    // Su shell command failed
+                    Handler(Looper.getMainLooper()).post {
+                        Toast
+                            .makeText(context, "Root permissions required!!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
-                outputStream.close()
             } else {
                 Runtime.getRuntime().exec(command)
             }
         } catch (_: Throwable) {
+            // Shell command failed
         }
     }
 

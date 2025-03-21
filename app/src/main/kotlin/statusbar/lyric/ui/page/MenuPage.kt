@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Build
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -50,9 +51,6 @@ import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.bigTextOne
 import statusbar.lyric.tools.Tools.buildTime
 import statusbar.lyric.tools.Tools.getPhoneName
-import statusbar.lyric.tools.XiaomiUtils
-import statusbar.lyric.tools.XiaomiUtils.isHyperOS
-import statusbar.lyric.tools.XiaomiUtils.isXiaomi
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -359,11 +357,7 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
                 onClick = {
-                    if (isXiaomi && isHyperOS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        XiaomiUtils.restartXiaomiSystemUI(context)
-                    } else {
-                        Tools.shell("killall com.android.systemui", true)
-                    }
+                    Tools.shell("killall com.android.systemui", true)
                     dismissDialog(showDialog)
                 }
             )
