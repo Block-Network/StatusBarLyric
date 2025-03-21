@@ -164,7 +164,7 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
+        BackHandler {
             navController.navigate(currentStartDestination.value) {
                 popUpTo(navController.graph.startDestinationId) {
                     saveState = true

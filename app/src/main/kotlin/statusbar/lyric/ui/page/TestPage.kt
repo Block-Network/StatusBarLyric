@@ -118,7 +118,7 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
+        BackHandler {
             navController.navigate(currentStartDestination.value) {
                 popUpTo(navController.graph.startDestinationId) {
                     saveState = true

@@ -26,7 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
-import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -34,7 +33,6 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.BuildConfig
-import statusbar.lyric.MainActivity
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.MainActivity.Companion.isLoad
 import statusbar.lyric.R
@@ -60,7 +58,6 @@ import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Settings
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.BackHandler
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
@@ -118,9 +115,6 @@ fun HomePage(navController: NavController) {
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
-            finishAffinity(context as MainActivity)
-        }
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)

@@ -154,7 +154,7 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
+        BackHandler {
             navController.navigate(currentStartDestination.value) {
                 popUpTo(navController.graph.startDestinationId) {
                     saveState = true

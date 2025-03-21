@@ -107,7 +107,7 @@ fun ChoosePage(navController: NavController) {
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
+        BackHandler {
             navController.popBackStack("TestPage", inclusive = false)
         }
 

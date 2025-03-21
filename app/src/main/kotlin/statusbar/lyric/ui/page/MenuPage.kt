@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -139,7 +138,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
+        BackHandler {
             navController.navigate(currentStartDestination.value) {
                 popUpTo(navController.graph.startDestinationId) {
                     saveState = true

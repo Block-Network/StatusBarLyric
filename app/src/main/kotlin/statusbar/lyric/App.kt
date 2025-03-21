@@ -27,13 +27,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.ui.page.ChoosePage
 import statusbar.lyric.ui.page.ExtendPage
 import statusbar.lyric.ui.page.HomePage
@@ -46,7 +44,6 @@ import statusbar.lyric.ui.theme.AppTheme
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.BackHandler
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
@@ -196,9 +193,6 @@ fun EmptyPage() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        BackHandler(true) {
-            finishAffinity(context as MainActivity)
-        }
         Icon(
             painter = painterResource(R.drawable.ic_launcher_foreground),
             contentDescription = null,

@@ -130,7 +130,7 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
+        BackHandler {
             navController.navigate(currentStartDestination.value) {
                 popUpTo(navController.graph.startDestinationId) {
                     saveState = true
