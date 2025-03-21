@@ -75,7 +75,9 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @SuppressLint("ContextCastToActivity")
 @Composable
-fun MenuPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun MenuPage(
+    navController: NavController
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val ac = LocalContext.current as Activity
     val outLog = remember { mutableStateOf(config.outLog) }
@@ -112,17 +114,7 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                     IconButton(
                         modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(
-                                currentStartDestination.value,
-                                inclusive = false
-                            )
+                            navController.popBackStack("HomePage", inclusive = false)
                         }
                     ) {
                         Icon(
@@ -139,16 +131,8 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
         popupHost = { null }
     ) {
         BackHandler {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
+            navController.popBackStack("HomePage", inclusive = false)
         }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -216,7 +200,8 @@ fun MenuPage(navController: NavController, currentStartDestination: MutableState
                             title = stringResource(R.string.clear_config),
                             onClick = {
                                 showResetDialog.value = true
-                            }
+                            },
+                            holdDownState = showResetDialog.value
                         )
                     }
                 }

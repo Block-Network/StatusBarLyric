@@ -63,7 +63,9 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun SystemSpecialPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun SystemSpecialPage(
+    navController: NavController
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val mMiuiHideNetworkSpeed = remember { mutableStateOf(config.mMiuiHideNetworkSpeed) }
     val mMiuiPadOptimize = remember { mutableStateOf(config.mMiuiPadOptimize) }
@@ -104,17 +106,7 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
                     IconButton(
                         modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(
-                                currentStartDestination.value,
-                                inclusive = false
-                            )
+                            navController.popBackStack("HomePage", inclusive = false)
                         }
                     ) {
                         Icon(
@@ -131,16 +123,8 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
         popupHost = { null }
     ) {
         BackHandler {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
+            navController.popBackStack("HomePage", inclusive = false)
         }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -221,19 +205,22 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
                                     title = stringResource(R.string.hyperos_texture_radio),
                                     onClick = {
                                         showRadioDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showRadioDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.hyperos_texture_corner),
                                     onClick = {
                                         showCornerDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showCornerDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.hyperos_texture_color),
                                     onClick = {
                                         showBgColorDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showBgColorDialog.value
                                 )
                             }
                         }

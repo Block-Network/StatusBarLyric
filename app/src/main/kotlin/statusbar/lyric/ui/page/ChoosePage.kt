@@ -58,7 +58,9 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun ChoosePage(navController: NavController) {
+fun ChoosePage(
+    navController: NavController
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
 
@@ -110,7 +112,6 @@ fun ChoosePage(navController: NavController) {
         BackHandler {
             navController.popBackStack("TestPage", inclusive = false)
         }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -134,7 +135,8 @@ fun ChoosePage(navController: NavController) {
                                 onClick = {
                                     context.showView(data)
                                     showDialog.value = true
-                                }
+                                },
+                                holdDownState = showDialog.value
                             )
                             ChooseDialog(showDialog, data)
                         }

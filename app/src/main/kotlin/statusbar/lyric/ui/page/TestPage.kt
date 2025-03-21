@@ -57,7 +57,10 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun TestPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun TestPage(
+    navController: NavController,
+    currentRoute: MutableState<String>
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
     val testMode = remember { mutableStateOf(config.testMode) }
@@ -92,17 +95,7 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
                     IconButton(
                         modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(
-                                currentStartDestination.value,
-                                inclusive = false
-                            )
+                            navController.popBackStack("HomePage", inclusive = false)
                         }
                     ) {
                         Icon(
@@ -119,16 +112,8 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
         popupHost = { null }
     ) {
         BackHandler {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
+            navController.popBackStack("HomePage", inclusive = false)
         }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -173,19 +158,33 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
                                     onClick = {
                                         context.getClass()
                                         when (testReceiver) {
-                                            true -> navController.navigate("ChoosePage")
+                                            true -> if (currentRoute.value != "ChoosePage") {
+                                                navController.navigate("ChoosePage") {
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+
                                             else -> {
                                                 Thread {
                                                     Thread.sleep(500)
                                                     goMainThread {
-                                                        if (testReceiver) navController.navigate("ChoosePage") else {
+                                                        if (testReceiver) {
+                                                            if (currentRoute.value != "ChoosePage") {
+                                                                navController.navigate("ChoosePage") {
+                                                                    launchSingleTop = true
+                                                                    restoreState = true
+                                                                }
+                                                            }
+                                                        } else {
                                                             showToastOnLooper(context.getString(R.string.broadcast_receive_timeout))
                                                         }
                                                     }
                                                 }.start()
                                             }
                                         }
-                                    }
+                                    },
+                                    holdDownState = currentRoute.value == "ChoosePage"
                                 )
                             }
                         }

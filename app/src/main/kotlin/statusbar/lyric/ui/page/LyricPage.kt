@@ -65,7 +65,9 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun LyricPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun LyricPage(
+    navController: NavController
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val lyricWidth = remember { mutableStateOf(config.lyricWidth.toString()) }
     val fixedLyricWidth = remember { mutableStateOf(config.fixedLyricWidth) }
@@ -138,17 +140,7 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                     IconButton(
                         modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(
-                                currentStartDestination.value,
-                                inclusive = false
-                            )
+                            navController.popBackStack("HomePage", inclusive = false)
                         }
                     ) {
                         Icon(
@@ -165,16 +157,8 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
         popupHost = { null }
     ) {
         BackHandler {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
+            navController.popBackStack("HomePage", inclusive = false)
         }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -199,7 +183,8 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             title = stringResource(R.string.lyric_width),
                             onClick = {
                                 showLyricWidthDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricWidthDialog.value
                         )
                         AnimatedVisibility(
                             visible = lyricWidth.value != "0",
@@ -219,13 +204,15 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             title = stringResource(R.string.lyric_size),
                             onClick = {
                                 showLyricSizeDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricSizeDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_color_and_transparency),
                             onClick = {
                                 showLyricColorDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricColorDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyrics_are_gradient_and_transparent),
@@ -235,37 +222,43 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             rightText = stringResource(R.string.tips1),
                             onClick = {
                                 showLyricGradientDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricGradientDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyrics_gradient_background_color_and_transparency),
                             onClick = {
                                 showLyricGradientBgColorDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricGradientBgColorDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_background_radius),
                             onClick = {
                                 showLyricBgRadiusDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricBgRadiusDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_letter_spacing),
                             onClick = {
                                 showLyricLetterSpacingDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricLetterSpacingDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_stroke_width),
                             onClick = {
                                 showLyricStrokeWidthDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricStrokeWidthDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_speed),
                             onClick = {
                                 showLyricSpeedDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricSpeedDialog.value
                         )
                     }
                     SmallTitle(
@@ -282,25 +275,29 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             title = stringResource(R.string.lyric_top_margins),
                             onClick = {
                                 showLyricTopMarginsDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricTopMarginsDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_bottom_margins),
                             onClick = {
                                 showLyricBottomMarginsDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricBottomMarginsDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_start_margins),
                             onClick = {
                                 showLyricStartMarginsDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricStartMarginsDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_end_margins),
                             onClick = {
                                 showLyricEndMarginsDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricEndMarginsDialog.value
                         )
                     }
                     SmallTitle(
@@ -337,7 +334,8 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             title = stringResource(R.string.lyrics_animation_duration),
                             onClick = {
                                 showLyricAnimDurationDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricAnimDurationDialog.value
                         )
                     }
                     Card(

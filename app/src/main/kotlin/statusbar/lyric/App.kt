@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,15 +53,24 @@ fun App() {
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val navController = rememberNavController()
-    val currentStartDestination = remember { mutableStateOf("HomePage") }
+
+    val currentRoute = remember {
+        mutableStateOf(navController.currentDestination?.route ?: "")
+    }
+
+    LaunchedEffect(navController) {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            currentRoute.value = destination.route ?: ""
+        }
+    }
 
     AppTheme {
         Scaffold {
             BoxWithConstraints {
                 if (isLandscape || maxWidth > 768.dp) {
-                    LandscapeLayout(navController, currentStartDestination)
+                    LandscapeLayout(navController, currentRoute)
                 } else {
-                    PortraitLayout(navController, currentStartDestination)
+                    PortraitLayout(navController, currentRoute)
                 }
             }
         }
@@ -70,7 +80,7 @@ fun App() {
 @Composable
 fun PortraitLayout(
     navController: NavHostController,
-    currentStartDestination: MutableState<String>
+    currentRoute: MutableState<String>
 ) {
     val windowWidth = getWindowSize().width
     val easing = CubicBezierEasing(0.12f, 0.38f, 0.2f, 1f)
@@ -109,15 +119,15 @@ fun PortraitLayout(
             )
         }
     ) {
-        composable("HomePage") { HomePage(navController) }
-        pageDestinations(navController, currentStartDestination)
+        composable("HomePage") { HomePage(navController, currentRoute) }
+        pageDestinations(navController, currentRoute)
     }
 }
 
 @Composable
 fun LandscapeLayout(
     navController: NavHostController,
-    currentStartDestination: MutableState<String>
+    currentRoute: MutableState<String>
 ) {
     val windowWidth = getWindowSize().width
     val easing = CubicBezierEasing(0.12f, 0.88f, 0.2f, 1f)
@@ -131,7 +141,7 @@ fun LandscapeLayout(
         Box(
             modifier = Modifier.weight(0.88f)
         ) {
-            HomePage(navController)
+            HomePage(navController, currentRoute)
         }
         Canvas(
             Modifier
@@ -168,22 +178,22 @@ fun LandscapeLayout(
             },
         ) {
             composable("HomePage") { EmptyPage() }
-            pageDestinations(navController, currentStartDestination)
+            pageDestinations(navController, currentRoute)
         }
     }
 }
 
 fun NavGraphBuilder.pageDestinations(
     navController: NavHostController,
-    currentStartDestination: MutableState<String>
+    currentRoute: MutableState<String>
 ) {
     composable("ChoosePage") { ChoosePage(navController) }
-    composable("TestPage") { TestPage(navController, currentStartDestination) }
-    composable("MenuPage") { MenuPage(navController, currentStartDestination) }
-    composable("LyricPage") { LyricPage(navController, currentStartDestination) }
-    composable("IconPage") { IconPage(navController, currentStartDestination) }
-    composable("ExtendPage") { ExtendPage(navController, currentStartDestination) }
-    composable("SystemSpecialPage") { SystemSpecialPage(navController, currentStartDestination) }
+    composable("TestPage") { TestPage(navController, currentRoute) }
+    composable("MenuPage") { MenuPage(navController) }
+    composable("LyricPage") { LyricPage(navController) }
+    composable("IconPage") { IconPage(navController) }
+    composable("ExtendPage") { ExtendPage(navController) }
+    composable("SystemSpecialPage") { SystemSpecialPage(navController) }
 
 }
 

@@ -65,7 +65,9 @@ import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun ExtendPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun ExtendPage(
+    navController: NavController
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val viewLocationOptions = listOf(
         stringResource(R.string.title_gravity_start),
@@ -128,17 +130,7 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                     IconButton(
                         modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(
-                                currentStartDestination.value,
-                                inclusive = false
-                            )
+                            navController.popBackStack("HomePage", inclusive = false)
                         }
                     ) {
                         Icon(
@@ -155,16 +147,8 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
         popupHost = { null }
     ) {
         BackHandler {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
+            navController.popBackStack("HomePage", inclusive = false)
         }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -254,13 +238,15 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                                     title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
                                     onClick = {
                                         showCutSongsXRadiusDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showCutSongsXRadiusDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
                                     onClick = {
                                         showCutSongsYRadiusDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showCutSongsYRadiusDialog.value
                                 )
                             }
                         }
@@ -322,31 +308,36 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                                     title = stringResource(R.string.title_delay_duration),
                                     onClick = {
                                         showTitleDelayDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleDelayDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.title_color_and_transparency),
                                     onClick = {
                                         showTitleBgColorDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleBgColorDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.title_background_radius),
                                     onClick = {
                                         showTitleRadiusDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleRadiusDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.title_background_stroke_width),
                                     onClick = {
                                         showTitleStrokeWidthDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleStrokeWidthDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.title_background_stroke_color),
                                     onClick = {
                                         showTitleStrokeColorDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleStrokeColorDialog.value
                                 )
                                 SuperDropdown(
                                     title = stringResource(R.string.title_gravity),

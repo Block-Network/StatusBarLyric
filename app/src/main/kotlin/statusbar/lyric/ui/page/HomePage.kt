@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -61,7 +62,10 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun HomePage(navController: NavController) {
+fun HomePage(
+    navController: NavController,
+    currentRoute: MutableState<String>
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
     val lyricGetterApi = checkLyricGetterApi()
@@ -100,8 +104,14 @@ fun HomePage(navController: NavController) {
                     IconButton(
                         modifier = Modifier.padding(end = 20.dp),
                         onClick = {
-                            navController.navigate("MenuPage")
-                        }
+                            if (currentRoute.value != "MenuPage") {
+                                navController.navigate("MenuPage") {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        },
+                        holdDownState = currentRoute.value == "MenuPage"
                     ) {
                         Icon(
                             imageVector = MiuixIcons.Useful.Settings,
@@ -223,12 +233,18 @@ fun HomePage(navController: NavController) {
                                 ) {
                                     SuperArrow(
                                         title = stringResource(R.string.hook_page),
-                                        summary = if (config.textViewId == 0) stringResource(R.string.test_mode_tips).split(
-                                            "\n"
-                                        )[0] else null,
+                                        summary = if (config.textViewId == 0) {
+                                            stringResource(R.string.test_mode_tips).split("\n")[0]
+                                        } else null,
                                         onClick = {
-                                            navController.navigate("TestPage")
-                                        }
+                                            if (currentRoute.value != "TestPage") {
+                                                navController.navigate("TestPage") {
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "TestPage"
                                     )
                                 }
                             }
@@ -252,14 +268,26 @@ fun HomePage(navController: NavController) {
                                     SuperArrow(
                                         title = stringResource(R.string.lyric_page),
                                         onClick = {
-                                            navController.navigate("LyricPage")
-                                        }
+                                            if (currentRoute.value != "LyricPage") {
+                                                navController.navigate("LyricPage") {
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "LyricPage"
                                     )
                                     SuperArrow(
                                         title = stringResource(R.string.icon_page),
                                         onClick = {
-                                            navController.navigate("IconPage")
-                                        }
+                                            if (currentRoute.value != "IconPage") {
+                                                navController.navigate("IconPage") {
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "IconPage"
                                     )
                                 }
                             }
@@ -283,14 +311,27 @@ fun HomePage(navController: NavController) {
                                     SuperArrow(
                                         title = stringResource(R.string.extend_page),
                                         onClick = {
-                                            navController.navigate("ExtendPage")
-                                        }
+                                            if (currentRoute.value != "ExtendPage") {
+                                                navController.navigate("ExtendPage") {
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "ExtendPage"
                                     )
+
                                     SuperArrow(
                                         title = stringResource(R.string.system_special_page),
                                         onClick = {
-                                            navController.navigate("SystemSpecialPage")
-                                        }
+                                            if (currentRoute.value != "SystemSpecialPage") {
+                                                navController.navigate("SystemSpecialPage") {
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "SystemSpecialPage"
                                     )
                                 }
                             }
