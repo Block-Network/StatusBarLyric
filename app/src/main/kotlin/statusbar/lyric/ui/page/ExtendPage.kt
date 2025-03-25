@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -123,7 +124,9 @@ fun ExtendPage(
                         noiseFactor = 0f
                     }
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.extend_page),
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
@@ -140,7 +143,6 @@ fun ExtendPage(
                         )
                     }
                 },
-                horizontalPadding = 26.dp,
                 defaultWindowInsetsPadding = false
             )
         },
@@ -156,7 +158,7 @@ fun ExtendPage(
             contentPadding = it,
         ) {
             item {
-                Column(Modifier.padding(top = 16.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     Text(
                         modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp),
                         text = stringResource(R.string.module_extend),

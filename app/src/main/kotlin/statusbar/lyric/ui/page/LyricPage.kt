@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -133,7 +134,9 @@ fun LyricPage(
                         noiseFactor = 0f
                     }
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.lyric_page),
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
@@ -150,7 +153,6 @@ fun LyricPage(
                         )
                     }
                 },
-                horizontalPadding = 26.dp,
                 defaultWindowInsetsPadding = false
             )
         },
@@ -166,7 +168,7 @@ fun LyricPage(
             contentPadding = it,
         ) {
             item {
-                Column(Modifier.padding(top = 16.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     SmallTitle(
                         text = stringResource(R.string.module_second)
                     )

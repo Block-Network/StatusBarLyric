@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -97,7 +98,11 @@ fun HomePage(
                         style = hazeStyle
                         blurRadius = 25.dp
                         noiseFactor = 0f
-                    },
+                    }
+                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Left))
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Left))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.app_name),
                 scrollBehavior = scrollBehavior,
                 actions = {
@@ -123,7 +128,7 @@ fun HomePage(
                         )
                     }
                 },
-                horizontalPadding = 26.dp,
+                defaultWindowInsetsPadding = false
             )
         },
         popupHost = { null }
@@ -138,7 +143,7 @@ fun HomePage(
             contentPadding = it,
         ) {
             item {
-                Column(Modifier.padding(top = 18.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()

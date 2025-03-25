@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -86,7 +87,9 @@ fun ChoosePage(
                         noiseFactor = 0f
                     }
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.choose_page),
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
@@ -103,7 +106,6 @@ fun ChoosePage(
                         )
                     }
                 },
-                horizontalPadding = 26.dp,
                 defaultWindowInsetsPadding = false
             )
         },
@@ -119,7 +121,7 @@ fun ChoosePage(
             contentPadding = it
         ) {
             item {
-                Column(Modifier.padding(top = 18.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     dataList.forEach { data ->
                         Card(
                             modifier = Modifier
