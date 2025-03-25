@@ -1,14 +1,14 @@
 [versions]
-android-gradle-plugin = "8.9.0"
+android-gradle-plugin = "8.9.1"
 androidx-core-kit = "1.15.0"
 androidx-activity-compose = "1.10.1"
 androidx-compose-foundation = "1.7.8"
 androidx-navigation-compose = "2.8.9"
-ezXHelper = "2.2.0"
+ezXHelper = "2.2.1"
 haze = "1.5.0"
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 lyric-getter-api = "6.0.0"
-miuix = "0.3.6"
+miuix = "0.3.8"
 xposed = "82"
 
 [libraries]
