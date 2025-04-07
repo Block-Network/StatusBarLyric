@@ -13,14 +13,14 @@ if (rootProject.file("local.properties").canRead()) localProperties.load(rootPro
 
 android {
     namespace = "statusbar.lyric"
-    compileSdk = 35
+    compileSdk = 36
     val buildTime = System.currentTimeMillis()
     defaultConfig {
         applicationId = "statusbar.lyric"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 712
-        versionName = "7.1.2"
+        targetSdk = 36
+        versionCode = 713
+        versionName = "7.1.3"
         aaptOptions.cruncherEnabled = false
         dependenciesInfo.includeInApk = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")

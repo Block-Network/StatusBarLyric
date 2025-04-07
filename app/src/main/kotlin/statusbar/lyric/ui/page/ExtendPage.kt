@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.captionBar
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -58,13 +60,15 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun ExtendPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun ExtendPage(
+    navController: NavController
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val viewLocationOptions = listOf(
         stringResource(R.string.title_gravity_start),
@@ -101,7 +105,12 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
         backgroundColor = MiuixTheme.colorScheme.background,
-        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+        tint = HazeTint(
+            MiuixTheme.colorScheme.background.copy(
+                if (scrollBehavior.state.collapsedFraction <= 0f) 1f
+                else lerp(1f, 0.67f, (scrollBehavior.state.collapsedFraction))
+            )
+        )
     )
 
     Scaffold(
@@ -115,26 +124,20 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                         noiseFactor = 0f
                     }
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.extend_page),
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
+                        modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(currentStartDestination.value, inclusive = false)
+                            navController.popBackStack()
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(40.dp),
-                            imageVector = MiuixIcons.ArrowBack,
+                            imageVector = MiuixIcons.Useful.Back,
                             contentDescription = "Back",
                             tint = MiuixTheme.colorScheme.onBackground
                         )
@@ -145,17 +148,6 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
-        }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -166,7 +158,7 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
             contentPadding = it,
         ) {
             item {
-                Column(Modifier.padding(top = 16.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     Text(
                         modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp),
                         text = stringResource(R.string.module_extend),
@@ -245,13 +237,15 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                                     title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
                                     onClick = {
                                         showCutSongsXRadiusDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showCutSongsXRadiusDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
                                     onClick = {
                                         showCutSongsYRadiusDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showCutSongsYRadiusDialog.value
                                 )
                             }
                         }
@@ -313,31 +307,36 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                                     title = stringResource(R.string.title_delay_duration),
                                     onClick = {
                                         showTitleDelayDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleDelayDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.title_color_and_transparency),
                                     onClick = {
                                         showTitleBgColorDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleBgColorDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.title_background_radius),
                                     onClick = {
                                         showTitleRadiusDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleRadiusDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.title_background_stroke_width),
                                     onClick = {
                                         showTitleStrokeWidthDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleStrokeWidthDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.title_background_stroke_color),
                                     onClick = {
                                         showTitleStrokeColorDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showTitleStrokeColorDialog.value
                                 )
                                 SuperDropdown(
                                     title = stringResource(R.string.title_gravity),
@@ -370,7 +369,8 @@ fun ExtendPage(navController: NavController, currentStartDestination: MutableSta
                 }
                 Spacer(
                     Modifier.height(
-                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+                                WindowInsets.captionBar.asPaddingValues().calculateBottomPadding()
                     )
                 )
             }

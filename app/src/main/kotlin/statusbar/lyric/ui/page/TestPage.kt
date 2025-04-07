@@ -1,19 +1,19 @@
 package statusbar.lyric.ui.page
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.captionBar
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -51,12 +52,15 @@ import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun TestPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun TestPage(
+    navController: NavController,
+    currentRoute: MutableState<String>
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
     val testMode = remember { mutableStateOf(config.testMode) }
@@ -65,7 +69,12 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
         backgroundColor = MiuixTheme.colorScheme.background,
-        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+        tint = HazeTint(
+            MiuixTheme.colorScheme.background.copy(
+                if (scrollBehavior.state.collapsedFraction <= 0f) 1f
+                else lerp(1f, 0.67f, (scrollBehavior.state.collapsedFraction))
+            )
+        )
     )
 
     Scaffold(
@@ -79,26 +88,20 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
                         noiseFactor = 0f
                     }
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.hook_page),
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
+                        modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(currentStartDestination.value, inclusive = false)
+                            navController.popBackStack()
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(40.dp),
-                            imageVector = MiuixIcons.ArrowBack,
+                            imageVector = MiuixIcons.Useful.Back,
                             contentDescription = "Back",
                             tint = MiuixTheme.colorScheme.onBackground
                         )
@@ -109,17 +112,6 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
-        }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -130,7 +122,7 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
             contentPadding = it,
         ) {
             item {
-                Column(Modifier.padding(top = 18.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -164,19 +156,39 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
                                     onClick = {
                                         context.getClass()
                                         when (testReceiver) {
-                                            true -> navController.navigate("ChoosePage")
+                                            true -> if (currentRoute.value != "ChoosePage") {
+                                                navController.navigate("ChoosePage") {
+                                                    popUpTo("TestPage") {
+                                                        inclusive = false
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+
                                             else -> {
                                                 Thread {
                                                     Thread.sleep(500)
                                                     goMainThread {
-                                                        if (testReceiver) navController.navigate("ChoosePage") else {
+                                                        if (testReceiver) {
+                                                            if (currentRoute.value != "ChoosePage") {
+                                                                navController.navigate("ChoosePage") {
+                                                                    popUpTo("TestPage") {
+                                                                        inclusive = false
+                                                                    }
+                                                                    launchSingleTop = true
+                                                                    restoreState = true
+                                                                }
+                                                            }
+                                                        } else {
                                                             showToastOnLooper(context.getString(R.string.broadcast_receive_timeout))
                                                         }
                                                     }
                                                 }.start()
                                             }
                                         }
-                                    }
+                                    },
+                                    holdDownState = currentRoute.value == "ChoosePage"
                                 )
                             }
                         }
@@ -204,7 +216,8 @@ fun TestPage(navController: NavController, currentStartDestination: MutableState
                 }
                 Spacer(
                     Modifier.height(
-                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+                                WindowInsets.captionBar.asPaddingValues().calculateBottomPadding()
                     )
                 )
             }

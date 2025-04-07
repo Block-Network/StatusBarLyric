@@ -8,16 +8,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.captionBar
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -25,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat.finishAffinity
+import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -33,7 +35,6 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.BuildConfig
-import statusbar.lyric.MainActivity
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.MainActivity.Companion.isLoad
 import statusbar.lyric.R
@@ -56,12 +57,16 @@ import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperSwitch
+import top.yukonga.miuix.kmp.icon.MiuixIcons
+import top.yukonga.miuix.kmp.icon.icons.useful.Settings
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.BackHandler
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun HomePage(navController: NavController) {
+fun HomePage(
+    navController: NavController,
+    currentRoute: MutableState<String>
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
     val lyricGetterApi = checkLyricGetterApi()
@@ -69,7 +74,12 @@ fun HomePage(navController: NavController) {
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
         backgroundColor = MiuixTheme.colorScheme.background,
-        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+        tint = HazeTint(
+            MiuixTheme.colorScheme.background.copy(
+                if (scrollBehavior.state.collapsedFraction <= 0f) 1f
+                else lerp(1f, 0.67f, (scrollBehavior.state.collapsedFraction))
+            )
+        )
     )
 
     LaunchedEffect(Unit) {
@@ -88,31 +98,41 @@ fun HomePage(navController: NavController) {
                         style = hazeStyle
                         blurRadius = 25.dp
                         noiseFactor = 0f
-                    },
+                    }
+                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Left))
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Left))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.app_name),
                 scrollBehavior = scrollBehavior,
                 actions = {
                     IconButton(
-                        modifier = Modifier.padding(end = 15.dp),
+                        modifier = Modifier.padding(end = 20.dp),
                         onClick = {
-                            navController.navigate("MenuPage")
-                        }
+                            if (currentRoute.value != "MenuPage") {
+                                navController.navigate("MenuPage") {
+                                    popUpTo("HomePage") {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        },
+                        holdDownState = currentRoute.value == "MenuPage"
                     ) {
                         Icon(
-                            modifier = Modifier.size(28.dp),
-                            painter = painterResource(id = R.drawable.ic_menu),
+                            imageVector = MiuixIcons.Useful.Settings,
                             contentDescription = "Menu",
                             tint = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.8f)
                         )
                     }
-                }
+                },
+                defaultWindowInsetsPadding = false
             )
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
-            finishAffinity(context as MainActivity)
-        }
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -123,7 +143,7 @@ fun HomePage(navController: NavController) {
             contentPadding = it,
         ) {
             item {
-                Column(Modifier.padding(top = 18.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -221,12 +241,21 @@ fun HomePage(navController: NavController) {
                                 ) {
                                     SuperArrow(
                                         title = stringResource(R.string.hook_page),
-                                        summary = if (config.textViewId == 0) stringResource(R.string.test_mode_tips).split(
-                                            "\n"
-                                        )[0] else null,
+                                        summary = if (config.textViewId == 0) {
+                                            stringResource(R.string.test_mode_tips).split("\n")[0]
+                                        } else null,
                                         onClick = {
-                                            navController.navigate("TestPage")
-                                        }
+                                            if (currentRoute.value != "TestPage") {
+                                                navController.navigate("TestPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "TestPage"
                                     )
                                 }
                             }
@@ -250,14 +279,32 @@ fun HomePage(navController: NavController) {
                                     SuperArrow(
                                         title = stringResource(R.string.lyric_page),
                                         onClick = {
-                                            navController.navigate("LyricPage")
-                                        }
+                                            if (currentRoute.value != "LyricPage") {
+                                                navController.navigate("LyricPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "LyricPage"
                                     )
                                     SuperArrow(
                                         title = stringResource(R.string.icon_page),
                                         onClick = {
-                                            navController.navigate("IconPage")
-                                        }
+                                            if (currentRoute.value != "IconPage") {
+                                                navController.navigate("IconPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "IconPage"
                                     )
                                 }
                             }
@@ -281,14 +328,33 @@ fun HomePage(navController: NavController) {
                                     SuperArrow(
                                         title = stringResource(R.string.extend_page),
                                         onClick = {
-                                            navController.navigate("ExtendPage")
-                                        }
+                                            if (currentRoute.value != "ExtendPage") {
+                                                navController.navigate("ExtendPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "ExtendPage"
                                     )
+
                                     SuperArrow(
                                         title = stringResource(R.string.system_special_page),
                                         onClick = {
-                                            navController.navigate("SystemSpecialPage")
-                                        }
+                                            if (currentRoute.value != "SystemSpecialPage") {
+                                                navController.navigate("SystemSpecialPage") {
+                                                    popUpTo("HomePage") {
+                                                        saveState = true
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        },
+                                        holdDownState = currentRoute.value == "SystemSpecialPage"
                                     )
                                 }
                             }
@@ -297,7 +363,8 @@ fun HomePage(navController: NavController) {
                 }
                 Spacer(
                     Modifier.height(
-                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+                                WindowInsets.captionBar.asPaddingValues().calculateBottomPadding()
                     )
                 )
             }

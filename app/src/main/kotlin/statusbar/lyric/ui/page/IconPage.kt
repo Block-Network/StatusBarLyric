@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.captionBar
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -28,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -57,13 +59,15 @@ import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun IconPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun IconPage(
+    navController: NavController
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val iconSwitch = remember { mutableStateOf(config.iconSwitch) }
     val forceTheIconToBeDisplayed = remember { mutableStateOf(config.forceTheIconToBeDisplayed) }
@@ -79,7 +83,12 @@ fun IconPage(navController: NavController, currentStartDestination: MutableState
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
         backgroundColor = MiuixTheme.colorScheme.background,
-        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+        tint = HazeTint(
+            MiuixTheme.colorScheme.background.copy(
+                if (scrollBehavior.state.collapsedFraction <= 0f) 1f
+                else lerp(1f, 0.67f, (scrollBehavior.state.collapsedFraction))
+            )
+        )
     )
 
     Scaffold(
@@ -93,26 +102,20 @@ fun IconPage(navController: NavController, currentStartDestination: MutableState
                         noiseFactor = 0f
                     }
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.icon_page),
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
+                        modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(currentStartDestination.value, inclusive = false)
+                            navController.popBackStack()
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(40.dp),
-                            imageVector = MiuixIcons.ArrowBack,
+                            imageVector = MiuixIcons.Useful.Back,
                             contentDescription = "Back",
                             tint = MiuixTheme.colorScheme.onBackground
                         )
@@ -123,17 +126,6 @@ fun IconPage(navController: NavController, currentStartDestination: MutableState
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
-        }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -144,7 +136,7 @@ fun IconPage(navController: NavController, currentStartDestination: MutableState
             contentPadding = it,
         ) {
             item {
-                Column(Modifier.padding(top = 18.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -200,19 +192,22 @@ fun IconPage(navController: NavController, currentStartDestination: MutableState
                                     title = stringResource(R.string.icon_size),
                                     onClick = {
                                         showIconSizeDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showIconSizeDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.icon_color_and_transparency),
                                     onClick = {
                                         showIconColorDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showIconColorDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.icon_background_color_and_transparency),
                                     onClick = {
                                         showIconBgColorDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showIconBgColorDialog.value
                                 )
                             }
                         }
@@ -237,19 +232,22 @@ fun IconPage(navController: NavController, currentStartDestination: MutableState
                                     title = stringResource(R.string.icon_top_margins),
                                     onClick = {
                                         showIconTopMarginsDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showIconTopMarginsDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.icon_bottom_margins),
                                     onClick = {
                                         showIconBottomMarginsDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showIconBottomMarginsDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.icon_start_margins),
                                     onClick = {
                                         showIconStartMarginsDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showIconStartMarginsDialog.value
                                 )
                             }
                         }
@@ -283,7 +281,8 @@ fun IconPage(navController: NavController, currentStartDestination: MutableState
                                     title = stringResource(R.string.change_all_icons),
                                     onClick = {
                                         showIconChangeAllIconsDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showIconChangeAllIconsDialog.value
                                 )
                             }
                         }
@@ -313,7 +312,8 @@ fun IconPage(navController: NavController, currentStartDestination: MutableState
                 }
                 Spacer(
                     Modifier.height(
-                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+                                WindowInsets.captionBar.asPaddingValues().calculateBottomPadding()
                     )
                 )
             }

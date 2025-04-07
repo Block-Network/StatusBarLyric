@@ -10,13 +10,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.captionBar
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -56,13 +58,15 @@ import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun SystemSpecialPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun SystemSpecialPage(
+    navController: NavController
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val mMiuiHideNetworkSpeed = remember { mutableStateOf(config.mMiuiHideNetworkSpeed) }
     val mMiuiPadOptimize = remember { mutableStateOf(config.mMiuiPadOptimize) }
@@ -77,7 +81,12 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
         backgroundColor = MiuixTheme.colorScheme.background,
-        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+        tint = HazeTint(
+            MiuixTheme.colorScheme.background.copy(
+                if (scrollBehavior.state.collapsedFraction <= 0f) 1f
+                else lerp(1f, 0.67f, (scrollBehavior.state.collapsedFraction))
+            )
+        )
     )
 
     Scaffold(
@@ -91,26 +100,20 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
                         noiseFactor = 0f
                     }
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.system_special_page),
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
+                        modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(currentStartDestination.value, inclusive = false)
+                            navController.popBackStack()
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(40.dp),
-                            imageVector = MiuixIcons.ArrowBack,
+                            imageVector = MiuixIcons.Useful.Back,
                             contentDescription = "Back",
                             tint = MiuixTheme.colorScheme.onBackground
                         )
@@ -121,17 +124,6 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
-        }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -142,7 +134,7 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
             contentPadding = it,
         ) {
             item {
-                Column(Modifier.padding(top = 16.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     SmallTitle(
                         text = stringResource(R.string.miui_and_hyperos)
                     )
@@ -212,19 +204,22 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
                                     title = stringResource(R.string.hyperos_texture_radio),
                                     onClick = {
                                         showRadioDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showRadioDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.hyperos_texture_corner),
                                     onClick = {
                                         showCornerDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showCornerDialog.value
                                 )
                                 SuperArrow(
                                     title = stringResource(R.string.hyperos_texture_color),
                                     onClick = {
                                         showBgColorDialog.value = true
-                                    }
+                                    },
+                                    holdDownState = showBgColorDialog.value
                                 )
                             }
                         }
@@ -248,7 +243,8 @@ fun SystemSpecialPage(navController: NavController, currentStartDestination: Mut
                 }
                 Spacer(
                     Modifier.height(
-                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+                                WindowInsets.captionBar.asPaddingValues().calculateBottomPadding()
                     )
                 )
             }

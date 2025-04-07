@@ -14,26 +14,28 @@ open class SystemMediaSessionListener(context: Context) {
     private val activeControllers = mutableMapOf<MediaController, MediaControllerCallback>()
 
     // 监听活跃会话的变化
-    private val activeSessionsListener = MediaSessionManager.OnActiveSessionsChangedListener { controllers ->
-        if (controllers?.size == 0)
-            onCleared()
+    private val activeSessionsListener =
+        MediaSessionManager.OnActiveSessionsChangedListener { controllers ->
+            if (controllers?.size == 0)
+                onCleared()
 
-        // 清理之前的回调
-        activeControllers.forEach { it.key.unregisterCallback(it.value) }
-        activeControllers.clear()
+            // 清理之前的回调
+            activeControllers.forEach { it.key.unregisterCallback(it.value) }
+            activeControllers.clear()
 
-        controllers?.let {
-            it.forEach { controller ->
-                val callback = MediaControllerCallback(controller)
-                activeControllers[controller] = callback
-                controller.registerCallback(callback)
-                handleMediaController(controller)
+            controllers?.let {
+                it.forEach { controller ->
+                    val callback = MediaControllerCallback(controller)
+                    activeControllers[controller] = callback
+                    controller.registerCallback(callback)
+                    handleMediaController(controller)
+                }
             }
         }
-    }
 
     init {
-        mediaSessionManager = context.getSystemService(Context.MEDIA_SESSION_SERVICE) as? MediaSessionManager
+        mediaSessionManager =
+            context.getSystemService(Context.MEDIA_SESSION_SERVICE) as? MediaSessionManager
         mediaSessionManager?.addOnActiveSessionsChangedListener(
             activeSessionsListener,
             ComponentName(context, NotificationListenerService::class.java)

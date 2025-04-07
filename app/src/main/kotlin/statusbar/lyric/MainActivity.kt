@@ -46,6 +46,9 @@ class MainActivity : ComponentActivity() {
 
         context = this
         enableEdgeToEdge()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false // Xiaomi moment, this code must be here
+        }
 
         createDocumentLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -111,7 +114,11 @@ class MainActivity : ComponentActivity() {
                     } ?: arrayListOf()
                     if (dataList.isEmpty()) {
                         "DataList is empty".log()
-                        Toast.makeText(context, context.getString(R.string.not_found_hook), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.not_found_hook),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         testReceiver = false
                     } else {
                         "DataList size: ${dataList.size}".log()

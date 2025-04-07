@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.captionBar
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -58,13 +60,15 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @Composable
-fun LyricPage(navController: NavController, currentStartDestination: MutableState<String>) {
+fun LyricPage(
+    navController: NavController
+) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val lyricWidth = remember { mutableStateOf(config.lyricWidth.toString()) }
     val fixedLyricWidth = remember { mutableStateOf(config.fixedLyricWidth) }
@@ -111,7 +115,12 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
         backgroundColor = MiuixTheme.colorScheme.background,
-        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.67f))
+        tint = HazeTint(
+            MiuixTheme.colorScheme.background.copy(
+                if (scrollBehavior.state.collapsedFraction <= 0f) 1f
+                else lerp(1f, 0.67f, (scrollBehavior.state.collapsedFraction))
+            )
+        )
     )
 
     Scaffold(
@@ -125,26 +134,20 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                         noiseFactor = 0f
                     }
                     .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                    .windowInsetsPadding(WindowInsets.captionBar.only(WindowInsetsSides.Top)),
                 title = stringResource(R.string.lyric_page),
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
                     IconButton(
-                        modifier = Modifier.padding(start = 18.dp),
+                        modifier = Modifier.padding(start = 20.dp),
                         onClick = {
-                            navController.navigate(currentStartDestination.value) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                            navController.popBackStack(currentStartDestination.value, inclusive = false)
+                            navController.popBackStack()
                         }
                     ) {
                         Icon(
-                            modifier = Modifier.size(40.dp),
-                            imageVector = MiuixIcons.ArrowBack,
+                            imageVector = MiuixIcons.Useful.Back,
                             contentDescription = "Back",
                             tint = MiuixTheme.colorScheme.onBackground
                         )
@@ -155,17 +158,6 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
         },
         popupHost = { null }
     ) {
-        BackHandler(true) {
-            navController.navigate(currentStartDestination.value) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            navController.popBackStack(currentStartDestination.value, inclusive = false)
-        }
-
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
@@ -176,7 +168,7 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
             contentPadding = it,
         ) {
             item {
-                Column(Modifier.padding(top = 16.dp)) {
+                Column(Modifier.padding(top = 6.dp)) {
                     SmallTitle(
                         text = stringResource(R.string.module_second)
                     )
@@ -190,7 +182,8 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             title = stringResource(R.string.lyric_width),
                             onClick = {
                                 showLyricWidthDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricWidthDialog.value
                         )
                         AnimatedVisibility(
                             visible = lyricWidth.value != "0",
@@ -210,13 +203,15 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             title = stringResource(R.string.lyric_size),
                             onClick = {
                                 showLyricSizeDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricSizeDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_color_and_transparency),
                             onClick = {
                                 showLyricColorDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricColorDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyrics_are_gradient_and_transparent),
@@ -226,37 +221,43 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             rightText = stringResource(R.string.tips1),
                             onClick = {
                                 showLyricGradientDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricGradientDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyrics_gradient_background_color_and_transparency),
                             onClick = {
                                 showLyricGradientBgColorDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricGradientBgColorDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_background_radius),
                             onClick = {
                                 showLyricBgRadiusDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricBgRadiusDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_letter_spacing),
                             onClick = {
                                 showLyricLetterSpacingDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricLetterSpacingDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_stroke_width),
                             onClick = {
                                 showLyricStrokeWidthDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricStrokeWidthDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_speed),
                             onClick = {
                                 showLyricSpeedDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricSpeedDialog.value
                         )
                     }
                     SmallTitle(
@@ -273,25 +274,29 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             title = stringResource(R.string.lyric_top_margins),
                             onClick = {
                                 showLyricTopMarginsDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricTopMarginsDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_bottom_margins),
                             onClick = {
                                 showLyricBottomMarginsDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricBottomMarginsDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_start_margins),
                             onClick = {
                                 showLyricStartMarginsDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricStartMarginsDialog.value
                         )
                         SuperArrow(
                             title = stringResource(R.string.lyric_end_margins),
                             onClick = {
                                 showLyricEndMarginsDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricEndMarginsDialog.value
                         )
                     }
                     SmallTitle(
@@ -328,7 +333,8 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                             title = stringResource(R.string.lyrics_animation_duration),
                             onClick = {
                                 showLyricAnimDurationDialog.value = true
-                            }
+                            },
+                            holdDownState = showLyricAnimDurationDialog.value
                         )
                     }
                     Card(
@@ -350,7 +356,8 @@ fun LyricPage(navController: NavController, currentStartDestination: MutableStat
                 }
                 Spacer(
                     Modifier.height(
-                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+                                WindowInsets.captionBar.asPaddingValues().calculateBottomPadding()
                     )
                 )
             }

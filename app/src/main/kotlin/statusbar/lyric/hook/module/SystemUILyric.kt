@@ -112,6 +112,8 @@ class SystemUILyric : BaseHook() {
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private var lastColor: Int by observableChange(Color.WHITE) { oldValue, newValue ->
+        if (oldValue == newValue) return@observableChange
+        "Change Color: $newValue".log()
         goMainThread {
             if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) {
                 lyricView.setTextColor(newValue)
@@ -120,7 +122,6 @@ class SystemUILyric : BaseHook() {
                 iconView.setColorFilter(newValue, PorterDuff.Mode.SRC_IN)
             }
         }
-        "Change Color".log()
     }
     private var lastLyric: String = ""
     private var title: String by observableChange("") { _, newValue ->
@@ -185,19 +186,20 @@ class SystemUILyric : BaseHook() {
             override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
                 super.onSizeChanged(w, h, oldw, oldh)
                 if (config.lyricGradientColor.isNotEmpty()) {
-                    config.lyricGradientColor.trim().split(",").map { it.trim().toColorInt() }.let { colors ->
-                        if (colors.isEmpty()) {
-                            setTextColor(Color.WHITE)
-                        } else if (colors.size < 2) {
-                            setTextColor(colors[0])
-                        } else {
-                            val textShader = LinearGradient(
-                                0f, 0f, width.toFloat(),
-                                0f, colors.toIntArray(), null, Shader.TileMode.CLAMP
-                            )
-                            setLinearGradient(textShader)
+                    config.lyricGradientColor.trim().split(",").map { it.trim().toColorInt() }
+                        .let { colors ->
+                            if (colors.isEmpty()) {
+                                setTextColor(Color.WHITE)
+                            } else if (colors.size < 2) {
+                                setTextColor(colors[0])
+                            } else {
+                                val textShader = LinearGradient(
+                                    0f, 0f, width.toFloat(),
+                                    0f, colors.toIntArray(), null, Shader.TileMode.CLAMP
+                                )
+                                setLinearGradient(textShader)
+                            }
                         }
-                    }
                 }
             }
         }.apply {
@@ -261,16 +263,17 @@ class SystemUILyric : BaseHook() {
                 }
             }
 
-            View::class.java.methodFinder().filterByName("onDetachedFromWindow").first().createHook {
-                after { hookParam ->
-                    val view = (hookParam.thisObject as View)
-                    if (view.isTargetView()) {
-                        "onDetachedFromWindow".log()
-                        canLoad = true
-                        hideLyric()
+            View::class.java.methodFinder().filterByName("onDetachedFromWindow").first()
+                .createHook {
+                    after { hookParam ->
+                        val view = (hookParam.thisObject as View)
+                        if (view.isTargetView()) {
+                            "onDetachedFromWindow".log()
+                            canLoad = true
+                            hideLyric()
+                        }
                     }
                 }
-            }
         }.isNot {
             moduleRes.getString(R.string.load_class_empty).log()
             return
@@ -301,7 +304,8 @@ class SystemUILyric : BaseHook() {
             it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
                 after { hookParam ->
                     if (!isPlaying) return@after
-                    val mIconTint = hookParam.thisObject.objectHelper().getObjectOrNullAs<Int>("mIconTint")
+                    val mIconTint =
+                        hookParam.thisObject.objectHelper().getObjectOrNullAs<Int>("mIconTint")
                     lastColor = mIconTint ?: Color.BLACK
                 }
             }
@@ -312,14 +316,17 @@ class SystemUILyric : BaseHook() {
             fun HookFactory.hideNoticeIcon(scheme: Int) {
                 after { hookParam ->
                     val clazz = hookParam.thisObject::class.java
-                    val name = if (scheme == 0) "NotificationIconAreaController" else "CollapsedStatusBarFragment"
-                    val method = if (scheme == 0) "mNotificationIconArea" else "mNotificationIconAreaInner"
+                    val name =
+                        if (scheme == 0) "NotificationIconAreaController" else "CollapsedStatusBarFragment"
+                    val method =
+                        if (scheme == 0) "mNotificationIconArea" else "mNotificationIconAreaInner"
                     if (clazz.simpleName == name) {
                         hookParam.thisObject.objectHelper {
                             mNotificationIconArea = this.getObjectOrNullAs<View>(method)!!
                         }
                     } else {
-                        mNotificationIconArea = clazz.superclass.getField(method).get(hookParam.thisObject) as View
+                        mNotificationIconArea =
+                            clazz.superclass.getField(method).get(hookParam.thisObject) as View
                     }
                 }
             }
@@ -337,9 +344,10 @@ class SystemUILyric : BaseHook() {
                             hideNoticeIcon(0)
                         }
                     } else {
-                        it.methodFinder().filterByName("initializeNotificationAreaViews").first().createHook {
-                            hideNoticeIcon(0)
-                        }
+                        it.methodFinder().filterByName("initializeNotificationAreaViews").first()
+                            .createHook {
+                                hideNoticeIcon(0)
+                            }
                     }
                 }
             }
@@ -356,7 +364,8 @@ class SystemUILyric : BaseHook() {
                                     mCarrierLabel = this.getObjectOrNullAs<View>("mCarrierLabel")!!
                                 }
                             } else {
-                                mCarrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as View
+                                mCarrierLabel = clazz.superclass.getField("mCarrierLabel")
+                                    .get(hookParam.thisObject) as View
                             }
                         }
                     }
@@ -387,7 +396,8 @@ class SystemUILyric : BaseHook() {
                                             if (abs(point.y - motionEvent.rawY.toInt()) <= config.slideStatusBarCutSongsYRadius) {
                                                 val i = point.x - motionEvent.rawX.toInt()
                                                 if (abs(i) > config.slideStatusBarCutSongsXRadius) {
-                                                    moduleRes.getString(R.string.slide_status_bar_cut_songs).log()
+                                                    moduleRes.getString(R.string.slide_status_bar_cut_songs)
+                                                        .log()
                                                     if (i > 0) {
                                                         shell("input keyevent 87", false)
                                                     } else {
@@ -404,7 +414,8 @@ class SystemUILyric : BaseHook() {
                                     when (isLongChick) {
                                         true -> {
                                             if (config.longClickStatusBarStop) {
-                                                moduleRes.getString(R.string.long_click_status_bar_stop).log()
+                                                moduleRes.getString(R.string.long_click_status_bar_stop)
+                                                    .log()
                                                 shell("input keyevent 85", false)
                                                 hookParam.result = true
                                             }
@@ -415,10 +426,14 @@ class SystemUILyric : BaseHook() {
                                                 if (isOS1FocusNotifyShowing) return@before
 
                                                 if (isPlaying) {
-                                                    moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
+                                                    moduleRes.getString(R.string.click_status_bar_to_hide_lyric)
+                                                        .log()
                                                     if (isHiding) {
                                                         if (shouldControlFocusNotify()) {
-                                                            if (!isHideFocusNotify && shouldOpenFocusNotify(motionEvent)) {
+                                                            if (!isHideFocusNotify && shouldOpenFocusNotify(
+                                                                    motionEvent
+                                                                )
+                                                            ) {
                                                                 "should open focus notify".log()
                                                                 return@before
                                                             }
@@ -465,8 +480,10 @@ class SystemUILyric : BaseHook() {
                     after { hook ->
                         mCentralSurfacesImpl = hook.thisObject
                         mAutoHideController = hook.thisObject.getObjectField("mAutoHideController")
-                        val mStatusBarModeRepository = hook.thisObject.getObjectFieldIfExist("mStatusBarModeRepository")
-                        defaultDisplay = mStatusBarModeRepository?.getObjectFieldIfExist("defaultDisplay")
+                        val mStatusBarModeRepository =
+                            hook.thisObject.getObjectFieldIfExist("mStatusBarModeRepository")
+                        defaultDisplay =
+                            mStatusBarModeRepository?.getObjectFieldIfExist("defaultDisplay")
                     }
                 }
             }
@@ -549,13 +566,18 @@ class SystemUILyric : BaseHook() {
             it.methodFinder().filterByName("onExpansionChanged").first().createHook {
                 before { hook ->
                     if (isPlaying && !isHiding && config.hideTime) {
-                        val notificationHeaderExpandController = hook.thisObject.getObjectField("this\$0")
+                        val notificationHeaderExpandController =
+                            hook.thisObject.getObjectField("this\$0")
                         notificationHeaderExpandController?.setObjectField("bigTimeTranslationY", 0)
-                        notificationHeaderExpandController?.setObjectField("notificationTranslationX", 0)
+                        notificationHeaderExpandController?.setObjectField(
+                            "notificationTranslationX",
+                            0
+                        )
                         // notificationHeaderExpandController?.setObjectField("notificationTranslationY", 0)
 
-                        val notificationBigTime = notificationHeaderExpandController?.getObjectField("headerController")
-                            ?.callMethod("get")?.getObjectField("notificationBigTime") as View
+                        val notificationBigTime =
+                            notificationHeaderExpandController?.getObjectField("headerController")
+                                ?.callMethod("get")?.getObjectField("notificationBigTime") as View
 
                         val f = hook.args[0] as Float
                         if (f < 0.75f)
@@ -579,12 +601,17 @@ class SystemUILyric : BaseHook() {
             statusbarShowing = mCentralSurfacesImpl?.getObjectField("mTransientShown") as Boolean
         } else if (defaultDisplay.existField("isInFullscreenMode")) {
             val isInFullscreenMode = defaultDisplay?.getObjectField("isInFullscreenMode")
-            isInFullScreenMode = isInFullscreenMode?.getObjectField("\$\$delegate_0")?.callMethod("getValue") as Boolean
+            isInFullScreenMode = isInFullscreenMode?.getObjectField("\$\$delegate_0")
+                ?.callMethod("getValue") as Boolean
 
             val isTransientShown = defaultDisplay?.getObjectField("isTransientShown")
-            statusbarShowing = isTransientShown?.getObjectField("\$\$delegate_0")?.callMethod("getValue") as Boolean
+            statusbarShowing = isTransientShown?.getObjectField("\$\$delegate_0")
+                ?.callMethod("getValue") as Boolean
         }
-        if (isInFullScreenMode && context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (isInFullScreenMode &&
+            (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE ||
+                    context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+        ) {
             if (statusbarShowing && isPlaying) {
                 if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing || isClickHide)) {
                     isHiding = false
@@ -648,11 +675,17 @@ class SystemUILyric : BaseHook() {
         val mIsHeadsUpShowing = focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean
         return if (canHideFocusNotify) {
             shouldIgnore = true
-            (focusedNotify!!.callMethod("shouldShow", mCurrentNotifyBean, mIsHeadsUpShowing) as Boolean).apply {
+            (focusedNotify!!.callMethod(
+                "shouldShow",
+                mCurrentNotifyBean,
+                mIsHeadsUpShowing
+            ) as Boolean).apply {
                 shouldIgnore = false
             }
         } else {
-            !(focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean || mCurrentNotifyBean.getObjectField("headsUp") as Boolean || (TextUtils.equals(
+            !(focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean || mCurrentNotifyBean.getObjectField(
+                "headsUp"
+            ) as Boolean || (TextUtils.equals(
                 mCurrentNotifyBean.getObjectField("packageName") as CharSequence,
                 focusedNotify!!.getObjectField("mTopActivityPackageName") as CharSequence
             ) && !(focusedNotify!!.getObjectField("mRequestHide") as Boolean)))
@@ -807,7 +840,11 @@ class SystemUILyric : BaseHook() {
         registerLyricListener(context, BuildConfig.API_VERSION, mLyricReceiver)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(mUpdateConfig, IntentFilter("updateConfig"), Context.RECEIVER_EXPORTED)
+            context.registerReceiver(
+                mUpdateConfig,
+                IntentFilter("updateConfig"),
+                Context.RECEIVER_EXPORTED
+            )
         } else {
             context.registerReceiver(mUpdateConfig, IntentFilter("updateConfig"))
         }
@@ -818,7 +855,11 @@ class SystemUILyric : BaseHook() {
                 addAction(Intent.ACTION_USER_PRESENT)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                context.registerReceiver(mScreenLockReceiver, screenLockFilter, Context.RECEIVER_EXPORTED)
+                context.registerReceiver(
+                    mScreenLockReceiver,
+                    screenLockFilter,
+                    Context.RECEIVER_EXPORTED
+                )
             } else {
                 context.registerReceiver(mScreenLockReceiver, screenLockFilter)
             }
@@ -836,7 +877,7 @@ class SystemUILyric : BaseHook() {
         isStop = false
         isPlaying = true
         goMainThread {
-            if (config.lyricColor.isEmpty()) lastColor = clockView.currentTextColor
+            lastColor = clockView.currentTextColor
             lyricLayout.showView()
             if (config.hideTime) {
                 clockView.hideView()
@@ -867,7 +908,8 @@ class SystemUILyric : BaseHook() {
                     val animation = randomAnima
                     val interpolator = config.lyricInterpolator
                     val duration = config.animationDuration
-                    inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
+                    inAnimation =
+                        LyricViewTools.switchViewInAnima(animation, interpolator, duration)
                     outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
                 }
                 setText(lyric)
@@ -966,7 +1008,8 @@ class SystemUILyric : BaseHook() {
                 if (!isRandomAnima) {
                     val interpolator = config.lyricInterpolator
                     val duration = config.animationDuration
-                    inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
+                    inAnimation =
+                        LyricViewTools.switchViewInAnima(animation, interpolator, duration)
                     outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
                 }
                 runCatching {
@@ -987,7 +1030,12 @@ class SystemUILyric : BaseHook() {
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
                     ).apply {
-                        setMargins(config.iconStartMargins, config.iconTopMargins, 0, config.iconBottomMargins)
+                        setMargins(
+                            config.iconStartMargins,
+                            config.iconTopMargins,
+                            0,
+                            config.iconBottomMargins
+                        )
                         if (config.iconSize == 0) {
                             width = clockView.height / 2
                             height = clockView.height / 2
@@ -1034,16 +1082,18 @@ class SystemUILyric : BaseHook() {
         init {
             if (isXiaomi) {
                 for (i in 0..10) {
-                    val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$$i")
+                    val clazz =
+                        loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager\$$i")
                     if (clazz.isNotNull()) {
                         if (clazz!!.existMethod("onWallpaperChanged")) {
-                            clazz.methodFinder().filterByName("onWallpaperChanged").first().createHook {
-                                after {
-                                    "onWallpaperChanged".log()
-                                    canLoad = true
-                                    hideLyric()
+                            clazz.methodFinder().filterByName("onWallpaperChanged").first()
+                                .createHook {
+                                    after {
+                                        "onWallpaperChanged".log()
+                                        canLoad = true
+                                        hideLyric()
+                                    }
                                 }
-                            }
                             break
                         }
                     }
@@ -1069,14 +1119,16 @@ class SystemUILyric : BaseHook() {
                             if (isPad) {
                                 loadClassOrNull("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment").isNotNull {
                                     if (it.existMethod("initMiuiViewsOnViewCreated")) {
-                                        it.methodFinder().filterByName("initMiuiViewsOnViewCreated").first()
+                                        it.methodFinder().filterByName("initMiuiViewsOnViewCreated")
+                                            .first()
                                     } else {
                                         it.methodFinder().filterByName("onViewCreated").first()
                                     }.let { method ->
                                         method.createHook {
                                             after { hookParam ->
                                                 hookParam.thisObject.objectHelper {
-                                                    mPadClockView = this.getObjectOrNullAs<View>("mPadClockView")!!
+                                                    mPadClockView =
+                                                        this.getObjectOrNullAs<View>("mPadClockView")!!
                                                 }
                                             }
                                         }
