@@ -73,8 +73,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.ezXHelper)
     implementation(libs.haze)
-    implementation(libs.lyric.getter.api)
+    // implementation(libs.lyric.getter.api)
     implementation(libs.miuix)
+    implementation(libs.superlyricapi)
 
     debugImplementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
