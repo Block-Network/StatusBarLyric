@@ -59,7 +59,7 @@ import cn.lyric.getter.api.data.ExtraData
 import cn.lyric.getter.api.data.LyricData
 import cn.lyric.getter.api.listener.LyricListener
 import cn.lyric.getter.api.listener.LyricReceiver
-import cn.lyric.getter.api.tools.Tools.base64ToBitmap
+import cn.lyric.getter.api.tools.Tools.base64ToDrawable
 import cn.lyric.getter.api.tools.Tools.registerLyricListener
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
 import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
@@ -69,6 +69,7 @@ import com.github.kyuubiran.ezxhelper.ObjectHelper.Companion.objectHelper
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
+import statusbar.lyric.BuildConfig
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
@@ -79,6 +80,7 @@ import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.LyricViewTools.hideView
 import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
+import statusbar.lyric.tools.SystemMediaSessionListener
 import statusbar.lyric.tools.Tools.callMethod
 import statusbar.lyric.tools.Tools.existField
 import statusbar.lyric.tools.Tools.existMethod
@@ -137,7 +139,7 @@ class SystemUILyric : BaseHook() {
     }
     private var lastBase64Icon: String by observableChange("") { _, newValue ->
         goMainThread {
-            base64ToBitmap(newValue).isNotNull {
+            base64ToDrawable(newValue).isNotNull {
                 iconView.showView()
                 iconView.setImageBitmap(it)
             }.isNot {
@@ -777,14 +779,24 @@ class SystemUILyric : BaseHook() {
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
             // themeMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK)
+            if (config.titleSwitch) {
+                object : SystemMediaSessionListener(context) {
+                    override fun onTitleChanged(caller: String, title: String) {
+                        super.onTitleChanged(caller, title)
+
+                        val message = Message.obtain()
+                        message.what = TITLE_SHOW_READY
+                        message.obj = TitleData(caller, title)
+                        titleShowHandler.sendMessage(message)
+                    }
+                }
+            }
         }
 
         // if (!firstLoad) return
         updateConfig(1)
     }
 
-    private var lastArtist: String = ""
-    private var lastAlbum: String = ""
     private var mUpdateConfig: UpdateConfig = UpdateConfig()
     private var mScreenLockReceiver: ScreenLockReceiver = ScreenLockReceiver()
 
@@ -824,22 +836,8 @@ class SystemUILyric : BaseHook() {
                     timeoutRestoreHandler.removeMessages(TIMEOUT_RESTORE)
                 }
             }
-
-            override fun onMediaData(lyricData: LyricData) {
-                if (config.titleSwitch) {
-                    if (lastArtist != lyricData.extraData.artist || lastAlbum != lyricData.extraData.album) {
-                        lastArtist = lyricData.extraData.artist
-                        lastAlbum = lyricData.extraData.album
-                        val message = Message.obtain()
-                        message.what = TITLE_SHOW_READY
-                        message.obj = TitleData(lyricData.extraData.packageName, "$lastArtist - $lastAlbum")
-                        titleShowHandler.sendMessage(message)
-                        ("title: " + lyricData.extraData.title + ", artist: " + lastArtist + ", album: " + lastAlbum).log()
-                    }
-                }
-            }
         })
-        registerLyricListener(context, mLyricReceiver)
+        registerLyricListener(context, BuildConfig.API_VERSION, mLyricReceiver)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             context.registerReceiver(
