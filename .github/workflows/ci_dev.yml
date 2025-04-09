@@ -1,8 +1,8 @@
-name: Android CI Dev
+name: Android CI for dev
 
 on:
   push:
-    branches: [ Dev, new ]
+    branches: [ dev ]
     paths-ignore:
       - "README.md"
   pull_request:
@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
 
       - name: Write key
         if: ${{ github.event_name != 'pull_request' || github.ref_type == 'tag' }}
@@ -37,8 +35,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-read-only: ${{ github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/new' }}
 
       - name: Build with Gradle
         run: ./gradlew assemble
@@ -69,7 +65,7 @@ jobs:
           MAPPING: ./app/build/outputs/mapping/release/mapping.txt
           COMMIT_URL: ${{ github.event.head_commit.url }}
           COMMIT_MESSAGE: |+
-            New Github Dev Build
+            New Github CI Build from dev Branch
             ```
             ${{ github.event.head_commit.message }}
             ```
