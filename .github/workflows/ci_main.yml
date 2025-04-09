@@ -1,4 +1,4 @@
-name: Android CI
+name: Android CI for main
 
 on:
   push:
@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: "recursive"
 
       - name: Write key
         run: |
@@ -36,8 +34,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          cache-read-only: ${{ github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/new' }}
 
       - name: Build with Gradle
         run: ./gradlew assemble
@@ -66,7 +62,7 @@ jobs:
           CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           COMMIT_MESSAGE: |+
-            New Github CI Build
+            New Github CI Build from main Branch
             ```
             ${{ github.event.head_commit.message }}
             ```
