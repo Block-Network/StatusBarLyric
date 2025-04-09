@@ -23,7 +23,6 @@
 package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -31,7 +30,6 @@ import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.util.ArrayMap
 import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
@@ -68,14 +66,14 @@ object Tools {
         val xiaomiMarketName = getSystemProperties("ro.product.marketname")
         val vivoMarketName = getSystemProperties("ro.vivo.market.name")
         when {
-            bigTextOne(Build.BRAND) == "Vivo" -> bigTextOne(vivoMarketName)
-            xiaomiMarketName.isNotEmpty() -> bigTextOne(xiaomiMarketName)
-            else -> "${bigTextOne(Build.BRAND)} ${Build.MODEL}"
+            Build.BRAND.uppercaseFirstChar() == "Vivo" -> vivoMarketName.uppercaseFirstChar()
+            xiaomiMarketName.isNotEmpty() -> xiaomiMarketName.uppercaseFirstChar()
+            else -> "${Build.BRAND.uppercaseFirstChar()} ${Build.MODEL}"
         }
     }
 
-    fun bigTextOne(st: String): String {
-        val formattedBrand = st.replaceFirstChar {
+    fun String.uppercaseFirstChar(): String {
+        val formattedBrand = this.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase() else it.toString()
         }
         return formattedBrand
@@ -214,26 +212,6 @@ object Tools {
         } catch (_: Throwable) {
             // Shell command failed
         }
-    }
-
-    fun checkBroadcastReceiverState(
-        context: Context,
-        broadcastReceiver: BroadcastReceiver?
-    ): Boolean {
-        context.isNull { return false }
-        broadcastReceiver.isNull { return false }
-
-        val contextImpl: Context = context.getSuperObjectField("mBase") as Context
-        contextImpl.getObjectField("mPackageInfo").isNotNull {
-            it.getObjectField("mReceivers").isNotNull {
-                (it as ArrayMap<*, *>)[context].isNotNull {
-                    (it as ArrayMap<*, *>)[broadcastReceiver].isNotNull {
-                        return true
-                    }
-                }
-            }
-        }
-        return false
     }
 
     inline fun <T> T?.isNotNull(callback: (T) -> Unit): Boolean {

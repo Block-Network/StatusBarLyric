@@ -24,8 +24,6 @@ package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -98,14 +96,6 @@ object ActivityTools {
             }
         }
         unit(value)
-    }
-
-    fun checkInstalled(pkgName: String): ApplicationInfo? {
-        return try {
-            context.packageManager.getApplicationInfo(pkgName, PackageManager.GET_META_DATA)
-        } catch (_: Exception) {
-            null
-        }
     }
 
     fun openUrl(url: String) {

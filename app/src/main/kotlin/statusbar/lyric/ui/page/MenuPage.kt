@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,9 +48,9 @@ import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.Tools
-import statusbar.lyric.tools.Tools.bigTextOne
 import statusbar.lyric.tools.Tools.buildTime
 import statusbar.lyric.tools.Tools.getPhoneName
+import statusbar.lyric.tools.Tools.uppercaseFirstChar
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -135,10 +135,10 @@ fun MenuPage(
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .height(getWindowSize().height.dp)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
-            topAppBarScrollBehavior = scrollBehavior,
             contentPadding = it
         ) {
             item {
@@ -236,9 +236,7 @@ fun MenuPage(
                         )
                         Text(
                             text = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) ${
-                                bigTextOne(
-                                    BuildConfig.BUILD_TYPE
-                                )
+                                BuildConfig.BUILD_TYPE.uppercaseFirstChar()
                             }",
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(horizontal = 12.dp)
@@ -258,15 +256,6 @@ fun MenuPage(
                         )
                         Text(
                             text = "$getPhoneName (${Build.DEVICE}) SDK${Build.VERSION.SDK_INT}",
-                            fontWeight = FontWeight.Medium,
-                            modifier = Modifier.padding(horizontal = 12.dp)
-                        )
-                        Text(
-                            text = "Lyric Getter",
-                            modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp)
-                        )
-                        Text(
-                            text = "API${BuildConfig.API_VERSION} \uD83D\uDE0A",
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp)
                         )

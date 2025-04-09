@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,15 +35,12 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
-import statusbar.lyric.BuildConfig
 import statusbar.lyric.MainActivity.Companion.context
 import statusbar.lyric.MainActivity.Companion.isLoad
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.AnimTools
-import statusbar.lyric.tools.Tools.isNot
-import statusbar.lyric.tools.Tools.isNotNull
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
@@ -69,7 +67,6 @@ fun HomePage(
 ) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
-    val lyricGetterApi = checkLyricGetterApi()
 
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
@@ -83,7 +80,7 @@ fun HomePage(
     )
 
     LaunchedEffect(Unit) {
-        if (checkLyricGetterApi() != 0 || !isLoad) {
+        if (!isLoad) {
             masterSwitchState.value = false
             config.masterSwitch = false
         }
@@ -136,10 +133,10 @@ fun HomePage(
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .height(getWindowSize().height.dp)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Left))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Left)),
-            topAppBarScrollBehavior = scrollBehavior,
             contentPadding = it,
         ) {
             item {
@@ -155,15 +152,6 @@ fun HomePage(
                             contentDescription = "Logo",
                         )
                     }
-                    if (lyricGetterApi != 0) {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            ShowLyricGetter(lyricGetterApi)
-                        }
-                    }
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -173,19 +161,7 @@ fun HomePage(
                             title = stringResource(R.string.master_switch),
                             checked = masterSwitchState.value,
                             onCheckedChange = {
-                                if (lyricGetterApi == 1) {
-                                    Toast.makeText(
-                                        context,
-                                        R.string.no_supported_version_lyric_getter,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else if (lyricGetterApi == 2) {
-                                    Toast.makeText(
-                                        context,
-                                        R.string.no_lyric_getter,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else if (isLoad) {
+                                if (isLoad) {
                                     masterSwitchState.value = it
                                     config.masterSwitch = it
                                 } else {
@@ -202,6 +178,13 @@ fun HomePage(
                         visible = !masterSwitchState.value
                     ) {
                         Column {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                ShowSuperLyric()
+                            }
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -373,61 +356,17 @@ fun HomePage(
 }
 
 @Composable
-fun ShowLyricGetter(int: Int) {
-    val openLyricGetterUrl = { ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/") }
-    when (int) {
-        0 -> return
-        1 -> {
-            SuperArrow(
-                leftAction = {
-                    Image(
-                        modifier = Modifier.padding(end = 12.dp),
-                        painter = painterResource(id = R.drawable.ic_warning),
-                        contentDescription = "Warning"
-                    )
-                },
-                title = stringResource(R.string.no_supported_version_lyric_getter),
-                titleColor = BasicComponentDefaults.titleColor(
-                    color = Color.Red
-                ),
-                summary = stringResource(R.string.click_to_install),
-                onClick = {
-                    openLyricGetterUrl()
-                }
-            )
+fun ShowSuperLyric() {
+    val openSuperLyricUrl = { ActivityTools.openUrl("https://github.com/HChenX/SuperLyric") }
+    SuperArrow(
+        title = stringResource(R.string.super_lyric_tip),
+        titleColor = BasicComponentColors(
+            color = Color.Red,
+            disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+        ),
+        summary = stringResource(R.string.click_to_install),
+        onClick = {
+            openSuperLyricUrl()
         }
-
-        2 -> {
-            SuperArrow(
-                leftAction = {
-                    Image(
-                        modifier = Modifier.padding(end = 12.dp),
-                        painter = painterResource(id = R.drawable.ic_warning),
-                        contentDescription = "Warning"
-                    )
-                },
-                title = stringResource(R.string.no_lyric_getter),
-                titleColor = BasicComponentColors(
-                    color = Color.Red,
-                    disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
-                ),
-                summary = stringResource(R.string.click_to_install),
-                onClick = {
-                    openLyricGetterUrl()
-                }
-            )
-        }
-    }
-}
-
-private fun checkLyricGetterApi(): Int {
-    ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
-        val getterVersion = it.metaData.getInt("Getter_Version")
-        if (getterVersion != BuildConfig.API_VERSION) {
-            return 1
-        }
-    }.isNot {
-        return 2
-    }
-    return 0
+    )
 }

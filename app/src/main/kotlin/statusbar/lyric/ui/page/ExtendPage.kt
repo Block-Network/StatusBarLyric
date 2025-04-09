@@ -1,6 +1,5 @@
 package statusbar.lyric.ui.page
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -151,10 +151,10 @@ fun ExtendPage(
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .height(getWindowSize().height.dp)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
-            topAppBarScrollBehavior = scrollBehavior,
             contentPadding = it,
         ) {
             item {

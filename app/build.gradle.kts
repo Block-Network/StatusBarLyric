@@ -24,7 +24,6 @@ android {
         aaptOptions.cruncherEnabled = false
         dependenciesInfo.includeInApk = false
         buildConfigField("long", "BUILD_TIME", "$buildTime")
-        buildConfigField("int", "API_VERSION", "6")
         buildConfigField("int", "COMPOSE_CONFIG_VERSION", "1")
     }
     val config = localProperties.getProperty("androidStoreFile")?.let {
@@ -71,10 +70,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
-    implementation(libs.ezXHelper)
+
     implementation(libs.haze)
-    // implementation(libs.lyric.getter.api)
     implementation(libs.miuix)
+
+    implementation(libs.ezXHelper)
     implementation(libs.superlyricapi)
 
     debugImplementation(libs.androidx.ui.tooling.preview)

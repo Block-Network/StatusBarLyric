@@ -167,11 +167,7 @@ class TitleDialog(context: Context) : Dialog(context) {
     }
 
     fun setTitle(title: String) {
-        textView.apply {
-            text = title
-//            val w = textView.paint.measureText(title).toInt()
-//            layoutParams.width = if (w > this@TitleDialog.maxWidth) this@TitleDialog.maxWidth else w
-        }
+        textView.text = title
     }
 
     private fun viewYAnimate(into: Boolean) {
