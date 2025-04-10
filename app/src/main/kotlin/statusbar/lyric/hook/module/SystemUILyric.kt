@@ -232,6 +232,7 @@ class SystemUILyric : BaseHook() {
     private var defaultDisplay: Any? = null
     private var centralSurfacesImpl: Any? = null
     private var notificationBigTime: View? = null
+    private var statusBatteryContainer: View? = null
 
     @SuppressLint("DiscouragedApi", "NewApi")
     override fun init() {
@@ -271,25 +272,30 @@ class SystemUILyric : BaseHook() {
                     }
                 }
 
-            // 有问题
-            // View::class.java.methodFinder().filterByName("setVisibility").first()
-            //     .createHook {
-            //         before { param ->
-            //             val view = param.thisObject as View
-            //             if (view.isTargetView()) {
-            //                 if (!isMusicPlaying) return@before
-            //
-            //                 val visibility = param.args[0] == View.VISIBLE
-            //                 if (visibility) {
-            //                     isHiding = false
-            //                     showLyric(lastLyric, 0)
-            //                 } else {
-            //                     hideLyric()
-            //                     isHiding = true
-            //                 }
-            //             }
-            //         }
-            //     }
+            View::class.java.methodFinder().filterByName("setVisibility").first()
+                .createHook {
+                    before { param ->
+                        val view = param.thisObject as View
+                        if (statusBatteryContainer != null) {
+                            if (statusBatteryContainer != view) return@before
+                            if (!isMusicPlaying) return@before
+
+                            val visibility = param.args[0] == View.VISIBLE
+                            if (visibility) {
+                                isHiding = false
+                                showLyric(lastLyric, 0)
+                            } else {
+                                hideLyric()
+                                isHiding = true
+                            }
+                        } else {
+                            val idName = runCatching { view.resources.getResourceEntryName(view.id) }.getOrNull()
+                            if (idName != null && idName == "system_icons") {
+                                statusBatteryContainer = view;
+                            }
+                        }
+                    }
+                }
         }.isNot {
             moduleRes.getString(R.string.load_class_empty).log()
             return
