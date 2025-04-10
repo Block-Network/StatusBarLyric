@@ -110,7 +110,7 @@ class SystemUILyric : BaseHook() {
 
     private var lastColor: Int by observableChange(Color.WHITE) { oldValue, newValue ->
         if (oldValue == newValue) return@observableChange
-        "Change Color: $newValue".log()
+        "Changing Color: $newValue".log()
         goMainThread {
             if (config.lyricColor.isEmpty() && config.lyricGradientColor.isEmpty()) {
                 lyricView.setTextColor(newValue)
@@ -142,7 +142,7 @@ class SystemUILyric : BaseHook() {
             }.isNot {
                 iconView.hideView()
             }
-            "Change Icon".log()
+            "Changing Icon".log()
         }
     }
     private var canLoad: Boolean = true
@@ -234,7 +234,7 @@ class SystemUILyric : BaseHook() {
 
     @SuppressLint("DiscouragedApi", "NewApi")
     override fun init() {
-        "Init Hook".log()
+        "Initializing Hook".log()
         Application::class.java.methodFinder().filterByName("attach").first().createHook {
             after { hook ->
                 registerSuperLyric(hook.args[0] as Context)
@@ -247,7 +247,6 @@ class SystemUILyric : BaseHook() {
                     val view = (hookParam.thisObject as View)
                     if (view.isTargetView()) {
                         if (!canLoad) return@after
-                        "Lyric Init".log()
                         clockView = view as TextView
                         targetView = (clockView.parent as LinearLayout).apply {
                             gravity = Gravity.CENTER
@@ -264,7 +263,7 @@ class SystemUILyric : BaseHook() {
                     after { hookParam ->
                         val view = (hookParam.thisObject as View)
                         if (view.isTargetView()) {
-                            "onDetachedFromWindow".log()
+                            "Running onDetachedFromWindow".log()
                             canLoad = true
                             hideLyric()
                         }
@@ -495,14 +494,14 @@ class SystemUILyric : BaseHook() {
                 }
 
                 it.declaredMethods.filter { method ->
-                    (method.name == "updateVisibility\$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
+                    (method.name == "updateVisibility$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
                             method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
                 }.forEach { method ->
                     method.createHook {
                         before { hook ->
                             if (isHideFocusNotify) {
                                 hook.result = null
-                                "update focus notify visibility is hiding!".log()
+                                "Update focus notify visibility state to hide".log()
                             }
                         }
                     }
@@ -641,7 +640,7 @@ class SystemUILyric : BaseHook() {
         focusedNotify!!.callMethod("hideImmediately", mContent)
         focusedNotify!!.callMethod("setIsFocusedNotifPromptShowing", false)
         isHideFocusNotify = true
-        "hide focus notify!".log()
+        "Hiding focus notify".log()
     }
 
     private fun showFocusNotifyIfNeed() {
@@ -655,7 +654,7 @@ class SystemUILyric : BaseHook() {
         focusedNotify!!.callMethod("showImmediately", mIcon)
         focusedNotify!!.callMethod("showImmediately", mContent)
         focusedNotify!!.callMethod("setIsFocusedNotifPromptShowing", true)
-        "show focus notify!".log()
+        "Showing focus notify".log()
     }
 
     private fun shouldControlFocusNotify(): Boolean {
@@ -739,7 +738,7 @@ class SystemUILyric : BaseHook() {
                 hideLyric()
                 playingApp = ""
                 lastLyric = ""
-                "timeout restore!!".log()
+                "Timeout restore".log()
             }
         }
     }
@@ -794,7 +793,7 @@ class SystemUILyric : BaseHook() {
                             lastRunnable = Runnable { showTitleConsumer.accept(data) }
                             handler.postDelayed(lastRunnable!!, 800)
 
-                            ("title: " + data.title + ", artist: " + lastArtist + ", album: " + lastAlbum).log()
+                            ("Title: " + data.title + ", Artist: " + lastArtist + ", Album: " + lastAlbum).log()
                         }
                     }
                 }
@@ -845,11 +844,12 @@ class SystemUILyric : BaseHook() {
             }
         }
 
-        "Register Super Lyric".log()
+        "Register SuperLyric".log()
     }
 
     private fun showLyric() {
         if (!isReady || lastLyric == "" || isScreenLocked) return
+        "Showing LyricView".log()
         isLyricViewShowing = true
         goMainThread {
             lastColor = clockView.currentTextColor
@@ -872,9 +872,9 @@ class SystemUILyric : BaseHook() {
             if (config.dynamicLyricSpeed && delay == 0) {
                 if (i > 0) {
                     val proportion = i * 1.0 / displayWidth
-                    "proportion:$proportion".log()
+                    "Proportion: $proportion".log()
                     val speed = 2 * proportion + 0.4
-                    "speed:$speed".log()
+                    "Speed: $speed".log()
                     setScrollSpeed(speed.toFloat())
                 }
             }
@@ -911,7 +911,7 @@ class SystemUILyric : BaseHook() {
     private fun hideLyric(anim: Boolean = true) {
         if (!isReady) return
         isLyricViewShowing = false
-        "Hide Lyric".log()
+        "Hiding LyricView".log()
         goMainThread {
             lyricLayout.hideView(anim)
             clockView.showView()
@@ -925,7 +925,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun updateConfig(delay: Long = 0L) {
-        "Update Config".log()
+        "Updating Config".log()
         config.update()
         goMainThread(delay) {
             lyricView.apply {
@@ -1032,7 +1032,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun getLyricWidth(paint: Paint, text: String): Int {
-        "Get Lyric Width".log()
+        "Getting Lyric Width".log()
         return if (config.lyricWidth == 0) {
             theoreticalWidth = min(paint.measureText(text).toInt(), targetView.width)
             theoreticalWidth
