@@ -109,10 +109,12 @@ object LyricViewTools {
         }
     }
 
+    private var alphaAnimation: AnimationSet? = null
+
     fun View.hideView(anim: Boolean = true) {
         if (isGone) return
         if (anim) {
-            val alphaAnimation = getAlphaAnimation(false).apply {
+            alphaAnimation = getAlphaAnimation(false).apply {
                 setAnimationListener(object : Animation.AnimationListener {
                     override fun onAnimationStart(animation: Animation) {}
                     override fun onAnimationEnd(animation: Animation) {
@@ -126,6 +128,11 @@ object LyricViewTools {
         } else {
             visibility = View.GONE
         }
+    }
+
+    fun View.cancelAnimation() {
+        if (alphaAnimation != null)
+            alphaAnimation!!.cancel()
     }
 
     fun View.showView() {
