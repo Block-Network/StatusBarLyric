@@ -1,6 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -8,21 +9,22 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
-val localProperties = org.jetbrains.kotlin.konan.properties.Properties()
-if (rootProject.file("local.properties").canRead()) localProperties.load(rootProject.file("local.properties").inputStream())
+val buildTime = System.currentTimeMillis()
+val localProperties = Properties()
+if (rootProject.file("local.properties").canRead()) {
+    localProperties.load(rootProject.file("local.properties").inputStream())
+}
 
 android {
     namespace = "statusbar.lyric"
     compileSdk = 36
-    val buildTime = System.currentTimeMillis()
+
     defaultConfig {
         applicationId = "statusbar.lyric"
         minSdk = 26
         targetSdk = 36
-        versionCode = 712
-        versionName = "7.1.2"
-        aaptOptions.cruncherEnabled = false
-        dependenciesInfo.includeInApk = false
+        versionCode = 720
+        versionName = "7.2.0"
         buildConfigField("long", "BUILD_TIME", "$buildTime")
         buildConfigField("int", "COMPOSE_CONFIG_VERSION", "1")
     }
@@ -47,18 +49,16 @@ android {
             setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"))
         }
     }
-    packaging {
-        resources {
-            excludes += "**"
-        }
-    }
     applicationVariants.all {
         outputs.all {
             (this as BaseVariantOutputImpl).outputFileName = "StatusBarLyric-$versionName($versionCode)-$name-$buildTime.apk"
         }
     }
+    aaptOptions.cruncherEnabled = false
     buildFeatures.buildConfig = true
+    dependenciesInfo.includeInApk = false
     kotlin.jvmToolchain(21)
+    packaging.resources.excludes += "**"
 }
 
 dependencies {
