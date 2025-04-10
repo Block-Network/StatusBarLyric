@@ -67,7 +67,6 @@ import com.hchen.superlyricapi.ISuperLyric
 import com.hchen.superlyricapi.SuperLyricData
 import com.hchen.superlyricapi.SuperLyricTool
 import com.hchen.superlyricapi.SuperLyricTool.base64ToBitmap
-import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.hook.BaseHook
@@ -104,8 +103,6 @@ import kotlin.math.max
 import kotlin.math.min
 
 class SystemUILyric : BaseHook() {
-
-    private lateinit var hook: XC_MethodHook.Unhook
     val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
     private var lastColor: Int by observableChange(Color.WHITE) { oldValue, newValue ->
@@ -148,8 +145,11 @@ class SystemUILyric : BaseHook() {
     private var canLoad: Boolean = true
     private var isScreenLocked: Boolean = false
     private var iconSwitch: Boolean = config.iconSwitch
+
+    @Volatile
     private var isMusicPlaying: Boolean = false
-    private var isLyricViewShowing: Boolean = false
+
+    @Volatile
     private var isHiding: Boolean = false
     private var isClickHiding: Boolean = false
     private var isRandomAnima: Boolean = false
@@ -243,7 +243,7 @@ class SystemUILyric : BaseHook() {
         }
 
         loadClassOrNull(config.textViewClassName).isNotNull {
-            hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
+            TextView::class.java.methodFinder().filterByName("onAttachedToWindow").first().createHook {
                 after { hookParam ->
                     val view = (hookParam.thisObject as View)
                     if (view.isTargetView()) {
@@ -270,6 +270,26 @@ class SystemUILyric : BaseHook() {
                         }
                     }
                 }
+
+            // 有问题
+            // View::class.java.methodFinder().filterByName("setVisibility").first()
+            //     .createHook {
+            //         before { param ->
+            //             val view = param.thisObject as View
+            //             if (view.isTargetView()) {
+            //                 if (!isMusicPlaying) return@before
+            //
+            //                 val visibility = param.args[0] == View.VISIBLE
+            //                 if (visibility) {
+            //                     isHiding = false
+            //                     showLyric(lastLyric, 0)
+            //                 } else {
+            //                     hideLyric()
+            //                     isHiding = true
+            //                 }
+            //             }
+            //         }
+            //     }
         }.isNot {
             moduleRes.getString(R.string.load_class_empty).log()
             return
@@ -278,7 +298,7 @@ class SystemUILyric : BaseHook() {
             moduleRes.getString(R.string.limit_visibility_change).log()
             View::class.java.methodFinder().filterByName("setVisibility").first().createHook {
                 before { hookParam ->
-                    if (isLyricViewShowing && !isHiding) {
+                    if (isMusicPlaying && !isHiding) {
                         if (hookParam.args[0] == View.VISIBLE) {
                             val view = hookParam.thisObject as View
                             if (
@@ -299,9 +319,9 @@ class SystemUILyric : BaseHook() {
         loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
             it.methodFinder().filterByName("applyDarkIntensity").first().createHook {
                 after { hookParam ->
-                    if (!isLyricViewShowing) return@after
-                    val mIconTint =
-                        hookParam.thisObject.objectHelper().getObjectOrNullAs<Int>("mIconTint")
+                    if (!isMusicPlaying) return@after
+
+                    val mIconTint = hookParam.thisObject.objectHelper().getObjectOrNullAs<Int>("mIconTint")
                     lastColor = mIconTint ?: Color.BLACK
                 }
             }
@@ -312,17 +332,14 @@ class SystemUILyric : BaseHook() {
             fun HookFactory.hideNoticeIcon(scheme: Int) {
                 after { hookParam ->
                     val clazz = hookParam.thisObject::class.java
-                    val name =
-                        if (scheme == 0) "NotificationIconAreaController" else "CollapsedStatusBarFragment"
-                    val method =
-                        if (scheme == 0) "mNotificationIconArea" else "mNotificationIconAreaInner"
+                    val name = if (scheme == 0) "NotificationIconAreaController" else "CollapsedStatusBarFragment"
+                    val method = if (scheme == 0) "mNotificationIconArea" else "mNotificationIconAreaInner"
                     if (clazz.simpleName == name) {
                         hookParam.thisObject.objectHelper {
                             notificationIconArea = this.getObjectOrNullAs<View>(method)!!
                         }
                     } else {
-                        notificationIconArea =
-                            clazz.superclass.getField(method).get(hookParam.thisObject) as View
+                        notificationIconArea = clazz.superclass.getField(method).get(hookParam.thisObject) as View
                     }
                 }
             }
@@ -360,8 +377,7 @@ class SystemUILyric : BaseHook() {
                                     carrierLabel = this.getObjectOrNullAs<View>("mCarrierLabel")!!
                                 }
                             } else {
-                                carrierLabel = clazz.superclass.getField("mCarrierLabel")
-                                    .get(hookParam.thisObject) as View
+                                carrierLabel = clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as View
                             }
                         }
                     }
@@ -388,12 +404,13 @@ class SystemUILyric : BaseHook() {
                             when (isMove) {
                                 true -> {
                                     if (config.slideStatusBarCutSongs) {
-                                        if (isLyricViewShowing) {
+                                        if (isMusicPlaying) {
+                                            if (isHiding) return@before
+
                                             if (abs(point.y - motionEvent.rawY.toInt()) <= config.slideStatusBarCutSongsYRadius) {
                                                 val i = point.x - motionEvent.rawX.toInt()
                                                 if (abs(i) > config.slideStatusBarCutSongsXRadius) {
-                                                    moduleRes.getString(R.string.slide_status_bar_cut_songs)
-                                                        .log()
+                                                    moduleRes.getString(R.string.slide_status_bar_cut_songs).log()
                                                     if (i > 0) {
                                                         shell("input keyevent 87", false)
                                                     } else {
@@ -410,8 +427,9 @@ class SystemUILyric : BaseHook() {
                                     when (isLongChick) {
                                         true -> {
                                             if (config.longClickStatusBarStop) {
-                                                moduleRes.getString(R.string.long_click_status_bar_stop)
-                                                    .log()
+                                                if (isHiding) return@before
+
+                                                moduleRes.getString(R.string.long_click_status_bar_stop).log()
                                                 shell("input keyevent 85", false)
                                                 hookParam.result = true
                                             }
@@ -419,44 +437,39 @@ class SystemUILyric : BaseHook() {
 
                                         false -> {
                                             if (config.clickStatusBarToHideLyric || isOS2FocusNotifyShowing) {
+                                                if (!isMusicPlaying) return@before
                                                 if (isOS1FocusNotifyShowing) return@before
 
-                                                if (!isLyricViewShowing) {
-                                                    moduleRes.getString(R.string.click_status_bar_to_hide_lyric)
-                                                        .log()
-                                                    if (isHiding) {
-                                                        if (shouldControlFocusNotify()) {
-                                                            if (!isHideFocusNotify && shouldOpenFocusNotify(
-                                                                    motionEvent
-                                                                )
-                                                            ) {
-                                                                "Should open focus notify".log()
-                                                                return@before
-                                                            }
+                                                moduleRes.getString(R.string.click_status_bar_to_hide_lyric).log()
+                                                if (isHiding) {
+                                                    if (canControlFocusNotify()) {
+                                                        if (!isHideFocusNotify && shouldOpenFocusNotify(motionEvent)) {
+                                                            "Should open focus notify".log()
+                                                            return@before
                                                         }
-                                                        isClickHiding = false
-                                                        isHiding = false
-                                                        hookParam.result = true
-                                                        hideFocusNotifyIfNeed()
-                                                        changeLyric(lastLyric, 0)
-                                                        autoHideStatusBarInFullScreenModeIfNeed()
-                                                    } else {
-                                                        val x = motionEvent.x.toInt()
-                                                        val y = motionEvent.y.toInt()
-                                                        val left = lyricLayout.left
-                                                        val top = lyricLayout.top
-                                                        val right = lyricLayout.right
-                                                        val bottom = lyricLayout.bottom
-                                                        if (x in left..right && y in top..bottom) {
-                                                            isClickHiding = true
-                                                            isHiding = true
-                                                            hookParam.result = true
-                                                            hideLyric()
-                                                            showFocusNotifyIfNeed()
-                                                            autoHideStatusBarInFullScreenModeIfNeed()
-                                                        }
-                                                        "Change to hide LyricView: $isHiding".log()
                                                     }
+                                                    isClickHiding = false
+                                                    isHiding = false
+                                                    hookParam.result = true
+                                                    hideFocusNotifyIfNeed()
+                                                    showLyric(lastLyric, 0)
+                                                    autoHideStatusBarInFullScreenModeIfNeed()
+                                                } else {
+                                                    val x = motionEvent.x.toInt()
+                                                    val y = motionEvent.y.toInt()
+                                                    val left = lyricLayout.left
+                                                    val top = lyricLayout.top
+                                                    val right = lyricLayout.right
+                                                    val bottom = lyricLayout.bottom
+                                                    if (x in left..right && y in top..bottom) {
+                                                        isClickHiding = true
+                                                        isHiding = true
+                                                        hookParam.result = true
+                                                        hideLyric()
+                                                        showFocusNotifyIfNeed()
+                                                        autoHideStatusBarInFullScreenModeIfNeed()
+                                                    }
+                                                    "Change to hide LyricView: $isHiding".log()
                                                 }
                                             }
                                         }
@@ -475,10 +488,8 @@ class SystemUILyric : BaseHook() {
                     after { hook ->
                         centralSurfacesImpl = hook.thisObject
                         autoHideController = hook.thisObject.getObjectField("mAutoHideController")
-                        val mStatusBarModeRepository =
-                            hook.thisObject.getObjectFieldIfExist("mStatusBarModeRepository")
-                        defaultDisplay =
-                            mStatusBarModeRepository?.getObjectFieldIfExist("defaultDisplay")
+                        val mStatusBarModeRepository = hook.thisObject.getObjectFieldIfExist("mStatusBarModeRepository")
+                        defaultDisplay = mStatusBarModeRepository?.getObjectFieldIfExist("defaultDisplay")
                     }
                 }
             }
@@ -497,7 +508,7 @@ class SystemUILyric : BaseHook() {
 
                 it.declaredMethods.filter { method ->
                     (method.name == "updateVisibility$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
-                            method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
+                        method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
                 }.forEach { method ->
                     method.createHook {
                         before { hook ->
@@ -522,7 +533,7 @@ class SystemUILyric : BaseHook() {
 
                         isOS2FocusNotifyShowing = hook.result as Boolean
                         if (isOS2FocusNotifyShowing) {
-                            if (isLyricViewShowing && !isHideFocusNotify) {
+                            if (isMusicPlaying && !isHideFocusNotify) {
                                 isHiding = true
                                 hideLyric()
                             }
@@ -541,7 +552,7 @@ class SystemUILyric : BaseHook() {
                             if (message.what == 1003) {
                                 val show = focusNotifyShowing()
                                 if (show) {
-                                    if (isLyricViewShowing) {
+                                    if (isMusicPlaying) {
                                         isOS1FocusNotifyShowing = true
                                         isHiding = true
                                         hideLyric()
@@ -577,9 +588,9 @@ class SystemUILyric : BaseHook() {
         }
         if (isInFullScreenMode &&
             (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-                    || context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                || context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
         ) {
-            if (statusBarShowing && isLyricViewShowing) {
+            if (statusBarShowing && isMusicPlaying) {
                 if (!(isOS2FocusNotifyShowing || isOS1FocusNotifyShowing || isClickHiding)) {
                     isHiding = false
                     hideFocusNotifyIfNeed()
@@ -602,12 +613,14 @@ class SystemUILyric : BaseHook() {
     private fun autoHideStatusBarInFullScreenModeIfNeed() {
         if (autoHideController == null) return
         if (!isInFullScreenMode) return
+
         autoHideController!!.callMethod("touchAutoHide")
     }
 
     private fun hideFocusNotifyIfNeed() {
-        if (!shouldControlFocusNotify()) return
+        if (!canControlFocusNotify()) return
         if (!focusNotifyShowing()) return
+
         val mIcon = focusedNotify!!.getObjectField("mIcon")
         val mContent = focusedNotify!!.getObjectField("mContent")
         if (mIcon == null || mContent == null) return
@@ -620,8 +633,9 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun showFocusNotifyIfNeed() {
-        if (!shouldControlFocusNotify()) return
+        if (!canControlFocusNotify()) return
         if (!focusNotifyShowing()) return
+
         val mIcon = focusedNotify!!.getObjectField("mIcon")
         val mContent = focusedNotify!!.getObjectField("mContent")
         if (mIcon == null || mContent == null) return
@@ -633,7 +647,7 @@ class SystemUILyric : BaseHook() {
         "Showing focus notify".log()
     }
 
-    private fun shouldControlFocusNotify(): Boolean {
+    private fun canControlFocusNotify(): Boolean {
         return focusedNotify != null && canHideFocusNotify
     }
 
@@ -650,17 +664,18 @@ class SystemUILyric : BaseHook() {
                 shouldIgnore = false
             }
         } else {
-            !(focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean || mCurrentNotifyBean.getObjectField(
-                "headsUp"
-            ) as Boolean || (TextUtils.equals(
-                mCurrentNotifyBean.getObjectField("packageName") as CharSequence,
-                focusedNotify!!.getObjectField("mTopActivityPackageName") as CharSequence
-            ) && !(focusedNotify!!.getObjectField("mRequestHide") as Boolean)))
+            !(focusedNotify!!.getObjectField("mIsHeadsUpShowing") as Boolean ||
+                mCurrentNotifyBean.getObjectField("headsUp") as Boolean ||
+                (TextUtils.equals(
+                    mCurrentNotifyBean.getObjectField("packageName") as CharSequence,
+                    focusedNotify!!.getObjectField("mTopActivityPackageName") as CharSequence
+                ) &&
+                    !(focusedNotify!!.getObjectField("mRequestHide") as Boolean)))
         }
     }
 
     private fun shouldOpenFocusNotify(motionEvent: MotionEvent): Boolean {
-        if (!shouldControlFocusNotify()) return false
+        if (!canControlFocusNotify()) return false
         if (!focusNotifyShowing()) return false
         val focusedNotifyPromptView = focusedNotify!!.getObjectField("mView") ?: return false
 
@@ -710,7 +725,7 @@ class SystemUILyric : BaseHook() {
     private var lastRunnable: Runnable? = null
     private val timeoutRestoreHandler: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
-            if (msg.what == timeoutRestore && isLyricViewShowing && config.timeoutRestore) {
+            if (msg.what == timeoutRestore && isMusicPlaying && config.timeoutRestore) {
                 hideLyric()
                 playingApp = ""
                 lastLyric = ""
@@ -720,23 +735,11 @@ class SystemUILyric : BaseHook() {
     }
     private val showTitleConsumer: Consumer<SuperLyricData> = object : Consumer<SuperLyricData> {
         override fun accept(value: SuperLyricData) {
-            // if (!isPlaying) return
+            if (!isMusicPlaying) return
             if (playingApp != value.packageName) return
 
             this@SystemUILyric.title = value.title
         }
-    }
-
-    // 延迟执行隐藏歌词，如果期间歌词有更新则取消任务
-    private var hideLyricRunnable: Runnable? = null
-    fun scheduleHideLyric() {
-        hideLyricRunnable?.let { handler.removeCallbacks(it) }
-        hideLyricRunnable = Runnable { hideLyric() }
-        handler.postDelayed(hideLyricRunnable!!, 200)
-    }
-
-    fun onNewLyricReceived() {
-        hideLyricRunnable?.let { handler.removeCallbacks(it) }
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -744,20 +747,21 @@ class SystemUILyric : BaseHook() {
         SuperLyricTool.registerSuperLyric(context, object : ISuperLyric.Stub() {
             override fun onStop(data: SuperLyricData?) {
                 if (data == null) return
-                isMusicPlaying = false
                 if (!isReady) return
-
+                if (data.playbackState?.state == 6) return
                 if (playingApp.isNotEmpty()) {
                     if ((data.packageName.ifNotNull { playingApp != data.packageName }
                             ?: false) as Boolean)
                         return
                 }
+
+                isMusicPlaying = false
                 lastLyric = ""
+                playingApp = ""
                 if (lastRunnable != null)
                     handler.removeCallbacks(lastRunnable!!)
 
-                scheduleHideLyric()
-
+                handler.post { hideLyric() }
                 showFocusNotifyIfNeed()
                 if (timeoutRestoreHandler.hasMessages(timeoutRestore)) {
                     timeoutRestoreHandler.removeMessages(timeoutRestore)
@@ -766,7 +770,6 @@ class SystemUILyric : BaseHook() {
 
             override fun onSuperLyric(data: SuperLyricData?) {
                 if (data == null) return
-                isMusicPlaying = true
                 if (!isReady) return
 
                 playingApp = data.packageName
@@ -779,16 +782,16 @@ class SystemUILyric : BaseHook() {
                             if (lastRunnable != null)
                                 handler.removeCallbacks(lastRunnable!!)
                             lastRunnable = Runnable { showTitleConsumer.accept(data) }
-                            handler.postDelayed(lastRunnable!!, 800)
 
                             ("Title: " + data.title + ", Artist: " + lastArtist + ", Album: " + lastAlbum).log()
                         }
                     }
                 }
-
-                if (data.lyric == "") return
-                onNewLyricReceived()
+                if (data.lyric.isEmpty()) return
+                isMusicPlaying = true
                 lastLyric = data.lyric
+                if (lastRunnable != null)
+                    handler.postDelayed(lastRunnable!!, 800)
 
                 changeLyricStateIfInFullScreenMode()
 
@@ -800,8 +803,7 @@ class SystemUILyric : BaseHook() {
                 hideFocusNotifyIfNeed()
                 handler.post {
                     changeIcon(data)
-                    showLyric()
-                    changeLyric(lastLyric, data.delay)
+                    showLyric(lastLyric, data.delay)
                 }
             }
         })
@@ -835,10 +837,11 @@ class SystemUILyric : BaseHook() {
         "Register SuperLyric".log()
     }
 
-    private fun showLyric() {
-        if (!isReady || lastLyric == "" || isScreenLocked || isHiding) return
+    private fun showLyric(lyric: String, delay: Int) {
+        if (!isReady || !isMusicPlaying || lyric.isEmpty() || isScreenLocked || isHiding)
+            return
+
         "Showing LyricView".log()
-        isLyricViewShowing = true
         goMainThread {
             lastColor = clockView.currentTextColor
             lyricLayout.showView()
@@ -850,43 +853,42 @@ class SystemUILyric : BaseHook() {
             if (this::carrierLabel.isInitialized && config.hideCarrier) carrierLabel.hideView()
             if (this::miuiNetworkSpeedView.isInitialized && config.mMiuiHideNetworkSpeed) miuiNetworkSpeedView.hideView()
 
-        }
-    }
-
-    private fun changeLyric(lyric: String, delay: Int) {
-        lyricView.apply {
-            width = getLyricWidth(getPaint(), lyric)
-            val i = width - theoreticalWidth
-            if (config.dynamicLyricSpeed && delay == 0) {
-                if (i > 0) {
-                    val proportion = i * 1.0 / displayWidth
-                    "Proportion: $proportion".log()
-                    val speed = 2 * proportion + 0.4
-                    "Speed: $speed".log()
-                    setScrollSpeed(speed.toFloat())
+            lyricView.apply {
+                width = getLyricWidth(getPaint(), lyric)
+                val i = width - theoreticalWidth
+                if (config.dynamicLyricSpeed && delay == 0) {
+                    if (i > 0) {
+                        val proportion = i * 1.0 / displayWidth
+                        "Proportion: $proportion".log()
+                        val speed = 2 * proportion + 0.4
+                        "Speed: $speed".log()
+                        setScrollSpeed(speed.toFloat())
+                    }
                 }
-            }
-            if (delay > 0) {
-                if (i > 0) {
-                    val delayInSeconds = delay / 1000.0
-                    val framesCount = delayInSeconds * 60
-                    setScrollSpeed(((i / framesCount).toFloat()))
+                if (delay > 0) {
+                    if (i > 0) {
+                        val delayInSeconds = delay / 1000.0
+                        val framesCount = delayInSeconds * 60
+                        setScrollSpeed(((i / framesCount).toFloat()))
+                    }
                 }
+                if (isRandomAnima) {
+                    val animation = randomAnima
+                    val interpolator = config.lyricInterpolator
+                    val duration = config.animationDuration
+                    inAnimation =
+                        LyricViewTools.switchViewInAnima(animation, interpolator, duration)
+                    outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
+                }
+                setText(lyric)
             }
-            if (isRandomAnima) {
-                val animation = randomAnima
-                val interpolator = config.lyricInterpolator
-                val duration = config.animationDuration
-                inAnimation =
-                    LyricViewTools.switchViewInAnima(animation, interpolator, duration)
-                outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
-            }
-            setText(lyric)
         }
     }
 
     private fun changeIcon(it: SuperLyricData) {
         if (!iconSwitch) return
+        if (!isMusicPlaying) return
+
         lastBase64Icon = config.changeAllIcons.ifEmpty {
             if (it.base64Icon != "") {
                 it.base64Icon
@@ -898,7 +900,8 @@ class SystemUILyric : BaseHook() {
 
     private fun hideLyric(anim: Boolean = true) {
         if (!isReady) return
-        isLyricViewShowing = false
+        isHiding = true
+
         "Hiding LyricView".log()
         goMainThread {
             lyricLayout.hideView(anim)
@@ -1045,7 +1048,7 @@ class SystemUILyric : BaseHook() {
                 loadClassOrNull("com.android.systemui.controlcenter.shade.NotificationHeaderExpandController\$notificationCallback$1").isNotNull {
                     it.methodFinder().filterByName("onExpansionChanged").first().createHook {
                         before { hook ->
-                            if (isLyricViewShowing && !isHiding && config.hideTime) {
+                            if (isMusicPlaying && !isHiding && config.hideTime) {
                                 val notificationHeaderExpandController =
                                     hook.thisObject.getObjectField("this$0")
                                 notificationHeaderExpandController?.setObjectField(
@@ -1086,7 +1089,7 @@ class SystemUILyric : BaseHook() {
                         it.methodFinder().filterByName("setVisibilityByController").first()
                             .createHook {
                                 before { hookParam ->
-                                    if (isLyricViewShowing) hookParam.args[0] = false
+                                    if (isMusicPlaying) hookParam.args[0] = false
                                 }
                             }
                     }
@@ -1171,12 +1174,10 @@ class SystemUILyric : BaseHook() {
             isScreenLocked = intent.action == Intent.ACTION_SCREEN_OFF
             "isScreenLocked: $isScreenLocked".log()
             if (isScreenLocked) {
-                lyricView.clearText()
                 hideLyric(false)
             } else {
-                if (isMusicPlaying && lastLyric != "") {
-                    showLyric()
-                    changeLyric(lastLyric, 0)
+                if (isMusicPlaying && lastLyric.isNotEmpty()) {
+                    showLyric(lastLyric, 0)
                 }
             }
         }
