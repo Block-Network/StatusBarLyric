@@ -767,7 +767,8 @@ class SystemUILyric : BaseHook() {
                 if (data == null) return
 
                 if (playingApp.isNotEmpty()) {
-                    if ((data.packageName.ifNotNull { playingApp != data.packageName } ?: false) as Boolean)
+                    if ((data.packageName.ifNotNull { playingApp != data.packageName }
+                            ?: false) as Boolean)
                         return
                 }
                 playingApp = ""
@@ -901,8 +902,8 @@ class SystemUILyric : BaseHook() {
     private fun changeIcon(it: SuperLyricData) {
         if (!iconSwitch) return
         lastBase64Icon = config.changeAllIcons.ifEmpty {
-            if (it.base64Icon != null) {
-                it.base64Icon!!
+            if (it.base64Icon != "") {
+                it.base64Icon
             } else {
                 config.getDefaultIcon(it.packageName)
             }
