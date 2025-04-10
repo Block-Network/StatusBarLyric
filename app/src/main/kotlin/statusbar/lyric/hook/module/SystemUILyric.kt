@@ -74,6 +74,7 @@ import statusbar.lyric.tools.BlurTools.cornerRadius
 import statusbar.lyric.tools.BlurTools.setBackgroundBlur
 import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.LyricViewTools
+import statusbar.lyric.tools.LyricViewTools.cancelAnimation
 import statusbar.lyric.tools.LyricViewTools.hideView
 import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
@@ -849,6 +850,7 @@ class SystemUILyric : BaseHook() {
 
         "Showing LyricView".log()
         goMainThread {
+            lyricLayout.cancelAnimation()
             lastColor = clockView.currentTextColor
             lyricLayout.showView()
             if (config.hideTime) {
