@@ -440,6 +440,7 @@ class SystemUILyric : BaseHook() {
                                                         isHiding = false
                                                         hookParam.result = true
                                                         hideFocusNotifyIfNeed()
+                                                        showLyric()
                                                         changeLyric(lastLyric, 0)
                                                         autoHideStatusBarInFullScreenModeIfNeed()
                                                     } else {
@@ -803,9 +804,9 @@ class SystemUILyric : BaseHook() {
                     }
                 }
 
-                if (data.lyric == null) return
+                if (data.lyric == "") return
 
-                lastLyric = data.lyric!!
+                lastLyric = data.lyric
                 changeLyricStateIfInFullScreenMode()
 
                 if (isHiding) return
@@ -816,6 +817,7 @@ class SystemUILyric : BaseHook() {
                 hideFocusNotifyIfNeed()
                 handler.post {
                     changeIcon(data)
+                    showLyric()
                     changeLyric(lastLyric, data.delay)
                 }
             }
@@ -850,12 +852,9 @@ class SystemUILyric : BaseHook() {
         "Register Super Lyric".log()
     }
 
-    private fun changeLyric(lyric: String, delay: Int) {
-        if (!isReady) return
-        if (lyric.isEmpty()) return
-        if (isHiding || isScreenLock) return
+    private fun showLyric() {
+        if (!isReady || lastLyric == "" || isHiding || isScreenLock) return
 
-        "lyric:$lyric".log()
         isStop = false
         isPlaying = true
         goMainThread {
@@ -868,34 +867,39 @@ class SystemUILyric : BaseHook() {
             if (this::notificationIconArea.isInitialized && config.hideNotificationIcon) notificationIconArea.hideView()
             if (this::carrierLabel.isInitialized && config.hideCarrier) carrierLabel.hideView()
             if (this::miuiNetworkSpeedView.isInitialized && config.mMiuiHideNetworkSpeed) miuiNetworkSpeedView.hideView()
-            lyricView.apply {
-                width = getLyricWidth(getPaint(), lyric)
-                val i = width - theoreticalWidth
-                if (config.dynamicLyricSpeed && delay == 0) {
-                    if (i > 0) {
-                        val proportion = i * 1.0 / displayWidth
-                        "proportion:$proportion".log()
-                        val speed = 2 * proportion + 0.4
-                        "speed:$speed".log()
-                        setScrollSpeed(speed.toFloat())
-                    }
+
+        }
+    }
+
+    private fun changeLyric(lyric: String, delay: Int) {
+        lyricView.apply {
+            width = getLyricWidth(getPaint(), lyric)
+            val i = width - theoreticalWidth
+            if (config.dynamicLyricSpeed && delay == 0) {
+                if (i > 0) {
+                    val proportion = i * 1.0 / displayWidth
+                    "proportion:$proportion".log()
+                    val speed = 2 * proportion + 0.4
+                    "speed:$speed".log()
+                    setScrollSpeed(speed.toFloat())
                 }
-                if (delay > 0) {
-                    if (i > 0) {
-                        val d = delay * 1000.0 / 16.0
-                        setScrollSpeed(((i / d).toFloat()))
-                    }
-                }
-                if (isRandomAnima) {
-                    val animation = randomAnima
-                    val interpolator = config.lyricInterpolator
-                    val duration = config.animationDuration
-                    inAnimation =
-                        LyricViewTools.switchViewInAnima(animation, interpolator, duration)
-                    outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
-                }
-                setText(lyric)
             }
+            if (delay > 0) {
+                if (i > 0) {
+                    val delayInSeconds = delay / 1000.0
+                    val framesCount = delayInSeconds * 60
+                    setScrollSpeed(((i / framesCount).toFloat()))
+                }
+            }
+            if (isRandomAnima) {
+                val animation = randomAnima
+                val interpolator = config.lyricInterpolator
+                val duration = config.animationDuration
+                inAnimation =
+                    LyricViewTools.switchViewInAnima(animation, interpolator, duration)
+                outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
+            }
+            setText(lyric)
         }
     }
 
@@ -1155,12 +1159,14 @@ class SystemUILyric : BaseHook() {
     inner class ScreenLockReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             isScreenLock = intent.action == Intent.ACTION_SCREEN_OFF
+            "isScreenLock: $isScreenLock".log()
             if (isScreenLock) {
+                lyricView.clearText()
                 hideLyric(false)
             } else {
-                if (lastLyric.isNotEmpty()) {
+                if (isPlaying && lastLyric != "") {
                     changeLyric(lastLyric, 0)
-                    lastColor = clockView.currentTextColor
+                    showLyric()
                 }
             }
         }

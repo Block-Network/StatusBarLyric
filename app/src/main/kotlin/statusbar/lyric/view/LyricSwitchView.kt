@@ -108,4 +108,8 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     fun setMaxLines(maxLines: Int) {
         applyToAllViews { it.maxLines = maxLines }
     }
+
+    fun clearText() {
+        applyToAllViews { it.clearText() }
+    }
 }

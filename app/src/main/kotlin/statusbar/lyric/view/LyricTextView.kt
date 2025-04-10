@@ -56,6 +56,10 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
         startScroll()
     }
 
+    fun clearText() {
+        text = ""
+    }
+
     override fun setTextColor(color: Int) {
         paint.color = color
         postInvalidate()
