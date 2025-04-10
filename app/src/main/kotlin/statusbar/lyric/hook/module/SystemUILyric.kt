@@ -727,6 +727,17 @@ class SystemUILyric : BaseHook() {
         }
     }
 
+    // 延迟执行隐藏歌词，如果期间歌词有更新则取消任务
+    private var hideLyricRunnable: Runnable? = null
+    fun scheduleHideLyric() {
+        hideLyricRunnable?.let { handler.removeCallbacks(it) }
+        hideLyricRunnable = Runnable { hideLyric() }
+        handler.postDelayed(hideLyricRunnable!!, 200)
+    }
+
+    fun onNewLyricReceived() {
+        hideLyricRunnable?.let { handler.removeCallbacks(it) }
+    }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun registerSuperLyric(context: Context) {
@@ -741,11 +752,12 @@ class SystemUILyric : BaseHook() {
                             ?: false) as Boolean)
                         return
                 }
-                playingApp = ""
                 lastLyric = ""
                 if (lastRunnable != null)
                     handler.removeCallbacks(lastRunnable!!)
-                handler.post { hideLyric() }
+
+                scheduleHideLyric()
+
                 showFocusNotifyIfNeed()
                 if (timeoutRestoreHandler.hasMessages(timeoutRestore)) {
                     timeoutRestoreHandler.removeMessages(timeoutRestore)
@@ -775,6 +787,7 @@ class SystemUILyric : BaseHook() {
                 }
 
                 if (data.lyric == "") return
+                onNewLyricReceived()
                 lastLyric = data.lyric
 
                 changeLyricStateIfInFullScreenMode()
@@ -1162,8 +1175,8 @@ class SystemUILyric : BaseHook() {
                 hideLyric(false)
             } else {
                 if (isMusicPlaying && lastLyric != "") {
-                    changeLyric(lastLyric, 0)
                     showLyric()
+                    changeLyric(lastLyric, 0)
                 }
             }
         }
