@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">StatusBar lyric</string>
+    <string name="app_name">StatusBar Lyric</string>
     <string name="module_inactivated">モジュールが無効化されています</string>
     <string name="module_first">前提条件</string>
     <string name="module_second">基本設定</string>

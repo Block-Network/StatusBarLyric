@@ -359,7 +359,7 @@ fun HomePage(
 
 @Composable
 fun ShowSuperLyric() {
-    val openSuperLyricUrl = { ActivityTools.openUrl("https://github.com/HChenX/SuperLyric") }
+    val openSuperLyricUrl = { ActivityTools.openUrl("https://github.com/HChenX/SuperLyric/releases") }
     SuperArrow(
         title = stringResource(R.string.super_lyric_tip),
         titleColor = BasicComponentColors(
