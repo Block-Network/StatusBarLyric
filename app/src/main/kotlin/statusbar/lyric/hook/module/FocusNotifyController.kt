@@ -93,7 +93,7 @@ class FocusNotifyController {
                                 systemUILyric.updateLyricState(showLyric = false, showFocus = false)
                             }
                         } else {
-                            systemUILyric.updateLyricState(systemUILyric.lastLyric)
+                            systemUILyric.updateLyricState()
                         }
                         "New focus notify is ${if (isOS2FocusNotifyShowing) "show" else "hide"}".log()
                     }
@@ -113,7 +113,7 @@ class FocusNotifyController {
                                     }
                                 } else {
                                     isOS1FocusNotifyShowing = false
-                                    systemUILyric.updateLyricState(systemUILyric.lastLyric)
+                                    systemUILyric.updateLyricState()
                                 }
                                 "Focus notify is ${if (show) "show" else "hide"}".log()
                             }

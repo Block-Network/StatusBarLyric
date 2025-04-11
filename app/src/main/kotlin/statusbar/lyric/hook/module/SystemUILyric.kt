@@ -100,9 +100,9 @@ import kotlin.math.abs
 import kotlin.math.min
 
 class SystemUILyric : BaseHook() {
-    val context: Context by lazy { AndroidAppHelper.currentApplication() }
+    private val context: Context by lazy { AndroidAppHelper.currentApplication() }
 
-    var lastLyric: String = ""
+    private var lastLyric: String = ""
     private var lastColor: Int by observableChange(Color.WHITE) { oldValue, newValue ->
         if (oldValue == newValue) return@observableChange
         "Changing Color: $newValue".log()
@@ -270,7 +270,7 @@ class SystemUILyric : BaseHook() {
 
                             val visibility = param.args[0] == View.VISIBLE
                             if (visibility) {
-                                updateLyricState(lastLyric)
+                                updateLyricState()
                             } else {
                                 updateLyricState(showLyric = false)
                             }
@@ -446,7 +446,7 @@ class SystemUILyric : BaseHook() {
                                                     }
                                                     isClickHiding = false
                                                     hookParam.result = true
-                                                    updateLyricState(lastLyric)
+                                                    updateLyricState()
                                                     autoHideStatusBarInFullScreenModeIfNeed()
                                                 } else {
                                                     val x = motionEvent.x.toInt()
@@ -519,14 +519,14 @@ class SystemUILyric : BaseHook() {
     private var statusBarShowing: Boolean = true
 
     // 适合考虑状态的更新
-    fun updateLyricState(lyric: String = "", showLyric: Boolean = true, showFocus: Boolean = true, delay: Int = 0) {
+    fun updateLyricState(showLyric: Boolean = true, showFocus: Boolean = true, delay: Int = 0) {
         if (
             isInFullScreenMode() &&
             (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE ||
                 context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
         ) {
             if (statusBarShowing && isMusicPlaying && showLyric && canShowLyric()) {
-                showLyric(lyric, delay)
+                showLyric(lastLyric, delay)
                 FocusNotifyController.hideFocusNotifyIfNeed()
                 "StatusBar state is showing".log()
             } else {
@@ -537,7 +537,7 @@ class SystemUILyric : BaseHook() {
             }
         } else {
             if (showLyric && canShowLyric()) {
-                showLyric(lyric, delay)
+                showLyric(lastLyric, delay)
                 FocusNotifyController.hideFocusNotifyIfNeed()
             } else {
                 hideLyric()
@@ -585,9 +585,9 @@ class SystemUILyric : BaseHook() {
     private val handler: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
             if (msg.what == timeoutRestore && isMusicPlaying && config.timeoutRestore) {
-                updateLyricState(showLyric = false)
-                playingApp = ""
                 lastLyric = ""
+                playingApp = ""
+                updateLyricState(showLyric = false)
                 "Timeout restore".log()
             }
         }
@@ -643,7 +643,7 @@ class SystemUILyric : BaseHook() {
                 if (lastRunnable != null) handler.postDelayed(lastRunnable!!, 800)
 
                 changeIcon(data)
-                updateLyricState(lastLyric, delay = data.delay)
+                updateLyricState(delay = data.delay)
                 if (handler.hasMessages(timeoutRestore)) {
                     handler.removeMessages(timeoutRestore)
                     handler.sendEmptyMessageDelayed(timeoutRestore, 10000L)
@@ -722,8 +722,7 @@ class SystemUILyric : BaseHook() {
                     val animation = randomAnima
                     val interpolator = config.lyricInterpolator
                     val duration = config.animationDuration
-                    inAnimation =
-                        LyricViewTools.switchViewInAnima(animation, interpolator, duration)
+                    inAnimation = LyricViewTools.switchViewInAnima(animation, interpolator, duration)
                     outAnimation = LyricViewTools.switchViewOutAnima(animation, duration)
                 }
                 setText(lyric)
@@ -753,6 +752,7 @@ class SystemUILyric : BaseHook() {
         "Hiding LyricView".log()
         goMainThread {
             lyricLayout.hideView(false)
+            lyricView.setText("")
             clockView.showView()
             notificationBigTime?.visibility = View.VISIBLE
             if (config.titleSwitch) titleDialog.hideTitle()
@@ -933,10 +933,10 @@ class SystemUILyric : BaseHook() {
                             }
                         }
                         it.methodFinder().filterByName("setVisibilityByController").first().createHook {
-                                before { hookParam ->
-                                    if (isMusicPlaying) hookParam.args[0] = false
-                                }
+                            before { hookParam ->
+                                if (isMusicPlaying) hookParam.args[0] = false
                             }
+                        }
                     }
                 }
 
@@ -1021,7 +1021,7 @@ class SystemUILyric : BaseHook() {
                 updateLyricState(showLyric = false)
             } else {
                 if (isMusicPlaying && lastLyric.isNotEmpty()) {
-                    updateLyricState(lastLyric)
+                    updateLyricState()
                 }
             }
         }
