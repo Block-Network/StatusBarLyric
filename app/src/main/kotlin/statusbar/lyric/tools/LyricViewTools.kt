@@ -136,7 +136,7 @@ object LyricViewTools {
     fun View.hideView(anim: Boolean = true) {
         if (isGone) return
         if (anim) {
-            alphaAnimation = getAlphaAnimation(false).apply {
+            alphaAnimation = getAlphaAnimation(false, 0).apply {
                 setAnimationListener(object : Animation.AnimationListener {
                     override fun onAnimationStart(animation: Animation) {}
                     override fun onAnimationEnd(animation: Animation) {
