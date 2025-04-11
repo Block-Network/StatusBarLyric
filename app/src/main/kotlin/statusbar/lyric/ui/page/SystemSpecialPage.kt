@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -46,7 +47,6 @@ import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -62,6 +62,7 @@ import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @Composable
 fun SystemSpecialPage(
@@ -127,8 +128,9 @@ fun SystemSpecialPage(
         LazyColumn(
             modifier = Modifier
                 .hazeSource(state = hazeState)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .height(getWindowSize().height.dp)
+                .overScrollVertical()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
             contentPadding = it,
