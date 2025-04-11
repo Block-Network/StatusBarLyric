@@ -46,7 +46,7 @@ class FocusNotifyController {
     companion object {
         private var focusedNotify: Any? = null
         private var canHideFocusNotify: Boolean = false
-        var isHideFocusNotify: Boolean = false
+        private var isHideFocusNotify: Boolean = false
         var isOS2FocusNotifyShowing: Boolean = false
         var isOS1FocusNotifyShowing: Boolean = false // OS1 不要支持隐藏焦点通知
 
@@ -170,6 +170,7 @@ class FocusNotifyController {
         fun shouldOpenFocusNotify(motionEvent: MotionEvent): Boolean {
             if (!canControlFocusNotify()) return false
             if (!isFocusNotifyShowing()) return false
+            if (!isHideFocusNotify) return false
 
             val focusedNotifyPromptView = focusedNotify!!.getObjectField("mView") ?: return false
 
