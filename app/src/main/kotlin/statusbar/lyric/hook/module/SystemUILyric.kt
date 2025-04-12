@@ -147,7 +147,6 @@ class SystemUILyric : BaseHook() {
 
     @Volatile
     private var isHiding: Boolean = false
-    private var isClickHiding: Boolean = false
     private var isRandomAnima: Boolean = false
     private var autoHideController: Any? = null
     private val isReady: Boolean get() = this@SystemUILyric::clockView.isInitialized
@@ -444,7 +443,7 @@ class SystemUILyric : BaseHook() {
                                                             return@before
                                                         }
                                                     }
-                                                    isClickHiding = false
+                                                    FocusNotifyController.isInteraction = false
                                                     hookParam.result = true
                                                     updateLyricState()
                                                     autoHideStatusBarInFullScreenModeIfNeed()
@@ -456,7 +455,7 @@ class SystemUILyric : BaseHook() {
                                                     val right = lyricLayout.right
                                                     val bottom = lyricLayout.bottom
                                                     if (x in left..right && y in top..bottom) {
-                                                        isClickHiding = true
+                                                        FocusNotifyController.isInteraction = true
                                                         hookParam.result = true
                                                         updateLyricState(showLyric = false)
                                                         autoHideStatusBarInFullScreenModeIfNeed()
@@ -523,9 +522,9 @@ class SystemUILyric : BaseHook() {
         if (
             isInFullScreenMode() &&
             (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE ||
-                    context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
         ) {
-            if (statusBarShowing && isMusicPlaying && showLyric && canShowLyric()) {
+            if (statusBarShowing && showLyric && canShowLyric()) {
                 showLyric(lastLyric, delay)
                 FocusNotifyController.hideFocusNotifyIfNeed()
                 "StatusBar state is showing".log()
@@ -548,8 +547,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun canShowLyric(): Boolean {
-        // 同时满足非手动隐藏歌词及不存在焦点通知时才显示歌词
-        return !isClickHiding && !FocusNotifyController.isOS1FocusNotifyShowing && !FocusNotifyController.isOS2FocusNotifyShowing
+        return isMusicPlaying && !FocusNotifyController.isOS1FocusNotifyShowing && !FocusNotifyController.isInteraction
     }
 
     private fun isInFullScreenMode(): Boolean {

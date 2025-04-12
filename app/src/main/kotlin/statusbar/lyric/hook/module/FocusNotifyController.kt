@@ -47,6 +47,7 @@ class FocusNotifyController {
         private var focusedNotify: Any? = null
         private var canHideFocusNotify: Boolean = false
         private var isHideFocusNotify: Boolean = false
+        var isInteraction: Boolean = false
         var isOS2FocusNotifyShowing: Boolean = false
         var isOS1FocusNotifyShowing: Boolean = false // OS1 不要支持隐藏焦点通知
 
@@ -87,15 +88,23 @@ class FocusNotifyController {
                 canHideFocusNotify = true
                 (shouldShowMethod as Method).createHook {
                     after { hook ->
-                        isOS2FocusNotifyShowing = hook.result as Boolean
-                        if (isOS2FocusNotifyShowing) {
-                            if (systemUILyric.isMusicPlaying && !isHideFocusNotify) {
-                                systemUILyric.updateLyricState(showLyric = false, showFocus = false)
+                        val show = hook.result as Boolean
+                        if (systemUILyric.isMusicPlaying) {
+                            if (show) {
+                                if (!isHideFocusNotify) {
+                                    isInteraction = true
+                                    isOS2FocusNotifyShowing = true
+                                    systemUILyric.updateLyricState(showLyric = false, showFocus = false)
+                                }
+                            } else {
+                                isHideFocusNotify = false
+                                isInteraction = false
+                                isOS2FocusNotifyShowing = false
+                                systemUILyric.updateLyricState()
                             }
-                        } else {
-                            systemUILyric.updateLyricState()
+                            "New focus notify is ${if (show) "show" else "hide"}".log()
+                            // "isHideFocusNotify: $isHideFocusNotify, isOS2FocusNotifyShowing: $isOS2FocusNotifyShowing, isInteraction: $isInteraction".log()
                         }
-                        "New focus notify is ${if (isOS2FocusNotifyShowing) "show" else "hide"}".log()
                     }
                 }
             } else {
@@ -106,16 +115,16 @@ class FocusNotifyController {
                             val message = hook.args[0] as Message
                             if (message.what == 1003) {
                                 val show = isFocusNotifyShowing()
-                                if (show) {
-                                    if (systemUILyric.isMusicPlaying) {
+                                if (systemUILyric.isMusicPlaying) {
+                                    if (show) {
                                         isOS1FocusNotifyShowing = true
                                         systemUILyric.updateLyricState(showLyric = false, showFocus = false)
+                                    } else {
+                                        isOS1FocusNotifyShowing = false
+                                        systemUILyric.updateLyricState()
                                     }
-                                } else {
-                                    isOS1FocusNotifyShowing = false
-                                    systemUILyric.updateLyricState()
+                                    "Focus notify is ${if (show) "show" else "hide"}".log()
                                 }
-                                "Focus notify is ${if (show) "show" else "hide"}".log()
                             }
                         }
                     }
@@ -164,13 +173,13 @@ class FocusNotifyController {
         }
 
         private fun isFocusNotifyShowing(): Boolean {
-            return isOS2FocusNotifyShowing || isOS1FocusNotifyShowing
+            return isOS1FocusNotifyShowing || isOS2FocusNotifyShowing
         }
 
         fun shouldOpenFocusNotify(motionEvent: MotionEvent): Boolean {
             if (!canControlFocusNotify()) return false
             if (!isFocusNotifyShowing()) return false
-            if (!isHideFocusNotify) return false
+            if (isHideFocusNotify) return false
 
             val focusedNotifyPromptView = focusedNotify!!.getObjectField("mView") ?: return false
 
