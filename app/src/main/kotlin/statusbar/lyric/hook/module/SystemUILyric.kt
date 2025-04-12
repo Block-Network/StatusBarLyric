@@ -475,7 +475,6 @@ class SystemUILyric : BaseHook() {
             }
         }
 
-        //
         loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
             clazz.methodFinder().filterByName("onConfigurationChanged").single().createHook {
                 after { hookParam ->
@@ -748,7 +747,7 @@ class SystemUILyric : BaseHook() {
     }
 
     // 适用于不考虑状态的隐藏
-    fun hideLyric() {
+    private fun hideLyric() {
         if (!isReady) return
         if (isHiding) return
         isHiding = true

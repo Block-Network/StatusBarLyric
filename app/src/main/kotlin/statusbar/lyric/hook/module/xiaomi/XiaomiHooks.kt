@@ -53,22 +53,22 @@ class XiaomiHooks {
         private var carrierLabelRef: WeakReference<View>? = null
 
         fun getNotificationBigTime(): View? = notificationBigTimeRef?.get()
-        fun setNotificationBigTime(view: View?) {
+        private fun setNotificationBigTime(view: View?) {
             notificationBigTimeRef = if (view.isNotNull()) WeakReference(view) else null
         }
 
         fun getMiuiNetworkSpeedView(): TextView? = miuiNetworkSpeedViewRef?.get()
-        fun setMiuiNetworkSpeedView(view: TextView?) {
+        private fun setMiuiNetworkSpeedView(view: TextView?) {
             miuiNetworkSpeedViewRef = if (view.isNotNull()) WeakReference(view) else null
         }
 
         fun getPadClockView(): View? = padClockViewRef?.get()
-        fun setPadClockView(view: View?) {
+        private fun setPadClockView(view: View?) {
             padClockViewRef = if (view.isNotNull()) WeakReference(view) else null
         }
 
         fun getCarrierLabel(): View? = carrierLabelRef?.get()
-        fun setCarrierLabel(view: View?) {
+        private fun setCarrierLabel(view: View?) {
             carrierLabelRef = if (view.isNotNull()) WeakReference(view) else null
         }
 
@@ -180,14 +180,13 @@ class XiaomiHooks {
                                 after {
                                     "onWallpaperChanged".log()
                                     systemUILyric.canLoad = true
-                                    systemUILyric.hideLyric()
+                                    systemUILyric.updateLyricState(showLyric = false)
                                 }
                             }
                         break
                     }
                 }
             }
-
         }
     }
 }
