@@ -277,7 +277,7 @@ class SystemUILyric : BaseHook() {
                         } else {
                             val idName = runCatching { view.resources.getResourceEntryName(view.id) }.getOrNull()
                             if (idName != null && idName == "system_icons") {
-                                statusBatteryContainer = view;
+                                statusBatteryContainer = view
                             }
                         }
                     }
@@ -523,7 +523,7 @@ class SystemUILyric : BaseHook() {
         if (
             isInFullScreenMode() &&
             (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE ||
-                context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                    context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
         ) {
             if (statusBarShowing && isMusicPlaying && showLyric && canShowLyric()) {
                 showLyric(lastLyric, delay)
@@ -548,8 +548,8 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun canShowLyric(): Boolean {
-        // 不存在焦点通知和不是手动隐藏时可以显示歌词
-        return !FocusNotifyController.isOS1FocusNotifyShowing && (!isClickHiding || !FocusNotifyController.isOS2FocusNotifyShowing)
+        // 同时满足非手动隐藏歌词及不存在焦点通知时才显示歌词
+        return !isClickHiding && !FocusNotifyController.isOS1FocusNotifyShowing && !FocusNotifyController.isOS2FocusNotifyShowing
     }
 
     private fun isInFullScreenMode(): Boolean {
