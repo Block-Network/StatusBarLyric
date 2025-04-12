@@ -1,3 +1,25 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/Block-Network/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 package statusbar.lyric.hook.module.xiaomi
 
 import android.os.Build
@@ -58,7 +80,7 @@ class XiaomiHooks {
 
             // 处理通知中心时间
             loadClassOrNull("com.android.systemui.controlcenter.shade.NotificationHeaderExpandController\$notificationCallback$1").isNotNull {
-                it.methodFinder().filterByName("onExpansionChanged").first().createHook {
+                it.methodFinder().filterByName("onExpansionChanged").filterFinal().single().createHook {
                     before { hook ->
                         if (systemUILyric.isMusicPlaying && !systemUILyric.isHiding && config.hideTime) {
                             val notificationHeaderExpandController = hook.thisObject.getObjectField("this$0")
@@ -83,12 +105,12 @@ class XiaomiHooks {
             if (config.mMiuiHideNetworkSpeed) {
                 moduleRes.getString(R.string.miui_hide_network_speed).log()
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
-                    it.constructorFinder().first().createHook {
+                    it.constructorFinder().single().createHook {
                         after { hookParam ->
                             setMiuiNetworkSpeedView(hookParam.thisObject as? TextView)
                         }
                     }
-                    it.methodFinder().filterByName("setVisibilityByController").first()
+                    it.methodFinder().filterByName("setVisibilityByController").single()
                         .createHook {
                             before { hookParam ->
                                 if (systemUILyric.isMusicPlaying) hookParam.args[0] = false
@@ -128,7 +150,7 @@ class XiaomiHooks {
             if (config.hideCarrier && Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
                 moduleRes.getString(R.string.hide_carrier).log()
                 loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
-                    it.methodFinder().filterByName("onFinishInflate").firstOrNull()
+                    it.methodFinder().filterByName("onFinishInflate").singleOrNull()
                         .ifNotNull { method ->
                             method.createHook {
                                 after { hookParam ->
@@ -153,7 +175,7 @@ class XiaomiHooks {
                 val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager$$i")
                 if (clazz.isNotNull()) {
                     if (clazz!!.existMethod("onWallpaperChanged")) {
-                        clazz.methodFinder().filterByName("onWallpaperChanged").first()
+                        clazz.methodFinder().filterByName("onWallpaperChanged").single()
                             .createHook {
                                 after {
                                     "onWallpaperChanged".log()

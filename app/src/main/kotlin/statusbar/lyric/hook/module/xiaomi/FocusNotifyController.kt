@@ -1,3 +1,25 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/Block-Network/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 package statusbar.lyric.hook.module.xiaomi
 
 import android.graphics.Rect
@@ -37,7 +59,7 @@ class FocusNotifyController {
 
             EzXHelper.moduleRes.getString(R.string.automate_focused_notice).log()
             ClassUtils.loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").isNotNull {
-                it.constructorFinder().firstOrNull().ifNotNull { constructor ->
+                it.constructorFinder().singleOrNull().ifNotNull { constructor ->
                     constructor.createHook {
                         after { hook ->
                             focusedNotify = hook.thisObject
@@ -62,7 +84,7 @@ class FocusNotifyController {
 
             val shouldShowMethod =
                 ClassUtils.loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").ifNotNull {
-                    it.declaredMethods.firstOrNull { method -> method.name == "shouldShow" }
+                    it.declaredMethods.singleOrNull { method -> method.name == "shouldShow" }
                 }
             if (shouldShowMethod.isNotNull()) {
                 canHideFocusNotify = true
@@ -90,7 +112,7 @@ class FocusNotifyController {
             } else {
                 canHideFocusNotify = false
                 ClassUtils.loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController$2").isNotNull {
-                    it.methodFinder().filterByName("handleMessage").first().createHook {
+                    it.methodFinder().filterByName("handleMessage").single().createHook {
                         before { hook ->
                             val message = hook.args[0] as Message
                             if (message.what == 1003) {

@@ -463,15 +463,13 @@ class SystemUILyric : BaseHook() {
 
         // 屏幕状态
         loadClassOrNull("com.android.systemui.statusbar.phone.CentralSurfacesImpl").isNotNull {
-            it.constructorFinder().firstOrNull().ifNotNull { constructor ->
+            it.constructorFinder().singleOrNull().ifNotNull { constructor ->
                 constructor.createHook {
                     after { hook ->
                         centralSurfacesImpl = hook.thisObject
                         autoHideController = hook.thisObject.getObjectField("mAutoHideController")
-                        val mStatusBarModeRepository =
-                            hook.thisObject.getObjectFieldIfExist("mStatusBarModeRepository")
-                        defaultDisplay =
-                            mStatusBarModeRepository?.getObjectFieldIfExist("defaultDisplay")
+                        val mStatusBarModeRepository = hook.thisObject.getObjectFieldIfExist("mStatusBarModeRepository")
+                        defaultDisplay = mStatusBarModeRepository?.getObjectFieldIfExist("defaultDisplay")
                     }
                 }
             }
@@ -484,7 +482,9 @@ class SystemUILyric : BaseHook() {
                     "onConfigurationChanged".log()
                     val newConfig = hookParam.args[0] as Configuration
 
-                    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE || newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
+                        newConfig.orientation == Configuration.ORIENTATION_PORTRAIT
+                    ) {
                         if (!isReady) return@after
                         updateLyricState()
                     }
