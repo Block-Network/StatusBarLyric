@@ -36,6 +36,7 @@ import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import statusbar.lyric.tools.Tools.isNotNull
 
 object LyricViewTools {
     private var animaList: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -153,7 +154,7 @@ object LyricViewTools {
     }
 
     fun View.cancelAnimation() {
-        if (alphaAnimation != null)
+        if (alphaAnimation.isNotNull())
             alphaAnimation!!.cancel()
     }
 

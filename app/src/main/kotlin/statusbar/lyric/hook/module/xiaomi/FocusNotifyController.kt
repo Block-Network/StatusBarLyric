@@ -1,44 +1,24 @@
-/*
- * StatusBarLyric
- * Copyright (C) 2021-2022 fkj@fkj233.cn
- * https://github.com/Block-Network/StatusBarLyric
- *
- * This software is free opensource software: you can redistribute it
- * and/or modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either
- * version 3 of the License, or any later version and our eula as
- * published by Block-Network contributors.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * and eula along with this software.  If not, see
- * <https://www.gnu.org/licenses/>
- * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
- */
-package statusbar.lyric.hook.module
+package statusbar.lyric.hook.module.xiaomi
 
 import android.graphics.Rect
 import android.os.Message
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import com.github.kyuubiran.ezxhelper.ClassUtils.loadClassOrNull
-import com.github.kyuubiran.ezxhelper.EzXHelper.moduleRes
+import com.github.kyuubiran.ezxhelper.ClassUtils
+import com.github.kyuubiran.ezxhelper.EzXHelper
 import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constructorFinder
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import statusbar.lyric.R
-import statusbar.lyric.config.XposedOwnSP.config
+import statusbar.lyric.config.XposedOwnSP
+import statusbar.lyric.hook.module.SystemUILyric
 import statusbar.lyric.tools.LogTools.log
+import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.callMethod
 import statusbar.lyric.tools.Tools.getObjectField
-import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.ifNotNull
 import statusbar.lyric.tools.Tools.isNotNull
-import statusbar.lyric.tools.XiaomiUtils.isXiaomi
+import statusbar.lyric.tools.XiaomiUtils
 import java.lang.reflect.Method
 import kotlin.math.max
 
@@ -52,11 +32,11 @@ class FocusNotifyController {
         var isOS1FocusNotifyShowing: Boolean = false // OS1 不要支持隐藏焦点通知
 
         fun init(systemUILyric: SystemUILyric) {
-            if (!isXiaomi) return
-            if (!config.automateFocusedNotice) return
+            if (!XiaomiUtils.isXiaomi) return
+            if (!XposedOwnSP.config.automateFocusedNotice) return
 
-            moduleRes.getString(R.string.automate_focused_notice).log()
-            loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").isNotNull {
+            EzXHelper.moduleRes.getString(R.string.automate_focused_notice).log()
+            ClassUtils.loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").isNotNull {
                 it.constructorFinder().firstOrNull().ifNotNull { constructor ->
                     constructor.createHook {
                         after { hook ->
@@ -67,7 +47,7 @@ class FocusNotifyController {
 
                 it.declaredMethods.filter { method ->
                     (method.name == "updateVisibility$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
-                        method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
+                            method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
                 }.forEach { method ->
                     method.createHook {
                         before { hook ->
@@ -81,10 +61,10 @@ class FocusNotifyController {
             }
 
             val shouldShowMethod =
-                loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").ifNotNull {
+                ClassUtils.loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").ifNotNull {
                     it.declaredMethods.firstOrNull { method -> method.name == "shouldShow" }
                 }
-            if (shouldShowMethod != null) {
+            if (shouldShowMethod.isNotNull()) {
                 canHideFocusNotify = true
                 (shouldShowMethod as Method).createHook {
                     after { hook ->
@@ -109,7 +89,7 @@ class FocusNotifyController {
                 }
             } else {
                 canHideFocusNotify = false
-                loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController$2").isNotNull {
+                ClassUtils.loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController$2").isNotNull {
                     it.methodFinder().filterByName("handleMessage").first().createHook {
                         before { hook ->
                             val message = hook.args[0] as Message
@@ -140,7 +120,7 @@ class FocusNotifyController {
             val mIcon = focusedNotify!!.getObjectField("mIcon")
             val mContent = focusedNotify!!.getObjectField("mContent")
             if (mIcon == null || mContent == null) return
-            goMainThread {
+            Tools.goMainThread {
                 focusedNotify!!.callMethod("cancelFolme")
                 focusedNotify!!.callMethod("hideImmediately", mIcon)
                 focusedNotify!!.callMethod("hideImmediately", mContent)
@@ -159,7 +139,7 @@ class FocusNotifyController {
             val mContent = focusedNotify!!.getObjectField("mContent")
             if (mIcon == null || mContent == null) return
             isHideFocusNotify = false
-            goMainThread {
+            Tools.goMainThread {
                 focusedNotify!!.callMethod("cancelFolme")
                 focusedNotify!!.callMethod("showImmediately", mIcon)
                 focusedNotify!!.callMethod("showImmediately", mContent)
@@ -169,7 +149,7 @@ class FocusNotifyController {
         }
 
         fun canControlFocusNotify(): Boolean {
-            return isXiaomi && focusedNotify != null && canHideFocusNotify
+            return XiaomiUtils.isXiaomi && focusedNotify.isNotNull() && canHideFocusNotify
         }
 
         private fun isFocusNotifyShowing(): Boolean {

@@ -63,6 +63,7 @@ import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
+import statusbar.lyric.tools.Tools.isNotNull
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -417,19 +418,13 @@ fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.slide_status_bar_cut_songs_x_radius),
         summary = stringResource(R.string.slide_status_bar_cut_songs_x_radius_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..2000)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -437,9 +432,7 @@ fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -447,8 +440,12 @@ fun CutSongsXRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty() || value.value.toInt() < 50) value.value = "50"
-                    config.slideStatusBarCutSongsXRadius = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..2000) {
+                        config.slideStatusBarCutSongsXRadius = value.value.toInt()
+                    } else {
+                        config.slideStatusBarCutSongsXRadius = 50
+                        value.value = "50"
+                    }
                     dismissDialog(showDialog)
                 }
             )
@@ -463,19 +460,13 @@ fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.slide_status_bar_cut_songs_y_radius),
         summary = stringResource(R.string.slide_status_bar_cut_songs_y_radius_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -483,9 +474,7 @@ fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -493,8 +482,12 @@ fun CutSongsYRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty() || value.value.toInt() < 10) value.value = "10"
-                    config.slideStatusBarCutSongsYRadius = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..100) {
+                        config.slideStatusBarCutSongsYRadius = value.value.toInt()
+                    } else {
+                        config.slideStatusBarCutSongsYRadius = 10
+                        value.value = "10"
+                    }
                     dismissDialog(showDialog)
                 }
             )
@@ -509,19 +502,13 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.title_delay_duration),
         summary = stringResource(R.string.title_delay_duration_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..10000)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -529,9 +516,7 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -539,8 +524,12 @@ fun TitleDelayDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "3000"
-                    config.titleDelayDuration = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..10000) {
+                        config.titleDelayDuration = value.value.toInt()
+                    } else {
+                        config.titleDelayDuration = 3000
+                        value.value = "3000"
+                    }
                     dismissDialog(showDialog)
                 }
             )
@@ -555,17 +544,13 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.title_color_and_transparency),
         summary = stringResource(R.string.lyric_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -583,12 +568,7 @@ fun TitleBgColorDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    ActivityTools.colorCheck(
-                        value.value,
-                        unit = { config.lyricColor = it },
-                        "#000000"
-                    )
-                    config.titleColorAndTransparency = value.value.ifEmpty { "#000000" }
+                    ActivityTools.colorCheck(value.value, unit = { config.titleColorAndTransparency = it }, "#000000")
                     dismissDialog(showDialog)
                 }
             )
@@ -603,19 +583,13 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.title_background_radius),
         summary = stringResource(R.string.lyric_background_radius_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -623,9 +597,7 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -633,8 +605,12 @@ fun TitleRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "50"
-                    config.titleBackgroundRadius = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..100) {
+                        config.titleBackgroundRadius = value.value.toInt()
+                    } else {
+                        config.titleBackgroundRadius = 50
+                        value.value = "50"
+                    }
                     dismissDialog(showDialog)
                 }
             )
@@ -649,19 +625,13 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.title_background_stroke_width),
         summary = stringResource(R.string.title_background_stroke_width_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..30)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -669,9 +639,7 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -679,8 +647,12 @@ fun TitleStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "10"
-                    config.titleBackgroundStrokeWidth = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..30) {
+                        config.titleBackgroundStrokeWidth = value.value.toInt()
+                    } else {
+                        config.titleBackgroundStrokeWidth = 10
+                        value.value = "10"
+                    }
                     dismissDialog(showDialog)
                 }
             )
@@ -695,9 +667,7 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.title_background_stroke_color),
         summary = stringResource(R.string.lyric_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -713,9 +683,7 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -723,11 +691,7 @@ fun TitleStrokeColorDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    ActivityTools.colorCheck(
-                        value.value,
-                        unit = { config.titleBackgroundStrokeColorAndTransparency = it },
-                        "#FFFFFF"
-                    )
+                    ActivityTools.colorCheck(value.value, unit = { config.titleBackgroundStrokeColorAndTransparency = it }, "#FFFFFF")
                     dismissDialog(showDialog)
                 }
             )

@@ -64,6 +64,7 @@ import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
+import statusbar.lyric.tools.Tools.isNotNull
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -410,21 +411,14 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
         title = stringResource(R.string.lyric_width),
         summary = stringResource(R.string.lyric_width_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = lyricWidth.value,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    lyricWidth.value = it
-                    changeConfig()
-                }
-            }
+            onValueChange = { lyricWidth.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -432,9 +426,7 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -442,8 +434,12 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricWidth =
-                        if (lyricWidth.value.isEmpty()) 0 else lyricWidth.value.toInt()
+                    if (lyricWidth.value.toIntOrNull().isNotNull() && lyricWidth.value.toInt() in 0..100) {
+                        config.lyricWidth = lyricWidth.value.toInt()
+                    } else {
+                        config.lyricWidth = 0
+                        lyricWidth.value = "0"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -459,20 +455,14 @@ fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_size),
         summary = stringResource(R.string.lyric_size_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -490,7 +480,12 @@ fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.lyricSize = if (value.value.isEmpty()) 0 else value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..100) {
+                        config.lyricSize = value.value.toInt()
+                    } else {
+                        config.lyricSize = 0
+                        value.value = "0"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -506,9 +501,7 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_color_and_transparency),
         summary = stringResource(R.string.lyric_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             label = "#FFFFFF",
@@ -516,9 +509,7 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
             value = value.value,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -526,9 +517,7 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -552,9 +541,7 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyrics_are_gradient_and_transparent),
         summary = stringResource(R.string.lyrics_are_gradient_and_transparent_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             label = "#ff0099,#d508a8,#aa10b8",
@@ -562,9 +549,7 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
             value = value.value,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -582,9 +567,7 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    ActivityTools.colorSCheck(
-                        value.value,
-                        unit = { config.lyricGradientColor = it })
+                    ActivityTools.colorSCheck(value.value, unit = { config.lyricGradientColor = it })
                     dismissDialog(showDialog)
                 }
             )
@@ -599,9 +582,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyrics_gradient_background_color_and_transparency),
         summary = stringResource(R.string.lyrics_gradient_background_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             label = "#00000000",
@@ -609,9 +590,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
             value = value.value,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -619,9 +598,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -629,9 +606,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    ActivityTools.colorSCheck(
-                        value.value,
-                        unit = { config.lyricBackgroundColor = it })
+                    ActivityTools.colorSCheck(value.value, unit = { config.lyricBackgroundColor = it })
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -647,19 +622,13 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_background_radius),
         summary = stringResource(R.string.lyric_background_radius_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -667,9 +636,7 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -677,8 +644,12 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "0"
-                    config.lyricBackgroundRadius = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..100) {
+                        config.lyricBackgroundRadius = value.value.toInt()
+                    } else {
+                        config.lyricBackgroundRadius = 0
+                        value.value = "0"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -694,19 +665,13 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_letter_spacing),
         summary = stringResource(R.string.lyric_letter_spacing_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..50)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -714,9 +679,7 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -724,8 +687,12 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "0"
-                    config.lyricLetterSpacing = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..50) {
+                        config.lyricLetterSpacing = value.value.toInt()
+                    } else {
+                        config.lyricLetterSpacing = 0
+                        value.value = "0"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -749,11 +716,7 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..400)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -771,8 +734,12 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "100"
-                    config.lyricStrokeWidth = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..400) {
+                        config.lyricStrokeWidth = value.value.toInt()
+                    } else {
+                        config.lyricStrokeWidth = 100
+                        value.value = "100"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -788,19 +755,13 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_speed),
         summary = stringResource(R.string.lyric_speed_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..20)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -808,9 +769,7 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -818,8 +777,12 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "1"
-                    config.lyricSpeed = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..20) {
+                        config.lyricSpeed = value.value.toInt()
+                    } else {
+                        config.lyricSpeed = 1
+                        value.value = "1"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -835,19 +798,13 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_top_margins),
         summary = stringResource(R.string.lyric_top_margins_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -855,9 +812,7 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -865,8 +820,12 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "0"
-                    config.lyricTopMargins = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..100) {
+                        config.lyricTopMargins = value.value.toInt()
+                    } else {
+                        config.lyricTopMargins = 0
+                        value.value = "0"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -882,19 +841,13 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_bottom_margins),
         summary = stringResource(R.string.lyric_bottom_margins_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -902,9 +855,7 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -912,8 +863,12 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "0"
-                    config.lyricBottomMargins = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..100) {
+                        config.lyricBottomMargins = value.value.toInt()
+                    } else {
+                        config.lyricBottomMargins = 0
+                        value.value = "0"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }
@@ -929,17 +884,13 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_start_margins),
         summary = stringResource(R.string.lyric_start_margins_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -957,7 +908,7 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.toIntOrNull() != null && value.value.toInt() in -2000..2000) {
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in -2000..2000) {
                         config.lyricStartMargins = value.value.toInt()
                     } else {
                         config.lyricStartMargins = 0
@@ -978,17 +929,13 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_end_margins),
         summary = stringResource(R.string.lyric_end_margins_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -1006,7 +953,7 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.toIntOrNull() != null && value.value.toInt() in -2000..2000) {
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in -2000..2000) {
                         config.lyricEndMargins = value.value.toInt()
                     } else {
                         config.lyricEndMargins = 0
@@ -1027,19 +974,13 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyrics_animation_duration),
         summary = stringResource(R.string.lyric_animation_duration_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..1000)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -1047,9 +988,7 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -1057,8 +996,12 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty() || value.value.toInt() < 300) value.value = "300"
-                    config.animationDuration = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..1000) {
+                        config.animationDuration = value.value.toInt()
+                    } else {
+                        config.animationDuration = 300
+                        value.value = "300"
+                    }
                     dismissDialog(showDialog)
                     changeConfig()
                 }

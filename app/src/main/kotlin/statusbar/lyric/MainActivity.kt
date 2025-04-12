@@ -23,7 +23,6 @@
 package statusbar.lyric
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -48,6 +47,7 @@ import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.ConfigTools
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.LogTools.log
+import statusbar.lyric.tools.Tools.isNotNull
 
 class MainActivity : ComponentActivity() {
     private val appTestReceiver by lazy { AppTestReceiver() }
@@ -55,8 +55,7 @@ class MainActivity : ComponentActivity() {
     lateinit var openDocumentLauncher: ActivityResultLauncher<Intent>
 
     companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var context: Context
+        lateinit var appContext: Context private set
 
         var isLoad: Boolean = false
 
@@ -66,7 +65,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        context = this
+        appContext = this
         enableEdgeToEdge()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false // Xiaomi moment, this code must be here
@@ -75,7 +74,7 @@ class MainActivity : ComponentActivity() {
         createDocumentLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            if (result.resultCode == RESULT_OK && result.data != null) {
+            if (result.resultCode == RESULT_OK && result.data.isNotNull()) {
                 BackupTools.handleCreateDocument(this, result.data!!.data)
             }
         }
@@ -83,7 +82,7 @@ class MainActivity : ComponentActivity() {
         openDocumentLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            if (result.resultCode == RESULT_OK && result.data != null) {
+            if (result.resultCode == RESULT_OK && result.data.isNotNull()) {
                 BackupTools.handleReadDocument(this, result.data!!.data)
                 Thread {
                     Thread.sleep(500)
@@ -118,7 +117,7 @@ class MainActivity : ComponentActivity() {
 
     private fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!(context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled()) {
+            if (!(appContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled()) {
                 this.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
             }
         }
@@ -154,10 +153,10 @@ class MainActivity : ComponentActivity() {
     private fun registerReceiver() {
         val filter = IntentFilter("AppTestReceiver")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(appTestReceiver, filter, RECEIVER_EXPORTED)
+            appContext.registerReceiver(appTestReceiver, filter, RECEIVER_EXPORTED)
         } else {
             @Suppress("UnspecifiedRegisterReceiverFlag")
-            context.registerReceiver(appTestReceiver, filter)
+            appContext.registerReceiver(appTestReceiver, filter)
         }
     }
 }

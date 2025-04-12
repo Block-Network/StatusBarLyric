@@ -56,7 +56,7 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.data.Data
@@ -156,7 +156,7 @@ fun ChoosePage(
                                 title = "${data.textViewClassName} ${data.textViewId}",
                                 summary = "idName: ${data.idName}; textSize: ${data.textSize}f\n${data.parentViewClassName} ${data.parentViewId}",
                                 onClick = {
-                                    context.showView(data)
+                                    MainActivity.appContext.showView(data)
                                     showDialog.value = true
                                 },
                                 holdDownState = showDialog.value
@@ -184,9 +184,7 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
     SuperDialog(
         title = stringResource(R.string.select_hook),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -194,9 +192,7 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(

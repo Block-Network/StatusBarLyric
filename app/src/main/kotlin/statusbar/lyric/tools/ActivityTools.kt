@@ -29,7 +29,7 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.R
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.LogTools.log
@@ -48,7 +48,7 @@ object ActivityTools {
     fun changeConfig(type: String = "normal", path: String = "") {
         Thread {
             Thread.sleep(200)
-            context.sendBroadcast(Intent("updateConfig").apply {
+            MainActivity.appContext.sendBroadcast(Intent("updateConfig").apply {
                 putExtra("type", type)
                 putExtra("path", path)
             })
@@ -58,7 +58,7 @@ object ActivityTools {
     fun showToastOnLooper(message: Any?) {
         try {
             handler.post {
-                Toast.makeText(context, message.toString(), Toast.LENGTH_LONG).show()
+                Toast.makeText(MainActivity.appContext, message.toString(), Toast.LENGTH_LONG).show()
                 message.log()
             }
         } catch (e: RuntimeException) {
@@ -73,7 +73,7 @@ object ActivityTools {
             try {
                 value.toColorInt()
             } catch (_: Exception) {
-                showToastOnLooper(context.getString(R.string.color_error))
+                showToastOnLooper(MainActivity.appContext.getString(R.string.color_error))
                 return
             }
         }
@@ -91,7 +91,7 @@ object ActivityTools {
                     }
                 }
             } catch (_: Exception) {
-                showToastOnLooper(context.getString(R.string.color_error))
+                showToastOnLooper(MainActivity.appContext.getString(R.string.color_error))
                 return
             }
         }
@@ -99,13 +99,13 @@ object ActivityTools {
     }
 
     fun openUrl(url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+        MainActivity.appContext.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     }
 
     fun restartApp() {
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+        val intent = MainActivity.appContext.packageManager.getLaunchIntentForPackage(MainActivity.appContext.packageName)
         intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        context.startActivity(intent)
+        MainActivity.appContext.startActivity(intent)
         exitProcess(0)
     }
 }

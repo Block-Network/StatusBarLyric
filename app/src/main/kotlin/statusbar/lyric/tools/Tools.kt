@@ -39,7 +39,7 @@ import com.github.kyuubiran.ezxhelper.EzXHelper
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.ActivityTools.isHook
@@ -178,7 +178,7 @@ object Tools {
         }
     }
 
-    fun getSP(context: Context, key: String): SharedPreferences? {
+    fun getSP(context: Context, key: String): SharedPreferences {
         @Suppress("DEPRECATION", "WorldReadableFiles")
         return context.createDeviceProtectedStorageContext()
             .getSharedPreferences(
@@ -201,9 +201,7 @@ object Tools {
                 } catch (_: Exception) {
                     // Su shell command failed
                     Handler(Looper.getMainLooper()).post {
-                        Toast
-                            .makeText(context, "Root permissions required!!", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(MainActivity.appContext, "Root permissions required!!", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
@@ -243,6 +241,10 @@ object Tools {
         return null
     }
 
+    fun Any?.isNull() = this == null
+
+    fun Any?.isNotNull() = this != null
+
     fun Any.getObjectField(fieldName: String): Any? {
         return XposedHelpers.getObjectField(this, fieldName)
     }
@@ -271,7 +273,7 @@ object Tools {
 
     fun Any?.existField(fieldName: String): Boolean {
         if (this == null) return false
-        return XposedHelpers.findFieldIfExists(this.javaClass, fieldName) != null
+        return XposedHelpers.findFieldIfExists(this.javaClass, fieldName).isNotNull()
     }
 
     fun Any?.existMethod(methodName: String): Boolean {
@@ -293,8 +295,4 @@ object Tools {
     fun Any.callMethod(methodName: String, vararg args: Any): Any? {
         return XposedHelpers.callMethod(this, methodName, *args)
     }
-
-    fun Any?.isNull() = this == null
-
-    fun Any?.isNotNull() = this != null
 }

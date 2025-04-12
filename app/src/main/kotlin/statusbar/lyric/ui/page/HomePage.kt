@@ -58,7 +58,7 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.MainActivity.Companion.isLoad
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -189,11 +189,7 @@ fun HomePage(
                                     masterSwitchState.value = it
                                     config.masterSwitch = it
                                 } else {
-                                    Toast.makeText(
-                                        context,
-                                        R.string.module_inactivated,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    Toast.makeText(MainActivity.appContext, R.string.module_inactivated, Toast.LENGTH_SHORT).show()
                                 }
                             }
                         )

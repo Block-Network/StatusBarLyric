@@ -54,7 +54,7 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.MainActivity.Companion.testReceiver
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -179,7 +179,7 @@ fun TestPage(
                                     ),
                                     rightText = stringResource(R.string.tips1),
                                     onClick = {
-                                        context.getClass()
+                                        MainActivity.appContext.getClass()
                                         when (testReceiver) {
                                             true -> if (currentRoute.value != "ChoosePage") {
                                                 navController.navigate("ChoosePage") {
@@ -206,7 +206,7 @@ fun TestPage(
                                                                 }
                                                             }
                                                         } else {
-                                                            showToastOnLooper(context.getString(R.string.broadcast_receive_timeout))
+                                                            showToastOnLooper(MainActivity.appContext.getString(R.string.broadcast_receive_timeout))
                                                         }
                                                     }
                                                 }.start()

@@ -63,6 +63,7 @@ import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
+import statusbar.lyric.tools.Tools.isNotNull
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -287,20 +288,14 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.hyperos_texture_radio),
         summary = stringResource(R.string.lyric_stroke_width_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..400)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -308,9 +303,7 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -318,8 +311,12 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "25"
-                    config.mHyperOSTextureRadio = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..400) {
+                        config.mHyperOSTextureRadio = value.value.toInt()
+                    } else {
+                        config.mHyperOSTextureRadio = 25
+                        value.value = "25"
+                    }
                     dismissDialog(showDialog)
                 }
             )
@@ -334,20 +331,14 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.hyperos_texture_corner),
         summary = stringResource(R.string.lyric_letter_spacing_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..50)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -355,9 +346,7 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -365,8 +354,12 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "25"
-                    config.mHyperOSTextureCorner = value.value.toInt()
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..50) {
+                        config.mHyperOSTextureCorner = value.value.toInt()
+                    } else {
+                        config.mHyperOSTextureCorner = 25
+                        value.value = "25"
+                    }
                     dismissDialog(showDialog)
                 }
             )
@@ -381,18 +374,14 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.hyperos_texture_color),
         summary = stringResource(R.string.lyric_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -400,9 +389,7 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -410,11 +397,7 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    ActivityTools.colorCheck(
-                        value.value,
-                        unit = { config.mHyperOSTextureBgColor = it },
-                        "#15818181"
-                    )
+                    ActivityTools.colorCheck(value.value, unit = { config.mHyperOSTextureBgColor = it }, "#15818181")
                     dismissDialog(showDialog)
                 }
             )

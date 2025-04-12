@@ -64,7 +64,7 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import statusbar.lyric.BuildConfig
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -179,8 +179,8 @@ fun MenuPage(
                                 onCheckedChange = {
                                     showLauncherIcon.value = it
                                     config.showLauncherIcon = it
-                                    context.packageManager.setComponentEnabledSetting(
-                                        ComponentName(context, "statusbar.lyric.AliasActivity"),
+                                    MainActivity.appContext.packageManager.setComponentEnabledSetting(
+                                        ComponentName(MainActivity.appContext, "statusbar.lyric.AliasActivity"),
                                         if (it) {
                                             PackageManager.COMPONENT_ENABLED_STATE_ENABLED
                                         } else {
@@ -190,14 +190,16 @@ fun MenuPage(
                                     )
                                 }
                             )
-                            SuperSwitch(
-                                title = stringResource(R.string.show_logcat),
-                                checked = outLog.value,
-                                onCheckedChange = {
-                                    outLog.value = it
-                                    config.outLog = it
-                                }
-                            )
+                            if (!BuildConfig.DEBUG) {
+                                SuperSwitch(
+                                    title = stringResource(R.string.show_logcat),
+                                    checked = outLog.value,
+                                    onCheckedChange = {
+                                        outLog.value = it
+                                        config.outLog = it
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -304,9 +306,7 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.clear_config),
         summary = stringResource(R.string.clear_config_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -314,9 +314,7 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -325,11 +323,11 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     config.clear()
-                    dismissDialog(showDialog)
                     Thread {
                         Thread.sleep(500)
                         ActivityTools.restartApp()
                     }.start()
+                    dismissDialog(showDialog)
                 }
             )
         }
@@ -342,9 +340,7 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.reset_system_ui),
         summary = stringResource(R.string.restart_systemui_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { dismissDialog(showDialog) },
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -362,9 +358,7 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { dismissDialog(showDialog) }
             )
         }
     }
