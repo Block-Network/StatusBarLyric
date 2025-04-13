@@ -136,7 +136,7 @@ class SystemUILyric : BaseHook() {
             "Changing Icon".log()
         }
     }
-    var canLoad: Boolean = true
+    private var canLoad: Boolean = true
     private var isScreenLocked: Boolean = false
     private var iconSwitch: Boolean = config.iconSwitch
 
@@ -789,7 +789,7 @@ class SystemUILyric : BaseHook() {
                     }
                 }
                 setLetterSpacings(config.lyricLetterSpacing / 100f)
-                strokeWidth(config.lyricStrokeWidth / 100f)
+                setStrokeWidth(config.lyricStrokeWidth / 100f)
                 if (!config.dynamicLyricSpeed) setScrollSpeed(config.lyricSpeed.toFloat())
                 if (config.lyricBackgroundColor.isNotEmpty()) {
                     if (config.lyricBackgroundColor.split(",").size < 2) {

@@ -594,8 +594,8 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
                     if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in -2000..2000) {
                         config.iconStartMargins = value.value.toInt()
                     } else {
-                        config.iconStartMargins = 0
-                        value.value = "0"
+                        config.iconStartMargins = if (config.mHyperOSTexture) 20 else 0
+                        value.value = if (config.mHyperOSTexture) "20" else "0"
                     }
                     dismissDialog(showDialog)
                     changeConfig()

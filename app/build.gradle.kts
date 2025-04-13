@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId = "statusbar.lyric"
-        minSdk = 26
+        minSdk = 30
         targetSdk = 36
         versionCode = 720
         versionName = "7.2.0"

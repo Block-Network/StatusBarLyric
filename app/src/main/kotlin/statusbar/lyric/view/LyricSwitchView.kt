@@ -81,7 +81,7 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         applyToAllViews { it.letterSpacing = letterSpacing }
     }
 
-    fun strokeWidth(width: Float) {
+    fun setStrokeWidth(width: Float) {
         applyToAllViews { it.setStrokeWidth(width) }
     }
 

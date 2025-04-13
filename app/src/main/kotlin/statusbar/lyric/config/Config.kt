@@ -151,7 +151,7 @@ class Config {
         }
     var lyricStartMargins: Int
         get() {
-            return config.opt("lyricStart", if (XposedOwnSP.config.mHyperOSTexture) 20 else 0)
+            return config.opt("lyricStart", if (mHyperOSTexture) 20 else 8)
         }
         set(value) {
             config.put("lyricStart", value)
@@ -165,7 +165,7 @@ class Config {
         }
     var lyricEndMargins: Int
         get() {
-            return config.opt("lyricEnd", if (XposedOwnSP.config.mHyperOSTexture) 20 else 10)
+            return config.opt("lyricEnd", if (mHyperOSTexture) 20 else 10)
         }
         set(value) {
             config.put("lyricEnd", value)
@@ -186,7 +186,7 @@ class Config {
         }
     var iconStartMargins: Int
         get() {
-            return config.opt("iconStart", if (XposedOwnSP.config.mHyperOSTexture) 20 else 0)
+            return config.opt("iconStart", if (mHyperOSTexture) 20 else 0)
         }
         set(value) {
             config.put("iconStart", value)
@@ -284,7 +284,7 @@ class Config {
         }
     var lyricStrokeWidth: Int
         get() {
-            return config.opt("lyricStrokeWidth", 100)
+            return config.opt("lyricStrokeWidth", 0)
         }
         set(value) {
             config.put("lyricStrokeWidth", value)

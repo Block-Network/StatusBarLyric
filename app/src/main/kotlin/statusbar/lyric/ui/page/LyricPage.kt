@@ -737,8 +737,8 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                     if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..400) {
                         config.lyricStrokeWidth = value.value.toInt()
                     } else {
-                        config.lyricStrokeWidth = 100
-                        value.value = "100"
+                        config.lyricStrokeWidth = 0
+                        value.value = "0"
                     }
                     dismissDialog(showDialog)
                     changeConfig()
@@ -911,8 +911,8 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                     if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in -2000..2000) {
                         config.lyricStartMargins = value.value.toInt()
                     } else {
-                        config.lyricStartMargins = 0
-                        value.value = "0"
+                        config.lyricStartMargins = if (config.mHyperOSTexture) 20 else 8
+                        value.value = if (config.mHyperOSTexture) "20" else "8"
                     }
                     dismissDialog(showDialog)
                     changeConfig()
@@ -956,8 +956,8 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                     if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in -2000..2000) {
                         config.lyricEndMargins = value.value.toInt()
                     } else {
-                        config.lyricEndMargins = 0
-                        value.value = "0"
+                        config.lyricEndMargins = if (config.mHyperOSTexture) 20 else 10
+                        value.value = if (config.mHyperOSTexture) "20" else "10"
                     }
                     dismissDialog(showDialog)
                     changeConfig()

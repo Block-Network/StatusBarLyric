@@ -169,24 +169,6 @@ class XiaomiHooks {
                         }
                 }
             }
-
-            // 处理更换壁纸后歌词不显示
-            for (i in 0..10) {
-                val clazz = loadClassOrNull("com.android.keyguard.wallpaper.MiuiKeyguardWallPaperManager$$i")
-                if (clazz.isNotNull()) {
-                    if (clazz!!.existMethod("onWallpaperChanged")) {
-                        clazz.methodFinder().filterByName("onWallpaperChanged").single()
-                            .createHook {
-                                after {
-                                    "onWallpaperChanged".log()
-                                    systemUILyric.canLoad = true
-                                    systemUILyric.updateLyricState(showLyric = false)
-                                }
-                            }
-                        break
-                    }
-                }
-            }
         }
     }
 }
