@@ -32,7 +32,6 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.LinearGradient
-import android.graphics.Paint
 import android.graphics.Point
 import android.graphics.PorterDuff
 import android.graphics.Shader
@@ -701,23 +700,27 @@ class SystemUILyric : BaseHook() {
             XiaomiHooks.getCarrierLabel()?.hideView()
 
             lyricView.apply {
-                width = getLyricWidth(getPaint(), lyric)
-                val i = width - theoreticalWidth
-                if (config.dynamicLyricSpeed && delay == 0) {
-                    if (i > 0) {
-                        val proportion = i * 1.0 / displayWidth
-                        "Proportion: $proportion".log()
-                        val speed = 2 * proportion + 0.4
-                        "Speed: $speed".log()
-                        setScrollSpeed(speed.toFloat())
+                val lyricWidth = getLyricWidth(lyric)
+                width = lyricWidth
+                val i = theoreticalWidth - lyricWidth
+                "Lyric width: $lyricWidth, Theoretical width: $theoreticalWidth, i: $i".log()
+                if (i > 0) {
+                    if (delay > 0) {
+                        val durationInSeconds = delay / 1000f
+                        if (durationInSeconds > 0) {
+                            val speed = 0.3f + (i.toFloat() / lyricWidth) * (5f / durationInSeconds)
+                            val boundedSpeed = speed.coerceIn(0.3f, 5.0f)
+                            setScrollSpeed(boundedSpeed)
+                            "Delay mode - Duration: ${durationInSeconds}, Speed: $boundedSpeed".log()
+                        }
+                    } else if (config.dynamicLyricSpeed) {
+                        val proportion = i / lyricWidth
+                        val speed = 10 * proportion + 0.7f
+                        setScrollSpeed(speed)
+                        "Dynamic mode - Proportion: $proportion, Speed: $speed".log()
                     }
-                }
-                if (delay > 0) {
-                    if (i > 0) {
-                        val delayInSeconds = delay / 1000.0
-                        val framesCount = delayInSeconds * 60
-                        setScrollSpeed(((i / framesCount).toFloat()))
-                    }
+                } else {
+                    setScrollSpeed(config.lyricSpeed.toFloat())
                 }
                 if (isRandomAnima) {
                     val animation = randomAnima
@@ -873,16 +876,26 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private fun getLyricWidth(paint: Paint, text: String): Int {
+    private fun getLyricWidth(lyric: String): Int {
         "Getting Lyric Width".log()
+        val textView = TextView(context).apply {
+            setTextSize(
+                TypedValue.COMPLEX_UNIT_SHIFT,
+                if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat()
+            )
+            setTypeface(clockView.typeface)
+            letterSpacing = config.lyricLetterSpacing / 100f
+            paint.strokeWidth = config.lyricStrokeWidth / 100f
+        }
+        val textWidth = textView.paint.measureText(lyric).toInt()
+        theoreticalWidth = textWidth
         return if (config.lyricWidth == 0) {
-            theoreticalWidth = min(paint.measureText(text).toInt(), targetView.width)
-            theoreticalWidth
+            min(textView.paint.measureText(lyric).toInt(), targetView.width - config.lyricStartMargins - config.lyricEndMargins)
         } else {
             if (config.fixedLyricWidth) {
                 scaleWidth()
             } else {
-                min(paint.measureText(text).toInt(), scaleWidth())
+                min(textView.paint.measureText(lyric).toInt(), scaleWidth())
             }
         }
     }

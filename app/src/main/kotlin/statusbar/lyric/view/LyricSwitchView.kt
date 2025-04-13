@@ -27,7 +27,6 @@ import android.content.Context
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.text.TextPaint
 import android.widget.TextSwitcher
 
 open class LyricSwitchView(context: Context) : TextSwitcher(context) {
@@ -44,10 +43,6 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         }
     }
 
-    fun getPaint(): TextPaint {
-        return (getChildAt(0) as LyricTextView).paint
-    }
-
     fun applyToAllViews(action: (LyricTextView) -> Unit) {
         for (i in 0 until childCount) {
             action(getChildAt(i) as LyricTextView)
@@ -56,9 +51,8 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
 
     fun setWidth(width: Int) {
         layoutTransition = LayoutTransition()
-        applyToAllViews {
-            it.width = width
-        }
+        layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+        applyToAllViews { it.width = width }
     }
 
     fun setTextColor(color: Int) {
