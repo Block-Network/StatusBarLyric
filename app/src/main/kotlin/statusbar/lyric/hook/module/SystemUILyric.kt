@@ -227,12 +227,13 @@ class SystemUILyric : BaseHook() {
         }
 
         loadClassOrNull(config.textViewClassName).isNotNull {
-            TextView::class.java.methodFinder().filterByName("onAttachedToWindow").single()
+            TextView::class.java.methodFinder().filterByName("onLayout").single()
                 .createHook {
                     after { hookParam ->
+                        if (!canLoad) return@after
+
                         val view = (hookParam.thisObject as View)
                         if (view.isTargetView()) {
-                            if (!canLoad) return@after
                             clockView = view as TextView
                             targetView = (clockView.parent as LinearLayout).apply {
                                 gravity = Gravity.CENTER
@@ -523,7 +524,7 @@ class SystemUILyric : BaseHook() {
         if (
             isInFullScreenMode() &&
             (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE ||
-                    context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
         ) {
             if (statusBarShowing && showLyric && canShowLyric()) {
                 showLyric(lastLyric, delay)
