@@ -508,6 +508,14 @@ class Config {
             config.put("automateFocusedNotice", value)
         }
 
+    var pageRatio: Float
+        get() {
+            return config.opt("pageRatio", 0.5f)
+        }
+        set(value) {
+            config.put("pageRatio", value)
+        }
+
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon
