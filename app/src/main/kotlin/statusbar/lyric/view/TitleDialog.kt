@@ -52,7 +52,7 @@ import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.tools.LyricViewTools
 import statusbar.lyric.tools.Tools.dp2px
 
-@SuppressLint("InternalInsetResource", "DiscouragedApi")
+@SuppressLint("DiscouragedApi", "InternalInsetResource")
 class TitleDialog(context: Context) : Dialog(context) {
 
     private val resourceId =

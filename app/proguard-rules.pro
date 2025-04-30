@@ -22,7 +22,6 @@
 -optimizationpasses 5
 -keep class statusbar.lyric.hook.MainHook { <init>(); }
 -keep class statusbar.lyric.tools.ActivityTools { isHook(); }
--keep class cn.lyric.getter.api.data.* { *; }
 -dontskipnonpubliclibraryclassmembers
 -allowaccessmodification
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable

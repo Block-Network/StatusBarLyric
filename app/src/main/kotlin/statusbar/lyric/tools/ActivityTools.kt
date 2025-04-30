@@ -41,9 +41,7 @@ object ActivityTools {
 
     lateinit var dataList: ArrayList<Data>
 
-    fun isHook(): Boolean {
-        return false
-    }
+    fun isHook(): Boolean = false
 
     fun changeConfig(type: String = "normal", path: String = "") {
         Thread {

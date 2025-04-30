@@ -219,7 +219,6 @@ fun NavGraphBuilder.pageDestinations(
     composable("IconPage") { IconPage(navController) }
     composable("ExtendPage") { ExtendPage(navController) }
     composable("SystemSpecialPage") { SystemSpecialPage(navController) }
-
 }
 
 @Composable
