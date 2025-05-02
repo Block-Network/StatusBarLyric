@@ -69,7 +69,7 @@ class FocusNotifyController {
 
                 it.declaredMethods.filter { method ->
                     (method.name == "updateVisibility$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
-                            method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
+                        method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
                 }.forEach { method ->
                     method.createHook {
                         before { hook ->
@@ -91,22 +91,22 @@ class FocusNotifyController {
                 (shouldShowMethod as Method).createHook {
                     after { hook ->
                         val show = hook.result as Boolean
-                        if (systemUILyric.isMusicPlaying) {
-                            if (show) {
-                                if (!isHideFocusNotify) {
-                                    isInteraction = true
-                                    isOS2FocusNotifyShowing = true
+                        if (show) {
+                            if (!isHideFocusNotify) {
+                                isInteraction = true
+                                isOS2FocusNotifyShowing = true
+                                if (systemUILyric.isMusicPlaying)
                                     systemUILyric.updateLyricState(showLyric = false, showFocus = false)
-                                }
-                            } else {
-                                isHideFocusNotify = false
-                                isInteraction = false
-                                isOS2FocusNotifyShowing = false
-                                systemUILyric.updateLyricState()
                             }
-                            "New focus notify is ${if (show) "show" else "hide"}".log()
-                            // "isHideFocusNotify: $isHideFocusNotify, isOS2FocusNotifyShowing: $isOS2FocusNotifyShowing, isInteraction: $isInteraction".log()
+                        } else {
+                            isHideFocusNotify = false
+                            isInteraction = false
+                            isOS2FocusNotifyShowing = false
+                            if (systemUILyric.isMusicPlaying)
+                                systemUILyric.updateLyricState()
                         }
+                        "New focus notify is ${if (show) "show" else "hide"}".log()
+                        "isHideFocusNotify: $isHideFocusNotify, isOS2FocusNotifyShowing: $isOS2FocusNotifyShowing, isInteraction: $isInteraction".log()
                     }
                 }
             } else {
