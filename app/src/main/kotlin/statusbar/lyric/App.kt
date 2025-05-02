@@ -156,7 +156,6 @@ fun LandscapeLayout(
     currentRoute: MutableState<String>
 ) {
     val windowWidth = getWindowSize().width
-    val easing = CubicBezierEasing(0.12f, 0.88f, 0.2f, 1f)
     var weight by remember { mutableFloatStateOf(config.pageRatio) }
     val dragState = rememberDraggableState {
         weight = (weight + it / windowWidth).coerceIn(0.35f, 0.65f)
@@ -185,22 +184,8 @@ fun LandscapeLayout(
             navController = navController,
             startDestination = "HomePage",
             modifier = Modifier.weight(1f - weight),
-            enterTransition = {
-                slideInHorizontally(
-                    initialOffsetX = { windowWidth },
-                    animationSpec = tween(durationMillis = 500, easing = easing)
-                ) + fadeIn(
-                    animationSpec = tween(durationMillis = 200)
-                )
-            },
-            exitTransition = {
-                slideOutHorizontally(
-                    targetOffsetX = { windowWidth / 5 },
-                    animationSpec = tween(durationMillis = 500, easing = easing)
-                ) + fadeOut(
-                    animationSpec = tween(durationMillis = 500)
-                )
-            },
+            enterTransition = { fadeIn(initialAlpha = 1f) },
+            exitTransition = { fadeOut(targetAlpha = 1f) },
         ) {
             composable("HomePage") { EmptyPage() }
             pageDestinations(navController, currentRoute)
