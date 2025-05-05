@@ -39,7 +39,6 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -83,7 +82,7 @@ import top.yukonga.miuix.kmp.utils.overScrollVertical
 @Composable
 fun TestPage(
     navController: NavController,
-    currentRoute: MutableState<String>
+    currentRoute: String
 ) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
@@ -181,7 +180,7 @@ fun TestPage(
                                     onClick = {
                                         MainActivity.appContext.getClass()
                                         when (testReceiver) {
-                                            true -> if (currentRoute.value != "ChoosePage") {
+                                            true -> if (currentRoute != "ChoosePage") {
                                                 navController.navigate("ChoosePage") {
                                                     popUpTo("TestPage") {
                                                         inclusive = false
@@ -196,7 +195,7 @@ fun TestPage(
                                                     Thread.sleep(500)
                                                     goMainThread {
                                                         if (testReceiver) {
-                                                            if (currentRoute.value != "ChoosePage") {
+                                                            if (currentRoute != "ChoosePage") {
                                                                 navController.navigate("ChoosePage") {
                                                                     popUpTo("TestPage") {
                                                                         inclusive = false
@@ -213,7 +212,7 @@ fun TestPage(
                                             }
                                         }
                                     },
-                                    holdDownState = currentRoute.value == "ChoosePage"
+                                    holdDownState = currentRoute == "ChoosePage"
                                 )
                             }
                         }

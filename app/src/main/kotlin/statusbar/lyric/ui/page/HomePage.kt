@@ -42,7 +42,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -86,7 +85,7 @@ import top.yukonga.miuix.kmp.utils.overScrollVertical
 @Composable
 fun HomePage(
     navController: NavController,
-    currentRoute: MutableState<String>
+    currentRoute: String
 ) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
@@ -129,7 +128,7 @@ fun HomePage(
                     IconButton(
                         modifier = Modifier.padding(end = 20.dp),
                         onClick = {
-                            if (currentRoute.value != "MenuPage") {
+                            if (currentRoute != "MenuPage") {
                                 navController.navigate("MenuPage") {
                                     popUpTo("HomePage") {
                                         saveState = true
@@ -139,7 +138,7 @@ fun HomePage(
                                 }
                             }
                         },
-                        holdDownState = currentRoute.value == "MenuPage"
+                        holdDownState = currentRoute == "MenuPage"
                     ) {
                         Icon(
                             imageVector = MiuixIcons.Useful.Settings,
@@ -248,7 +247,7 @@ fun HomePage(
                                             stringResource(R.string.test_mode_tips).split("\n")[0]
                                         } else null,
                                         onClick = {
-                                            if (currentRoute.value != "TestPage") {
+                                            if (currentRoute != "TestPage") {
                                                 navController.navigate("TestPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -258,7 +257,7 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "TestPage"
+                                        holdDownState = currentRoute == "TestPage"
                                     )
                                 }
                             }
@@ -282,7 +281,7 @@ fun HomePage(
                                     SuperArrow(
                                         title = stringResource(R.string.lyric_page),
                                         onClick = {
-                                            if (currentRoute.value != "LyricPage") {
+                                            if (currentRoute != "LyricPage") {
                                                 navController.navigate("LyricPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -292,12 +291,12 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "LyricPage"
+                                        holdDownState = currentRoute == "LyricPage"
                                     )
                                     SuperArrow(
                                         title = stringResource(R.string.icon_page),
                                         onClick = {
-                                            if (currentRoute.value != "IconPage") {
+                                            if (currentRoute != "IconPage") {
                                                 navController.navigate("IconPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -307,7 +306,7 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "IconPage"
+                                        holdDownState = currentRoute == "IconPage"
                                     )
                                 }
                             }
@@ -331,7 +330,7 @@ fun HomePage(
                                     SuperArrow(
                                         title = stringResource(R.string.extend_page),
                                         onClick = {
-                                            if (currentRoute.value != "ExtendPage") {
+                                            if (currentRoute != "ExtendPage") {
                                                 navController.navigate("ExtendPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -341,13 +340,13 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "ExtendPage"
+                                        holdDownState = currentRoute == "ExtendPage"
                                     )
 
                                     SuperArrow(
                                         title = stringResource(R.string.system_special_page),
                                         onClick = {
-                                            if (currentRoute.value != "SystemSpecialPage") {
+                                            if (currentRoute != "SystemSpecialPage") {
                                                 navController.navigate("SystemSpecialPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -357,7 +356,7 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "SystemSpecialPage"
+                                        holdDownState = currentRoute == "SystemSpecialPage"
                                     )
                                 }
                             }

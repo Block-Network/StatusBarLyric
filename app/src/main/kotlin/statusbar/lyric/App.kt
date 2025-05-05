@@ -40,12 +40,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +55,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.ui.page.ChoosePage
@@ -80,14 +80,9 @@ fun App() {
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val navController = rememberNavController()
 
-    val currentRoute = remember {
-        mutableStateOf(navController.currentDestination?.route ?: "")
-    }
-
-    LaunchedEffect(navController) {
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            currentRoute.value = destination.route ?: ""
-        }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute by remember(navBackStackEntry) {
+        derivedStateOf { navBackStackEntry?.destination?.route ?: "HomePage" }
     }
 
     AppTheme {
@@ -106,9 +101,10 @@ fun App() {
 @Composable
 fun PortraitLayout(
     navController: NavHostController,
-    currentRoute: MutableState<String>
+    currentRoute: String
 ) {
-    val windowWidth = getWindowSize().width
+    val getWindowSize by rememberUpdatedState(getWindowSize())
+    val windowWidth = getWindowSize.width
     val easing = CubicBezierEasing(0.12f, 0.38f, 0.2f, 1f)
 
     NavHost(
@@ -153,14 +149,18 @@ fun PortraitLayout(
 @Composable
 fun LandscapeLayout(
     navController: NavHostController,
-    currentRoute: MutableState<String>
+    currentRoute: String
 ) {
-    val windowWidth = getWindowSize().width
+    val getWindowSize by rememberUpdatedState(getWindowSize())
+    val windowWidth = getWindowSize.width
     var weight by remember { mutableFloatStateOf(config.pageRatio) }
+    var potentialWeight by remember { mutableFloatStateOf(weight) }
     val dragState = rememberDraggableState {
-        weight = (weight + it / windowWidth).coerceIn(0.35f, 0.65f)
-        config.pageRatio = weight
+        val nextPotentialWeight = potentialWeight + it / windowWidth
+        potentialWeight = nextPotentialWeight
+        weight = nextPotentialWeight.coerceIn(0.35f, 0.65f)
     }
+    var finalWeight by remember { mutableFloatStateOf(weight) }
 
     Row(
         modifier = Modifier
@@ -174,11 +174,18 @@ fun LandscapeLayout(
         }
         VerticalDivider(
             modifier = Modifier
-                .padding(horizontal = 12.dp)
                 .draggable(
                     state = dragState,
-                    orientation = Orientation.Horizontal
+                    orientation = Orientation.Horizontal,
+                    onDragStarted = {
+                        potentialWeight = weight
+                    },
+                    onDragStopped = {
+                        finalWeight = weight
+                        config.pageRatio = finalWeight
+                    }
                 )
+                .padding(horizontal = 12.dp)
         )
         NavHost(
             navController = navController,
@@ -195,7 +202,7 @@ fun LandscapeLayout(
 
 fun NavGraphBuilder.pageDestinations(
     navController: NavHostController,
-    currentRoute: MutableState<String>
+    currentRoute: String
 ) {
     composable("ChoosePage") { ChoosePage(navController) }
     composable("TestPage") { TestPage(navController, currentRoute) }
@@ -216,7 +223,7 @@ fun EmptyPage() {
             painter = painterResource(R.drawable.ic_launcher_foreground),
             contentDescription = null,
             tint = MiuixTheme.colorScheme.secondary,
-            modifier = Modifier.size(256.dp)
+            modifier = Modifier.size(300.dp)
         )
     }
 }
