@@ -142,7 +142,8 @@ fun ChoosePage(
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
-            contentPadding = it
+            contentPadding = it,
+            overscrollEffect = null
         ) {
             item {
                 Column(Modifier.padding(top = 6.dp)) {

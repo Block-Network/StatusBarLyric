@@ -161,6 +161,7 @@ fun HomePage(
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Left))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Left)),
             contentPadding = it,
+            overscrollEffect = null
         ) {
             item {
                 Column(Modifier.padding(top = 6.dp)) {
