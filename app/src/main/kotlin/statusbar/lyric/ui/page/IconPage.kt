@@ -84,7 +84,6 @@ import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
@@ -362,7 +361,7 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_size),
         summary = stringResource(R.string.icon_size_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -376,7 +375,7 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -390,7 +389,7 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
                         config.iconSize = 0
                         value.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -405,7 +404,7 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_color_and_transparency),
         summary = stringResource(R.string.icon_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -419,7 +418,7 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -428,7 +427,7 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.iconColor = it })
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -443,7 +442,7 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_background_color_and_transparency),
         summary = stringResource(R.string.icon_background_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -457,7 +456,7 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -466,7 +465,7 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.iconBgColor = it })
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -482,7 +481,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
         summary = stringResource(R.string.icon_top_margins_tips),
         show = showDialog,
         onDismissRequest = {
-            dismissDialog(showDialog)
+            showDialog.value = false
         },
     ) {
         TextField(
@@ -497,7 +496,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -511,7 +510,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                         config.iconTopMargins = 0
                         value.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -526,7 +525,7 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_bottom_margins),
         summary = stringResource(R.string.icon_bottom_margins_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -540,7 +539,7 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -554,7 +553,7 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                         config.iconBottomMargins = 0
                         value.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -569,7 +568,7 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_start_margins),
         summary = stringResource(R.string.icon_start_margins_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -584,7 +583,7 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -598,7 +597,7 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
                         config.iconStartMargins = if (config.mHyperOSTexture) 20 else 0
                         value.value = if (config.mHyperOSTexture) "20" else "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -613,7 +612,7 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.change_all_icons),
         summary = stringResource(R.string.change_all_icons_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -627,7 +626,7 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -637,7 +636,7 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
                 onClick = {
                     if (value.value.isEmpty()) value.value = ""
                     config.changeAllIcons = value.value
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )

@@ -77,7 +77,6 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
@@ -185,7 +184,7 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
     SuperDialog(
         title = stringResource(R.string.select_hook),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -193,7 +192,7 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -207,7 +206,7 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
                     config.parentViewId = data.parentViewId
                     config.index = data.index
                     config.textSize = data.textSize
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
         }

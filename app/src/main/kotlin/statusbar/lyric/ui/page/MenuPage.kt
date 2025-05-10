@@ -93,7 +93,6 @@ import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
@@ -307,7 +306,7 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.clear_config),
         summary = stringResource(R.string.clear_config_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -315,7 +314,7 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -328,7 +327,7 @@ fun ResetDialog(showDialog: MutableState<Boolean>) {
                         Thread.sleep(500)
                         ActivityTools.restartApp()
                     }.start()
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
         }
@@ -341,7 +340,7 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.reset_system_ui),
         summary = stringResource(R.string.restart_systemui_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -351,7 +350,7 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 onClick = {
                     Tools.shell("killall com.android.systemui", true)
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
             Spacer(Modifier.width(20.dp))
@@ -359,7 +358,7 @@ fun RestartDialog(showDialog: MutableState<Boolean>) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
         }
     }
