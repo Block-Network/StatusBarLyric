@@ -1,23 +1,23 @@
 /*
  * StatusBarLyric
  * Copyright (C) 2021-2022 fkj@fkj233.cn
- * https://github.com/577fkj/StatusBarLyric
+ * https://github.com/Block-Network/StatusBarLyric
  *
  * This software is free opensource software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either
- * version 3 of the License, or any later version and our eula as published
- * by 577fkj.
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
  *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * and eula along with this software.  If not, see
  * <https://www.gnu.org/licenses/>
- * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
  */
 
 package statusbar.lyric.view
@@ -27,7 +27,6 @@ import android.content.Context
 import android.graphics.Shader
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.text.TextPaint
 import android.widget.TextSwitcher
 
 open class LyricSwitchView(context: Context) : TextSwitcher(context) {
@@ -44,10 +43,6 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         }
     }
 
-    fun getPaint(): TextPaint {
-        return (getChildAt(0) as LyricTextView).paint
-    }
-
     fun applyToAllViews(action: (LyricTextView) -> Unit) {
         for (i in 0 until childCount) {
             action(getChildAt(i) as LyricTextView)
@@ -56,9 +51,8 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
 
     fun setWidth(width: Int) {
         layoutTransition = LayoutTransition()
-        applyToAllViews {
-            it.width = width
-        }
+        layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+        applyToAllViews { it.width = width }
     }
 
     fun setTextColor(color: Int) {
@@ -81,7 +75,7 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
         applyToAllViews { it.letterSpacing = letterSpacing }
     }
 
-    fun strokeWidth(width: Float) {
+    fun setStrokeWidth(width: Float) {
         applyToAllViews { it.setStrokeWidth(width) }
     }
 

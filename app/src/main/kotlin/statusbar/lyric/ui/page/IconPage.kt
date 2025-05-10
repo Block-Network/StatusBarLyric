@@ -1,6 +1,27 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/Block-Network/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 package statusbar.lyric.ui.page
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +40,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -26,6 +48,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -41,13 +64,13 @@ import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.ActivityTools.changeConfig
 import statusbar.lyric.tools.AnimTools
+import statusbar.lyric.tools.Tools.isNotNull
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -61,8 +84,8 @@ import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @Composable
 fun IconPage(
@@ -130,10 +153,12 @@ fun IconPage(
             modifier = Modifier
                 .hazeSource(state = hazeState)
                 .height(getWindowSize().height.dp)
+                .overScrollVertical()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
-            topAppBarScrollBehavior = scrollBehavior,
             contentPadding = it,
+            overscrollEffect = null
         ) {
             item {
                 Column(Modifier.padding(top = 6.dp)) {
@@ -336,19 +361,13 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_size),
         summary = stringResource(R.string.icon_size_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -356,9 +375,7 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -366,8 +383,13 @@ fun IconSizeDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    config.iconSize = if (value.value.isEmpty()) 0 else value.value.toInt()
-                    dismissDialog(showDialog)
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..100) {
+                        config.iconSize = value.value.toInt()
+                    } else {
+                        config.iconSize = 0
+                        value.value = "0"
+                    }
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -382,17 +404,13 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_color_and_transparency),
         summary = stringResource(R.string.icon_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -400,9 +418,7 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -411,7 +427,7 @@ fun IconColorDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.iconColor = it })
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -426,17 +442,13 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_background_color_and_transparency),
         summary = stringResource(R.string.icon_background_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -444,9 +456,7 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -455,7 +465,7 @@ fun IconBgColorDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.iconBgColor = it })
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -471,18 +481,14 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
         summary = stringResource(R.string.icon_top_margins_tips),
         show = showDialog,
         onDismissRequest = {
-            dismissDialog(showDialog)
+            showDialog.value = false
         },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -490,9 +496,7 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -500,9 +504,13 @@ fun IconTopMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "0"
-                    config.iconTopMargins = value.value.toInt()
-                    dismissDialog(showDialog)
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..100) {
+                        config.iconTopMargins = value.value.toInt()
+                    } else {
+                        config.iconTopMargins = 0
+                        value.value = "0"
+                    }
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -517,19 +525,13 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_bottom_margins),
         summary = stringResource(R.string.icon_bottom_margins_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                if (it.isEmpty() || (it.toIntOrNull() != null && it.toInt() in 0..100)) {
-                    value.value = it
-                }
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -537,9 +539,7 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -547,9 +547,13 @@ fun IconBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.isEmpty()) value.value = "0"
-                    config.iconBottomMargins = value.value.toInt()
-                    dismissDialog(showDialog)
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in 0..100) {
+                        config.iconBottomMargins = value.value.toInt()
+                    } else {
+                        config.iconBottomMargins = 0
+                        value.value = "0"
+                    }
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -564,18 +568,14 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.icon_start_margins),
         summary = stringResource(R.string.icon_start_margins_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -583,9 +583,7 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -593,13 +591,13 @@ fun IconStartMarginsDialog(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    if (value.value.toIntOrNull() != null && value.value.toInt() in -2000..2000) {
+                    if (value.value.toIntOrNull().isNotNull() && value.value.toInt() in -2000..2000) {
                         config.iconStartMargins = value.value.toInt()
                     } else {
-                        config.iconStartMargins = 0
-                        value.value = "0"
+                        config.iconStartMargins = if (config.mHyperOSTexture) 20 else 0
+                        value.value = if (config.mHyperOSTexture) "20" else "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -614,17 +612,13 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.change_all_icons),
         summary = stringResource(R.string.change_all_icons_tips),
         show = showDialog,
-        onDismissRequest = {
-            dismissDialog(showDialog)
-        },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
             value = value.value,
             maxLines = 1,
-            onValueChange = {
-                value.value = it
-            }
+            onValueChange = { value.value = it }
         )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -632,9 +626,7 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showDialog)
-                }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -644,7 +636,7 @@ fun IconChangeAllIconsDialog(showDialog: MutableState<Boolean>) {
                 onClick = {
                     if (value.value.isEmpty()) value.value = ""
                     config.changeAllIcons = value.value
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )

@@ -1,37 +1,35 @@
 /*
  * StatusBarLyric
  * Copyright (C) 2021-2022 fkj@fkj233.cn
- * https://github.com/577fkj/StatusBarLyric
+ * https://github.com/Block-Network/StatusBarLyric
  *
  * This software is free opensource software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either
- * version 3 of the License, or any later version and our eula as published
- * by 577fkj.
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
  *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * and eula along with this software.  If not, see
  * <https://www.gnu.org/licenses/>
- * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
  */
 
 package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.R
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.LogTools.log
@@ -43,14 +41,12 @@ object ActivityTools {
 
     lateinit var dataList: ArrayList<Data>
 
-    fun isHook(): Boolean {
-        return false
-    }
+    fun isHook(): Boolean = false
 
     fun changeConfig(type: String = "normal", path: String = "") {
         Thread {
             Thread.sleep(200)
-            context.sendBroadcast(Intent("updateConfig").apply {
+            MainActivity.appContext.sendBroadcast(Intent("updateConfig").apply {
                 putExtra("type", type)
                 putExtra("path", path)
             })
@@ -60,7 +56,7 @@ object ActivityTools {
     fun showToastOnLooper(message: Any?) {
         try {
             handler.post {
-                Toast.makeText(context, message.toString(), Toast.LENGTH_LONG).show()
+                Toast.makeText(MainActivity.appContext, message.toString(), Toast.LENGTH_LONG).show()
                 message.log()
             }
         } catch (e: RuntimeException) {
@@ -75,7 +71,7 @@ object ActivityTools {
             try {
                 value.toColorInt()
             } catch (_: Exception) {
-                showToastOnLooper(context.getString(R.string.color_error))
+                showToastOnLooper(MainActivity.appContext.getString(R.string.color_error))
                 return
             }
         }
@@ -93,29 +89,21 @@ object ActivityTools {
                     }
                 }
             } catch (_: Exception) {
-                showToastOnLooper(context.getString(R.string.color_error))
+                showToastOnLooper(MainActivity.appContext.getString(R.string.color_error))
                 return
             }
         }
         unit(value)
     }
 
-    fun checkInstalled(pkgName: String): ApplicationInfo? {
-        return try {
-            context.packageManager.getApplicationInfo(pkgName, PackageManager.GET_META_DATA)
-        } catch (_: Exception) {
-            null
-        }
-    }
-
     fun openUrl(url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
+        MainActivity.appContext.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     }
 
     fun restartApp() {
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+        val intent = MainActivity.appContext.packageManager.getLaunchIntentForPackage(MainActivity.appContext.packageName)
         intent!!.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        context.startActivity(intent)
+        MainActivity.appContext.startActivity(intent)
         exitProcess(0)
     }
 }

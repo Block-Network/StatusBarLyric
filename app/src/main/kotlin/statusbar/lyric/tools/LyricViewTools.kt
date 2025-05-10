@@ -1,3 +1,25 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/Block-Network/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 package statusbar.lyric.tools
 
 import android.view.View
@@ -14,6 +36,7 @@ import android.view.animation.ScaleAnimation
 import android.view.animation.TranslateAnimation
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import statusbar.lyric.tools.Tools.isNotNull
 
 object LyricViewTools {
     private var animaList: ArrayList<Int> = arrayListOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -109,10 +132,12 @@ object LyricViewTools {
         }
     }
 
+    private var alphaAnimation: AnimationSet? = null
+
     fun View.hideView(anim: Boolean = true) {
         if (isGone) return
         if (anim) {
-            val alphaAnimation = getAlphaAnimation(false).apply {
+            alphaAnimation = getAlphaAnimation(false, 0).apply {
                 setAnimationListener(object : Animation.AnimationListener {
                     override fun onAnimationStart(animation: Animation) {}
                     override fun onAnimationEnd(animation: Animation) {
@@ -126,6 +151,11 @@ object LyricViewTools {
         } else {
             visibility = View.GONE
         }
+    }
+
+    fun View.cancelAnimation() {
+        if (alphaAnimation.isNotNull())
+            alphaAnimation!!.cancel()
     }
 
     fun View.showView() {

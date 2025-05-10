@@ -1,3 +1,25 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/Block-Network/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 package statusbar.lyric.ui.page
 
 import android.widget.Toast
@@ -17,13 +39,14 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,22 +57,18 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
-import statusbar.lyric.BuildConfig
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.MainActivity.Companion.isLoad
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.tools.ActivityTools
 import statusbar.lyric.tools.AnimTools
-import statusbar.lyric.tools.Tools.isNot
-import statusbar.lyric.tools.Tools.isNotNull
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -61,15 +80,15 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Settings
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @Composable
 fun HomePage(
     navController: NavController,
-    currentRoute: MutableState<String>
+    currentRoute: String
 ) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val masterSwitchState = remember { mutableStateOf(if (isLoad) config.masterSwitch else false) }
-    val lyricGetterApi = checkLyricGetterApi()
 
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
@@ -83,7 +102,7 @@ fun HomePage(
     )
 
     LaunchedEffect(Unit) {
-        if (checkLyricGetterApi() != 0 || !isLoad) {
+        if (!isLoad) {
             masterSwitchState.value = false
             config.masterSwitch = false
         }
@@ -109,7 +128,7 @@ fun HomePage(
                     IconButton(
                         modifier = Modifier.padding(end = 20.dp),
                         onClick = {
-                            if (currentRoute.value != "MenuPage") {
+                            if (currentRoute != "MenuPage") {
                                 navController.navigate("MenuPage") {
                                     popUpTo("HomePage") {
                                         saveState = true
@@ -119,7 +138,7 @@ fun HomePage(
                                 }
                             }
                         },
-                        holdDownState = currentRoute.value == "MenuPage"
+                        holdDownState = currentRoute == "MenuPage"
                     ) {
                         Icon(
                             imageVector = MiuixIcons.Useful.Settings,
@@ -137,10 +156,12 @@ fun HomePage(
             modifier = Modifier
                 .hazeSource(state = hazeState)
                 .height(getWindowSize().height.dp)
+                .overScrollVertical()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Left))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Left)),
-            topAppBarScrollBehavior = scrollBehavior,
             contentPadding = it,
+            overscrollEffect = null
         ) {
             item {
                 Column(Modifier.padding(top = 6.dp)) {
@@ -155,15 +176,6 @@ fun HomePage(
                             contentDescription = "Logo",
                         )
                     }
-                    if (lyricGetterApi != 0) {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            ShowLyricGetter(lyricGetterApi)
-                        }
-                    }
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -173,27 +185,11 @@ fun HomePage(
                             title = stringResource(R.string.master_switch),
                             checked = masterSwitchState.value,
                             onCheckedChange = {
-                                if (lyricGetterApi == 1) {
-                                    Toast.makeText(
-                                        context,
-                                        R.string.no_supported_version_lyric_getter,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else if (lyricGetterApi == 2) {
-                                    Toast.makeText(
-                                        context,
-                                        R.string.no_lyric_getter,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else if (isLoad) {
+                                if (isLoad) {
                                     masterSwitchState.value = it
                                     config.masterSwitch = it
                                 } else {
-                                    Toast.makeText(
-                                        context,
-                                        R.string.module_inactivated,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    Toast.makeText(MainActivity.appContext, R.string.module_inactivated, Toast.LENGTH_SHORT).show()
                                 }
                             }
                         )
@@ -202,6 +198,13 @@ fun HomePage(
                         visible = !masterSwitchState.value
                     ) {
                         Column {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                ShowSuperLyric()
+                            }
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -245,7 +248,7 @@ fun HomePage(
                                             stringResource(R.string.test_mode_tips).split("\n")[0]
                                         } else null,
                                         onClick = {
-                                            if (currentRoute.value != "TestPage") {
+                                            if (currentRoute != "TestPage") {
                                                 navController.navigate("TestPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -255,7 +258,7 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "TestPage"
+                                        holdDownState = currentRoute == "TestPage"
                                     )
                                 }
                             }
@@ -279,7 +282,7 @@ fun HomePage(
                                     SuperArrow(
                                         title = stringResource(R.string.lyric_page),
                                         onClick = {
-                                            if (currentRoute.value != "LyricPage") {
+                                            if (currentRoute != "LyricPage") {
                                                 navController.navigate("LyricPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -289,12 +292,12 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "LyricPage"
+                                        holdDownState = currentRoute == "LyricPage"
                                     )
                                     SuperArrow(
                                         title = stringResource(R.string.icon_page),
                                         onClick = {
-                                            if (currentRoute.value != "IconPage") {
+                                            if (currentRoute != "IconPage") {
                                                 navController.navigate("IconPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -304,7 +307,7 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "IconPage"
+                                        holdDownState = currentRoute == "IconPage"
                                     )
                                 }
                             }
@@ -328,7 +331,7 @@ fun HomePage(
                                     SuperArrow(
                                         title = stringResource(R.string.extend_page),
                                         onClick = {
-                                            if (currentRoute.value != "ExtendPage") {
+                                            if (currentRoute != "ExtendPage") {
                                                 navController.navigate("ExtendPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -338,13 +341,13 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "ExtendPage"
+                                        holdDownState = currentRoute == "ExtendPage"
                                     )
 
                                     SuperArrow(
                                         title = stringResource(R.string.system_special_page),
                                         onClick = {
-                                            if (currentRoute.value != "SystemSpecialPage") {
+                                            if (currentRoute != "SystemSpecialPage") {
                                                 navController.navigate("SystemSpecialPage") {
                                                     popUpTo("HomePage") {
                                                         saveState = true
@@ -354,7 +357,7 @@ fun HomePage(
                                                 }
                                             }
                                         },
-                                        holdDownState = currentRoute.value == "SystemSpecialPage"
+                                        holdDownState = currentRoute == "SystemSpecialPage"
                                     )
                                 }
                             }
@@ -373,61 +376,17 @@ fun HomePage(
 }
 
 @Composable
-fun ShowLyricGetter(int: Int) {
-    val openLyricGetterUrl = { ActivityTools.openUrl("https://github.com/xiaowine/Lyric-Getter/") }
-    when (int) {
-        0 -> return
-        1 -> {
-            SuperArrow(
-                leftAction = {
-                    Image(
-                        modifier = Modifier.padding(end = 12.dp),
-                        painter = painterResource(id = R.drawable.ic_warning),
-                        contentDescription = "Warning"
-                    )
-                },
-                title = stringResource(R.string.no_supported_version_lyric_getter),
-                titleColor = BasicComponentDefaults.titleColor(
-                    color = Color.Red
-                ),
-                summary = stringResource(R.string.click_to_install),
-                onClick = {
-                    openLyricGetterUrl()
-                }
-            )
+fun ShowSuperLyric() {
+    val openSuperLyricUrl = { ActivityTools.openUrl("https://github.com/HChenX/SuperLyric/releases") }
+    SuperArrow(
+        title = stringResource(R.string.super_lyric_tip),
+        titleColor = BasicComponentColors(
+            color = Color.Red,
+            disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+        ),
+        summary = stringResource(R.string.click_to_install),
+        onClick = {
+            openSuperLyricUrl()
         }
-
-        2 -> {
-            SuperArrow(
-                leftAction = {
-                    Image(
-                        modifier = Modifier.padding(end = 12.dp),
-                        painter = painterResource(id = R.drawable.ic_warning),
-                        contentDescription = "Warning"
-                    )
-                },
-                title = stringResource(R.string.no_lyric_getter),
-                titleColor = BasicComponentColors(
-                    color = Color.Red,
-                    disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
-                ),
-                summary = stringResource(R.string.click_to_install),
-                onClick = {
-                    openLyricGetterUrl()
-                }
-            )
-        }
-    }
-}
-
-private fun checkLyricGetterApi(): Int {
-    ActivityTools.checkInstalled("cn.lyric.getter").isNotNull {
-        val getterVersion = it.metaData.getInt("Getter_Version")
-        if (getterVersion != BuildConfig.API_VERSION) {
-            return 1
-        }
-    }.isNot {
-        return 2
-    }
-    return 0
+    )
 }

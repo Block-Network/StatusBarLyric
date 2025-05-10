@@ -1,7 +1,28 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/Block-Network/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 package statusbar.lyric
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -26,6 +47,7 @@ import statusbar.lyric.tools.BackupTools
 import statusbar.lyric.tools.ConfigTools
 import statusbar.lyric.tools.LogTools
 import statusbar.lyric.tools.LogTools.log
+import statusbar.lyric.tools.Tools.isNotNull
 
 class MainActivity : ComponentActivity() {
     private val appTestReceiver by lazy { AppTestReceiver() }
@@ -33,8 +55,7 @@ class MainActivity : ComponentActivity() {
     lateinit var openDocumentLauncher: ActivityResultLauncher<Intent>
 
     companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var context: Context
+        lateinit var appContext: Context private set
 
         var isLoad: Boolean = false
 
@@ -44,7 +65,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        context = this
+        appContext = this
         enableEdgeToEdge()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false // Xiaomi moment, this code must be here
@@ -53,7 +74,7 @@ class MainActivity : ComponentActivity() {
         createDocumentLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            if (result.resultCode == RESULT_OK && result.data != null) {
+            if (result.resultCode == RESULT_OK && result.data.isNotNull()) {
                 BackupTools.handleCreateDocument(this, result.data!!.data)
             }
         }
@@ -61,7 +82,7 @@ class MainActivity : ComponentActivity() {
         openDocumentLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            if (result.resultCode == RESULT_OK && result.data != null) {
+            if (result.resultCode == RESULT_OK && result.data.isNotNull()) {
                 BackupTools.handleReadDocument(this, result.data!!.data)
                 Thread {
                     Thread.sleep(500)
@@ -96,7 +117,7 @@ class MainActivity : ComponentActivity() {
 
     private fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (!(context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled()) {
+            if (!(appContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager).areNotificationsEnabled()) {
                 this.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
             }
         }
@@ -132,10 +153,10 @@ class MainActivity : ComponentActivity() {
     private fun registerReceiver() {
         val filter = IntentFilter("AppTestReceiver")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(appTestReceiver, filter, RECEIVER_EXPORTED)
+            appContext.registerReceiver(appTestReceiver, filter, RECEIVER_EXPORTED)
         } else {
             @Suppress("UnspecifiedRegisterReceiverFlag")
-            context.registerReceiver(appTestReceiver, filter)
+            appContext.registerReceiver(appTestReceiver, filter)
         }
     }
 }

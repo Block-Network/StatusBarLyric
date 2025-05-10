@@ -1,29 +1,28 @@
 /*
  * StatusBarLyric
  * Copyright (C) 2021-2022 fkj@fkj233.cn
- * https://github.com/577fkj/StatusBarLyric
+ * https://github.com/Block-Network/StatusBarLyric
  *
  * This software is free opensource software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either
- * version 3 of the License, or any later version and our eula as published
- * by 577fkj.
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
  *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * and eula along with this software.  If not, see
  * <https://www.gnu.org/licenses/>
- * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
  */
 
 package statusbar.lyric.tools
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -31,7 +30,6 @@ import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.util.ArrayMap
 import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
@@ -41,7 +39,7 @@ import com.github.kyuubiran.ezxhelper.EzXHelper
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.tools.ActivityTools.isHook
@@ -68,14 +66,14 @@ object Tools {
         val xiaomiMarketName = getSystemProperties("ro.product.marketname")
         val vivoMarketName = getSystemProperties("ro.vivo.market.name")
         when {
-            bigTextOne(Build.BRAND) == "Vivo" -> bigTextOne(vivoMarketName)
-            xiaomiMarketName.isNotEmpty() -> bigTextOne(xiaomiMarketName)
-            else -> "${bigTextOne(Build.BRAND)} ${Build.MODEL}"
+            Build.BRAND.uppercaseFirstChar() == "Vivo" -> vivoMarketName.uppercaseFirstChar()
+            xiaomiMarketName.isNotEmpty() -> xiaomiMarketName.uppercaseFirstChar()
+            else -> "${Build.BRAND.uppercaseFirstChar()} ${Build.MODEL}"
         }
     }
 
-    fun bigTextOne(st: String): String {
-        val formattedBrand = st.replaceFirstChar {
+    fun String.uppercaseFirstChar(): String {
+        val formattedBrand = this.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase() else it.toString()
         }
         return formattedBrand
@@ -180,7 +178,7 @@ object Tools {
         }
     }
 
-    fun getSP(context: Context, key: String): SharedPreferences? {
+    fun getSP(context: Context, key: String): SharedPreferences {
         @Suppress("DEPRECATION", "WorldReadableFiles")
         return context.createDeviceProtectedStorageContext()
             .getSharedPreferences(
@@ -203,9 +201,7 @@ object Tools {
                 } catch (_: Exception) {
                     // Su shell command failed
                     Handler(Looper.getMainLooper()).post {
-                        Toast
-                            .makeText(context, "Root permissions required!!", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(MainActivity.appContext, "Root permissions required!!", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
@@ -214,26 +210,6 @@ object Tools {
         } catch (_: Throwable) {
             // Shell command failed
         }
-    }
-
-    fun checkBroadcastReceiverState(
-        context: Context,
-        broadcastReceiver: BroadcastReceiver?
-    ): Boolean {
-        context.isNull { return false }
-        broadcastReceiver.isNull { return false }
-
-        val contextImpl: Context = context.getSuperObjectField("mBase") as Context
-        contextImpl.getObjectField("mPackageInfo").isNotNull {
-            it.getObjectField("mReceivers").isNotNull {
-                (it as ArrayMap<*, *>)[context].isNotNull {
-                    (it as ArrayMap<*, *>)[broadcastReceiver].isNotNull {
-                        return true
-                    }
-                }
-            }
-        }
-        return false
     }
 
     inline fun <T> T?.isNotNull(callback: (T) -> Unit): Boolean {
@@ -265,6 +241,10 @@ object Tools {
         return null
     }
 
+    fun Any?.isNull() = this == null
+
+    fun Any?.isNotNull() = this != null
+
     fun Any.getObjectField(fieldName: String): Any? {
         return XposedHelpers.getObjectField(this, fieldName)
     }
@@ -293,7 +273,7 @@ object Tools {
 
     fun Any?.existField(fieldName: String): Boolean {
         if (this == null) return false
-        return XposedHelpers.findFieldIfExists(this.javaClass, fieldName) != null
+        return XposedHelpers.findFieldIfExists(this.javaClass, fieldName).isNotNull()
     }
 
     fun Any?.existMethod(methodName: String): Boolean {
@@ -315,8 +295,4 @@ object Tools {
     fun Any.callMethod(methodName: String, vararg args: Any): Any? {
         return XposedHelpers.callMethod(this, methodName, *args)
     }
-
-    fun Any?.isNull() = this == null
-
-    fun Any?.isNotNull() = this != null
 }

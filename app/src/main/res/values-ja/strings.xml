@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">StatusBar lyric</string>
+    <string name="app_name">StatusBar Lyric</string>
     <string name="module_inactivated">モジュールが無効化されています</string>
     <string name="module_first">前提条件</string>
     <string name="module_second">基本設定</string>
@@ -9,13 +9,11 @@
     <string name="module_fifth">フローティングタイトル</string>
     <string name="module_sixth">アニメーションの設定</string>
     <string name="menu_page">メニュー</string>
-    <string name="no_supported_version_lyric_getter">LyricGetter に非対応</string>
-    <string name="no_lyric_getter">LyricGetter がありません</string>
     <string name="click_to_install">タップで最新のバージョンをインストール</string>
     <string name="show_logcat">logcat を表示</string>
     <string name="show_launcher_icon">アイコンを表示</string>
     <string name="module_extend">このページを変更後にシステムインターフェースとプレーヤーを再起動してください</string>
-    <string name="xposed_tips">歌詞を表示できないときは、音楽アプリを停止してシステム UI を再起動と Lyric Getter を確認してください</string>
+    <string name="xposed_tips">歌詞を表示できないときは、音楽アプリを停止してシステム UI を再起動してください</string>
     <string name="cancel">キャンセル</string>
     <string name="ok">OK</string>
     <string name="reset_system_ui">システム UI を再起動</string>

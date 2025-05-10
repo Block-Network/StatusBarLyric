@@ -1,3 +1,25 @@
+/*
+ * StatusBarLyric
+ * Copyright (C) 2021-2022 fkj@fkj233.cn
+ * https://github.com/Block-Network/StatusBarLyric
+ *
+ * This software is free opensource software: you can redistribute it
+ * and/or modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * and eula along with this software.  If not, see
+ * <https://www.gnu.org/licenses/>
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
+ */
+
 package statusbar.lyric.ui.page
 
 import androidx.compose.animation.AnimatedVisibility
@@ -15,12 +37,13 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -30,7 +53,7 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
-import statusbar.lyric.MainActivity.Companion.context
+import statusbar.lyric.MainActivity
 import statusbar.lyric.MainActivity.Companion.testReceiver
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
@@ -43,7 +66,6 @@ import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
-import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -55,11 +77,12 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @Composable
 fun TestPage(
     navController: NavController,
-    currentRoute: MutableState<String>
+    currentRoute: String
 ) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
@@ -116,10 +139,12 @@ fun TestPage(
             modifier = Modifier
                 .hazeSource(state = hazeState)
                 .height(getWindowSize().height.dp)
+                .overScrollVertical()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
-            topAppBarScrollBehavior = scrollBehavior,
             contentPadding = it,
+            overscrollEffect = null
         ) {
             item {
                 Column(Modifier.padding(top = 6.dp)) {
@@ -154,9 +179,9 @@ fun TestPage(
                                     ),
                                     rightText = stringResource(R.string.tips1),
                                     onClick = {
-                                        context.getClass()
+                                        MainActivity.appContext.getClass()
                                         when (testReceiver) {
-                                            true -> if (currentRoute.value != "ChoosePage") {
+                                            true -> if (currentRoute != "ChoosePage") {
                                                 navController.navigate("ChoosePage") {
                                                     popUpTo("TestPage") {
                                                         inclusive = false
@@ -171,7 +196,7 @@ fun TestPage(
                                                     Thread.sleep(500)
                                                     goMainThread {
                                                         if (testReceiver) {
-                                                            if (currentRoute.value != "ChoosePage") {
+                                                            if (currentRoute != "ChoosePage") {
                                                                 navController.navigate("ChoosePage") {
                                                                     popUpTo("TestPage") {
                                                                         inclusive = false
@@ -181,14 +206,14 @@ fun TestPage(
                                                                 }
                                                             }
                                                         } else {
-                                                            showToastOnLooper(context.getString(R.string.broadcast_receive_timeout))
+                                                            showToastOnLooper(MainActivity.appContext.getString(R.string.broadcast_receive_timeout))
                                                         }
                                                     }
                                                 }.start()
                                             }
                                         }
                                     },
-                                    holdDownState = currentRoute.value == "ChoosePage"
+                                    holdDownState = currentRoute == "ChoosePage"
                                 )
                             }
                         }

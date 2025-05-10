@@ -1,23 +1,23 @@
 /*
  * StatusBarLyric
  * Copyright (C) 2021-2022 fkj@fkj233.cn
- * https://github.com/577fkj/StatusBarLyric
+ * https://github.com/Block-Network/StatusBarLyric
  *
  * This software is free opensource software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either
- * version 3 of the License, or any later version and our eula as published
- * by 577fkj.
+ * version 3 of the License, or any later version and our eula as
+ * published by Block-Network contributors.
  *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * and eula along with this software.  If not, see
  * <https://www.gnu.org/licenses/>
- * <https://github.com/577fkj/StatusBarLyric/blob/main/LICENSE>.
+ * <https://github.com/Block-Network/StatusBarLyric/blob/main/LICENSE>.
  */
 
 package statusbar.lyric.config
@@ -151,7 +151,7 @@ class Config {
         }
     var lyricStartMargins: Int
         get() {
-            return config.opt("lyricStart", if (XposedOwnSP.config.mHyperOSTexture) 20 else 0)
+            return config.opt("lyricStart", if (mHyperOSTexture) 20 else 8)
         }
         set(value) {
             config.put("lyricStart", value)
@@ -165,7 +165,7 @@ class Config {
         }
     var lyricEndMargins: Int
         get() {
-            return config.opt("lyricEnd", if (XposedOwnSP.config.mHyperOSTexture) 20 else 10)
+            return config.opt("lyricEnd", if (mHyperOSTexture) 20 else 10)
         }
         set(value) {
             config.put("lyricEnd", value)
@@ -186,7 +186,7 @@ class Config {
         }
     var iconStartMargins: Int
         get() {
-            return config.opt("iconStart", if (XposedOwnSP.config.mHyperOSTexture) 20 else 0)
+            return config.opt("iconStart", if (mHyperOSTexture) 20 else 0)
         }
         set(value) {
             config.put("iconStart", value)
@@ -284,7 +284,7 @@ class Config {
         }
     var lyricStrokeWidth: Int
         get() {
-            return config.opt("lyricStrokeWidth", 100)
+            return config.opt("lyricStrokeWidth", 0)
         }
         set(value) {
             config.put("lyricStrokeWidth", value)
@@ -508,6 +508,14 @@ class Config {
             config.put("automateFocusedNotice", value)
         }
 
+    var pageRatio: Float
+        get() {
+            return config.opt("pageRatio", 0.5f)
+        }
+        set(value) {
+            config.put("pageRatio", value)
+        }
+
     private val defIconHashMap by lazy {
         HashMap<String, String>().apply {
             this["com.tencent.qqmusic"] = qQMusicIcon
@@ -526,6 +534,7 @@ class Config {
             this["com.apple.android.music"] = appleMusicIcon
             this["com.luna.music"] = lunaIcon
             this["com.salt.music"] = saltPlayerIcon
+            this["org.akanework.gramophone"] = gramophoneIcon
         }
     }
 
@@ -564,5 +573,9 @@ class Config {
 
     private val saltPlayerIcon by lazy {
         @Suppress("SpellCheckingInspection") "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"
+    }
+
+    private val gramophoneIcon by lazy {
+        @Suppress("SpellCheckingInspection") "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"
     }
 }
