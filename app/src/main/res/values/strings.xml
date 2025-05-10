@@ -18,7 +18,7 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="reset_system_ui">Restart SystemUI</string>
-    <string name="restart_systemui_tips">Are you sure you want to restart the System UI?</string>
+    <string name="restart_systemui_tips">Are you sure you want to restart the SystemUI?</string>
     <string name="master_switch">Master Switch</string>
     <string name="hook_page">Hook Page</string>
     <string name="test_mode">Test Mode</string>
@@ -30,7 +30,7 @@
     <string name="extend_page">Extend Page</string>
     <string name="choose_page">Choose Page</string>
     <string name="lyric_width">Lyric Width</string>
-    <string name="lyric_width_tips">Range: 0~100, 0 is Adaptive width</string>
+    <string name="lyric_width_tips">Range: 0~100, 0 is adaptive width</string>
     <string name="fixed_lyric_width">Fixed lyric width</string>
     <string name="fixed_lyric_width_tips">When turned on, the outer width of the lyrics is fixed and does not change with the lyrics</string>
     <string name="lyric_color_and_transparency">Lyric Color And Transparency</string>
@@ -53,7 +53,7 @@
     <string name="lyric_bottom_margins_tips">Range: 0~100</string>
     <string name="icon_switch">Icon Switch</string>
     <string name="icon_size">Icon Size</string>
-    <string name="icon_size_tips">Range:: 0%~100% of the height of the status bar, 0 is the following clock</string>
+    <string name="icon_size_tips">Range: 0~100% of the height of the status bar, 0 is the following clock</string>
     <string name="icon_top_margins">Icon Top Margins</string>
     <string name="icon_top_margins_tips">Range: 0~100</string>
     <string name="icon_bottom_margins">Icon Bottom Margins</string>
@@ -70,7 +70,7 @@
     <string name="hook_succeeded">Hook Succeeded</string>
     <string name="hook_failed">Hook Failed</string>
     <string name="start_hooking_text_view">Start Hooking All TextView</string>
-    <string name="first_filter">%s meets preliminary requirements,Total: %s meets requirements</string>
+    <string name="first_filter">%s meets preliminary requirements, Total: %s meets requirements</string>
     <string name="no_text_view">There is no Textview that meets the requirements</string>
     <string name="send_text_view_class">Send: %s</string>
     <string name="load_class_empty">Please turn on the test mode configuration first</string>
@@ -130,7 +130,7 @@
     <string name="slide_status_bar_cut_songs_y_radius">Slide Status Bar Cut Songs Y Radius</string>
     <string name="slide_status_bar_cut_songs_y_radius_tips">Range: 10~100</string>
     <string name="title_delay_duration">Floating title hint hides the delay</string>
-    <string name="title_delay_duration_tips">Range: 0~10000,Unit: milliseconds</string>
+    <string name="title_delay_duration_tips">Range: 0~10000, Unit: milliseconds</string>
     <string name="title_switch">Floating title hint switch</string>
     <string name="title_color_and_transparency">Floating title hint background color</string>
     <string name="title_background_radius">Floating title hint background corner radius</string>

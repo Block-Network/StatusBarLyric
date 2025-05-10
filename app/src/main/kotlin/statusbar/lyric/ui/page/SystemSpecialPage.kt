@@ -83,7 +83,6 @@ import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
@@ -289,7 +288,7 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.hyperos_texture_radio),
         summary = stringResource(R.string.lyric_stroke_width_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -304,7 +303,7 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -318,7 +317,7 @@ fun RadioDialog(showDialog: MutableState<Boolean>) {
                         config.mHyperOSTextureRadio = 25
                         value.value = "25"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
         }
@@ -332,7 +331,7 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.hyperos_texture_corner),
         summary = stringResource(R.string.lyric_letter_spacing_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -347,7 +346,7 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -361,7 +360,7 @@ fun CornerDialog(showDialog: MutableState<Boolean>) {
                         config.mHyperOSTextureCorner = 25
                         value.value = "25"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
         }
@@ -375,7 +374,7 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.hyperos_texture_color),
         summary = stringResource(R.string.lyric_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -390,7 +389,7 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -399,7 +398,7 @@ fun BgColorDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.mHyperOSTextureBgColor = it }, "#15818181")
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
         }

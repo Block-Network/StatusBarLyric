@@ -85,7 +85,6 @@ import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
@@ -412,7 +411,7 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
         title = stringResource(R.string.lyric_width),
         summary = stringResource(R.string.lyric_width_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -427,7 +426,7 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -441,7 +440,7 @@ fun LyricWidthDialog(showDialog: MutableState<Boolean>, lyricWidth: MutableState
                         config.lyricWidth = 0
                         lyricWidth.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -456,7 +455,7 @@ fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_size),
         summary = stringResource(R.string.lyric_size_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -472,7 +471,7 @@ fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
             Spacer(Modifier.width(20.dp))
@@ -487,7 +486,7 @@ fun LyricSizeDialog(showDialog: MutableState<Boolean>) {
                         config.lyricSize = 0
                         value.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -502,7 +501,7 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_color_and_transparency),
         summary = stringResource(R.string.lyric_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             label = "#FFFFFF",
@@ -518,7 +517,7 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -527,7 +526,7 @@ fun LyricColorDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorCheck(value.value, unit = { config.lyricColor = it })
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -542,7 +541,7 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyrics_are_gradient_and_transparent),
         summary = stringResource(R.string.lyrics_are_gradient_and_transparent_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             label = "#ff0099,#d508a8,#aa10b8",
@@ -559,7 +558,7 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
             Spacer(Modifier.width(20.dp))
@@ -569,7 +568,7 @@ fun LyricGradientDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorSCheck(value.value, unit = { config.lyricGradientColor = it })
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
         }
@@ -583,7 +582,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyrics_gradient_background_color_and_transparency),
         summary = stringResource(R.string.lyrics_gradient_background_color_and_transparency_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             label = "#00000000",
@@ -599,7 +598,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -608,7 +607,7 @@ fun LyricGradientBgColorDialog(showDialog: MutableState<Boolean>) {
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     ActivityTools.colorSCheck(value.value, unit = { config.lyricBackgroundColor = it })
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -623,7 +622,7 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_background_radius),
         summary = stringResource(R.string.lyric_background_radius_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -637,7 +636,7 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -651,7 +650,7 @@ fun LyricBgRadiusDialog(showDialog: MutableState<Boolean>) {
                         config.lyricBackgroundRadius = 0
                         value.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -666,7 +665,7 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_letter_spacing),
         summary = stringResource(R.string.lyric_letter_spacing_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -680,7 +679,7 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -694,7 +693,7 @@ fun LyricLetterSpacingDialog(showDialog: MutableState<Boolean>) {
                         config.lyricLetterSpacing = 0
                         value.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -710,7 +709,7 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
         summary = stringResource(R.string.lyric_stroke_width_tips),
         show = showDialog,
         onDismissRequest = {
-            dismissDialog(showDialog)
+            showDialog.value = false
         },
     ) {
         TextField(
@@ -726,7 +725,7 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
             Spacer(Modifier.width(20.dp))
@@ -741,7 +740,7 @@ fun LyricStrokeWidthDialog(showDialog: MutableState<Boolean>) {
                         config.lyricStrokeWidth = 0
                         value.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -756,7 +755,7 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_speed),
         summary = stringResource(R.string.lyric_speed_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -770,7 +769,7 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -784,7 +783,7 @@ fun LyricSpeedDialog(showDialog: MutableState<Boolean>) {
                         config.lyricSpeed = 1
                         value.value = "1"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -799,7 +798,7 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_top_margins),
         summary = stringResource(R.string.lyric_top_margins_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -813,7 +812,7 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -827,7 +826,7 @@ fun LyricTopMarginsDialog(showDialog: MutableState<Boolean>) {
                         config.lyricTopMargins = 0
                         value.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -842,7 +841,7 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_bottom_margins),
         summary = stringResource(R.string.lyric_bottom_margins_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -856,7 +855,7 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -870,7 +869,7 @@ fun LyricBottomMarginsDialog(showDialog: MutableState<Boolean>) {
                         config.lyricBottomMargins = 0
                         value.value = "0"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -885,7 +884,7 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_start_margins),
         summary = stringResource(R.string.lyric_start_margins_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -900,7 +899,7 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
             Spacer(Modifier.width(20.dp))
@@ -915,7 +914,7 @@ fun LyricStartMarginsDialog(showDialog: MutableState<Boolean>) {
                         config.lyricStartMargins = if (config.mHyperOSTexture) 20 else 8
                         value.value = if (config.mHyperOSTexture) "20" else "8"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -930,7 +929,7 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyric_end_margins),
         summary = stringResource(R.string.lyric_end_margins_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -945,7 +944,7 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
             Spacer(Modifier.width(20.dp))
@@ -960,7 +959,7 @@ fun LyricEndMarginsDialog(showDialog: MutableState<Boolean>) {
                         config.lyricEndMargins = if (config.mHyperOSTexture) 20 else 10
                         value.value = if (config.mHyperOSTexture) "20" else "10"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
@@ -975,7 +974,7 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
         title = stringResource(R.string.lyrics_animation_duration),
         summary = stringResource(R.string.lyric_animation_duration_tips),
         show = showDialog,
-        onDismissRequest = { dismissDialog(showDialog) },
+        onDismissRequest = { showDialog.value = false },
     ) {
         TextField(
             modifier = Modifier.padding(bottom = 16.dp),
@@ -989,7 +988,7 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { dismissDialog(showDialog) }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -1003,7 +1002,7 @@ fun LyricAnimDurationDialog(showDialog: MutableState<Boolean>) {
                         config.animationDuration = 300
                         value.value = "300"
                     }
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                     changeConfig()
                 }
             )
