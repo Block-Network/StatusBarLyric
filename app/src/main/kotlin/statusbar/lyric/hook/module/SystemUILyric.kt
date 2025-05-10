@@ -586,7 +586,7 @@ class SystemUILyric : BaseHook() {
     private val timeoutRestore: Int = 0
     private val handler: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
-            if (msg.what == timeoutRestore && isMusicPlaying && config.timeoutRestore) {
+            if (msg.what == timeoutRestore && config.timeoutRestore) {
                 lastLyric = ""
                 playingApp = ""
                 updateLyricState(showLyric = false)
