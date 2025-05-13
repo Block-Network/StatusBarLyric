@@ -38,9 +38,13 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     private fun initialize() {
         setFactory {
             LyricTextView(context).apply {
-                layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
+                layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             }
         }
+    }
+
+    private val layoutTr = LayoutTransition().apply {
+        enableTransitionType(LayoutTransition.CHANGING)
     }
 
     fun applyToAllViews(action: (LyricTextView) -> Unit) {
@@ -50,8 +54,7 @@ open class LyricSwitchView(context: Context) : TextSwitcher(context) {
     }
 
     fun setWidth(width: Int) {
-        layoutTransition = LayoutTransition()
-        layoutTransition.enableTransitionType(LayoutTransition.CHANGING)
+        layoutTransition = layoutTr
         applyToAllViews { it.width = width }
     }
 

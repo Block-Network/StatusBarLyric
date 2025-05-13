@@ -158,9 +158,7 @@ object Tools {
     }
 
     fun goMainThread(delayed: Long = 0, callback: () -> Unit): Boolean {
-        return Handler(Looper.getMainLooper()).postDelayed({
-            callback()
-        }, delayed * 1000)
+        return Handler(Looper.getMainLooper()).postDelayed({ callback() }, delayed * 1000)
     }
 
     fun Context.isLandscape() =

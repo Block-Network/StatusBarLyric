@@ -32,15 +32,17 @@ import statusbar.lyric.config.XposedOwnSP.config
 
 class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCallback {
     private var isScrolling = false
+    private var textString: String = ""
     private var textLength = 0f
     private var viewWidth = 0f
     private var scrollSpeed = 4f
     private var currentX = 0f
-    private val startScrollRunnable =
-        Runnable { Choreographer.getInstance().postFrameCallback(this) }
+    private var textY = 0f
+    private val startScrollRunnable = Runnable { Choreographer.getInstance().postFrameCallback(this) }
 
     init {
         paint.style = Paint.Style.FILL_AND_STROKE
+        setLayerType(LAYER_TYPE_HARDWARE, paint)
     }
 
     override fun onDetachedFromWindow() {
@@ -51,7 +53,8 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
     override fun setText(text: CharSequence, type: BufferType) {
         stopScroll()
         currentX = 0f
-        textLength = getTextLength(text)
+        textString = text.toString()
+        textLength = getTextLength(textString)
         super.setText(text, type)
         startScroll()
     }
@@ -71,10 +74,14 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
         postInvalidate()
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        viewWidth = w.toFloat()
+        textY = (h - (paint.descent() + paint.ascent())) / 2
+    }
+
     override fun onDraw(canvas: Canvas) {
-        viewWidth = width.toFloat()
-        val y = (height - (paint.descent() + paint.ascent())) / 2
-        text?.let { canvas.drawText(it.toString(), currentX, y, paint) }
+        canvas.drawText(textString, currentX, textY, paint)
     }
 
     private fun updateScrollPosition() {
@@ -88,13 +95,13 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
             stopScroll()
         } else {
             currentX -= scrollSpeed
+            postInvalidate()
         }
     }
 
     override fun doFrame(frameTimeNanos: Long) {
         if (isScrolling) {
             updateScrollPosition()
-            postInvalidate()
             Choreographer.getInstance().postFrameCallback(this)
         }
     }
@@ -113,8 +120,8 @@ class LyricTextView(context: Context) : TextView(context), Choreographer.FrameCa
         Choreographer.getInstance().removeFrameCallback(this)
     }
 
-    private fun getTextLength(text: CharSequence): Float {
-        return paint.measureText(text.toString())
+    private fun getTextLength(text: String): Float {
+        return paint.measureText(text)
     }
 
     fun setScrollSpeed(speed: Float) {
