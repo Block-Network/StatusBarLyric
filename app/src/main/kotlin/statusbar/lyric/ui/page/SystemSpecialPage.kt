@@ -263,7 +263,8 @@ fun SystemSpecialPage(
                         ),
                         onClick = {
                             showDialog.value = true
-                        }
+                        },
+                        holdDownState = showDialog.value
                     )
                 }
                 Spacer(

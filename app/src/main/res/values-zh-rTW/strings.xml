@@ -159,4 +159,8 @@
     <string name="buildtime">編譯時間</string>
     <string name="currentdevice">當前設備</string>
     <string name="info">資訊</string>
+    <string name="refresh_pulling">下拉刷新</string>
+    <string name="refresh_release">鬆開刷新</string>
+    <string name="refresh_refresh">正在刷新…</string>
+    <string name="refresh_complete">刷新成功</string>
 </resources>

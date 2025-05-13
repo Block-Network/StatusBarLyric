@@ -22,6 +22,7 @@
 
 package statusbar.lyric.ui.page
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +43,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -56,21 +58,26 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
+import kotlinx.coroutines.delay
 import statusbar.lyric.MainActivity
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
 import statusbar.lyric.data.Data
+import statusbar.lyric.tools.ActivityTestTools.dataList
+import statusbar.lyric.tools.ActivityTestTools.getClass
+import statusbar.lyric.tools.ActivityTestTools.hideView
 import statusbar.lyric.tools.ActivityTestTools.showView
-import statusbar.lyric.tools.ActivityTools.dataList
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.PullToRefresh
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.basic.rememberPullToRefreshState
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
@@ -80,12 +87,21 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun ChoosePage(
     navController: NavController
 ) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
     val showDialog = remember { mutableStateOf(false) }
+    val selectedItemIndex = remember { mutableIntStateOf(-1) }
+    val pullToRefreshState = rememberPullToRefreshState()
+    val refreshTexts = listOf(
+        stringResource(R.string.refresh_pulling),
+        stringResource(R.string.refresh_release),
+        stringResource(R.string.refresh_refresh),
+        stringResource(R.string.refresh_complete)
+    )
 
     val hazeState = remember { HazeState() }
     val hazeStyle = HazeStyle(
@@ -133,47 +149,60 @@ fun ChoosePage(
         },
         popupHost = { null }
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .hazeSource(state = hazeState)
-                .height(getWindowSize().height.dp)
-                .overScrollVertical()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
-            contentPadding = it,
-            overscrollEffect = null
+        PullToRefresh(
+            pullToRefreshState = pullToRefreshState,
+            onRefresh = {
+                pullToRefreshState.completeRefreshing {
+                    MainActivity.appContext.getClass()
+                    delay(150)
+                }
+            },
+            refreshTexts = refreshTexts,
+            contentPadding = it
         ) {
-            item {
-                Column(Modifier.padding(top = 6.dp)) {
-                    dataList.forEach { data ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            SuperArrow(
-                                title = "${data.textViewClassName} ${data.textViewId}",
-                                summary = "idName: ${data.idName}; textSize: ${data.textSize}f\n${data.parentViewClassName} ${data.parentViewId}",
-                                onClick = {
-                                    MainActivity.appContext.showView(data)
-                                    showDialog.value = true
-                                },
-                                holdDownState = showDialog.value
-                            )
-                            ChooseDialog(showDialog, data)
+            LazyColumn(
+                modifier = Modifier
+                    .hazeSource(state = hazeState)
+                    .height(getWindowSize().height.dp)
+                    .overScrollVertical()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Right))
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Right)),
+                contentPadding = it,
+                overscrollEffect = null
+            ) {
+                item {
+                    Column(Modifier.padding(top = 6.dp)) {
+                        dataList.forEachIndexed { index, data ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                SuperArrow(
+                                    title = "${data.textViewClassName} ${data.textViewId}",
+                                    summary = "idName: ${data.idName}; textSize: ${data.textSize}f\n${data.parentViewClassName} ${data.parentViewId}",
+                                    onClick = {
+                                        MainActivity.appContext.showView(data)
+                                        selectedItemIndex.intValue = index
+                                        showDialog.value = true
+                                    },
+                                    holdDownState = selectedItemIndex.intValue == index && showDialog.value
+                                )
+                                ChooseDialog(showDialog, data)
+                            }
                         }
+                        SmallTitle(
+                            text = stringResource(R.string.choose_page_tips)
+                        )
                     }
-                    SmallTitle(
-                        text = stringResource(R.string.choose_page_tips)
+                    Spacer(
+                        Modifier.height(
+                            WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
+                                    WindowInsets.captionBar.asPaddingValues().calculateBottomPadding()
+                        )
                     )
                 }
-                Spacer(
-                    Modifier.height(
-                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() +
-                                WindowInsets.captionBar.asPaddingValues().calculateBottomPadding()
-                    )
-                )
             }
         }
     }
@@ -184,7 +213,10 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
     SuperDialog(
         title = stringResource(R.string.select_hook),
         show = showDialog,
-        onDismissRequest = { showDialog.value = false },
+        onDismissRequest = {
+            showDialog.value = false
+            MainActivity.appContext.hideView()
+        },
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -192,7 +224,10 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = { showDialog.value = false }
+                onClick = {
+                    showDialog.value = false
+                    MainActivity.appContext.hideView()
+                }
             )
             Spacer(Modifier.width(20.dp))
             TextButton(
@@ -206,6 +241,7 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
                     config.parentViewId = data.parentViewId
                     config.index = data.index
                     config.textSize = data.textSize
+                    MainActivity.appContext.hideView()
                     showDialog.value = false
                 }
             )

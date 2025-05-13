@@ -375,7 +375,8 @@ fun LyricPage(
                             ),
                             onClick = {
                                 showDialog.value = true
-                            }
+                            },
+                            holdDownState = showDialog.value
                         )
                     }
                 }

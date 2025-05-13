@@ -57,6 +57,7 @@ import statusbar.lyric.MainActivity
 import statusbar.lyric.MainActivity.Companion.testReceiver
 import statusbar.lyric.R
 import statusbar.lyric.config.ActivityOwnSP.config
+import statusbar.lyric.tools.ActivityTestTools.dataList
 import statusbar.lyric.tools.ActivityTestTools.getClass
 import statusbar.lyric.tools.ActivityTools.showToastOnLooper
 import statusbar.lyric.tools.Tools.goMainThread
@@ -179,8 +180,9 @@ fun TestPage(
                                     ),
                                     rightText = stringResource(R.string.tips1),
                                     onClick = {
+                                        dataList = arrayListOf()
                                         MainActivity.appContext.getClass()
-                                        when (testReceiver) {
+                                        when (testReceiver && dataList.isNotEmpty()) {
                                             true -> if (currentRoute != "ChoosePage") {
                                                 navController.navigate("ChoosePage") {
                                                     popUpTo("TestPage") {
@@ -195,7 +197,7 @@ fun TestPage(
                                                 Thread {
                                                     Thread.sleep(500)
                                                     goMainThread {
-                                                        if (testReceiver) {
+                                                        if (testReceiver && dataList.isNotEmpty()) {
                                                             if (currentRoute != "ChoosePage") {
                                                                 navController.navigate("ChoosePage") {
                                                                     popUpTo("TestPage") {
@@ -231,7 +233,8 @@ fun TestPage(
                             ),
                             onClick = {
                                 showDialog.value = true
-                            }
+                            },
+                            holdDownState = showDialog.value
                         )
                     }
                     SmallTitle(

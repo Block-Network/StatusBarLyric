@@ -242,7 +242,8 @@ fun MenuPage(
                         ),
                         onClick = {
                             showDialog.value = true
-                        }
+                        },
+                        holdDownState = showDialog.value
                     )
                 }
                 SmallTitle(

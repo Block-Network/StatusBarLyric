@@ -159,4 +159,8 @@
     <string name="buildtime">コンパイル時</string>
     <string name="currentdevice">現在のデバイス</string>
     <string name="info">情報</string>
+    <string name="refresh_pulling">下に引いて更新</string>
+    <string name="refresh_release">放して更新</string>
+    <string name="refresh_refresh">更新中…</string>
+    <string name="refresh_complete">更新成功</string>
 </resources>

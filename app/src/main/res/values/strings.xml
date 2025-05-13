@@ -162,4 +162,8 @@
     <string name="buildtime">Build Time</string>
     <string name="currentdevice">Current Device</string>
     <string name="info">Info</string>
+    <string name="refresh_pulling">Pull down to refresh</string>
+    <string name="refresh_release">Release to refresh</string>
+    <string name="refresh_refresh">Refreshing…</string>
+    <string name="refresh_complete">Refreshed successfully</string>
 </resources>

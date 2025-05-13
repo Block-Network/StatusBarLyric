@@ -25,11 +25,16 @@ package statusbar.lyric.tools
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import statusbar.lyric.data.Data
 import statusbar.lyric.tools.LogTools.log
 
-@SuppressLint("StaticFieldLeak")
+@SuppressLint("StaticFieldLeak", "MutableCollectionMutableState")
 object ActivityTestTools {
+
+    var dataList by mutableStateOf(ArrayList<Data>())
 
     fun Context.getClass() {
         this.sendBroadcast(Intent("TestReceiver").apply {
@@ -49,6 +54,12 @@ object ActivityTestTools {
         sendBroadcast(Intent("TestReceiver").apply {
             putExtra("Type", "ShowView")
             putExtra("Data", data)
+        })
+    }
+
+    fun Context.hideView() {
+        sendBroadcast(Intent("TestReceiver").apply {
+            putExtra("Type", "HideView")
         })
     }
 }

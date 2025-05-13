@@ -55,9 +55,8 @@ import java.util.Locale
 class SystemUITest : BaseHook() {
     private lateinit var hook: XC_MethodHook.Unhook
     private var lastTime: Int = 0
-    lateinit var context: Context
-    lateinit var lastView: TextView
-    var lastViewId = 0
+    private lateinit var context: Context
+    private lateinit var lastView: TextView
     val testTextView by lazy {
         TextView(context).apply {
             text = moduleRes.getString(R.string.app_name)
@@ -79,11 +78,7 @@ class SystemUITest : BaseHook() {
                 isLoad = true
                 context = it.args[0] as Context
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    context.registerReceiver(
-                        TestReceiver(),
-                        IntentFilter("TestReceiver"),
-                        Context.RECEIVER_EXPORTED
-                    )
+                    context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"), Context.RECEIVER_EXPORTED)
                 } else {
                     context.registerReceiver(TestReceiver(), IntentFilter("TestReceiver"))
                 }
@@ -97,113 +92,89 @@ class SystemUITest : BaseHook() {
     private fun hook() {
         hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
             after { hookParam ->
-                canHook {
-                    val view = (hookParam.thisObject as TextView)
-                    val className = hookParam.thisObject::class.java.name
-                    val text = view.text.toString().dispose()
-                    text.isTimeSame {
-                        if (className.filterClassName()) {
-                            view.filterView {
-                                val parentView = (view.parent as LinearLayout)
-                                val newData = Data(
-                                    className,
-                                    view.id,
-                                    parentView::class.java.name,
-                                    parentView.id,
-                                    false,
-                                    0,
-                                    view.textSize,
-                                    context.resources.getResourceEntryName(view.id)
-                                )
-                                var index = 0
-                                val exists = dataHashMap.values.any { data ->
-                                    if (data.textViewClassName == className
-                                        && data.textViewId == view.id
-                                        && data.parentViewClassName == parentView::class.java.name
-                                        && data.parentViewId == parentView.id
-                                        && data.textSize == view.textSize
-                                        && data.idName == context.resources.getResourceEntryName(
-                                            view.id
-                                        )
-                                    ) {
-                                        index += 1
-                                        true
-                                    } else {
-                                        false
-                                    }
-                                }
-                                if (!exists) {
-                                    newData.index = index
-                                    dataHashMap[view] = newData
-                                    moduleRes.getString(R.string.first_filter)
-                                        .format(newData, dataHashMap.size).log()
-                                }
-                            }
-                        }
+                val currentMinutes = LocalDateTime.now().minute
+                if (lastTime == 0) {
+                    lastTime = currentMinutes
+                } else {
+                    val shouldUnhook = if (lastTime == 59) {
+                        currentMinutes == 0
+                    } else {
+                        currentMinutes == lastTime + 1
+                    }
+                    if (shouldUnhook) {
+                        hook.unhook()
                     }
                 }
+
+                val view = hookParam.thisObject as TextView
+                val className = view::class.java.name
+                val textContent = view.text.toString().dispose()
+
+                if (!textContent.isTimeSameInternal()) return@after
+                if (!className.filterClassNameInternal()) return@after
+                val parentView = view.parent as? LinearLayout ?: return@after
+                if (!view.filterViewInternal(parentView)) return@after
+
+                val matchingDataCount = dataHashMap.values.count { data ->
+                    data.textViewClassName == className &&
+                            data.textViewId == view.id &&
+                            data.parentViewClassName == parentView::class.java.name &&
+                            data.parentViewId == parentView.id &&
+                            data.textSize == view.textSize &&
+                            data.idName == context.resources.getResourceEntryName(view.id)
+                }
+
+                val newData = Data(
+                    className,
+                    view.id,
+                    parentView::class.java.name,
+                    parentView.id,
+                    matchingDataCount > 0,
+                    matchingDataCount,
+                    view.textSize,
+                    context.resources.getResourceEntryName(view.id)
+                )
+
+                dataHashMap[view] = newData
+                moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
             }
         }
     }
 
-    private fun String.isTimeSame(callback: () -> Unit) {
-        val timeFormat = arrayOf(
+    private fun String.isTimeSameInternal(): Boolean {
+        val timeFormats = arrayOf(
             SimpleDateFormat("H:mm", Locale.getDefault()),
             SimpleDateFormat("h:mm", Locale.getDefault())
         )
         val nowTime = System.currentTimeMillis()
-        timeFormat.forEach {
-            if (it.format(nowTime).toRegex().containsMatchIn(this)) {
-                callback()
-                return
+        timeFormats.forEach { formatter ->
+            if (this.contains(formatter.format(nowTime))) {
+                return true
             }
         }
         if (config.relaxConditions) {
-            if (this.contains("周")) {
-                callback()
-                return
-            }
-            if (this.contains("月")) {
-                callback()
-                return
-            }
-            if (this.contains("日")) {
-                callback()
-                return
+            if (this.contains("周") || this.contains("月") || this.contains("日")) {
+                return true
             }
         }
+        return false
     }
 
-    private fun String.filterClassName(): Boolean {
+    private fun String.filterClassNameInternal(): Boolean {
         if (config.relaxConditions) return true
-        val filterList = arrayListOf("controlcenter", "image", "keyguard")
-        filterList.forEach {
-            if (contains(it, true)) return false
+        val filterKeywords = listOf("controlcenter", "image", "keyguard")
+        if (filterKeywords.any { this.contains(it, ignoreCase = true) }) {
+            return false
         }
         return this != TextView::class.java.name
     }
 
     @SuppressLint("DiscouragedApi")
-    private fun View.filterView(function: () -> Unit) {
-        if (this.parent is LinearLayout) {
-            val parentView = (this.parent as LinearLayout)
-            val id = context.resources.getIdentifier("clock_container", "id", context.packageName)
-            if (parentView.id != id) {
-                function()
-            }
-        }
-    }
-
-    private fun canHook(callback: () -> Unit) {
-        val minutes = LocalDateTime.now().minute
-        if (lastTime == 0) {
-            lastTime = minutes
-        } else {
-            if (lastTime - minutes == -1) {
-                hook.unhook()
-            }
-        }
-        callback()
+    private fun View.filterViewInternal(parentView: LinearLayout): Boolean {
+        val clockContainerIdName = "clock_container"
+        val expectedPackageName = context.packageName
+        val id = context.resources.getIdentifier(clockContainerIdName, "id", expectedPackageName)
+        return if (id == 0) true else parentView.id != id
     }
 
     inner class TestReceiver : BroadcastReceiver() {
@@ -224,31 +195,34 @@ class SystemUITest : BaseHook() {
                     val data = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         intent.getParcelableExtra("Data", Data::class.java)
                     } else {
-                        @Suppress("DEPRECATION") intent.getParcelableExtra("Data")
-                    }!!
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<Data>("Data")
+                    }
                     goMainThread {
-                        dataHashMap.forEach { (textview, da) ->
-                            if (da.textViewClassName == data.textViewClassName
-                                && da.textViewId == data.textViewId
-                                && da.parentViewClassName == data.parentViewClassName
-                                && da.parentViewId == data.parentViewId
-                                && da.textSize == data.textSize
-                                && da.index == data.index
+                        dataHashMap.forEach { (textview, map) ->
+                            if (
+                                map.textViewClassName == data?.textViewClassName &&
+                                map.textViewId == data.textViewId &&
+                                map.parentViewClassName == data.parentViewClassName &&
+                                map.parentViewId == data.parentViewId &&
+                                map.textSize == data.textSize &&
+                                map.index == data.index &&
+                                map.idName == data.idName
                             ) {
-                                if (lastViewId != textview.id) {
-                                    if (this@SystemUITest::lastView.isInitialized) {
-                                        (lastView.parent as LinearLayout).removeView(testTextView)
-                                        lastView.showView()
-                                    }
-                                    textview.hideView()
-                                    val parentLinearLayout = textview.parent as LinearLayout
-                                    parentLinearLayout.addView(testTextView, 0)
-                                    lastViewId = textview.id
-                                    lastView = textview
-                                }
+                                textview.hideView()
+                                val parentLinearLayout = textview.parent as LinearLayout
+                                parentLinearLayout.addView(testTextView, 0)
+                                lastView = textview
                                 return@forEach
                             }
                         }
+                    }
+                }
+
+                "HideView" -> {
+                    if (this@SystemUITest::lastView.isInitialized) {
+                        (lastView.parent as LinearLayout).removeView(testTextView)
+                        lastView.showView()
                     }
                 }
             }

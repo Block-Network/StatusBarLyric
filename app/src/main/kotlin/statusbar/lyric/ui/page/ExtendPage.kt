@@ -388,7 +388,8 @@ fun ExtendPage(
                             ),
                             onClick = {
                                 showDialog.value = true
-                            }
+                            },
+                            holdDownState = showDialog.value
                         )
                     }
                 }

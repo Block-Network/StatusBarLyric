@@ -31,15 +31,12 @@ import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import statusbar.lyric.MainActivity
 import statusbar.lyric.R
-import statusbar.lyric.data.Data
 import statusbar.lyric.tools.LogTools.log
 import kotlin.system.exitProcess
 
 @SuppressLint("StaticFieldLeak")
 object ActivityTools {
     private val handler by lazy { Handler(Looper.getMainLooper()) }
-
-    lateinit var dataList: ArrayList<Data>
 
     fun isHook(): Boolean = false
 
