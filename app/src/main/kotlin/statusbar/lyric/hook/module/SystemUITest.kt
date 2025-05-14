@@ -72,7 +72,7 @@ class SystemUITest : BaseHook() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun init() {
         var isLoad = false
-        Application::class.java.methodFinder().filterByName("attach").first().createHook {
+        Application::class.java.methodFinder().filterByName("attach").single().createHook {
             after {
                 if (isLoad) return@after
                 isLoad = true
@@ -84,14 +84,13 @@ class SystemUITest : BaseHook() {
                 }
                 moduleRes.getString(R.string.start_hooking_text_view).log()
                 hook()
-
             }
         }
     }
 
     private fun hook() {
-        hook = TextView::class.java.methodFinder().filterByName("onDraw").first().createHook {
-            after { hookParam ->
+        hook = TextView::class.java.methodFinder().filterByName("onDraw").single().createHook {
+            after {
                 val currentMinutes = LocalDateTime.now().minute
                 if (lastTime == 0) {
                     lastTime = currentMinutes
@@ -101,12 +100,10 @@ class SystemUITest : BaseHook() {
                     } else {
                         currentMinutes == lastTime + 1
                     }
-                    if (shouldUnhook) {
-                        hook.unhook()
-                    }
+                    if (shouldUnhook) hook.unhook()
                 }
 
-                val view = hookParam.thisObject as TextView
+                val view = it.thisObject as TextView
                 val className = view::class.java.name
                 val textContent = view.text.toString().dispose()
 
@@ -115,41 +112,26 @@ class SystemUITest : BaseHook() {
                 val parentView = view.parent as? LinearLayout ?: return@after
                 if (!view.filterViewInternal(parentView)) return@after
 
-                val newData = if (dataHashMap.isEmpty()) {
-                    Data(
-                        className,
-                        view.id,
-                        parentView::class.java.name,
-                        parentView.id,
-                        false,
-                        0,
-                        view.textSize,
-                        context.resources.getResourceEntryName(view.id)
-                    )
-                } else {
-                    var index = 0
-                    dataHashMap.values.forEach { data ->
-                        if (data.textViewClassName == className &&
-                            data.textViewId == view.id &&
-                            data.parentViewClassName == parentView::class.java.name &&
-                            data.parentViewId == parentView.id &&
-                            data.textSize == view.textSize
-                        ) {
-                            index += 1
+                var viewIndexInParent = 0
+                for (i in 0 until parentView.childCount) {
+                    val child = parentView.getChildAt(i)
+                    if (child::class.java.name == className) {
+                        if (child == view) {
+                            break
                         }
+                        viewIndexInParent++
                     }
-                    Data(
-                        className,
-                        view.id,
-                        parentView::class.java.name,
-                        parentView.id,
-                        index != 0,
-                        index,
-                        view.textSize,
-                        context.resources.getResourceEntryName(view.id)
-                    )
                 }
 
+                val newData = Data(
+                    className,
+                    view.id,
+                    parentView::class.java.name,
+                    parentView.id,
+                    viewIndexInParent,
+                    view.textSize,
+                    context.resources.getResourceEntryName(view.id)
+                )
                 dataHashMap[view] = newData
                 moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
             }
@@ -220,7 +202,6 @@ class SystemUITest : BaseHook() {
                                 map.textViewId == data.textViewId &&
                                 map.parentViewClassName == data.parentViewClassName &&
                                 map.parentViewId == data.parentViewId &&
-                                map.isRepeat == data.isRepeat &&
                                 map.textSize == data.textSize &&
                                 map.index == data.index &&
                                 map.idName == data.idName

@@ -181,7 +181,7 @@ fun ChoosePage(
                             ) {
                                 SuperArrow(
                                     title = "${data.idName} ${data.textViewId}\n${data.textViewClassName}",
-                                    summary = "textSize: ${data.textSize}f; index: ${data.index}; isRepeat: ${data.isRepeat}\n${data.parentViewClassName} ${data.parentViewId}",
+                                    summary = "textSize: ${data.textSize}f; index: ${data.index}\n${data.parentViewClassName} ${data.parentViewId}",
                                     onClick = {
                                         MainActivity.appContext.showView(data)
                                         selectedItemIndex.intValue = index

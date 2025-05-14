@@ -30,7 +30,6 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     var textViewId: Int = 0
     var parentViewClassName: String = ""
     var parentViewId: Int = 0
-    var isRepeat: Boolean = false
     var index: Int = 0
     var textSize: Float = 0f
     var idName: String = ""
@@ -44,7 +43,6 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         textViewId: Int,
         parentViewClassName: String,
         parentViewId: Int,
-        isRepeat: Boolean,
         index: Int,
         textSize: Float,
         idName: String
@@ -53,7 +51,6 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         this.textViewId = textViewId
         this.parentViewClassName = parentViewClassName
         this.parentViewId = parentViewId
-        this.isRepeat = isRepeat
         this.index = index
         this.textSize = textSize
         this.idName = idName
@@ -65,7 +62,6 @@ class Data private constructor(parcel: Parcel) : Parcelable {
             writeInt(textViewId)
             writeString(parentViewClassName)
             writeInt(parentViewId)
-            writeInt(if (isRepeat) 1 else 0)
             writeInt(index)
             writeFloat(textSize)
             writeString(idName)
@@ -77,7 +73,6 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         textViewId = parcel.readInt()
         parentViewClassName = parcel.readString().toString()
         parentViewId = parcel.readInt()
-        isRepeat = parcel.readInt() == 1
         index = parcel.readInt()
         textSize = parcel.readFloat()
         idName = parcel.readString().toString()
@@ -94,6 +89,6 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     }
 
     override fun toString(): String {
-        return "Data(textViewClassName='$textViewClassName', textViewId=$textViewId, parentViewClassName='$parentViewClassName', parentViewId=$parentViewId, isRepeat=$isRepeat, index=$index, textSize=$textSize idName=$idName)"
+        return "Data(textViewClassName='$textViewClassName', textViewId=$textViewId, parentViewClassName='$parentViewClassName', parentViewId=$parentViewId, index=$index, textSize=$textSize, idName=$idName)"
     }
 }

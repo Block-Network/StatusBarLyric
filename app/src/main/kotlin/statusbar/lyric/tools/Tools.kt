@@ -41,7 +41,7 @@ import de.robv.android.xposed.XposedHelpers
 import statusbar.lyric.BuildConfig
 import statusbar.lyric.MainActivity
 import statusbar.lyric.R
-import statusbar.lyric.config.XposedOwnSP
+import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.tools.ActivityTools.isHook
 import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
@@ -54,9 +54,6 @@ import kotlin.properties.ReadWriteProperty
 
 @SuppressLint("StaticFieldLeak")
 object Tools {
-
-    private var index: Int = 0
-
     val buildTime: String = SimpleDateFormat("yyyy/M/d H:m:s", Locale.CHINA).format(BuildConfig.BUILD_TIME)
 
     val isPad by lazy { getSystemProperties("ro.build.characteristics") == "tablet" }
@@ -118,28 +115,35 @@ object Tools {
     }
 
     fun View.isTargetView(): Boolean {
-        val textViewClassName = XposedOwnSP.config.textViewClassName
-        val textViewId = XposedOwnSP.config.textViewId
-        val parentViewClassName = XposedOwnSP.config.parentViewClassName
-        val parentViewId = XposedOwnSP.config.parentViewId
-        val textSize = XposedOwnSP.config.textSize
-        val targetIndex = XposedOwnSP.config.index
+        val textViewClassName = config.textViewClassName
+        val textViewId = config.textViewId
+        val parentViewClassName = config.parentViewClassName
+        val parentViewId = config.parentViewId
+        val textSize = config.textSize
+        val targetIndex = config.index
         if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0 || textSize == 0f) {
             EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
             return false
         }
         if (this !is TextView) return false
-        if (this::class.java.name != textViewClassName) return false
-        if (this.id != textViewId) return false
         if (this.textSize != textSize) return false
         val parent = this.parent as? LinearLayout ?: return false
         if (parent::class.java.name != parentViewClassName) return false
         if (parent.id != parentViewId) return false
-        if (index != targetIndex) {
-            index += 1
-            return false
+        var index = 0
+        for (i in 0 until parent.childCount) {
+            val child = parent.getChildAt(i) as View
+            "Child $i class: ${child::class.java.name}".log()
+            if (child::class.java.name == textViewClassName && child.id == textViewId) {
+                "Eligible TextView index $index".log()
+                if (index == targetIndex) {
+                    return true
+                    break
+                }
+                index++
+            }
         }
-        return true
+        return false
     }
 
     private fun String.regexReplace(pattern: String, newString: String): String {
