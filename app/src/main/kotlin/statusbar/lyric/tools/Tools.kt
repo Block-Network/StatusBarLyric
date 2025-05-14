@@ -32,7 +32,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.github.kyuubiran.ezxhelper.EzXHelper
@@ -117,33 +116,47 @@ object Tools {
     fun View.isTargetView(): Boolean {
         val textViewClassName = config.textViewClassName
         val textViewId = config.textViewId
-        val parentViewClassName = config.parentViewClassName
-        val parentViewId = config.parentViewId
         val textSize = config.textSize
-        val targetIndex = config.index
-        if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0 || textSize == 0f) {
+        val viewTree = config.viewTree
+        if (textViewClassName.isEmpty() || textViewId == 0 || textSize == 0f || viewTree.isEmpty()) {
             EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
             return false
         }
         if (this !is TextView) return false
+        if (this.javaClass.name != textViewClassName) return false
+        if (this.id != textViewId) return false
         if (this.textSize != textSize) return false
-        val parent = this.parent as? LinearLayout ?: return false
-        if (parent::class.java.name != parentViewClassName) return false
-        if (parent.id != parentViewId) return false
-        var index = 0
-        for (i in 0 until parent.childCount) {
-            val child = parent.getChildAt(i) as View
-            "Child $i class: ${child::class.java.name}".log()
-            if (child::class.java.name == textViewClassName && child.id == textViewId) {
-                "Eligible TextView index $index".log()
-                if (index == targetIndex) {
-                    return true
-                    break
+        val viewHierarchyList = mutableListOf<String>()
+        var currentView: View? = this
+        var currentIndent = ""
+        while (currentView != null) {
+            val viewClassName = currentView::class.java.name
+            val resourceIdName = try {
+                if (currentView.id != View.NO_ID && currentView.id != -1) {
+                    currentView.resources.getResourceEntryName(currentView.id)
+                } else {
+                    "no_id"
                 }
-                index++
+            } catch (_: Exception) {
+                "Getting id name error".log()
+            }
+            viewHierarchyList.add("$currentIndent$viewClassName (id: $resourceIdName)")
+
+            currentIndent += "  "
+
+            val parent = currentView.parent
+            if (parent is View) {
+                currentView = parent
+            } else {
+                if (parent != null) {
+                    viewHierarchyList.add("$currentIndent${parent::class.java.name} (Parent, not a View)")
+                }
+                currentView = null
             }
         }
-        return false
+        val viewHierarchy = viewHierarchyList.joinToString("\n")
+        "\nConfig viewTree: $viewTree \nThis viewTree: $viewHierarchy".log()
+        return viewTree == viewHierarchy
     }
 
     private fun String.regexReplace(pattern: String, newString: String): String {
@@ -156,8 +169,7 @@ object Tools {
         return Handler(Looper.getMainLooper()).postDelayed({ callback() }, delayed * 1000)
     }
 
-    fun Context.isLandscape() =
-        resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    fun Context.isLandscape() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     fun String.dispose() = this.regexReplace(" ", "").regexReplace("\n", "")
 
@@ -174,9 +186,7 @@ object Tools {
     fun getSP(context: Context, key: String): SharedPreferences {
         @Suppress("DEPRECATION", "WorldReadableFiles")
         return context.createDeviceProtectedStorageContext()
-            .getSharedPreferences(
-                key, if (isHook()) Context.MODE_WORLD_READABLE else Context.MODE_PRIVATE
-            )
+            .getSharedPreferences(key, if (isHook()) Context.MODE_WORLD_READABLE else Context.MODE_PRIVATE)
     }
 
     fun shell(command: String, isSu: Boolean) {

@@ -28,11 +28,9 @@ import android.os.Parcelable
 class Data private constructor(parcel: Parcel) : Parcelable {
     var textViewClassName: String = ""
     var textViewId: Int = 0
-    var parentViewClassName: String = ""
-    var parentViewId: Int = 0
-    var index: Int = 0
     var textSize: Float = 0f
     var idName: String = ""
+    var viewTree: String = ""
     override fun describeContents(): Int {
         return 0
     }
@@ -41,41 +39,33 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     constructor(
         textViewClassName: String,
         textViewId: Int,
-        parentViewClassName: String,
-        parentViewId: Int,
-        index: Int,
         textSize: Float,
-        idName: String
+        idName: String,
+        viewTree: String = ""
     ) : this() {
         this.textViewClassName = textViewClassName
         this.textViewId = textViewId
-        this.parentViewClassName = parentViewClassName
-        this.parentViewId = parentViewId
-        this.index = index
         this.textSize = textSize
         this.idName = idName
+        this.viewTree = viewTree
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.apply {
             writeString(textViewClassName)
             writeInt(textViewId)
-            writeString(parentViewClassName)
-            writeInt(parentViewId)
-            writeInt(index)
             writeFloat(textSize)
             writeString(idName)
+            writeString(viewTree)
         }
     }
 
     init {
         textViewClassName = parcel.readString().toString()
         textViewId = parcel.readInt()
-        parentViewClassName = parcel.readString().toString()
-        parentViewId = parcel.readInt()
-        index = parcel.readInt()
         textSize = parcel.readFloat()
         idName = parcel.readString().toString()
+        viewTree = parcel.readString().toString()
     }
 
     companion object CREATOR : Parcelable.Creator<Data> {
@@ -89,6 +79,6 @@ class Data private constructor(parcel: Parcel) : Parcelable {
     }
 
     override fun toString(): String {
-        return "Data(textViewClassName='$textViewClassName', textViewId=$textViewId, parentViewClassName='$parentViewClassName', parentViewId=$parentViewId, index=$index, textSize=$textSize, idName=$idName)"
+        return "Data(textViewClassName='$textViewClassName', textViewId=$textViewId, textSize=$textSize, idName=$idName)"
     }
 }

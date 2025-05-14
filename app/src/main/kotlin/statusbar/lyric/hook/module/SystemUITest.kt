@@ -112,27 +112,46 @@ class SystemUITest : BaseHook() {
                 val parentView = view.parent as? LinearLayout ?: return@after
                 if (!view.filterViewInternal(parentView)) return@after
 
-                var viewIndexInParent = 0
-                for (i in 0 until parentView.childCount) {
-                    val child = parentView.getChildAt(i)
-                    if (child::class.java.name == className) {
-                        if (child == view) {
-                            break
-                        }
-                        viewIndexInParent++
-                    }
-                }
-
                 val newData = Data(
                     className,
                     view.id,
-                    parentView::class.java.name,
-                    parentView.id,
-                    viewIndexInParent,
                     view.textSize,
                     context.resources.getResourceEntryName(view.id)
                 )
                 dataHashMap[view] = newData
+                dataHashMap.forEach { (textView, data) ->
+                    val viewHierarchyList = mutableListOf<String>()
+                    var currentView: View? = textView
+                    var currentIndent = ""
+                    while (currentView != null) {
+                        val viewClassName = currentView::class.java.name
+                        val resourceIdName = try {
+                            if (currentView.id != View.NO_ID && currentView.id != -1) {
+                                currentView.resources.getResourceEntryName(currentView.id)
+                            } else {
+                                "no_id"
+                            }
+                        } catch (_: Exception) {
+                            "Getting id name error".log()
+                        }
+                        viewHierarchyList.add("$currentIndent$viewClassName (id: $resourceIdName)")
+                        
+                        currentIndent += "  "
+                        
+                        val parent = currentView.parent
+                        if (parent is View) {
+                            currentView = parent
+                        } else {
+                            if (parent != null) {
+                                viewHierarchyList.add("$currentIndent${parent::class.java.name} (Parent, not a View)")
+                            }
+                            currentView = null 
+                        }
+                    }
+                    val viewHierarchy = viewHierarchyList.joinToString("\n")
+                    data.viewTree = viewHierarchy 
+                    "SystemUITest: $textView\nviewHierarchy:\n$viewHierarchy".log()
+                }
                 moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
             }
         }
@@ -200,16 +219,18 @@ class SystemUITest : BaseHook() {
                             if (
                                 map.textViewClassName == data?.textViewClassName &&
                                 map.textViewId == data.textViewId &&
-                                map.parentViewClassName == data.parentViewClassName &&
-                                map.parentViewId == data.parentViewId &&
                                 map.textSize == data.textSize &&
-                                map.index == data.index &&
-                                map.idName == data.idName
+                                map.idName == data.idName &&
+                                map.viewTree == data.viewTree
                             ) {
-                                textview.hideView()
-                                val parentLinearLayout = textview.parent as LinearLayout
-                                parentLinearLayout.addView(testTextView, 0)
-                                lastView = textview
+                                try {
+                                    textview.hideView()
+                                    val parentLinearLayout = textview.parent as LinearLayout
+                                    parentLinearLayout.addView(testTextView, 0)
+                                    lastView = textview
+                                } catch (e: Exception) {
+                                    "SystemUITest: $e".log()
+                                }
                                 return@forEach
                             }
                         }

@@ -113,27 +113,6 @@ class Config {
         set(value) {
             config.put("textViewId", value)
         }
-    var parentViewClassName: String
-        get() {
-            return config.opt("parentViewClassName", "")
-        }
-        set(value) {
-            config.put("parentViewClassName", value)
-        }
-    var parentViewId: Int
-        get() {
-            return config.opt("parentViewId", 0)
-        }
-        set(value) {
-            config.put("parentViewId", value)
-        }
-    var index: Int
-        get() {
-            return config.opt("index", 0)
-        }
-        set(value) {
-            config.put("index", value)
-        }
     var textSize: Float
         get() {
             return config.opt("textSize", 0f)
@@ -141,7 +120,13 @@ class Config {
         set(value) {
             config.put("textSize", value)
         }
-
+    var viewTree: String
+        get() {
+            return config.opt("viewTree", "")
+        }
+        set(value) {
+            config.put("viewTree", value)
+        }
     var lyricSize: Int
         get() {
             return config.opt("lyricSize", 0)
