@@ -57,8 +57,7 @@ object Tools {
 
     private var index: Int = 0
 
-    val buildTime: String =
-        SimpleDateFormat("yyyy/M/d H:m:s", Locale.CHINA).format(BuildConfig.BUILD_TIME)
+    val buildTime: String = SimpleDateFormat("yyyy/M/d H:m:s", Locale.CHINA).format(BuildConfig.BUILD_TIME)
 
     val isPad by lazy { getSystemProperties("ro.build.characteristics") == "tablet" }
 
@@ -124,31 +123,23 @@ object Tools {
         val parentViewClassName = XposedOwnSP.config.parentViewClassName
         val parentViewId = XposedOwnSP.config.parentViewId
         val textSize = XposedOwnSP.config.textSize
+        val targetIndex = XposedOwnSP.config.index
         if (textViewClassName.isEmpty() || parentViewClassName.isEmpty() || textViewId == 0 || parentViewId == 0 || textSize == 0f) {
             EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
             return false
         }
-        if (this is TextView) {
-            if (this::class.java.name == textViewClassName) {
-                if (this.id == textViewId) {
-                    if (this.textSize == textSize) {
-                        if (this.parent is LinearLayout) {
-                            val parentView = (this.parent as LinearLayout)
-                            if (parentView::class.java.name == parentViewClassName) {
-                                if (parentViewId == parentView.id) {
-                                    if (index == XposedOwnSP.config.index) {
-                                        return true
-                                    } else {
-                                        index += 1
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        if (this !is TextView) return false
+        if (this::class.java.name != textViewClassName) return false
+        if (this.id != textViewId) return false
+        if (this.textSize != textSize) return false
+        val parent = this.parent as? LinearLayout ?: return false
+        if (parent::class.java.name != parentViewClassName) return false
+        if (parent.id != parentViewId) return false
+        if (index != targetIndex) {
+            index += 1
+            return false
         }
-        return false
+        return true
     }
 
     private fun String.regexReplace(pattern: String, newString: String): String {

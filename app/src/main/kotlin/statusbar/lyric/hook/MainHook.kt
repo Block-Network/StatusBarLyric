@@ -82,9 +82,9 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
                 if (it.isInit) return
                 it.init()
                 it.isInit = true
-                "${moduleRes.getString(R.string.hook_succeeded)}:${it.javaClass.simpleName}".log()
+                "${moduleRes.getString(R.string.hook_succeeded)}: ${it.javaClass.simpleName}".log()
             } catch (e: Exception) {
-                "${moduleRes.getString(R.string.hook_failed)}:${it.javaClass.simpleName}".log()
+                "${moduleRes.getString(R.string.hook_failed)}: ${it.javaClass.simpleName}".log()
                 e.log()
             }
         }

@@ -46,7 +46,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         parentViewId: Int,
         isRepeat: Boolean,
         index: Int,
-        size: Float,
+        textSize: Float,
         idName: String
     ) : this() {
         this.textViewClassName = textViewClassName
@@ -55,7 +55,7 @@ class Data private constructor(parcel: Parcel) : Parcelable {
         this.parentViewId = parentViewId
         this.isRepeat = isRepeat
         this.index = index
-        this.textSize = size
+        this.textSize = textSize
         this.idName = idName
     }
 

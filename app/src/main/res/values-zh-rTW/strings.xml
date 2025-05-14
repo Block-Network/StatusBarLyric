@@ -69,7 +69,7 @@
     <string name="hook_succeeded">Hook 成功</string>
     <string name="hook_failed">Hook 失敗</string>
     <string name="start_hooking_text_view">開始 Hook 所有 TextView</string>
-    <string name="first_filter">%s已滿足初步要求，共有 %s 個符合要求</string>
+    <string name="first_filter">%s 已滿足初步要求，共有 %s 個符合要求</string>
     <string name="no_text_view">沒有符合要求的 TextView</string>
     <string name="send_text_view_class">發送：%s</string>
     <string name="load_class_empty">請先打開錨點設置模式配置</string>

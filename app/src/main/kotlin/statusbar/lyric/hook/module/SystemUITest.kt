@@ -115,25 +115,40 @@ class SystemUITest : BaseHook() {
                 val parentView = view.parent as? LinearLayout ?: return@after
                 if (!view.filterViewInternal(parentView)) return@after
 
-                val matchingDataCount = dataHashMap.values.count { data ->
-                    data.textViewClassName == className &&
+                val newData = if (dataHashMap.isEmpty()) {
+                    Data(
+                        className,
+                        view.id,
+                        parentView::class.java.name,
+                        parentView.id,
+                        false,
+                        0,
+                        view.textSize,
+                        context.resources.getResourceEntryName(view.id)
+                    )
+                } else {
+                    var index = 0
+                    dataHashMap.values.forEach { data ->
+                        if (data.textViewClassName == className &&
                             data.textViewId == view.id &&
                             data.parentViewClassName == parentView::class.java.name &&
                             data.parentViewId == parentView.id &&
-                            data.textSize == view.textSize &&
-                            data.idName == context.resources.getResourceEntryName(view.id)
+                            data.textSize == view.textSize
+                        ) {
+                            index += 1
+                        }
+                    }
+                    Data(
+                        className,
+                        view.id,
+                        parentView::class.java.name,
+                        parentView.id,
+                        index != 0,
+                        index,
+                        view.textSize,
+                        context.resources.getResourceEntryName(view.id)
+                    )
                 }
-
-                val newData = Data(
-                    className,
-                    view.id,
-                    parentView::class.java.name,
-                    parentView.id,
-                    matchingDataCount > 0,
-                    matchingDataCount,
-                    view.textSize,
-                    context.resources.getResourceEntryName(view.id)
-                )
 
                 dataHashMap[view] = newData
                 moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
@@ -205,6 +220,7 @@ class SystemUITest : BaseHook() {
                                 map.textViewId == data.textViewId &&
                                 map.parentViewClassName == data.parentViewClassName &&
                                 map.parentViewId == data.parentViewId &&
+                                map.isRepeat == data.isRepeat &&
                                 map.textSize == data.textSize &&
                                 map.index == data.index &&
                                 map.idName == data.idName

@@ -180,8 +180,8 @@ fun ChoosePage(
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
                                 SuperArrow(
-                                    title = "${data.textViewClassName} ${data.textViewId}",
-                                    summary = "idName: ${data.idName}; textSize: ${data.textSize}f\n${data.parentViewClassName} ${data.parentViewId}",
+                                    title = "${data.idName} ${data.textViewId}\n${data.textViewClassName}",
+                                    summary = "textSize: ${data.textSize}f; index: ${data.index}; isRepeat: ${data.isRepeat}\n${data.parentViewClassName} ${data.parentViewId}",
                                     onClick = {
                                         MainActivity.appContext.showView(data)
                                         selectedItemIndex.intValue = index
@@ -225,6 +225,12 @@ fun ChooseDialog(showDialog: MutableState<Boolean>, data: Data) {
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
+                    config.textViewClassName = ""
+                    config.textViewId = 0
+                    config.parentViewClassName = ""
+                    config.parentViewId = 0
+                    config.index = 0
+                    config.textSize = 0f
                     showDialog.value = false
                     MainActivity.appContext.hideView()
                 }
