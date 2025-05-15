@@ -79,20 +79,15 @@ import statusbar.lyric.tools.LyricViewTools.hideView
 import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.Tools.callMethod
-import statusbar.lyric.tools.Tools.dispose
 import statusbar.lyric.tools.Tools.existField
-import statusbar.lyric.tools.Tools.filterClassNameInternal
-import statusbar.lyric.tools.Tools.filterViewInternal
 import statusbar.lyric.tools.Tools.getObjectField
 import statusbar.lyric.tools.Tools.getObjectFieldIfExist
 import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.ifNotNull
 import statusbar.lyric.tools.Tools.isLandscape
-import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isNull
 import statusbar.lyric.tools.Tools.isTargetView
-import statusbar.lyric.tools.Tools.isTimeSameInternal
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.XiaomiUtils.isHyperOS
@@ -165,6 +160,9 @@ class SystemUILyric : BaseHook() {
     private lateinit var targetView: ViewGroup
 
 
+    private var statusBarShowing: Boolean = true
+
+
     private val lyricView: LyricSwitchView by lazy {
         object : LyricSwitchView(context) {
             override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -223,76 +221,72 @@ class SystemUILyric : BaseHook() {
         "Initializing Hook".log()
         Application::class.java.methodFinder().filterByName("attach").single().createHook {
             after { hook ->
+                hook()
+                if (!canLoad) return@after
                 registerSuperLyric(hook.args[0] as Context)
             }
         }
+    }
 
-        loadClassOrNull(config.textViewClassName).isNotNull {
-            TextView::class.java.methodFinder().filterByName("onDraw").single().createHook {
-                after {
-                    if (!canLoad) return@after
-                    val view = it.thisObject as TextView
-                    val className = view::class.java.name
-                    val textContent = view.text.toString().dispose()
+    private fun hook() {
+        "Hooking other method".log()
+        TextView::class.java.methodFinder().filterByName("onDraw").single().createHook {
+            after {
+                if (!canLoad) return@after
 
-                    if (!textContent.isTimeSameInternal()) return@after
-                    if (!className.filterClassNameInternal()) return@after
-                    val parentView = view.parent as? LinearLayout ?: return@after
-                    if (!view.filterViewInternal(parentView)) return@after
-
-                    if (view.isTargetView()) {
-                        "Running onDraw".log()
-                        clockView = view
-                        targetView = (clockView.parent as LinearLayout).apply {
-                            gravity = Gravity.CENTER_VERTICAL
-                        }
-                        lyricInit()
-                        canLoad = false
-                    } else return@after
-                }
-            }
-
-            View::class.java.methodFinder().filterByName("onDetachedFromWindow").single().createHook {
-                after {
-                    val view = (it.thisObject as View)
-                    if (view.isTargetView()) {
-                        "Running onDetachedFromWindow".log()
-                        canLoad = true
-                        updateLyricState(showLyric = false, showFocus = false)
+                val view = it.thisObject as TextView
+                if (view.isTargetView()) {
+                    "Running onDraw".log()
+                    clockView = view
+                    targetView = (clockView.parent as LinearLayout).apply {
+                        gravity = Gravity.CENTER_VERTICAL
                     }
+                    lyricLayoutInit()
+                    canLoad = false
                 }
             }
+        }
+    }
 
-            View::class.java.methodFinder().filterByName("setVisibility").single().createHook {
-                before {
-                    val view = it.thisObject as View
-                    if (statusBatteryContainer.isNotNull()) {
-                        if (statusBatteryContainer != view) return@before
-                        if (!isMusicPlaying) return@before
+    private fun lyricHookInit() {
+        "lyricHook init".log()
+        View::class.java.methodFinder().filterByName("onDetachedFromWindow").single().createHook {
+            after {
+                val view = (it.thisObject as View)
+                if (view.isTargetView()) {
+                    "Running onDetachedFromWindow".log()
+                    canLoad = true
+                    updateLyricState(showLyric = false, showFocus = false)
+                }
+            }
+        }
 
-                        val visibility = it.args[0] == View.VISIBLE
-                        if (visibility) {
-                            updateLyricState()
-                        } else {
-                            updateLyricState(showLyric = false)
-                        }
+        View::class.java.methodFinder().filterByName("setVisibility").single().createHook {
+            after {
+                val view = it.thisObject as View
+                if (statusBatteryContainer.isNotNull()) {
+                    if (statusBatteryContainer != view) return@after
+                    if (!isMusicPlaying) return@after
+
+                    val visibility = it.args[0] == View.VISIBLE
+                    if (visibility) {
+                        updateLyricState()
                     } else {
-                        val idName = runCatching { view.resources.getResourceEntryName(view.id) }.getOrNull()
-                        if (idName.isNotNull() && idName == "system_icons") {
-                            statusBatteryContainer = view
-                        }
+                        updateLyricState(showLyric = false)
+                    }
+                } else {
+                    val idName = runCatching { view.resources.getResourceEntryName(view.id) }.getOrNull()
+                    if (idName.isNotNull() && idName == "system_icons") {
+                        statusBatteryContainer = view
                     }
                 }
             }
-        }.isNot {
-            moduleRes.getString(R.string.load_class_empty).log()
-            return
         }
 
         if (config.limitVisibilityChange) {
             moduleRes.getString(R.string.limit_visibility_change).log()
             View::class.java.methodFinder().filterByName("setVisibility").single().createHook {
-                before {
+                after {
                     if (isMusicPlaying && !isHiding) {
                         if (it.args[0] == View.VISIBLE) {
                             val view = it.thisObject as View
@@ -365,7 +359,7 @@ class SystemUILyric : BaseHook() {
         loadClassOrNull("com.android.systemui.statusbar.phone.PhoneStatusBarView").isNotNull {
             it.methodFinder().filterByName("onTouchEvent").single().createHook {
                 before {
-                    if (!isReady || canLoad) return@before
+                    if (!isReady) return@before
 
                     val motionEvent = it.args[0] as MotionEvent
                     when (motionEvent.action) {
@@ -457,8 +451,8 @@ class SystemUILyric : BaseHook() {
 
         // 屏幕状态
         loadClassOrNull("com.android.systemui.statusbar.phone.CentralSurfacesImpl").isNotNull {
-            it.constructorFinder().singleOrNull().ifNotNull { constructor ->
-                constructor.createHook {
+            it.constructorFinder().singleOrNull().ifNotNull {
+                it.createHook {
                     after {
                         centralSurfacesImpl = it.thisObject
                         autoHideController = it.thisObject.getObjectField("mAutoHideController")
@@ -480,18 +474,21 @@ class SystemUILyric : BaseHook() {
                         newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
                         newConfig.orientation == Configuration.ORIENTATION_PORTRAIT
                     ) {
-                        if (!isReady || canLoad) return@after
+                        if (!isReady) return@after
                         updateLyricState()
                     }
                 }
             }
         }
 
-        // Xiaomi 相关
+        // Xiaomi 相关 Hook
         XiaomiHooks.init(this)
+
+        // 更新配置
+        updateConfig()
     }
 
-    private fun lyricInit() {
+    private fun lyricLayoutInit() {
         goMainThread(1) {
             "lyricLayout init".log()
             runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
@@ -509,11 +506,9 @@ class SystemUILyric : BaseHook() {
                 )
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
-            updateConfig()
+            lyricHookInit()
         }
     }
-
-    private var statusBarShowing: Boolean = true
 
     // 适合考虑状态的更新
     fun updateLyricState(showLyric: Boolean = true, showFocus: Boolean = true, delay: Int = 0) {
@@ -613,7 +608,7 @@ class SystemUILyric : BaseHook() {
 
             override fun onSuperLyric(data: SuperLyricData?) {
                 if (data == null) return
-                if (!isReady || canLoad) return
+                if (!isReady) return
 
                 playingApp = data.packageName
                 if (config.titleSwitch && data.isExistMediaMetadata) {
