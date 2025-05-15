@@ -68,7 +68,6 @@ class SystemUITest : BaseHook() {
     }
     private val dataHashMap by lazy { HashMap<TextView, Data>() }
 
-
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun init() {
         var isLoad = false
@@ -104,24 +103,18 @@ class SystemUITest : BaseHook() {
                 }
 
                 val view = it.thisObject as TextView
-                val className = view::class.java.name
-                val textContent = view.text.toString().dispose()
 
-                if (!textContent.isTimeSameInternal()) return@after
-                if (!className.filterClassNameInternal()) return@after
-                val parentView = view.parent as? LinearLayout ?: return@after
-                if (!view.filterViewInternal(parentView)) return@after
+                if (!dataHashMap.containsKey(view)) {
+                    val className = view::class.java.name
+                    val textContent = view.text.toString().dispose()
 
-                val newData = Data(
-                    className,
-                    view.id,
-                    view.textSize,
-                    view.resources.getResourceEntryName(view.id)
-                )
-                dataHashMap[view] = newData
-                dataHashMap.forEach { (textView, data) ->
+                    if (!textContent.isTimeSameInternal()) return@after
+                    if (!className.filterClassNameInternal()) return@after
+                    val parentView = view.parent as? LinearLayout ?: return@after
+                    if (!view.filterViewInternal(parentView)) return@after
+
                     val viewHierarchyList = mutableListOf<String>()
-                    var currentView: View? = textView
+                    var currentView: View? = view
                     var currentIndent = ""
                     while (currentView != null) {
                         val viewClassName = currentView::class.java.name
@@ -135,9 +128,7 @@ class SystemUITest : BaseHook() {
                             "Getting id name error".log()
                         }
                         viewHierarchyList.add("$currentIndent$viewClassName (id: $resourceIdName)")
-
                         currentIndent += "  "
-
                         val parent = currentView.parent
                         if (parent is View) {
                             currentView = parent
@@ -149,10 +140,19 @@ class SystemUITest : BaseHook() {
                         }
                     }
                     val viewHierarchy = viewHierarchyList.joinToString("\n")
-                    data.viewTree = viewHierarchy
-                    "SystemUITest: $textView\nviewHierarchy:\n$viewHierarchy".log()
+                    "SystemUITest: $view\nviewHierarchy:\n$viewHierarchy".log()
+
+                    val newData = Data(
+                        className,
+                        view.id,
+                        view.textSize,
+                        view.resources.getResourceEntryName(view.id),
+                        viewHierarchy
+                    )
+
+                    dataHashMap[view] = newData
+                    moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
                 }
-                moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
             }
         }
     }
