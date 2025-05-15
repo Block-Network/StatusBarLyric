@@ -262,11 +262,11 @@ class SystemUILyric : BaseHook() {
         }
 
         View::class.java.methodFinder().filterByName("setVisibility").single().createHook {
-            after {
+            before {
                 val view = it.thisObject as View
                 if (statusBatteryContainer.isNotNull()) {
-                    if (statusBatteryContainer != view) return@after
-                    if (!isMusicPlaying) return@after
+                    if (statusBatteryContainer != view) return@before
+                    if (!isMusicPlaying) return@before
 
                     val visibility = it.args[0] == View.VISIBLE
                     if (visibility) {
@@ -286,7 +286,7 @@ class SystemUILyric : BaseHook() {
         if (config.limitVisibilityChange) {
             moduleRes.getString(R.string.limit_visibility_change).log()
             View::class.java.methodFinder().filterByName("setVisibility").single().createHook {
-                after {
+                before {
                     if (isMusicPlaying && !isHiding) {
                         if (it.args[0] == View.VISIBLE) {
                             val view = it.thisObject as View
