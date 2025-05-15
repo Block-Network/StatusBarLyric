@@ -242,6 +242,7 @@ class SystemUILyric : BaseHook() {
                         gravity = Gravity.CENTER_VERTICAL
                     }
                     lyricLayoutInit()
+                    lyricHookInit()
                     canLoad = false
                 }
             }
@@ -506,7 +507,6 @@ class SystemUILyric : BaseHook() {
                 )
                 lyricLayout.setBackgroundBlur(blurRadio, cornerRadius, blendModes)
             }
-            lyricHookInit()
         }
     }
 
