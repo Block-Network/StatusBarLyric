@@ -151,7 +151,6 @@ object Tools {
         return if (id == 0) true else parentView.id != id
     }
 
-
     fun View.isTargetView(): Boolean {
         val textViewClassName = config.textViewClassName
         val textViewId = config.textViewId
@@ -180,9 +179,7 @@ object Tools {
                 "Getting id name error".log()
             }
             viewHierarchyList.add("$currentIndent$viewClassName (id: $resourceIdName)")
-
             currentIndent += "  "
-
             val parent = currentView.parent
             if (parent is View) {
                 currentView = parent

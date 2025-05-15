@@ -103,55 +103,56 @@ class SystemUITest : BaseHook() {
                 }
 
                 val view = it.thisObject as TextView
+                val className = view::class.java.name
+                val textContent = view.text.toString().dispose()
 
-                if (!dataHashMap.containsKey(view)) {
-                    val className = view::class.java.name
-                    val textContent = view.text.toString().dispose()
+                if (!textContent.isTimeSameInternal()) return@after
+                if (!className.filterClassNameInternal()) return@after
+                val parentView = view.parent as? LinearLayout ?: return@after
+                if (!view.filterViewInternal(parentView)) return@after
 
-                    if (!textContent.isTimeSameInternal()) return@after
-                    if (!className.filterClassNameInternal()) return@after
-                    val parentView = view.parent as? LinearLayout ?: return@after
-                    if (!view.filterViewInternal(parentView)) return@after
-
-                    val viewHierarchyList = mutableListOf<String>()
-                    var currentView: View? = view
-                    var currentIndent = ""
-                    while (currentView != null) {
-                        val viewClassName = currentView::class.java.name
-                        val resourceIdName = try {
-                            if (currentView.id != View.NO_ID && currentView.id != -1) {
-                                currentView.resources.getResourceEntryName(currentView.id)
+                view.post {
+                    if (!dataHashMap.containsKey(view)) {
+                        val viewHierarchyList = mutableListOf<String>()
+                        var currentView: View? = view
+                        var currentIndent = ""
+                        while (currentView != null) {
+                            val viewClassName = currentView::class.java.name
+                            val resourceIdName = try {
+                                if (currentView.id != View.NO_ID && currentView.id != -1) {
+                                    currentView.resources.getResourceEntryName(currentView.id)
+                                } else {
+                                    "no_id"
+                                }
+                            } catch (_: Exception) {
+                                "Getting id name error".log()
+                            }
+                            viewHierarchyList.add("$currentIndent$viewClassName (id: $resourceIdName)")
+                            currentIndent += "  "
+                            val parent = currentView.parent
+                            if (parent is View) {
+                                currentView = parent
                             } else {
-                                "no_id"
+                                if (parent != null) {
+                                    viewHierarchyList.add("$currentIndent${parent::class.java.name} (Parent, not a View)")
+                                }
+                                currentView = null
                             }
-                        } catch (_: Exception) {
-                            "Getting id name error".log()
                         }
-                        viewHierarchyList.add("$currentIndent$viewClassName (id: $resourceIdName)")
-                        currentIndent += "  "
-                        val parent = currentView.parent
-                        if (parent is View) {
-                            currentView = parent
-                        } else {
-                            if (parent != null) {
-                                viewHierarchyList.add("$currentIndent${parent::class.java.name} (Parent, not a View)")
-                            }
-                            currentView = null
-                        }
+                        val viewHierarchy = viewHierarchyList.joinToString("\n")
+                        "SystemUITest: $view\nviewHierarchy:\n$viewHierarchy".log()
+
+                        val newData = Data(
+                            className,
+                            view.id,
+                            view.textSize,
+                            view.resources.getResourceEntryName(view.id),
+                            viewHierarchy
+                        )
+
+                        dataHashMap[view] = newData
+                        moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
                     }
-                    val viewHierarchy = viewHierarchyList.joinToString("\n")
-                    "SystemUITest: $view\nviewHierarchy:\n$viewHierarchy".log()
-
-                    val newData = Data(
-                        className,
-                        view.id,
-                        view.textSize,
-                        view.resources.getResourceEntryName(view.id),
-                        viewHierarchy
-                    )
-
-                    dataHashMap[view] = newData
-                    moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
                 }
             }
         }

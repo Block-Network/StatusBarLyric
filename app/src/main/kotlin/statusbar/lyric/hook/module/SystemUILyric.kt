@@ -235,15 +235,18 @@ class SystemUILyric : BaseHook() {
                 if (!canLoad) return@after
 
                 val view = it.thisObject as TextView
-                if (view.isTargetView()) {
-                    "Running onDraw".log()
-                    clockView = view
-                    targetView = (clockView.parent as LinearLayout).apply {
-                        gravity = Gravity.CENTER_VERTICAL
+
+                view.post {
+                    if (view.isTargetView()) {
+                        "Running onDraw".log()
+                        clockView = view
+                        targetView = (clockView.parent as LinearLayout).apply {
+                            gravity = Gravity.CENTER_VERTICAL
+                        }
+                        lyricLayoutInit()
+                        lyricHookInit()
+                        canLoad = false
                     }
-                    lyricLayoutInit()
-                    lyricHookInit()
-                    canLoad = false
                 }
             }
         }
