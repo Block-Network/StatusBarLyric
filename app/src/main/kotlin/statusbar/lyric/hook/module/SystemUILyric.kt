@@ -225,10 +225,10 @@ class SystemUILyric : BaseHook() {
 
         loadClassOrNull(config.textViewClassName).isNotNull {
             TextView::class.java.methodFinder().filterByName("onDraw").single().createHook {
-                after { hookParam ->
+                after {
                     if (!canLoad) return@after
 
-                    val view = (hookParam.thisObject as View)
+                    val view = (it.thisObject as View)
                     if (view.isTargetView()) {
                         "Running onDraw".log()
                         clockView = view as TextView
@@ -242,8 +242,8 @@ class SystemUILyric : BaseHook() {
             }
 
             View::class.java.methodFinder().filterByName("onDetachedFromWindow").single().createHook {
-                after { hookParam ->
-                    val view = (hookParam.thisObject as View)
+                after {
+                    val view = (it.thisObject as View)
                     if (view.isTargetView()) {
                         "Running onDetachedFromWindow".log()
                         canLoad = true
@@ -253,13 +253,13 @@ class SystemUILyric : BaseHook() {
             }
 
             View::class.java.methodFinder().filterByName("setVisibility").single().createHook {
-                before { param ->
-                    val view = param.thisObject as View
+                before {
+                    val view = it.thisObject as View
                     if (statusBatteryContainer.isNotNull()) {
                         if (statusBatteryContainer != view) return@before
                         if (!isMusicPlaying) return@before
 
-                        val visibility = param.args[0] == View.VISIBLE
+                        val visibility = it.args[0] == View.VISIBLE
                         if (visibility) {
                             updateLyricState()
                         } else {
@@ -281,10 +281,10 @@ class SystemUILyric : BaseHook() {
         if (config.limitVisibilityChange) {
             moduleRes.getString(R.string.limit_visibility_change).log()
             View::class.java.methodFinder().filterByName("setVisibility").single().createHook {
-                before { hookParam ->
+                before {
                     if (isMusicPlaying && !isHiding) {
-                        if (hookParam.args[0] == View.VISIBLE) {
-                            val view = hookParam.thisObject as View
+                        if (it.args[0] == View.VISIBLE) {
+                            val view = it.thisObject as View
                             if (
                                 (isReady && clockView == view && config.hideTime) ||
                                 (notificationIconArea == view && config.hideNotificationIcon) ||
@@ -292,7 +292,7 @@ class SystemUILyric : BaseHook() {
                                 (XiaomiHooks.getMiuiNetworkSpeedView() == view && config.mMiuiHideNetworkSpeed) ||
                                 (XiaomiHooks.getPadClockView() == view && config.hideTime)
                             ) {
-                                hookParam.args[0] = View.GONE
+                                it.args[0] = View.GONE
                             }
                         }
                     }
@@ -303,10 +303,10 @@ class SystemUILyric : BaseHook() {
         // 状态栏图标颜色更改
         loadClassOrNull("com.android.systemui.statusbar.phone.DarkIconDispatcherImpl").isNotNull {
             it.methodFinder().filterByName("applyDarkIntensity").filterNonAbstract().single().createHook {
-                after { hookParam ->
+                after {
                     if (!isMusicPlaying) return@after
 
-                    val mIconTint = hookParam.thisObject.objectHelper().getObjectOrNullAs<Int>("mIconTint")
+                    val mIconTint = it.thisObject.objectHelper().getObjectOrNullAs<Int>("mIconTint")
                     lastColor = mIconTint ?: Color.WHITE
                 }
             }
@@ -315,16 +315,16 @@ class SystemUILyric : BaseHook() {
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.hide_notification_icon).log()
             fun HookFactory.hideNoticeIcon(mode: Int) {
-                after { hookParam ->
-                    val clazz = hookParam.thisObject::class.java
+                after {
+                    val clazz = it.thisObject::class.java
                     val name = if (mode == 0) "NotificationIconAreaController" else "CollapsedStatusBarFragment"
                     val method = if (mode == 0) "mNotificationIconArea" else "mNotificationIconAreaInner"
                     if (clazz.simpleName == name) {
-                        hookParam.thisObject.objectHelper {
+                        it.thisObject.objectHelper {
                             notificationIconArea = this.getObjectOrNullAs<View>(method)!!
                         }
                     } else {
-                        notificationIconArea = clazz.superclass.getField(method).get(hookParam.thisObject) as View
+                        notificationIconArea = clazz.superclass.getField(method).get(it.thisObject) as View
                     }
                 }
             }
@@ -353,10 +353,10 @@ class SystemUILyric : BaseHook() {
         // 触摸监听
         loadClassOrNull("com.android.systemui.statusbar.phone.PhoneStatusBarView").isNotNull {
             it.methodFinder().filterByName("onTouchEvent").single().createHook {
-                before { hookParam ->
+                before {
                     if (!isReady || canLoad) return@before
 
-                    val motionEvent = hookParam.args[0] as MotionEvent
+                    val motionEvent = it.args[0] as MotionEvent
                     when (motionEvent.action) {
                         MotionEvent.ACTION_DOWN -> {
                             point = Point(motionEvent.rawX.toInt(), motionEvent.rawY.toInt())
@@ -382,7 +382,7 @@ class SystemUILyric : BaseHook() {
                                                     } else {
                                                         shell("input keyevent 88", false)
                                                     }
-                                                    hookParam.result = true
+                                                    it.result = true
                                                 }
                                             }
                                         }
@@ -397,7 +397,7 @@ class SystemUILyric : BaseHook() {
 
                                                 moduleRes.getString(R.string.long_click_status_bar_stop).log()
                                                 shell("input keyevent 85", false)
-                                                hookParam.result = true
+                                                it.result = true
                                             }
                                         }
 
@@ -415,7 +415,7 @@ class SystemUILyric : BaseHook() {
                                                         }
                                                     }
                                                     FocusNotifyController.isInteraction = false
-                                                    hookParam.result = true
+                                                    it.result = true
                                                     updateLyricState()
                                                     autoHideStatusBarInFullScreenModeIfNeed()
                                                 } else {
@@ -427,7 +427,7 @@ class SystemUILyric : BaseHook() {
                                                     val bottom = lyricLayout.bottom
                                                     if (x in left..right && y in top..bottom) {
                                                         FocusNotifyController.isInteraction = true
-                                                        hookParam.result = true
+                                                        it.result = true
                                                         updateLyricState(showLyric = false)
                                                         autoHideStatusBarInFullScreenModeIfNeed()
                                                     }
@@ -448,10 +448,10 @@ class SystemUILyric : BaseHook() {
         loadClassOrNull("com.android.systemui.statusbar.phone.CentralSurfacesImpl").isNotNull {
             it.constructorFinder().singleOrNull().ifNotNull { constructor ->
                 constructor.createHook {
-                    after { hook ->
-                        centralSurfacesImpl = hook.thisObject
-                        autoHideController = hook.thisObject.getObjectField("mAutoHideController")
-                        val mStatusBarModeRepository = hook.thisObject.getObjectFieldIfExist("mStatusBarModeRepository")
+                    after {
+                        centralSurfacesImpl = it.thisObject
+                        autoHideController = it.thisObject.getObjectField("mAutoHideController")
+                        val mStatusBarModeRepository = it.thisObject.getObjectFieldIfExist("mStatusBarModeRepository")
                         defaultDisplay = mStatusBarModeRepository?.getObjectFieldIfExist("defaultDisplay")
                     }
                 }
@@ -461,9 +461,9 @@ class SystemUILyric : BaseHook() {
         // 屏幕方向
         loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
             clazz.methodFinder().filterByName("onConfigurationChanged").single().createHook {
-                after { hookParam ->
+                after {
                     "onConfigurationChanged".log()
-                    val newConfig = hookParam.args[0] as Configuration
+                    val newConfig = it.args[0] as Configuration
 
                     if (
                         newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||

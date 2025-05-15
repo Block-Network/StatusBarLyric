@@ -81,9 +81,9 @@ class XiaomiHooks {
             // 处理通知中心时间
             loadClassOrNull("com.android.systemui.controlcenter.shade.NotificationHeaderExpandController\$notificationCallback$1").isNotNull {
                 it.methodFinder().filterByName("onExpansionChanged").filterFinal().single().createHook {
-                    before { hook ->
+                    before {
                         if (systemUILyric.isMusicPlaying && !systemUILyric.isHiding && config.hideTime) {
-                            val notificationHeaderExpandController = hook.thisObject.getObjectField("this$0")
+                            val notificationHeaderExpandController = it.thisObject.getObjectField("this$0")
                             notificationHeaderExpandController?.setObjectField("bigTimeTranslationY", 0)
                             notificationHeaderExpandController?.setObjectField("notificationTranslationX", 0)
 
@@ -93,7 +93,7 @@ class XiaomiHooks {
 
                             setNotificationBigTime(bigTimeView)
 
-                            val f = hook.args[0] as Float
+                            val f = it.args[0] as Float
                             if (f < 0.75f) getNotificationBigTime()?.visibility = View.GONE
                             else getNotificationBigTime()?.visibility = View.VISIBLE
                         }
@@ -106,14 +106,14 @@ class XiaomiHooks {
                 moduleRes.getString(R.string.miui_hide_network_speed).log()
                 loadClassOrNull("com.android.systemui.statusbar.views.NetworkSpeedView").isNotNull {
                     it.constructorFinder().single().createHook {
-                        after { hookParam ->
-                            setMiuiNetworkSpeedView(hookParam.thisObject as? TextView)
+                        after {
+                            setMiuiNetworkSpeedView(it.thisObject as? TextView)
                         }
                     }
                     it.methodFinder().filterByName("setVisibilityByController").single()
                         .createHook {
-                            before { hookParam ->
-                                if (systemUILyric.isMusicPlaying) hookParam.args[0] = false
+                            before {
+                                if (systemUILyric.isMusicPlaying) it.args[0] = false
                             }
                         }
                 }
@@ -124,18 +124,18 @@ class XiaomiHooks {
                 loadClassOrNull("com.android.systemui.SystemUIApplication").isNotNull { clazz ->
                     clazz.methodFinder().filterByName("onCreate").single().createHook {
                         after {
-                            if (isPad) {
-                                loadClassOrNull("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment").isNotNull {
-                                    if (it.existMethod("initMiuiViewsOnViewCreated")) {
-                                        it.methodFinder().filterByName("initMiuiViewsOnViewCreated").single()
-                                    } else {
-                                        it.methodFinder().filterByName("onViewCreated").single()
-                                    }.let { method ->
-                                        method.createHook {
-                                            after { hookParam ->
-                                                hookParam.thisObject.objectHelper {
-                                                    setPadClockView(this.getObjectOrNullAs<View>("mPadClockView"))
-                                                }
+                            if (!isPad) return@after
+
+                            loadClassOrNull("com.android.systemui.statusbar.phone.MiuiCollapsedStatusBarFragment").isNotNull {
+                                if (it.existMethod("initMiuiViewsOnViewCreated")) {
+                                    it.methodFinder().filterByName("initMiuiViewsOnViewCreated").single()
+                                } else {
+                                    it.methodFinder().filterByName("onViewCreated").single()
+                                }.let { method ->
+                                    method.createHook {
+                                        after { hookParam ->
+                                            hookParam.thisObject.objectHelper {
+                                                setPadClockView(this.getObjectOrNullAs<View>("mPadClockView"))
                                             }
                                         }
                                     }
@@ -150,23 +150,22 @@ class XiaomiHooks {
             if (config.hideCarrier && Build.VERSION.SDK_INT <= Build.VERSION_CODES.TIRAMISU) {
                 moduleRes.getString(R.string.hide_carrier).log()
                 loadClassOrNull("com.android.systemui.statusbar.phone.KeyguardStatusBarView").isNotNull {
-                    it.methodFinder().filterByName("onFinishInflate").singleOrNull()
-                        .ifNotNull { method ->
-                            method.createHook {
-                                after { hookParam ->
-                                    kotlin.runCatching {
-                                        val clazz = hookParam.thisObject::class.java
-                                        if (clazz.simpleName == "KeyguardStatusBarView") {
-                                            hookParam.thisObject.objectHelper {
-                                                setCarrierLabel(this.getObjectOrNullAs<View>("mCarrierLabel"))
-                                            }
-                                        } else {
-                                            setCarrierLabel(clazz.superclass.getField("mCarrierLabel").get(hookParam.thisObject) as View)
+                    it.methodFinder().filterByName("onFinishInflate").singleOrNull().ifNotNull {
+                        it.createHook {
+                            after {
+                                runCatching {
+                                    val clazz = it.thisObject::class.java
+                                    if (clazz.simpleName == "KeyguardStatusBarView") {
+                                        it.thisObject.objectHelper {
+                                            setCarrierLabel(this.getObjectOrNullAs<View>("mCarrierLabel"))
                                         }
-                                    }.onFailure { throwable -> "Hook carrier error: $throwable".log() }
-                                }
+                                    } else {
+                                        setCarrierLabel(clazz.superclass.getField("mCarrierLabel").get(it.thisObject) as View)
+                                    }
+                                }.onFailure { throwable -> "Hook carrier error: $throwable".log() }
                             }
                         }
+                    }
                 }
             }
         }

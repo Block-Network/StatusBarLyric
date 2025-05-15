@@ -116,7 +116,7 @@ class SystemUITest : BaseHook() {
                     className,
                     view.id,
                     view.textSize,
-                    context.resources.getResourceEntryName(view.id)
+                    view.resources.getResourceEntryName(view.id)
                 )
                 dataHashMap[view] = newData
                 dataHashMap.forEach { (textView, data) ->
@@ -135,9 +135,9 @@ class SystemUITest : BaseHook() {
                             "Getting id name error".log()
                         }
                         viewHierarchyList.add("$currentIndent$viewClassName (id: $resourceIdName)")
-                        
+
                         currentIndent += "  "
-                        
+
                         val parent = currentView.parent
                         if (parent is View) {
                             currentView = parent
@@ -145,11 +145,11 @@ class SystemUITest : BaseHook() {
                             if (parent != null) {
                                 viewHierarchyList.add("$currentIndent${parent::class.java.name} (Parent, not a View)")
                             }
-                            currentView = null 
+                            currentView = null
                         }
                     }
                     val viewHierarchy = viewHierarchyList.joinToString("\n")
-                    data.viewTree = viewHierarchy 
+                    data.viewTree = viewHierarchy
                     "SystemUITest: $textView\nviewHierarchy:\n$viewHierarchy".log()
                 }
                 moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()

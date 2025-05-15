@@ -59,8 +59,8 @@ class FocusNotifyController {
 
             EzXHelper.moduleRes.getString(R.string.automate_focused_notice).log()
             ClassUtils.loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController").isNotNull {
-                it.constructorFinder().singleOrNull().ifNotNull { constructor ->
-                    constructor.createHook {
+                it.constructorFinder().singleOrNull().ifNotNull {
+                    it.createHook {
                         after { hook ->
                             focusedNotify = hook.thisObject
                         }
@@ -69,9 +69,9 @@ class FocusNotifyController {
 
                 it.declaredMethods.filter { method ->
                     (method.name == "updateVisibility$1" || method.name == "showImmediately" || method.name == "hideImmediately" ||
-                        method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
-                }.forEach { method ->
-                    method.createHook {
+                            method.name == "cancelFolme" || method.name == "setIsFocusedNotifPromptShowing")
+                }.forEach {
+                    it.createHook {
                         before { hook ->
                             if (isHideFocusNotify) {
                                 hook.result = null
@@ -113,8 +113,8 @@ class FocusNotifyController {
                 canHideFocusNotify = false
                 ClassUtils.loadClassOrNull("com.android.systemui.statusbar.phone.FocusedNotifPromptController$2").isNotNull {
                     it.methodFinder().filterByName("handleMessage").single().createHook {
-                        before { hook ->
-                            val message = hook.args[0] as Message
+                        before {
+                            val message = it.args[0] as Message
                             if (message.what == 1003) {
                                 val show = isFocusNotifyShowing()
                                 if (systemUILyric.isMusicPlaying) {
