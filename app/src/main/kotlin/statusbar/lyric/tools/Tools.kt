@@ -26,12 +26,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.icu.text.SimpleDateFormat
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.github.kyuubiran.ezxhelper.EzXHelper
@@ -45,6 +45,7 @@ import statusbar.lyric.tools.ActivityTools.isHook
 import statusbar.lyric.tools.LogTools.log
 import java.io.DataOutputStream
 import java.lang.reflect.Field
+import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Objects
 import java.util.regex.Pattern
@@ -112,6 +113,44 @@ object Tools {
             }
         }
     }
+
+
+    fun String.isTimeSameInternal(): Boolean {
+        val timeFormats = arrayOf(
+            SimpleDateFormat("H:mm", Locale.getDefault()),
+            SimpleDateFormat("h:mm", Locale.getDefault())
+        )
+        val nowTime = System.currentTimeMillis()
+        timeFormats.forEach { formatter ->
+            if (this.contains(formatter.format(nowTime))) {
+                return true
+            }
+        }
+        if (config.relaxConditions) {
+            if (this.contains("周") || this.contains("月") || this.contains("日")) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun String.filterClassNameInternal(): Boolean {
+        if (config.relaxConditions) return true
+        val filterKeywords = listOf("controlcenter", "image", "keyguard")
+        if (filterKeywords.any { this.contains(it, ignoreCase = true) }) {
+            return false
+        }
+        return this != TextView::class.java.name
+    }
+
+    @SuppressLint("DiscouragedApi")
+    fun View.filterViewInternal(parentView: LinearLayout): Boolean {
+        val clockContainerIdName = "clock_container"
+        val expectedPackageName = context.packageName
+        val id = context.resources.getIdentifier(clockContainerIdName, "id", expectedPackageName)
+        return if (id == 0) true else parentView.id != id
+    }
+
 
     fun View.isTargetView(): Boolean {
         val textViewClassName = config.textViewClassName

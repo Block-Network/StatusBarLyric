@@ -79,7 +79,10 @@ import statusbar.lyric.tools.LyricViewTools.hideView
 import statusbar.lyric.tools.LyricViewTools.randomAnima
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.Tools.callMethod
+import statusbar.lyric.tools.Tools.dispose
 import statusbar.lyric.tools.Tools.existField
+import statusbar.lyric.tools.Tools.filterClassNameInternal
+import statusbar.lyric.tools.Tools.filterViewInternal
 import statusbar.lyric.tools.Tools.getObjectField
 import statusbar.lyric.tools.Tools.getObjectFieldIfExist
 import statusbar.lyric.tools.Tools.goMainThread
@@ -89,6 +92,7 @@ import statusbar.lyric.tools.Tools.isNot
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.Tools.isNull
 import statusbar.lyric.tools.Tools.isTargetView
+import statusbar.lyric.tools.Tools.isTimeSameInternal
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.XiaomiUtils.isHyperOS
@@ -227,17 +231,24 @@ class SystemUILyric : BaseHook() {
             TextView::class.java.methodFinder().filterByName("onDraw").single().createHook {
                 after {
                     if (!canLoad) return@after
+                    val view = it.thisObject as TextView
+                    val className = view::class.java.name
+                    val textContent = view.text.toString().dispose()
 
-                    val view = (it.thisObject as View)
+                    if (!textContent.isTimeSameInternal()) return@after
+                    if (!className.filterClassNameInternal()) return@after
+                    val parentView = view.parent as? LinearLayout ?: return@after
+                    if (!view.filterViewInternal(parentView)) return@after
+
                     if (view.isTargetView()) {
                         "Running onDraw".log()
-                        clockView = view as TextView
+                        clockView = view
                         targetView = (clockView.parent as LinearLayout).apply {
                             gravity = Gravity.CENTER_VERTICAL
                         }
                         lyricInit()
                         canLoad = false
-                    }
+                    } else return@after
                 }
             }
 

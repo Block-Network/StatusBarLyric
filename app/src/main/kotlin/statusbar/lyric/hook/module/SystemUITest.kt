@@ -39,7 +39,6 @@ import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import de.robv.android.xposed.XC_MethodHook
 import statusbar.lyric.R
-import statusbar.lyric.config.XposedOwnSP.config
 import statusbar.lyric.data.Data
 import statusbar.lyric.hook.BaseHook
 import statusbar.lyric.tools.ActivityTestTools.receiveClass
@@ -47,10 +46,11 @@ import statusbar.lyric.tools.LogTools.log
 import statusbar.lyric.tools.LyricViewTools.hideView
 import statusbar.lyric.tools.LyricViewTools.showView
 import statusbar.lyric.tools.Tools.dispose
+import statusbar.lyric.tools.Tools.filterClassNameInternal
+import statusbar.lyric.tools.Tools.filterViewInternal
 import statusbar.lyric.tools.Tools.goMainThread
-import java.text.SimpleDateFormat
+import statusbar.lyric.tools.Tools.isTimeSameInternal
 import java.time.LocalDateTime
-import java.util.Locale
 
 class SystemUITest : BaseHook() {
     private lateinit var hook: XC_MethodHook.Unhook
@@ -155,42 +155,6 @@ class SystemUITest : BaseHook() {
                 moduleRes.getString(R.string.first_filter).format(newData, dataHashMap.size).log()
             }
         }
-    }
-
-    private fun String.isTimeSameInternal(): Boolean {
-        val timeFormats = arrayOf(
-            SimpleDateFormat("H:mm", Locale.getDefault()),
-            SimpleDateFormat("h:mm", Locale.getDefault())
-        )
-        val nowTime = System.currentTimeMillis()
-        timeFormats.forEach { formatter ->
-            if (this.contains(formatter.format(nowTime))) {
-                return true
-            }
-        }
-        if (config.relaxConditions) {
-            if (this.contains("周") || this.contains("月") || this.contains("日")) {
-                return true
-            }
-        }
-        return false
-    }
-
-    private fun String.filterClassNameInternal(): Boolean {
-        if (config.relaxConditions) return true
-        val filterKeywords = listOf("controlcenter", "image", "keyguard")
-        if (filterKeywords.any { this.contains(it, ignoreCase = true) }) {
-            return false
-        }
-        return this != TextView::class.java.name
-    }
-
-    @SuppressLint("DiscouragedApi")
-    private fun View.filterViewInternal(parentView: LinearLayout): Boolean {
-        val clockContainerIdName = "clock_container"
-        val expectedPackageName = context.packageName
-        val id = context.resources.getIdentifier(clockContainerIdName, "id", expectedPackageName)
-        return if (id == 0) true else parentView.id != id
     }
 
     inner class TestReceiver : BroadcastReceiver() {
