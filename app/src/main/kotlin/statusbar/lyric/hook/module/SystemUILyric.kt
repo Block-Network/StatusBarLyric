@@ -354,6 +354,8 @@ class SystemUILyric : BaseHook() {
         loadClassOrNull("com.android.systemui.statusbar.phone.PhoneStatusBarView").isNotNull {
             it.methodFinder().filterByName("onTouchEvent").single().createHook {
                 before { hookParam ->
+                    if (!isReady || canLoad) return@before
+
                     val motionEvent = hookParam.args[0] as MotionEvent
                     when (motionEvent.action) {
                         MotionEvent.ACTION_DOWN -> {
@@ -467,7 +469,7 @@ class SystemUILyric : BaseHook() {
                         newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE ||
                         newConfig.orientation == Configuration.ORIENTATION_PORTRAIT
                     ) {
-                        if (!isReady) return@after
+                        if (!isReady || canLoad) return@after
                         updateLyricState()
                     }
                 }
@@ -600,7 +602,7 @@ class SystemUILyric : BaseHook() {
 
             override fun onSuperLyric(data: SuperLyricData?) {
                 if (data == null) return
-                if (!isReady) return
+                if (!isReady || canLoad) return
 
                 playingApp = data.packageName
                 if (config.titleSwitch && data.isExistMediaMetadata) {
