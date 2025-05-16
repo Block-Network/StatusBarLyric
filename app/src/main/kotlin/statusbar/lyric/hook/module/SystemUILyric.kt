@@ -613,27 +613,28 @@ class SystemUILyric : BaseHook() {
                 if (data == null) return
                 if (!isReady) return
 
+                isMusicPlaying = true
                 playingApp = data.packageName
-                if (config.titleSwitch && data.isExistMediaMetadata) {
+
+                if (config.titleSwitch && data.isExistMediaMetadata && data.title.isNotEmpty()) {
                     if (lastArtist != data.artist || lastAlbum != data.album) {
                         lastArtist = data.artist
                         lastAlbum = data.album
 
                         if (lastRunnable.isNotNull()) handler.removeCallbacks(lastRunnable!!)
                         lastRunnable = Runnable { showTitleConsumer.accept(data) }
-
+                        if (lastRunnable.isNotNull()) handler.postDelayed(lastRunnable!!, 800)
                         ("Title: " + data.title + ", Artist: " + lastArtist + ", Album: " + lastAlbum).log()
                     }
                 }
-                if (data.lyric.isEmpty()) return
 
-                isMusicPlaying = true
+                if (data.lyric.isEmpty()) return
                 lastLyric = data.lyric
-                changeIcon(data.base64Icon)
-                updateLyricState(delay = data.delay)
                 "Lyric: $lastLyric".log()
 
-                if (lastRunnable.isNotNull()) handler.postDelayed(lastRunnable!!, 800)
+                changeIcon(data.base64Icon)
+                updateLyricState(delay = data.delay)
+
                 if (handler.hasMessages(timeoutRestore)) {
                     handler.removeMessages(timeoutRestore)
                     handler.sendEmptyMessageDelayed(timeoutRestore, 10000L)
@@ -747,7 +748,10 @@ class SystemUILyric : BaseHook() {
         config.update()
         goMainThread(delay) {
             lyricView.apply {
-                setTextSize(TypedValue.COMPLEX_UNIT_SHIFT, if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat())
+                setTextSize(
+                    TypedValue.COMPLEX_UNIT_SHIFT,
+                    if (config.lyricSize == 0) clockView.textSize else config.lyricSize.toFloat()
+                )
                 setMargins(config.lyricStartMargins, config.lyricTopMargins, config.lyricEndMargins, config.lyricBottomMargins)
                 if (config.lyricGradientColor.isEmpty()) {
                     if (config.lyricColor.isEmpty()) {
