@@ -101,6 +101,18 @@ class XiaomiHooks {
                 }
             }
 
+            // 隐藏通知图标
+            if (config.hideNotificationIcon) {
+                loadClassOrNull("com.android.systemui.statusbar.phone.NotificationIconContainer").isNotNull {
+                    it.methodFinder().filterByName("onLayout").single().createHook {
+                        after {
+                            if (systemUILyric.notificationIconArea != null) return@after
+                            systemUILyric.notificationIconArea = it.thisObject as View
+                        }
+                    }
+                }
+            }
+
             // 隐藏小米网络速度
             if (config.mMiuiHideNetworkSpeed) {
                 moduleRes.getString(R.string.miui_hide_network_speed).log()

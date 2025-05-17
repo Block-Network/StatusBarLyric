@@ -137,6 +137,7 @@ class SystemUILyric : BaseHook() {
     }
     private var canLoad: Boolean = true
     private var isScreenLocked: Boolean = false
+    private var statusBarShowing: Boolean = true
     private var iconSwitch: Boolean = config.iconSwitch
 
     @Volatile
@@ -159,9 +160,6 @@ class SystemUILyric : BaseHook() {
 
     private lateinit var clockView: TextView
     private lateinit var targetView: ViewGroup
-
-
-    private var statusBarShowing: Boolean = true
 
 
     private val lyricView: LyricSwitchView by lazy {
@@ -215,8 +213,8 @@ class SystemUILyric : BaseHook() {
     //////////////////////////////Hook//////////////////////////////////////
     private var defaultDisplay: Any? = null
     private var centralSurfacesImpl: Any? = null
-    private var notificationIconArea: View? = null
     private var statusBatteryContainer: View? = null
+    var notificationIconArea: View? = null
 
     override fun init() {
         "Initializing Hook".log()
@@ -287,6 +285,7 @@ class SystemUILyric : BaseHook() {
             }
         }
 
+        // 限制可见性更改
         if (config.limitVisibilityChange) {
             moduleRes.getString(R.string.limit_visibility_change).log()
             View::class.java.methodFinder().filterByName("setVisibility").single().createHook {
@@ -321,6 +320,7 @@ class SystemUILyric : BaseHook() {
             }
         }
 
+        // 隐藏通知图标
         if (config.hideNotificationIcon) {
             moduleRes.getString(R.string.hide_notification_icon).log()
             fun HookFactory.hideNoticeIcon(mode: Int) {
