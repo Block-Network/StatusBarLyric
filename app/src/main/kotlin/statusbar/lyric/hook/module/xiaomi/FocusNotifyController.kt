@@ -35,9 +35,9 @@ import statusbar.lyric.R
 import statusbar.lyric.config.XposedOwnSP
 import statusbar.lyric.hook.module.SystemUILyric
 import statusbar.lyric.tools.LogTools.log
-import statusbar.lyric.tools.Tools
 import statusbar.lyric.tools.Tools.callMethod
 import statusbar.lyric.tools.Tools.getObjectField
+import statusbar.lyric.tools.Tools.goMainThread
 import statusbar.lyric.tools.Tools.ifNotNull
 import statusbar.lyric.tools.Tools.isNotNull
 import statusbar.lyric.tools.XiaomiUtils
@@ -142,7 +142,7 @@ class FocusNotifyController {
             val mIcon = focusedNotify!!.getObjectField("mIcon")
             val mContent = focusedNotify!!.getObjectField("mContent")
             if (mIcon == null || mContent == null) return
-            Tools.goMainThread {
+            goMainThread {
                 focusedNotify!!.callMethod("cancelFolme")
                 focusedNotify!!.callMethod("hideImmediately", mIcon)
                 focusedNotify!!.callMethod("hideImmediately", mContent)
@@ -161,7 +161,7 @@ class FocusNotifyController {
             val mContent = focusedNotify!!.getObjectField("mContent")
             if (mIcon == null || mContent == null) return
             isHideFocusNotify = false
-            Tools.goMainThread {
+            goMainThread {
                 focusedNotify!!.callMethod("cancelFolme")
                 focusedNotify!!.callMethod("showImmediately", mIcon)
                 focusedNotify!!.callMethod("showImmediately", mContent)

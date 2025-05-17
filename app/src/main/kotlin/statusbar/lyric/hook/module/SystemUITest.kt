@@ -106,6 +106,8 @@ class SystemUITest : BaseHook() {
                 val className = view::class.java.name
                 val textContent = view.text.toString().dispose()
 
+                if (view.visibility != View.VISIBLE) return@after
+                if (!view.isAttachedToWindow) return@after
                 if (!textContent.isTimeSameInternal()) return@after
                 if (!className.filterClassNameInternal()) return@after
                 val parentView = view.parent as? LinearLayout ?: return@after

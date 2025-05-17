@@ -91,6 +91,7 @@ import statusbar.lyric.tools.Tools.isTargetView
 import statusbar.lyric.tools.Tools.observableChange
 import statusbar.lyric.tools.Tools.shell
 import statusbar.lyric.tools.XiaomiUtils.isHyperOS
+import statusbar.lyric.tools.XiaomiUtils.isXiaomi
 import statusbar.lyric.view.LyricSwitchView
 import statusbar.lyric.view.TitleDialog
 import java.io.File
@@ -220,10 +221,10 @@ class SystemUILyric : BaseHook() {
     override fun init() {
         "Initializing Hook".log()
         Application::class.java.methodFinder().filterByName("attach").single().createHook {
-            after { hook ->
+            after {
                 hook()
                 if (!canLoad) return@after
-                registerSuperLyric(hook.args[0] as Context)
+                registerSuperLyric(it.args[0] as Context)
             }
         }
     }
@@ -235,7 +236,6 @@ class SystemUILyric : BaseHook() {
                 if (!canLoad) return@after
 
                 val view = it.thisObject as TextView
-
                 view.post {
                     if (view.isTargetView()) {
                         "Running onDraw".log()
@@ -256,7 +256,7 @@ class SystemUILyric : BaseHook() {
         "lyricHook init".log()
         View::class.java.methodFinder().filterByName("onDetachedFromWindow").single().createHook {
             after {
-                val view = (it.thisObject as View)
+                val view = it.thisObject as View
                 if (view.isTargetView()) {
                     "Running onDetachedFromWindow".log()
                     canLoad = true
@@ -493,7 +493,7 @@ class SystemUILyric : BaseHook() {
     }
 
     private fun lyricLayoutInit() {
-        goMainThread(1) {
+        goMainThread {
             "lyricLayout init".log()
             runCatching { (lyricLayout.parent as ViewGroup).removeView(lyricLayout) }
             if (config.viewLocation == 0) {
@@ -501,7 +501,7 @@ class SystemUILyric : BaseHook() {
             } else {
                 targetView.addView(lyricLayout)
             }
-            if (isHyperOS && config.mHyperOSTexture) {
+            if (isXiaomi && isHyperOS && config.mHyperOSTexture) {
                 val blurRadio = config.mHyperOSTextureRadio
                 val cornerRadius = cornerRadius(config.mHyperOSTextureCorner.toFloat())
                 val blendModes = arrayOf(
@@ -743,10 +743,10 @@ class SystemUILyric : BaseHook() {
         }
     }
 
-    private fun updateConfig(delay: Long = 0L) {
+    private fun updateConfig() {
         "Updating Config".log()
         config.update()
-        goMainThread(delay) {
+        goMainThread {
             lyricView.apply {
                 setTextSize(
                     TypedValue.COMPLEX_UNIT_SHIFT,

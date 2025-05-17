@@ -152,6 +152,9 @@ object Tools {
     }
 
     fun View.isTargetView(): Boolean {
+        if (this !is TextView) return false
+        if (this.visibility != View.VISIBLE) return false
+        if (!this.isAttachedToWindow) return false
         val textViewClassName = config.textViewClassName
         val textViewId = config.textViewId
         val textSize = config.textSize
@@ -160,7 +163,6 @@ object Tools {
             EzXHelper.moduleRes.getString(R.string.load_class_empty).log()
             return false
         }
-        if (this !is TextView) return false
         if (this.javaClass.name != textViewClassName) return false
         if (this.id != textViewId) return false
         if (this.textSize != textSize) return false
@@ -202,7 +204,7 @@ object Tools {
     }
 
     fun goMainThread(delayed: Long = 0, callback: () -> Unit): Boolean {
-        return Handler(Looper.getMainLooper()).postDelayed({ callback() }, delayed * 1000)
+        return Handler(Looper.getMainLooper()).postDelayed({ callback() }, delayed)
     }
 
     fun Context.isLandscape() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
